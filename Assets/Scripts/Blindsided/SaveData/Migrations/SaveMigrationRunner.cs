@@ -62,6 +62,8 @@ namespace Blindsided.SaveData.Migrations
         {
             if (source == null)
                 return Failed(null, "Cannot migrate null save data.");
+            if (source.SchemaVersion < 0)
+                return Failed(source, $"Save schema {source.SchemaVersion} cannot be negative.");
             if (source.SchemaVersion > GameData.CurrentSchemaVersion)
             {
                 return Failed(

@@ -106,17 +106,28 @@ namespace Blindsided.SaveData
             try
             {
                 GameData decoded;
-                if (isEs3)
+                try
                 {
-                    if (!LegacyEs3Adapter.TryDecode(input, out decoded, out error)) return false;
+                    if (isEs3)
+                    {
+                        if (!LegacyEs3Adapter.TryDecode(input, out decoded, out error)) return false;
+                    }
+                    else
+                    {
+                        var prefix = isCurrentFormat ? ExportPrefix : LegacyExportPrefix;
+                        var compressed = Base64UrlDecode(input.Substring(prefix.Length));
+                        var inflated = InflateBounded(compressed, isCurrentFormat ? MaxSaveBytes + 64 : MaxSaveBytes);
+                        var binary = isCurrentFormat ? ReadEnvelope(inflated) : inflated;
+                        decoded = SerializationUtility.DeserializeValue<GameData>(binary, DataFormat.Binary);
+                    }
                 }
-                else
+                catch (Exception ex) when (ex is FormatException || ex is InvalidDataException ||
+                                           ex is EndOfStreamException)
                 {
-                    var prefix = isCurrentFormat ? ExportPrefix : LegacyExportPrefix;
-                    var compressed = Base64UrlDecode(input.Substring(prefix.Length));
-                    var inflated = InflateBounded(compressed, isCurrentFormat ? MaxSaveBytes + 64 : MaxSaveBytes);
-                    var binary = isCurrentFormat ? ReadEnvelope(inflated) : inflated;
-                    decoded = SerializationUtility.DeserializeValue<GameData>(binary, DataFormat.Binary);
+                    // Malformed pasted data is an expected input failure. Keep unexpected
+                    // migration and activation failures on the existing reporting path.
+                    error = ex.Message;
+                    return false;
                 }
                 if (decoded == null)
                 {
