@@ -9,7 +9,6 @@ using System.Linq;
 using Blindsided.SaveData;
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Enemies;
-using TimelessEchoes.NpcGeneration;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Upgrades;
@@ -30,7 +29,6 @@ namespace TimelessEchoes.Quests
     {
         private ResourceManager resourceManager;
         private EnemyKillTracker killTracker;
-        private AlterEchoGenerationManager generationManager;
         private QuestUIManager uiManager;
         private GameplayStatTracker statTracker;
         private TimelessEchoes.Upgrades.CauldronManager cauldronManager;
@@ -73,9 +71,6 @@ namespace TimelessEchoes.Quests
             killTracker = EnemyKillTracker.Instance;
             if (killTracker == null)
                 Log("EnemyKillTracker missing", TELogCategory.Combat, this);
-            generationManager = AlterEchoGenerationManager.Instance;
-            if (generationManager == null)
-                Log("AlterEchoGenerationManager missing", TELogCategory.General, this);
             uiManager = QuestUIManager.Instance;
 
             statTracker = GameplayStatTracker.Instance;
@@ -581,11 +576,6 @@ namespace TimelessEchoes.Quests
                 // Quest rewards should bypass the demo cap and apply to the true backing value
                 // so players don't miss progression when moving to the main version.
                 GameplayStatTracker.Instance?.IncreaseMaxRunDistance(inst.data.maxDistanceIncrease, oracle != null && oracle.demo);
-            if (inst.data.disciplePercentReward > 0f)
-            {
-                oracle.saveData.DisciplePercent += inst.data.disciplePercentReward;
-                AlterEchoGenerationManager.Instance?.RefreshRates();
-            }
             if (!string.IsNullOrEmpty(inst.data.npcId))
                 CompletedNpcTasks.Add(inst.data.npcId);
             if (inst.ui != null)

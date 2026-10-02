@@ -232,36 +232,6 @@ MonoBehaviour:
     width: 22
     fontSize: 2.35
     visibility: []
-  - id: alterEchoes
-    group: 2
-    action: 0
-    window: 4
-    map: {fileID: 0}
-    label:
-      key: navigation.alterEchoes
-      bold: 1
-      smallCaps: 0
-      fallback: Alter Echoes
-      localized:
-        m_TableReference:
-          m_TableCollectionName: 
-        m_TableEntryReference:
-          m_KeyId: 0
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
-    icon: {fileID: 0}
-    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
-    iconSize: {x: 18, y: 18}
-    iconSliced: 0
-    width: 80
-    fontSize: 8
-    visibility:
-    - condition: 0
-      quest: {fileID: 11400000, guid: 023383fb0fcbe3b41b7dca4f9ec81b72, type: 2}
-      npcId: 
   - id: skills
     group: 2
     action: 0
@@ -541,8 +511,6 @@ MonoBehaviour:
   forgeAttention: {fileID: 21300000, guid: 52ace75bf0b7f894d97b20a21000e1c8, type: 3}
   cauldronAttention: {fileID: 21300000, guid: 4cb6611cce92c664a91354038f2be24e, type: 3}
   questAttention: {fileID: 3947923570558630869, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
-  echoFrame: {fileID: 1030688936884539648, guid: 51bd82d473befb0479be7d5b9a324629, type: 3}
-  echoInset: {fileID: -6793677539430908002, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
   autoPinFrame: {fileID: 239788920320451221, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
   toggleOn: {fileID: 9208044968218441874, guid: f429786718350477cb960cfcb3452aab, type: 3}
   toggleOff: {fileID: 7182660371469165703, guid: f429786718350477cb960cfcb3452aab, type: 3}
@@ -567,7 +535,6 @@ MonoBehaviour:
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
-  balanceColor: {r: 0.9176471, g: 0.8313726, b: 0.6666667, a: 1}
   references:
     version: 2
     RefIds: []

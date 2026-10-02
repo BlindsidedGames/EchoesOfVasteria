@@ -37,6 +37,7 @@ namespace TimelessEchoes.Tasks
                 return;
 
             var dropTotals = new Dictionary<Resource, double>();
+            var windfallInputs = new Dictionary<Resource, double>();
             var dropOrder = new List<Resource>();
 
             var results = DropResolver.RollDrops(taskData.resourceDrops, taskData.additionalLootChances, associatedSkill);
@@ -47,9 +48,10 @@ namespace TimelessEchoes.Tasks
                 foreach (var res in results)
                 {
                     double final = res.count;
+                    int mult = 1;
                     if (skillController)
                     {
-                        int mult = skillController.GetStackingMultiplier(associatedSkill, MilestoneProcType.DoubleResources);
+                        mult = skillController.GetStackingMultiplier(associatedSkill, MilestoneProcType.DoubleResources);
                         float resourceMult = skillController.GetResourceGainMultiplier();
                         float milestoneMult = skillController.GetResourceBonusMultiplier(associatedSkill);
                         final = res.count * mult * resourceMult * milestoneMult;
@@ -62,6 +64,10 @@ namespace TimelessEchoes.Tasks
                     // Gathering rewards share the existing batch and floating-text totals.
                     double bonus = buff != null ? buff.GetResonanceBonus(taskData, ClaimedBy != null && ClaimedBy.IsEcho, final) : 0d;
                     final += bonus;
+                    windfallInputs.TryGetValue(res.resource, out var procInput);
+                    windfallInputs[res.resource] = procInput + final;
+                    var baseYield = (double)res.count * mult;
+                    final += CauldronResourceYield.Supplement(oracle?.saveData, res.resource, baseYield);
                     resourceManager.Add(res.resource, final);
                     if (dropTotals.ContainsKey(res.resource))
                         dropTotals[res.resource] += final;
@@ -72,7 +78,7 @@ namespace TimelessEchoes.Tasks
                     }
                 }
                 BuffManager.Instance?.RecordGatheringCompletion(taskData, ClaimedBy != null && ClaimedBy.IsEcho,
-                    dropTotals, dropOrder, resourceManager);
+                    dropTotals, dropOrder, resourceManager, windfallInputs);
                 // Fixed propagation bonuses are awarded once by the completed task, after
                 // ordinary reward modifiers/windfall. They cannot feed those modifier pools.
                 foreach (var bonusDrop in DropResolver.RollBonusDrops(taskData.bonusDrops))

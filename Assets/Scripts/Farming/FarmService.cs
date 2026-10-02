@@ -98,7 +98,8 @@ namespace TimelessEchoes.Farming
         public bool Plant(string bedId) => Execute(state => FarmCommands.Plant(state, bedId,
             FarmJournal.NextOperation(state, "plant-radish:" + bedId), DateTime.UtcNow, tuning), true);
         public bool HarvestReady() => Execute(state => FarmCommands.HarvestReady(state,
-            FarmJournal.NextOperation(state, "harvest-ready"), DateTime.UtcNow, activeElapsedSeconds: 0), true);
+            FarmJournal.NextOperation(state, "harvest-ready"), DateTime.UtcNow, activeElapsedSeconds: 0,
+            harvestYieldBonusPercent: CauldronResourceYield.BonusPercent(Oracle.oracle.saveData, "Radish")), true);
 
         /// <summary>Eligibility and ownership are captured before ordinary completion callbacks.</summary>
         public sealed class StagedTaskCredit

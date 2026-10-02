@@ -265,17 +265,6 @@ namespace TimelessEchoes.Upgrades
             return GetTierFromThresholds(count, config != null ? config.buffTierThresholds : null);
         }
 
-        public float GetResourceAlterEchoMultiplier(string resourceName)
-        {
-            // Multiplier applied to per-resource alter-echo generation rate
-            if (config == null) return 1f;
-            var tier = GetResourceTier(resourceName);
-            if (tier <= 0 || config.resourcePowerBonusPerTier == null || config.resourcePowerBonusPerTier.Length == 0)
-                return 1f;
-            var idx = Mathf.Clamp(tier - 1, 0, config.resourcePowerBonusPerTier.Length - 1);
-            var bonusPercent = config.resourcePowerBonusPerTier[idx];
-            return 1f + Mathf.Max(0f, bonusPercent) / 100f;
-        }
 
         public float GetBuffCooldownReductionPercent(string buffName)
         {
@@ -978,16 +967,6 @@ namespace TimelessEchoes.Upgrades
                 }
             }
 
-            // Update alter-echo generation rates when card counts change
-            try
-            {
-                TimelessEchoes.NpcGeneration.AlterEchoGenerationManager.Instance?.MarkRatesDirty();
-            }
-            catch (Exception)
-            {
-                // ignore: manager may not be available in some scenes
-            }
-
             // If a buff tier or the Buffs group min tier changed, refresh active buff effects immediately
             if (isBuff)
             {
@@ -1100,9 +1079,6 @@ namespace TimelessEchoes.Upgrades
             sessionCardsGained += totalCardsGained;
             if (oracle != null) oracle.saveData.CauldronTotals.TotalCards += totalCardsGained;
 
-            // Cascade updates ONCE (not per card)
-            try { TimelessEchoes.NpcGeneration.AlterEchoGenerationManager.Instance?.MarkRatesDirty(); }
-            catch { }
 
             if (anyBuffTierChanged)
             {

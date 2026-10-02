@@ -22,14 +22,14 @@ namespace TimelessEchoes.UI
     {
         public static TownWindowManager Instance { get; private set; }
 
-        public enum Window { Upgrades, Buffs, Quests, Credits, AlterEchoes, Stats, Skills, Library, Cauldron, Forge, Inventory, Options, Farm }
+        public enum Window { Upgrades = 0, Buffs = 1, Quests = 2, Credits = 3, Stats = 5, Skills = 6, Library = 7, Cauldron = 8, Forge = 9, Inventory = 10, Options = 11, Farm = 12 } // 4 is retired
         public event Action CloseRequested;
         public event Action WindowsChanged;
         public bool HasOpenWindow => AnyWindowOpen();
         public bool ForgeNeedsAttention { get; private set; }
         public bool CauldronNeedsAttention { get; private set; }
         private readonly System.Collections.Generic.HashSet<Window> tutorialLockedRoutes = new();
-        public bool CanOpenWindow(Window window) => !tutorialLockedRoutes.Contains(window);
+        public bool CanOpenWindow(Window window) => Enum.IsDefined(typeof(Window), window) && !tutorialLockedRoutes.Contains(window);
 
         /// <summary>UI-independent routes shared by native and legacy navigation during migration.</summary>
         public void OpenWindow(Window window)
@@ -45,7 +45,6 @@ namespace TimelessEchoes.UI
                     if (scroll != null) scroll.verticalNormalizedPosition = 1;
                     OpenQuests(); break;
                 case Window.Credits: OpenCredits(); break;
-                case Window.AlterEchoes: OpenAlterEchoes(); break;
                 case Window.Stats: OpenStats(); break;
                 case Window.Skills: OpenSkills(); break;
                 case Window.Library: OpenWiki(); break;
@@ -62,7 +61,6 @@ namespace TimelessEchoes.UI
             if (window == Window.Farm && toolkitFarm != null) return toolkitFarm.IsOpen;
             if (window == Window.Forge && toolkitForge != null && toolkitForge.IsConfigured) return toolkitForge.IsOpen;
             if (window == Window.Stats && toolkitStatistics != null && toolkitStatistics.IsConfigured) return toolkitStatistics.IsOpen;
-            if (window == Window.AlterEchoes && toolkitAlterEchoes != null && toolkitAlterEchoes.IsConfigured) return toolkitAlterEchoes.IsOpen;
             if (window == Window.Cauldron && toolkitCauldron != null && toolkitCauldron.IsConfigured) return toolkitCauldron.IsOpen;
             if (window == Window.Inventory && toolkitResources != null && toolkitResources.IsConfigured) return toolkitResources.IsOpen;
             if (window == Window.Quests && toolkitQuests != null && toolkitQuests.IsConfigured) return toolkitQuests.IsOpen;
@@ -74,7 +72,7 @@ namespace TimelessEchoes.UI
             var reference = window switch
             {
                 Window.Upgrades => upgrades, Window.Buffs => buffs, Window.Quests => quests,
-                Window.Credits => credits, Window.AlterEchoes => alterEchoes, Window.Stats => stats,
+                Window.Credits => credits, Window.Stats => stats,
                 Window.Skills => skills, Window.Library => wiki,
                 Window.Forge => forge, Window.Inventory => inventory, Window.Options => options, _ => null
             };
@@ -192,7 +190,6 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private WindowReference buffs = new();
         [SerializeField] [Space] private WindowReference quests = new();
         [SerializeField] [Space] private WindowReference credits = new();
-        [SerializeField] [Space] private WindowReference alterEchoes = new();
         [SerializeField] [Space] private WindowReference stats = new();
         [SerializeField] [Space] private WindowReference skills = new();
         [SerializeField] [Space] private WindowReference wiki = new();
@@ -203,7 +200,6 @@ namespace TimelessEchoes.UI
         [SerializeField] private Toolkit.ToolkitSkillsScreen toolkitSkills;
         [SerializeField] private Toolkit.ToolkitQuestsScreen toolkitQuests;
         [SerializeField] private Toolkit.ToolkitCauldronScreen toolkitCauldron;
-        [SerializeField] private Toolkit.ToolkitAlterEchoesScreen toolkitAlterEchoes;
         [SerializeField] private Toolkit.ToolkitFarmScreen toolkitFarm;
         public void ConfigureFarm(Toolkit.ToolkitFarmScreen screen) => toolkitFarm = screen;
         private void OpenFarm()
@@ -258,8 +254,6 @@ namespace TimelessEchoes.UI
                 quests.button.onClick.AddListener(OpenQuests);
             if (credits.button != null)
                 credits.button.onClick.AddListener(OpenCredits);
-            if (alterEchoes.button != null)
-                alterEchoes.button.onClick.AddListener(OpenAlterEchoes);
             if (stats.button != null)
                 stats.button.onClick.AddListener(OpenStats);
             if (skills.button != null)
@@ -320,8 +314,6 @@ namespace TimelessEchoes.UI
                 quests.button.onClick.RemoveListener(OpenQuests);
             if (credits.button != null)
                 credits.button.onClick.RemoveListener(OpenCredits);
-            if (alterEchoes.button != null)
-                alterEchoes.button.onClick.RemoveListener(OpenAlterEchoes);
             if (stats.button != null)
                 stats.button.onClick.RemoveListener(OpenStats);
             if (skills.button != null)
@@ -452,25 +444,6 @@ namespace TimelessEchoes.UI
                 return;
             }
             Debug.LogError("Native Credits view is not configured.", this);
-        }
-
-        private void OpenAlterEchoes()
-        {
-            if (toolkitAlterEchoes != null && toolkitAlterEchoes.IsConfigured)
-            {
-                var wasOpen = toolkitAlterEchoes.IsOpen;
-                CloseAllWindows();
-                if (!wasOpen)
-                {
-                    
-                    SetResourceInventoryVisible(alterEchoes.openInventory);
-                    toolkitAlterEchoes.CompanionWidth = alterEchoes.openInventory ? 178 : 0;
-                    toolkitAlterEchoes.Show();
-                }
-                UpdateTownButtonsVisibility();
-                return;
-            }
-            Debug.LogError("Native AlterEchoes view is not configured.", this);
         }
 
         private void OpenStats()
@@ -707,7 +680,6 @@ namespace TimelessEchoes.UI
             if (toolkitQuests != null) toolkitQuests.Hide();
             if (toolkitCauldron != null) toolkitCauldron.Hide();
             if (toolkitFarm != null) toolkitFarm.Hide();
-            if (toolkitAlterEchoes != null) toolkitAlterEchoes.Hide();
             if (toolkitStatistics != null) toolkitStatistics.Hide();
             if (toolkitForge != null) toolkitForge.Hide();
             if (toolkitQuestLayoutSpace != null) toolkitQuestLayoutSpace.SetActive(false);
@@ -720,8 +692,6 @@ namespace TimelessEchoes.UI
                 quests.window.SetActive(false);
             if (credits.window != null)
                 credits.window.SetActive(false);
-            if (alterEchoes.window != null)
-                alterEchoes.window.SetActive(false);
             if (stats.window != null)
                 stats.window.SetActive(false);
             if (skills.window != null)
@@ -763,8 +733,6 @@ namespace TimelessEchoes.UI
                 quests.button.interactable = true;
             if (credits.button != null)
                 credits.button.interactable = true;
-            if (alterEchoes.button != null)
-                alterEchoes.button.interactable = true;
             if (stats.button != null)
                 stats.button.interactable = true;
             if (skills.button != null)
@@ -784,7 +752,6 @@ namespace TimelessEchoes.UI
             return (toolkitFarm != null && toolkitFarm.IsOpen)
                    || (toolkitForge != null && toolkitForge.IsOpen)
                    || (toolkitStatistics != null && toolkitStatistics.IsOpen)
-                   || (toolkitAlterEchoes != null && toolkitAlterEchoes.IsOpen)
                    || (toolkitCauldron != null && toolkitCauldron.IsOpen)
                    || (toolkitResources != null && toolkitResources.IsOpen)
                    || (toolkitQuests != null && toolkitQuests.IsOpen)
@@ -797,7 +764,6 @@ namespace TimelessEchoes.UI
                    || (buffs.window != null && buffs.window.activeSelf)
                    || (quests.window != null && quests.window.activeSelf)
                    || (credits.window != null && credits.window.activeSelf)
-                   || (alterEchoes.window != null && alterEchoes.window.activeSelf)
                    || (stats.window != null && stats.window.activeSelf)
                    || (skills.window != null && skills.window.activeSelf)
                    || (wiki.window != null && wiki.window.activeSelf)

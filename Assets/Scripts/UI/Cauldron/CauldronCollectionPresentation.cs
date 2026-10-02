@@ -28,11 +28,12 @@ namespace TimelessEchoes.UI.Cauldron
 					grp = cachedCauldronManager.GetResourceGroup(res);
 				sectionName = FormatGroupName(grp);
 				sectionTier = GetSectionTier(grp);
-				var sectPct = sectionTier * 0.1f;
-				sectionEffect = $"Collections Bonus: +{FormatPercentNoTrailingZero(sectPct)}% Echo Power";
-				var mult = cachedCauldronManager != null ? cachedCauldronManager.GetResourceAlterEchoMultiplier(cardName) : 1f;
-				var pct = Mathf.Max(0f, (mult - 1f) * 100f);
-				cardEffect = $"+{pct:N0}% Alter-Echo Power";
+				var config = CauldronResourceYield.Config;
+                cardTier = cachedCauldronManager != null ? cachedCauldronManager.GetResourceTier(cardName) : 0;
+                var sectPct = CauldronResourceYield.CategoryBonusPercent(sectionTier, config);
+                sectionEffect = $"Category Yield: +{FormatPercentNoTrailingZero(sectPct)}% {sectionName}";
+                var pct = CauldronResourceYield.CardBonusPercent(cardTier, config);
+                cardEffect = $"+{pct:N0}% {cardName} Yield (gathering and harvests)";
 			}
 			else if (id.StartsWith("BUFF:"))
 			{

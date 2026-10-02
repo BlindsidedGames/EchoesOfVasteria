@@ -2,6 +2,7 @@
 using Blindsided.SaveData;
 using Blindsided.SaveData.Migrations;
 using NUnit.Framework;
+using System.Linq;
 
 namespace Tests.EditMode
 {
@@ -19,6 +20,47 @@ namespace Tests.EditMode
             Assert.AreEqual(8192.125f, result.Data.SkillData["Farming"].CurrentXP);
             Assert.AreEqual(123456789.25, result.Data.Resources["preserved-unknown"].Amount);
             Assert.AreEqual(0, source.SchemaVersion);
+            Assert.IsEmpty(source.AppliedMigrationIds);
+        }
+
+        [TestCase(0)] [TestCase(3)] [TestCase(4)]
+        public void ProductionRetirementPreservesBalancesAndQuestsWithoutPayoutAcrossReload(int schema)
+        {
+            var source = new GameData { SchemaVersion = schema, LastGameVersion = "9999.0.0", DisciplePercent = .03f };
+            source.Resources["Radish"] = new GameData.ResourceEntry { Amount = 17.25, Earned = true, Tier = 3, BestPerMinute = 90 };
+            source.Disciples["Radish"] = new GameData.DiscipleGenerationRecord
+            {
+                StoredResources = new System.Collections.Generic.Dictionary<string, double> { ["Radish"] = 1000.5 },
+                TotalCollected = new System.Collections.Generic.Dictionary<string, double> { ["Radish"] = 42 },
+                LastGenerationTime = 1234, Progress = .5f
+            };
+            source.Quests["Finishing Touches"] = new GameData.QuestRecord { Completed = true, CompletedTimestamp = 456 };
+            source.CauldronCardCounts["RES:Radish"] = 3500;
+            var migrated = SaveMigrationRunner.TryMigrate(source, "9999.0.0");
+            Assert.IsTrue(migrated.Succeeded, migrated.Error);
+            Assert.AreEqual(5, migrated.Data.SchemaVersion);
+            Assert.Contains("SchemaV5AlterEchoRetirement", migrated.Data.AppliedMigrationIds.ToArray());
+            var imported = Sirenix.Serialization.SerializationUtility.DeserializeValue<GameData>(CurrentSaveCodec.Serialize(migrated.Data), Sirenix.Serialization.DataFormat.Binary);
+            var repeated = SaveMigrationRunner.TryMigrate(imported, "9999.0.0");
+            Assert.IsTrue(repeated.Succeeded, repeated.Error);
+            Assert.AreEqual(17.25, repeated.Data.Resources["Radish"].Amount);
+            Assert.AreEqual(1000.5, repeated.Data.Disciples["Radish"].StoredResources["Radish"]);
+            Assert.AreEqual(42, repeated.Data.Disciples["Radish"].TotalCollected["Radish"]);
+            Assert.AreEqual(1234, repeated.Data.Disciples["Radish"].LastGenerationTime);
+            Assert.AreEqual(.5f, repeated.Data.Disciples["Radish"].Progress);
+            Assert.AreEqual(.03f, repeated.Data.DisciplePercent);
+            Assert.IsTrue(repeated.Data.Quests["Finishing Touches"].Completed);
+            Assert.AreEqual(456, repeated.Data.Quests["Finishing Touches"].CompletedTimestamp);
+            Assert.AreEqual(3500, repeated.Data.CauldronCardCounts["RES:Radish"]);
+            Assert.AreEqual(schema, source.SchemaVersion);
+            Assert.IsEmpty(source.AppliedMigrationIds);
+            var rollbackSource = CurrentSaveCodec.Clone(source);
+            rollbackSource.LastGameVersion = "0.0.0"; // Make the throwing version migration eligible even for schema zero.
+            var rollback = SaveMigrationRunner.RunRollbackProbeForTests(rollbackSource);
+            Assert.IsFalse(rollback.Succeeded); Assert.AreSame(rollbackSource, rollback.Data);
+            Assert.AreEqual(17.25, rollbackSource.Resources["Radish"].Amount);
+            Assert.IsEmpty(rollbackSource.AppliedMigrationIds);
+            Assert.AreEqual(17.25, source.Resources["Radish"].Amount);
             Assert.IsEmpty(source.AppliedMigrationIds);
         }
 

@@ -280,16 +280,6 @@ namespace TimelessEchoes
             NpcObjectStateController.Instance?.UpdateObjectStates();
         }
 
-        [Command("wipe-disciples", "Clear all disciple generation data")]
-        public static void WipeDisciples()
-        {
-            ConsoleAuth.EnsureAuthenticated();
-            var oracle = Blindsided.Oracle.oracle;
-            if (oracle == null) return;
-            oracle.saveData.Disciples = new Dictionary<string, GameData.DiscipleGenerationRecord>();
-            oracle.saveData.DisciplePercent = 0.1f;
-            Blindsided.EventHandler.LoadData();
-        }
 
         [Command("wipe-achievements", "Clear all Steam achievements for the current user")]
         public static void WipeAchievements()

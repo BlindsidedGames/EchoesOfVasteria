@@ -13,7 +13,7 @@ namespace Blindsided.SaveData
     public static class CurrentSaveCodec
     {
         private static readonly ISerializationPolicy Policy = new CustomSerializationPolicy(
-            "Echoes.CurrentSave.Schema4", true, member =>
+            "Echoes.CurrentSave.Schema5", true, member =>
                 member is FieldInfo field && field.IsPublic && !field.IsNotSerialized &&
                 !(field.DeclaringType == typeof(GameData) &&
                   (field.Name == nameof(GameData.UpgradeLevels) ||

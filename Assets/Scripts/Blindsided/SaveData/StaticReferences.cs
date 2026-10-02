@@ -39,31 +39,14 @@ namespace Blindsided.SaveData
         /// </summary>
         public static HashSet<string> ActiveNpcMeetings { get; } = new();
 
-        // Runtime-only bonus contributed by AE section tiers; not persisted. Updated by Collections UI.
-        private static float disciplePercentCollectionsBonus;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics()
         {
             ActiveNpcMeetings.Clear();
-            disciplePercentCollectionsBonus = 0f;
             ShowLevelTextChanged = null;
             AutoBuffChanged = null;
         }
-
-        public static float DisciplePercent
-        {
-            get => oracle.saveData.DisciplePercent + Mathf.Max(0f, disciplePercentCollectionsBonus);
-            set => oracle.saveData.DisciplePercent = value;
-        }
-
-        // Expose the runtime collections bonus for controlled updates
-        public static float DisciplePercentCollectionsBonus
-        {
-            get => Mathf.Max(0f, disciplePercentCollectionsBonus);
-            set => disciplePercentCollectionsBonus = Mathf.Max(0f, value);
-        }
-
 
         public static BuyMode PurchaseMode
         {

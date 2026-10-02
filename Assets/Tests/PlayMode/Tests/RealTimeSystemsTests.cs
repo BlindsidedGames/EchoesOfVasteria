@@ -7,7 +7,6 @@ using Blindsided;
 using Blindsided.SaveData;
 using Blindsided.Utilities;
 using TimelessEchoes.Gear;
-using TimelessEchoes.NpcGeneration;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
 
@@ -47,58 +46,53 @@ namespace TimelessEchoes.Tests.RealTime
             }
         }
 
-        [Test]
-        public void AlterEchoGeneratorsAdvanceWithUnscaledDelta()
+        [TestCase(0)] [TestCase(1)] [TestCase(2)] [TestCase(3)]
+        public void GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted(int seed)
         {
-            var originalScale = Time.timeScale;
-            var oracleGo = new GameObject("Oracle_AlterEchoTestHarness");
-            var managerGo = new GameObject("AlterEchoGenerationManager_TestHarness");
-            var generatorGo = new GameObject("AlterEchoGenerator_TestHarness");
-            var resource = ScriptableObject.CreateInstance<Resource>();
-            resource.name = "AlterEchoTestResource";
-
+            var originalOracle = Oracle.oracle;
+            var randomState = Random.state;
+            var oracleGo = new GameObject("Yield contract oracle");
+            var resourcesGo = new GameObject("Yield contract inventory"); resourcesGo.SetActive(false);
+            var skillsGo = new GameObject("Yield contract skills"); skillsGo.SetActive(false);
+            var taskGo = new GameObject("Yield contract task"); taskGo.SetActive(false);
+            var combat = ScriptableObject.CreateInstance<TimelessEchoes.Skills.Skill>(); combat.name = "Combat"; combat.skillName = "Combat";
+            var data = ScriptableObject.CreateInstance<TimelessEchoes.Tasks.TaskData>();
             try
             {
-                var oracle = oracleGo.AddComponent<Oracle>();
-                var manager = managerGo.AddComponent<AlterEchoGenerationManager>();
-                var generator = generatorGo.AddComponent<AlterEchoGenerator>();
-                Assert.IsNotNull(oracle.saveData);
-                generator.Configure(resource, 60.0); // One cycle per real-time second.
-
-                var generatorsField = typeof(AlterEchoGenerationManager).GetField("generators", BindingFlags.Instance | BindingFlags.NonPublic);
-                Assert.IsNotNull(generatorsField, "generators list missing.");
-                var generators = generatorsField.GetValue(manager) as List<AlterEchoGenerator>;
-                Assert.IsNotNull(generators, "generators list not initialised.");
-                generators.Add(generator);
-
-                var tickMethod = typeof(AlterEchoGenerationManager).GetMethod("TickGenerators", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                Assert.IsNotNull(tickMethod, "TickGenerators method missing.");
-
-                Time.timeScale = 8f;
-                tickMethod.Invoke(manager, new object[] { 0.5f });
-                Assert.AreEqual(0.5f, generator.Progress, 1e-4f, "Progress should follow supplied unscaled seconds.");
-
-                var storedField = typeof(AlterEchoGenerator).GetField("stored", BindingFlags.Instance | BindingFlags.NonPublic);
-                Assert.IsNotNull(storedField, "stored field missing.");
-
-                tickMethod.Invoke(manager, new object[] { 0.5f });
-
-                Assert.AreEqual(0f, generator.Progress, 1e-4f, "Progress should wrap after accumulating a full interval.");
-                Assert.AreEqual(generator.CycleAmount, (double)storedField.GetValue(generator), 1e-4f, "Stored amount should match cycle yield.");
-
-                generator.ApplyOfflineProgress(1_800_000_000d);
-                Assert.AreEqual(0f, generator.Progress, 1e-4f);
-                Assert.AreEqual(1_800_000_001d, (double)storedField.GetValue(generator), 0.1d,
-                    "Large offline spans should be advanced in constant time without losing cycles.");
+                Oracle.oracle = null;
+                var owner = oracleGo.AddComponent<Oracle>();
+                var radish = AssetCache.GetAll<Resource>("").Single(r => r.name == "Radish");
+                owner.saveData.Resources["Radish"] = new GameData.ResourceEntry { Amount = 0, Earned = true, Tier = 1 };
+                owner.saveData.CauldronCardCounts[radish.CardId] = 10000;
+                owner.saveData.SkillData["Combat"] = new GameData.SkillProgress { Level = 100 };
+                var skills = skillsGo.AddComponent<TimelessEchoes.Skills.SkillController>();
+                typeof(TimelessEchoes.Skills.SkillController).GetField("combatSkill", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(skills, combat);
+                typeof(TimelessEchoes.Skills.SkillController).GetField("skills", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(skills, new List<TimelessEchoes.Skills.Skill> { combat });
+                skillsGo.SetActive(true);
+                var resources = resourcesGo.AddComponent<ResourceManager>();
+                typeof(ResourceManager).GetField("tierUpgradeDenominators", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(resources, new List<int> { 0, 0 });
+                resourcesGo.SetActive(true);
+                data.resourceDrops = new List<ResourceDrop>
+                { new() { resource = radish, weight = 1, dropRange = new Vector2Int(100, 100) } };
+                data.bonusDrops = new List<TimelessEchoes.Tasks.TaskData.BonusDrop>
+                { new() { resource = radish, chance = 1, range = new Vector2Int(10, 10) } };
+                var task = taskGo.AddComponent<TimelessEchoes.Tasks.FruitHarvestTask>(); task.taskData = data; task.associatedSkill = combat;
+                skills.Aggregator.AddProcChance(combat, TimelessEchoes.Skills.MilestoneProcType.DoubleResources, .5f);
+                Random.InitState(seed);
+                typeof(TimelessEchoes.Tasks.ResourceGeneratingTask).GetMethod("GenerateDrops", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(task, new object[] { 0f });
+                var gathered = resources.GetAmount(radish);
+                // One shared proc outcome: (200 existing + 70 supplement) * 1 or 2, plus 10 fixed bonus.
+                Assert.That(gathered, Is.EqualTo(280).Within(1e-9).Or.EqualTo(550).Within(1e-9));
+                resources.Add(radish, 100, trackStats: false, eligibleForTierRoll: false);
+                Assert.AreEqual(gathered + 100, resources.GetAmount(radish), 1e-9); // generic reward gains no card yield
+                Blindsided.EventHandler.AwayForTime(3600);
+                Assert.AreEqual(gathered + 100, resources.GetAmount(radish), 1e-9); // retired production has no resume subscriber
             }
             finally
             {
-                Time.timeScale = originalScale;
-                Oracle.oracle = null;
-                ScriptableObject.DestroyImmediate(resource);
-                Object.DestroyImmediate(generatorGo);
-                Object.DestroyImmediate(managerGo);
-                Object.DestroyImmediate(oracleGo);
+                Object.DestroyImmediate(taskGo); Object.DestroyImmediate(skillsGo); Object.DestroyImmediate(resourcesGo);
+                Object.DestroyImmediate(oracleGo); Object.DestroyImmediate(combat); Object.DestroyImmediate(data);
+                Oracle.oracle = originalOracle; Random.state = randomState;
             }
         }
 

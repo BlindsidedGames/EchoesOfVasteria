@@ -224,8 +224,8 @@ namespace TimelessEchoes.UI.Toolkit
         private void Gained(string id, int amount) { collections.Gained(id, amount); dirty = true; }
         private void StatsChanged(CauldronManager.TastingStats _) => dirty = true;
         private void Started() { collections.ClearHighlights(); dirty = true; }
-        private void Stopped() { collections.Refresh(); collections.ApplyCollectionsBonus(); dirty = true; }
-        private void Loaded() { selectedFood = null; quantityInput.SetValueWithoutNotify("0"); collections.Rebuild(); collections.ApplyCollectionsBonus(); membershipKey = collections.MembershipKey(); dirty = true; }
+        private void Stopped() { collections.Refresh(); dirty = true; }
+        private void Loaded() { selectedFood = null; quantityInput.SetValueWithoutNotify("0"); collections.Rebuild(); membershipKey = collections.MembershipKey(); dirty = true; }
         private void QuestChanged(string _) { collections.Rebuild(); membershipKey = collections.MembershipKey(); dirty = true; }
         private void LocaleChanged(UnityEngine.Localization.Locale _) { collections.Rebuild(); dirty = true; }
         private readonly ToolkitWindowLayout windowLayout = new();

@@ -113,6 +113,27 @@ namespace Tests.EditMode
         }
 
         [Test]
+        public void CardYieldIsFinalizedOnceInHarvestAndDoesNotAddRarityOrOtherRewards()
+        {
+            var live = PlantedBoth();
+            var proposal = FarmCommands.HarvestReady(live.Farm, "harvest", Start.AddHours(1), harvestYieldBonusPercent: 70);
+            var paid = Prepare(live, proposal);
+            Assert.AreEqual(41, paid.Resources["Radish"].Amount, 1e-12); // 7 + 20 base * 1.70
+            Assert.AreEqual(3, paid.Resources["Radish"].Tier);
+            Assert.AreEqual(17, paid.SkillData["Farming"].Level);
+            Assert.AreEqual(900, paid.General.TotalResourcesGathered);
+            Assert.AreEqual(2, paid.Farm.Seeds[FarmCommands.RadishSeedId].LifetimeAcquired);
+            var write = SaveManager.Instance.SaveDetailedAsync(paid, "Save1").GetAwaiter().GetResult();
+            Assert.IsTrue(write.Succeeded, write.Error);
+            var loaded = SaveManager.Instance.LoadDetailedAsync("Save1").GetAwaiter().GetResult();
+            Assert.IsTrue(loaded.Succeeded, loaded.Diagnostic);
+            var replay = FarmCommands.HarvestReady(loaded.Data.Farm, "harvest", Start.AddHours(2), harvestYieldBonusPercent: 0);
+            Assert.IsFalse(replay.Accepted);
+            Assert.AreEqual(41, loaded.Data.Resources["Radish"].Amount, 1e-12);
+            Assert.AreEqual(7, live.Resources["Radish"].Amount);
+        }
+
+        [Test]
         public void CurrentWriteProjectionRoundTripsFarmAndMeaningfulProgressWithoutObsoletePurchases()
         {
             var source = PlantedBoth();

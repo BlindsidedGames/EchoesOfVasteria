@@ -84,11 +84,15 @@ namespace Blindsided.SaveData.Migrations
             var warnings = GetCompatibilityWarnings(source);
 
             var schemaMigrations = Registered
-                .Where(migration => migration?.TargetSchema != null &&
-                                    (source.SchemaVersion < migration.TargetSchema.Value ||
-                                     (source.SchemaVersion == migration.TargetSchema.Value &&
-                                      (!alreadyApplied.Contains(migration.Id) ||
-                                       (migration is IConditionalRepairSaveMigration repair && repair.NeedsRepair(source))))))
+                .Where(migration =>
+                {
+                    if (migration?.TargetSchema is not int targetSchema) return false;
+                    if (source.SchemaVersion < targetSchema) return true;
+                    if (source.SchemaVersion == targetSchema && !alreadyApplied.Contains(migration.Id)) return true;
+                    // Current collection repairs remain valid after the retirement schema advances.
+                    return source.SchemaVersion >= targetSchema &&
+                           migration is IConditionalRepairSaveMigration repair && repair.NeedsRepair(source);
+                })
                 .OrderBy(migration => migration.TargetSchema.Value)
                 .ThenBy(migration => migration.Id, StringComparer.Ordinal)
                 .ToList();
@@ -243,6 +247,7 @@ namespace Blindsided.SaveData.Migrations
             Register(new Migration_GearAffixQuality());
             Register(new Migration_SchemaV4LegacyCompatibility());
             Register(new Migration_SchemaV4CurrentCollections());
+            Register(new Migration_SchemaV5AlterEchoRetirement());
         }
     }
 

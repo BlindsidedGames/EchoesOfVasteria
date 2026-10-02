@@ -101,8 +101,6 @@
 .eov-navigation-popup { position: absolute; top: 24px; }
 .eov-navigation-popup .eov-navigation-row { margin-bottom: 2px; margin-right: 0; }
 .eov-navigation-popup .eov-navigation-button { flex-grow: 1; }
-.eov-navigation-balance { position: absolute; left: 82px; height: 22px; padding: 3px; margin: 0; }
-.eov-navigation-balance-label { height: 16px; margin: 0; padding: 0 4px; font-size: var(--eov-font-heading); -unity-text-align: middle-center; white-space: nowrap; }
 .eov-navigation-auto-pin { flex-direction: row; height: 22px; padding: 3px 4px 3px 2px; margin-right: 2px; }
 .eov-navigation-toggle { width: 32px; height: 16px; margin: 0; padding: 0; border-width: 0; border-radius: 0; background-color: transparent; }
 .eov-navigation-auto-pin-label { margin: 0; padding: 0; font-size: var(--eov-font-caption); -unity-text-align: middle-center; }
@@ -249,24 +247,6 @@
 .eov-cauldron-collection-scroll .unity-scroller--vertical { width: 8px; margin-left: 1px; }
 .eov-cauldron-collection-scroll .unity-base-slider, .eov-cauldron-collection-scroll #unity-dragger { width: 8px; }
 
-.eov-alter-echoes { position: absolute; }
-.eov-alter-header { flex-direction: row; height: 16px; flex-shrink: 0; margin-bottom: 1px; }
-.eov-alter-power-frame { margin-left: 1px; padding: 0 2px; justify-content: center; }
-.eov-alter-inset { flex-grow: 1; min-height: 0; padding: 2px 2px 1px 2px; }
-.eov-alter-scroll { flex-grow: 1; min-height: 0; }
-.eov-alter-scroll .unity-scroller--vertical { width: 8px; margin-left: 1px; }
-.eov-alter-scroll .unity-base-slider, .eov-alter-scroll #unity-dragger { width: 8px; }
-.eov-alter-scroll .unity-scroll-view__content-container { padding-top: 1px; }
-.eov-alter-row { height: 32px; padding: 3px; margin-bottom: 1px; flex-shrink: 0; }
-.eov-alter-row-main { height: 20px; flex-direction: row; }
-.eov-alter-row-labels { flex-grow: 1; min-width: 0; margin-right: 2px; }
-.eov-alter-text { margin: 0; padding: 0; -unity-font-style: normal; white-space: nowrap; overflow: hidden; }
-.eov-alter-resource { width: 20px; height: 20px; margin-right: 2px; flex-shrink: 0; }
-.eov-alter-resource-icon { position: absolute; left: 2px; top: 2px; width: 16px; height: 16px; }
-.eov-alter-pending { position: absolute; left: 1px; top: 11px; width: 18px; height: 8px; -unity-text-align: middle-center; }
-.eov-alter-track { margin-top: 2px; height: 4px; flex-shrink: 0; }
-.eov-alter-action { flex-shrink: 0; }
-.eov-alter-action:disabled { opacity: 1; color: rgb(62,39,49); }
 
 .eov-statistics { position: absolute; }
 .eov-stat-tabs { height: 16px; flex-shrink: 0; flex-direction: row; }
@@ -363,7 +343,7 @@
 .eov-town-joke { position: absolute; right: 0; bottom: 0; padding: 3px 6px; font-size: var(--eov-font-heading); min-height: var(--eov-control-height); }
 .eov-joke-body { white-space: normal; padding: var(--eov-space-panel); }
 
-.eov-stat-text, .eov-cauldron-text, .eov-alter-text, .eov-collection-title { text-shadow: 0.163px 0.163px 0.163px var(--eov-color-text-outline); -unity-text-outline-width: 0.081px; -unity-text-outline-color: var(--eov-color-text-outline); }
+.eov-stat-text, .eov-cauldron-text, .eov-collection-title { text-shadow: 0.163px 0.163px 0.163px var(--eov-color-text-outline); -unity-text-outline-width: 0.081px; -unity-text-outline-color: var(--eov-color-text-outline); }
 .eov-forge-button { text-shadow: 0.190px 0.190px 0.190px var(--eov-color-text-outline); -unity-text-outline-width: 0.095px; -unity-text-outline-color: var(--eov-color-text-outline); }
 
 .eov-run-return #run-return { width: 80px; height: 22px; font-size: 8px; }

@@ -7,7 +7,7 @@ namespace Blindsided.SaveData
 {
     public class GameData
     {
-        public const int CurrentSchemaVersion = 4;
+        public const int CurrentSchemaVersion = 5;
 
         public int SchemaVersion = CurrentSchemaVersion;
         public HashSet<string> AppliedMigrationIds = new();
@@ -60,6 +60,7 @@ namespace Blindsided.SaveData
         public HashSet<string> CompletedNpcTasks = new();
 
         [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Disciples")]
+        // Retired Alter-Echo records remain inert for save compatibility; there is no payout.
         public Dictionary<string, DiscipleGenerationRecord> Disciples = new();
 
         [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Quests")]

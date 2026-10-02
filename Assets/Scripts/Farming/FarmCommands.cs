@@ -153,7 +153,7 @@ namespace TimelessEchoes.Farming
 
         /// <summary>All currently ready original beds, their receipts and the yield form one proposal.</summary>
         public static FarmCommandResult HarvestReady(FarmState state, string operationId, DateTime utcNow,
-            double? activeElapsedSeconds = null)
+            double? activeElapsedSeconds = null, double harvestYieldBonusPercent = 0)
         {
             var result = Begin(state, operationId, "harvest-ready", utcNow);
             if (!result.Accepted) return result;
@@ -193,7 +193,10 @@ namespace TimelessEchoes.Farming
                 bed.LastGrowthUtcTicks = UtcTicks(utcNow);
             }
             if (result.HarvestedBeds.Count == 0) return Reject("NoReadyBeds");
-            result.ResourceDeltas["Radish"] = total;
+            if (!Finite(harvestYieldBonusPercent) || harvestYieldBonusPercent < 0 || harvestYieldBonusPercent > 70)
+                return Reject("InvalidHarvestYieldBonus");
+            // Final payout lives in the committed proposal; replay cannot re-evaluate card ownership.
+            result.ResourceDeltas["Radish"] = total * (1 + harvestYieldBonusPercent / 100d);
             return result;
         }
 
