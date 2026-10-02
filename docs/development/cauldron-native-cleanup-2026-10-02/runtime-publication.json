@@ -1,0 +1,17 @@
+{
+  "loadedDisposableSlot": true,
+  "offlineServices": true,
+  "platform": "OSXPlayer",
+  "graphics": "Metal",
+  "product": "EOVCauldronCleanup20261002",
+  "publicationFailureBlocksWrites": true,
+  "publicationFaultKeepsDurableAtomicCandidate": true,
+  "publicationError": "Conversion committed; reload is required: Injected publication failure after durable food conversion",
+  "errors": [],
+  "expectedFaultDiagnostics": [
+    "The food conversion committed, but reloading it into the running game failed. The disk commit is safe and no recovery files were removed. Restart the game or Retry. System.Exception: Injected publication failure after durable food conversion\n  at CauldronCleanupValidation+<>c.<Workflow>b__21_12 () [0x00000] in <6e5c63176bd4457dbf9b1185f79bc706>:0 \n  at (wrapper delegate-invoke) <Module>.invoke_void()\n  at TimelessEchoes.Upgrades.ResourceManager.InvokeInventoryChanged () [0x0000a] in <6e5c63176bd4457dbf9b1185f79bc706>:0 \n  at TimelessEchoes.Upgrades.ResourceManager.PublishCommittedResource (System.String name, Blindsided.SaveData.GameData+ResourceEntry entry, Blindsided.SaveData.GameData+ResourceRecord stats) [0x0008c] in <6e5c63176bd4457dbf9b1185f79bc706>:0 \n  at Blindsided.Oracle.TryCommitCauldronConversion (TimelessEchoes.Upgrades.Resource food, System.Double quantity, System.Double expectedUnitValue, System.Int64 sequence, System.Double& stewGained, System.String& error) [0x00239] in <6e5c63176bd4457dbf9b1185f79bc706>:0 "
+  ],
+  "warnings": [],
+  "phase": "publication",
+  "passed": true
+}

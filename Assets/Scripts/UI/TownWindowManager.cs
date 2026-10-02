@@ -75,7 +75,7 @@ namespace TimelessEchoes.UI
             {
                 Window.Upgrades => upgrades, Window.Buffs => buffs, Window.Quests => quests,
                 Window.Credits => credits, Window.AlterEchoes => alterEchoes, Window.Stats => stats,
-                Window.Skills => skills, Window.Library => wiki, Window.Cauldron => cauldron,
+                Window.Skills => skills, Window.Library => wiki,
                 Window.Forge => forge, Window.Inventory => inventory, Window.Options => options, _ => null
             };
             return reference?.window != null && reference.window.activeSelf;
@@ -220,7 +220,6 @@ namespace TimelessEchoes.UI
         [SerializeField] private Toolkit.ToolkitResourceInventoryScreen toolkitResources;
         [SerializeField] private RectTransform toolkitResourceLayoutSpace;
         private readonly Vector3[] resourceLayoutCorners = new Vector3[4];
-        [SerializeField] [Space] private WindowReference cauldron = new();
         [SerializeField] [Space] private WindowReference forge = new();
         [SerializeField] [Space] private WindowReference inventory = new();
         [SerializeField] [Space] private GameObject forgeInfo;
@@ -267,8 +266,6 @@ namespace TimelessEchoes.UI
                 skills.button.onClick.AddListener(OpenSkills);
             if (wiki.button != null)
                 wiki.button.onClick.AddListener(OpenWiki);
-            if (cauldron.button != null)
-                cauldron.button.onClick.AddListener(OpenCauldron);
             if (forge.button != null)
                 forge.button.onClick.AddListener(OpenForge);
             if (options.button != null)
@@ -331,8 +328,6 @@ namespace TimelessEchoes.UI
                 skills.button.onClick.RemoveListener(OpenSkills);
             if (wiki.button != null)
                 wiki.button.onClick.RemoveListener(OpenWiki);
-            if (cauldron.button != null)
-                cauldron.button.onClick.RemoveListener(OpenCauldron);
             if (forge.button != null)
                 forge.button.onClick.RemoveListener(OpenForge);
             if (options.button != null)
@@ -733,8 +728,6 @@ namespace TimelessEchoes.UI
                 skills.window.SetActive(false);
             if (wiki.window != null)
                 wiki.window.SetActive(false);
-            if (cauldron.window != null)
-                cauldron.window.SetActive(false);
             if (options.window != null)
                 options.window.SetActive(false);
             if (forge.window != null)
@@ -778,8 +771,6 @@ namespace TimelessEchoes.UI
                 skills.button.interactable = true;
             if (wiki.button != null)
                 wiki.button.interactable = true;
-            if (cauldron.button != null)
-                cauldron.button.interactable = true;
             if (forge.button != null)
                 forge.button.interactable = true;
             if (options.button != null)
@@ -810,7 +801,6 @@ namespace TimelessEchoes.UI
                    || (stats.window != null && stats.window.activeSelf)
                    || (skills.window != null && skills.window.activeSelf)
                    || (wiki.window != null && wiki.window.activeSelf)
-                   || (cauldron.window != null && cauldron.window.activeSelf)
                    || (options.window != null && options.window.activeSelf)
                    || (forge.window != null && forge.window.activeSelf)
                    || (inventory.window != null && inventory.window.activeSelf);

@@ -25,7 +25,7 @@ namespace TimelessEchoes.UI.Toolkit
         private PanelSettings settings;
         private CauldronManager manager;
         private ResourceManager resources;
-        private VisualElement root, xpFill, weightsTooltip, pie, ingredientsColumn, tastingColumn, collectionColumn, oddsList, modal;
+        private VisualElement root, xpFill, ingredientsColumn, tastingColumn, collectionColumn, oddsList, modal;
         private Label selection;private VisualElement mobileTabs;private string mobileTab="Ingredients";private bool wasNarrow;private readonly List<Label> oddsValues=new();
         private Label level, xp, stew, stats, predicted, rollCost;
         private Image portrait, pot, selectedFoodIcon;
@@ -44,7 +44,6 @@ namespace TimelessEchoes.UI.Toolkit
         private ToolkitCauldronCollections collections;
         private List<(string label, float current, float next, Color color)> weights;
         private readonly StringBuilder statsBuilder = new(512);
-        private readonly List<Label> weightColumns = new();
         private sealed class FoodSlot
         {
             public Button button;
@@ -166,7 +165,7 @@ namespace TimelessEchoes.UI.Toolkit
             var scroll=ToolkitGameplay.Scroll(tastingColumn,"tasting-scroll");scroll.verticalScrollerVisibility=ScrollerVisibility.Auto;ToolkitGameplay.StyleScroll(scroll);var summary=E(scroll,"brew-summary");pot=ToolkitGameplay.Icon(summary,definition.pot.At(0),46);stew=L(summary,"","amount");L(summary,"Stew","muted");
             var rate=E(scroll,"row between readout");L(rate,"Rolls / s","muted");L(rate,definition.config.rollsPerSecond.ToString("N0"),"strong");var cost=E(scroll,"row between readout");L(cost,"Stew / roll","muted");rollCost=L(cost,"","strong");
             taste=ToolkitGameplay.B(scroll,"Start tasting",()=>manager.StartTasting(),"primary");stop=ToolkitGameplay.B(scroll,"Pause tasting",()=>manager.StopTasting());var heading=E(scroll,"row between odds-heading");L(heading,"Reward chances","strong");ToolkitGameplay.B(heading,"i",ShowTastingDetails,"details-button");oddsList=E(scroll,"odds");
-            stats=new Label();pie=new VisualElement();weightsTooltip=new VisualElement();for(int i=0;i<4;i++)weightColumns.Add(new Label());
+            stats = new Label();
         }
         private void CloseModal(){modal?.RemoveFromHierarchy();modal=null;root?.Q(className:"workspace")?.SetEnabled(true);}
         private VisualElement Modal(string title){CloseModal();root.Q(className:"workspace")?.SetEnabled(false);modal=E(root,"modal");var d=E(modal,"surface dialog mix-dialog");L(d,title,"heading");modal.RegisterCallback<KeyDownEvent>(e=>{if(e.keyCode==KeyCode.Escape){CloseModal();e.StopPropagation();}});return d;}
@@ -183,31 +182,6 @@ namespace TimelessEchoes.UI.Toolkit
             }
             L(scroll,"Tasting results","heading");L(scroll,stats.text,"small");L(scroll,definition.rewardHelp,"small muted");
             ToolkitGameplay.B(d,"Close",CloseModal).Focus();
-        }
-        private static void Place(VisualElement element, float x, float y, float width, float height)
-        {
-            element.style.position = Position.Absolute; element.style.left = x; element.style.top = y; element.style.width = width; element.style.height = height;
-        }
-        private VisualElement Frame(VisualElement parent, Sprite sprite, float x, float y, float width, float height)
-        {
-            var element = new VisualElement(); Place(element, x, y, width, height); ToolkitTheme.Background(element, sprite); parent.Add(element); return element;
-        }
-        private Image Icon(VisualElement parent, Sprite sprite, float x, float y, float width, float height)
-        {
-            var image = new Image { sprite = sprite, pickingMode = PickingMode.Ignore, scaleMode = ScaleMode.ScaleToFit }; Place(image, x, y, width, height); parent.Add(image); return image;
-        }
-        private Label Text(VisualElement parent, string value, float size, float x, float y, float width, float height)
-        {
-            var text = new Label(value) { pickingMode = PickingMode.Ignore }; text.AddToClassList("eov-cauldron-text"); text.style.fontSize = size; text.style.letterSpacing = size * .02f; Place(text, x, y, width, height); parent.Add(text); return text;
-        }
-        private Button Button(VisualElement parent, string name, string text, System.Action action, float x, float y, float width, float height)
-        {
-            var button = ToolkitBuffsScreen.MakeButton(name, action, definition.button); button.text = "<b>" + text + "</b>"; button.style.fontSize = 7; button.AddToClassList("eov-cauldron-action"); Place(button, x, y, width, height); parent.Add(button); return button;
-        }
-        private VisualElement Fill(VisualElement parent, float width, float height)
-        {
-            var clip = new VisualElement { pickingMode = PickingMode.Ignore }; clip.style.height = height; clip.style.overflow = Overflow.Hidden; parent.Add(clip);
-            var image = Frame(clip, definition.xpFill, 0, 0, width, height); image.style.unityBackgroundImageTintColor = definition.xpColor; return clip;
         }
         private void Refresh()
         {
@@ -242,32 +216,8 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var current = manager.GetEffectiveWeightsAtLevel(manager.EvaLevel); var next = manager.GetEffectiveWeightsAtLevel(manager.EvaLevel + 1);
             weights = CauldronWeightsPresentation.BuildRows(current, next, definition.config);
-            var total = CauldronWeightsPresentation.ComputeTotal(current); var nextTotal = CauldronWeightsPresentation.ComputeTotal(next);
-            if (nextTotal <= 0) nextTotal = 1;
-            var columns = new[] { new StringBuilder("<b>Current</b>\n"), new StringBuilder("<sprite=9>\n"), new StringBuilder("<b>Next</b>\n"), new StringBuilder("\n") };
-            if (total > 0) for (var i = 0; i < weights.Count; i++)
-            {
-                if (i > 0) foreach (var column in columns) column.Append('\n');
-                var weight = weights[i]; columns[0].Append($"<b>{Mathf.Clamp01(weight.current / total) * 100:F2}%</b>");
-                columns[1].Append($"<sprite=9 color=#{ColorUtility.ToHtmlStringRGB(weight.color)}>");
-                columns[2].Append($"{Mathf.Clamp01(weight.next / nextTotal) * 100:F2}%"); columns[3].Append("• " + weight.label);
-            }
-            for (var i = 0; i < 4; i++) weightColumns[i].text = total > 0 ? columns[i].ToString() : "";
+            var total = CauldronWeightsPresentation.ComputeTotal(current);
             if(oddsValues.Count!=weights.Count){oddsList.Clear();oddsValues.Clear();foreach(var w in weights){var row=E(oddsList,"row between odds-row");L(row,w.label.Replace("Vast Surge","Surge"));oddsValues.Add(L(row,"","strong"));}}for(int i=0;i<weights.Count;i++)oddsValues[i].text=total>0?(100*weights[i].current/total).ToString("0.0")+"%":"0%";
-            pie.MarkDirtyRepaint();
-        }
-        private void DrawPie(MeshGenerationContext context)
-        {
-            if (weights == null) return;
-            var total = weights.Sum(w => Mathf.Max(0, w.current)); if (total <= 0) return;
-            var painter = context.painter2D; var center = new Vector2(20, 20); var angle = -90f;
-            painter.fillColor = theme.textColor; painter.BeginPath(); painter.Arc(center, 20, 0, 360); painter.Fill();
-            foreach (var weight in weights)
-            {
-                var sweep = Mathf.Max(0, weight.current) / total * 360; if (sweep <= 0) continue;
-                painter.fillColor = weight.color; painter.BeginPath(); painter.MoveTo(center);
-                painter.Arc(center, 19, new Angle(angle, AngleUnit.Degree), new Angle(angle + sweep, AngleUnit.Degree)); painter.ClosePath(); painter.Fill(); angle += sweep;
-            }
         }
         private void Changed() => dirty = true;
         private void InventoryChanged() { dirty = true; membershipDirty = true; }
@@ -303,8 +253,7 @@ namespace TimelessEchoes.UI.Toolkit
             }
             Blindsided.EventHandler.OnLoadData -= Loaded; Blindsided.EventHandler.OnQuestHandin -= QuestChanged;
             UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocaleChanged -= LocaleChanged;
-            if (pie != null) pie.generateVisualContent -= DrawPie;
-            CloseModal();root?.RemoveFromHierarchy(); root = null; collections = null; foodSlots.Clear();weightColumns.Clear();oddsValues.Clear(); dirty = membershipDirty = false;
+            CloseModal();root?.RemoveFromHierarchy(); root = null; collections = null; foodSlots.Clear();oddsValues.Clear(); dirty = membershipDirty = false;
         }
         private void OnDisable() => Hide();
         private void OnDestroy() { Hide(); if (settings) Destroy(settings); }
