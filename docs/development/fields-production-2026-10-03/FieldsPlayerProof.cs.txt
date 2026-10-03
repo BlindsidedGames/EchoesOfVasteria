@@ -151,6 +151,11 @@ public sealed class FieldsPlayerProof : MonoBehaviour
         Check(farm.HarvestReady(),"actual service harvest durably succeeds after supplied active time");
         Check(farm.State.TwinsLevel==2 && farm.State.TwinsXp==5,"one 10XP batch advances level1 -> level2 with5XP carried");
         Check(!farm.HarvestReady(),"same paid batch cannot harvest twice");
+        // Controlled long-name seed fixture checks wrapping and full-name access without bypassing hero planting gates.
+        var longNameRecipe=farm.Content.recipes.First(r=>r.output.name=="Watermelone");
+        var longNameSeed=FarmJournal.StageSeed(farm.State,longNameRecipe.seedId,true,DateTime.UtcNow);
+        Check(oracle.TryCommitFarmCommand(state=>FarmCommands.CreditSeed(state,longNameSeed,DateTime.UtcNow,longNameRecipe.seedId,true),out _),
+            "controlled long-name Watermelone seed fixture commits for caption verification");
         DismissRunSummary();
         TownWindowManager.Instance.OpenWindow(TownWindowManager.Window.Farm);
         yield return null; yield return null;
@@ -158,6 +163,20 @@ public sealed class FieldsPlayerProof : MonoBehaviour
         Check(screen != null,"normal Main opens actual combined Fields screen");
         var document=screen.GetComponent<UIDocument>();
         Check(document.rootVisualElement.Q("fields-town-preview") != null,"combined native Fields UI includes live town preview");
+        Check(document.rootVisualElement.Query<Image>("bed-crop-icon").ToList().Count==0,"empty and locked beds render no stale crop icon");
+        foreach(var recipe in farm.CapturePresentation().Recipes.Where(r=>r.Discovered))
+        {
+            var card=document.rootVisualElement.Q("fields-seed-"+recipe.Id);
+            var caption=card?.Q<Label>("seed-caption");
+            Check(card!=null && caption!=null && caption.text==recipe.Title && card.tooltip.Contains(recipe.Title),
+                "discovered seed retains full readable caption and full-name tooltip "+recipe.Title);
+            Check(caption.resolvedStyle.whiteSpace==WhiteSpace.Normal,"seed caption wraps instead of clipping its full name "+recipe.Title);
+        }
+        var longNameCard=document.rootVisualElement.Q<Button>("fields-seed-"+longNameRecipe.id);
+        using(var submit=NavigationSubmitEvent.GetPooled()) { submit.target=longNameCard; longNameCard.SendEvent(submit); }
+        yield return null;
+        Check(document.rootVisualElement.Q<Label>("fields-seed-selection").text.Contains(longNameRecipe.output.name+" seeds"),
+            "native seed button selection exposes full long name before a bed is selected");
         yield return new WaitForEndOfFrame();
         var columns=(VisualElement)typeof(ToolkitFarmScreen).GetField("columns",Hidden).GetValue(screen);
         var seedColumn=(VisualElement)typeof(ToolkitFarmScreen).GetField("seedColumn",Hidden).GetValue(screen);
@@ -177,6 +196,42 @@ public sealed class FieldsPlayerProof : MonoBehaviour
         Destroy(pixels);
         File.WriteAllText(Path.Combine(output,"desktop-column-bounds.txt"),seedColumn.worldBound+"\n"+bedColumn.worldBound+"\n"+townColumn.worldBound);
         ScreenCapture.CaptureScreenshot(Path.Combine(output,"fields-normal-combined.png"));
+        yield return new WaitForSecondsRealtime(1);
+        // Additional controlled two-bed fixture protects empty/growing/ready presentation.
+        farm.State.GardenCapacity=2;
+        farm.State.Beds[FarmCommands.EastBedId]=new FarmBedState { Unlocked=true };
+        for(int i=0;i<2;i++)
+        {
+            var seedOperation=FarmJournal.StageSeed(farm.State,radish.seedId,true,DateTime.UtcNow);
+            Check(oracle.TryCommitFarmCommand(state=>FarmCommands.CreditSeed(state,seedOperation,DateTime.UtcNow,radish.seedId,true),out _),
+                "controlled matching seed fixture commits for growing/ready presentation "+i);
+        }
+        Check(farm.Plant(FarmCommands.WestBedId) && farm.Plant(FarmCommands.EastBedId),"two controlled paid batches planted through actual service");
+        FarmCommands.TickFields(farm.State,900);
+        Check(farm.Water(FarmCommands.WestBedId),"late watering makes one controlled batch ready while other remains growing");
+        screen.Refresh();
+        yield return new WaitForSecondsRealtime(.3f); // Wait past the world's normal .2-second refresh cadence.
+        var populatedWorld=FindAnyObjectByType<FieldsWorldView>();
+        var populatedGeometry=(Transform)typeof(FieldsWorldView).GetField("geometry",Hidden).GetValue(populatedWorld);
+        foreach(var bedId in new[]{FarmCommands.WestBedId,FarmCommands.EastBedId})
+        {
+            var cropRenderers=populatedGeometry.Find(bedId).GetComponentsInChildren<SpriteRenderer>();
+            Check(cropRenderers.Count(r=>r.gameObject.name=="Crop growth" && r.enabled && r.sprite)==9,
+                "actual town world renders nine current crop sprites for populated bed "+bedId);
+        }
+        Check(populatedGeometry.Find(FarmCommands.WestBedId).GetComponentsInChildren<SpriteRenderer>().Count(r=>r.gameObject.name=="Matched watered overlay" && r.enabled)==9,
+            "actual ready watered bed renders nine matching wet soil overlays in live preview");
+        yield return new WaitForEndOfFrame();
+        var readyRow=document.rootVisualElement.Q("farm-bed-"+FarmCommands.WestBedId);
+        var growingRow=document.rootVisualElement.Q("farm-bed-"+FarmCommands.EastBedId);
+        Check(readyRow?.Q<Image>("bed-crop-icon")!=null && readyRow.Q<Label>("bed-status").text.Contains("Ready"),
+            "actual ready bed shows current crop icon and Ready status");
+        Check(growingRow?.Q<Image>("bed-crop-icon")!=null && !growingRow.Q<Label>("bed-status").text.Contains("Ready") &&
+            farm.State.Beds[FarmCommands.EastBedId].IsPlanted && !farm.State.Beds[FarmCommands.EastBedId].IsReady,
+            "actual growing bed shows current crop icon and remaining time");
+        foreach(var row in document.rootVisualElement.Query<VisualElement>().ToList().Where(e=>e.name!=null && e.name.StartsWith("farm-bed-")))
+            if(row!=readyRow && row!=growingRow) Check(row.Q<Image>("bed-crop-icon")==null,"other empty/locked bed has no crop icon "+row.name);
+        ScreenCapture.CaptureScreenshot(Path.Combine(output,"fields-growing-ready.png"));
         yield return new WaitForSecondsRealtime(1);
         // Controlled fully unlocked world fixture. Never describe this as naturally earned progression.
         farm.State.GardenCapacity=6; farm.State.OrchardCapacity=6; farm.State.TwinsLevel=225;

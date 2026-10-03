@@ -3,7 +3,7 @@ from pathlib import Path
 source=Path('/Users/matthewrushworth/Projects/Echoes of Vasteria');run=Path('/tmp/eov-fields-production-v1').resolve();project=run/'project'
 spec=importlib.util.spec_from_file_location('runner',source/'tools/testing/run.py');runner=importlib.util.module_from_spec(spec);spec.loader.exec_module(runner)
 summary=json.loads((run/'summary.json').read_text());assert summary['status']=='passed', 'Require complete passing snapshot'
-output=run/'player-proof-v2';output.mkdir();context=output/'context';context.mkdir()
+output=run/'player-proof-v5';output.mkdir();context=output/'context';context.mkdir()
 identity=runner.isolate_identity(project,context)
 # Preserve exact production inputs before adding guarded proof-only scripts.
 (run/'pre-proof-source-inputs.json').write_text((run/'inputs.json').read_text())
@@ -16,7 +16,7 @@ leases={'links':[],'parents':[],'prefs':[]};env=os.environ.copy()
 for k in list(env):
  if k.lower() in ('http_proxy','https_proxy','all_proxy'):del env[k]
 env.update(HOME=str(run/'home'),TMPDIR=str(run/'tmp')+'/',TMP=str(run/'tmp'),TEMP=str(run/'tmp'),UPM_CACHE_ROOT=str(run/'cache'),EOV_FIELDS_PROOF_DIR=str(output))
-result={'identity':identity,'output':str(output),'production_test_summary':'v6-summary.json','service_guards':'5 proof-only Steam/UGS entry points, never shared source','save_root':str(output/'test-save-root')}
+result={'identity':identity,'output':str(output),'production_test_summary':'v10-summary.json','service_guards':'5 proof-only Steam/UGS entry points, never shared source','save_root':str(output/'test-save-root')}
 try:
  runner.create_native_fixture_paths(Path.home(),context,identity['productName'],leases)
  build=['/usr/bin/sandbox-exec','-f',str(run/'sandbox.sb'),'/Applications/Unity/Hub/Editor/6000.6.0f1/Unity.app/Contents/MacOS/Unity','-batchmode','-quit','-forgetProjectPath','-refreshImportMode','InProcess','-projectPath',str(project),'-executeMethod','FieldsProofBuild.Run','-logFile',str(output/'Build.log')]

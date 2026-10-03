@@ -152,12 +152,12 @@
     {
       "step": "Compile scripts",
       "type": "Warning",
-      "message": "Assets/Scripts/UI/UITicker.cs(61,39): warning CS0414: The field 'UITicker.enableProfiling' is assigned but its value is never used"
+      "message": "Assets/Scripts/Blindsided/Oracle.cs(43,22): warning CS0414: The field 'Oracle._isQuitting' is assigned but its value is never used"
     },
     {
       "step": "Compile scripts",
       "type": "Warning",
-      "message": "Assets/Scripts/Blindsided/Oracle.cs(43,22): warning CS0414: The field 'Oracle._isQuitting' is assigned but its value is never used"
+      "message": "Assets/Scripts/UI/UITicker.cs(61,39): warning CS0414: The field 'UITicker.enableProfiling' is assigned but its value is never used"
     },
     {
       "step": "Compile scripts",
@@ -167,12 +167,12 @@
     {
       "step": "Compile scripts",
       "type": "Warning",
-      "message": "Assets/Scripts/UI/UITicker.cs(61,39): warning CS0414: The field 'UITicker.enableProfiling' is assigned but its value is never used"
+      "message": "Assets/Scripts/Blindsided/Oracle.cs(43,22): warning CS0414: The field 'Oracle._isQuitting' is assigned but its value is never used"
     },
     {
       "step": "Compile scripts",
       "type": "Warning",
-      "message": "Assets/Scripts/Blindsided/Oracle.cs(43,22): warning CS0414: The field 'Oracle._isQuitting' is assigned but its value is never used"
+      "message": "Assets/Scripts/UI/UITicker.cs(61,39): warning CS0414: The field 'UITicker.enableProfiling' is assigned but its value is never used"
     },
     {
       "step": "Prepare splash screen",
@@ -284,13 +284,13 @@
     },
     {
       "type": "Warning",
-      "message": "Assets/Scripts/UI/UITicker.cs(61,39): warning CS0414: The field 'UITicker.enableProfiling' is assigned but its value is never used",
+      "message": "Assets/Scripts/Blindsided/Oracle.cs(43,22): warning CS0414: The field 'Oracle._isQuitting' is assigned but its value is never used",
       "count": 2,
       "classification": "byte-identical package-baseline source warning"
     },
     {
       "type": "Warning",
-      "message": "Assets/Scripts/Blindsided/Oracle.cs(43,22): warning CS0414: The field 'Oracle._isQuitting' is assigned but its value is never used",
+      "message": "Assets/Scripts/UI/UITicker.cs(61,39): warning CS0414: The field 'UITicker.enableProfiling' is assigned but its value is never used",
       "count": 2,
       "classification": "byte-identical package-baseline source warning"
     },
@@ -301,17 +301,5 @@
       "classification": "disposable proof service guard"
     }
   ],
-  "removedMessages": [],
-  "fieldsBuildSummary": {
-    "result": "Succeeded",
-    "errors": 7,
-    "warnings": 20,
-    "bytes": 333585707
-  },
-  "firstProofBuildSummary": {
-    "result": "Succeeded",
-    "errors": 7,
-    "warnings": 66,
-    "explanation": "initial clean player assembly compilation emitted inherited compiler warnings; see provenance file, removed sole Fields unused-setting warning"
-  }
+  "fieldsBuildResult": "Succeeded\nErrors=7\nWarnings=20\nBytes=333592404"
 }

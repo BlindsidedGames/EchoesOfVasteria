@@ -80,7 +80,7 @@ namespace TimelessEchoes.UI.Toolkit
             orchard = new Foldout { text = "Orchard plots", name = "fields-orchard", value = false }; beds.Add(orchard);
             orchardList = ToolkitGameplay.E(orchard, "column");
             var planting = ToolkitGameplay.E(bedColumn, "row between"); planting.style.flexWrap = Wrap.Wrap;
-            selection = ToolkitGameplay.L(planting, "Select seeds and an empty bed", "muted"); selection.style.flexShrink = 1;
+            selection = ToolkitGameplay.L(planting, "Select seeds and an empty bed", "muted"); selection.name = "fields-seed-selection"; selection.style.flexShrink = 1; selection.style.whiteSpace = WhiteSpace.Normal;
             plant = Button(planting, "Plant", PlantSelected); plant.name = "fields-plant-selected"; plant.AddToClassList("primary");
             townColumn = ToolkitGameplay.E(columns, "column"); townColumn.style.flexShrink = 0;
             ToolkitGameplay.L(townColumn, "Fields in town", "heading");
@@ -115,6 +115,7 @@ namespace TimelessEchoes.UI.Toolkit
             xp.text = snapshot.TwinsXp + " / " + snapshot.TwinsXpRequired + " XP";
             xpBar.style.width = Length.Percent(Mathf.Clamp01((float)snapshot.TwinsXp / Math.Max(1, snapshot.TwinsXpRequired)) * 100);
             status.text = snapshot.TownActionsAllowed ? "Yield ×" + snapshot.YieldMultiplier.ToString("0.00") + " · Growth time ×" + snapshot.SpeedFactor.ToString("0.0") : "Return to town to tend Fields.";
+            FramePreview(snapshot);
             var key = PresentationKey(snapshot);
             if (presentationKey == key)
             {
@@ -137,15 +138,16 @@ namespace TimelessEchoes.UI.Toolkit
                 if (recipe == null) continue;
                 var id = recipe.Id;
                 var card = Button(seedGrid, "", () => { selectedRecipe = id; Refresh(); });
-                card.name = "fields-seed-" + id; card.style.width = 40; card.style.height = 60; card.style.flexShrink = 0;
+                card.name = "fields-seed-" + id; card.style.width = 82; card.style.height = 70; card.style.flexShrink = 0;
                 card.style.marginRight = 2; card.style.marginBottom = 3;
                 card.style.paddingLeft = card.style.paddingRight = 1;
                 card.style.flexDirection = FlexDirection.Column; card.style.alignItems = Align.Center;
                 ToolkitGameplay.Icon(card, recipe.Discovered ? recipe.Icon : recipe.UnknownIcon ? recipe.UnknownIcon : unknownPack, 24);
                 var caption = ToolkitGameplay.L(card, recipe.Discovered ? recipe.Title : "???", "");
-                caption.style.fontSize = 8; caption.style.maxWidth = 38;
-                caption.style.whiteSpace = WhiteSpace.NoWrap; caption.style.overflow = Overflow.Hidden;
-                caption.style.textOverflow = TextOverflow.Ellipsis;
+                caption.name = "seed-caption"; caption.style.fontSize = 8; caption.style.width = 76;
+                caption.style.minHeight = 20; caption.style.whiteSpace = WhiteSpace.Normal;
+                caption.style.unityTextAlign = TextAnchor.MiddleCenter;
+                caption.tooltip = recipe.Discovered ? recipe.Title : "Discover this seed or sapling first.";
                 ToolkitGameplay.L(card, recipe.Discovered ? recipe.SeedQuantity.ToString("0.##", CultureInfo.InvariantCulture) : "—", "muted");
                 card.EnableInClassList("primary", selectedRecipe == id);
                 card.tooltip = recipe.Discovered ? recipe.Title + " · Farming " + recipe.RequiredHeroLevel + (recipe.Eligible ? "" : " required") : "Discover this seed or sapling first.";
@@ -161,7 +163,7 @@ namespace TimelessEchoes.UI.Toolkit
                 var description = ToolkitGameplay.E(top, "grow");
                 var bedTitle = ToolkitGameplay.L(description, bed.Title, "heading"); bedTitle.style.fontSize = 10;
                 var label = ToolkitGameplay.L(description, BedStatus(bed), "muted"); label.name = "bed-status";
-                if (bed.Icon) ToolkitGameplay.Icon(top, bed.Icon, 24);
+                if (bed.Planted && bed.Icon) ToolkitGameplay.Icon(top, bed.Icon, 24).name = "bed-crop-icon";
                 var select = Button(top, "Select", () => { selectedBed = id; Refresh(); }); select.SetEnabled(bed.Unlocked);
                 if (bed.Planted)
                 {
@@ -183,7 +185,8 @@ namespace TimelessEchoes.UI.Toolkit
             }
             var selected = Array.Find(snapshot.Recipes ?? Array.Empty<FarmRecipePresentation>(), r => r?.Id == selectedRecipe);
             var target = Array.Find(snapshot.Beds ?? Array.Empty<FarmBedPresentation>(), b => b?.Id == selectedBed);
-            selection.text = selected == null || target == null ? "Select seeds and an empty bed" : (selected.Discovered ? selected.Title : "Undiscovered") + " → " + target.Title;
+            selection.text = selected == null ? "Select seeds and an empty bed" : (selected.Discovered ? selected.Title : "Undiscovered") +
+                (target == null ? " · Select an empty bed" : " → " + target.Title);
             plant.SetEnabled(snapshot.TownActionsAllowed && selected?.Eligible == true && selected.Discovered && selected.SeedQuantity >= 1 && target?.Unlocked == true && !target.Planted && target.Orchard == selected.Orchard);
             harvest.SetEnabled(snapshot.TownActionsAllowed && ready > 0);
             roadmap.Clear();
@@ -223,6 +226,25 @@ namespace TimelessEchoes.UI.Toolkit
             previewCamera.transform.rotation = camera.transform.rotation;
             previewCamera.rect = new Rect(0, 0, 1, 1); previewCamera.enabled = true;
             townImage.image = previewTexture;
+        }
+        private void FramePreview(FarmPresentationSnapshot snapshot)
+        {
+            if (!previewCamera) return;
+            var bounds = new Bounds(); var any = false;
+            foreach (var bed in snapshot.Beds ?? Array.Empty<FarmBedPresentation>())
+            {
+                if (bed?.Unlocked != true) continue;
+                var index = Array.IndexOf(bed.Orchard ? FarmCommands.OrchardBeds : FarmCommands.GardenBeds, bed.Id);
+                if (index < 0) continue;
+                var anchor = bed.Orchard ? FieldsWorldView.OrchardAnchors[index] : FieldsWorldView.GardenAnchors[index] + new Vector2(1,1);
+                var plot = new Bounds(new Vector3(anchor.x,anchor.y,0), bed.Orchard ? new Vector3(2,3,0) : new Vector3(4,4,0));
+                if (!any) { bounds = plot; any = true; } else bounds.Encapsulate(plot);
+            }
+            if (!any) bounds = new Bounds(new Vector3(-59,2.5f,0),new Vector3(10,7,0));
+            // Show unlocked plots together, with room for their trees and enclosure frontage.
+            var size = Mathf.Max(3.5f, bounds.extents.y + 1.5f, (bounds.extents.x + 1.5f) / previewCamera.aspect);
+            previewCamera.orthographicSize = size;
+            previewCamera.transform.position = new Vector3(bounds.center.x,bounds.center.y,previewCamera.transform.position.z);
         }
         private void Update()
         {
