@@ -4,6 +4,7 @@
 
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.Build;
 using System.IO;
 using System.Collections.Generic;
 
@@ -11,9 +12,16 @@ using System.Collections.Generic;
 [InitializeOnLoad]
 public class RedistInstall {
 	static RedistInstall() {
-		WriteSteamAppIdTxtFile();
-		AddDefineSymbols();
-		CheckForOldDlls();
+		// We only want to do this on Steam supported platforms.
+		if (EditorUserBuildSettings.selectedBuildTargetGroup != BuildTargetGroup.Standalone) {
+			return;
+		}
+		// Delay calls to fix compile issues with custom build profiles in Unity 6.00+
+		EditorApplication.delayCall += () => {
+			WriteSteamAppIdTxtFile();
+			AddDefineSymbols();
+			CheckForOldDlls();
+		};
 	}
 
 	static void WriteSteamAppIdTxtFile() {
@@ -56,15 +64,35 @@ public class RedistInstall {
 		}
 	}
 
-	static void AddDefineSymbols() {
-		string currentDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
-		HashSet<string> defines = new HashSet<string>(currentDefines.Split(';')) {
-			"STEAMWORKS_NET"
-		};
+    static void AddDefineSymbols()
+    {
+	    if (!EditorSteamworksNETSettings.Instance.CanManageDefineSymbols)
+	    {
+		    return;
+	    }
 
-		string newDefines = string.Join(";", defines);
-		if (newDefines != currentDefines) {
+        string currentDefines;
+        HashSet<string> defines;
+
+#if UNITY_2021_1_OR_NEWER
+        currentDefines = PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup));
+#else
+		currentDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
+
+#endif
+        defines = new HashSet<string>(currentDefines.Split(';'))
+        {
+            "STEAMWORKS_NET"
+        };
+
+        string newDefines = string.Join(";", defines);
+        if (newDefines != currentDefines)
+        {
+#if UNITY_2021_1_OR_NEWER
+            PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), newDefines);
+#else
 			PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, newDefines);
-		}
-	}
+#endif
+        }
+    }
 }
