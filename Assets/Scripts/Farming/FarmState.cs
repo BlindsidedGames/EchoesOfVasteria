@@ -7,6 +7,11 @@ namespace TimelessEchoes.Farming
     public sealed class FarmState
     {
         public int FormatVersion = 2;
+        public int ProductionRevision;
+        public int TwinsLevel = 1;
+        public long TwinsXp;
+        public int GardenCapacity;
+        public int OrchardCapacity;
         public string JournalLineage = Guid.NewGuid().ToString("N");
         public long LastIssuedSequence;
         public long CommittedThroughSequence;
@@ -27,6 +32,8 @@ namespace TimelessEchoes.Farming
             var copy = new FarmState
             {
                 FormatVersion = FormatVersion,
+                ProductionRevision = ProductionRevision, TwinsLevel = TwinsLevel, TwinsXp = TwinsXp,
+                GardenCapacity = GardenCapacity, OrchardCapacity = OrchardCapacity,
                 JournalLineage = JournalLineage,
                 LastIssuedSequence = LastIssuedSequence,
                 CommittedThroughSequence = CommittedThroughSequence,
@@ -51,6 +58,12 @@ namespace TimelessEchoes.Farming
     public sealed class FarmBedState
     {
         public bool Unlocked;
+        public string SelectedRecipeId;
+        public bool Repeat;
+        public bool Watered;
+        public double FrozenYield;
+        public long PlantSequence;
+        public int HarvestXp;
         public string BatchId;
         public string RecipeId;
         public double DurationSeconds;
@@ -62,7 +75,8 @@ namespace TimelessEchoes.Farming
         public string LegacyBatchId;
 
         public bool IsPlanted => !string.IsNullOrEmpty(BatchId);
-        public bool IsReady => IsPlanted && DurationSeconds > 0 && ElapsedSeconds >= DurationSeconds;
+        public bool IsReady => IsPlanted && DurationSeconds > 0 && ElapsedSeconds >= ReadyAfterSeconds;
+        public double ReadyAfterSeconds => Watered ? DurationSeconds / 2 : DurationSeconds;
         public FarmBedState DeepClone() => (FarmBedState)MemberwiseClone();
     }
 
@@ -91,6 +105,7 @@ namespace TimelessEchoes.Farming
     public sealed class FarmPendingCredit
     {
         public bool Rolled;
+        public string SeedId;
         public long CompletedAtUtcTicks;
         public FarmPendingCredit DeepClone() => (FarmPendingCredit)MemberwiseClone();
     }

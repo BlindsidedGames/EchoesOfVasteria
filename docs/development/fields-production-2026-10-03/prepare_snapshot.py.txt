@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+"""Install proof helpers/service guards exclusively into a run.py disposable project."""
+import argparse, pathlib, re, shutil
+parser=argparse.ArgumentParser(); parser.add_argument('snapshot'); args=parser.parse_args()
+project=pathlib.Path(args.snapshot).resolve()
+assert str(project).startswith('/private/tmp/') or str(project).startswith('/tmp/'), 'Refusing non-disposable source tree'
+assert (project/'Assets/Scenes/Main.unity').is_file()
+base=pathlib.Path(__file__).resolve().parent
+runtime=project/'Assets/Scripts/FieldsPlayerProof.cs'; shutil.copyfile(base/'FieldsPlayerProof.cs',runtime)
+editor=project/'Assets/Editor/FieldsProofBuild.cs'; editor.parent.mkdir(parents=True,exist_ok=True); shutil.copyfile(base/'FieldsProofBuild.cs',editor)
+guards=[
+ ('Assets/Scripts/Steamworks.NET/SteamManager.cs',r'(protected virtual void Awake\(\)\s*\{)'),
+ ('Assets/Scripts/Blindsided/UGS/UgsInitializer.cs',r'(private static void AutoInit\(\)\s*\{)'),
+ ('Assets/Scripts/Blindsided/UGS/SilentAuthBootstrap.cs',r'(async void Awake\(\)\s*\{)'),
+ ('Assets/Scripts/Blindsided/UGS/UgsLeaderboardsReporter.cs',r'(private static void AutoCreate\(\)\s*\{)'),
+ ('Assets/Scripts/Blindsided/UGS/UgsLeaderboardsReporter.cs',r'(private async Task TryUploadAllAsync\(\)\s*\{)'),
+]
+for relative,pattern in guards:
+ p=project/relative
+ body = 's_instance = this; m_bInitialized = false; return;' if 'SteamManager.cs' in relative else 'return;'
+ text,n=re.subn(pattern,lambda m:m.group(1)+'\n            // DISPOSABLE PROOF ONLY: external integration disabled.\n            '+body,p.read_text(),count=1)
+ assert n==1, f'Guard seam missing: {relative} {pattern}'
+ p.write_text(text)
+print('Installed proof helpers and 5 external service guards in disposable project:',project)

@@ -1,0 +1,42 @@
+using System;
+using System.IO;
+using System.Linq;
+using UnityEditor;
+using UnityEditor.Build.Reporting;
+using UnityEditor.Build;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+
+// Disposable snapshot only; does not save/roundtrip Main.
+public static class FieldsProofBuild
+{
+    [Serializable] private class BuildMessage { public string step,type,message; }
+    [Serializable] private class BuildMessages { public BuildMessage[] messages; }
+    public static void Run()
+    {
+        string output=Environment.GetEnvironmentVariable("EOV_FIELDS_PROOF_DIR");
+        if(string.IsNullOrEmpty(output)) throw new Exception("EOV_FIELDS_PROOF_DIR required");
+        Directory.CreateDirectory(output);
+        foreach(string path in new[]{"Assets/Scenes/Loading.unity","Assets/Scenes/Main.unity"})
+        {
+            var scene=EditorSceneManager.OpenScene(path,OpenSceneMode.Single);
+            int missing=scene.GetRootGameObjects().SelectMany(g=>g.GetComponentsInChildren<Transform>(true)).Sum(t=>GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(t.gameObject));
+            if(missing!=0) throw new Exception(path+" missing scripts: "+missing);
+        }
+        Directory.CreateDirectory("Assets/Resources/FieldsProof");
+        if(!File.Exists("Assets/Resources/FieldsProof/Farmers.prefab") && !AssetDatabase.CopyAsset("Assets/Prefabs/Tasks/NPC/FloraAndTillmanMeeting.prefab","Assets/Resources/FieldsProof/Farmers.prefab"))
+            throw new Exception("Cannot copy actual farmer meeting prefab into proof Resources");
+        AssetDatabase.Refresh();
+        PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone,ScriptingImplementation.Mono2x);
+        PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Standalone,"com.EchoesTests."+PlayerSettings.productName);
+        PlayerSettings.defaultScreenWidth=1440; PlayerSettings.defaultScreenHeight=900;
+        PlayerSettings.fullScreenMode=FullScreenMode.Windowed;
+        var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions {
+            scenes=new[]{"Assets/Scenes/Loading.unity","Assets/Scenes/Main.unity"},
+            locationPathName=Path.Combine(output,"FieldsProof.app"),target=BuildTarget.StandaloneOSX,
+            options=BuildOptions.Development });
+        File.WriteAllText(Path.Combine(output,"build-result.txt"),report.summary.result+"\nErrors="+report.summary.totalErrors+"\nWarnings="+report.summary.totalWarnings+"\nBytes="+report.summary.totalSize);
+        File.WriteAllText(Path.Combine(output,"build-messages.json"),JsonUtility.ToJson(new BuildMessages { messages=report.steps.SelectMany(step=>step.messages.Select(m=>new BuildMessage {step=step.name,type=m.type.ToString(),message=m.content})).ToArray() },true));
+        if(report.summary.result!=BuildResult.Succeeded) throw new Exception("Protected player build failed");
+    }
+}

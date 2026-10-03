@@ -1,0 +1,29 @@
+{
+  "ownedPaths": [
+    "Assets/Scripts/Farming/FieldsWorldAppearance.cs",
+    "Assets/Scripts/Farming/FieldsWorldAppearance.cs.meta",
+    "Assets/Scripts/Farming/FieldsWorldView.cs",
+    "Assets/Scripts/Farming/FieldsWorldView.cs.meta",
+    "Assets/Resources/Farming/FieldsWorldAppearance.asset",
+    "Assets/Resources/Farming/FieldsWorldAppearance.asset.meta",
+    "Assets/Scenes/Main.unity",
+    "Assets/UI/Toolkit/Navigation.asset",
+    "Assets/Development/Farming/Navigation.asset",
+    "Assets/Development/Farming/Main.unity"
+  ],
+  "mainBeforeSHA256": "abf9fe47bfdeb34c90f72e4f77fe74673ec34dd21a94f9997537a8d0e022b95e",
+  "newFileIDs": [
+    8675309101,
+    8675309102,
+    8675309103,
+    8675309104
+  ],
+  "onlyExistingDocChange": "SceneRoots adds one Fields root; all other existing serialized documents preserved",
+  "appearanceDry": [
+    "{fileID: 1274790815, guid: 17f4808c2c5c9a14bbc591caf4bf57d0, type: 3}",
+    "{fileID: -454666723, guid: 17f4808c2c5c9a14bbc591caf4bf57d0, type: 3}",
+    "{fileID: 681603588, guid: 17f4808c2c5c9a14bbc591caf4bf57d0, type: 3}",
+    "{fileID: 814521130, guid: 17f4808c2c5c9a14bbc591caf4bf57d0, type: 3}"
+  ],
+  "uiBootstrap": "FieldsWorldView configures ToolkitFarmScreen using serialized existing theme/style/text refs and calls TownWindowManager.ConfigureFarm; Farm entry is gated by meeting Farmers1"
+}

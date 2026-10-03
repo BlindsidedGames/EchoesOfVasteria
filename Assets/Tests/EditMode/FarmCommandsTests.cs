@@ -82,7 +82,7 @@ namespace Tests.EditMode
         }
 
         [Test]
-        public void ActiveAndOfflineGrowthAreEqualAndMonthOnlyCompletesOneBatchPerBed()
+        public void OnlyExplicitActiveTimeGrowsAndEachPaidBedHarvestsOneBatch()
         {
             var state = Credit(Credit(Prepared(), "return-one"), "return-two");
             state = FarmCommands.Plant(state, FarmCommands.WestBedId, "plant-west", Start, tuning).Candidate;
@@ -90,8 +90,12 @@ namespace Tests.EditMode
             var offline = FarmCommands.AdvanceGrowth(state, Start.AddMinutes(12)).Candidate;
             var online = FarmCommands.AdvanceGrowth(state, Start.AddMinutes(12), 12 * 60).Candidate;
             foreach (var id in FarmCommands.OriginalBedIds)
-                Assert.AreEqual(offline.Beds[id].ElapsedSeconds, online.Beds[id].ElapsedSeconds);
-            var month = FarmCommands.HarvestReady(state, "harvest-month", Start.AddMonths(1));
+            {
+                Assert.AreEqual(0, offline.Beds[id].ElapsedSeconds);
+                Assert.AreEqual(720, online.Beds[id].ElapsedSeconds);
+            }
+            Assert.AreEqual("NoReadyBeds", FarmCommands.HarvestReady(state, "clock-only", Start.AddMonths(1)).Reason);
+            var month = FarmCommands.HarvestReady(state, "harvest-month", Start.AddMonths(1), activeElapsedSeconds: 1800);
             Assert.AreEqual(20, month.ResourceDeltas["Radish"]);
             Assert.AreEqual(2, month.HarvestedBeds.Count);
             Assert.AreEqual(2, month.Candidate.HarvestedBatchIds.Count);
@@ -107,13 +111,13 @@ namespace Tests.EditMode
         public void FailedWriteDiscardsWholeHarvestProposalAndRetryHasSameYield()
         {
             var persisted = Planted();
-            var firstAttempt = FarmCommands.HarvestReady(persisted, "harvest", Start.AddHours(1));
+            var firstAttempt = FarmCommands.HarvestReady(persisted, "harvest", Start.AddHours(1), activeElapsedSeconds: 1800);
             Assert.IsTrue(firstAttempt.Accepted);
             // Simulated persistence failure: the owner retains its old snapshot and publishes nothing.
             Assert.IsTrue(persisted.Beds[FarmCommands.WestBedId].IsPlanted);
             Assert.IsEmpty(persisted.HarvestedBatchIds);
             Assert.IsFalse(persisted.Operations.ContainsKey("harvest"));
-            var retry = FarmCommands.HarvestReady(persisted, "harvest", Start.AddHours(1));
+            var retry = FarmCommands.HarvestReady(persisted, "harvest", Start.AddHours(1), activeElapsedSeconds: 1800);
             Assert.AreEqual(firstAttempt.ResourceDeltas["Radish"], retry.ResourceDeltas["Radish"]);
             persisted = RoundTrip(retry.Candidate); // Commit succeeded, then process crashed before UI publication.
             Assert.AreEqual(FarmCommandStatus.AlreadyApplied,
@@ -128,7 +132,7 @@ namespace Tests.EditMode
             state = FarmCommands.Plant(state, FarmCommands.WestBedId, "plant-west", Start, tuning).Candidate;
             state = FarmCommands.Plant(state, FarmCommands.EastBedId, "plant-east", Start, tuning).Candidate;
             state.HarvestedBatchIds.Add(state.Beds[FarmCommands.EastBedId].BatchId);
-            var harvest = FarmCommands.HarvestReady(state, "harvest", Start.AddHours(1));
+            var harvest = FarmCommands.HarvestReady(state, "harvest", Start.AddHours(1), activeElapsedSeconds: 1800);
             Assert.AreEqual("InvalidOrPreviouslyHarvestedBatch", harvest.Reason);
             Assert.IsNull(harvest.Candidate);
             Assert.IsEmpty(harvest.ResourceDeltas);
@@ -154,26 +158,27 @@ namespace Tests.EditMode
         }
 
         [Test]
-        public void RollbackKeepsEarnedGrowthAndRebasesFutureProgress()
+        public void ClockRollbackPreservesActiveGrowthAndDoesNotCreateElapsedTime()
         {
-            var state = FarmCommands.AdvanceGrowth(Planted(), Start.AddMinutes(10)).Candidate;
+            var state = FarmCommands.AdvanceGrowth(Planted(), Start.AddMinutes(10), 600).Candidate;
             state = FarmCommands.AdvanceGrowth(state, Start.AddMinutes(3)).Candidate;
             Assert.AreEqual(600, state.Beds[FarmCommands.WestBedId].ElapsedSeconds);
             Assert.AreEqual(Start.AddMinutes(3).Ticks, state.Beds[FarmCommands.WestBedId].LastGrowthUtcTicks);
-            state = FarmCommands.AdvanceGrowth(state, Start.AddMinutes(4)).Candidate;
+            state = FarmCommands.AdvanceGrowth(state, Start.AddMinutes(4), 60).Candidate;
             Assert.AreEqual(660, state.Beds[FarmCommands.WestBedId].ElapsedSeconds);
         }
 
         [Test]
-        public void LaterPlantGetsNoCarriedTimeButAnotherForwardClockJumpCanAcceleratePaidBatch()
+        public void LaterPlantGetsNoCarriedTimeAndForwardClockJumpCannotAcceleratePaidBatch()
         {
             var future = Start.AddMonths(1);
-            var state = FarmCommands.HarvestReady(Planted(), "harvest-one", future).Candidate;
+            var state = FarmCommands.HarvestReady(Planted(), "harvest-one", future, activeElapsedSeconds: 1800).Candidate;
             state = Credit(state, "return-two");
             state = FarmCommands.Plant(state, FarmCommands.WestBedId, "plant-two", future, tuning).Candidate;
             Assert.AreEqual(0, state.Beds[FarmCommands.WestBedId].ElapsedSeconds);
             Assert.AreEqual("NoReadyBeds", FarmCommands.HarvestReady(state, "too-soon", future).Reason);
-            var second = FarmCommands.HarvestReady(state, "harvest-two", future.AddMonths(1));
+            Assert.AreEqual("NoReadyBeds", FarmCommands.HarvestReady(state, "clock-only", future.AddMonths(1)).Reason);
+            var second = FarmCommands.HarvestReady(state, "harvest-two", future.AddMonths(1), activeElapsedSeconds: 1800);
             Assert.AreEqual(10, second.ResourceDeltas["Radish"]);
             Assert.AreEqual(0, second.Candidate.Seeds[FarmCommands.RadishSeedId].Quantity);
         }
@@ -186,7 +191,7 @@ namespace Tests.EditMode
                 DurationSeconds = 1, HarvestYield = 123, LastGrowthUtcTicks = Start.Ticks };
             state.Seeds["future.seed"] = new FarmSeedState { Quantity = 17, LifetimeAcquired = 21 };
             state.Operations["future.operation"] = new FarmOperationReceipt { Fingerprint = "unknown-operation" };
-            var harvest = FarmCommands.HarvestReady(state, "harvest", Start.AddHours(1));
+            var harvest = FarmCommands.HarvestReady(state, "harvest", Start.AddHours(1), activeElapsedSeconds: 1800);
             var loaded = RoundTrip(harvest.Candidate);
             Assert.AreEqual(10, harvest.ResourceDeltas["Radish"]);
             Assert.AreEqual(0, loaded.Beds["future.bed"].ElapsedSeconds);

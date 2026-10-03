@@ -1,0 +1,33 @@
+import importlib.util,json,os,shutil,time,hashlib
+from pathlib import Path
+source=Path('/Users/matthewrushworth/Projects/Echoes of Vasteria');run=Path('/tmp/eov-fields-production-v1').resolve();project=run/'project'
+spec=importlib.util.spec_from_file_location('runner',source/'tools/testing/run.py');runner=importlib.util.module_from_spec(spec);spec.loader.exec_module(runner)
+summary=json.loads((run/'summary.json').read_text());assert summary['status']=='passed', 'Require complete passing snapshot'
+output=run/'player-proof-v2';output.mkdir();context=output/'context';context.mkdir()
+identity=runner.isolate_identity(project,context)
+# Preserve exact production inputs before adding guarded proof-only scripts.
+(run/'pre-proof-source-inputs.json').write_text((run/'inputs.json').read_text())
+import subprocess
+# Restore only proof guards to tested shared source before reinstalling them.
+for relative in ['Assets/Scripts/Steamworks.NET/SteamManager.cs','Assets/Scripts/Blindsided/UGS/UgsInitializer.cs','Assets/Scripts/Blindsided/UGS/SilentAuthBootstrap.cs','Assets/Scripts/Blindsided/UGS/UgsLeaderboardsReporter.cs']:
+ shutil.copyfile(source/relative,project/relative)
+subprocess.run(['python3',str(Path(__file__).parent/'prepare_snapshot.py'),str(project)],check=True)
+leases={'links':[],'parents':[],'prefs':[]};env=os.environ.copy()
+for k in list(env):
+ if k.lower() in ('http_proxy','https_proxy','all_proxy'):del env[k]
+env.update(HOME=str(run/'home'),TMPDIR=str(run/'tmp')+'/',TMP=str(run/'tmp'),TEMP=str(run/'tmp'),UPM_CACHE_ROOT=str(run/'cache'),EOV_FIELDS_PROOF_DIR=str(output))
+result={'identity':identity,'output':str(output),'production_test_summary':'v6-summary.json','service_guards':'5 proof-only Steam/UGS entry points, never shared source','save_root':str(output/'test-save-root')}
+try:
+ runner.create_native_fixture_paths(Path.home(),context,identity['productName'],leases)
+ build=['/usr/bin/sandbox-exec','-f',str(run/'sandbox.sb'),'/Applications/Unity/Hub/Editor/6000.6.0f1/Unity.app/Contents/MacOS/Unity','-batchmode','-quit','-forgetProjectPath','-refreshImportMode','InProcess','-projectPath',str(project),'-executeMethod','FieldsProofBuild.Run','-logFile',str(output/'Build.log')]
+ print('Building protected normal Loading/Main Fields player',flush=True);result['build_command']=build;result['build_exit']=runner.run_process(build,env,1800)
+ resultfile=output/'build-result.txt'
+ if result['build_exit']!=0 or not resultfile.exists() or not resultfile.read_text().startswith('Succeeded'):raise RuntimeError('Protected player did not build successfully')
+ exe=output/'FieldsProof.app/Contents/MacOS'/identity['productName'];assert exe.is_file(),str(exe)
+ player=['/usr/bin/sandbox-exec','-f',str(run/'sandbox.sb'),str(exe),'-screen-width','1440','-screen-height','900','-screen-fullscreen','0','-logFile',str(output/'Player.log')]
+ print('Running protected actual normal scene and native Fields UI',flush=True);result['player_command']=player;result['player_exit']=runner.run_process(player,env,300)
+ result['status']='passed' if result['player_exit']==0 and (output/'runtime-proof.txt').exists() and not (output/'FAILED.txt').exists() else 'failed'
+finally:
+ runner.cleanup_native_fixture_paths(leases);(output/'summary.json').write_text(json.dumps(result,indent=2))
+print(json.dumps(result,indent=2),flush=True)
+raise SystemExit(0 if result.get('status')=='passed' else 1)

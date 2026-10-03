@@ -46,6 +46,7 @@ namespace Blindsided
                     owner.Farm = candidate.Farm;
                     if (preparedNow && candidate.Quests.TryGetValue("Farm.PrepareBeds", out var quest))
                         owner.Quests["Farm.PrepareBeds"] = quest;
+                    foreach (var id in proposal.CompletedQuests) owner.Quests[id] = candidate.Quests[id];
                     var manager = ResourceManager.Instance;
                     manager?.BeginBatch();
                     try

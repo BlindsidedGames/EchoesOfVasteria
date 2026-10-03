@@ -1,0 +1,44 @@
+{
+  "identity": {
+    "companyName": "EchoesTests",
+    "productName": "EOVTests_fee76a416365094a"
+  },
+  "output": "/private/tmp/eov-fields-production-v1/player-proof-v2",
+  "production_test_summary": "v6-summary.json",
+  "service_guards": "5 proof-only Steam/UGS entry points, never shared source",
+  "save_root": "/private/tmp/eov-fields-production-v1/player-proof-v2/test-save-root",
+  "build_command": [
+    "/usr/bin/sandbox-exec",
+    "-f",
+    "/private/tmp/eov-fields-production-v1/sandbox.sb",
+    "/Applications/Unity/Hub/Editor/6000.6.0f1/Unity.app/Contents/MacOS/Unity",
+    "-batchmode",
+    "-quit",
+    "-forgetProjectPath",
+    "-refreshImportMode",
+    "InProcess",
+    "-projectPath",
+    "/private/tmp/eov-fields-production-v1/project",
+    "-executeMethod",
+    "FieldsProofBuild.Run",
+    "-logFile",
+    "/private/tmp/eov-fields-production-v1/player-proof-v2/Build.log"
+  ],
+  "build_exit": 0,
+  "player_command": [
+    "/usr/bin/sandbox-exec",
+    "-f",
+    "/private/tmp/eov-fields-production-v1/sandbox.sb",
+    "/private/tmp/eov-fields-production-v1/player-proof-v2/FieldsProof.app/Contents/MacOS/EOVTests_fee76a416365094a",
+    "-screen-width",
+    "1440",
+    "-screen-height",
+    "900",
+    "-screen-fullscreen",
+    "0",
+    "-logFile",
+    "/private/tmp/eov-fields-production-v1/player-proof-v2/Player.log"
+  ],
+  "player_exit": 0,
+  "status": "passed"
+}

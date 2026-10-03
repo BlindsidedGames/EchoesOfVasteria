@@ -348,6 +348,12 @@ namespace TimelessEchoes.Quests
                     return false;
             }
 
+            if (quest.questId == TimelessEchoes.Farming.FarmContent.IntroductionId)
+                return oracle.saveData.CompletedNpcTasks.Contains("Farmers1");
+            var fields = TimelessEchoes.Farming.FarmContent.Load();
+            var construction = fields ? fields.Build(quest.questId) : null;
+            if (quest.questId.StartsWith("Farm.Garden.Build", StringComparison.Ordinal) || quest.questId.StartsWith("Farm.Orchard.Build", StringComparison.Ordinal))
+                return fields && construction != null && fields.BuildGate(oracle.saveData, construction) == null;
             return true;
         }
 
@@ -515,9 +521,11 @@ namespace TimelessEchoes.Quests
             PinnedQuestUIManager.Instance?.UpdateProgress();
         }
 
-        private void CompleteQuest(QuestInstance inst)
+        private bool CompleteQuest(QuestInstance inst)
         {
-            if (inst == null) return;
+            if (inst == null) return false;
+            var fieldQuest = inst.data.questId.StartsWith("Farm.Garden.", StringComparison.Ordinal) || inst.data.questId.StartsWith("Farm.Orchard.", StringComparison.Ordinal);
+            if (fieldQuest && (TimelessEchoes.Farming.FarmService.Instance == null || !TimelessEchoes.Farming.FarmService.Instance.BuildQuest(inst.data.questId))) return false;
             var id = inst.data.questId;
             if (!oracle.saveData.Quests.TryGetValue(id, out var record))
             {
@@ -525,7 +533,7 @@ namespace TimelessEchoes.Quests
                 oracle.saveData.Quests[id] = record;
             }
 
-            if (resourceManager != null)
+            if (!fieldQuest && resourceManager != null)
                 foreach (var req in inst.data.requirements)
                     if (req.type == QuestData.RequirementType.Resource)
                         resourceManager.Spend(req.resource, req.amount);
@@ -610,12 +618,13 @@ namespace TimelessEchoes.Quests
             // Immediately persist rewards and quest state so saved data matches live inventory.
             try
             {
-                SaveData();
+                if (!fieldQuest) SaveData();
             }
             catch (System.Exception ex)
             {
                 Debug.LogError($"Immediate save after quest completion failed: {ex}");
             }
+            return true;
         }
 
         /// <summary>
@@ -845,13 +854,23 @@ namespace TimelessEchoes.Quests
             return entries;
         }
 
+        public void RefreshFieldsProgression()
+        {
+            if (oracle?.saveData == null) return;
+            foreach (var quest in quests)
+                if (quest && (quest.questId == TimelessEchoes.Farming.FarmContent.IntroductionId ||
+                    quest.questId.StartsWith("Farm.Garden.Build", StringComparison.Ordinal) ||
+                    quest.questId.StartsWith("Farm.Orchard.Build", StringComparison.Ordinal))) TryStartQuest(quest);
+            UpdateAllProgress();
+            RefreshNoticeboard();
+        }
+
         public bool TryTurnInQuest(string questId)
         {
             if (string.IsNullOrEmpty(questId) || !active.TryGetValue(questId, out var inst)) return false;
             UpdateProgress(inst);
             if (!inst.ReadyForTurnIn) return false;
-            CompleteQuest(inst);
-            return true;
+            return CompleteQuest(inst);
         }
 
         public void RefreshNoticeboard()

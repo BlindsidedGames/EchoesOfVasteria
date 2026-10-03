@@ -32,7 +32,7 @@ namespace Tests.EditMode
         private static FarmCommandResult Harvest(FarmState state, out string id)
         {
             id = FarmJournal.NextOperation(state, "harvest-ready");
-            return FarmCommands.HarvestReady(state, id, Start.AddMonths(1));
+            return FarmCommands.HarvestReady(state, id, Start.AddMonths(1), activeElapsedSeconds: 1800);
         }
 
         [TestCase(false)]
@@ -301,6 +301,9 @@ namespace Tests.EditMode
             Assert.AreSame(pending, state.PendingCredits);
             Assert.AreEqual(0, state.Beds["future"].ElapsedSeconds);
             Assert.IsTrue(FarmCommands.CaptureGrowthInPlace(state, Start.AddMonths(1)));
+            Assert.AreEqual(600, state.Beds[FarmCommands.WestBedId].ElapsedSeconds, "UTC capture must not grow a batch.");
+            Assert.IsTrue(FarmCommands.CaptureGrowthInPlace(state, Start.AddMonths(1), 1200));
+            Assert.IsTrue(state.Beds[FarmCommands.WestBedId].IsReady);
             var baseline = state.Beds[FarmCommands.WestBedId].LastGrowthUtcTicks;
             Assert.IsFalse(FarmCommands.CaptureGrowthInPlace(state, Start.AddMonths(2)));
             Assert.AreEqual(FarmCommandStatus.NoChange, FarmCommands.AdvanceGrowth(state, Start.AddMonths(2)).Status);

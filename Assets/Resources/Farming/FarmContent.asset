@@ -1,0 +1,424 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5367d306291d41d89d025d1a4c16223a, type: 3}
+  m_Name: FarmContent
+  m_EditorClassIdentifier:
+  displayNameKey: farm.display-name
+  displayName: Fields
+  baseDurationSeconds: 1800
+  baseYield: 10
+  harvestXp: 10
+  seedChance: 0.1
+  recipes:
+  - id: recipe.radish.v1
+    output: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}
+    source: {fileID: 11400000, guid: 42f81ca90b736cd4bb035112a8b22ad3, type: 2}
+    seedId: seed.radish
+    paidInput: {fileID: 0}
+    orchard: 0
+    packIcon: {fileID: 759725064393614726, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    unknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    stages:
+    - {fileID: -3087722540913972952, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 354162863218615001, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -8800576670314286437, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -1319403273844478748, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  - id: recipe.corn.v1
+    output: {fileID: 11400000, guid: 1fd4ff0f627126a4a8ca50ea71793823, type: 2}
+    source: {fileID: 11400000, guid: 4706c98248fceba4d999590b3af7c998, type: 2}
+    seedId: seed.corn
+    paidInput: {fileID: 0}
+    orchard: 0
+    packIcon: {fileID: 898378307958081348, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    unknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    stages:
+    - {fileID: -7264623449321555839, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -8212930081969480023, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -3911487379921220410, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -1010118597598872900, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  - id: recipe.wheat.v1
+    output: {fileID: 11400000, guid: 9e0063ffd6091384fba5f8a233b51808, type: 2}
+    source: {fileID: 11400000, guid: 42ee84897ea94fe9a7f5c79dd7fac12d, type: 2}
+    seedId: seed.wheat
+    paidInput: {fileID: 0}
+    orchard: 0
+    packIcon: {fileID: 198350115383387494, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    unknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    stages:
+    - {fileID: 1542044054, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 704103268, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 1725182957, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -1041579510, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  - id: recipe.watermelone.v1
+    output: {fileID: 11400000, guid: ae1b523394ff9eb49866f20982e4c68d, type: 2}
+    source: {fileID: 11400000, guid: 616f97cc056149dc86d1db52889c9a51, type: 2}
+    seedId: seed.watermelone
+    paidInput: {fileID: 0}
+    orchard: 0
+    packIcon: {fileID: 543908422910629068, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    unknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    stages:
+    - {fileID: -2663035583714953732, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 1926556741188489488, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 706502502933305996, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 9057977493438303337, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  - id: recipe.carrot.v1
+    output: {fileID: 11400000, guid: 9e342e09a47b4014ab320cc6d06a2a3d, type: 2}
+    source: {fileID: 11400000, guid: 70617213aa5b4282810c56d8c6fef1dc, type: 2}
+    seedId: seed.carrot
+    paidInput: {fileID: 0}
+    orchard: 0
+    packIcon: {fileID: 1131955448228513964, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    unknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    stages:
+    - {fileID: 3225213848598672445, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 5507455356034643388, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 4150229347420907923, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 4727212774405997460, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  - id: recipe.spud.v1
+    output: {fileID: 11400000, guid: fd0a53a91094b2b4da64fec1b7c7bace, type: 2}
+    source: {fileID: 11400000, guid: 7ce5ada54f204022860133895160fdb0, type: 2}
+    seedId: seed.spud
+    paidInput: {fileID: 0}
+    orchard: 0
+    packIcon: {fileID: 582303101692890011, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    unknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    stages:
+    - {fileID: -7015276441256703656, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -5545492575456576821, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 4422337733266787571, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 166006926289291715, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  - id: recipe.tomato.v1
+    output: {fileID: 11400000, guid: e8e8a19bb4573f540a00a6d78dddd0db, type: 2}
+    source: {fileID: 11400000, guid: 86a9b7060b024768a521ceb023a7830d, type: 2}
+    seedId: seed.tomato
+    paidInput: {fileID: 0}
+    orchard: 0
+    packIcon: {fileID: 748163242451466372, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    unknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    stages:
+    - {fileID: -5774877164156790999, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 1640555460866966840, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 2683288208970150335, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 8954413170907878631, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  - id: recipe.lettuce.v1
+    output: {fileID: 11400000, guid: 49595052db28a8e48a4eb1fa7d04b7f6, type: 2}
+    source: {fileID: 11400000, guid: e0a30f5655974fccaf00c303a1ec8ab8, type: 2}
+    seedId: seed.lettuce
+    paidInput: {fileID: 0}
+    orchard: 0
+    packIcon: {fileID: 459907259450771117, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    unknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    stages:
+    - {fileID: 7449849197881009115, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -1453761271293660484, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 8003362964857521715, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 2799499457651537543, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  - id: recipe.cucumber.v1
+    output: {fileID: 11400000, guid: 5eaebeeea7cd85948922c1bcab927ca6, type: 2}
+    source: {fileID: 11400000, guid: e14a18a28eab47f3b4a1ba4fc35feecc, type: 2}
+    seedId: seed.cucumber
+    paidInput: {fileID: 0}
+    orchard: 0
+    packIcon: {fileID: 691918031244132977, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    unknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    stages:
+    - {fileID: 6610592383885769403, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 7064467092071143883, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -2673831232468371044, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -7998690685759499793, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  - id: recipe.leek.v1
+    output: {fileID: 11400000, guid: 92206defd8abd854c835604fc2ebfc33, type: 2}
+    source: {fileID: 11400000, guid: 9f12af72c3d64cb7992be2c5a55e724d, type: 2}
+    seedId: seed.leek
+    paidInput: {fileID: 0}
+    orchard: 0
+    packIcon: {fileID: 304037392452589065, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    unknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    stages:
+    - {fileID: 5074320991204899774, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -1896591569020917584, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -4087323518823875634, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -4179824020582981186, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  - id: recipe.parsnip.v1
+    output: {fileID: 11400000, guid: fb12ddb33d729bf48a519c61510dca6a, type: 2}
+    source: {fileID: 11400000, guid: b7927331582c41ad858f05059f361a0a, type: 2}
+    seedId: seed.parsnip
+    paidInput: {fileID: 0}
+    orchard: 0
+    packIcon: {fileID: 390489407658149345, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    unknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    stages:
+    - {fileID: 7113927244362079390, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -8963637610061471851, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -8124274317607321232, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 1524892664962734932, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  - id: recipe.pepper.v1
+    output: {fileID: 11400000, guid: db783fe988c6728428405a8c18c3f5d8, type: 2}
+    source: {fileID: 11400000, guid: 62658544c0614a5490f65bb405af7397, type: 2}
+    seedId: seed.pepper
+    paidInput: {fileID: 0}
+    orchard: 0
+    packIcon: {fileID: 307870317232740152, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    unknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    stages:
+    - {fileID: 7476822244457568348, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 1663202593893667963, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -5560092192333691669, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -7950665004155765343, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  - id: recipe.chillie.v1
+    output: {fileID: 11400000, guid: 52b45ffed04e559418584d82175340a6, type: 2}
+    source: {fileID: 11400000, guid: 057a73ef4be1461a8f37f4a18cc9ccd7, type: 2}
+    seedId: seed.chillie
+    paidInput: {fileID: 0}
+    orchard: 0
+    packIcon: {fileID: 15699827892383398, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    unknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    stages:
+    - {fileID: -7777105805926593153, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 7780584609490285511, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -3667834562317142703, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -9046296309055213395, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  - id: recipe.pumking.v1
+    output: {fileID: 11400000, guid: c11abbf84f4141844b21de6f7af929ea, type: 2}
+    source: {fileID: 11400000, guid: 9bf4f670cbb2443baabc2867f46fe800, type: 2}
+    seedId: seed.pumking
+    paidInput: {fileID: 0}
+    orchard: 0
+    packIcon: {fileID: 1117777023212221724, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    unknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    stages:
+    - {fileID: 568712722439862651, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -9177457062998269095, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 92264684534740810, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -2584793599262434737, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  - id: recipe.strawberry.v1
+    output: {fileID: 11400000, guid: dcd8ad1628b899a48847deb1cb2b3739, type: 2}
+    source: {fileID: 11400000, guid: d32ac8f14ec6412b970968c95d6630b5, type: 2}
+    seedId: seed.strawberry
+    paidInput: {fileID: 0}
+    orchard: 0
+    packIcon: {fileID: 437888660324833231, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    unknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    stages:
+    - {fileID: 7733726326453383831, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 7550892748726295396, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -3242253921355452507, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -8228112601785353111, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  - id: recipe.funion.v1
+    output: {fileID: 11400000, guid: b4981418ea008e74f8918c87bac15573, type: 2}
+    source: {fileID: 11400000, guid: 32c67278a4d449d1a3b9537021e12b94, type: 2}
+    seedId: seed.funion
+    paidInput: {fileID: 0}
+    orchard: 0
+    packIcon: {fileID: 814697532494998315, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    unknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    stages:
+    - {fileID: 2166644136731427129, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -1368242011544380887, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -9004892251159916311, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: -3967237929857205426, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  - id: recipe.turnip.v1
+    output: {fileID: 11400000, guid: 420847cbb07e26640a57575ee30d5120, type: 2}
+    source: {fileID: 11400000, guid: 46bf1183fb9d4166b85a3b5bf3286e94, type: 2}
+    seedId: seed.turnip
+    paidInput: {fileID: 0}
+    orchard: 0
+    packIcon: {fileID: 759725064393614726, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    unknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    stages:
+    - {fileID: 9118292104019925386, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 2737622864529235156, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 9006110008903433327, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+    - {fileID: 4227562727828232050, guid: 9cb02e74c571af045af4e6f90876850b, type: 3}
+  - id: recipe.apple.v1
+    output: {fileID: 11400000, guid: 8d0b52ec3400e45ee82c1e3fee2f1557, type: 2}
+    source: {fileID: 11400000, guid: 32bc36b4c40b94ef6aba887b77a88b82, type: 2}
+    seedId:
+    paidInput: {fileID: 11400000, guid: 5c2ad61ef0dfc43beb589ce1c114bda3, type: 2}
+    orchard: 1
+    packIcon: {fileID: -1124318958, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
+    unknownIcon: {fileID: 1264961375, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
+    stages:
+    - {fileID: -8582943164656172086, guid: fb2d20a85bb1e404abf5ec5eef672073, type: 3}
+    - {fileID: 6735665171789789739, guid: fb2d20a85bb1e404abf5ec5eef672073, type: 3}
+    - {fileID: -6927793014847252990, guid: fb2d20a85bb1e404abf5ec5eef672073, type: 3}
+    - {fileID: -1027468092030900218, guid: 8a835532a72d6bc43a5e13ee677c43de, type: 3}
+  - id: recipe.pear.v1
+    output: {fileID: 11400000, guid: cb5c0182aea64486aa517a4c4c9bb6b3, type: 2}
+    source: {fileID: 11400000, guid: abad222a9919a44dfbd01e18cfd16f4a, type: 2}
+    seedId:
+    paidInput: {fileID: 11400000, guid: cb2591d15a0a842de8275a5d4c7453c9, type: 2}
+    orchard: 1
+    packIcon: {fileID: -1075394546, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
+    unknownIcon: {fileID: 1466075713, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
+    stages:
+    - {fileID: -8582943164656172086, guid: fb2d20a85bb1e404abf5ec5eef672073, type: 3}
+    - {fileID: 6735665171789789739, guid: fb2d20a85bb1e404abf5ec5eef672073, type: 3}
+    - {fileID: -6927793014847252990, guid: fb2d20a85bb1e404abf5ec5eef672073, type: 3}
+    - {fileID: 214158277229850874, guid: 832a8ff528ace054787e1a6f66aa6b88, type: 3}
+  - id: recipe.peach.v1
+    output: {fileID: 11400000, guid: c73e225f2293348658398193e3b57a5f, type: 2}
+    source: {fileID: 11400000, guid: 79f2cc3b85dbd40c5959f6a284b44491, type: 2}
+    seedId:
+    paidInput: {fileID: 11400000, guid: 441bdf1c9db5e4019a08802bfe74333c, type: 2}
+    orchard: 1
+    packIcon: {fileID: 1069427138, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
+    unknownIcon: {fileID: 786504821, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
+    stages:
+    - {fileID: -8582943164656172086, guid: fb2d20a85bb1e404abf5ec5eef672073, type: 3}
+    - {fileID: 6735665171789789739, guid: fb2d20a85bb1e404abf5ec5eef672073, type: 3}
+    - {fileID: -6927793014847252990, guid: fb2d20a85bb1e404abf5ec5eef672073, type: 3}
+    - {fileID: -1918244869426106285, guid: b95abfde2cf72044db50f608c7d0f9a0, type: 3}
+  - id: recipe.cherry.v1
+    output: {fileID: 11400000, guid: 2a300b43027754474b19d88d47a555d7, type: 2}
+    source: {fileID: 11400000, guid: 6e48b7bff1eac4c2ead90e55ba5cb8e0, type: 2}
+    seedId:
+    paidInput: {fileID: 11400000, guid: cb8cb6fce4e5145b3811376ef37afb94, type: 2}
+    orchard: 1
+    packIcon: {fileID: -126438635, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
+    unknownIcon: {fileID: -1463776566, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
+    stages:
+    - {fileID: -8582943164656172086, guid: fb2d20a85bb1e404abf5ec5eef672073, type: 3}
+    - {fileID: 6735665171789789739, guid: fb2d20a85bb1e404abf5ec5eef672073, type: 3}
+    - {fileID: -6927793014847252990, guid: fb2d20a85bb1e404abf5ec5eef672073, type: 3}
+    - {fileID: -2960387421028039873, guid: 77565e7591968a240b4e57102a305122, type: 3}
+  builds:
+  - questId: Farm.Garden.Build01.v1
+    previousQuestId: Farm.Garden.Introduction.v1
+    title: Our First Patch
+    twinsLevel: 1
+    gardenCapacity: 1
+    orchardCapacity: 0
+    sources:
+    - {fileID: 11400000, guid: 8d93789f09a37544e9dda9870a26098c, type: 2}
+    costs:
+    - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
+      amount: 10
+    - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
+      amount: 20
+  - questId: Farm.Garden.Build02.v1
+    previousQuestId: Farm.Garden.Build01.v1
+    title: Room to Grow
+    twinsLevel: 5
+    gardenCapacity: 2
+    orchardCapacity: 0
+    sources:
+    - {fileID: 11400000, guid: 8d93789f09a37544e9dda9870a26098c, type: 2}
+    costs:
+    - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
+      amount: 40
+    - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
+      amount: 80
+  - questId: Farm.Garden.Build03.v1
+    previousQuestId: Farm.Garden.Build02.v1
+    title: Reclaim the Old Field
+    twinsLevel: 35
+    gardenCapacity: 3
+    orchardCapacity: 0
+    sources:
+    - {fileID: 11400000, guid: f47cc95a61027c549af94e61a3609e02, type: 2}
+    - {fileID: 11400000, guid: ba3b6a5aed10ba14299ebe98151f3018, type: 2}
+    costs:
+    - resource: {fileID: 11400000, guid: d27f42dac2c64a9fbdaef87b1d68cf83, type: 2}
+      amount: 750
+    - resource: {fileID: 11400000, guid: 662ac0c8e09545b9a11ae5a1e0ac7125, type: 2}
+      amount: 1500
+    - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
+      amount: 100
+  - questId: Farm.Garden.Build04.v1
+    previousQuestId: Farm.Garden.Build03.v1
+    title: A Second Row
+    twinsLevel: 65
+    gardenCapacity: 4
+    orchardCapacity: 0
+    sources:
+    - {fileID: 11400000, guid: f47cc95a61027c549af94e61a3609e02, type: 2}
+    costs:
+    - resource: {fileID: 11400000, guid: d27f42dac2c64a9fbdaef87b1d68cf83, type: 2}
+      amount: 2500
+    - resource: {fileID: 11400000, guid: 662ac0c8e09545b9a11ae5a1e0ac7125, type: 2}
+      amount: 5000
+  - questId: Farm.Garden.Build05.v1
+    previousQuestId: Farm.Garden.Build04.v1
+    title: Beyond the Old Field
+    twinsLevel: 95
+    gardenCapacity: 5
+    orchardCapacity: 0
+    sources:
+    - {fileID: 11400000, guid: b64ee94d97b7f3e4d9a2185969b31623, type: 2}
+    - {fileID: 11400000, guid: ba3b6a5aed10ba14299ebe98151f3018, type: 2}
+    costs:
+    - resource: {fileID: 11400000, guid: 46c7f0ba803d4f56acb642a964cbe795, type: 2}
+      amount: 4000
+    - resource: {fileID: 11400000, guid: 25c8cee6eddf4c4cb20d6d77f390eb56, type: 2}
+      amount: 6000
+    - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
+      amount: 1000
+  - questId: Farm.Garden.Build06.v1
+    previousQuestId: Farm.Garden.Build05.v1
+    title: The Fields, Complete
+    twinsLevel: 125
+    gardenCapacity: 6
+    orchardCapacity: 0
+    sources:
+    - {fileID: 11400000, guid: b64ee94d97b7f3e4d9a2185969b31623, type: 2}
+    costs:
+    - resource: {fileID: 11400000, guid: 46c7f0ba803d4f56acb642a964cbe795, type: 2}
+      amount: 8000
+    - resource: {fileID: 11400000, guid: 25c8cee6eddf4c4cb20d6d77f390eb56, type: 2}
+      amount: 12000
+  - questId: Farm.Orchard.Build01.v1
+    previousQuestId: Farm.Garden.Build06.v1
+    title: Roots for Tomorrow
+    twinsLevel: 150
+    gardenCapacity: 6
+    orchardCapacity: 2
+    sources:
+    - {fileID: 11400000, guid: b64ee94d97b7f3e4d9a2185969b31623, type: 2}
+    - {fileID: 11400000, guid: ba3b6a5aed10ba14299ebe98151f3018, type: 2}
+    costs:
+    - resource: {fileID: 11400000, guid: 46c7f0ba803d4f56acb642a964cbe795, type: 2}
+      amount: 10000
+    - resource: {fileID: 11400000, guid: 25c8cee6eddf4c4cb20d6d77f390eb56, type: 2}
+      amount: 15000
+    - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
+      amount: 2500
+  - questId: Farm.Orchard.Build02.v1
+    previousQuestId: Farm.Orchard.Build01.v1
+    title: Another Pair of Roots
+    twinsLevel: 185
+    gardenCapacity: 6
+    orchardCapacity: 4
+    sources:
+    - {fileID: 11400000, guid: 30abf53f32318cf418c3f6120c389b1b, type: 2}
+    costs:
+    - resource: {fileID: 11400000, guid: 7b11407c43c740dea10e135bf7e0c061, type: 2}
+      amount: 15000
+    - resource: {fileID: 11400000, guid: 914756acb1d24fb8a64da0ad08e3838f, type: 2}
+      amount: 20000
+  - questId: Farm.Orchard.Build03.v1
+    previousQuestId: Farm.Orchard.Build02.v1
+    title: The Last Orchard Row
+    twinsLevel: 225
+    gardenCapacity: 6
+    orchardCapacity: 6
+    sources:
+    - {fileID: 11400000, guid: 30abf53f32318cf418c3f6120c389b1b, type: 2}
+    - {fileID: 11400000, guid: ba3b6a5aed10ba14299ebe98151f3018, type: 2}
+    costs:
+    - resource: {fileID: 11400000, guid: 7b11407c43c740dea10e135bf7e0c061, type: 2}
+      amount: 25000
+    - resource: {fileID: 11400000, guid: 914756acb1d24fb8a64da0ad08e3838f, type: 2}
+      amount: 35000
+    - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
+      amount: 5000

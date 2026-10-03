@@ -238,10 +238,10 @@ MonoBehaviour:
     window: 12
     map: {fileID: 0}
     label:
-      key: navigation.alterEchoes
+      key: farm.display-name
       bold: 1
       smallCaps: 0
-      fallback: Alter Echoes
+      fallback: Fields
       localized:
         m_TableReference:
           m_TableCollectionName: 
@@ -252,13 +252,16 @@ MonoBehaviour:
         m_WaitForCompletion: 0
         m_LocalVariables: []
     background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
-    icon: {fileID: 759725064393614726, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+    icon: {fileID: 0}
     shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
     iconSize: {x: 18, y: 18}
     iconSliced: 0
     width: 80
     fontSize: 8
-    visibility: []
+    visibility:
+    - condition: 3
+      quest: {fileID: 0}
+      npcId: Farmers1
   - id: skills
     group: 2
     action: 0

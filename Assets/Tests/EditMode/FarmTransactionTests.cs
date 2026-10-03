@@ -85,7 +85,7 @@ namespace Tests.EditMode
         {
             var live = PlantedBoth();
             live.Resources["Radish"].Amount = balance;
-            var harvest = FarmCommands.HarvestReady(live.Farm, "harvest", Start.AddHours(1));
+            var harvest = FarmCommands.HarvestReady(live.Farm, "harvest", Start.AddHours(1), activeElapsedSeconds: 1800);
             Assert.IsFalse(FarmTransaction.TryPrepare(live, harvest, out var candidate, out var error));
             Assert.IsNull(candidate);
             StringAssert.Contains("invalid Radish", error);
@@ -97,7 +97,7 @@ namespace Tests.EditMode
         public void HarvestUsesCapturedResourceStatsWithoutMultipliersAdventureStatsOrSeedRecursion()
         {
             var live = PlantedBoth();
-            var proposal = FarmCommands.HarvestReady(live.Farm, "harvest", Start.AddHours(1));
+            var proposal = FarmCommands.HarvestReady(live.Farm, "harvest", Start.AddHours(1), activeElapsedSeconds: 1800);
             Assert.IsTrue(FarmTransaction.TryPrepare(live, proposal, out var candidate, out var error), error);
             Assert.AreEqual(27, candidate.Resources["Radish"].Amount);
             Assert.IsTrue(candidate.Resources["Radish"].Earned);
@@ -116,7 +116,7 @@ namespace Tests.EditMode
         public void CardYieldIsFinalizedOnceInHarvestAndDoesNotAddRarityOrOtherRewards()
         {
             var live = PlantedBoth();
-            var proposal = FarmCommands.HarvestReady(live.Farm, "harvest", Start.AddHours(1), harvestYieldBonusPercent: 70);
+            var proposal = FarmCommands.HarvestReady(live.Farm, "harvest", Start.AddHours(1), activeElapsedSeconds: 1800, harvestYieldBonusPercent: 70);
             var paid = Prepare(live, proposal);
             Assert.AreEqual(41, paid.Resources["Radish"].Amount, 1e-12); // 7 + 20 base * 1.70
             Assert.AreEqual(3, paid.Resources["Radish"].Tier);
@@ -239,7 +239,8 @@ namespace Tests.EditMode
             Assert.AreEqual(0, state.Farm.Seeds[FarmCommands.RadishSeedId].Quantity);
             Assert.AreEqual(FarmCommandStatus.AlreadyApplied,
                 FarmCommands.Plant(state.Farm, FarmCommands.WestBedId, "plant-west", Start, tuning).Status);
-            state = CommitAndReload(state, FarmCommands.HarvestReady(state.Farm, "harvest", Start.AddMonths(1)));
+            Assert.AreEqual("NoReadyBeds", FarmCommands.HarvestReady(state.Farm, "clock-only", Start.AddMonths(1)).Reason);
+            state = CommitAndReload(state, FarmCommands.HarvestReady(state.Farm, "harvest", Start.AddMonths(1), activeElapsedSeconds: 1800));
             Assert.AreEqual(27, state.Resources["Radish"].Amount);
             Assert.AreEqual(320, state.ResourceStats["Radish"].TotalReceived);
             Assert.AreEqual(2, state.Farm.HarvestedBatchIds.Count);

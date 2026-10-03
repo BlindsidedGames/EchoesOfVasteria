@@ -6,18 +6,22 @@ using Blindsided.SaveData;
 using TimelessEchoes.Hero;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.UI;
+using TimelessEchoes.Quests;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
 
 namespace TimelessEchoes.Farming
 {
-    /// <summary>Explicitly installed in the development scene. Live Main has no farm service.</summary>
+    /// <summary>Production Fields owner. Commands commit through the existing immutable farm lane.</summary>
     public sealed class FarmService : MonoBehaviour, IFarmPresentationSource
     {
         public static FarmService Instance { get; private set; }
         [SerializeField] private FarmTuning tuning = new();
-        [SerializeField, Range(0, 1)] private float developmentRadishPackChance = .1f;
         private GameData owner;
+        private bool skipGrowthFrame = true;
+        private FarmContent content;
+        public FarmContent Content => content ? content : content = FarmContent.Load();
+        private int gateSignature = int.MinValue;
         private double lastMonotonic;
         private bool suspended;
         private bool applicationPaused;
@@ -40,7 +44,10 @@ namespace TimelessEchoes.Farming
             owner = Oracle.oracle.saveData;
             owner.Farm ??= new FarmState();
             FarmJournal.UpgradeLegacy(owner.Farm);
-            FarmCommands.CaptureGrowthInPlace(owner.Farm, DateTime.UtcNow);
+            // Fresh slots bypass migration; initialize the revision without importing old construction.
+            owner.Farm.ProductionRevision = 1;
+            gateSignature = int.MinValue;
+            skipGrowthFrame = true;
             lastMonotonic = Time.realtimeSinceStartupAsDouble;
             Changed?.Invoke();
         }
@@ -48,32 +55,34 @@ namespace TimelessEchoes.Farming
         {
             if (!Ready || suspended) return;
             if (!ReferenceEquals(owner, Oracle.oracle.saveData)) { SettleResume(); return; }
-            if (Time.realtimeSinceStartupAsDouble - lastMonotonic >= .25) CaptureGrowth();
+            var seconds = Time.unscaledDeltaTime;
+            if (skipGrowthFrame) skipGrowthFrame = false;
+            else if (seconds >= 0 && seconds <= Time.maximumDeltaTime) FarmCommands.TickFields(owner.Farm, seconds);
+            if (owner.Farm.TwinsLevel >= 20 && owner.Farm.Beds.Any(b => FarmCommands.KnownBed(b.Key) && b.Value?.Repeat == true && b.Value.IsReady))
+                Execute(state => FarmCommands.HarvestFields(owner, FarmJournal.NextOperation(state, "harvest-auto"), DateTime.UtcNow, Content, true), false);
             if (Time.realtimeSinceStartupAsDouble >= nextCreditRetry)
             {
                 nextCreditRetry = Time.realtimeSinceStartupAsDouble + 1;
                 RetryPendingCredit();
+                RefreshProgression();
             }
         }
         private void CaptureGrowth()
         {
             if (!Ready || suspended) return;
-            // Settle this bank's elapsed offline time before any command or early save
-            // can adopt it and replace its historical clock baseline.
+            // A newly selected bank must be rebound before any command or snapshot capture.
             if (!ReferenceEquals(owner, Oracle.oracle.saveData)) { SettleResume(); return; }
-            var now = Time.realtimeSinceStartupAsDouble;
-            FarmCommands.CaptureGrowthInPlace(owner.Farm, DateTime.UtcNow, Math.Max(0, now - lastMonotonic));
-            lastMonotonic = now;
+            // Update already records only actual running frames. Save/load never settle a UTC gap.
         }
         private void OnApplicationPause(bool paused) { applicationPaused = paused; UpdateSuspension(); }
         private void OnApplicationFocus(bool focused) { applicationFocused = focused; UpdateSuspension(); }
         private void UpdateSuspension()
         {
-            var value = applicationPaused || !applicationFocused;
+            var value = applicationPaused;
             if (suspended == value) return;
             if (value) CaptureGrowth();
             suspended = value;
-            if (!value) SettleResume();
+            if (!value) { SettleResume(); skipGrowthFrame = true; }
         }
         private bool Execute(Func<FarmState, FarmCommandResult> command, bool townRequired)
         {
@@ -90,16 +99,33 @@ namespace TimelessEchoes.Farming
                 _ => error
             };
             owner = Oracle.oracle.saveData;
+            if (ok) RefreshProgression();
             Changed?.Invoke();
             return ok;
         }
-        public bool PrepareBeds() => Execute(state => FarmCommands.PrepareBeds(state,
-            FarmJournal.NextOperation(state, "prepare-original"), DateTime.UtcNow, tuning), true);
-        public bool Plant(string bedId) => Execute(state => FarmCommands.Plant(state, bedId,
-            FarmJournal.NextOperation(state, "plant-radish:" + bedId), DateTime.UtcNow, tuning), true);
-        public bool HarvestReady() => Execute(state => FarmCommands.HarvestReady(state,
-            FarmJournal.NextOperation(state, "harvest-ready"), DateTime.UtcNow, activeElapsedSeconds: 0,
-            harvestYieldBonusPercent: CauldronResourceYield.BonusPercent(Oracle.oracle.saveData, "Radish")), true);
+        private void RefreshProgression()
+        {
+            if (!Ready) return;
+            var data = Oracle.oracle.saveData;
+            var signature = HashCode.Combine(data.Farm.TwinsLevel, FarmContent.SkillLevel(data, "Farming"),
+                FarmContent.SkillLevel(data, "Woodcutting"), FarmContent.SkillLevel(data, "Mining"), data.General.MaxRunDistance);
+            if (signature == gateSignature) return;
+            gateSignature = signature;
+            QuestManager.Instance?.RefreshFieldsProgression();
+            Changed?.Invoke();
+        }
+        public bool BuildQuest(string questId) => Execute(state => FarmCommands.BuildFields(Oracle.oracle.saveData, questId,
+            FarmJournal.NextOperation(state, "build:" + questId), DateTime.UtcNow, Content), true);
+        public bool PrepareBeds() => BuildQuest("Farm.Garden.Build01.v1");
+        public bool Plant(string bedId) => Plant(bedId, FarmCommands.RadishRecipeId);
+        public bool Plant(string bedId, string recipeId) => Execute(state => FarmCommands.PlantRecipe(Oracle.oracle.saveData, bedId, recipeId,
+            FarmJournal.NextOperation(state, FarmCommands.PlantFingerprint(bedId, recipeId)), DateTime.UtcNow, Content), true);
+        public bool Water(string bedId) => Execute(state => FarmCommands.Water(state, bedId,
+            FarmJournal.NextOperation(state, "water:" + bedId), DateTime.UtcNow), true);
+        public bool SetRepeat(string bedId, bool repeat) => Execute(state => FarmCommands.SetRepeat(state, bedId, repeat,
+            FarmJournal.NextOperation(state, "repeat:" + bedId + ":" + (repeat ? "1" : "0")), DateTime.UtcNow), true);
+        public bool HarvestReady() => Execute(state => FarmCommands.HarvestFields(Oracle.oracle.saveData,
+            FarmJournal.NextOperation(state, "harvest-fields"), DateTime.UtcNow, Content, false), true);
 
         /// <summary>Eligibility and ownership are captured before ordinary completion callbacks.</summary>
         public sealed class StagedTaskCredit
@@ -116,8 +142,12 @@ namespace TimelessEchoes.Farming
             // Retain the completed task's token even after its individual receipt is compacted.
             // An old-owner handle is deliberately not reminted for a newly selected bank.
             if (existing != null) return existing;
-            if (!Ready || InTown || hero == null || hero != HeroController.Instance || hero.IsEcho || task == null || task.taskID != 28) return null;
-            return StageRadishCompletion(UnityEngine.Random.value < developmentRadishPackChance);
+            if (!Ready || InTown || hero == null || hero != HeroController.Instance || hero.IsEcho || task == null || !Content ||
+                !FarmContent.Completed(Oracle.oracle.saveData, FarmContent.IntroductionId)) return null;
+            var recipe = Content.recipes.FirstOrDefault(r => !r.orchard && r.source == task);
+            if (recipe == null || !Content.CanPlant(Oracle.oracle.saveData, recipe)) return null;
+            var id = FarmJournal.StageSeed(State, recipe.seedId, UnityEngine.Random.value < Content.seedChance, DateTime.UtcNow);
+            return id == null ? null : new StagedTaskCredit(this, Oracle.oracle.saveData, Oracle.oracle.CurrentSlot, id);
         }
         public StagedTaskCredit StageRadishCompletion(bool rolled)
         {
@@ -139,12 +169,9 @@ namespace TimelessEchoes.Farming
         private bool CommitPendingCredit(string operationId, FarmPendingCredit pending)
         {
             if (!Ready || pending == null) return false;
-            if (State.Operations.TryGetValue(operationId, out var receipt))
-            {
-                if (receipt?.Fingerprint != "adventure-radish:" + (pending.Rolled ? "1" : "0")) return false;
-                State.PendingCredits?.Remove(operationId);
-                return true;
-            }
+            if (!string.IsNullOrEmpty(pending.SeedId))
+                return Execute(state => FarmCommands.CreditSeed(state, operationId,
+                    new DateTime(pending.CompletedAtUtcTicks, DateTimeKind.Utc), pending.SeedId, pending.Rolled), false);
             return Execute(state => FarmCommands.RecordRadishAdventureCompletion(state, operationId,
                 new DateTime(pending.CompletedAtUtcTicks, DateTimeKind.Utc), true, pending.Rolled), false);
         }
@@ -153,7 +180,7 @@ namespace TimelessEchoes.Farming
             // The journal belongs to this loaded bank. No transient queue crosses owner/slot changes.
             var pending = State?.PendingCredits?.FirstOrDefault(x => x.Value != null && x.Value.CompletedAtUtcTicks > 0 &&
                 x.Value.CompletedAtUtcTicks <= DateTime.MaxValue.Ticks &&
-                FarmJournal.Inspect(State, x.Key, "adventure-radish:" + (x.Value.Rolled ? "1" : "0"), out _) != FarmCommandStatus.Rejected);
+                FarmJournal.Inspect(State, x.Key, FarmJournal.CreditFingerprint(x.Value), out _) != FarmCommandStatus.Rejected);
             if (pending.HasValue && pending.Value.Value != null)
                 CommitPendingCredit(pending.Value.Key, pending.Value.Value);
         }
@@ -169,29 +196,68 @@ namespace TimelessEchoes.Farming
         public void Focus(string bedId)
         {
             if (!InTown) return;
-            var point = bedId == FarmCommands.WestBedId ? new Vector2(-62, 1) : new Vector2(-58, 1);
+            var garden = Array.IndexOf(FarmCommands.GardenBeds, bedId);
+            var orchard = Array.IndexOf(FarmCommands.OrchardBeds, bedId);
+            var point = garden >= 0 ? FieldsWorldView.GardenAnchors[garden] + Vector2.one :
+                orchard >= 0 ? FieldsWorldView.OrchardAnchors[orchard] : new Vector2(-58,-12);
             TownWindowManager.Instance?.CloseAllWindows();
             foreach (var camera in FindObjectsByType<TownCameraPan>(FindObjectsInactive.Include))
                 if (camera.gameObject.activeInHierarchy) { camera.Focus(point); break; }
         }
         public FarmPresentationSnapshot CapturePresentation()
         {
+            var data = Oracle.oracle?.saveData;
             var state = State ?? new FarmState();
-            state.Seeds.TryGetValue(FarmCommands.RadishSeedId, out var seed);
-            double Amount(string name) => Oracle.oracle?.saveData.Resources.TryGetValue(name, out var entry) == true ? entry.Amount : 0;
+            var config = Content;
+            if (!config) return new FarmPresentationSnapshot();
+            double Amount(Resource resource) => ResourceManager.Instance ? ResourceManager.Instance.GetAmount(resource, data) :
+                data?.Resources?.TryGetValue(resource.name, out var entry) == true ? entry.Amount : 0;
+            var ready = QuestManager.Instance?.GetNoticeboardEntries()
+                .Where(e => e.Category == QuestNoticeboardCategory.Ready).Select(e => e.Quest.questId).ToHashSet() ?? new HashSet<string>();
+            var recipes = config.recipes.Where(r => r != null).Select(r =>
+            {
+                state.Seeds.TryGetValue(r.seedId ?? "", out var seed);
+                var quantity = r.paidInput ? Amount(r.paidInput) : seed?.Quantity ?? 0;
+                var discovered = r.paidInput ? ResourceManager.Instance ? ResourceManager.Instance.IsUnlocked(r.paidInput, data) :
+                    data?.Resources?.TryGetValue(r.paidInput.name, out var input) == true && input.Earned : seed?.IsDiscovered == true;
+                return new FarmRecipePresentation { Id=r.id, Title=r.paidInput ? r.paidInput.name : r.output.name + " seeds",
+                    SeedQuantity=quantity, Discovered=discovered, Eligible=config.CanPlant(data,r), Orchard=r.orchard,
+                    Icon=r.packIcon, UnknownIcon=r.unknownIcon, RequiredHeroLevel=r.source ? r.source.requiredSkillLevel : 1 };
+            }).ToArray();
+            var builds = new List<FarmBuildPresentation>();
+            var introComplete = FarmContent.Completed(data,FarmContent.IntroductionId);
+            builds.Add(new FarmBuildPresentation { QuestId=FarmContent.IntroductionId, Title="Fields of Our Own", TwinsLevel=1,
+                Completed=introComplete, CanTurnIn=InTown && ready.Contains(FarmContent.IntroductionId), Costs="Meet Flora and Tillman",
+                Status=introComplete ? "Complete" : data?.CompletedNpcTasks?.Contains("Farmers1") == true ? "Hear Flora and Tillman's introduction" : "Meet Flora and Tillman on an adventure" });
+            foreach (var build in config.builds)
+            {
+                var completed=FarmContent.Completed(data,build.questId);
+                var gate=config.BuildGate(data,build);
+                var costText=string.Join(" + ",build.costs.Select(c => c.amount.ToString("N0") + " " + c.resource.name));
+                var materials=build.costs.All(c=>Amount(c.resource)>=c.amount);
+                builds.Add(new FarmBuildPresentation { QuestId=build.questId,Title=build.title,TwinsLevel=build.twinsLevel,Completed=completed,
+                    Costs=costText,CanTurnIn=InTown && !completed && gate==null && materials && ready.Contains(build.questId),
+                    Status=completed ? "Built" : gate ?? (materials ? "Ready to build" : "Gather the construction materials") });
+            }
+            state.Seeds.TryGetValue(FarmCommands.RadishSeedId,out var radish);
             return new FarmPresentationSnapshot
             {
-                Prepared = state.OriginalBedsPrepared, TownActionsAllowed = InTown,
-                Discovered = seed?.IsDiscovered == true, SeedQuantity = seed?.Quantity ?? 0,
-                LogQuantity = Amount("Log"), StickQuantity = Amount("Stick"),
-                BuildLogCost = tuning.OriginalBedsLogCost, BuildStickCost = tuning.OriginalBedsStickCost,
-                Beds = FarmCommands.OriginalBedIds.Select((id, index) =>
+                DisplayName=config.DisplayName,TwinsLevel=state.TwinsLevel,TwinsXp=state.TwinsXp,TwinsXpRequired=FarmContent.XpRequired(state.TwinsLevel),
+                YieldMultiplier=FarmContent.YieldMultiplier(state.TwinsLevel),SpeedFactor=FarmContent.SpeedFactor(state.TwinsLevel),Recipes=recipes,Builds=builds.ToArray(),
+                Prepared=state.GardenCapacity>0,TownActionsAllowed=InTown,Discovered=radish?.IsDiscovered==true,SeedQuantity=radish?.Quantity??0,
+                LogQuantity=data?.Resources?.TryGetValue("Log",out var log)==true?log.Amount:0,
+                StickQuantity=data?.Resources?.TryGetValue("Stick",out var stick)==true?stick.Amount:0,
+                BuildLogCost=10,BuildStickCost=20,
+                Beds=FarmCommands.GardenBeds.Concat(FarmCommands.OrchardBeds).Select((id,index)=>
                 {
-                    state.Beds.TryGetValue(id, out var bed);
-                    return new FarmBedPresentation { Id = id, Title = index == 0 ? "West bed" : "East bed",
-                        Planted = bed?.IsPlanted == true, Ready = bed?.IsReady == true,
-                        Progress01 = bed?.IsPlanted == true && bed.DurationSeconds > 0 ? (float)(bed.ElapsedSeconds / bed.DurationSeconds) : 0,
-                        RemainingSeconds = bed?.IsPlanted == true ? Math.Max(0, bed.DurationSeconds - bed.ElapsedSeconds) : 0 };
+                    state.Beds.TryGetValue(id,out var bed);
+                    var recipe=config.Recipe(bed?.RecipeId ?? bed?.SelectedRecipeId);
+                    var orchard=index>=6;
+                    return new FarmBedPresentation { Id=id,Title=orchard ? "Orchard plot " + (index-5) : "Bed " + (index+1),
+                        Unlocked=FarmCommands.AccessibleBed(state,id),Orchard=orchard,RecipeId=recipe?.id,RecipeTitle=recipe?.output?.name,
+                        Icon=recipe?.output?.icon,Watered=bed?.Watered==true,Repeat=bed?.Repeat==true,Planted=bed?.IsPlanted==true,Ready=bed?.IsReady==true,
+                        Progress01=bed?.IsPlanted==true && bed.ReadyAfterSeconds>0?Mathf.Clamp01((float)(bed.ElapsedSeconds/bed.ReadyAfterSeconds)):0,
+                        RemainingSeconds=bed?.IsPlanted==true?Math.Max(0,bed.ReadyAfterSeconds-bed.ElapsedSeconds):0 };
                 }).ToArray()
             };
         }

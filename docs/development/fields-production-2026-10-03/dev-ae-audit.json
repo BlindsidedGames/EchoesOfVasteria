@@ -1,0 +1,62 @@
+{
+  "removedDocIds": [
+    140410758,
+    140410759,
+    140410760,
+    140410761,
+    993136412,
+    993136413,
+    993136415,
+    993136416,
+    1375772634,
+    1375772635,
+    1375772636,
+    1375772637,
+    1375772638,
+    1375772639,
+    1375772640,
+    1395324304,
+    1395324305,
+    1395324306,
+    1395324307,
+    1395324308,
+    1861144587,
+    1861144588,
+    1861144589,
+    1861144590,
+    1861144591,
+    1937865726,
+    1937865728,
+    1937865729
+  ],
+  "externalRefs": [
+    [
+      209856030,
+      140410758,
+      "MonoBehaviour:"
+    ],
+    [
+      1941665148,
+      140410759,
+      "RectTransform:"
+    ]
+  ],
+  "mainBeforeSHA256": "51e156c71670406db674963bd902bb3b68edd406630dfd54f5d7d77f6d0cbd30",
+  "mainAfterSHA256": "215f55f64a988087bb5a4e0a12559c59d434acebd3d87380a832063963bc5040",
+  "removedObjects": "Retired UGUI Alter-Echoes dropdown subtree and orphaned retired TMP title; only generic Unity UI/TMP component GUIDs, no callbacks",
+  "removedExternalRefs": [
+    "parentDropdown child140410759",
+    "IntoTheWoods visibility row solely targeting140410758"
+  ],
+  "retainedActiveEcho": "Disciples WikiEntry retained; stale disabled title corrected toDisciples",
+  "danglingReferencesToRemovedIds": 0,
+  "remainingRetiredLabels": 0,
+  "scriptReferenceAudit": {
+    "totalUniqueScriptGuids": 133,
+    "resolvedCount": 132,
+    "unresolvedScriptGuids": [
+      "0000000000000000e000000000000000"
+    ],
+    "scope": "Static GUID lookup in Assets, Packages and current Library/PackageCache; not Unity runtime missing-script scan"
+  }
+}

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TimelessEchoes.Farming;
 using Blindsided.Utilities;
 using TimelessEchoes.Quests;
 using UnityEngine;
@@ -71,6 +72,11 @@ namespace TimelessEchoes.UI.Toolkit
                 button.RegisterCallback<NavigationSubmitEvent>(_ => Audio.AudioManager.Instance?.PlayUIButtonClick());
                 if(entry.id=="stats") { button.Add(new ToolkitStatisticsGlyph()); button.tooltip="Statistics"; }
                 else if (entry.action == NavAction.Close) { button.text="×";button.AddToClassList("close-control");button.tooltip="Close window"; }
+                else if (entry.action == NavAction.Window && entry.window == TownWindowManager.Window.Farm)
+                {
+                    var label = new Label { name = "fields-navigation-label", text = FarmContent.Load()?.DisplayName ?? "Fields", pickingMode = PickingMode.Ignore };
+                    label.AddToClassList("eov-navigation-label"); button.Add(label);
+                }
                 else if (entry.icon)
                 {
                     VisualElement icon;
@@ -207,6 +213,11 @@ namespace TimelessEchoes.UI.Toolkit
                 var visible = ToolkitVisibilityRule.All(entry.visibility) && (entry.group == Group.Toolbar || entry.group == openGroup);
                 if (entry.action == NavAction.Close) visible &= windows != null && windows.HasOpenWindow;
                 rows[entry].style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+                if (entry.action == NavAction.Window && entry.window == TownWindowManager.Window.Farm)
+                {
+                    var label = buttons[entry].Q<Label>("fields-navigation-label");
+                    if (label != null) label.text = FarmContent.Load()?.DisplayName ?? "Fields";
+                }
                 buttons[entry].SetEnabled(entry.action != NavAction.Window || windows == null || windows.CanOpenWindow(entry.window));
             }
             SetVisible(forgeAttention, windows != null && windows.ForgeNeedsAttention);

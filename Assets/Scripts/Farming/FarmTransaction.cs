@@ -26,12 +26,19 @@ namespace TimelessEchoes.Farming
                 candidate.Resources[delta.Key] = entry;
                 candidate.ResourceStats.TryGetValue(delta.Key, out var stats);
                 stats ??= new GameData.ResourceRecord();
+                if (double.IsNaN(stats.TotalReceived) || double.IsInfinity(stats.TotalReceived) || stats.TotalReceived < 0 ||
+                    double.IsNaN(stats.TotalSpent) || double.IsInfinity(stats.TotalSpent) || stats.TotalSpent < 0)
+                { candidate = null; error = "Invalid resource ledger."; return false; }
                 if (delta.Value > 0) stats.TotalReceived += delta.Value;
                 else stats.TotalSpent -= delta.Value;
+                if (double.IsInfinity(stats.TotalReceived) || double.IsInfinity(stats.TotalSpent))
+                { candidate = null; error = "Resource ledger overflow."; return false; }
                 candidate.ResourceStats[delta.Key] = stats;
             }
             if (captured.Farm?.OriginalBedsPrepared != true && candidate.Farm.OriginalBedsPrepared)
                 candidate.Quests["Farm.PrepareBeds"] = new GameData.QuestRecord { Completed = true, CompletedTimestamp = DateTime.UtcNow.Ticks };
+            foreach (var id in proposal.CompletedQuests)
+                candidate.Quests[id] = new GameData.QuestRecord { Completed = true, CompletedTimestamp = DateTime.UtcNow.Ticks };
             return true;
         }
     }

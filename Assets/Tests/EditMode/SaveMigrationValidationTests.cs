@@ -38,7 +38,7 @@ namespace Tests.EditMode
             source.CauldronCardCounts["RES:Radish"] = 3500;
             var migrated = SaveMigrationRunner.TryMigrate(source, "9999.0.0");
             Assert.IsTrue(migrated.Succeeded, migrated.Error);
-            Assert.AreEqual(5, migrated.Data.SchemaVersion);
+            Assert.AreEqual(GameData.CurrentSchemaVersion, migrated.Data.SchemaVersion);
             Assert.Contains("SchemaV5AlterEchoRetirement", migrated.Data.AppliedMigrationIds.ToArray());
             var imported = Sirenix.Serialization.SerializationUtility.DeserializeValue<GameData>(CurrentSaveCodec.Serialize(migrated.Data), Sirenix.Serialization.DataFormat.Binary);
             var repeated = SaveMigrationRunner.TryMigrate(imported, "9999.0.0");

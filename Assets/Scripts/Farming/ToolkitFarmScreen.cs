@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using TimelessEchoes.Farming;
+using TimelessEchoes.Quests;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Blindsided.Utilities.CalcUtils;
 
 namespace TimelessEchoes.UI.Toolkit
 {
-    /// <summary>Native bed list; commands are delegated to the durable farm service.</summary>
+    /// <summary>One combined Fields workspace. All economic actions remain owned by the durable service.</summary>
     [RequireComponent(typeof(UIDocument))]
     public sealed class ToolkitFarmScreen : MonoBehaviour
     {
@@ -16,337 +18,236 @@ namespace TimelessEchoes.UI.Toolkit
         [SerializeField] private ToolkitTheme theme;
         [SerializeField] private ThemeStyleSheet runtimeTheme;
         [SerializeField] private PanelTextSettings textSettings;
-        [SerializeField] private Sprite knownPack;
-        [SerializeField] private Sprite unknownPack;
-        [SerializeField] private Sprite cropIcon = null;
+        [SerializeField] private Sprite knownPack, unknownPack, cropIcon;
         private IFarmPresentationSource source;
         private PanelSettings settings;
-        private VisualElement root;
-        private ScrollView scroll;
-        private ScrollView narrowScroll;
-        private Image seedIcon;
-        private Label seedLabel, seedQuantity, seedDescription, bedSummary, buildCost, error, townStatus;
-        private VisualElement workspace, inventory, bedColumn;
-        private VisualElement preparation;
-        private Button prepare, harvest;
-        private readonly List<BedRow> rows = new();
+        private VisualElement root, columns, seedGrid, bedList, orchardList, roadmap, xpBar, seedColumn, bedColumn, townColumn;
+        private Foldout orchard;
+        private Label heading, xp, error, selection, status;
+        private Image townImage;
+        private Button plant, harvest;
         private readonly ToolkitWindowLayout layout = new();
+        private string selectedRecipe, selectedBed;
         private float nextRefresh;
-        private bool? stackedLayout;
-        private float previousRowsHeight = -1;
-
-        private sealed class BedRow
-        {
-            public string Id;
-            public VisualElement Root, Progress, Planting;
-            public Label Title, Status, PlantCost;
-            public Image Crop;
-            public Button Plant, Focus;
-        }
-
-        public float CompanionWidth { get; set; } = 0;
+        private string presentationKey;
+        private bool pointerDown;
+        private Camera previewCamera;
+        private RenderTexture previewTexture;
+        public float CompanionWidth { get; set; }
         public bool IsOpen => root != null;
-        public bool IsConfigured => theme && runtimeTheme && textSettings && knownPack && unknownPack && (source != null || sourceBehaviour is IFarmPresentationSource);
+        public bool IsConfigured => theme && runtimeTheme && textSettings && (source != null || sourceBehaviour is IFarmPresentationSource);
 
         public void Configure(IFarmPresentationSource presentationSource, ToolkitTheme toolkitTheme,
             ThemeStyleSheet stylesheet, PanelTextSettings panelTextSettings, Sprite discoveredPack, Sprite undiscoveredPack)
         {
-            Hide();
-            source = presentationSource;
-            sourceBehaviour = presentationSource as MonoBehaviour;
-            theme = toolkitTheme;
-            runtimeTheme = stylesheet;
-            textSettings = panelTextSettings;
-            knownPack = discoveredPack;
-            unknownPack = undiscoveredPack;
+            Hide(); source = presentationSource; sourceBehaviour = presentationSource as MonoBehaviour;
+            theme = toolkitTheme; runtimeTheme = stylesheet; textSettings = panelTextSettings;
+            knownPack = discoveredPack; unknownPack = undiscoveredPack;
         }
-
         public bool Show()
         {
             if (IsOpen) return true;
             source ??= sourceBehaviour as IFarmPresentationSource;
             if (!IsConfigured || !source.Ready) return false;
-            if (!settings)
-            {
-                settings = ToolkitPanel.CreateSettings(runtimeTheme, textSettings);
-                settings.sortingOrder = 100;
-            }
-            var document = GetComponent<UIDocument>();
-            document.panelSettings = settings;
+            if (!settings) { settings = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); settings.sortingOrder = 100; }
+            var document = GetComponent<UIDocument>(); document.panelSettings = settings;
             document.rootVisualElement.pickingMode = PickingMode.Ignore;
-            root = new VisualElement { name = "farm" };
-            theme.Apply(root);
-            ToolkitGameplay.Apply(root, theme);
-            root.AddToClassList("menu-surface");
-            root.AddToClassList("quests-reviewed");
-            document.rootVisualElement.Add(root);
-            ToolkitGameplay.L(root, "Farm", "quests-heading");
-            townStatus = ToolkitGameplay.L(root, "Return to town to tend the beds.", "muted");
-            townStatus.style.marginBottom = 8;
-            error = ToolkitGameplay.L(root, "", "status");
-            preparation = ToolkitGameplay.E(root, "eov-quest-row");
-            ToolkitGameplay.L(preparation, "Barkley · Prepare two beds", "heading");
-            buildCost = ToolkitGameplay.L(preparation, "", "muted");
-            buildCost.style.marginBottom = 4;
-            prepare = ToolkitControls.Button("farm-prepare-beds", () => Execute(source.PrepareBeds), null);
-            prepare.text = "Prepare beds";
-            prepare.style.alignSelf = Align.FlexStart;
-            preparation.Add(prepare);
-            narrowScroll = new ScrollView(ScrollViewMode.Vertical)
-            {
-                name = "farm-narrow-scroll",
-                horizontalScrollerVisibility = ScrollerVisibility.Hidden,
-                verticalScrollerVisibility = ScrollerVisibility.Auto
-            };
-            narrowScroll.style.display = DisplayStyle.None;
-            narrowScroll.style.flexGrow = 1;
-            narrowScroll.style.minHeight = 0;
-            narrowScroll.AddToClassList("eov-scroll");
-            theme.StyleScroll(narrowScroll);
-            ToolkitGameplay.StyleScroll(narrowScroll);
-            root.Add(narrowScroll);
-            workspace = ToolkitGameplay.E(root, "row workspace");
-            inventory = ToolkitGameplay.E(workspace, "column");
-            inventory.name = "farm-seed-inventory";
-            inventory.style.width = 144;
-            inventory.style.flexShrink = 0;
-            inventory.style.marginRight = 12;
-            ToolkitGameplay.L(inventory, "Seed inventory", "heading");
-            var seedCard = ToolkitGameplay.E(inventory, "surface");
-            Frame(seedCard);
-            seedCard.style.flexShrink = 0;
-            seedCard.style.paddingLeft = seedCard.style.paddingRight = 8;
-            seedCard.style.paddingTop = seedCard.style.paddingBottom = 8;
-            var seedTop = ToolkitGameplay.E(seedCard, "row between");
-            seedIcon = ToolkitGameplay.Icon(seedTop, unknownPack, 40);
-            var amount = ToolkitGameplay.E(seedTop, "grow");
-            seedQuantity = ToolkitGameplay.L(amount, "", "amount");
-            ToolkitGameplay.L(amount, "packs", "muted");
-            seedLabel = ToolkitGameplay.L(seedCard, "", "heading");
-            seedLabel.style.marginTop = 8;
-            seedDescription = ToolkitGameplay.L(seedCard, "", "muted");
-            bedColumn = ToolkitGameplay.E(workspace, "column grow");
-            bedColumn.style.flexBasis = 0;
-            var bedHeading = ToolkitGameplay.E(bedColumn, "row between");
-            bedHeading.style.marginBottom = 8;
-            var bedTitles = ToolkitGameplay.E(bedHeading, "grow");
-            ToolkitGameplay.L(bedTitles, "Crop beds", "heading");
-            bedSummary = ToolkitGameplay.L(bedTitles, "", "muted");
-            harvest = ToolkitControls.Button("farm-harvest-ready", () => Execute(source.HarvestReady), null);
-            harvest.text = "Harvest all ready";
-            harvest.AddToClassList("primary");
-            harvest.style.marginLeft = 8;
-            bedHeading.Add(harvest);
-            scroll = ToolkitControls.RecessedScroll(bedColumn, "farm-beds", theme);
-            source.Changed += Refresh;
-            Refresh();
-            layout.Fill(root, theme, CompanionWidth);
-            return true;
+            root = new VisualElement { name = "farm" }; theme.Apply(root); ToolkitGameplay.Apply(root, theme);
+            root.AddToClassList("menu-surface"); document.rootVisualElement.Add(root);
+            root.RegisterCallback<PointerDownEvent>(_ => pointerDown = true, TrickleDown.TrickleDown);
+            root.RegisterCallback<PointerUpEvent>(_ => pointerDown = false, TrickleDown.TrickleDown);
+            root.RegisterCallback<PointerCancelEvent>(_ => pointerDown = false);
+            var header = ToolkitGameplay.E(root, "row between");
+            heading = ToolkitGameplay.L(header, "Fields · Flora & Tillman", "quests-heading");
+            xp = ToolkitGameplay.L(header, "", "muted"); xpBar = ToolkitGameplay.Bar(root);
+            xpBar.parent.style.height = 4; xpBar.parent.style.marginBottom = 6;
+            status = ToolkitGameplay.L(root, "", "muted"); error = ToolkitGameplay.L(root, "", "status");
+            columns = ToolkitGameplay.E(root, "row workspace"); columns.style.flexGrow = 1; columns.style.minHeight = 0;
+            seedColumn = ToolkitGameplay.E(columns, "column"); seedColumn.style.flexShrink = 0;
+            ToolkitGameplay.L(seedColumn, "Seeds & saplings", "heading");
+            var seeds = ToolkitControls.RecessedScroll(seedColumn, "fields-seeds", theme, compact: true);
+            seeds.parent.style.flexGrow = 1; seeds.parent.style.minHeight = 0;
+            seeds.parent.style.paddingLeft = seeds.parent.style.paddingRight = 2;
+            seeds.style.flexGrow = 1; seeds.style.minHeight = 0;
+            seedGrid = ToolkitGameplay.E(seeds, "row"); seedGrid.style.flexWrap = Wrap.Wrap;
+            bedColumn = ToolkitGameplay.E(columns, "column grow"); bedColumn.style.minWidth = 220;
+            var controls = ToolkitGameplay.E(bedColumn, "row between"); ToolkitGameplay.L(controls, "Beds", "heading");
+            harvest = Button(controls, "Harvest ready", () => Execute(source.HarvestReady)); harvest.name = "farm-harvest-ready";
+            var beds = ToolkitControls.RecessedScroll(bedColumn, "fields-beds", theme, compact: true);
+            beds.parent.style.flexGrow = 1; beds.parent.style.minHeight = 0;
+            beds.style.flexGrow = 1; beds.style.minHeight = 0;
+            bedList = ToolkitGameplay.E(beds, "column");
+            orchard = new Foldout { text = "Orchard plots", name = "fields-orchard", value = false }; beds.Add(orchard);
+            orchardList = ToolkitGameplay.E(orchard, "column");
+            var planting = ToolkitGameplay.E(bedColumn, "row between"); planting.style.flexWrap = Wrap.Wrap;
+            selection = ToolkitGameplay.L(planting, "Select seeds and an empty bed", "muted"); selection.style.flexShrink = 1;
+            plant = Button(planting, "Plant", PlantSelected); plant.name = "fields-plant-selected"; plant.AddToClassList("primary");
+            townColumn = ToolkitGameplay.E(columns, "column"); townColumn.style.flexShrink = 0;
+            ToolkitGameplay.L(townColumn, "Fields in town", "heading");
+            townImage = new Image { name = "fields-town-preview", scaleMode = ScaleMode.ScaleToFit };
+            townColumn.Add(townImage);
+            Button(townColumn, "Focus Fields", () => source.Focus(selectedBed ?? FarmCommands.WestBedId));
+            ToolkitGameplay.L(townColumn, "10 Twins XP per harvest. Growth while playing.", "muted");
+            var future = new Foldout { text = "Construction", value = false }; townColumn.Add(future);
+            var plans = ToolkitControls.RecessedScroll(future, "fields-construction", theme, compact: true);
+            plans.parent.style.maxHeight = 150;
+            roadmap = ToolkitGameplay.E(plans, "column");
+            source.Changed += Refresh; CreatePreview(); Refresh(); layout.Fill(root, theme, CompanionWidth); return true;
         }
-
-        private void Execute(Func<bool> command)
+        private static Button Button(VisualElement parent, string text, Action action)
         {
-            if (source == null || !source.Ready) return;
-            // Recheck in the command owner; button state is only presentation.
-            command();
-            Refresh();
+            var button = ToolkitControls.Button("fields-" + text.Replace(' ', '-').ToLowerInvariant(), action, null);
+            button.text = text; parent.Add(button); return button;
         }
-
-        private void CreateRows(FarmBedPresentation[] beds)
+        private void Execute(Func<bool> command) { if (source?.Ready == true) { command(); Refresh(); } }
+        private void PlantSelected()
         {
-            scroll.Clear();
-            rows.Clear();
-            previousRowsHeight = -1;
-            foreach (var bed in beds)
-            {
-                if (bed == null || string.IsNullOrEmpty(bed.Id)) continue;
-                var id = bed.Id;
-                var row = new BedRow { Id = id, Root = ToolkitGameplay.E(scroll, "surface") };
-                row.Root.name = "farm-bed-" + id;
-                Frame(row.Root);
-                row.Root.style.marginBottom = 8;
-                row.Root.style.paddingLeft = row.Root.style.paddingRight = 8;
-                row.Root.style.paddingTop = row.Root.style.paddingBottom = 8;
-                var top = ToolkitGameplay.E(row.Root, "row between");
-                var title = ToolkitGameplay.E(top, "grow");
-                row.Title = ToolkitGameplay.L(title, bed.Title ?? id, "heading quest-name");
-                row.Status = ToolkitGameplay.L(title, "", "");
-                row.Crop = ToolkitGameplay.Icon(top, cropIcon, 28);
-                row.Crop.style.marginRight = 0;
-                row.Progress = ToolkitGameplay.Bar(row.Root);
-                row.Progress.parent.style.height = 4;
-                row.Progress.parent.style.marginTop = 4;
-                row.Progress.parent.style.marginBottom = 8;
-                var controls = ToolkitGameplay.E(row.Root, "row");
-                controls.style.alignItems = Align.Center;
-                controls.style.flexWrap = Wrap.Wrap;
-                controls.style.marginTop = 8;
-                row.Planting = ToolkitGameplay.E(controls, "row grow");
-                row.Planting.style.alignItems = Align.Center;
-                row.Planting.style.flexWrap = Wrap.Wrap;
-                row.Planting.style.minWidth = 96;
-                row.Plant = ToolkitControls.Button("farm-plant-" + id, () => Execute(() => source.Plant(id)), null);
-                row.Plant.AddToClassList("primary");
-                row.Plant.style.marginRight = 8;
-                row.Planting.Add(row.Plant);
-                row.PlantCost = ToolkitGameplay.L(row.Planting, "1 seed pack", "muted");
-                row.Focus = ToolkitControls.Button("farm-focus-" + id, () => source.Focus(id), null);
-                row.Focus.text = "View bed";
-                row.Focus.AddToClassList("quiet");
-                row.Focus.style.marginLeft = StyleKeyword.Auto;
-                controls.Add(row.Focus);
-                rows.Add(row);
-            }
+            if (source is FarmService service && selectedBed != null && selectedRecipe != null)
+                Execute(() => service.Plant(selectedBed, selectedRecipe));
         }
-
         public void Refresh()
         {
             if (!IsOpen || source == null) return;
             var snapshot = source.Ready ? source.CapturePresentation() : null;
-            if (snapshot == null)
+            error.text = source.LastError ?? ""; error.style.display = error.text.Length == 0 ? DisplayStyle.None : DisplayStyle.Flex;
+            if (snapshot == null) { plant.SetEnabled(false); harvest.SetEnabled(false); return; }
+            heading.text = snapshot.DisplayName + " · Flora & Tillman · Level " + snapshot.TwinsLevel;
+            xp.text = snapshot.TwinsXp + " / " + snapshot.TwinsXpRequired + " XP";
+            xpBar.style.width = Length.Percent(Mathf.Clamp01((float)snapshot.TwinsXp / Math.Max(1, snapshot.TwinsXpRequired)) * 100);
+            status.text = snapshot.TownActionsAllowed ? "Yield ×" + snapshot.YieldMultiplier.ToString("0.00") + " · Growth time ×" + snapshot.SpeedFactor.ToString("0.0") : "Return to town to tend Fields.";
+            var key = PresentationKey(snapshot);
+            if (presentationKey == key)
             {
-                prepare.SetEnabled(false);
-                harvest.SetEnabled(false);
-                foreach (var row in rows) { row.Plant.SetEnabled(false); row.Focus.SetEnabled(false); }
-                error.text = source.LastError ?? string.Empty;
-                error.style.display = string.IsNullOrEmpty(error.text) ? DisplayStyle.None : DisplayStyle.Flex;
+                foreach (var bed in snapshot.Beds ?? Array.Empty<FarmBedPresentation>())
+                {
+                    if (bed == null) continue;
+                    var row = columns.Q<VisualElement>("farm-bed-" + bed.Id);
+                    var label = row?.Q<Label>("bed-status");
+                    if (label != null) label.text = BedStatus(bed);
+                    var fill = row?.Q<VisualElement>("bed-progress");
+                    if (fill != null) fill.style.width = Length.Percent(Mathf.Clamp01(bed.Progress01) * 100);
+                }
                 return;
             }
-            var beds = snapshot.Beds ?? Array.Empty<FarmBedPresentation>();
-            var rebuild = rows.Count != beds.Length;
-            if (!rebuild)
-                for (var i = 0; i < beds.Length; i++)
-                    if (beds[i] == null || rows[i].Id != beds[i].Id) { rebuild = true; break; }
-            if (rebuild) CreateRows(beds);
-            seedIcon.sprite = snapshot.Discovered ? knownPack : unknownPack;
-            seedLabel.text = snapshot.Discovered ? "Radish seeds" : "Undiscovered";
-            seedQuantity.text = snapshot.Discovered ? snapshot.SeedQuantity.ToString(CultureInfo.InvariantCulture) : "—";
-            seedDescription.text = snapshot.Discovered ? "1 pack plants 1 bed." : "No seed pack discovered yet.";
-            seedLabel.tooltip = snapshot.Discovered ? "Radish seed packs" : "Undiscovered";
-            preparation.style.display = snapshot.Prepared ? DisplayStyle.None : DisplayStyle.Flex;
-            buildCost.text = Number(snapshot.LogQuantity) + "/" + Number(snapshot.BuildLogCost) + " Logs   ·   " + Number(snapshot.StickQuantity) + "/" + Number(snapshot.BuildStickCost) + " Sticks";
-            prepare.SetEnabled(snapshot.TownActionsAllowed && !snapshot.Prepared && snapshot.LogQuantity >= snapshot.BuildLogCost && snapshot.StickQuantity >= snapshot.BuildStickCost);
-            townStatus.style.display = snapshot.TownActionsAllowed ? DisplayStyle.None : DisplayStyle.Flex;
-            var readyCount = 0;
-            var plantedCount = 0;
-            foreach (var row in rows)
+            if (pointerDown) return;
+            presentationKey = key;
+            seedGrid.Clear();
+            foreach (var recipe in snapshot.Recipes ?? Array.Empty<FarmRecipePresentation>())
             {
-                var bed = Array.Find(beds, value => value != null && value.Id == row.Id);
+                if (recipe == null) continue;
+                var id = recipe.Id;
+                var card = Button(seedGrid, "", () => { selectedRecipe = id; Refresh(); });
+                card.name = "fields-seed-" + id; card.style.width = 40; card.style.height = 60; card.style.flexShrink = 0;
+                card.style.marginRight = 2; card.style.marginBottom = 3;
+                card.style.paddingLeft = card.style.paddingRight = 1;
+                card.style.flexDirection = FlexDirection.Column; card.style.alignItems = Align.Center;
+                ToolkitGameplay.Icon(card, recipe.Discovered ? recipe.Icon : recipe.UnknownIcon ? recipe.UnknownIcon : unknownPack, 24);
+                var caption = ToolkitGameplay.L(card, recipe.Discovered ? recipe.Title : "???", "");
+                caption.style.fontSize = 8; caption.style.maxWidth = 38;
+                caption.style.whiteSpace = WhiteSpace.NoWrap; caption.style.overflow = Overflow.Hidden;
+                caption.style.textOverflow = TextOverflow.Ellipsis;
+                ToolkitGameplay.L(card, recipe.Discovered ? recipe.SeedQuantity.ToString("0.##", CultureInfo.InvariantCulture) : "—", "muted");
+                card.EnableInClassList("primary", selectedRecipe == id);
+                card.tooltip = recipe.Discovered ? recipe.Title + " · Farming " + recipe.RequiredHeroLevel + (recipe.Eligible ? "" : " required") : "Discover this seed or sapling first.";
+            }
+            bedList.Clear(); orchardList.Clear(); var ready = 0;
+            foreach (var bed in snapshot.Beds ?? Array.Empty<FarmBedPresentation>())
+            {
                 if (bed == null) continue;
-                row.Title.text = bed.Title ?? bed.Id;
-                row.Status.text = !snapshot.Prepared ? "Not prepared" : !bed.Planted ? "Empty · ready to plant" : bed.Ready ? "Radish · Ready to harvest" : "Radish · " + FormatTime(Math.Max(0, bed.RemainingSeconds), mspace: false, shortForm: true) + " remaining";
-                row.Progress.style.width = Length.Percent(Mathf.Clamp01(bed.Progress01) * 100);
-                row.Progress.parent.style.display = snapshot.Prepared && bed.Planted ? DisplayStyle.Flex : DisplayStyle.None;
-                row.Root.EnableInClassList("quest-ready", bed.Ready);
-                row.Title.EnableInClassList("quest-name", bed.Ready);
-                row.Crop.style.display = bed.Planted && snapshot.Discovered && cropIcon ? DisplayStyle.Flex : DisplayStyle.None;
-                row.Planting.style.display = snapshot.Prepared && !bed.Planted ? DisplayStyle.Flex : DisplayStyle.None;
-                row.Plant.text = snapshot.Discovered ? "Plant Radish" : "Plant";
-                row.PlantCost.text = !snapshot.Discovered ? "Discover seeds first" : snapshot.SeedQuantity == 0 ? "No packs owned" : "1 seed pack";
-                row.Plant.SetEnabled(snapshot.TownActionsAllowed && snapshot.Prepared && !bed.Planted && snapshot.Discovered && snapshot.SeedQuantity > 0);
-                row.Focus.SetEnabled(snapshot.TownActionsAllowed);
-                if (bed.Planted) plantedCount++;
-                if (bed.Ready && bed.Planted) readyCount++;
+                var id = bed.Id; var row = ToolkitGameplay.E(bed.Orchard ? orchardList : bedList, "surface column");
+                row.name = "farm-bed-" + id; row.style.paddingTop = row.style.paddingBottom = 3;
+                row.style.marginBottom = 3; row.EnableInClassList("quest-ready", bed.Ready || selectedBed == id);
+                var top = ToolkitGameplay.E(row, "row between");
+                var description = ToolkitGameplay.E(top, "grow");
+                var bedTitle = ToolkitGameplay.L(description, bed.Title, "heading"); bedTitle.style.fontSize = 10;
+                var label = ToolkitGameplay.L(description, BedStatus(bed), "muted"); label.name = "bed-status";
+                if (bed.Icon) ToolkitGameplay.Icon(top, bed.Icon, 24);
+                var select = Button(top, "Select", () => { selectedBed = id; Refresh(); }); select.SetEnabled(bed.Unlocked);
+                if (bed.Planted)
+                {
+                    var fill = ToolkitGameplay.Bar(row); fill.name = "bed-progress"; fill.style.width = Length.Percent(Mathf.Clamp01(bed.Progress01) * 100);
+                    var actions = ToolkitGameplay.E(row, "row");
+                    actions.style.display = selectedBed == id ? DisplayStyle.Flex : DisplayStyle.None;
+                    actions.style.flexWrap = Wrap.Wrap;
+                    if (source is FarmService service)
+                    {
+                        var water = Button(actions, bed.Watered ? "Watered" : "Water once", () => Execute(() => service.Water(id)));
+                        water.SetEnabled(snapshot.TownActionsAllowed && !bed.Watered && !bed.Ready);
+                        var repeat = Button(actions, bed.Repeat ? "Repeat: on" : "Repeat: off", () => Execute(() => service.SetRepeat(id, !bed.Repeat)));
+                        repeat.SetEnabled(snapshot.TownActionsAllowed && (snapshot.TwinsLevel >= 20 || bed.Repeat));
+                        repeat.tooltip = "Twins level 20: harvest and replant using one matching seed or sapling. Stops when inputs run out.";
+                    }
+                    Button(actions, "Focus", () => source.Focus(id));
+                    if (bed.Ready) ready++;
+                }
             }
-            bedSummary.text = readyCount > 0 ? readyCount + " of " + beds.Length + " ready to harvest" : plantedCount > 0 ? plantedCount + " of " + beds.Length + " growing" : snapshot.Prepared ? beds.Length + " beds available" : "Prepare the beds to begin";
-            harvest.SetEnabled(snapshot.TownActionsAllowed && readyCount > 0);
-            error.text = source.LastError ?? string.Empty;
-            error.style.display = string.IsNullOrEmpty(error.text) ? DisplayStyle.None : DisplayStyle.Flex;
-        }
-
-        // Match the field and thin divider colours used by the native Forge/Quest panels.
-        private static void Frame(VisualElement element)
-        {
-            element.style.backgroundColor = (Color)new Color32(56, 46, 49, 255);
-            element.style.borderLeftWidth = element.style.borderRightWidth = .5f;
-            element.style.borderTopWidth = element.style.borderBottomWidth = .5f;
-            Color line = new Color32(116, 81, 74, 255);
-            element.style.borderLeftColor = element.style.borderRightColor = line;
-            element.style.borderTopColor = element.style.borderBottomColor = line;
-        }
-
-        private static string Number(double value) => value.ToString("0.##", CultureInfo.InvariantCulture);
-
-        private void LayoutColumns()
-        {
-            if (workspace == null || inventory == null || narrowScroll == null) return;
-            if (root.contentRect.width <= 0) return;
-            var stacked = root.contentRect.width < 410;
-            if (stackedLayout != stacked)
+            var selected = Array.Find(snapshot.Recipes ?? Array.Empty<FarmRecipePresentation>(), r => r?.Id == selectedRecipe);
+            var target = Array.Find(snapshot.Beds ?? Array.Empty<FarmBedPresentation>(), b => b?.Id == selectedBed);
+            selection.text = selected == null || target == null ? "Select seeds and an empty bed" : (selected.Discovered ? selected.Title : "Undiscovered") + " → " + target.Title;
+            plant.SetEnabled(snapshot.TownActionsAllowed && selected?.Eligible == true && selected.Discovered && selected.SeedQuantity >= 1 && target?.Unlocked == true && !target.Planted && target.Orchard == selected.Orchard);
+            harvest.SetEnabled(snapshot.TownActionsAllowed && ready > 0);
+            roadmap.Clear();
+            foreach (var build in snapshot.Builds ?? Array.Empty<FarmBuildPresentation>())
             {
-                // Change hierarchy only on a mode transition, outside a geometry callback.
-                // Updating it while the panel is laying out can recursively invalidate it.
-                if (stacked && workspace.parent != narrowScroll.contentContainer)
-                {
-                    preparation.RemoveFromHierarchy();
-                    workspace.RemoveFromHierarchy();
-                    narrowScroll.Add(preparation);
-                    narrowScroll.Add(workspace);
-                }
-                else if (!stacked && workspace.parent != root)
-                {
-                    preparation.RemoveFromHierarchy();
-                    workspace.RemoveFromHierarchy();
-                    root.Insert(root.IndexOf(narrowScroll), preparation);
-                    root.Add(workspace);
-                }
-                narrowScroll.style.display = stacked ? DisplayStyle.Flex : DisplayStyle.None;
-                workspace.style.flexGrow = stacked ? 0 : 1;
-                workspace.style.flexShrink = stacked ? 0 : 1;
-                workspace.style.flexBasis = stacked ? StyleKeyword.Auto : new StyleLength(0f);
-                workspace.style.flexDirection = stacked ? FlexDirection.Column : FlexDirection.Row;
-                inventory.style.width = stacked ? StyleKeyword.Auto : new StyleLength(144);
-                inventory.style.marginRight = stacked ? 0 : 12;
-                inventory.style.marginBottom = stacked ? 12 : 0;
-                bedColumn.style.flexGrow = stacked ? 0 : 1;
-                bedColumn.style.flexShrink = stacked ? 0 : 1;
-                bedColumn.style.flexBasis = stacked ? StyleKeyword.Auto : new StyleLength(0f);
-                scroll.parent.style.flexGrow = stacked ? 0 : 1;
-                scroll.parent.style.flexShrink = stacked ? 0 : 1;
-                scroll.verticalScrollerVisibility = stacked ? ScrollerVisibility.Hidden : ScrollerVisibility.Auto;
-                if (!stacked) scroll.style.height = StyleKeyword.Auto;
-                stackedLayout = stacked;
-                previousRowsHeight = -1;
+                if (build == null) continue;
+                var row = ToolkitGameplay.E(roadmap, "row between"); var detail = ToolkitGameplay.E(row, "grow");
+                ToolkitGameplay.L(detail, build.Title + " · Twins " + build.TwinsLevel, "heading");
+                ToolkitGameplay.L(detail, build.Completed ? "Completed" : build.Status + " · " + build.Costs, "muted");
+                var questId = build.QuestId;
+                var handin = Button(row, "Hand in", () => { QuestManager.Instance?.TryTurnInQuest(questId); Refresh(); });
+                handin.SetEnabled(snapshot.TownActionsAllowed && build.CanTurnIn && !build.Completed);
             }
-            if (!stacked) return;
-            // Measure the rows, not the viewport/container whose height this controls.
-            // The latter forms a feedback loop through ScrollView's minimum viewport size.
-            var height = 0f;
-            foreach (var row in rows) height += Mathf.Max(0, row.Root.layout.height) + 8;
-            if (float.IsNaN(height) || float.IsInfinity(height)) return;
-            if (Mathf.Abs(previousRowsHeight - height) < .5f) return;
-            scroll.style.height = height;
-            previousRowsHeight = height;
         }
-
+        private static string BedStatus(FarmBedPresentation bed) => !bed.Unlocked ? "Locked · construction required" : !bed.Planted ? "Empty" : bed.RecipeTitle + " · " + (bed.Ready ? "Ready" : FormatTime(Math.Max(0, bed.RemainingSeconds), mspace: false, shortForm: true));
+        private string PresentationKey(FarmPresentationSnapshot snapshot)
+        {
+            var key = new StringBuilder(); key.Append(selectedRecipe).Append('|').Append(selectedBed).Append('|').Append(snapshot.TownActionsAllowed).Append('|').Append(snapshot.TwinsLevel);
+            foreach (var recipe in snapshot.Recipes ?? Array.Empty<FarmRecipePresentation>())
+                if (recipe != null) key.Append('|').Append(recipe.Id).Append(':').Append(recipe.Discovered).Append(':').Append(recipe.Eligible).Append(':').Append(recipe.SeedQuantity).Append(':').Append(recipe.Title);
+            foreach (var bed in snapshot.Beds ?? Array.Empty<FarmBedPresentation>())
+                if (bed != null) key.Append('|').Append(bed.Id).Append(':').Append(bed.Unlocked).Append(':').Append(bed.Planted).Append(':').Append(bed.Ready).Append(':').Append(bed.Watered).Append(':').Append(bed.Repeat).Append(':').Append(bed.RecipeId);
+            foreach (var build in snapshot.Builds ?? Array.Empty<FarmBuildPresentation>())
+                if (build != null) key.Append('|').Append(build.QuestId).Append(':').Append(build.Completed).Append(':').Append(build.CanTurnIn).Append(':').Append(build.Status).Append(':').Append(build.Costs);
+            return key.ToString();
+        }
+        private void CreatePreview()
+        {
+            var camera = Camera.main; if (!camera) return;
+            previewTexture = new RenderTexture(560, 640, 16) { name = "Fields town preview" };
+            previewTexture.Create();
+            var host = new GameObject("Fields preview camera") { hideFlags = HideFlags.DontSave };
+            previewCamera = host.AddComponent<Camera>(); previewCamera.CopyFrom(camera);
+            previewCamera.targetTexture = previewTexture; previewCamera.tag = "Untagged";
+            previewCamera.orthographic = true; previewCamera.orthographicSize = 19;
+            previewCamera.transform.position = new Vector3(-57, -13, camera.transform.position.z);
+            previewCamera.transform.rotation = camera.transform.rotation;
+            previewCamera.rect = new Rect(0, 0, 1, 1); previewCamera.enabled = true;
+            townImage.image = previewTexture;
+        }
         private void Update()
         {
             if (!IsOpen) return;
             layout.Fill(root, theme, CompanionWidth);
-            LayoutColumns();
-            if (Time.unscaledTime < nextRefresh) return;
-            nextRefresh = Time.unscaledTime + .25f;
-            Refresh();
+            var wide = root.contentRect.width >= 600;
+            columns.style.flexDirection = wide ? FlexDirection.Row : FlexDirection.Column;
+            seedColumn.style.width = 180;
+            seedColumn.style.marginRight = wide ? 8 : 0;
+            bedColumn.style.marginRight = wide ? 8 : 0;
+            bedColumn.style.minHeight = wide ? 0 : 220;
+            townColumn.style.width = wide ? 164 : 172;
+            townImage.style.width = wide ? 164 : 172; townImage.style.height = wide ? 188 : 196;
+            if (Time.unscaledTime < nextRefresh) return; nextRefresh = Time.unscaledTime + .25f; Refresh();
         }
-
         public void Hide()
         {
             if (source != null) source.Changed -= Refresh;
-            root?.RemoveFromHierarchy();
-            root = null;
-            scroll = null;
-            narrowScroll = null;
-            workspace = inventory = bedColumn = null;
-            stackedLayout = null;
-            previousRowsHeight = -1;
-            rows.Clear();
+            root?.RemoveFromHierarchy(); root = null; presentationKey = null; pointerDown = false;
+            if (previewCamera) { previewCamera.targetTexture = null; Destroy(previewCamera.gameObject); }
+            previewCamera = null;
+            if (previewTexture) { previewTexture.Release(); Destroy(previewTexture); }
+            previewTexture = null;
         }
-
         private void OnDisable() => Hide();
-        private void OnDestroy()
-        {
-            Hide();
-            if (settings) Destroy(settings);
-        }
+        private void OnDestroy() { Hide(); if (settings) Destroy(settings); }
     }
 }

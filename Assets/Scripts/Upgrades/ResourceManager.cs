@@ -207,6 +207,13 @@ namespace TimelessEchoes.Upgrades
         }
 
         /// <summary>Live discoveries belong only to the loaded active bank; detached banks use saved membership.</summary>
+        public double GetAmount(Resource resource, GameData owner)
+        {
+            if (!resource || owner == null) return 0;
+            if (ReferenceEquals(owner, stateOwner) && ReferenceEquals(owner, oracle?.saveData)) return GetAmount(resource);
+            return owner.Resources?.TryGetValue(resource.name, out var saved) == true ? saved.Amount : 0;
+        }
+
         public bool IsUnlocked(Resource resource, GameData owner)
         {
             if (resource == null || owner == null) return false;

@@ -18,6 +18,13 @@ namespace TimelessEchoes.Farming
 
     public sealed class FarmPresentationSnapshot
     {
+        public string DisplayName = "Fields";
+        public int TwinsLevel = 1;
+        public long TwinsXp;
+        public int TwinsXpRequired = 5;
+        public double YieldMultiplier = 1, SpeedFactor = 1;
+        public FarmRecipePresentation[] Recipes = Array.Empty<FarmRecipePresentation>();
+        public FarmBuildPresentation[] Builds = Array.Empty<FarmBuildPresentation>();
         public bool Prepared;
         public bool TownActionsAllowed;
         public bool Discovered;
@@ -33,10 +40,29 @@ namespace TimelessEchoes.Farming
     {
         public string Id;
         public string Title;
+        public bool Unlocked, Orchard, Watered, Repeat;
+        public string RecipeId, RecipeTitle;
+        public Sprite Icon;
         public bool Planted;
         public bool Ready;
         public float Progress01;
         public double RemainingSeconds;
+    }
+
+    public sealed class FarmRecipePresentation
+    {
+        public string Id, Title;
+        public double SeedQuantity;
+        public bool Discovered, Eligible, Orchard;
+        public int RequiredHeroLevel;
+        public Sprite Icon, UnknownIcon;
+    }
+
+    public sealed class FarmBuildPresentation
+    {
+        public string QuestId, Title, Status, Costs;
+        public int TwinsLevel;
+        public bool Completed, CanTurnIn;
     }
 
     /// <summary>Reuses authored crop sprites at the existing bed anchors without changing task art.</summary>
@@ -101,9 +127,11 @@ namespace TimelessEchoes.Farming
             {
                 if (visual == null) continue;
                 var bed = snapshot?.Beds == null ? null : Array.Find(snapshot.Beds, item => item != null && item.Id == visual.bedId);
-                var visible = snapshot?.Prepared == true && bed?.Planted == true;
+                var visible = bed?.Planted == true && (bed.Unlocked || snapshot?.Prepared == true);
                 var stage = bed == null ? 0 : GrowthStage(bed.Progress01, bed.Ready);
-                var sprite = radishStages.Length == 4 ? radishStages[stage] : null;
+                var recipe = FarmContent.Load()?.Recipe(bed?.RecipeId);
+                var stages = recipe?.stages ?? radishStages;
+                var sprite = stages.Length == 4 ? stages[stage] : null;
                 foreach (var plant in visual.plants ?? Array.Empty<SpriteRenderer>())
                 {
                     if (!plant) continue;

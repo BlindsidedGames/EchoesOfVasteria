@@ -7,7 +7,7 @@ namespace Blindsided.SaveData
 {
     public class GameData
     {
-        public const int CurrentSchemaVersion = 5;
+        public const int CurrentSchemaVersion = 6;
 
         public int SchemaVersion = CurrentSchemaVersion;
         public HashSet<string> AppliedMigrationIds = new();

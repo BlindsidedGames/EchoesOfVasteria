@@ -1,0 +1,62 @@
+PASS actual welcome dismissed through normal ready TryClose API
+PASS normal Main QuestManager exists
+PASS fresh normal game: no free capacity or Twins XP
+PASS intro cannot hand in before Farmers1 meeting
+PASS actual first authored adventure config found
+PASS real authored first adventure starts before intro
+PASS actual matching Radish task prefab exists
+PASS actual authored crop prefab is ContinuousTask
+PASS actual primary hero claims controlled crop fixture
+PASS actual matching task public Tick completes controlled duration fixture
+PASS actual matching adventure task before intro grants no seed or pending seed intent
+PASS actual authored Flora/Tillman meeting prefab loaded
+PASS actual TalkToNpcTask present
+PASS actual native meeting view opens
+PASS actual meeting callback records Farmers1
+PASS normal QuestManager intro hand-in succeeds after meeting
+PASS intro gives no free seed, build or XP
+PASS real first construction hand-in succeeds with controlled 10Log20Stick fixture
+PASS first construction charges exact materials once and unlocks one bed
+PASS real second authored adventure starts after intro
+PASS actual authored crop prefab is ContinuousTask
+PASS actual primary hero claims controlled crop fixture
+PASS actual matching task public Tick completes controlled duration fixture
+PASS actual post-intro matching adventure completion commits exactly one seed with controlled chance1
+PASS actual task token retry retains exactly one seed
+PASS actual service plants paid Radish batch
+PASS actual service waters once
+PASS second watering rejected
+PASS actual service resume/reload does not settle year-old UTC gap
+PASS actual service harvest durably succeeds after supplied active time
+PASS one 10XP batch advances level1 -> level2 with5XP carried
+PASS same paid batch cannot harvest twice
+PASS actual run summaries dismissed through normal HideDetails API before capture
+PASS normal Main opens actual combined Fields screen
+PASS combined native Fields UI includes live town preview
+PASS actual desktop Fields columns use one combined row
+PASS actual desktop seed/beds/town columns have ordered nonoverlapping bounds
+PASS actual combined town preview uses live runtime RenderTexture
+PASS live town preview pixels contain rendered color variation
+PASS controlled full-capacity orchard paid planting 0
+PASS controlled full-capacity orchard paid planting 1
+PASS orchard matching wet overlay 1
+PASS controlled full-capacity orchard paid planting 2
+PASS controlled full-capacity orchard paid planting 3
+PASS orchard matching wet overlay 3
+PASS controlled full-capacity orchard paid planting 4
+PASS controlled full-capacity orchard paid planting 5
+PASS orchard matching wet overlay 5
+PASS actual run summaries dismissed through normal HideDetails API before capture
+PASS world clears exactly23 approved stumps
+PASS world clears exactly20 approved standing trees
+PASS actual active town output camera exists
+PASS actual town camera retains controlled orchard close-up framing
+PASS actual orchard plot center inside live camera viewport (-60.00, -13.50)
+PASS actual orchard plot center inside live camera viewport (-56.00, -13.50)
+PASS actual orchard plot center inside live camera viewport (-52.00, -13.50)
+PASS actual orchard plot center inside live camera viewport (-60.00, -17.00)
+PASS actual orchard plot center inside live camera viewport (-56.00, -17.00)
+PASS actual orchard plot center inside live camera viewport (-52.00, -17.00)
+PASS actual authored rounded soil sprite renderers present
+PASS normal owner snapshot durable save succeeds in protected namespace
+PASS protected normal-game save reload retains controlled orchard fixture

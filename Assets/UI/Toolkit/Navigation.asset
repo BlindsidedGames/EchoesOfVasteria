@@ -232,6 +232,36 @@ MonoBehaviour:
     width: 22
     fontSize: 2.35
     visibility: []
+  - id: farm
+    group: 2
+    action: 0
+    window: 12
+    map: {fileID: 0}
+    label:
+      key: farm.display-name
+      bold: 1
+      smallCaps: 0
+      fallback: Fields
+      localized:
+        m_TableReference:
+          m_TableCollectionName:
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key:
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 80
+    fontSize: 8
+    visibility:
+    - condition: 3
+      quest: {fileID: 0}
+      npcId: Farmers1
   - id: skills
     group: 2
     action: 0

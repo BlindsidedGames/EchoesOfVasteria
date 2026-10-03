@@ -16,11 +16,12 @@ namespace TimelessEchoes.Farming
         public FarmState Candidate;
         public Dictionary<string, double> ResourceDeltas = new Dictionary<string, double>();
         public List<string> HarvestedBeds = new List<string>();
+        public List<string> CompletedQuests = new List<string>();
         internal FarmOperationReceipt OperationReceipt;
         public bool Accepted => Status == FarmCommandStatus.Accepted;
     }
 
-    public static class FarmCommands
+    public static partial class FarmCommands
     {
         public const string WestBedId = "farm.original.west";
         public const string EastBedId = "farm.original.east";
@@ -113,10 +114,9 @@ namespace TimelessEchoes.Farming
         }
 
         /// <summary>
-        /// Supply monotonic measured seconds during active play. Otherwise use elapsed UTC since
-        /// the persisted baseline on resume. Every call rebases the baseline, including rollback.
-        /// Each planted batch is finite; elapsed time is never banked for a later planting.
-        /// Successive forward clock edits can accelerate successive paid batches (local policy).
+        /// Supply explicitly measured seconds during active play. Missing elapsed time means zero;
+        /// persisted UTC timestamps are legacy metadata and never accrue closed-game growth.
+        /// Each paid batch is finite; elapsed time is never banked for a later planting.
         /// </summary>
         public static FarmCommandResult AdvanceGrowth(FarmState state, DateTime utcNow, double? activeElapsedSeconds = null)
         {
@@ -230,8 +230,7 @@ namespace TimelessEchoes.Farming
                 if (!state.Beds.TryGetValue(id, out var bed) || bed == null || !bed.Unlocked || !bed.IsPlanted ||
                     bed.RecipeId != RadishRecipeId || !Finite(bed.DurationSeconds) || bed.DurationSeconds <= 0 ||
                     !Finite(bed.ElapsedSeconds) || bed.ElapsedSeconds < 0 || bed.IsReady) continue;
-                double seconds = activeSeconds ?? (bed.LastGrowthUtcTicks > 0 && nowTicks > bed.LastGrowthUtcTicks
-                    ? (nowTicks - bed.LastGrowthUtcTicks) / (double)TimeSpan.TicksPerSecond : 0);
+                double seconds = activeSeconds ?? 0;
                 double elapsed = Math.Min(bed.DurationSeconds, bed.ElapsedSeconds + seconds);
                 changed |= elapsed != bed.ElapsedSeconds || nowTicks != bed.LastGrowthUtcTicks;
                 bed.ElapsedSeconds = elapsed;

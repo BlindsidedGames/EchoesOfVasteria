@@ -57,7 +57,7 @@ namespace TimelessEchoes.Farming
                     {
                         // A retained matching receipt is durable proof this stale intent already paid.
                         // Conflicting or opaque intents remain available for explicit recovery.
-                        if (pending == null || state.Operations[id].Fingerprint != "adventure-radish:" + (pending.Rolled ? "1" : "0")) continue;
+                        if (pending == null || state.Operations[id].Fingerprint != CreditFingerprint(pending)) continue;
                         state.PendingCredits.Remove(id);
                     }
                     state.Operations.Remove(id);
@@ -68,9 +68,20 @@ namespace TimelessEchoes.Farming
             state.FormatVersion = CurrentFormat;
         }
 
-        public static bool IsKnownFingerprint(string value) => value == "prepare-original" ||
-            value == "adventure-radish:0" || value == "adventure-radish:1" || value == "harvest-ready" ||
-            value == "plant-radish:" + FarmCommands.WestBedId || value == "plant-radish:" + FarmCommands.EastBedId;
+        public static bool IsKnownFingerprint(string value)
+        {
+            if (value == "prepare-original" || value == "adventure-radish:0" || value == "adventure-radish:1" ||
+                value == "harvest-ready" || value == "harvest-fields" || value == "harvest-auto" ||
+                value == "plant-radish:" + FarmCommands.WestBedId || value == "plant-radish:" + FarmCommands.EastBedId) return true;
+            if (value == null) return false;
+            if (value.StartsWith("build:", StringComparison.Ordinal)) return FarmCommands.KnownBuild(value.Substring(6));
+            if (value.StartsWith("water:", StringComparison.Ordinal)) return FarmCommands.KnownBed(value.Substring(6));
+            var parts = value.Split(':');
+            if (parts.Length != 3) return false;
+            return parts[0] == "plant" ? FarmCommands.KnownBed(parts[1]) && FarmCommands.KnownRecipe(parts[2]) :
+                parts[0] == "repeat" ? FarmCommands.KnownBed(parts[1]) && (parts[2] == "0" || parts[2] == "1") :
+                parts[0] == "seed" && FarmCommands.KnownSeed(parts[1]) && (parts[2] == "0" || parts[2] == "1");
+        }
 
         /// <summary>Pure UI reservation: a failed validation/write consumes no sequence or gap.</summary>
         public static string NextOperation(FarmState state, string fingerprint)
@@ -89,6 +100,15 @@ namespace TimelessEchoes.Farming
             state.PendingCredits.Add(id, new FarmPendingCredit { Rolled = rolled, CompletedAtUtcTicks = utcNow.Ticks });
             state.LastIssuedSequence++;
             return id;
+        }
+
+        public static string CreditFingerprint(FarmPendingCredit pending) => string.IsNullOrEmpty(pending.SeedId) ? "adventure-radish:" + (pending.Rolled ? "1" : "0") : "seed:" + pending.SeedId + ":" + (pending.Rolled ? "1" : "0");
+        public static string StageSeed(FarmState state, string seedId, bool rolled, DateTime now)
+        {
+            var pending = new FarmPendingCredit { SeedId = seedId, Rolled = rolled, CompletedAtUtcTicks = now.Ticks };
+            var id = NextOperation(state, CreditFingerprint(pending));
+            if (id == null) return null;
+            state.PendingCredits.Add(id, pending); state.LastIssuedSequence++; return id;
         }
 
         public static bool TrySequence(FarmState state, string id, out long sequence, out string fingerprint)
@@ -119,19 +139,19 @@ namespace TimelessEchoes.Farming
                 if (state.PendingCredits?.TryGetValue(id, out var pending) == true)
                 {
                     if (sequence <= state.LastIssuedSequence && pending != null &&
-                        fingerprint == "adventure-radish:" + (pending.Rolled ? "1" : "0"))
+                        fingerprint == CreditFingerprint(pending))
                         return FarmCommandStatus.Accepted;
                     reason = "PendingRollConflict"; return FarmCommandStatus.Rejected;
                 }
                 // Only a new UI command can issue a sequence inside its successful candidate.
                 if (sequence == state.LastIssuedSequence + 1 && state.LastIssuedSequence < long.MaxValue &&
-                    !fingerprint.StartsWith("adventure-radish:", StringComparison.Ordinal)) return FarmCommandStatus.Accepted;
+                    !fingerprint.StartsWith("adventure-radish:", StringComparison.Ordinal) && !fingerprint.StartsWith("seed:", StringComparison.Ordinal)) return FarmCommandStatus.Accepted;
                 reason = "UnreservedOperation"; return FarmCommandStatus.Rejected;
             }
             // A migrated legacy completion can settle only an existing fixed intent.
             if (id != null && !id.StartsWith(Prefix, StringComparison.Ordinal) &&
                 state.PendingCredits?.TryGetValue(id, out var legacy) == true && legacy != null &&
-                fingerprint == "adventure-radish:" + (legacy.Rolled ? "1" : "0"))
+                fingerprint == CreditFingerprint(legacy))
             {
                 if (state.Operations?.TryGetValue(id, out var receipt) == true)
                 {
@@ -169,7 +189,7 @@ namespace TimelessEchoes.Farming
         }
 
         public static bool IsCommittedCredit(FarmState state, string id) =>
-            TrySequence(state, id, out _, out var fingerprint) && fingerprint.StartsWith("adventure-radish:", StringComparison.Ordinal) &&
+            TrySequence(state, id, out _, out var fingerprint) && (fingerprint.StartsWith("adventure-radish:", StringComparison.Ordinal) || fingerprint.StartsWith("seed:", StringComparison.Ordinal)) &&
             Inspect(state, id, fingerprint, out _) == FarmCommandStatus.AlreadyApplied;
 
         public static bool IsCommittedPlant(FarmState state, string id, string bedId) =>
