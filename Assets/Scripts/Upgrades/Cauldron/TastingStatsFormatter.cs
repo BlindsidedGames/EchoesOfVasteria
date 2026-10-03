@@ -78,7 +78,7 @@ namespace TimelessEchoes.Upgrades.Cauldron
             sb.Append("• Eva's Blessing: ");
             sb.Append(stats.evasBlessing.ToString("N0"));
             sb.Append('\n');
-            sb.Append("• The Vast One's Surge: ");
+            sb.Append("• Orin's Surge: ");
             sb.Append(stats.vastSurge.ToString("N0"));
             // Note: No trailing newline after the last line to match original behavior
         }
