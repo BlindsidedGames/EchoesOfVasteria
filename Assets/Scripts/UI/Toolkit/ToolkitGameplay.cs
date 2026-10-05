@@ -7,7 +7,7 @@ namespace TimelessEchoes.UI.Toolkit
     // Approved StyleLab primitives, in the game's 768x432 reference coordinate system.
     public static class ToolkitGameplay
     {
-        public static void Apply(VisualElement root, ToolkitTheme theme) { root.AddToClassList("gameplay");root.styleSheets.Add(Resources.Load<StyleSheet>("UI/Gameplay")); root.style.unityFontDefinition=FontDefinition.FromFont(theme.gameplayFont ? theme.gameplayFont : theme.font);root.style.color=StyleKeyword.Null;root.AddToClassList("dark");root.RegisterCallback<PointerDownEvent>(_=>root.RemoveFromClassList("keyboard"),TrickleDown.TrickleDown);root.RegisterCallback<KeyDownEvent>(_=>root.AddToClassList("keyboard"),TrickleDown.TrickleDown); }
+        public static void Apply(VisualElement root, ToolkitTheme theme) { root.AddToClassList("gameplay");root.styleSheets.Add(Resources.Load<StyleSheet>("UI/Gameplay")); ToolkitLocaleFonts.Bind(root,theme.gameplayFont ? theme.gameplayFont : theme.font);root.style.color=StyleKeyword.Null;root.AddToClassList("dark");root.RegisterCallback<PointerDownEvent>(_=>root.RemoveFromClassList("keyboard"),TrickleDown.TrickleDown);root.RegisterCallback<KeyDownEvent>(_=>root.AddToClassList("keyboard"),TrickleDown.TrickleDown); }
         public static VisualElement E(VisualElement parent,string classes){var e=new VisualElement();foreach(var c in classes.Split(' '))if(c.Length>0)e.AddToClassList(c);parent.Add(e);return e;}
         public static Label L(VisualElement parent,string text,string classes=""){var e=new Label(text);foreach(var c in classes.Split(' '))if(c.Length>0)e.AddToClassList(c);parent.Add(e);return e;}
         public static Button B(VisualElement parent,string text,Action action,string classes=""){var b=new Button(action){text=text};b.AddToClassList("button");foreach(var c in classes.Split(' '))if(c.Length>0)b.AddToClassList(c);b.RegisterCallback<ClickEvent>(_=>Audio.AudioManager.Instance?.PlayUIButtonClick());parent.Add(b);return b;}
@@ -27,7 +27,7 @@ namespace TimelessEchoes.UI.Toolkit
             var mark = button.Q<ToolkitCheckMark>();
             if (mark == null) { mark = new ToolkitCheckMark(); button.Insert(0, mark); }
             mark.Value = value;
-            button.tooltip = value ? "Enabled" : "Disabled";
+            button.tooltip = ToolkitLocalization.Text(value ? "common.enabled" : "common.disabled", value ? "Enabled" : "Disabled");
         }
         public static void StyleSlider(Slider slider)
         {

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8c46105a822e04290ca4001c548df8, type: 3}
+  m_Name: Peach Sapling
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.Upgrades.Resource
+  foodEligibility: 2
+  resourceID: 82
+  icon: {fileID: 1069427138, guid: 42a05063a628feb43bd6cbe6f5ae1473, type: 3}
+  UnknownIcon: {fileID: 786504821, guid: 35e13e6c4003b46529864675fd01ee19, type: 3}
+  baseValue: 0
+  valueMultiplier: 1
+  DisableAlterEcho: 1
+  cauldronCategory: 1
+  totalReceived: 0
+  totalSpent: 0

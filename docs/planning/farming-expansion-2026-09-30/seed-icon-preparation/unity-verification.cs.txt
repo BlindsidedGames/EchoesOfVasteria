@@ -1,0 +1,96 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using TMPro;
+using TimelessEchoes.UI.Toolkit;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.UIElements;
+using Object=UnityEngine.Object;
+
+[InitializeOnLoad]
+public static class SeedPackAssetVerification
+{
+    static string Out=Path.GetFullPath("../Echoes Farming Planning Evidence/2026-09-30/seed-icon-assets-2026-10-01/");
+    static Scene preview; static Scene main; static PanelSettings panel; static RenderTexture ui; static UIDocument doc; static JObject report;static JArray logs=new JArray();static int frames;static double deadline; static SeedPackPreviewWindow window;
+    static SeedPackAssetVerification(){EditorApplication.update+=Poll;}
+    static void Poll(){
+      if(EditorApplication.isCompiling||EditorApplication.isUpdating)return;
+      string orchard=Out+"orchard-request.txt";if(File.Exists(orchard)){File.Delete(orchard);try{OrchardPreview();}catch(Exception ex){File.WriteAllText(Out+"orchard-error.txt",ex.ToString());}return;}
+      string request=Out+"unity-request.txt";
+      if(window){window.Repaint();if(EditorApplication.timeSinceStartup>deadline||File.Exists(Out+"screen-captured.txt")){try{Finish();}catch(Exception ex){File.WriteAllText(Out+"unity-error.txt",ex.ToString());}finally{Cleanup();}}return;}
+      if(!File.Exists(request))return;File.Delete(request);
+      try{Start();}catch(Exception ex){File.WriteAllText(Out+"unity-error.txt",ex.ToString());Cleanup();}
+    }
+    static void Log(string message,string stack,LogType kind){if(kind==LogType.Warning||kind==LogType.Error||kind==LogType.Exception)logs.Add(new JObject{["kind"]=kind.ToString(),["message"]=message,["stack"]=stack});}
+    static GameObject Go(string name){var o=new GameObject(name);SceneManager.MoveGameObjectToScene(o,preview);return o;}
+    static void Ensure(bool yes,string message){if(!yes)throw new Exception(message);}
+    static void Start(){
+      main=SceneManager.GetActiveScene();Ensure(main.path=="Assets/Scenes/Main.unity"&&!main.isDirty&&!EditorApplication.isPlaying,"Main must be clean Edit mode");
+      Application.logMessageReceived+=Log;
+      var manifest=JObject.Parse(File.ReadAllText(Out+"asset-manifest.json"));var icons=(JArray)manifest["icons"];
+      var inv=AssetDatabase.LoadAllAssetsAtPath("Assets/Art/Derived/SeedPacks/SeedPackInventory.png").OfType<Sprite>().ToDictionary(s=>s.name);
+      var drops=AssetDatabase.LoadAllAssetsAtPath("Assets/Resources/Fonts/FloatingTextIcons.png").OfType<Sprite>().ToDictionary(s=>s.name);
+      var tmp=AssetDatabase.LoadAssetAtPath<TMP_SpriteAsset>("Assets/Resources/Fonts/FloatingTextIcons.asset");tmp.UpdateLookupTables();
+      var inline=AssetDatabase.LoadAssetAtPath<UnityEngine.TextCore.Text.SpriteAsset>("Assets/UI/Toolkit/InlineSprites.asset");inline.UpdateLookupTables();
+      File.WriteAllText(Out+"table-import-counts.json",new JObject{["inventory"]=inv.Count,["drops"]=drops.Count,["tmpCharacters"]=tmp.spriteCharacterTable.Count,["tmpGlyphs"]=tmp.spriteGlyphTable.Count,["inlineCharacters"]=inline.spriteCharacterTable.Count,["inlineGlyphs"]=inline.spriteGlyphTable.Count}.ToString());
+      var art=new JArray();foreach(var i in icons){string name=(string)i["inventoryName"];var sprite=inv[name];AssetDatabase.TryGetGUIDAndLocalFileIdentifier(sprite,out string guid,out long id);Ensure(guid==(string)manifest["inventoryTextureGuid"]&&id==(long)i["inventoryFileId"],"Inventory ID differs: "+name);Ensure(sprite.rect.size==new Vector2(16,16)&&sprite.pivot==new Vector2(8,8)&&sprite.pixelsPerUnit==16,"Inventory geometry differs: "+name);var drop=drops[name];AssetDatabase.TryGetGUIDAndLocalFileIdentifier(drop,out string dg,out long did);Ensure(did==(long)i["dropFileId"],"Drop ID differs: "+name);int n=(int)i["dropIndex"];Ensure(tmp.spriteCharacterTable[n].name==name&&tmp.spriteGlyphTable[n].sprite==drop,"TMP reference differs: "+name);Ensure(inline.spriteCharacterTable[n].name==name&&inline.spriteGlyphTable[n].sprite==drop,"Native reference differs: "+name);Ensure(tmp.GetSpriteIndexFromName(name)==n,"Named TMP lookup differs: "+name);art.Add(new JObject{["name"]=name,["inventoryGuid"]=guid,["inventoryFileId"]=id,["dropGuid"]=dg,["dropFileId"]=did,["dropIndex"]=n,["width"]=sprite.rect.width,["height"]=sprite.rect.height,["pivotX"]=sprite.pivot.x,["pivotY"]=sprite.pivot.y,["ppu"]=sprite.pixelsPerUnit});}
+      Ensure(inv.Count==23&&drops.Count==236&&tmp.spriteCharacterTable.Count==236&&inline.spriteCharacterTable.Count==236,"Atlas counts differ");
+      var imports=new JArray();foreach(var path in new[]{"Assets/Art/Derived/SeedPacks/SeedPackInventory.png","Assets/Resources/Fonts/FloatingTextIcons.png"}){var t=AssetImporter.GetAtPath(path) as TextureImporter;var tex=AssetDatabase.LoadAssetAtPath<Texture2D>(path);Ensure(t.filterMode==FilterMode.Point&&!t.mipmapEnabled&&t.textureCompression==TextureImporterCompression.Uncompressed&&t.alphaIsTransparency&&t.spritePixelsPerUnit==16,"Pixel import settings differ");imports.Add(new JObject{["path"]=path,["width"]=tex.width,["height"]=tex.height,["format"]=tex.format.ToString(),["filter"]=t.filterMode.ToString(),["mipmaps"]=t.mipmapEnabled,["compression"]=t.textureCompression.ToString(),["alphaTransparency"]=t.alphaIsTransparency,["wrap"]=t.wrapMode.ToString()});}
+      report=new JObject{["mainPath"]=main.path,["mainDirtyBefore"]=main.isDirty,["playing"]=EditorApplication.isPlaying,["graphicsDevice"]=SystemInfo.graphicsDeviceType.ToString(),["spriteChecks"]=art,["imports"]=imports,["TMPCount"]=236,["TextCoreCount"]=236,["newGameplayResources"]=0,["liveDropRoutingChanged"]=false};
+      preview=EditorSceneManager.NewPreviewScene();EditorSceneManager.SetSceneCullingMask(preview,1UL<<42);
+      var camera=Go("Seed asset TMP camera").AddComponent<Camera>();camera.enabled=false;camera.orthographic=true;camera.orthographicSize=3.25f;camera.clearFlags=CameraClearFlags.SolidColor;camera.backgroundColor=new Color(.075f,.11f,.085f);camera.transform.position=new Vector3(0,0,-10);camera.overrideSceneCullingMask=EditorSceneManager.GetSceneCullingMask(preview);camera.GetUniversalAdditionalCameraData().renderPostProcessing=false;
+      var all=Text("All packet glyphs",string.Join(" ",icons.Select(i=>"<sprite name=\""+(string)i["dropName"]+"\">")),new Vector3(-5,2,0),3,tmp);all.ForceMeshUpdate(true,true);
+      var sprites=all.textInfo.characterInfo.Take(all.textInfo.characterCount).Where(c=>c.elementType==TMP_TextElementType.Sprite).ToArray();Ensure(sprites.Length==23&&sprites.All(c=>c.isVisible),"23 named TMP glyphs must emit visible vertices");report["allNamedTMPGlyphsVisible"]=sprites.Length;
+      Text("Title","Isolated TMP packet drops | existing font/material",new Vector3(-5,3,0),4,tmp);
+      int k=0;foreach(var family in new[]{"Corn","Radish","Tomato","Unknown"}){Text(family,"<sprite name=\"SeedPack_"+family+"\"> +1 "+(family=="Unknown"?"Undiscovered":family+" pack"),new Vector3(-5,1.2f-k*.65f,0),8,tmp);k++;}
+      var old=Text("Regression","Existing: <sprite=56> <sprite=192> <sprite=198> <sprite=207> <sprite=211>",new Vector3(-5,-1.7f,0),8,tmp);old.ForceMeshUpdate(true,true);Ensure(old.textInfo.characterInfo.Take(old.textInfo.characterCount).Count(c=>c.elementType==TMP_TextElementType.Sprite&&c.isVisible)==5,"Old glyph regression failed");
+      Text("Description","fontSize8; default drop colour; no gameplay spawned",new Vector3(-5,-2.85f,0),3,tmp);
+      Capture(camera,Out+"unity-tmp-drop-render.png",1200,650);
+      if(!AssetDatabase.IsValidFolder("Assets/Resources/Sprite Assets"))AssetDatabase.CreateFolder("Assets/Resources","Sprite Assets");var nativeClone=Object.Instantiate(inline);nativeClone.name="SeedVerificationNative";AssetDatabase.CreateAsset(nativeClone,"Assets/Resources/Sprite Assets/SeedVerificationNative.asset");
+      window=EditorWindow.GetWindow<SeedPackPreviewWindow>(true,"Isolated seed icon evidence",true);window.position=new Rect(80,100,1180,750);window.Show();window.Focus();window.Build(inv,icons);
+      frames=0;deadline=EditorApplication.timeSinceStartup+80;
+    }
+    static TMP_Text Text(string name,string value,Vector3 pos,float size,TMP_SpriteAsset sprites){var t=Go(name).AddComponent<TextMeshPro>();t.font=TMP_Settings.defaultFontAsset;t.spriteAsset=sprites;t.fontSize=size;t.color=TimelessEchoes.FloatingText.DefaultColor;t.rectTransform.sizeDelta=new Vector2(12,1);t.rectTransform.pivot=new Vector2(0,1);t.transform.position=pos;t.textWrappingMode=TextWrappingModes.NoWrap;t.text=value;t.ForceMeshUpdate(true,true);return t;}
+    static void Capture(Camera camera,string path,int w,int h){var rt=new RenderTexture(w,h,24,RenderTextureFormat.ARGB32);rt.Create();var old=RenderTexture.active;try{camera.aspect=(float)w/h;camera.targetTexture=rt;RenderPipeline.SubmitRenderRequest(camera,new UniversalRenderPipeline.SingleCameraRequest{destination=rt});SaveRT(rt,path);}finally{camera.targetTexture=null;RenderTexture.active=old;rt.Release();Object.DestroyImmediate(rt);}}
+    static void SaveRT(RenderTexture rt,string path){var old=RenderTexture.active;try{RenderTexture.active=rt;var t=new Texture2D(rt.width,rt.height,TextureFormat.RGBA32,false);t.ReadPixels(new Rect(0,0,rt.width,rt.height),0,0);t.Apply();File.WriteAllBytes(path,t.EncodeToPNG());Object.DestroyImmediate(t);}finally{RenderTexture.active=old;}}
+    static void Finish(){Ensure(File.Exists(Out+"external-native-capture.png"),"Native screenshot unavailable");File.Copy(Out+"external-native-capture.png",Out+"unity-inventory-inline-render.png",true);report["nativeUIRootWidth"]=window.rootVisualElement.layout.width;report["nativeUIRootHeight"]=window.rootVisualElement.layout.height;report["nativeUIContext"]="EditorWindow native UI Toolkit Image controls, inventory18x17 geometry at3x; TextCore via temporary clone of InlineSprites using supported named asset tag; runtime panel detached Edit-mode capture unavailable";report["mainDirtyAfter"]=main.isDirty;report["logs"]=logs;File.WriteAllText(Out+"unity-verification.json",report.ToString());}
+
+    static JArray V(Vector3 v){return new JArray(v.x,v.y,v.z);}
+    static string PathOf(Transform t){return t.parent?PathOf(t.parent)+"/"+t.name:t.name;}
+    static void OrchardPreview(){
+      var live=SceneManager.GetActiveScene();Ensure(live.path=="Assets/Scenes/Main.unity"&&!live.isDirty&&!EditorApplication.isPlaying,"Main must be clean");
+      var oldMask=EditorSceneManager.GetSceneCullingMask(live);EditorSceneManager.SetSceneCullingMask(live,1UL<<40);
+      var guards=live.GetRootGameObjects().SelectMany(x=>x.GetComponentsInChildren<Light2D>(true)).Select(x=>new{light=x,state=x.enabled,path=PathOf(x.transform)}).ToArray();Scene sc=default;
+      try{foreach(var g in guards)g.light.enabled=false;sc=EditorSceneManager.OpenScene("Assets/Editor/FarmingPreviewsV4/A3-southeast-clearing.unity",OpenSceneMode.Additive);SceneManager.SetActiveScene(sc);EditorSceneManager.SetSceneCullingMask(sc,1UL<<41);
+        var roots=sc.GetRootGameObjects();var all=roots.SelectMany(x=>x.GetComponentsInChildren<SpriteRenderer>(true)).ToArray();var crops=all.Where(x=>x.name.StartsWith("Crop ")).ToArray();var before=crops.Select(x=>new JObject{["path"]=PathOf(x.transform),["sprite"]=x.sprite.name,["position"]=V(x.transform.position)}).ToArray();
+        var area=new Bounds(new Vector3(-58,-16,0),new Vector3(10,6,2));var blockers=new JArray(all.Where(x=>x.gameObject.activeInHierarchy&&x.sprite&&x.bounds.Intersects(area)).Select(x=>new JObject{["path"]=PathOf(x.transform),["position"]=V(x.transform.position),["sprite"]=x.sprite.name,["boundsMin"]=V(x.bounds.min),["boundsMax"]=V(x.bounds.max)}));
+        Ensure(blockers.Count==0,"Separate orchard candidate contains existing props: "+blockers);
+        var root=new GameObject("OPTIONAL Separate orchard - two grass trees, six crop beds retained");SceneManager.MoveGameObjectToScene(root,sc);
+        var specs=new[]{new{path="Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",name="FruitTree_Growth_SmallSapling",x=-61f,y=-17f},new{path="Assets/Art/Packs/Cute_Fantasy/Crops/Apple_Tree.png",name="Apple_Tree_Fruiting_WholeTree",x=-56f,y=-17f}};
+        var trees=new JArray();foreach(var spec in specs){var sprite=AssetDatabase.LoadAllAssetsAtPath(spec.path).OfType<Sprite>().Single(x=>x.name==spec.name);var o=new GameObject("OPTIONAL Separate Orchard - "+spec.name);o.transform.SetParent(root.transform);o.transform.position=new Vector3(spec.x+(sprite.pivot.x-16)/16,spec.y+(sprite.pivot.y-16)/16,0);var sr=o.AddComponent<SpriteRenderer>();sr.sprite=sprite;sr.sortingOrder=2;trees.Add(new JObject{["name"]=o.name,["sprite"]=sprite.name,["source"]=spec.path,["alignedAnchor"]=new JArray(spec.x,spec.y),["position"]=V(o.transform.position),["boundsMin"]=V(sr.bounds.min),["boundsMax"]=V(sr.bounds.max)});}
+        var after=roots.SelectMany(x=>x.GetComponentsInChildren<SpriteRenderer>(true)).Where(x=>x.name.StartsWith("Crop ")).Select(x=>new JObject{["path"]=PathOf(x.transform),["sprite"]=x.sprite.name,["position"]=V(x.transform.position)}).ToArray();Ensure(JToken.DeepEquals(new JArray(before),new JArray(after)),"Crop sprites changed");
+        var cam=roots.SelectMany(x=>x.GetComponentsInChildren<Camera>(true)).First();cam.overrideSceneCullingMask=EditorSceneManager.GetSceneCullingMask(sc);cam.transform.position=new Vector3(-58,-16,-10);cam.orthographicSize=9;root.SetActive(false);Capture(cam,Out+"orchard-baseline-close.png",1600,900);root.SetActive(true);Capture(cam,Out+"orchard-separate-close.png",1600,900);cam.transform.position=new Vector3(-61,-17,-10);cam.orthographicSize=18;Capture(cam,Out+"orchard-separate-normal.png",1600,900);cam.transform.position=new Vector3(-70,-10,-10);cam.orthographicSize=32;Capture(cam,Out+"orchard-separate-town.png",1600,900);
+        Directory.CreateDirectory("Assets/Editor/FarmingOrchardSeparatePreview");EditorSceneManager.SaveScene(sc,"Assets/Editor/FarmingOrchardSeparatePreview/E-separate-orchard.unity");
+        File.WriteAllText(Out+"orchard-space-proof.json",new JObject{["conceptual"]=true,["approvedGameplay"]=false,["separateArea"]=new JArray(-63,-19,-53,-13),["cropBedsRetained"]=6,["cropSpritesUnchanged"]=before.Length,["newCultivatedTiles"]=0,["additionalStandingTreeRemoval"]=0,["usesPreviouslyReclaimedStumpFieldGrass"]=true,["candidateActiveSpriteBlockers"]=blockers,["trees"]=trees,["mainDirty"]=live.isDirty}.ToString());
+      }finally{if(sc.IsValid())EditorSceneManager.CloseScene(sc,true);SceneManager.SetActiveScene(live);EditorSceneManager.SetSceneCullingMask(live,oldMask);foreach(var g in guards)g.light.enabled=g.state;File.WriteAllText(Out+"orchard-light-isolation.json",new JObject{["mainDirtyAfterRestore"]=live.isDirty,["guards"]=new JArray(guards.Select(g=>new JObject{["path"]=g.path,["before"]=g.state,["after"]=g.light.enabled}))}.ToString());}
+    }
+    static void Cleanup(){Application.logMessageReceived-=Log;AssetDatabase.DeleteAsset("Assets/Resources/Sprite Assets/SeedVerificationNative.asset");if(preview.IsValid())EditorSceneManager.ClosePreviewScene(preview);doc=null;if(window){window.Close();window=null;}if(panel)Object.DestroyImmediate(panel);if(ui){ui.Release();Object.DestroyImmediate(ui);}File.WriteAllText(Out+"unity-finished.txt",DateTime.UtcNow.ToString("O"));}
+}
+
+public class SeedPackPreviewWindow:EditorWindow
+{
+ public void Build(Dictionary<string,Sprite> icons,JArray manifest){var root=rootVisualElement;root.Clear();root.style.backgroundColor=new Color(.08f,.12f,.085f);root.style.color=new Color(.96f,.91f,.8f);root.style.paddingLeft=22;root.style.paddingTop=14;var title=new Label("Seed inventory | native UI Toolkit controls");title.style.fontSize=25;title.style.height=40;root.Add(title);var sub=new Label("Actual18×17 image rectangles at3×. Known packets and one shared Undiscovered silhouette.");sub.style.fontSize=18;sub.style.height=40;root.Add(sub);
+ var grid=new VisualElement();grid.style.flexDirection=FlexDirection.Row;grid.style.flexWrap=Wrap.Wrap;grid.style.width=1100;grid.style.height=500;root.Add(grid);
+ foreach(var i in manifest){var cell=new VisualElement();cell.style.width=130;cell.style.height=125;cell.style.marginRight=3;grid.Add(cell);var slot=new VisualElement();slot.style.width=78;slot.style.height=96;slot.style.backgroundColor=new Color(.22f,.28f,.20f);slot.style.borderBottomColor=new Color(.69f,.64f,.43f);slot.style.borderBottomWidth=2;cell.Add(slot);var image=new Image{sprite=icons[(string)i["inventoryName"]],scaleMode=ScaleMode.ScaleToFit};image.style.position=Position.Absolute;image.style.left=12;image.style.top=15;image.style.width=54;image.style.height=51;slot.Add(image);var count=new Label((string)i["family"]=="Unknown"?"???":"1");count.style.position=Position.Absolute;count.style.top=70;count.style.width=78;count.style.fontSize=17;count.style.unityTextAlign=TextAnchor.MiddleCenter;slot.Add(count);var name=new Label((string)i["family"]);name.style.fontSize=14;name.style.whiteSpace=WhiteSpace.Normal;cell.Add(name);}
+ var label=new Label("Existing inventory style references: borderless Corn and shared unknown Core");label.style.fontSize=18;root.Add(label);var row=new VisualElement();row.style.flexDirection=FlexDirection.Row;root.Add(row);foreach(var n in new[]{"Corn","Erif Core"}){var res=AssetDatabase.LoadAssetAtPath<TimelessEchoes.Upgrades.Resource>("Assets/Resources/Resource Items/"+n+".asset");var im=new Image{sprite=n=="Corn"?res.icon:res.UnknownIcon,scaleMode=ScaleMode.ScaleToFit};im.style.width=54;im.style.height=51;im.style.marginRight=18;row.Add(im);}
+ var native=new Label("TextCore named atlas: <sprite=\"SeedVerificationNative\" name=\"SeedPack_Corn\"> <sprite=\"SeedVerificationNative\" name=\"SeedPack_Radish\"> <sprite=\"SeedVerificationNative\" name=\"SeedPack_Unknown\">   existing <sprite=\"SeedVerificationNative\" index=211>");native.enableRichText=true;native.style.fontSize=24;native.style.height=36;root.Add(native);
+ var note=new Label("Art integration preview only. No real inventory balances, gameplay panels or drop pools changed.");note.style.fontSize=17;root.Add(note);
+ }
+}

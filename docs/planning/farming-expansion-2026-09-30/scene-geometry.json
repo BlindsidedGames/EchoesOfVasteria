@@ -1,0 +1,5037 @@
+{
+  "cameras": [
+    {
+      "path": "CameraStuff/Main Camera",
+      "position": [
+        -75.0,
+        0.0,
+        -10.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ortho": 18.0,
+      "active": true
+    },
+    {
+      "path": "CameraStuff/Main Camera/BGCamera",
+      "position": [
+        -75.0,
+        0.0,
+        -10.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ortho": 4.5,
+      "active": true
+    },
+    {
+      "path": "CameraStuff/UI Cam",
+      "position": [
+        -75.0,
+        0.0,
+        -10.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ortho": 18.0,
+      "active": true
+    }
+  ],
+  "tilemaps": [
+    {
+      "path": "Hometown/Tilemaps/BG -5",
+      "position": [
+        -75.0,
+        0.0,
+        0.0
+      ],
+      "cellSize": [
+        1.0,
+        1.0,
+        0.0
+      ],
+      "boundsMin": [
+        -65.0,
+        -56.0,
+        0.0
+      ],
+      "boundsMax": [
+        66.0,
+        56.0,
+        1.0
+      ],
+      "count": 26
+    },
+    {
+      "path": "Hometown/Tilemaps/BG_Walkable -4",
+      "position": [
+        -75.0,
+        0.0,
+        0.0
+      ],
+      "cellSize": [
+        1.0,
+        1.0,
+        0.0
+      ],
+      "boundsMin": [
+        -55.0,
+        -56.0,
+        0.0
+      ],
+      "boundsMax": [
+        365.0,
+        56.0,
+        1.0
+      ],
+      "count": 55
+    },
+    {
+      "path": "Hometown/Tilemaps/-2 Old Path",
+      "position": [
+        -25.0,
+        0.0,
+        0.0
+      ],
+      "cellSize": [
+        1.0,
+        1.0,
+        0.0
+      ],
+      "boundsMin": [
+        -74.0,
+        -27.0,
+        0.0
+      ],
+      "boundsMax": [
+        0.0,
+        13.0,
+        1.0
+      ],
+      "count": 20
+    },
+    {
+      "path": "Hometown/Tilemaps/-2 Tracks",
+      "position": [
+        -25.0,
+        0.0,
+        0.0
+      ],
+      "cellSize": [
+        1.0,
+        1.0,
+        0.0
+      ],
+      "boundsMin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "boundsMax": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "count": 0
+    },
+    {
+      "path": "Hometown/Tilemaps/-2 Tracks2Grass",
+      "position": [
+        -25.0,
+        0.0,
+        0.0
+      ],
+      "cellSize": [
+        1.0,
+        1.0,
+        0.0
+      ],
+      "boundsMin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "boundsMax": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "count": 0
+    },
+    {
+      "path": "Hometown/Tilemaps/-2 Tracks2",
+      "position": [
+        -25.0,
+        0.0,
+        0.0
+      ],
+      "cellSize": [
+        1.0,
+        1.0,
+        0.0
+      ],
+      "boundsMin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "boundsMax": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "count": 0
+    },
+    {
+      "path": "Hometown/Tilemaps/-2 Tracks3Grass",
+      "position": [
+        -25.0,
+        0.0,
+        0.0
+      ],
+      "cellSize": [
+        1.0,
+        1.0,
+        0.0
+      ],
+      "boundsMin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "boundsMax": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "count": 0
+    },
+    {
+      "path": "Hometown/Tilemaps/-2 Tracks3",
+      "position": [
+        -25.0,
+        0.0,
+        0.0
+      ],
+      "cellSize": [
+        1.0,
+        1.0,
+        0.0
+      ],
+      "boundsMin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "boundsMax": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "count": 0
+    },
+    {
+      "path": "Hometown/Tilemaps/-2 Tracks4Grass",
+      "position": [
+        -25.0,
+        0.0,
+        0.0
+      ],
+      "cellSize": [
+        1.0,
+        1.0,
+        0.0
+      ],
+      "boundsMin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "boundsMax": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "count": 0
+    },
+    {
+      "path": "Hometown/Tilemaps/-2 Tracks4",
+      "position": [
+        -25.0,
+        0.0,
+        0.0
+      ],
+      "cellSize": [
+        1.0,
+        1.0,
+        0.0
+      ],
+      "boundsMin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "boundsMax": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "count": 0
+    },
+    {
+      "path": "Hometown/Tilemaps/-1 Path",
+      "position": [
+        -25.0,
+        0.0,
+        0.0
+      ],
+      "cellSize": [
+        1.0,
+        1.0,
+        0.0
+      ],
+      "boundsMin": [
+        -74.0,
+        -23.0,
+        0.0
+      ],
+      "boundsMax": [
+        0.0,
+        13.0,
+        1.0
+      ],
+      "count": 21
+    },
+    {
+      "path": "Hometown/Tilemaps/BG_Decor 0",
+      "position": [
+        -75.0,
+        0.0,
+        0.0
+      ],
+      "cellSize": [
+        1.0,
+        1.0,
+        0.0
+      ],
+      "boundsMin": [
+        -62.0,
+        -18.0,
+        0.0
+      ],
+      "boundsMax": [
+        63.0,
+        18.0,
+        1.0
+      ],
+      "count": 26
+    },
+    {
+      "path": "Hometown/Tilemaps/Mountain Ground Transitions -3",
+      "position": [
+        -75.0,
+        0.0,
+        0.0
+      ],
+      "cellSize": [
+        1.0,
+        1.0,
+        0.0
+      ],
+      "boundsMin": [
+        -11.0,
+        0.0,
+        0.0
+      ],
+      "boundsMax": [
+        66.0,
+        56.0,
+        1.0
+      ],
+      "count": 38
+    },
+    {
+      "path": "Hometown/Tilemaps/Mountain Snow Stone Rims -3",
+      "position": [
+        -75.0,
+        0.0,
+        0.0
+      ],
+      "cellSize": [
+        1.0,
+        1.0,
+        0.0
+      ],
+      "boundsMin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "boundsMax": [
+        66.0,
+        56.0,
+        1.0
+      ],
+      "count": 9
+    },
+    {
+      "path": "Hometown/Tilemaps/Mountain Terrain Foundation -6",
+      "position": [
+        -75.0,
+        0.0,
+        0.0
+      ],
+      "cellSize": [
+        1.0,
+        1.0,
+        0.0
+      ],
+      "boundsMin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "boundsMax": [
+        57.0,
+        29.0,
+        1.0
+      ],
+      "count": 2
+    }
+  ],
+  "farmSprites": [
+    {
+      "path": "Hometown/Farmers/FloraAndTillman",
+      "active": true,
+      "position": [
+        -63.4570923,
+        -1.89171994,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Flora_Farmer_0",
+      "asset": "Assets/Art/NPCS/Farmers/Flora - Farmer/Flora_Farmer.png",
+      "boundsCenter": [
+        -63.4570923,
+        -1.49171841,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FloraAndTillman/Tillman",
+      "active": true,
+      "position": [
+        -62.25709,
+        -1.89171994,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Tillman_Farmer_0",
+      "asset": "Assets/Art/NPCS/Farmers/Tillman - Farmer/Tillman_Farmer.png",
+      "boundsCenter": [
+        -62.25709,
+        -1.49171841,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 1/Fence_Big_4",
+      "active": true,
+      "position": [
+        -64.0,
+        5.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_None_Variant02",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -64.0,
+        5.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 1/Fence_Big_4 (1)",
+      "active": true,
+      "position": [
+        -64.0,
+        6.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_None_Variant02",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -64.0,
+        6.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 1/Fence_Big_4 (2)",
+      "active": true,
+      "position": [
+        -64.0,
+        7.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_None_Variant02",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -64.0,
+        7.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 1/Fence_Big_4 (3)",
+      "active": true,
+      "position": [
+        -64.0,
+        8.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_None_Variant02",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -64.0,
+        8.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 1/Fence_Big_4 (4)",
+      "active": true,
+      "position": [
+        -64.0,
+        9.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_None_Variant02",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -64.0,
+        9.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 1/Fence_Big_5",
+      "active": true,
+      "position": [
+        -64.0,
+        10.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_E_Variant02",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -64.0,
+        10.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 1/Fence_Big_2",
+      "active": true,
+      "position": [
+        -63.0,
+        10.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_EW_Variant01",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -63.0,
+        10.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 1/Fence_Big_2 (2)",
+      "active": true,
+      "position": [
+        -62.0,
+        10.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_EW_Variant01",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -62.0,
+        10.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 1/Fence_Big_2 (3)",
+      "active": true,
+      "position": [
+        -61.0,
+        10.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_EW_Variant01",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -61.0,
+        10.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 1/Scarecrows_2",
+      "active": true,
+      "position": [
+        -58.75,
+        4.75,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Scarecrows_2",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Scarecrows.png",
+      "boundsCenter": [
+        -58.75,
+        5.65,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 2/Fence_Big_7",
+      "active": true,
+      "position": [
+        -54.0,
+        10.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_W_Variant02",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -54.0,
+        10.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 2/Fence_Big_4 (5)",
+      "active": true,
+      "position": [
+        -54.0,
+        5.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_None_Variant02",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -54.0,
+        5.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 2/Fence_Big_4 (6)",
+      "active": true,
+      "position": [
+        -54.0,
+        6.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_None_Variant02",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -54.0,
+        6.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 2/Fence_Big_4 (7)",
+      "active": true,
+      "position": [
+        -54.0,
+        7.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_None_Variant02",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -54.0,
+        7.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 2/Fence_Big_4 (8)",
+      "active": true,
+      "position": [
+        -54.0,
+        8.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_None_Variant02",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -54.0,
+        8.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 2/Fence_Big_4 (9)",
+      "active": true,
+      "position": [
+        -54.0,
+        9.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_None_Variant02",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -54.0,
+        9.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 2/Fence_Big_2 (1)",
+      "active": true,
+      "position": [
+        -55.0,
+        10.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_EW_Variant01",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -55.0,
+        10.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 2/Fence_Big_2 (4)",
+      "active": true,
+      "position": [
+        -60.0,
+        10.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_EW_Variant01",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -60.0,
+        10.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 2/Fence_Big_2 (5)",
+      "active": true,
+      "position": [
+        -59.0,
+        10.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_EW_Variant01",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -59.0,
+        10.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 2/Fence_Big_2 (6)",
+      "active": true,
+      "position": [
+        -58.0,
+        10.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_EW_Variant01",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -58.0,
+        10.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 2/Fence_Big_2 (7)",
+      "active": true,
+      "position": [
+        -57.0,
+        10.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_EW_Variant01",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -57.0,
+        10.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 2/Fence_Big_2 (8)",
+      "active": true,
+      "position": [
+        -56.0,
+        10.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_EW_Variant01",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -56.0,
+        10.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 2/Fence_Big_4 (12)",
+      "active": true,
+      "position": [
+        -54.0,
+        2.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_None_Variant02",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -54.0,
+        2.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 2/Fence_Big_4 (13)",
+      "active": true,
+      "position": [
+        -54.0,
+        3.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_None_Variant02",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -54.0,
+        3.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 2/Fence_Big_4 (14)",
+      "active": true,
+      "position": [
+        -54.0,
+        4.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_None_Variant02",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -54.0,
+        4.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 3/Fence_Big_4 (10)",
+      "active": true,
+      "position": [
+        -54.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_None_Variant02",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -54.0,
+        0.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 3/Fence_Big_4 (11)",
+      "active": true,
+      "position": [
+        -54.0,
+        1.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_None_Variant02",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -54.0,
+        1.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 3/Fence_Big_2 (9)",
+      "active": true,
+      "position": [
+        -63.0,
+        -1.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_EW_Variant01",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -63.0,
+        -1.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 3/Fence_Big_2 (10)",
+      "active": true,
+      "position": [
+        -55.0,
+        -1.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_EW_Variant01",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -55.0,
+        -1.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 3/Fence_Big_2 (14)",
+      "active": true,
+      "position": [
+        -59.0,
+        -1.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_EW_Variant01",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -59.0,
+        -1.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 3/Fence_Big_2 (15)",
+      "active": true,
+      "position": [
+        -58.0,
+        -1.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_EW_Variant01",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -58.0,
+        -1.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 3/Fence_Big_2 (16)",
+      "active": true,
+      "position": [
+        -57.0,
+        -1.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_EW_Variant01",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -57.0,
+        -1.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 3/Fence_Big_2 (17)",
+      "active": true,
+      "position": [
+        -56.0,
+        -1.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_EW_Variant01",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -56.0,
+        -1.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 3/Fence_Big_15",
+      "active": true,
+      "position": [
+        -54.0,
+        -1.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Fence_Wood_Big_RailJoin_W_Variant04",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png",
+      "boundsCenter": [
+        -54.0,
+        -1.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Fence/Phase 3/Fence_Big_Gate_1",
+      "active": true,
+      "position": [
+        -61.0,
+        -0.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Gate_Wood_Big_EW_SwingN_Frame01",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Other_Animations/Fence_Big_Gate.png",
+      "boundsCenter": [
+        -61.0,
+        -0.5,
+        0.0
+      ],
+      "boundsSize": [
+        3.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Radish",
+      "active": true,
+      "position": [
+        -61.0,
+        0.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -61.0,
+        0.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Radish/Crop",
+      "active": true,
+      "position": [
+        -61.0,
+        0.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Eggplant_EarlySprout",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -61.0,
+        1.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Radish/CropSign",
+      "active": true,
+      "position": [
+        -62.0,
+        1.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Eggplant_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -62.0,
+        1.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Radish/Wet",
+      "active": true,
+      "position": [
+        -61.0,
+        0.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -61.0,
+        0.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Corn",
+      "active": true,
+      "position": [
+        -61.0,
+        2.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -61.0,
+        2.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Corn/Crop",
+      "active": true,
+      "position": [
+        -61.0,
+        2.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Corn_EarlySprout",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -61.0,
+        2.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Corn/CropSign",
+      "active": true,
+      "position": [
+        -62.0,
+        2.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Corn_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -62.0,
+        3.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Corn/Wet",
+      "active": true,
+      "position": [
+        -61.0,
+        2.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -61.0,
+        2.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Wheat",
+      "active": true,
+      "position": [
+        -61.0,
+        3.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -61.0,
+        3.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Wheat/Crop",
+      "active": true,
+      "position": [
+        -61.0,
+        3.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Wheat_EarlySprouts",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -61.0,
+        3.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Wheat/CropSign",
+      "active": true,
+      "position": [
+        -62.0,
+        4.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Wheat_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -62.0,
+        4.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Wheat/Wet",
+      "active": true,
+      "position": [
+        -61.0,
+        3.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -61.0,
+        3.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Wartermelone",
+      "active": true,
+      "position": [
+        -61.0,
+        5.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -61.0,
+        5.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Wartermelone/Crop",
+      "active": true,
+      "position": [
+        -61.0,
+        5.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Watermelon_EarlySprout",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -61.0,
+        5.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Wartermelone/CropSign",
+      "active": true,
+      "position": [
+        -62.0,
+        5.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Watermelon_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -62.0,
+        6.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Wartermelone/Wet",
+      "active": true,
+      "position": [
+        -61.0,
+        5.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -61.0,
+        5.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Carrot",
+      "active": true,
+      "position": [
+        -61.0,
+        6.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -61.0,
+        6.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Carrot/Crop",
+      "active": true,
+      "position": [
+        -61.0,
+        6.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Carrot_EarlySprout",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -61.0,
+        7.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Carrot/CropSign",
+      "active": true,
+      "position": [
+        -62.0,
+        7.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Carrot_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -62.0,
+        7.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Carrot/Wet",
+      "active": true,
+      "position": [
+        -61.0,
+        6.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -61.0,
+        6.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Spud",
+      "active": true,
+      "position": [
+        -61.0,
+        8.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -61.0,
+        8.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Spud/Crop",
+      "active": true,
+      "position": [
+        -61.0,
+        8.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Potato_EarlySprout",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -61.0,
+        8.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Spud/CropSign",
+      "active": true,
+      "position": [
+        -62.0,
+        8.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Potato_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -62.0,
+        9.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Spud/Wet",
+      "active": true,
+      "position": [
+        -61.0,
+        8.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -61.0,
+        8.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Tomato",
+      "active": true,
+      "position": [
+        -58.5,
+        0.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -58.5,
+        0.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Tomato/Crop",
+      "active": true,
+      "position": [
+        -58.5,
+        0.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Tomato_EarlySprout",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -58.5,
+        1.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Tomato/CropSign",
+      "active": true,
+      "position": [
+        -59.5,
+        1.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Tomato_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -59.5,
+        1.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Tomato/Wet",
+      "active": true,
+      "position": [
+        -58.5,
+        0.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -58.5,
+        0.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Lettuce",
+      "active": true,
+      "position": [
+        -58.5,
+        2.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -58.5,
+        2.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Lettuce/Crop",
+      "active": true,
+      "position": [
+        -58.5,
+        2.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Cabbage_EarlySprout",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -58.5,
+        2.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Lettuce/CropSign",
+      "active": true,
+      "position": [
+        -59.5,
+        2.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Cabbage_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -59.5,
+        3.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Lettuce/Wet",
+      "active": true,
+      "position": [
+        -58.5,
+        2.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -58.5,
+        2.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Cucumber",
+      "active": true,
+      "position": [
+        -58.5,
+        3.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -58.5,
+        3.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Cucumber/Crop",
+      "active": true,
+      "position": [
+        -58.5,
+        3.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Cucumber_EarlySprout",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -58.5,
+        4.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Cucumber/CropSign",
+      "active": true,
+      "position": [
+        -59.5,
+        4.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Cucumber_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -59.5,
+        4.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Cucumber/Wet",
+      "active": true,
+      "position": [
+        -58.5,
+        3.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -58.5,
+        3.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Onion",
+      "active": false,
+      "position": [
+        -58.5,
+        5.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -58.5,
+        5.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Onion/Crop",
+      "active": false,
+      "position": [
+        -58.5,
+        5.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_TanBulb_B_EarlySprout",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -58.5,
+        5.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Onion/CropSign",
+      "active": false,
+      "position": [
+        -59.5,
+        5.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_TanBulb_B_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -59.5,
+        6.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Onion/Wet",
+      "active": false,
+      "position": [
+        -58.5,
+        5.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -58.5,
+        5.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Leek",
+      "active": true,
+      "position": [
+        -58.5,
+        6.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -58.5,
+        6.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Leek/Crop",
+      "active": true,
+      "position": [
+        -58.5,
+        6.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Leek_EarlySprout",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -58.5,
+        7.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Leek/CropSign",
+      "active": true,
+      "position": [
+        -59.5,
+        7.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Leek_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -59.5,
+        7.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Leek/Wet",
+      "active": true,
+      "position": [
+        -58.5,
+        6.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -58.5,
+        6.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Parsnip",
+      "active": true,
+      "position": [
+        -58.5,
+        8.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -58.5,
+        8.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Parsnip/Crop",
+      "active": true,
+      "position": [
+        -58.5,
+        8.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_PaleRoot_EarlySprout",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -58.5,
+        8.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Parsnip/CropSign",
+      "active": true,
+      "position": [
+        -59.5,
+        8.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_PaleRoot_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -59.5,
+        9.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Parsnip/Wet",
+      "active": true,
+      "position": [
+        -58.5,
+        8.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -58.5,
+        8.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Pepper",
+      "active": true,
+      "position": [
+        -56.0,
+        0.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -56.0,
+        0.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Pepper/Crop",
+      "active": true,
+      "position": [
+        -56.0,
+        0.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Beet_EarlySprout",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -56.0,
+        1.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Pepper/CropSign",
+      "active": true,
+      "position": [
+        -57.0,
+        1.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Beet_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -57.0,
+        1.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Pepper/Wet",
+      "active": true,
+      "position": [
+        -56.0,
+        0.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -56.0,
+        0.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Chillie",
+      "active": true,
+      "position": [
+        -56.0,
+        2.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -56.0,
+        2.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Chillie/Crop",
+      "active": true,
+      "position": [
+        -56.0,
+        2.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_RedPepper_EarlySprout",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -56.0,
+        2.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Chillie/CropSign",
+      "active": true,
+      "position": [
+        -57.0,
+        2.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_RedPepper_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -57.0,
+        3.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Chillie/Wet",
+      "active": true,
+      "position": [
+        -56.0,
+        2.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -56.0,
+        2.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Pumking",
+      "active": true,
+      "position": [
+        -56.0,
+        3.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -56.0,
+        3.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Pumking/Crop",
+      "active": true,
+      "position": [
+        -56.0,
+        3.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Pumpkin_EarlySprout",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -56.0,
+        4.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Pumking/CropSign",
+      "active": true,
+      "position": [
+        -57.0,
+        4.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Pumpkin_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -57.0,
+        4.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Pumking/Wet",
+      "active": true,
+      "position": [
+        -56.0,
+        3.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -56.0,
+        3.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Strawberry",
+      "active": true,
+      "position": [
+        -56.0,
+        5.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -56.0,
+        5.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Strawberry/Crop",
+      "active": true,
+      "position": [
+        -56.0,
+        5.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Strawberry_EarlySprout",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -56.0,
+        5.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Strawberry/CropSign",
+      "active": true,
+      "position": [
+        -57.0,
+        5.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Strawberry_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -57.0,
+        6.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Strawberry/Wet",
+      "active": true,
+      "position": [
+        -56.0,
+        5.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -56.0,
+        5.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Funion",
+      "active": true,
+      "position": [
+        -56.0,
+        6.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -56.0,
+        6.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Funion/Crop",
+      "active": true,
+      "position": [
+        -56.0,
+        6.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_TanBulb_A_EarlySprout",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -56.0,
+        7.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Funion/CropSign",
+      "active": true,
+      "position": [
+        -57.0,
+        7.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_TanBulb_A_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -57.0,
+        7.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Funion/Wet",
+      "active": true,
+      "position": [
+        -56.0,
+        6.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -56.0,
+        6.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Turnip",
+      "active": true,
+      "position": [
+        -56.0,
+        8.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png",
+      "boundsCenter": [
+        -56.0,
+        8.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -2
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Turnip/Crop",
+      "active": true,
+      "position": [
+        -56.0,
+        8.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Radish_EarlySprout",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -56.0,
+        8.5,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Turnip/CropSign",
+      "active": true,
+      "position": [
+        -57.0,
+        8.5,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Crop_Radish_MarkerSign",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "boundsCenter": [
+        -57.0,
+        9.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        2.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/FarmingTasks/Farming_Turnip/Wet",
+      "active": true,
+      "position": [
+        -56.0,
+        8.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Wet_Tile.png",
+      "boundsCenter": [
+        -56.0,
+        8.0,
+        0.0
+      ],
+      "boundsSize": [
+        1.0,
+        1.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": -1
+    },
+    {
+      "path": "Hometown/Farmers/Windmill_0",
+      "active": true,
+      "position": [
+        -64.469,
+        1.827,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Windmill_0",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/House/Buildings/Special_Buildings/Windmill/Windmill.png",
+      "boundsCenter": [
+        -64.469,
+        1.827,
+        0.0
+      ],
+      "boundsSize": [
+        2.8125,
+        7.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Farmers/Windmill_0/Windmill_Sail_Anim_0",
+      "active": true,
+      "position": [
+        -64.5013,
+        2.7637763,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Windmill_Sail_Anim_0",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/House/Buildings/Special_Buildings/Windmill/Windmill_Sail_Anim.png",
+      "boundsCenter": [
+        -64.5013,
+        2.7637763,
+        0.0
+      ],
+      "boundsSize": [
+        3.5,
+        3.5,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 1
+    }
+  ],
+  "stumpField": [
+    {
+      "path": "Hometown/Terrain/Trees/Big_Oak_Tree_0",
+      "active": true,
+      "position": [
+        -65.26956,
+        -5.576789,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -65.26956,
+        -4.326789,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Oak_Tree_0 (1)",
+      "active": true,
+      "position": [
+        -64.41,
+        -7.99,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -64.41,
+        -6.74,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Oak_Tree_0 (2)",
+      "active": true,
+      "position": [
+        -58.84,
+        -6.86,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -58.84,
+        -5.61,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Oak_Tree_0 (3)",
+      "active": true,
+      "position": [
+        -59.63,
+        -10.44,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -59.63,
+        -9.19,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Oak_Tree_0 (4)",
+      "active": true,
+      "position": [
+        -59.89,
+        -12.48,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -59.89,
+        -11.23,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Oak_Tree_0 (5)",
+      "active": true,
+      "position": [
+        -61.75,
+        -13.65,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -61.75,
+        -12.4,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Oak_Tree_0 (6)",
+      "active": true,
+      "position": [
+        -65.05,
+        -14.27,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -65.05,
+        -13.02,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Oak_Tree_0 (7)",
+      "active": true,
+      "position": [
+        -60.92,
+        -16.21,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -60.92,
+        -14.9599991,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Oak_Tree_0 (8)",
+      "active": true,
+      "position": [
+        -55.4899979,
+        -11.48,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -55.4899979,
+        -10.23,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Oak_Tree_0 (9)",
+      "active": true,
+      "position": [
+        -51.1200027,
+        -7.93,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -51.1200027,
+        -6.68,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Oak_Tree_0 (10)",
+      "active": true,
+      "position": [
+        -48.97,
+        -11.89,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -48.97,
+        -10.64,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Oak_Tree_0 (11)",
+      "active": true,
+      "position": [
+        -52.2399979,
+        -13.95,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -52.2399979,
+        -12.7,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Oak_Tree_0 (12)",
+      "active": true,
+      "position": [
+        -54.6900024,
+        -8.15,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -54.6900024,
+        -6.89999962,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Fruit_Tree_0",
+      "active": true,
+      "position": [
+        -63.2638435,
+        -6.38236237,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Fruit_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+      "boundsCenter": [
+        -63.2638435,
+        -5.38236237,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Fruit_Tree_0 (1)",
+      "active": true,
+      "position": [
+        -57.54,
+        -16.51,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Fruit_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+      "boundsCenter": [
+        -57.54,
+        -15.51,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Fruit_Tree_0 (12)",
+      "active": true,
+      "position": [
+        -54.73,
+        -16.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Fruit_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+      "boundsCenter": [
+        -54.73,
+        -15.0,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Fruit_Tree_0 (11)",
+      "active": true,
+      "position": [
+        -49.2638435,
+        -14.3823624,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Fruit_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+      "boundsCenter": [
+        -49.2638435,
+        -13.3823624,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Fruit_Tree_0 (10)",
+      "active": true,
+      "position": [
+        -49.2638435,
+        -10.3823624,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Fruit_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+      "boundsCenter": [
+        -49.2638435,
+        -9.382362,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Fruit_Tree_0 (9)",
+      "active": true,
+      "position": [
+        -52.77,
+        -9.97,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Fruit_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+      "boundsCenter": [
+        -52.77,
+        -8.97,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Fruit_Tree_0 (8)",
+      "active": true,
+      "position": [
+        -52.96,
+        -12.47,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Fruit_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+      "boundsCenter": [
+        -52.96,
+        -11.47,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Fruit_Tree_0 (7)",
+      "active": true,
+      "position": [
+        -59.2638435,
+        -14.3823624,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Fruit_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+      "boundsCenter": [
+        -59.2638435,
+        -13.3823624,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Fruit_Tree_0 (6)",
+      "active": true,
+      "position": [
+        -62.52,
+        -15.47,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Fruit_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+      "boundsCenter": [
+        -62.52,
+        -14.47,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Fruit_Tree_0 (5)",
+      "active": true,
+      "position": [
+        -63.94,
+        -12.53,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Fruit_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+      "boundsCenter": [
+        -63.94,
+        -11.53,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Fruit_Tree_0 (4)",
+      "active": true,
+      "position": [
+        -60.65,
+        -9.16,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Fruit_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+      "boundsCenter": [
+        -60.65,
+        -8.16,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Fruit_Tree_0 (3)",
+      "active": true,
+      "position": [
+        -56.84,
+        -8.86,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Fruit_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+      "boundsCenter": [
+        -56.84,
+        -7.85999966,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    },
+    {
+      "path": "Hometown/Terrain/Trees/Big_Fruit_Tree_0 (2)",
+      "active": true,
+      "position": [
+        -59.42,
+        -5.63,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Fruit_Tree_Stump",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+      "boundsCenter": [
+        -59.42,
+        -4.63,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 0
+    }
+  ],
+  "southeastWoodland": [
+    {
+      "path": "Hometown/Eastern Working Woodland/Medium_Birch_Tree_1",
+      "active": true,
+      "position": [
+        -55.4375,
+        -31.7,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Medium_Birch_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Birch_Tree.png",
+      "boundsCenter": [
+        -55.4375,
+        -31.25,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        3.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 508
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Medium_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -62.8125,
+        -27.175,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Medium_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Oak_Tree.png",
+      "boundsCenter": [
+        -62.8125,
+        -26.125,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        3.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 434
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Big_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -58.6875,
+        -30.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -58.6875,
+        -28.75,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 484
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Medium_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -58.0,
+        -32.675,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Medium_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Oak_Tree.png",
+      "boundsCenter": [
+        -58.0,
+        -31.625,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        3.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 522
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Medium_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -57.0,
+        -27.2375,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Medium_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Oak_Tree.png",
+      "boundsCenter": [
+        -57.0,
+        -26.1875,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        3.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 435
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Medium_Birch_Tree_1",
+      "active": true,
+      "position": [
+        -55.6875,
+        -28.7625,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Medium_Birch_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Birch_Tree.png",
+      "boundsCenter": [
+        -55.6875,
+        -28.3125,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        3.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 461
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Medium_Birch_Tree_1",
+      "active": true,
+      "position": [
+        -53.6875,
+        -30.7,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Medium_Birch_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Birch_Tree.png",
+      "boundsCenter": [
+        -53.6875,
+        -30.25,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        3.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 492
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Big_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -61.6875,
+        -29.375,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -61.6875,
+        -28.125,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 474
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Big_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -60.4375,
+        -27.625,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -60.4375,
+        -26.375,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 446
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Medium_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -59.0,
+        -25.8,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Medium_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Oak_Tree.png",
+      "boundsCenter": [
+        -59.0,
+        -24.75,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        3.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 412
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Medium_Birch_Tree_1",
+      "active": true,
+      "position": [
+        -62.625,
+        -31.8875,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Medium_Birch_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Birch_Tree.png",
+      "boundsCenter": [
+        -62.625,
+        -31.4375,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        3.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 511
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Big_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -60.0,
+        -33.875,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -60.0,
+        -32.625,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 546
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Big_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -64.625,
+        -30.4375,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -64.625,
+        -29.1875,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 491
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Big_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -61.375,
+        -25.4375,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -61.375,
+        -24.1875,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 411
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Big_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -59.875,
+        -31.9375,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -59.875,
+        -30.6875,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 515
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Big_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -57.9375,
+        -34.9375,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -57.9375,
+        -33.6875,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 563
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Medium_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -51.5625,
+        -33.9875,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Medium_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Oak_Tree.png",
+      "boundsCenter": [
+        -51.5625,
+        -32.9375,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        3.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 543
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Big_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -55.0625,
+        -34.875,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -55.0625,
+        -33.625,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 562
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Big_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -51.0,
+        -31.375,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Big_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "boundsCenter": [
+        -51.0,
+        -30.125,
+        0.0
+      ],
+      "boundsSize": [
+        4.0,
+        5.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 506
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Small_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -58.0,
+        -28.9125,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Small_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Small_Oak_Tree.png",
+      "boundsCenter": [
+        -58.0,
+        -28.3125,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 462
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Small_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -56.0625,
+        -30.35,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Small_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Small_Oak_Tree.png",
+      "boundsCenter": [
+        -56.0625,
+        -29.75,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 485
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Small_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -55.875,
+        -33.475,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Small_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Small_Oak_Tree.png",
+      "boundsCenter": [
+        -55.875,
+        -32.875,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 535
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Small_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -60.1875,
+        -30.35,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Small_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Small_Oak_Tree.png",
+      "boundsCenter": [
+        -60.1875,
+        -29.75,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 485
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Small_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -51.75,
+        -29.2875,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Small_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Small_Oak_Tree.png",
+      "boundsCenter": [
+        -51.75,
+        -28.6875,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 468
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Small_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -61.4375,
+        -34.0375,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Small_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Small_Oak_Tree.png",
+      "boundsCenter": [
+        -61.4375,
+        -33.4375,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 544
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Small_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -56.9375,
+        -25.7875,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Small_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Small_Oak_Tree.png",
+      "boundsCenter": [
+        -56.9375,
+        -25.1875,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 412
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Small_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -53.4375,
+        -29.2875,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Small_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Small_Oak_Tree.png",
+      "boundsCenter": [
+        -53.4375,
+        -28.6875,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 468
+    },
+    {
+      "path": "Hometown/Eastern Working Woodland/Small_Oak_Tree_1",
+      "active": true,
+      "position": [
+        -49.8125,
+        -32.2875,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sprite": "Small_Oak_Tree_Standing_GroundShadow",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Trees/Small_Oak_Tree.png",
+      "boundsCenter": [
+        -49.8125,
+        -31.6874981,
+        0.0
+      ],
+      "boundsSize": [
+        2.0,
+        4.0,
+        0.2
+      ],
+      "layer": "Default",
+      "order": 516
+    }
+  ]
+}

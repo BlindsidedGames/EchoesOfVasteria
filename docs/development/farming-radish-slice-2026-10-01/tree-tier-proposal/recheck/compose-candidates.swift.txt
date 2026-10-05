@@ -1,0 +1,41 @@
+import AppKit
+import Foundation
+let root="/Users/matthewrushworth/Projects/Echoes of Vasteria/", out="/tmp/eov-tree-art-recheck/"
+let all=try! JSONSerialization.jsonObject(with:Data(contentsOf:URL(fileURLWithPath:out+"sprites.json"))) as! [[String:Any]]
+func label(_ s:String,_ x:Int,_ y:Int,_ size:CGFloat=18,_ color:NSColor = .white){(s as NSString).draw(at:NSPoint(x:x,y:y),withAttributes:[.font:NSFont.systemFont(ofSize:size),.foregroundColor:color])}
+func sheet(_ file:String,_ title:String,_ subtitle:String,_ selectors:[(String,String,String)],_ cols:Int=4){
+ let rows=(selectors.count+cols-1)/cols,w=cols*390+40,h=rows*260+240
+ let b=NSBitmapImageRep(bitmapDataPlanes:nil,pixelsWide:w,pixelsHigh:h,bitsPerSample:8,samplesPerPixel:4,hasAlpha:true,isPlanar:false,colorSpaceName:.deviceRGB,bytesPerRow:w*4,bitsPerPixel:32)!
+ NSGraphicsContext.saveGraphicsState();NSGraphicsContext.current=NSGraphicsContext(bitmapImageRep:b);NSGraphicsContext.current!.imageInterpolation = .none
+ NSColor(calibratedRed:0.07,green:0.1,blue:0.11,alpha:1).setFill();NSRect(x:0,y:0,width:w,height:h).fill()
+ label(title,20,h-50,28);label(subtitle,20,h-85,18)
+ var paths=[String]();for (p,_,_) in selectors {if !paths.contains(p){paths.append(p)}}
+ for (i,p) in paths.enumerated(){label("\(i+1). "+p.replacingOccurrences(of:"Assets/Art/Packs/",with:""),20,h-118-i*24,17)}
+ for (i,(p,n,note)) in selectors.enumerated(){
+  let a=all.first{$0["path"] as? String == p && $0["name"] as? String == n}!,r=a["rect"] as! [String:Int],im=NSImage(contentsOfFile:root+p)!
+  let x=20+(i%cols)*390,y=h-240-(i/cols)*260;let scale=min(6,140/max(r["width"]!,r["height"]!))
+  NSColor(calibratedWhite:0.19,alpha:1).setFill();NSRect(x:x,y:y-205,width:370,height:245).fill()
+  label("\(paths.firstIndex(of:p)!+1). "+n,x+12,y+12,18)
+  let src=NSRect(x:r["x"]!,y:r["y"]!,width:r["width"]!,height:r["height"]!)
+  im.draw(in:NSRect(x:x+12,y:y-15-r["height"]!,width:r["width"]!,height:r["height"]!),from:src,operation:.sourceOver,fraction:1)
+  label("1x",x+55,y-44,14)
+  im.draw(in:NSRect(x:x+110,y:y-15-r["height"]!*scale,width:r["width"]!*scale,height:r["height"]!*scale),from:src,operation:.sourceOver,fraction:1)
+  label("\(r["width"]!) x \(r["height"]!) px / \(scale)x",x+12,y-168,15)
+  label(note,x+12,y-191,15,NSColor(calibratedRed:0.85,green:0.88,blue:0.62,alpha:1))
+ }
+ NSGraphicsContext.restoreGraphicsState();try!b.representation(using:.png,properties:[:])!.write(to:URL(fileURLWithPath:out+file))
+}
+let no="Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Resources_Icons_NO_Outline.png",outline="Assets/Art/Packs/Cute_Fantasy/Icons/Outline/Resources_Icons_Outline.png",other="Assets/Art/Packs/Cute_Fantasy/Icons/Outline/Other_Icons_2_Outline.png",decor="Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor.png",camp="Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Camp_Decor.png",split="Assets/Art/Packs/Cute_Fantasy_MilitaryCamp/Split_Log_Benches.png",spikes="Assets/Art/Packs/Cute_Fantasy_MilitaryCamp/Wood_Spikes.png"
+sheet("inventory-candidates.png","Wood art recheck: inventory and ambiguous material icons","Actual imported rectangles. Generic names do not establish tree species.",[
+(no,"Resources_Icons_NO_Outline_24","Existing Log 57"),(no,"Resources_Icons_NO_Outline_26","Existing Stick 2"),(no,"Resources_Icons_NO_Outline_31","Unused clustered pieces; unlabeled"),(no,"Resources_Icons_NO_Outline_28","Existing Leather: exclude as wood"),(no,"Resources_Icons_NO_Outline_25","Bone: exclude as timber"),(no,"Resources_Icons_NO_Outline_32","Pinecone: tree-related, not a log"),(no,"Resources_Icons_NO_Outline_33","Acorn/nut: tree-related, not a log"),(other,"Other_Icons_2_Outline_0","Import merges column, not one icon"),(outline,"Resources_Icons_Outline_23","Import merges log/stick/material group")],3)
+let singles=[(66,"Sprouted horizontal log"),(67,"Plain horizontal log"),(71,"Purple growth on log"),(73,"Red growth on log"),(75,"Blue growth on log"),(74,"Red growth, angled log"),(76,"Blue growth, angled log"),(81,"Purple growth, angled log"),(86,"Sprouted angled log"),(87,"Plain angled log"),(100,"Single upright wood piece"),(106,"Tall single upright log"),(102,"Dry-looking branch"),(143,"Water branch: blue pixels"),(105,"Water log: blue pixels")]
+var singleSel=singles.map{(decor,"Outdoor_Decor_\($0.0)",$0.1)}
+for i in 0...3{singleSel.append((camp,"Camp_Decor_\(i)","Camp stool/bench log prop"))}
+for i in 0...1{singleSel.append((split,"Split_Log_Benches_\(i)","Pale cut surface; bench prop"))}
+sheet("world-log-candidates.png","Existing single logs and branches: source candidates","World props are authored art; selecting them as inventory icons remains a proposal.",singleSel)
+let piles=[(50,"Small stump"),(58,"Sprouted horizontal log"),(59,"Small stump"),(80,"Rooted leafy stump"),(82,"Stone: exclude as timber"),(91,"Small wood stack"),(92,"Small wood stack"),(93,"Small wood stack"),(94,"Small wood stack"),(97,"Small wood stack"),(98,"Small wood stack"),(99,"Small wood stack"),(103,"Large wood stack"),(104,"Large wood stack"),(115,"Large wood stack"),(116,"Large wood stack"),(131,"Large wood stack"),(132,"Large wood stack")]
+var pileSel=piles.map{(decor,"Outdoor_Decor_\($0.0)",$0.1)}
+for i in 0...2{pileSel.append((spikes,"Wood_Spikes_\(i)","Pointed defensive wood prop"))}
+sheet("wood-stack-candidates.png","Wood stacks, stumps and shaped wood: source context","No species metadata or new resource mapping is inferred from these shapes.",pileSel)
+sheet("sibling-branch-candidates.png","Sibling pack branches and stump: additional context","These are world props with generic names; no Birch/Spruce resource identity is authored.",[
+("Assets/Art/Packs/Cute_Fantasy_Desert/Props/Dead_bush.png","Dead_bush_0","Dry branch-shaped bush"),("Assets/Art/Packs/Cute_Fantasy_Desert/Props/Dead_bush.png","Dead_bush_1","Dry branch-shaped bush"),("Assets/Art/Packs/Cute_Fantasy_Desert/Props/Water_Sack_On_Stick.png","Water_Sack_On_Stick_0","Built stick prop; sack is included"),("Assets/Art/Packs/Cute_Fantasy_Desert/Props/Acacia_Tree.png","Acacia_Tree_0","Acacia rooted stump")])

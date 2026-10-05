@@ -1,0 +1,1313 @@
+--- before/Assets/Resources/Fonts/FloatingTextIcons.asset
++++ after/Assets/Resources/Fonts/FloatingTextIcons.asset
+@@ -1260,6 +1260,86 @@
+     m_GlyphIndex: 235
+     m_Scale: 1
+     m_Name: SeedPack_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 236
++    m_Scale: 1
++    m_Name: Timber_StarterStick
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 237
++    m_Scale: 1
++    m_Name: Timber_StarterStick_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 238
++    m_Scale: 1
++    m_Name: Timber_StarterLog
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 239
++    m_Scale: 1
++    m_Name: Timber_StarterLog_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 240
++    m_Scale: 1
++    m_Name: Timber_OakStick
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 241
++    m_Scale: 1
++    m_Name: Timber_OakStick_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 242
++    m_Scale: 1
++    m_Name: Timber_OakLog
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 243
++    m_Scale: 1
++    m_Name: Timber_OakLog_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 244
++    m_Scale: 1
++    m_Name: Timber_BirchStick
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 245
++    m_Scale: 1
++    m_Name: Timber_BirchStick_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 246
++    m_Scale: 1
++    m_Name: Timber_BirchLog
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 247
++    m_Scale: 1
++    m_Name: Timber_BirchLog_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 248
++    m_Scale: 1
++    m_Name: Timber_SpruceStick
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 249
++    m_Scale: 1
++    m_Name: Timber_SpruceStick_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 250
++    m_Scale: 1
++    m_Name: Timber_SpruceLog
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 251
++    m_Scale: 1
++    m_Name: Timber_SpruceLog_Unknown
+   m_GlyphTable:
+   - m_Index: 0
+     m_Metrics:
+@@ -5037,5 +5117,261 @@
+     m_AtlasIndex: 0
+     m_ClassDefinitionType: 0
+     sprite: {fileID: 398324854314620224, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 236
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 0
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 421698404467648060, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 237
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 16
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 727849609343084173, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 238
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 32
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 489098626560803395, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 239
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 48
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 262102940682007718, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 240
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 64
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 117843253311342565, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 241
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 80
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 481654122412729998, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 242
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 96
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 936827264989479905, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 243
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 112
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 395609894683887768, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 244
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 128
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 453852723744772982, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 245
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 144
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 149264221147120778, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 246
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 160
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 567164148545298937, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 247
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 176
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 15504776762566348, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 248
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 192
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 675579681349317558, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 249
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 208
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 90209590612146231, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 250
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 224
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 634021073273878761, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 251
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 240
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 41346664410591715, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+   spriteInfoList: []
+   fallbackSpriteAssets: []
+Binary atlas change: Assets/Resources/Fonts/FloatingTextIcons.png; old pixels retained, one row appended.
+--- before/Assets/Resources/Fonts/FloatingTextIcons.png.meta
++++ after/Assets/Resources/Fonts/FloatingTextIcons.png.meta
+@@ -173,6 +173,54 @@
+   - first:
+       213: 398324854314620224
+     second: SeedPack_Unknown
++  - first:
++      213: 421698404467648060
++    second: Timber_StarterStick
++  - first:
++      213: 727849609343084173
++    second: Timber_StarterStick_Unknown
++  - first:
++      213: 489098626560803395
++    second: Timber_StarterLog
++  - first:
++      213: 262102940682007718
++    second: Timber_StarterLog_Unknown
++  - first:
++      213: 117843253311342565
++    second: Timber_OakStick
++  - first:
++      213: 481654122412729998
++    second: Timber_OakStick_Unknown
++  - first:
++      213: 936827264989479905
++    second: Timber_OakLog
++  - first:
++      213: 395609894683887768
++    second: Timber_OakLog_Unknown
++  - first:
++      213: 453852723744772982
++    second: Timber_BirchStick
++  - first:
++      213: 149264221147120778
++    second: Timber_BirchStick_Unknown
++  - first:
++      213: 567164148545298937
++    second: Timber_BirchLog
++  - first:
++      213: 15504776762566348
++    second: Timber_BirchLog_Unknown
++  - first:
++      213: 675579681349317558
++    second: Timber_SpruceStick
++  - first:
++      213: 90209590612146231
++    second: Timber_SpruceStick_Unknown
++  - first:
++      213: 634021073273878761
++    second: Timber_SpruceLog
++  - first:
++      213: 41346664410591715
++    second: Timber_SpruceLog_Unknown
+   externalObjects: {}
+   serializedVersion: 13
+   mipmaps:
+@@ -5496,6 +5544,358 @@
+       internalID: 398324854314620224
+       vertices: []
+       indices:
++      edges: []
++      weights: []
++    - serializedVersion: 2
++      name: Timber_StarterStick
++      rect:
++        serializedVersion: 2
++        x: 0
++        y: 224
++        width: 16
++        height: 16
++      alignment: 0
++      pivot: {x: 0.5, y: 0.5}
++      border: {x: 0, y: 0, z: 0, w: 0}
++      customData: 
++      outline: []
++      physicsShape: []
++      tessellationDetail: -1
++      bones: []
++      spriteID: 5da2c76f0a4a63c3b620eebd4fcd09f9
++      internalID: 421698404467648060
++      vertices: []
++      indices: 
++      edges: []
++      weights: []
++    - serializedVersion: 2
++      name: Timber_StarterStick_Unknown
++      rect:
++        serializedVersion: 2
++        x: 16
++        y: 224
++        width: 16
++        height: 16
++      alignment: 0
++      pivot: {x: 0.5, y: 0.5}
++      border: {x: 0, y: 0, z: 0, w: 0}
++      customData: 
++      outline: []
++      physicsShape: []
++      tessellationDetail: -1
++      bones: []
++      spriteID: a19d75d06cd268de164a27496c01b549
++      internalID: 727849609343084173
++      vertices: []
++      indices: 
++      edges: []
++      weights: []
++    - serializedVersion: 2
++      name: Timber_StarterLog
++      rect:
++        serializedVersion: 2
++        x: 32
++        y: 224
++        width: 16
++        height: 16
++      alignment: 0
++      pivot: {x: 0.5, y: 0.5}
++      border: {x: 0, y: 0, z: 0, w: 0}
++      customData: 
++      outline: []
++      physicsShape: []
++      tessellationDetail: -1
++      bones: []
++      spriteID: 6c9a09c0849c24321051d1ff2fe6652a
++      internalID: 489098626560803395
++      vertices: []
++      indices: 
++      edges: []
++      weights: []
++    - serializedVersion: 2
++      name: Timber_StarterLog_Unknown
++      rect:
++        serializedVersion: 2
++        x: 48
++        y: 224
++        width: 16
++        height: 16
++      alignment: 0
++      pivot: {x: 0.5, y: 0.5}
++      border: {x: 0, y: 0, z: 0, w: 0}
++      customData: 
++      outline: []
++      physicsShape: []
++      tessellationDetail: -1
++      bones: []
++      spriteID: 3a32d3c61efb4a6a175c184dc4ce02f8
++      internalID: 262102940682007718
++      vertices: []
++      indices: 
++      edges: []
++      weights: []
++    - serializedVersion: 2
++      name: Timber_OakStick
++      rect:
++        serializedVersion: 2
++        x: 64
++        y: 224
++        width: 16
++        height: 16
++      alignment: 0
++      pivot: {x: 0.5, y: 0.5}
++      border: {x: 0, y: 0, z: 0, w: 0}
++      customData: 
++      outline: []
++      physicsShape: []
++      tessellationDetail: -1
++      bones: []
++      spriteID: 1a2a9d084cc87e5eb606ec8356a1b678
++      internalID: 117843253311342565
++      vertices: []
++      indices: 
++      edges: []
++      weights: []
++    - serializedVersion: 2
++      name: Timber_OakStick_Unknown
++      rect:
++        serializedVersion: 2
++        x: 80
++        y: 224
++        width: 16
++        height: 16
++      alignment: 0
++      pivot: {x: 0.5, y: 0.5}
++      border: {x: 0, y: 0, z: 0, w: 0}
++      customData: 
++      outline: []
++      physicsShape: []
++      tessellationDetail: -1
++      bones: []
++      spriteID: 6af2ddf5703668e1a549a702caa01240
++      internalID: 481654122412729998
++      vertices: []
++      indices: 
++      edges: []
++      weights: []
++    - serializedVersion: 2
++      name: Timber_OakLog
++      rect:
++        serializedVersion: 2
++        x: 96
++        y: 224
++        width: 16
++        height: 16
++      alignment: 0
++      pivot: {x: 0.5, y: 0.5}
++      border: {x: 0, y: 0, z: 0, w: 0}
++      customData: 
++      outline: []
++      physicsShape: []
++      tessellationDetail: -1
++      bones: []
++      spriteID: d00476f199943e109bfc4c2663567292
++      internalID: 936827264989479905
++      vertices: []
++      indices: 
++      edges: []
++      weights: []
++    - serializedVersion: 2
++      name: Timber_OakLog_Unknown
++      rect:
++        serializedVersion: 2
++        x: 112
++        y: 224
++        width: 16
++        height: 16
++      alignment: 0
++      pivot: {x: 0.5, y: 0.5}
++      border: {x: 0, y: 0, z: 0, w: 0}
++      customData: 
++      outline: []
++      physicsShape: []
++      tessellationDetail: -1
++      bones: []
++      spriteID: 57d7d1a6a434898f9f56f54cd5b06f19
++      internalID: 395609894683887768
++      vertices: []
++      indices: 
++      edges: []
++      weights: []
++    - serializedVersion: 2
++      name: Timber_BirchStick
++      rect:
++        serializedVersion: 2
++        x: 128
++        y: 224
++        width: 16
++        height: 16
++      alignment: 0
++      pivot: {x: 0.5, y: 0.5}
++      border: {x: 0, y: 0, z: 0, w: 0}
++      customData: 
++      outline: []
++      physicsShape: []
++      tessellationDetail: -1
++      bones: []
++      spriteID: 64c68a5cb269376612754bb0b2fc840d
++      internalID: 453852723744772982
++      vertices: []
++      indices: 
++      edges: []
++      weights: []
++    - serializedVersion: 2
++      name: Timber_BirchStick_Unknown
++      rect:
++        serializedVersion: 2
++        x: 144
++        y: 224
++        width: 16
++        height: 16
++      alignment: 0
++      pivot: {x: 0.5, y: 0.5}
++      border: {x: 0, y: 0, z: 0, w: 0}
++      customData: 
++      outline: []
++      physicsShape: []
++      tessellationDetail: -1
++      bones: []
++      spriteID: 2124b04af26448a9ce31fdb108d7cd9f
++      internalID: 149264221147120778
++      vertices: []
++      indices: 
++      edges: []
++      weights: []
++    - serializedVersion: 2
++      name: Timber_BirchLog
++      rect:
++        serializedVersion: 2
++        x: 160
++        y: 224
++        width: 16
++        height: 16
++      alignment: 0
++      pivot: {x: 0.5, y: 0.5}
++      border: {x: 0, y: 0, z: 0, w: 0}
++      customData: 
++      outline: []
++      physicsShape: []
++      tessellationDetail: -1
++      bones: []
++      spriteID: 7def8c9c36121f9b331ccaa79a4f9c26
++      internalID: 567164148545298937
++      vertices: []
++      indices: 
++      edges: []
++      weights: []
++    - serializedVersion: 2
++      name: Timber_BirchLog_Unknown
++      rect:
++        serializedVersion: 2
++        x: 176
++        y: 224
++        width: 16
++        height: 16
++      alignment: 0
++      pivot: {x: 0.5, y: 0.5}
++      border: {x: 0, y: 0, z: 0, w: 0}
++      customData: 
++      outline: []
++      physicsShape: []
++      tessellationDetail: -1
++      bones: []
++      spriteID: 0371583274126cc004f6a8954e7a627b
++      internalID: 15504776762566348
++      vertices: []
++      indices: 
++      edges: []
++      weights: []
++    - serializedVersion: 2
++      name: Timber_SpruceStick
++      rect:
++        serializedVersion: 2
++        x: 192
++        y: 224
++        width: 16
++        height: 16
++      alignment: 0
++      pivot: {x: 0.5, y: 0.5}
++      border: {x: 0, y: 0, z: 0, w: 0}
++      customData: 
++      outline: []
++      physicsShape: []
++      tessellationDetail: -1
++      bones: []
++      spriteID: 96024240c4c33b640190529dcbeb263b
++      internalID: 675579681349317558
++      vertices: []
++      indices: 
++      edges: []
++      weights: []
++    - serializedVersion: 2
++      name: Timber_SpruceStick_Unknown
++      rect:
++        serializedVersion: 2
++        x: 208
++        y: 224
++        width: 16
++        height: 16
++      alignment: 0
++      pivot: {x: 0.5, y: 0.5}
++      border: {x: 0, y: 0, z: 0, w: 0}
++      customData: 
++      outline: []
++      physicsShape: []
++      tessellationDetail: -1
++      bones: []
++      spriteID: 1407d250bc538372506e1f3d8bee362e
++      internalID: 90209590612146231
++      vertices: []
++      indices: 
++      edges: []
++      weights: []
++    - serializedVersion: 2
++      name: Timber_SpruceLog
++      rect:
++        serializedVersion: 2
++        x: 224
++        y: 224
++        width: 16
++        height: 16
++      alignment: 0
++      pivot: {x: 0.5, y: 0.5}
++      border: {x: 0, y: 0, z: 0, w: 0}
++      customData: 
++      outline: []
++      physicsShape: []
++      tessellationDetail: -1
++      bones: []
++      spriteID: 8cc7ece9499f8e94f44ec6afec20e0ff
++      internalID: 634021073273878761
++      vertices: []
++      indices: 
++      edges: []
++      weights: []
++    - serializedVersion: 2
++      name: Timber_SpruceLog_Unknown
++      rect:
++        serializedVersion: 2
++        x: 240
++        y: 224
++        width: 16
++        height: 16
++      alignment: 0
++      pivot: {x: 0.5, y: 0.5}
++      border: {x: 0, y: 0, z: 0, w: 0}
++      customData: 
++      outline: []
++      physicsShape: []
++      tessellationDetail: -1
++      bones: []
++      spriteID: 092e4927cd731e3a996cda6d3e3e32d2
++      internalID: 41346664410591715
++      vertices: []
++      indices: 
+       edges: []
+       weights: []
+     outline: []
+@@ -5750,6 +6150,22 @@
+       SeedPack_Watermelon: 127031998072820663
+       SeedPack_Wheat: 495149490969744701
+       SeedPack_Unknown: 398324854314620224
++      Timber_StarterStick: 421698404467648060
++      Timber_StarterStick_Unknown: 727849609343084173
++      Timber_StarterLog: 489098626560803395
++      Timber_StarterLog_Unknown: 262102940682007718
++      Timber_OakStick: 117843253311342565
++      Timber_OakStick_Unknown: 481654122412729998
++      Timber_OakLog: 936827264989479905
++      Timber_OakLog_Unknown: 395609894683887768
++      Timber_BirchStick: 453852723744772982
++      Timber_BirchStick_Unknown: 149264221147120778
++      Timber_BirchLog: 567164148545298937
++      Timber_BirchLog_Unknown: 15504776762566348
++      Timber_SpruceStick: 675579681349317558
++      Timber_SpruceStick_Unknown: 90209590612146231
++      Timber_SpruceLog: 634021073273878761
++      Timber_SpruceLog_Unknown: 41346664410591715
+   mipmapLimitGroupName: 
+   pSDRemoveMatte: 0
+   userData: 
+--- before/Assets/Resources/Resource Items/Log.asset
++++ after/Assets/Resources/Resource Items/Log.asset
+@@ -13,7 +13,7 @@
+   m_Name: Log
+   m_EditorClassIdentifier: 
+   resourceID: 57
+-  icon: {fileID: 8831195269540349854, guid: f84262455b69072498ba0e2afc130d21, type: 3}
++  icon: {fileID: 736139449, guid: 7cfa32f7f30ac7e45930f7df88eba5ba, type: 3}
+   UnknownIcon: {fileID: 1056826793168131641, guid: b6263844b57b83e48afb7688d78f03df, type: 3}
+   baseValue: 1
+   valueMultiplier: 1.2
+--- before/Assets/Resources/Resource Items/Stick.asset
++++ after/Assets/Resources/Resource Items/Stick.asset
+@@ -13,7 +13,7 @@
+   m_Name: Stick
+   m_EditorClassIdentifier: 
+   resourceID: 2
+-  icon: {fileID: 1587561915571280470, guid: f84262455b69072498ba0e2afc130d21, type: 3}
++  icon: {fileID: -1305826939, guid: 7cfa32f7f30ac7e45930f7df88eba5ba, type: 3}
+   UnknownIcon: {fileID: 6020488383580729632, guid: b6263844b57b83e48afb7688d78f03df, type: 3}
+   totalReceived: 260
+   totalSpent: 0
+--- before/Assets/Resources/Tasks/Woodcutting/Large Birch Tree.asset
++++ after/Assets/Resources/Tasks/Woodcutting/Large Birch Tree.asset
+@@ -32,13 +32,13 @@
+   - {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
+   - {fileID: 11400000, guid: e9e0d5475b2b3794d9035d35ea81d481, type: 2}
+   resourceDrops:
+-  - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
++  - resource: {fileID: 11400000, guid: 25c8cee6eddf4c4cb20d6d77f390eb56, type: 2}
+     dropRange: {x: 4, y: 10}
+     weight: 1
+     minX: 500
+     maxX: Infinity
+     requiredSkillLevel: 0
+-  - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
++  - resource: {fileID: 11400000, guid: 46c7f0ba803d4f56acb642a964cbe795, type: 2}
+     dropRange: {x: 5, y: 12}
+     weight: 1
+     minX: 0
+--- before/Assets/Resources/Tasks/Woodcutting/Large Oak Tree.asset
++++ after/Assets/Resources/Tasks/Woodcutting/Large Oak Tree.asset
+@@ -32,13 +32,13 @@
+   - {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
+   - {fileID: 11400000, guid: e9e0d5475b2b3794d9035d35ea81d481, type: 2}
+   resourceDrops:
+-  - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
++  - resource: {fileID: 11400000, guid: 662ac0c8e09545b9a11ae5a1e0ac7125, type: 2}
+     dropRange: {x: 3, y: 9}
+     weight: 1
+     minX: 100
+     maxX: Infinity
+     requiredSkillLevel: 0
+-  - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
++  - resource: {fileID: 11400000, guid: d27f42dac2c64a9fbdaef87b1d68cf83, type: 2}
+     dropRange: {x: 3, y: 8}
+     weight: 1
+     minX: 0
+--- before/Assets/Resources/Tasks/Woodcutting/Large Spruce Tree.asset
++++ after/Assets/Resources/Tasks/Woodcutting/Large Spruce Tree.asset
+@@ -32,13 +32,13 @@
+   - {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
+   - {fileID: 11400000, guid: e9e0d5475b2b3794d9035d35ea81d481, type: 2}
+   resourceDrops:
+-  - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
++  - resource: {fileID: 11400000, guid: 914756acb1d24fb8a64da0ad08e3838f, type: 2}
+     dropRange: {x: 4, y: 15}
+     weight: 1
+     minX: 2500
+     maxX: Infinity
+     requiredSkillLevel: 0
+-  - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
++  - resource: {fileID: 11400000, guid: 7b11407c43c740dea10e135bf7e0c061, type: 2}
+     dropRange: {x: 7, y: 22}
+     weight: 1
+     minX: 0
+--- before/Assets/Resources/Tasks/Woodcutting/Medium Birch Tree.asset
++++ after/Assets/Resources/Tasks/Woodcutting/Medium Birch Tree.asset
+@@ -32,13 +32,13 @@
+   - {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
+   - {fileID: 11400000, guid: e9e0d5475b2b3794d9035d35ea81d481, type: 2}
+   resourceDrops:
+-  - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
++  - resource: {fileID: 11400000, guid: 25c8cee6eddf4c4cb20d6d77f390eb56, type: 2}
+     dropRange: {x: 1, y: 6}
+     weight: 1
+     minX: 500
+     maxX: Infinity
+     requiredSkillLevel: 0
+-  - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
++  - resource: {fileID: 11400000, guid: 46c7f0ba803d4f56acb642a964cbe795, type: 2}
+     dropRange: {x: 2, y: 4}
+     weight: 1
+     minX: 0
+--- before/Assets/Resources/Tasks/Woodcutting/Medium Oak Tree.asset
++++ after/Assets/Resources/Tasks/Woodcutting/Medium Oak Tree.asset
+@@ -32,13 +32,13 @@
+   - {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
+   - {fileID: 11400000, guid: e9e0d5475b2b3794d9035d35ea81d481, type: 2}
+   resourceDrops:
+-  - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
++  - resource: {fileID: 11400000, guid: 662ac0c8e09545b9a11ae5a1e0ac7125, type: 2}
+     dropRange: {x: 1, y: 5}
+     weight: 1
+     minX: 100
+     maxX: Infinity
+     requiredSkillLevel: 0
+-  - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
++  - resource: {fileID: 11400000, guid: d27f42dac2c64a9fbdaef87b1d68cf83, type: 2}
+     dropRange: {x: 1, y: 3}
+     weight: 1
+     minX: 0
+--- before/Assets/Resources/Tasks/Woodcutting/Medium Spruce Tree.asset
++++ after/Assets/Resources/Tasks/Woodcutting/Medium Spruce Tree.asset
+@@ -32,13 +32,13 @@
+   - {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
+   - {fileID: 11400000, guid: e9e0d5475b2b3794d9035d35ea81d481, type: 2}
+   resourceDrops:
+-  - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
++  - resource: {fileID: 11400000, guid: 914756acb1d24fb8a64da0ad08e3838f, type: 2}
+     dropRange: {x: 1, y: 7}
+     weight: 1
+     minX: 2500
+     maxX: Infinity
+     requiredSkillLevel: 0
+-  - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
++  - resource: {fileID: 11400000, guid: 7b11407c43c740dea10e135bf7e0c061, type: 2}
+     dropRange: {x: 4, y: 8}
+     weight: 1
+     minX: 0
+--- before/Assets/Scripts/Upgrades/ResourceIconLookup.cs
++++ after/Assets/Scripts/Upgrades/ResourceIconLookup.cs
+@@ -24,15 +24,16 @@
+             // New indices for the alternating sheet (known icons at even slots).
+             idToIndex = new Dictionary<int, int>(65)
+             {
+-                { 1, 64 }, { 2, 58 }, { 3, 66 }, { 4, 56 }, { 5, 60 }, { 6, 62 }, { 7, 12 }, { 8, 18 },
++                { 1, 64 }, { 2, 236 }, { 3, 66 }, { 4, 56 }, { 5, 60 }, { 6, 62 }, { 7, 12 }, { 8, 18 },
+                 { 9, 0 }, { 10, 36 }, { 11, 24 }, { 12, 6 }, { 13, 30 }, { 14, 42 }, { 15, 14 }, { 16, 20 },
+                 { 17, 2 }, { 18, 38 }, { 19, 26 }, { 20, 8 }, { 21, 32 }, { 22, 44 }, { 23, 16 }, { 24, 22 },
+                 { 25, 4 }, { 26, 40 }, { 27, 28 }, { 28, 10 }, { 29, 34 }, { 30, 46 }, { 31, 86 }, { 32, 80 },
+                 { 33, 76 }, { 34, 78 }, { 35, 82 }, { 36, 74 }, { 37, 72 }, { 38, 84 }, { 39, 126 }, { 40, 144 },
+                 { 41, 120 }, { 42, 134 }, { 43, 150 }, { 44, 138 }, { 45, 132 }, { 46, 136 }, { 47, 152 }, { 48, 142 },
+                 { 49, 146 }, { 50, 118 }, { 51, 128 }, { 52, 148 }, { 53, 130 }, { 54, 140 }, { 55, 124 }, { 56, 122 },
+-                { 57, 54 }, { 58, 172 }, { 59, 174 }, { 60, 176 }, { 61, 178 }, { 62, 180 }, { 63, 182 }, { 64, 184 },
+-                { 65, 186 }, { 66, 92 }, { 67, 106 }, { 68, 110 }, { 69, 114 }, { 70, 96 }
++                { 57, 238 }, { 58, 172 }, { 59, 174 }, { 60, 176 }, { 61, 178 }, { 62, 180 }, { 63, 182 }, { 64, 184 },
++                { 65, 186 }, { 66, 92 }, { 67, 106 }, { 68, 110 }, { 69, 114 }, { 70, 96 },
++                { 71, 240 }, { 72, 242 }, { 73, 244 }, { 74, 246 }, { 75, 248 }, { 76, 250 }
+             };
+ 
+             // With the alternating layout, each unknown sprite is adjacent: +1 from its known index.
+@@ -97,4 +98,4 @@
+                 : string.Empty;
+         }
+     }
+-}+}
+--- before/Assets/UI/Toolkit/InlineSprites.asset
++++ after/Assets/UI/Toolkit/InlineSprites.asset
+@@ -1218,6 +1218,86 @@
+     m_GlyphIndex: 235
+     m_Scale: 1
+     m_Name: SeedPack_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 236
++    m_Scale: 1
++    m_Name: Timber_StarterStick
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 237
++    m_Scale: 1
++    m_Name: Timber_StarterStick_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 238
++    m_Scale: 1
++    m_Name: Timber_StarterLog
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 239
++    m_Scale: 1
++    m_Name: Timber_StarterLog_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 240
++    m_Scale: 1
++    m_Name: Timber_OakStick
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 241
++    m_Scale: 1
++    m_Name: Timber_OakStick_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 242
++    m_Scale: 1
++    m_Name: Timber_OakLog
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 243
++    m_Scale: 1
++    m_Name: Timber_OakLog_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 244
++    m_Scale: 1
++    m_Name: Timber_BirchStick
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 245
++    m_Scale: 1
++    m_Name: Timber_BirchStick_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 246
++    m_Scale: 1
++    m_Name: Timber_BirchLog
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 247
++    m_Scale: 1
++    m_Name: Timber_BirchLog_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 248
++    m_Scale: 1
++    m_Name: Timber_SpruceStick
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 249
++    m_Scale: 1
++    m_Name: Timber_SpruceStick_Unknown
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 250
++    m_Scale: 1
++    m_Name: Timber_SpruceLog
++  - m_ElementType: 2
++    m_Unicode: 65534
++    m_GlyphIndex: 251
++    m_Scale: 1
++    m_Name: Timber_SpruceLog_Unknown
+   m_SpriteGlyphTable:
+   - m_Index: 0
+     m_Metrics:
+@@ -4995,4 +5075,260 @@
+     m_AtlasIndex: 0
+     m_ClassDefinitionType: 0
+     sprite: {fileID: 398324854314620224, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 236
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 0
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 421698404467648060, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 237
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 16
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 727849609343084173, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 238
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 32
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 489098626560803395, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 239
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 48
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 262102940682007718, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 240
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 64
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 117843253311342565, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 241
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 80
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 481654122412729998, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 242
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 96
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 936827264989479905, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 243
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 112
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 395609894683887768, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 244
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 128
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 453852723744772982, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 245
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 144
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 149264221147120778, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 246
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 160
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 567164148545298937, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 247
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 176
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 15504776762566348, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 248
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 192
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 675579681349317558, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 249
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 208
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 90209590612146231, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 250
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 224
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 634021073273878761, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
++  - m_Index: 251
++    m_Metrics:
++      m_Width: 16
++      m_Height: 16
++      m_HorizontalBearingX: 0
++      m_HorizontalBearingY: 12
++      m_HorizontalAdvance: 16
++    m_GlyphRect:
++      m_X: 240
++      m_Y: 224
++      m_Width: 16
++      m_Height: 16
++    m_Scale: 1
++    m_AtlasIndex: 0
++    m_ClassDefinitionType: 0
++    sprite: {fileID: 41346664410591715, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+   fallbackSpriteAssets: []
+--- before/Assets/UI/Toolkit/ResourceInventory.asset
++++ after/Assets/UI/Toolkit/ResourceInventory.asset
+@@ -82,6 +82,12 @@
+   - {fileID: 11400000, guid: 2127cdd04bf07ac4b9c19b6432213a1d, type: 2}
+   - {fileID: 11400000, guid: d2b03aa2dd8d2a4438598423b3dca1ec, type: 2}
+   - {fileID: 11400000, guid: e78551f83edfa39498c144470c42b987, type: 2}
++  - {fileID: 11400000, guid: 662ac0c8e09545b9a11ae5a1e0ac7125, type: 2}
++  - {fileID: 11400000, guid: d27f42dac2c64a9fbdaef87b1d68cf83, type: 2}
++  - {fileID: 11400000, guid: 25c8cee6eddf4c4cb20d6d77f390eb56, type: 2}
++  - {fileID: 11400000, guid: 46c7f0ba803d4f56acb642a964cbe795, type: 2}
++  - {fileID: 11400000, guid: 914756acb1d24fb8a64da0ad08e3838f, type: 2}
++  - {fileID: 11400000, guid: 7b11407c43c740dea10e135bf7e0c061, type: 2}
+   title: {fileID: -521334471, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+   inset: {fileID: -6679953284920075913, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+   selection: {fileID: -3351714043623252698, guid: 09816a9a266ff495a9997c0577b78a50, type: 3}

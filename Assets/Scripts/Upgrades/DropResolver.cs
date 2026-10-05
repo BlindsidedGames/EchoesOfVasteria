@@ -110,6 +110,22 @@ namespace TimelessEchoes.Upgrades
             return _scratchResults;
         }
 
+        public static List<DropResult> RollBonusDrops(IEnumerable<TimelessEchoes.Tasks.TaskData.BonusDrop> drops, Func<float> rand = null)
+        {
+            var result = new List<DropResult>();
+            if (drops == null) return result;
+            float Rand() => rand != null ? rand() : UnityEngine.Random.value;
+            foreach (var drop in drops)
+            {
+                if (drop?.resource == null || drop.chance <= 0 || Rand() >= Mathf.Clamp01(drop.chance)) continue;
+                var min = Mathf.Max(0, drop.range.x); var max = Mathf.Max(min, drop.range.y);
+                var t = Rand(); t *= t;
+                var count = Mathf.Clamp(Mathf.FloorToInt(Mathf.Lerp(min, max + 1, t)), min, max);
+                if (count > 0) result.Add(new DropResult { resource = drop.resource, count = count });
+            }
+            return result;
+        }
+
         private static bool IsDropUnlocked(ResourceDrop drop, Skill skill)
         {
             if (drop.requiredSkillLevel <= 0)

@@ -1,0 +1,29 @@
+from pathlib import Path
+import json,numpy as np
+p=Path.cwd();e=p.parent/'Echoes Farming Planning Evidence/2026-09-30/depth-sorting-correction-2026-10-01';alpha=json.loads((e.parent/'fence-scenery-correction-2026-10-01/source-alpha-pixels.json').read_text());scenes=json.loads((e/'final-scene-art.json').read_text())
+def geo(a,ground=False):
+ key=a['asset']+':'+','.join(str(float(x)) for x in a['rect']);px=np.array(alpha[key],float) if key in alpha else np.array([[0,0,255],[a['rect'][2]-1,a['rect'][3]-1,255]],float)
+ if ground:px=px[px[:,1]<=20] # native trunk base plus ground shadow; visual proxy, not a collider
+ if not len(px):return None
+ xy=(px[:,:2]-np.array(a['pivot']))/a['ppu'];m=np.array(a['matrix']).reshape(4,4);u=1/a['ppu'];c=np.stack([xy,xy+[u,0],xy+[0,u],xy+[u,u]],axis=1);w=c@m[:2,:2].T+m[:2,3];return w.min(axis=1).min(axis=0),w.max(axis=1).max(axis=0)
+def hit(g,lo,hi):return g is not None and bool(np.all(g[1]>lo+1e-6) and np.all(hi>g[0]+1e-6))
+res=[]
+for s in scenes:
+ if 'one-tile-up' not in s['scene']:continue
+ a=s['art'];trees=[x for x in a if 'OPTIONAL Orchard Capacity' in x['path'] and '/Orchard tree ' in x['path']];old=[x for x in a if not x['path'].startswith('OPTIONAL Orchard Capacity') and (x['kind']=='SpriteRenderer' or 'Decor' in x['path'] or '/-2 Old Path' in x['path'])];paths=[x for x in old if x['kind']=='Tilemap' and '/-2 Old Path' in x['path']];restored=[x for x in old if x['path'].startswith('RESTORED scenery trees')];plot=[]
+ for t in trees:
+  m=np.array(t['matrix']).reshape(4,4);anchor=m[:2,3]-(np.array(t['pivot'])-16)/16;lo=anchor-1;hi=anchor+1
+  soilpath=[x['worldAnchor'] for x in paths if hit(geo(x),lo,hi)];restoredHits=[x['path'] for x in restored if hit(geo(x,True),lo,hi)];other=[{'path':x['path'],'sprite':x['sprite']} for x in old if x not in paths and x not in restored and hit(geo(x),lo,hi)]
+  plot.append({'anchor':anchor.tolist(),'soilBoundsMin':lo.tolist(),'soilBoundsMax':hi.tolist(),'pathOverlap':soilpath,'restoredTreeBaseShadowOverlap':restoredHits,'otherArtBoundingIntersections':other})
+ xs=sorted(set(round(x['anchor'][0],3) for x in plot));lo=np.array([-59,-21]);hi=np.array([-58,-12.5]);block=[]
+ for x in old:
+  if x in paths or 'Grass_' in x['sprite'] or 'Farmland_' in x['sprite']:continue
+  g=geo(x,x in restored)
+  if hit(g,lo,hi):block.append({'path':x['path'],'sprite':x['sprite']})
+ access=[x['worldAnchor'] for x in paths if abs(x['worldAnchor'][0]+58.5)<.01 and abs(x['worldAnchor'][1]+21.5)<.01]
+ assert all(not x['pathOverlap'] and not x['restoredTreeBaseShadowOverlap'] for x in plot)
+ assert all(not x['otherArtBoundingIntersections'] for x in plot),plot
+ assert not block and access,(block,access)
+ r={'scene':s['scene'],'treeCount':len(trees),'rowsY':[-13.5,-17],'fullUpwardShift':1,'columnAnchors':xs,'columnSpacing':xs[1]-xs[0],'plotEnvelope':[max(xs)-min(xs)+2,5.5],'aisleWidth':xs[1]-xs[0]-2,'plantingPlots':plot,'entryGrassCorridor':{'min':lo.tolist(),'max':hi.tolist(),'width':1,'blockers':block,'loggingPathAnchor':access[0]},'restoredTrees':[{'anchor':np.array(x['matrix']).reshape(4,4)[:2,3].tolist(),'baseShadowBounds':[v.tolist() for v in geo(x,True)]} for x in restored],'collidersInPreview':s['colliders'],'runtimeNavigationValidated':False,'canopyFenceCrossing':'allowed, verified by render depth; never counted as a ground blocker'};res.append(r)
+ print(Path(s['scene']).stem,'plots',len(trees),'aisle',r['aisleWidth'],'restored',r['restoredTrees'],'colliders',len(s['colliders']))
+(e/'ground-path-proof.json').write_text(json.dumps(res,indent=2))

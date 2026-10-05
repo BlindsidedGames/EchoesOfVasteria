@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: "Localization-String-Tables-Portugu\xEAs \xB7 Brasil (pt-BR)"
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: "Localization-String-Tables-Portugu\xEAs \xB7 Brasil (pt-BR)"
+  m_GUID: 1c676a6b1a8244feab9c0cb12bb9cf8a
+  m_SerializeEntries:
+  - m_GUID: 60a0dfae0a0664046809adab515a7420
+    m_Address: Wiki_pt-BR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-pt-BR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 60c6e847ce90647389bfd028308db015
+    m_Address: TownUI_pt-BR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-pt-BR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a7cfc3549027f4afd8055dd440d4e27c
+    m_Address: Quests_pt-BR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-pt-BR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 1
+  m_Settings: {fileID: 11400000, guid: 28b1847c10109ba4fbdcda4cdd81fd8c, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 765a5e54eb3084b638bbcce1c0cb4568, type: 2}
+    - {fileID: 11400000, guid: bb918c639a2e34314a0b50a23bbbde8e, type: 2}
+    - {fileID: 11400000, guid: dfe2249e639074b8c8d0e2d480e79a9a, type: 2}
+    m_SchemaDisplayOrder:
+    - "Localization-String-Tables-Portugu\xEAs \xB7 Brasil (pt-BR)_BundledAssetGroupSchema"
+    - "Localization-String-Tables-Portugu\xEAs \xB7 Brasil (pt-BR)_ContentUpdateGroupSchema"
+    - "Localization-String-Tables-Portugu\xEAs \xB7 Brasil (pt-BR)_LocalizationGroupSchema"
+  m_IncludeInBuild: 1
+  m_IncludeInBuildMigrated: 1

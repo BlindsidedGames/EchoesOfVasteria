@@ -4,7 +4,7 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -5343102000599311727
-    second: Cobble_Road_2_0
+    second: CobbleRoad_Tan_RoadCorner_SE
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,7 +100,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Cobble_Road_2_0
+      name: CobbleRoad_Tan_RoadCorner_SE
       rect:
         serializedVersion: 2
         x: 0
@@ -122,7 +122,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cobble_Road_2_1
+      name: CobbleRoad_Tan_RoadSide_S
       rect:
         serializedVersion: 2
         x: 16
@@ -144,7 +144,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cobble_Road_2_2
+      name: CobbleRoad_Tan_RoadCorner_SW
       rect:
         serializedVersion: 2
         x: 32
@@ -166,7 +166,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cobble_Road_2_3
+      name: CobbleRoad_Tan_RoadSide_E
       rect:
         serializedVersion: 2
         x: 0
@@ -188,7 +188,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cobble_Road_2_4
+      name: CobbleRoad_Tan_RoadFill
       rect:
         serializedVersion: 2
         x: 16
@@ -210,7 +210,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cobble_Road_2_5
+      name: CobbleRoad_Tan_RoadSide_W
       rect:
         serializedVersion: 2
         x: 32
@@ -232,7 +232,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cobble_Road_2_6
+      name: CobbleRoad_Tan_RoadCorner_NE
       rect:
         serializedVersion: 2
         x: 0
@@ -254,7 +254,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cobble_Road_2_7
+      name: CobbleRoad_Tan_RoadSide_N
       rect:
         serializedVersion: 2
         x: 16
@@ -276,7 +276,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cobble_Road_2_8
+      name: CobbleRoad_Tan_RoadCorner_NW
       rect:
         serializedVersion: 2
         x: 32
@@ -298,7 +298,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cobble_Road_2_9
+      name: CobbleRoad_Tan_SandNotch_SE_InRoad
       rect:
         serializedVersion: 2
         x: 0
@@ -320,7 +320,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cobble_Road_2_10
+      name: CobbleRoad_Tan_SandNotch_SW_InRoad
       rect:
         serializedVersion: 2
         x: 16
@@ -342,7 +342,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cobble_Road_2_11
+      name: CobbleRoad_Tan_SandNotch_NE_InRoad
       rect:
         serializedVersion: 2
         x: 0
@@ -364,7 +364,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cobble_Road_2_12
+      name: CobbleRoad_Tan_SandNotch_NW_InRoad
       rect:
         serializedVersion: 2
         x: 16
@@ -401,19 +401,19 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"autoSlicingMethod":0,"spriteAlignment":9,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Cobble_Road_2_0: -5343102000599311727
-      Cobble_Road_2_1: 1330898352
-      Cobble_Road_2_10: -1122200656
-      Cobble_Road_2_11: -32250459
-      Cobble_Road_2_12: -1324317538
-      Cobble_Road_2_2: 1340032822
-      Cobble_Road_2_3: 475982614
-      Cobble_Road_2_4: 1944070118
-      Cobble_Road_2_5: 1934129238
-      Cobble_Road_2_6: -496530067
-      Cobble_Road_2_7: -1385470395
-      Cobble_Road_2_8: 418743745
-      Cobble_Road_2_9: -1212973541
+      CobbleRoad_Tan_RoadCorner_SE: -5343102000599311727
+      CobbleRoad_Tan_RoadSide_S: 1330898352
+      CobbleRoad_Tan_SandNotch_SW_InRoad: -1122200656
+      CobbleRoad_Tan_SandNotch_NE_InRoad: -32250459
+      CobbleRoad_Tan_SandNotch_NW_InRoad: -1324317538
+      CobbleRoad_Tan_RoadCorner_SW: 1340032822
+      CobbleRoad_Tan_RoadSide_E: 475982614
+      CobbleRoad_Tan_RoadFill: 1944070118
+      CobbleRoad_Tan_RoadSide_W: 1934129238
+      CobbleRoad_Tan_RoadCorner_NE: -496530067
+      CobbleRoad_Tan_RoadSide_N: -1385470395
+      CobbleRoad_Tan_RoadCorner_NW: 418743745
+      CobbleRoad_Tan_SandNotch_SE_InRoad: -1212973541
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

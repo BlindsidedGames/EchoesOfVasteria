@@ -1,0 +1,116 @@
+{
+  "serialized": [
+    {
+      "path": "Assets/Prefabs/Echo.prefab",
+      "sha256": "9376a7b03d958c8d9ac1438c9b80ca57bc956d8cc8deab6067cff67e8ac22521"
+    },
+    {
+      "path": "Assets/Scenes/Main.unity",
+      "sha256": "8f912645ea9216c7f25a833da730c44524aaea0dab7ba4cd76a9c0e1ac0d9d54"
+    },
+    {
+      "path": "Assets/UI/Toolkit/TextSettings.asset",
+      "sha256": "198015d12d4cf099d885c459372ee31894fa71cdfc45001030d22f16eda09260"
+    },
+    {
+      "path": "Assets/UI/Toolkit/InlineSprites.asset",
+      "sha256": "da5bf808e8f742fb7d773a9f3f6a8018b280a112c3289964e9305e472d800c10"
+    },
+    {
+      "path": "Assets/UI/Toolkit/InlineSprites.mat",
+      "sha256": "da0ba4be7a794d7ef8eea1d63a62d8a73104c04e5bc1f8bc150c7ff9e768a016"
+    },
+    {
+      "path": "Assets/Resources/Infinity/Defense.asset",
+      "sha256": "c1cafc3ffde1a5ed48581bdaa2fe48d3885656a06d7b916235faea70ac31f080"
+    },
+    {
+      "path": "Assets/Resources/Infinity/Attack Rate.asset",
+      "sha256": "eb7747cc9d3333b109fcc8e86454d29906f0b945632784f3c54d78d861624f2c"
+    },
+    {
+      "path": "Assets/Resources/Infinity/Health Regen.asset",
+      "sha256": "5a09e9afecd1e3fcf1fa8ed757e889f1724b95079e2e5150e9dc682051765cf4"
+    },
+    {
+      "path": "Assets/Resources/Infinity/Damage.asset",
+      "sha256": "f51f710c114214f8ea39b7aa8879ed73ab5edf7bb3d6d80d95e600572865943a"
+    },
+    {
+      "path": "Assets/Resources/Infinity/Crit Chance.asset",
+      "sha256": "c2c697ae0379a716ec97e65d9d2dd93de303230b25c81474b7701f717355088b"
+    },
+    {
+      "path": "Assets/Resources/Infinity/Move Speed.asset",
+      "sha256": "9508e3eb204c9ddc6cdb08a3afc1068a28ac03ab5bec124a83534534eb7551a2"
+    },
+    {
+      "path": "Assets/Prefabs/UI/Collection/CollectionSlot.prefab",
+      "sha256": "66c5c6af3264d1beb2e5cf3998048c803344a5de34f81b76b90415ae2b17361b"
+    },
+    {
+      "path": "Assets/Resources/Infinity/Max Health.asset",
+      "sha256": "0a48c897184e127542dd310456d04358622bb5c17b4f394d4ddbfa368053e0b3"
+    },
+    {
+      "path": "Assets/Resources/Fonts/FloatingTextIcons.asset",
+      "sha256": "efcfb954c2b20ca752c4f1b9927e0380a5f488e02f899739879d736716211362"
+    },
+    {
+      "path": "Assets/Resources/Resource Items/Egg.asset",
+      "sha256": "90d142b52d7111f20d556c341bede07df30e6b2c92a6e42512d46f052a359fee"
+    },
+    {
+      "path": "Assets/Resources/Resource Items/Chicken.asset",
+      "sha256": "aff2e5bc799c1d2a6932be998538f4e4f841219c4bb28a159e04b19c03295369"
+    },
+    {
+      "path": "Assets/Resources/Resource Items/Mutton.asset",
+      "sha256": "90842a30c6146f4757a5e622cf3a1ba0e05ee195908ddae53ae499fc49bd65f0"
+    },
+    {
+      "path": "Assets/Resources/Resource Items/Pork.asset",
+      "sha256": "ae59ba2d7ad8d71b564d77fc740bb0b356ac924559f76ab74da2a1b2ba901d99"
+    },
+    {
+      "path": "Assets/Resources/Resource Items/Steak.asset",
+      "sha256": "42ca26ac7e2f06cbc5b0bd43da9ccf6868e098385ca9f912eecab5c97e379760"
+    },
+    {
+      "path": "Assets/TextMesh Pro/Resources/TMP Settings.asset",
+      "sha256": "f2e1bc6ad2dbd2c47a8b80ad2af731a9f14310b1ece871ed5e7b64e21dd75a69"
+    }
+  ],
+  "code": [
+    "Assets/Editor/Validation/ToolkitBookMigration.cs",
+    "Assets/Editor/ResourceEditor.cs",
+    "Assets/Editor/ContentLinter/ContentLinterWindow.cs",
+    "Assets/Scripts/Enemies/Enemy.cs",
+    "Assets/Scripts/Enemies/EnemyHealth.cs",
+    "Assets/Editor/StyleLab/Study.cs",
+    "Assets/Scripts/FloatingText.cs",
+    "Assets/Scripts/Quests/QuestRequirementPresentation.cs",
+    "Assets/Scripts/HealthBase.cs",
+    "Assets/Scripts/Quests/PinnedQuestUIManager.cs",
+    "Assets/Scripts/Quests/QuestTextFormatter.cs",
+    "Assets/Scripts/Gear/UI/ForgeStatsUIController.cs",
+    "Assets/Scripts/Skills/SkillIconLookup.cs",
+    "Assets/Scripts/Skills/SkillTotalsPresentation.cs",
+    "Assets/Scripts/Gear/UI/ForgeStatisticsPresentation.cs",
+    "Assets/Scripts/Skills/SkillUIManager.cs",
+    "Assets/Scripts/Gear/UI/ForgeWindowUI/ForgeWindowUI.cs",
+    "Assets/Scripts/Gear/UI/GearStatTextBuilder.cs",
+    "Assets/Scripts/Blindsided/Utilities/TextStrings.cs",
+    "Assets/Scripts/Upgrades/StatIconLookup.cs",
+    "Assets/Scripts/Upgrades/ResourceIconLookup.cs",
+    "Assets/Scripts/Tasks/ResourceGeneratingTask.cs",
+    "Assets/Scripts/UI/Toolkit/ToolkitSkillsScreen.cs",
+    "Assets/Scripts/UI/RunCalebUIManager.cs",
+    "Assets/Scripts/UI/Toolkit/ToolkitStatRow.cs",
+    "Assets/Scripts/UI/Toolkit/ToolkitRunScreen.cs",
+    "Assets/Scripts/UI/Toolkit/ToolkitForgeDetails.cs"
+  ],
+  "terrainAtlasSeparate": "Assets/Art/Atlas.spriteatlasv2 contains terrain/outdoor packables; not used for text glyph lookup",
+  "legacyUnknownMenu": "ResourceEditor.AssignUnknownIconsFromShadow uses stale Assets/Fonts path; not run",
+  "inlineMigration": "ToolkitBookMigration imports TMP glyph order by clearing tables; not run; append directly preserving existing entries"
+}

@@ -1,0 +1,46 @@
+# Farm follow-up for review
+
+The isolated farm now has consistent rounded soil, a native seed inventory and clearer bed controls. The bounded receipt journal passes replay/recovery tests and removes completed-history growth. No production quest, seed pool, Echo integration, new timber resources or release was added.
+
+## Verified changes
+
+- Soil: ten sprite/flip bindings reuse actual rounded corner and edge art across both original beds. All eight corners pass direct Player inspection. Positions, fences, gate paths and production Main are preserved.
+- Interface: persistent known/unknown seed inventory, owned count, framed bed status/progress, explicit one-pack planting cost, View bed and Harvest all ready. Native EOV typography, colors and controls are reused. Zero owned packs retain their discovery. Landscape is independently accepted.
+- Narrow layout: one Farm scroll owner and wrapped planting controls prevent local overlap, recursion and lost content. **Portrait is not a mobile pass:** shared 16:9 safe-area/world geometry creates a tiny central viewport and clips navigation. Actual failing and corrected constrained captures are retained.
+- Receipt retention: per-bank lineage, issued sequences, contiguous committed watermark and per-bed paid plant sequence replace individual completed receipts. Fixed hit/miss intents, unresolved gaps and unknown legacy records remain saved. Legacy UUIDs close after their saved intents/active batches drain.
+
+## Validation and performance
+
+37/37 focused journal/model cases, 121/121 Unity EditMode cases and 51/51 PlayMode cases pass. Independent source review approves normal-path replay, fixed-roll retry, legacy closure and ready-bed avoidance. Four refreshed actual arm64/Mono Metal Player phases pass: native online actions/task retry/replay; one-month finite offline settlement; durable harvest publication failure/Loading Retry; actual save-bank transition and original-owner retry. Each reports zero unexpected gameplay errors/warnings. The deliberately injected publication failure is recorded separately and recovered without a second payout.
+
+In the same managed-host fixture at 50,000 historical operations, serialized bytes shrink from **13,269,704 to 20,632**; median serialization drops from **65.8596 ms to 0.1714 ms** and growth capture from **9.0076 ms to 0.0003 ms**. One-time migration takes **9.9988 ms**. A separate 50,000 new-event stress run pays exactly 5,000 selected seeds and retains no individual receipts. These are managed fixture measurements, not Unity frames, disk I/O or mobile/AOT guarantees. Outstanding unpaid work and unknown records deliberately remain proportional to input; no destructive hard cap is used.
+
+The Mac build succeeds with zero BuildReport errors and two configuration warnings: missing iOS localization App Info and missing RuntimePipelineConfig. Raw compiler/Editor diagnostics and teardown are retained; the pre-existing 2D Animation ComputeBuffer disposal and Mono finalization messages remain outside the gameplay report. The Editor also reports a missing GameAssembly.dSYM while attempting Cloud Diagnostics symbol processing for the Mono build; no account setting or diagnostic suppression was changed. iOS, Android and native Mac IL2CPP modules are absent and were not installed.
+
+## Quest gate and tree proposal
+
+**10% is approved behind a farming quest.** Ordinary ResourceDrop/DropResolver has skill gating only. The existing reusable check is QuestManager.IsQuestCompleted. Recommend new Barkley `Farm.FirstBeds` after **Tracking Twins** (`Meet Farmers1`, GUID `25bc32c449486874382b589899657abb`), requiring obtainable materials/work and no seeds. Check committed completion before RNG/staging; missing configuration fails closed. The exact new quest identity and costs need a content decision. The development PrepareBeds receipt is not an authored production quest, and this slice still has no production gate wiring. Additive/global seed pools and adventure Echo credit remain pending.
+
+Existing woodcutting families are starter Tree levels **1/6**, Oak **13/18**, Birch **31/36**, Spruce **81/86**. All eight tasks share **Log57 / Stick2**. Recommend three material groups: starter/Oak base wood, then Birch, then Spruce. Preserve existing Log/Stick identities and owned balances. Audited imported art provides one log and one leafy stick icon; no distinct Birch/Spruce inventory variants were found. World tree/stump art is not a ready inventory icon. The intended separately supplied farming pack still needs its source location before selecting icons or authoring four new variants. No new resources/art were invented. The contact sheet is `libfile_75c4473eaa10819192d83b195c0c03df`, version0.
+
+## Asset continuity and review boundaries
+
+All seven prepared seed inventory/atlas files match the prior verified checkpoint. The 22 known packets and shared unknown keep correct transparency, centered pivots, point filtering and 16×16 inventory geometry. Only the outer 40-pixel halo was removed from inventory icons; pale packet material stays. Drop glyphs retain the halo. All 23 appended names/fileIDs at indices213–235 remain verified; 213 old definitions and 55,296 old atlas pixels were preserved. Existing icon/concept Library identities remain unchanged.
+
+The final preservation record verifies production Main's original hash, clean Edit mode, exact restoration of all 12 temporary source/settings guards, removed/archived validation helpers, 77 unchanged actual player files and 93 unchanged backups. The disposable Player and all raw source/log/capture evidence remain under `../Echoes Farming Implementation Evidence/2026-10-01/receipt-retention`. Earlier failing isolation/layout versions remain recoverable. The current branch and all unrelated Mac/migration/art work are preserved. No commit, push, merge or release occurred.
+
+Technical detail is retained locally in receipt-retention.md, ui-soil-review.md and tree-tier-proposal/README.md under docs/development/farming-radish-slice-2026-10-01. Remaining decisions are the authored first-farm gate/costs, seed source/Echo rules, and the actual new timber icon source. Shared mobile layout and AOT/device upgrade checks are separate engineering gates. Orchard remains a separate optional area; no orchard implementation was added.
+
+## Visual deliverables
+
+The seven existing actual Player image identities are refreshed; the new seed-inventory image, matched soil/UI comparisons and portrait-limit image are delivered alongside this report. All are actual rendered pixels.
+
+| View | Preserved Library identity |
+| --- | --- |
+| Undiscovered | `libfile_fe05889466088191af54cf7b432cacaf` |
+| Planted list | `libfile_95b326d882748191b2d134b0107ce95b` |
+| Growing world | `libfile_b6edae6f65488191bd663a325bbed186` |
+| Ready list | `libfile_289c4a6ded3c8191be7bba8d449102aa` |
+| Mature world | `libfile_367bda1e944881919e4a4502b7351190` |
+| Month offline | `libfile_1c9f8a0362e08191aaa7e44ce581cc60` |
+| After harvest | `libfile_926bfda670dc81918adf4aaf12a9de1d` |

@@ -1,0 +1,206 @@
+[
+  {
+    "path": "Assets/Editor/Validation/ToolkitNativeCutover.cs",
+    "code": "CS0184",
+    "message": "The given expression is never of the provided ('SlicedFilledImage') type",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/Plugins/QFSW/Quantum Console/Source/Extras/KeyBinderModule.cs",
+    "code": "CS0618",
+    "message": "'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/Plugins/QFSW/Quantum Console/Source/Scripts/InjectionLoader.cs",
+    "code": "UAC0005",
+    "message": "AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/Plugins/QFSW/Quantum Console/Source/Scripts/InvocationTargetFactory.cs",
+    "code": "CS0618",
+    "message": "'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/Plugins/QFSW/Quantum Console/Source/Scripts/InvocationTargetFactory.cs",
+    "code": "CS0618",
+    "message": "'Object.FindFirstObjectByType(Type)' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/Plugins/QFSW/Quantum Console/Source/Scripts/InvocationTargetFactory.cs",
+    "code": "CS0618",
+    "message": "'Object.FindObjectsByType(Type, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType(Type) or FindObjectsByType(Type, FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/Plugins/QFSW/Quantum Console/Source/Scripts/Parsing/QuantumParser.cs",
+    "code": "UAC0005",
+    "message": "AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/Plugins/QFSW/Quantum Console/Source/Scripts/QuantumConsole.cs",
+    "code": "UAC0009",
+    "message": "DEVELOPMENT_BUILD preprocessor directive has been deprecated. Please use one of the managed code variant directives (such as DEBUG, UNITY_ENABLE_CHECKS or UNITY_INCLUDE_INSTRUMENTATION) if different code paths are desired for different managed code variants. Checking for development build is possible at runtime using Debug.isDebugBuild. See the Conditional Compilation manual page for more details.",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/Plugins/QFSW/Quantum Console/Source/Scripts/QuantumConsoleProcessor.cs",
+    "code": "UAC0005",
+    "message": "AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/Plugins/QFSW/Quantum Console/Source/Scripts/Suggestions/Suggestors/ComponentSuggestor.cs",
+    "code": "CS0618",
+    "message": "'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/Plugins/QFSW/Quantum Console/Source/Scripts/Suggestions/Suggestors/ComponentSuggestor.cs",
+    "code": "CS0618",
+    "message": "'Object.FindObjectsByType(Type, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType(Type) or FindObjectsByType(Type, FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/Plugins/QFSW/Quantum Console/Source/Scripts/Suggestions/Suggestors/GameObjectSuggestor.cs",
+    "code": "CS0618",
+    "message": "'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/Plugins/QFSW/Quantum Console/Source/Scripts/Suggestions/Suggestors/GameObjectSuggestor.cs",
+    "code": "CS0618",
+    "message": "'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/Scripts/Blindsided/Oracle.cs",
+    "code": "CS0414",
+    "message": "The field 'Oracle._isQuitting' is assigned but its value is never used",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/Scripts/Blindsided/UGS/SilentAuthBootstrap.cs",
+    "code": "CS0162",
+    "message": "Unreachable code detected",
+    "classification": "proof-only guard"
+  },
+  {
+    "path": "Assets/Scripts/Blindsided/UGS/UgsInitializer.cs",
+    "code": "CS0162",
+    "message": "Unreachable code detected",
+    "classification": "proof-only guard"
+  },
+  {
+    "path": "Assets/Scripts/Blindsided/UGS/UgsLeaderboardsReporter.cs",
+    "code": "CS0162",
+    "message": "Unreachable code detected",
+    "classification": "proof-only guard"
+  },
+  {
+    "path": "Assets/Scripts/Farming/FarmService.cs",
+    "code": "CS0414",
+    "message": "The field 'FarmService.developmentRadishPackChance' is assigned but its value is never used",
+    "classification": "unused retired setting removed in final source"
+  },
+  {
+    "path": "Assets/Scripts/Steamworks.NET/SteamManager.cs",
+    "code": "CS0162",
+    "message": "Unreachable code detected",
+    "classification": "proof-only guard"
+  },
+  {
+    "path": "Assets/Scripts/UI/UITicker.cs",
+    "code": "CS0414",
+    "message": "The field 'UITicker.enableProfiling' is assigned but its value is never used",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/Tests/PlayMode/Tests/SaveSystemStressPlayModeTests.cs",
+    "code": "UAC0005",
+    "message": "AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/com.rlabrecque.steamworks.net/Runtime/ISteamMatchmakingResponses.cs",
+    "code": "UAC0008",
+    "message": "UNITY_64 preprocessor directive has been deprecated. Please use either a runtime check (for example, condition based on IntPtr.Size) or replace it with bitness independent code instead.",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/com.rlabrecque.steamworks.net/Runtime/autogen/NativeMethods.cs",
+    "code": "UAC0008",
+    "message": "UNITY_64 preprocessor directive has been deprecated. Please use either a runtime check (for example, condition based on IntPtr.Size) or replace it with bitness independent code instead.",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/com.rlabrecque.steamworks.net/Runtime/types/SteamInput/SteamInputActionEvent_t.cs",
+    "code": "UAC1001",
+    "message": "Field 'analogActionData' type 'Steamworks.InputAnalogActionData_t' is skipped by serialization (missing the [Serializable] attribute). Refer to the Serialization rules analyzer reference. (https://docs.unity3d.com/6000.6/Documentation/Manual/script-serialization-analyzer.html#uac1001)",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/com.rlabrecque.steamworks.net/Runtime/types/SteamInput/SteamInputActionEvent_t.cs",
+    "code": "UAC1001",
+    "message": "Field 'digitalActionData' type 'Steamworks.InputDigitalActionData_t' is skipped by serialization (missing the [Serializable] attribute). Refer to the Serialization rules analyzer reference. (https://docs.unity3d.com/6000.6/Documentation/Manual/script-serialization-analyzer.html#uac1001)",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/com.rlabrecque.steamworks.net/Runtime/types/SteamNetworkingTypes/SteamNetworkingConfigValue_t.cs",
+    "code": "UAC1001",
+    "message": "Field 'm_val' type 'Steamworks.SteamNetworkingConfigValue_t.OptionValue' is skipped by serialization (missing the [Serializable] attribute). Refer to the Serialization rules analyzer reference. (https://docs.unity3d.com/6000.6/Documentation/Manual/script-serialization-analyzer.html#uac1001)",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Assets/com.rlabrecque.steamworks.net/Runtime/types/SteamRemotePlay/RemotePlayInput_t.cs",
+    "code": "UAC1001",
+    "message": "Field 'm_val' type 'Steamworks.RemotePlayInput_t.OptionValue' is skipped by serialization (missing the [Serializable] attribute). Refer to the Serialization rules analyzer reference. (https://docs.unity3d.com/6000.6/Documentation/Manual/script-serialization-analyzer.html#uac1001)",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Packages/com.arongranberg.astar/Core/Geometry/Triangulation/Triangulator.cs",
+    "code": "CS0618",
+    "message": "'UnsafeUtility.PinGCArrayAndGetDataAddress(Array, out ulong)' is obsolete: 'Use GCHandle.Alloc with GCHandle.AddrOfPinnedObject instead.'",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Packages/com.arongranberg.astar/Core/Geometry/Triangulation/Triangulator.cs",
+    "code": "CS0618",
+    "message": "'UnsafeUtility.ReleaseGCObject(ulong)' is obsolete: 'Use GCHandle.Free instead.'",
+    "classification": "identical package-baseline source"
+  },
+  {
+    "path": "Packages/com.unity.addressables/Runtime/ResourceManager/Util/ComponentSingleton.cs",
+    "code": "CS0618",
+    "message": "'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'",
+    "classification": "identical package-baseline cached source"
+  },
+  {
+    "path": "Packages/com.unity.localization/Runtime/Settings/LocalizationSettings.cs",
+    "code": "CS0618",
+    "message": "'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'",
+    "classification": "identical package-baseline cached source"
+  },
+  {
+    "path": "Packages/com.unity.localization/Runtime/Utilities/LocalizationBehaviour.cs",
+    "code": "CS0618",
+    "message": "'ComponentSingleton<LocalizationBehaviour>' is obsolete: 'This class was used for internal tooling and is not supported anymore.'",
+    "classification": "identical package-baseline cached source"
+  },
+  {
+    "path": "Packages/com.unity.services.leaderboards/Runtime/com.unity.services.leaderboards.internal/Http/HttpException.cs",
+    "code": "UAC1001",
+    "message": "Field 'Response' type 'Unity.Services.Leaderboards.Internal.Http.HttpClientResponse' is skipped by serialization (missing the [Serializable] attribute). Refer to the Serialization rules analyzer reference. (https://docs.unity3d.com/6000.6/Documentation/Manual/script-serialization-analyzer.html#uac1001)",
+    "classification": "identical package-baseline cached source"
+  },
+  {
+    "path": "Packages/com.unity.services.leaderboards/Runtime/com.unity.services.leaderboards.internal/Http/ResponseDeserializationException.cs",
+    "code": "UAC1001",
+    "message": "Field 'response' type 'Unity.Services.Leaderboards.Internal.Http.HttpClientResponse' is skipped by serialization (missing the [Serializable] attribute). Refer to the Serialization rules analyzer reference. (https://docs.unity3d.com/6000.6/Documentation/Manual/script-serialization-analyzer.html#uac1001)",
+    "classification": "identical package-baseline cached source"
+  }
+]

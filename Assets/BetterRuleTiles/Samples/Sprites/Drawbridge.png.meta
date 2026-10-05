@@ -4,46 +4,46 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -1543144502943612291
-    second: Drawbridge_0
+    second: SampleDrawbridge_RaisedBridgePost_E
   - first:
       213: -2223895859884470078
-    second: Drawbridge_1
+    second: SampleDrawbridge_SuspensionRope_UpperLeft
   - first:
       213: -463853215707306821
-    second: Drawbridge_2
+    second: SampleDrawbridge_SuspensionRope_UpperCenter
   - first:
       213: -284401302326872274
-    second: Drawbridge_3
+    second: SampleDrawbridge_SuspensionRope_LowerLeft
   - first:
       213: 7182188746355805367
-    second: Drawbridge_4
+    second: SampleDrawbridge_SuspensionRope_LowerCenter
   - first:
       213: -8111017331886339610
-    second: Drawbridge_5
+    second: SampleDrawbridge_SuspensionRope_LowerRight
   - first:
       213: -1604000608021961612
-    second: Drawbridge_6
+    second: SampleDrawbridge_RaisedBridgePost_W
   - first:
       213: 2411371642851756988
-    second: Drawbridge_7
+    second: SampleDrawbridge_EarthRockAnchor_W
   - first:
       213: 6744096810952103652
-    second: Drawbridge_8
+    second: SampleDrawbridge_BridgeDeck_LowerLeft
   - first:
       213: -2110847934342973966
-    second: Drawbridge_9
+    second: SampleDrawbridge_BridgeDeck_LowerRight
   - first:
       213: 2042056273578899114
-    second: Drawbridge_10
+    second: SampleDrawbridge_BridgeDeck_UpperLeft
   - first:
       213: -8721334785156935471
-    second: Drawbridge_11
+    second: SampleDrawbridge_BridgeDeck_UpperCenter
   - first:
       213: -3295765293661870348
-    second: Drawbridge_12
+    second: SampleDrawbridge_BridgeDeck_UpperRight
   - first:
       213: 4510927272911944215
-    second: Drawbridge_13
+    second: SampleDrawbridge_EarthRockAnchor_E
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -152,7 +152,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Drawbridge_0
+      name: SampleDrawbridge_RaisedBridgePost_E
       rect:
         serializedVersion: 2
         x: 0
@@ -174,7 +174,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drawbridge_1
+      name: SampleDrawbridge_SuspensionRope_UpperLeft
       rect:
         serializedVersion: 2
         x: 16
@@ -196,7 +196,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drawbridge_2
+      name: SampleDrawbridge_SuspensionRope_UpperCenter
       rect:
         serializedVersion: 2
         x: 32
@@ -218,7 +218,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drawbridge_3
+      name: SampleDrawbridge_SuspensionRope_LowerLeft
       rect:
         serializedVersion: 2
         x: 48
@@ -240,7 +240,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drawbridge_4
+      name: SampleDrawbridge_SuspensionRope_LowerCenter
       rect:
         serializedVersion: 2
         x: 64
@@ -262,7 +262,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drawbridge_5
+      name: SampleDrawbridge_SuspensionRope_LowerRight
       rect:
         serializedVersion: 2
         x: 80
@@ -284,7 +284,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drawbridge_6
+      name: SampleDrawbridge_RaisedBridgePost_W
       rect:
         serializedVersion: 2
         x: 96
@@ -306,7 +306,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drawbridge_7
+      name: SampleDrawbridge_EarthRockAnchor_W
       rect:
         serializedVersion: 2
         x: 0
@@ -328,7 +328,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drawbridge_8
+      name: SampleDrawbridge_BridgeDeck_LowerLeft
       rect:
         serializedVersion: 2
         x: 16
@@ -350,7 +350,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drawbridge_9
+      name: SampleDrawbridge_BridgeDeck_LowerRight
       rect:
         serializedVersion: 2
         x: 32
@@ -372,7 +372,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drawbridge_10
+      name: SampleDrawbridge_BridgeDeck_UpperLeft
       rect:
         serializedVersion: 2
         x: 48
@@ -394,7 +394,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drawbridge_11
+      name: SampleDrawbridge_BridgeDeck_UpperCenter
       rect:
         serializedVersion: 2
         x: 64
@@ -416,7 +416,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drawbridge_12
+      name: SampleDrawbridge_BridgeDeck_UpperRight
       rect:
         serializedVersion: 2
         x: 80
@@ -438,7 +438,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drawbridge_13
+      name: SampleDrawbridge_EarthRockAnchor_E
       rect:
         serializedVersion: 2
         x: 96
@@ -473,20 +473,20 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Drawbridge_0: -1543144502943612291
-      Drawbridge_1: -2223895859884470078
-      Drawbridge_10: 2042056273578899114
-      Drawbridge_11: -8721334785156935471
-      Drawbridge_12: -3295765293661870348
-      Drawbridge_13: 4510927272911944215
-      Drawbridge_2: -463853215707306821
-      Drawbridge_3: -284401302326872274
-      Drawbridge_4: 7182188746355805367
-      Drawbridge_5: -8111017331886339610
-      Drawbridge_6: -1604000608021961612
-      Drawbridge_7: 2411371642851756988
-      Drawbridge_8: 6744096810952103652
-      Drawbridge_9: -2110847934342973966
+      SampleDrawbridge_RaisedBridgePost_E: -1543144502943612291
+      SampleDrawbridge_SuspensionRope_UpperLeft: -2223895859884470078
+      SampleDrawbridge_BridgeDeck_UpperLeft: 2042056273578899114
+      SampleDrawbridge_BridgeDeck_UpperCenter: -8721334785156935471
+      SampleDrawbridge_BridgeDeck_UpperRight: -3295765293661870348
+      SampleDrawbridge_EarthRockAnchor_E: 4510927272911944215
+      SampleDrawbridge_SuspensionRope_UpperCenter: -463853215707306821
+      SampleDrawbridge_SuspensionRope_LowerLeft: -284401302326872274
+      SampleDrawbridge_SuspensionRope_LowerCenter: 7182188746355805367
+      SampleDrawbridge_SuspensionRope_LowerRight: -8111017331886339610
+      SampleDrawbridge_RaisedBridgePost_W: -1604000608021961612
+      SampleDrawbridge_EarthRockAnchor_W: 2411371642851756988
+      SampleDrawbridge_BridgeDeck_LowerLeft: 6744096810952103652
+      SampleDrawbridge_BridgeDeck_LowerRight: -2110847934342973966
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

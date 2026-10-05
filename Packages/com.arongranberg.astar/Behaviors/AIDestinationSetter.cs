@@ -15,7 +15,7 @@ namespace Pathfinding {
 	/// target moved since the last Update. There is also some complexity to reduce the performance impact, by using the <see cref="BatchedEvents"/> system to
 	/// process all AIDestinationSetter components in a single batch.
 	///
-	/// When using ECS, outside a subscene, this component is instead added as a managed component to the entity.
+	/// When using ECS, outside a subscene, a reference to this component is instead added to the entity.
 	/// The destination syncing is then handled by the <see cref="SyncDestinationTransformSystem"/> for better performance.
 	///
 	/// See: <see cref="Pathfinding.IAstarAI.destination"/>
@@ -82,7 +82,11 @@ namespace Pathfinding {
 		void OnDisable () {
 #if MODULE_ENTITIES
 			if (world != null && world.IsCreated && world.EntityManager.Exists(entity)) {
+#if MODULE_ENTITIES_6_6_0_OR_NEWER
+				world.EntityManager.RemoveComponent<ECS.AIDestinationSetterRef>(entity);
+#else
 				world.EntityManager.RemoveComponent<AIDestinationSetter>(entity);
+#endif
 			}
 			if (ai != null && !(ai is FollowerEntity)) ai.onSearchPath -= UpdateDestination;
 #else
@@ -96,7 +100,11 @@ namespace Pathfinding {
 			// Do nothing except add the component. Actual syncing is handled by the SyncDestinationTransformSystem.
 			this.entity = entity;
 			this.world = world;
+#if MODULE_ENTITIES_6_6_0_OR_NEWER
+			world.EntityManager.AddComponentData(entity, new ECS.AIDestinationSetterRef { value = this });
+#else
 			world.EntityManager.AddComponentObject(entity, this);
+#endif
 		}
 
 #if UNITY_EDITOR
@@ -128,3 +136,19 @@ namespace Pathfinding {
 		}
 	}
 }
+
+#if MODULE_ENTITIES_6_6_0_OR_NEWER
+namespace Pathfinding.ECS {
+	/// <summary>
+	/// Entity component referencing an <see cref="AIDestinationSetter"/>.
+	///
+	/// Version 6.6 of the entities package deprecated managed components, so the entity holds this
+	/// small unmanaged reference instead of the <see cref="AIDestinationSetter"/> itself.
+	///
+	/// See: <see cref="SyncDestinationTransformSystem"/>
+	/// </summary>
+	public struct AIDestinationSetterRef : IComponentData {
+		public UnityObjectRef<AIDestinationSetter> value;
+	}
+}
+#endif

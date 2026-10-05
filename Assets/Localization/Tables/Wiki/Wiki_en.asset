@@ -19,14 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 188400156672
-    m_Localized: "Alter Echoes are your main source of income while away. At the
-      end of each run each resource you earned calculates its income per minute including
-      any retreat bonus and stores your lifetime best. Alter Echoes use this value
-      to generate resources.\n\nEcho Power is a value that determines the percentage
-      of resources you receive. It is visible at the top right of the Alter Echoes
-      screen.\n \nResources will be gathered and brought to eva for storage. When
-      you return she will happily give them to you, all you have to do is ask!\nThese
-      will generate whether the game is open or closed!"
+    m_Localized: "Alter-Echo production has been retired. Gather resources on adventures or harvest planted crops."
     m_Metadata:
       m_Items: []
   - m_Id: 478381752320
@@ -203,36 +196,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12027031164698624
-    m_Localized: "The Cauldron is Eva's connection to The Vast One.\n\nTossing ingrediants
-      in summons the power of The Vast One pulling in your entire stockpile of that
-      resource! It does however require at least two types of resources, for flavour
-      reasons.\n\nOnce you toss ingredients in you will recieve an amount of stew
-      based on the rarity and count of the resources you selected. You then taste
-      the stew to draw from the well of The Vast One's power. You will receive cards
-      based on Eva's level which affects her weights as displayed on the Cauldron
-      screen.\n\nEach card has a tier from 1-8 and levels up at the following thresholds.
-      For now there are no additional bonuses for collecting beyond the cap of that
-      tier but you can continue for as long as you like. Perhaps more power will
-      come from this in the future? The following thresholds are currently implemented.\n\nEach
-      category except for the buff category will additionally tier up as you pass
-      the threshold with all cards in it. If all cards are Tier 2 or higher then
-      the category will be Tier 2. Each Tier you complete in this fashion will award
-      0.1% Alter Echo Power.\n\n<b>Resource Tiers</b> | Echo power increases by 0.1%
-      per category tier.\n\u2022 1 | Alter Echo Power for this cards resource +10%\n\u2022
-      25 | 10%<sprite=194>25%\n\u2022 75 | 25%<sprite=194>50%\n\u2022 200 | 50%<sprite=194>75%\n\u2022
-      750 | 75%<sprite=194>120%\n\u2022 1500 | 120%<sprite=194>180%\n\u2022 3500
-      | 180%<sprite=194>250%\n\u2022 10000 | 250%<sprite=194>400%\n\n<b>Buff Tiers</b>
-      | Buff power increases by 2.5% per category tier.\n\u2022 1 | Cooldown -5%,
-      Buff Power: 0%\n\u2022 5 | Cooldown -10%, Buff Power: 0%\n\u2022 25 | Cooldown
-      -15%, Buff Power: 5%\n\u2022 75 | Cooldown -25%, Buff Power: 10%\n\u2022 200
-      | Cooldown -40%, Buff Power: 15%\n\u2022 750 | Cooldown -60%, Buff Power: 20%\n\u2022
-      1500 | Cooldown -80%, Buff Power: 25%\n\u2022 3000 | Cooldown -100%, Buff Power:
-      30%"
+    m_Localized: "The Cauldron converts selected food into stew. You choose how much to mix; stew gained depends on the food's authored value and the quantity. Taste stew to receive cards using Eva's displayed reward weights.\n\nResource cards improve genuine gathering, enemy drops and town crop harvests for the matching resource. Their copy thresholds are 1, 25, 75, 200, 750, 1500, 3500 and 10000; yield bonuses are 1%, 2%, 3%, 5%, 7%, 10%, 15% and 20%.\n\nA resource category uses the lowest card tier among its unlocked resources. Unowned cards count as tier zero. Category tiers 1 through 8 add 2%, 5%, 10%, 15%, 20%, 30%, 40% and 50% yield to that category. Card and category bonuses add together, up to 70%. Rewards, seeds, refunds and conversions do not receive these bonuses.\n\nThese card tiers are separate from resource rarity. Existing buff-card cooldown and power benefits remain unchanged. Complete all available resource and buff collections to unlock Eternal Boons."
     m_Metadata:
       m_Items: []
   - m_Id: 18915029441462272
     m_Localized: 'Items have a low chance of tiering up each time you collect them.
-      The only source that cannot tier them up is Alter Echoes.
+      Town farm harvests do not roll resource tier upgrades.
 
       Each tier
       above the first grants you bonus resources each time you collect it in the
@@ -240,7 +209,7 @@ MonoBehaviour:
 
 
       I''m a bit loathe to share this information with you but here
-      you go - The Vast One...
+      you go - Orin...
 
 
       Tier | Bonus | Chance
@@ -250,20 +219,20 @@ MonoBehaviour:
 
       <b>Tier 2</b> - 10%\t1 /1,000
 
-      <b>Tier 3</b> - 20%</b>\t1
+      <b>Tier 3</b> - 20%\t1
       / 5,000
 
-      <b>Tier 4</b> - 30%</b>\t1 / 10,000
+      <b>Tier 4</b> - 30%\t1 / 10,000
 
-      <b>Tier 5</b> - 50%</b>\t1
+      <b>Tier 5</b> - 50%\t1
       / 50,000
 
-      <b>Tier 6</b> - 75%</b>\t1 / 100,000
+      <b>Tier 6</b> - 75%\t1 / 100,000
 
       <b>Tier 7</b> -
-      100%</b>\t1 / 250,000
+      100%\t1 / 250,000
 
-      <b>Tier 8</b> - 150%</b>\t1 / 1,000,000'
+      <b>Tier 8</b> - 150%\t1 / 1,000,000'
     m_Metadata:
       m_Items: []
   - m_Id: 25772880722018304

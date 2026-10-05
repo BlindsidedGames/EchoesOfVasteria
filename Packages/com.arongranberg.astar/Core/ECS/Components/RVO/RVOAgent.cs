@@ -11,6 +11,11 @@ namespace Pathfinding.ECS.RVO {
 	/// <summary>
 	/// Agent data for the local avoidance system.
 	///
+	/// Note: These settings are copied to the local avoidance simulation using a change filter, so
+	/// only take write access to this component when you actually want to change something, to improve performance.
+	/// Taking write access marks the whole chunk as changed even if you write an identical value, which makes
+	/// that copy run for every agent in the chunk.
+	///
 	/// See: local-avoidance (view in online documentation for working links)
 	/// </summary>
 	[System.Serializable]

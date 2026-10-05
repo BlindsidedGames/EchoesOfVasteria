@@ -642,6 +642,7 @@ Pathfinding.DynamicObstacle.prevEnabled	dynamicobstacle.html#prevEnabled	True if
 Pathfinding.DynamicObstacle.prevRotation	dynamicobstacle.html#prevRotation	Rotation of the collider the last time the graphs were updated.
 Pathfinding.DynamicObstacle.tr	dynamicobstacle.html#tr	Cached transform component.
 Pathfinding.DynamicObstacle.updateError	dynamicobstacle.html#updateError	The minimum change in world units along one of the axis of the bounding box of the collider to trigger a graph update.
+Pathfinding.ECS.AIDestinationSetterRef.value	aidestinationsetterref.html#value	
 Pathfinding.ECS.AIGizmosSystem.DrawerCallback.Exists	drawercallback.html#Exists	
 Pathfinding.ECS.AIGizmosSystem.DrawerCallback.world	drawercallback.html#world	
 Pathfinding.ECS.AIGizmosSystem.MovementStateTypeHandleRO	aigizmossystem.html#MovementStateTypeHandleRO	
@@ -651,6 +652,7 @@ Pathfinding.ECS.AIGizmosSystem.manuallyTriggered	aigizmossystem.html#manuallyTri
 Pathfinding.ECS.AIMoveSystem.MarkerMovementOverride	aimovesystem.html#MarkerMovementOverride	
 Pathfinding.ECS.AIMoveSystem.entityQueryMovementOverride	aimovesystem.html#entityQueryMovementOverride	
 Pathfinding.ECS.AIMoveSystem.entityQueryWithGravity	aimovesystem.html#entityQueryWithGravity	
+Pathfinding.ECS.AIMoveSystem.movementOverrideRunner	aimovesystem.html#movementOverrideRunner	
 Pathfinding.ECS.AIMovementSystemGroup.CustomTimeScale	aimovementsystemgroup.html#CustomTimeScale	Additional time scale multiplier to apply to the simulation. \n\nThis can be used to speed up or slow down the simulation instead of using Unity's Time.timeScale.\n\nThe final time scale will be Unity's Time.timeScale multiplied by this value.\n\nDefault value is 1.0.\n\n<b>[code in online documentation]</b>
 Pathfinding.ECS.AIMovementSystemGroup.TimeScaledRateManager.CheapSimulationOnly	timescaledratemanager.html#CheapSimulationOnly	True if it was determined that zero substeps should be simulated. \n\nIn this case all systems will get an opportunity to run a single update, but they should avoid systems that don't have to run every single frame.
 Pathfinding.ECS.AIMovementSystemGroup.TimeScaledRateManager.CheapStepDeltaTime	timescaledratemanager.html#CheapStepDeltaTime	
@@ -673,8 +675,30 @@ Pathfinding.ECS.AIMovementSystemGroup.TimeScaledRateManager.ownProcessingTimePer
 Pathfinding.ECS.AIMovementSystemGroup.TimeScaledRateManager.stepDt	timescaledratemanager.html#stepDt	
 Pathfinding.ECS.AIMovementSystemGroup.TimeScaledRateManager.timeDataQueue	timescaledratemanager.html#timeDataQueue	
 Pathfinding.ECS.AIMovementSystemGroup.TimeScaledRateManager.updateIndex	timescaledratemanager.html#updateIndex	
+Pathfinding.ECS.AgentBakedSettings.graphMask	agentbakedsettings.html#graphMask	Graphs that this agent can use. \n\nThis field determines which graphs will be considered when searching for the start and end nodes of a path. It is useful in numerous situations, for example if you want to make one graph for small units and one graph for large units, or one graph for people and one graph for ships.\n\nThis is a bitmask so if you for example want to make the agent only use graph index 3 then you can set this to: <b>[code in online documentation]</b>\n\n[more in online documentation]\nNote that this field only stores which graph indices that are allowed. This means that if the graphs change their ordering then this mask may no longer be correct.\n\nIf you know the name of the graph you can use the Pathfinding.GraphMask.FromGraphName method: <b>[code in online documentation]</b>\n\n[more in online documentation]
+Pathfinding.ECS.AgentBakedSettings.traversableTags	agentbakedsettings.html#traversableTags	The tags which this agent can traverse. \n\nThis is a bitmask. Each bit indicates that the agent can traverse nodes with the corresponding tag. If a bit is not set, the agent will treat it as if it is not traversable.\n\nThe default value is -1, which sets all bits, and indicates that the agent can traverse all tags.\n\n <b>[image in online documentation]</b>\n\n[more in online documentation]
+Pathfinding.ECS.AgentBakedTagCostMultiplier.value	agentbakedtagcostmultiplier.html#value	
+Pathfinding.ECS.AgentBakedTagEntryCost.value	agentbakedtagentrycost.html#value	
 Pathfinding.ECS.AgentCylinderShape.height	agentcylindershape.html#height	Height of the agent in world units.
 Pathfinding.ECS.AgentCylinderShape.radius	agentcylindershape.html#radius	Radius of the agent in world units.
+Pathfinding.ECS.AgentManagedAccess.access	agentmanagedaccess.html#access	
+Pathfinding.ECS.AgentManagedBackupRef.slot	agentmanagedbackupref.html#slot	Index into AgentManagedStorage. \n\nAlways equal to the agent's AgentManagedRef slot once repaired.
+Pathfinding.ECS.AgentManagedDataCleanupSystem.allAgents	agentmanageddatacleanupsystem.html#allAgents	
+Pathfinding.ECS.AgentManagedDataCleanupSystem.destroyedAgents	agentmanageddatacleanupsystem.html#destroyedAgents	
+Pathfinding.ECS.AgentManagedDataRepairSystem.unrepairedClones	agentmanageddatarepairsystem.html#unrepairedClones	
+Pathfinding.ECS.AgentManagedRef.slot	agentmanagedref.html#slot	Index into AgentManagedStorage.
+Pathfinding.ECS.AgentManagedStorage.Entry.afterControl	entry.html#afterControl	
+Pathfinding.ECS.AgentManagedStorage.Entry.beforeControl	entry.html#beforeControl	
+Pathfinding.ECS.AgentManagedStorage.Entry.beforeMovement	entry.html#beforeMovement	
+Pathfinding.ECS.AgentManagedStorage.Entry.linkTraversal	entry.html#linkTraversal	
+Pathfinding.ECS.AgentManagedStorage.Entry.owner	entry.html#owner	The agent this data belongs to, or Entity.Null if the slot is free. \n\nStored as a real Entity, which is only safe because this array is not chunk memory. EntityRemapUtility rewrites Entity-typed fields inside components when an entity is cloned, so this same field inside AgentManagedRef would be silently repointed at the clone.
+Pathfinding.ECS.AgentManagedStorage.Entry.settings	entry.html#settings	
+Pathfinding.ECS.AgentManagedStorage.Entry.state	entry.html#state	
+Pathfinding.ECS.AgentManagedStorage.entries	agentmanagedstorage.html#entries	Slot storage. \n\nIndex with the slot from an AgentManagedRef.\n\nRead this field exactly once per operation and index the local copy. Re-reading it partway through means a growth in between can move you to a different array.\n\nEvery slot handed out is in range for every array published from then on, so the methods below index it directly and leave the range check to the array. An out of range slot means the  AgentManagedRef did not come from here.
+Pathfinding.ECS.AgentManagedStorage.freeSlotCount	agentmanagedstorage.html#freeSlotCount	
+Pathfinding.ECS.AgentManagedStorage.freeSlots	agentmanagedstorage.html#freeSlots	Slots that have been freed and can be handed out again. \n\nGuarded by mutateLock.
+Pathfinding.ECS.AgentManagedStorage.mutateLock	agentmanagedstorage.html#mutateLock	Guards allocation and release. \n\nReads are lock-free.\n\nSerializes writers against each other, which is what makes the growth in AllocateSlotLocked safe: two concurrent growths would each copy the old array, and one would discard the other's slots.
+Pathfinding.ECS.AgentManagedStorage.usedSlots	agentmanagedstorage.html#usedSlots	Number of slots in entries that have ever been handed out. \n\nGuarded by mutateLock.
 Pathfinding.ECS.AgentMovementPlane.value	agentmovementplane.html#value	The movement plane for the agent. \n\nThe movement plane determines what the "up" direction of the agent is. For most typical 3D games, this will be aligned with the Y axis, but there are games in which the agent needs to navigate on walls, or on spherical worlds. For those games this movement plane will track the plane in which the agent is currently moving.\n\n[more in online documentation]
 Pathfinding.ECS.AgentMovementPlaneSource.value	agentmovementplanesource.html#value	
 Pathfinding.ECS.AgentOffMeshLinkTraversal.firstPosition	agentoffmeshlinktraversal.html#firstPosition	The start point of the off-mesh link from the agent's perspective. \n\nThis is the point where the agent starts traversing the off-mesh link, regardless of if the link is traversed from the start to end or from end to start. \n\n[more in online documentation]
@@ -705,6 +729,7 @@ Pathfinding.ECS.AgentOffMeshLinkTraversalContext.transform	agentoffmeshlinktrave
 Pathfinding.ECS.AgentOffMeshLinkTraversalContext.transformPtr	agentoffmeshlinktraversalcontext.html#transformPtr	
 Pathfinding.ECS.AutoRepathPolicy.Default	autorepathpolicy2.html#Default	
 Pathfinding.ECS.AutoRepathPolicy.Sensitivity	autorepathpolicy2.html#Sensitivity	How sensitive the agent should be to changes in its destination for Mode.Dynamic. \n\nA higher value means the destination has to move less for the path to be recalculated.\n\n[more in online documentation]
+Pathfinding.ECS.AutoRepathPolicy.jitterCounter	autorepathpolicy2.html#jitterCounter	Counter used to decorrelate the repath jitter between agents. \n\nA counter rather than a hash of the agent's own state, because the case the jitter exists for is many agents instantiated on the same frame, which is exactly when their state is identical.
 Pathfinding.ECS.AutoRepathPolicy.lastDestination	autorepathpolicy2.html#lastDestination	
 Pathfinding.ECS.AutoRepathPolicy.lastRepathTime	autorepathpolicy2.html#lastRepathTime	
 Pathfinding.ECS.AutoRepathPolicy.mode	autorepathpolicy2.html#mode	Policy to use when recalculating paths. \n\n[more in online documentation]
@@ -731,6 +756,7 @@ Pathfinding.ECS.FollowerControlSystem.MarkerMovementOverrideAfterControl	followe
 Pathfinding.ECS.FollowerControlSystem.MarkerMovementOverrideBeforeControl	followercontrolsystem.html#MarkerMovementOverrideBeforeControl	
 Pathfinding.ECS.FollowerControlSystem.entityQueryControlManaged	followercontrolsystem.html#entityQueryControlManaged	
 Pathfinding.ECS.FollowerControlSystem.entityQueryControlManaged2	followercontrolsystem.html#entityQueryControlManaged2	
+Pathfinding.ECS.FollowerControlSystem.movementOverrideRunner	followercontrolsystem.html#movementOverrideRunner	
 Pathfinding.ECS.FollowerControlSystem.redrawScope	followercontrolsystem.html#redrawScope	
 Pathfinding.ECS.FollowerEntityProxy.agentCylinderShapeAccessRO	followerentityproxy.html#agentCylinderShapeAccessRO	
 Pathfinding.ECS.FollowerEntityProxy.agentCylinderShapeAccessRW	followerentityproxy.html#agentCylinderShapeAccessRW	
@@ -747,7 +773,7 @@ Pathfinding.ECS.FollowerEntityProxy.destinationFacingDirection	followerentitypro
 Pathfinding.ECS.FollowerEntityProxy.destinationPointAccessRO	followerentityproxy.html#destinationPointAccessRO	
 Pathfinding.ECS.FollowerEntityProxy.destinationPointAccessRW	followerentityproxy.html#destinationPointAccessRW	
 Pathfinding.ECS.FollowerEntityProxy.enableGravity	followerentityproxy.html#enableGravity	Enables or disables gravity. \n\nIf gravity is enabled, the agent will accelerate downwards, and use a raycast to check if it should stop falling.\n\nThis has no effect if the agent's orientation is set to YAxisForward (2D mode). Gravity does not really make sense for top-down 2D games. The gravity setting is also hidden from the inspector in this mode.\n\n[more in online documentation]
-Pathfinding.ECS.FollowerEntityProxy.enableLocalAvoidance	followerentityproxy.html#enableLocalAvoidance	True if local avoidance is enabled for this agent. \n\nEnabling this will automatically add a Pathfinding.ECS.RVO.RVOAgent component to the entity.\n\n[more in online documentation]\n\n\n\n[more in online documentation]
+Pathfinding.ECS.FollowerEntityProxy.enableLocalAvoidance	followerentityproxy.html#enableLocalAvoidance	True if local avoidance is enabled for this agent. \n\nEnabling this will automatically add a Pathfinding.ECS.RVO.RVOAgent component to the entity.\n\n[more in online documentation]\n\n\n\n[more in online documentation]\n\n\n\n[more in online documentation]
 Pathfinding.ECS.FollowerEntityProxy.endOfPath	followerentityproxy.html#endOfPath	End point of path the agent is currently following. \n\nIf the agent has no path (or if it's not calculated yet), this will return the destination instead. If the agent has no destination it will return the agent's current position.\n\nThe end of the path is usually identical or very close to the destination, but it may differ if the path for example was blocked by a wall, so that the agent couldn't get any closer.\n\n[more in online documentation]
 Pathfinding.ECS.FollowerEntityProxy.entity	followerentityproxy.html#entity	
 Pathfinding.ECS.FollowerEntityProxy.entityExists	followerentityproxy.html#entityExists	True if the entity exists. \n\nThis is typically true if the FollowerEntity component is active and enabled and the game is running.\n\n[more in online documentation]
@@ -762,10 +788,9 @@ Pathfinding.ECS.FollowerEntityProxy.likelyHasReasonableComponents	followerentity
 Pathfinding.ECS.FollowerEntityProxy.localAvoidanceTemporarilyDisabled	followerentityproxy.html#localAvoidanceTemporarilyDisabled	True if the agent's local avoidance is temporarily disabled, due to traversing an off-mesh link. \n\nWhen traversing an off-mesh link, the traversal code may temporarily disable local avoidance to allow the agent to traverse the link without being pushed around by other agents.\n\n[more in online documentation]\nWhen the agent is not traversing an off-mesh link, this will always return false.\n\n[more in online documentation]
 Pathfinding.ECS.FollowerEntityProxy.localTransformAccessRO	followerentityproxy.html#localTransformAccessRO	
 Pathfinding.ECS.FollowerEntityProxy.localTransformAccessRW	followerentityproxy.html#localTransformAccessRW	
-Pathfinding.ECS.FollowerEntityProxy.managedSettingsAccessRO	followerentityproxy.html#managedSettingsAccessRO	
-Pathfinding.ECS.FollowerEntityProxy.managedSettingsAccessRW	followerentityproxy.html#managedSettingsAccessRW	
-Pathfinding.ECS.FollowerEntityProxy.managedStateAccessRO	followerentityproxy.html#managedStateAccessRO	
-Pathfinding.ECS.FollowerEntityProxy.managedStateAccessRW	followerentityproxy.html#managedStateAccessRW	
+Pathfinding.ECS.FollowerEntityProxy.managedAccessRO	followerentityproxy.html#managedAccessRO	
+Pathfinding.ECS.FollowerEntityProxy.managedAccessRW	followerentityproxy.html#managedAccessRW	
+Pathfinding.ECS.FollowerEntityProxy.managedState	followerentityproxy.html#managedState	Runtime state for this agent that requires managed types, such as its current path. \n\nThis is not a component. It lives in a storage array that the agent refers to by index, because the Entities package is removing class-based IComponentData.\n\n[more in online documentation]
 Pathfinding.ECS.FollowerEntityProxy.maxRotationSpeed	followerentityproxy.html#maxRotationSpeed	Maximum rotation speed in degrees per second. \n\nIf the agent would have to rotate faster than this, it will instead slow down to get more time to rotate.\n\nThe agent may want to rotate faster than rotationSpeed if there's not enough space, so that it has to move in a more narrow arc. It may also want to rotate faster if it is very close to its destination and it wants to make sure it ends up on the right spot without any circling.\n\nIt is recommended to keep this at a value slightly larger than rotationSpeed.\n\n[more in online documentation]
 Pathfinding.ECS.FollowerEntityProxy.maxSpeed	followerentityproxy.html#maxSpeed	Max speed in world units per second.
 Pathfinding.ECS.FollowerEntityProxy.movementControlAccessRO	followerentityproxy.html#movementControlAccessRO	
@@ -827,10 +852,10 @@ Pathfinding.ECS.JobControl.edgesScratch	jobcontrol.html#edgesScratch
 Pathfinding.ECS.JobControl.indicesScratch	jobcontrol.html#indicesScratch	
 Pathfinding.ECS.JobControl.navmeshEdgeData	jobcontrol.html#navmeshEdgeData	
 Pathfinding.ECS.JobDrawFollowerGizmos.AgentCylinderShapeHandleRO	jobdrawfollowergizmos.html#AgentCylinderShapeHandleRO	
+Pathfinding.ECS.JobDrawFollowerGizmos.AgentManagedRefHandleRW	jobdrawfollowergizmos.html#AgentManagedRefHandleRW	
 Pathfinding.ECS.JobDrawFollowerGizmos.AgentMovementPlaneHandleRO	jobdrawfollowergizmos.html#AgentMovementPlaneHandleRO	
 Pathfinding.ECS.JobDrawFollowerGizmos.InternalRotation	jobdrawfollowergizmos.html#InternalRotation	
 Pathfinding.ECS.JobDrawFollowerGizmos.LocalTransformTypeHandleRO	jobdrawfollowergizmos.html#LocalTransformTypeHandleRO	
-Pathfinding.ECS.JobDrawFollowerGizmos.ManagedStateHandleRW	jobdrawfollowergizmos.html#ManagedStateHandleRW	
 Pathfinding.ECS.JobDrawFollowerGizmos.MovementSettingsHandleRO	jobdrawfollowergizmos.html#MovementSettingsHandleRO	
 Pathfinding.ECS.JobDrawFollowerGizmos.MovementStateHandleRO	jobdrawfollowergizmos.html#MovementStateHandleRO	
 Pathfinding.ECS.JobDrawFollowerGizmos.Path	jobdrawfollowergizmos.html#Path	
@@ -840,17 +865,22 @@ Pathfinding.ECS.JobDrawFollowerGizmos.TargetInternalRotationHint	jobdrawfollower
 Pathfinding.ECS.JobDrawFollowerGizmos.UnsmoothedRotation	jobdrawfollowergizmos.html#UnsmoothedRotation	
 Pathfinding.ECS.JobDrawFollowerGizmos.VisualRotationColor	jobdrawfollowergizmos.html#VisualRotationColor	
 Pathfinding.ECS.JobDrawFollowerGizmos.draw	jobdrawfollowergizmos.html#draw	
-Pathfinding.ECS.JobDrawFollowerGizmos.entityManagerHandle	jobdrawfollowergizmos.html#entityManagerHandle	
 Pathfinding.ECS.JobDrawFollowerGizmos.scratchBuffer1	jobdrawfollowergizmos.html#scratchBuffer1	
 Pathfinding.ECS.JobDrawFollowerGizmos.scratchBuffer2	jobdrawfollowergizmos.html#scratchBuffer2	
 Pathfinding.ECS.JobDrawFollowerGizmosBase.ShapeGizmoColor	jobdrawfollowergizmosbase.html#ShapeGizmoColor	
 Pathfinding.ECS.JobDrawFollowerGizmosBase.draw	jobdrawfollowergizmosbase.html#draw	
 Pathfinding.ECS.JobDrawFollowerGizmosBase.orientation	jobdrawfollowergizmosbase.html#orientation	
-Pathfinding.ECS.JobManagedMovementOverrideAfterControl.dt	jobmanagedmovementoverrideaftercontrol.html#dt	
-Pathfinding.ECS.JobManagedMovementOverrideBeforeControl.dt	jobmanagedmovementoverridebeforecontrol.html#dt	
-Pathfinding.ECS.JobManagedMovementOverrideBeforeMovement.dt	jobmanagedmovementoverridebeforemovement.html#dt	
 Pathfinding.ECS.JobManagedOffMeshLinkTransition.commandBuffer	jobmanagedoffmeshlinktransition.html#commandBuffer	
 Pathfinding.ECS.JobManagedOffMeshLinkTransition.deltaTime	jobmanagedoffmeshlinktransition.html#deltaTime	
+Pathfinding.ECS.JobManagedOffMeshLinkTransition.entityHandle	jobmanagedoffmeshlinktransition.html#entityHandle	
+Pathfinding.ECS.JobManagedOffMeshLinkTransition.linkTraversalHandle	jobmanagedoffmeshlinktransition.html#linkTraversalHandle	
+Pathfinding.ECS.JobManagedOffMeshLinkTransition.localAvoidanceDisabledHandle	jobmanagedoffmeshlinktransition.html#localAvoidanceDisabledHandle	
+Pathfinding.ECS.JobManagedOffMeshLinkTransition.localTransformHandle	jobmanagedoffmeshlinktransition.html#localTransformHandle	
+Pathfinding.ECS.JobManagedOffMeshLinkTransition.managedRefHandle	jobmanagedoffmeshlinktransition.html#managedRefHandle	
+Pathfinding.ECS.JobManagedOffMeshLinkTransition.movementControlHandle	jobmanagedoffmeshlinktransition.html#movementControlHandle	
+Pathfinding.ECS.JobManagedOffMeshLinkTransition.movementDisabledHandle	jobmanagedoffmeshlinktransition.html#movementDisabledHandle	
+Pathfinding.ECS.JobManagedOffMeshLinkTransition.movementPlaneHandle	jobmanagedoffmeshlinktransition.html#movementPlaneHandle	
+Pathfinding.ECS.JobManagedOffMeshLinkTransition.movementSettingsHandle	jobmanagedoffmeshlinktransition.html#movementSettingsHandle	
 Pathfinding.ECS.JobMoveAgent.dt	jobmoveagent.html#dt	
 Pathfinding.ECS.JobPrepareAgentRaycasts.dt	jobprepareagentraycasts.html#dt	
 Pathfinding.ECS.JobPrepareAgentRaycasts.gravity	jobprepareagentraycasts.html#gravity	
@@ -860,15 +890,14 @@ Pathfinding.ECS.JobRepairPath.MarkerGetNextCorners	jobrepairpath.html#MarkerGetN
 Pathfinding.ECS.JobRepairPath.MarkerRepair	jobrepairpath.html#MarkerRepair	
 Pathfinding.ECS.JobRepairPath.MarkerUpdateReachedEndInfo	jobrepairpath.html#MarkerUpdateReachedEndInfo	
 Pathfinding.ECS.JobRepairPath.Scheduler.AgentCylinderShapeTypeHandleRO	scheduler.html#AgentCylinderShapeTypeHandleRO	
+Pathfinding.ECS.JobRepairPath.Scheduler.AgentManagedRefTypeHandleRW	scheduler.html#AgentManagedRefTypeHandleRW	
 Pathfinding.ECS.JobRepairPath.Scheduler.AgentMovementPlaneTypeHandleRO	scheduler.html#AgentMovementPlaneTypeHandleRO	
 Pathfinding.ECS.JobRepairPath.Scheduler.AutoRepathPolicyRW	scheduler.html#AutoRepathPolicyRW	
 Pathfinding.ECS.JobRepairPath.Scheduler.DestinationPointTypeHandleRO	scheduler.html#DestinationPointTypeHandleRO	
 Pathfinding.ECS.JobRepairPath.Scheduler.LocalTransformTypeHandleRO	scheduler.html#LocalTransformTypeHandleRO	
-Pathfinding.ECS.JobRepairPath.Scheduler.ManagedStateTypeHandleRW	scheduler.html#ManagedStateTypeHandleRW	
 Pathfinding.ECS.JobRepairPath.Scheduler.MovementSettingsTypeHandleRO	scheduler.html#MovementSettingsTypeHandleRO	
 Pathfinding.ECS.JobRepairPath.Scheduler.MovementStateTypeHandleRW	scheduler.html#MovementStateTypeHandleRW	
 Pathfinding.ECS.JobRepairPath.Scheduler.ReadyToTraverseOffMeshLinkTypeHandleRW	scheduler.html#ReadyToTraverseOffMeshLinkTypeHandleRW	
-Pathfinding.ECS.JobRepairPath.Scheduler.entityManagerHandle	scheduler.html#entityManagerHandle	
 Pathfinding.ECS.JobRepairPath.Scheduler.onlyApplyPendingPaths	scheduler.html#onlyApplyPendingPaths	
 Pathfinding.ECS.JobRepairPath.indicesScratch	jobrepairpath.html#indicesScratch	
 Pathfinding.ECS.JobRepairPath.nextCornersScratch	jobrepairpath.html#nextCornersScratch	
@@ -892,24 +921,13 @@ Pathfinding.ECS.ManagedAgentOffMeshLinkTraversal.context	managedagentoffmeshlink
 Pathfinding.ECS.ManagedAgentOffMeshLinkTraversal.coroutine	managedagentoffmeshlinktraversal.html#coroutine	Coroutine which is used to traverse the link.
 Pathfinding.ECS.ManagedAgentOffMeshLinkTraversal.handler	managedagentoffmeshlinktraversal.html#handler	
 Pathfinding.ECS.ManagedAgentOffMeshLinkTraversal.stateMachine	managedagentoffmeshlinktraversal.html#stateMachine	
-Pathfinding.ECS.ManagedEntityAccess.entityManager	managedentityaccess.html#entityManager	
-Pathfinding.ECS.ManagedEntityAccess.handle	managedentityaccess.html#handle	
-Pathfinding.ECS.ManagedEntityAccess.readOnly	managedentityaccess.html#readOnly	
-Pathfinding.ECS.ManagedEntityAccess.this[EntityStorageInfo storage]	managedentityaccess.html#thisEntityStorageInfostorage	
-Pathfinding.ECS.ManagedMovementOverride.callback	managedmovementoverride.html#callback	
 Pathfinding.ECS.ManagedMovementOverrides.entity	managedmovementoverrides.html#entity	
 Pathfinding.ECS.ManagedMovementOverrides.world	managedmovementoverrides.html#world	
 Pathfinding.ECS.ManagedSettings.onTraverseOffMeshLink	managedsettings.html#onTraverseOffMeshLink	Callback for when the agent starts to traverse an off-mesh link. \n\n[more in online documentation]
 Pathfinding.ECS.ManagedSettings.pathfindingSettings	managedsettings.html#pathfindingSettings	Settings for how an agent searches for paths. \n\nThis struct contains information about which graphs the agent can use, which nodes it can traverse, and if any nodes should be easier or harder to traverse.\n\nA good default value to start from is PathRequestSettings.Default.\n\n[more in online documentation]
 Pathfinding.ECS.ManagedState.activePath	managedstate.html#activePath	Path that is being followed, if any. \n\nThe agent may have moved away from this path since it was calculated. So it may not be up to date.
-Pathfinding.ECS.ManagedState.autoRepath	managedstate.html#autoRepath	Settings for when to recalculate the path. \n\n[more in online documentation]
-Pathfinding.ECS.ManagedState.enableGravity	managedstate.html#enableGravity	True if gravity is enabled for this agent. \n\nThe agent will always fall down according to its own movement plane. The gravity applied is Physics.gravity.y.\n\nEnabling this will enable the GravityState component of the entity.\n\nThis has no effect if the agent's orientation is set to YAxisForward (2D mode). Gravity does not really make sense for top-down 2D games. The gravity setting is also hidden from the inspector in this mode.\n\n[more in online documentation]
-Pathfinding.ECS.ManagedState.enableLocalAvoidance	managedstate.html#enableLocalAvoidance	True if local avoidance is enabled for this agent. \n\nEnabling this will automatically add a Pathfinding.ECS.RVO.RVOAgent component to the entity.\n\n[more in online documentation]
-Pathfinding.ECS.ManagedState.onTraverseOffMeshLink	managedstate.html#onTraverseOffMeshLink	Callback for when the agent starts to traverse an off-mesh link.
 Pathfinding.ECS.ManagedState.pathTracer	managedstate.html#pathTracer	Calculates in which direction to move to follow the path.
-Pathfinding.ECS.ManagedState.pathfindingSettings	managedstate.html#pathfindingSettings	
 Pathfinding.ECS.ManagedState.pendingPath	managedstate.html#pendingPath	Path that is being calculated, if any.
-Pathfinding.ECS.ManagedState.rvoSettings	managedstate.html#rvoSettings	Local avoidance settings. \n\nWhen the agent has local avoidance enabled, these settings will be copied into a Pathfinding.ECS.RVO.RVOAgent component which is attached to the agent.\n\n[more in online documentation]
 Pathfinding.ECS.MovementControl.endOfPath	movementcontrol.html#endOfPath	The end of the current path. \n\nThis informs the local avoidance system about the final desired destination for the agent. This is used to make agents stop if the destination is crowded and it cannot reach its destination.\n\nIf this is not set, agents will often move forever around a crowded destination, always trying to find some way to get closer, but never finding it.
 Pathfinding.ECS.MovementControl.hierarchicalNodeIndex	movementcontrol.html#hierarchicalNodeIndex	The index of the hierarchical node that the agent is currently in. \n\nWill be -1 if the hierarchical node index is not known. \n\n[more in online documentation]
 Pathfinding.ECS.MovementControl.maxSpeed	movementcontrol.html#maxSpeed	The maximum speed at which the agent may move, in meters per second. \n\nIt is recommended to keep this slightly above speed, to allow the local avoidance system to move agents around more efficiently when necessary.
@@ -920,13 +938,27 @@ Pathfinding.ECS.MovementControl.targetPoint	movementcontrol.html#targetPoint	The
 Pathfinding.ECS.MovementControl.targetRotation	movementcontrol.html#targetRotation	The desired rotation of the agent, in radians, relative to the current movement plane. \n\nWhen rotating the agent visually, the targetRotationOffset should also be added to this value.\n\n[more in online documentation]
 Pathfinding.ECS.MovementControl.targetRotationHint	movementcontrol.html#targetRotationHint	The desired rotation of the agent, in radians, over a longer time horizon, relative to the current movement plane. \n\nThe targetRotation is usually only over a very short time-horizon, usually a single simulation time step. This variable is used to provide a hint of where the agent wants to rotate to over a slightly longer time scale (on the order of a second or so). It is not used to control movement directly, but it may be used to guide animations, or rotation smoothing.\n\nIf no better hint is available, this should be set to the same value as targetRotation.\n\n[more in online documentation]
 Pathfinding.ECS.MovementControl.targetRotationOffset	movementcontrol.html#targetRotationOffset	Additive modifier to targetRotation, in radians. \n\nThis is used by the local avoidance system to rotate the agent, without this causing a feedback loop. This extra rotation will be ignored by the control system which decides how the agent *wants* to move. It will instead be directly applied to the agent.\n\n[more in online documentation]
+Pathfinding.ECS.MovementOverrideRunner.Phase	movementoverriderunner.html#Phase	Which point in the movement pipeline to invoke callbacks for.
+Pathfinding.ECS.MovementOverrideRunner.destinationHandle	movementoverriderunner.html#destinationHandle	
+Pathfinding.ECS.MovementOverrideRunner.dt	movementoverriderunner.html#dt	
+Pathfinding.ECS.MovementOverrideRunner.entityHandle	movementoverriderunner.html#entityHandle	
+Pathfinding.ECS.MovementOverrideRunner.localTransformHandle	movementoverriderunner.html#localTransformHandle	
+Pathfinding.ECS.MovementOverrideRunner.managedRefHandle	movementoverriderunner.html#managedRefHandle	
+Pathfinding.ECS.MovementOverrideRunner.movementControlHandle	movementoverriderunner.html#movementControlHandle	
+Pathfinding.ECS.MovementOverrideRunner.movementPlaneHandle	movementoverriderunner.html#movementPlaneHandle	
+Pathfinding.ECS.MovementOverrideRunner.movementSettingsHandle	movementoverriderunner.html#movementSettingsHandle	
+Pathfinding.ECS.MovementOverrideRunner.movementStateHandle	movementoverriderunner.html#movementStateHandle	
+Pathfinding.ECS.MovementOverrideRunner.phase	movementoverriderunner.html#phase	
+Pathfinding.ECS.MovementOverrideRunner.resolvedMovementHandle	movementoverriderunner.html#resolvedMovementHandle	
+Pathfinding.ECS.MovementOverrideRunner.shapeHandle	movementoverriderunner.html#shapeHandle	
 Pathfinding.ECS.MovementPlaneFromGraphSystem.JobMovementPlaneFromGraph.movementPlanes	jobmovementplanefromgraph.html#movementPlanes	
 Pathfinding.ECS.MovementPlaneFromGraphSystem.JobMovementPlaneFromNavmeshNormal.dt	jobmovementplanefromnavmeshnormal.html#dt	
-Pathfinding.ECS.MovementPlaneFromGraphSystem.JobMovementPlaneFromNavmeshNormal.que	jobmovementplanefromnavmeshnormal.html#que	
+Pathfinding.ECS.MovementPlaneFromGraphSystem.JobMovementPlaneFromNavmeshNormal.que	jobmovementplanefromnavmeshnormal.html#que	MovementPlaneFromGraphSystem.graphNodeQueue, a List&lt;GraphNode&gt;
 Pathfinding.ECS.MovementPlaneFromGraphSystem.JobMovementPlaneFromNavmeshNormal.vertices	jobmovementplanefromnavmeshnormal.html#vertices	
 Pathfinding.ECS.MovementPlaneFromGraphSystem.entityQueryGraph	movementplanefromgraphsystem.html#entityQueryGraph	
 Pathfinding.ECS.MovementPlaneFromGraphSystem.entityQueryNormal	movementplanefromgraphsystem.html#entityQueryNormal	
 Pathfinding.ECS.MovementPlaneFromGraphSystem.graphNodeQueue	movementplanefromgraphsystem.html#graphNodeQueue	
+Pathfinding.ECS.MovementPlaneFromGraphSystem.scratchVertices	movementplanefromgraphsystem.html#scratchVertices	
 Pathfinding.ECS.MovementPlaneSource	ecs2.html#MovementPlaneSource	How to calculate which direction is "up" for the agent.
 Pathfinding.ECS.MovementSettings.debugFlags	movementsettings.html#debugFlags	Flags for enabling debug rendering in the scene view.
 Pathfinding.ECS.MovementSettings.follower	movementsettings.html#follower	Additional movement settings.
@@ -969,6 +1001,13 @@ Pathfinding.ECS.MovementStatistics.estimatedVelocity	movementstatistics.html#est
 Pathfinding.ECS.MovementStatistics.lastPosition	movementstatistics.html#lastPosition	The position of the agent at the end of the last movement simulation step.
 Pathfinding.ECS.MovementTarget.isReached	movementtarget.html#isReached	
 Pathfinding.ECS.MovementTarget.reached	movementtarget.html#reached	
+Pathfinding.ECS.PendingMovementOverrideChanges.Change.add	change.html#add	
+Pathfinding.ECS.PendingMovementOverrideChanges.Change.callback	change.html#callback	
+Pathfinding.ECS.PendingMovementOverrideChanges.Change.entity	change.html#entity	
+Pathfinding.ECS.PendingMovementOverrideChanges.Change.phase	change.html#phase	
+Pathfinding.ECS.PendingMovementOverrideChanges.Change.world	change.html#world	
+Pathfinding.ECS.PendingMovementOverrideChanges.changes	pendingmovementoverridechanges.html#changes	Queued changes, oldest first. \n\nReplayed in order, so that repeated registration and unregistration of one callback resolve to whatever the last call asks for.
+Pathfinding.ECS.PendingMovementOverrideChanges.count	pendingmovementoverridechanges.html#count	
 Pathfinding.ECS.PhysicsSceneRef.physicsScene	physicssceneref.html#physicsScene	
 Pathfinding.ECS.PollPendingPathsSystem.anyPendingPaths	pollpendingpathssystem.html#anyPendingPaths	
 Pathfinding.ECS.PollPendingPathsSystem.entityQueryPrepare	pollpendingpathssystem.html#entityQueryPrepare	
@@ -994,15 +1033,20 @@ Pathfinding.ECS.RVO.RVOAgent.obstacleTimeHorizon	rvoagent.html#obstacleTimeHoriz
 Pathfinding.ECS.RVO.RVOAgent.priority	rvoagent.html#priority	How strongly other agents will avoid this agent. \n\nUsually a value between 0 and 1. Agents with similar priorities will avoid each other with an equal strength. If an agent sees another agent with a higher priority than itself it will avoid that agent more strongly. In the extreme case (e.g this agent has a priority of 0 and the other agent has a priority of 1) it will treat the other agent as being a moving obstacle. Similarly if an agent sees another agent with a lower priority than itself it will avoid that agent less.\n\nIn general the avoidance strength for this agent is: <b>[code in online documentation]</b>
 Pathfinding.ECS.RVO.RVOAgent.priorityMultiplier	rvoagent.html#priorityMultiplier	Priority multiplier. \n\nThis functions identically to the priority, however it is not exposed in the Unity inspector. It is primarily used by the Pathfinding.RVO.RVODestinationCrowdedBehavior.
 Pathfinding.ECS.RVO.RVOSystem.JobCopyFromEntitiesToRVOSimulator.agentData	jobcopyfromentitiestorvosimulator.html#agentData	
-Pathfinding.ECS.RVO.RVOSystem.JobCopyFromEntitiesToRVOSimulator.agentOffMeshLinkTraversalLookup	jobcopyfromentitiestorvosimulator.html#agentOffMeshLinkTraversalLookup	
 Pathfinding.ECS.RVO.RVOSystem.JobCopyFromEntitiesToRVOSimulator.agentOutputData	jobcopyfromentitiestorvosimulator.html#agentOutputData	
 Pathfinding.ECS.RVO.RVOSystem.JobCopyFromEntitiesToRVOSimulator.dt	jobcopyfromentitiestorvosimulator.html#dt	
 Pathfinding.ECS.RVO.RVOSystem.JobCopyFromEntitiesToRVOSimulator.movementPlaneMode	jobcopyfromentitiestorvosimulator.html#movementPlaneMode	
+Pathfinding.ECS.RVO.RVOSystem.JobCopyFromRVOSimulatorToEntities.DensityUpdateInterval	jobcopyfromrvosimulatortoentities.html#DensityUpdateInterval	How many simulation steps pass between an agent's crowd density updates. \n\nMust be a power of two, since the agents are spread over the steps using a bitmask.
 Pathfinding.ECS.RVO.RVOSystem.JobCopyFromRVOSimulatorToEntities.MaximumCirclePackingDensity	jobcopyfromrvosimulatortoentities.html#MaximumCirclePackingDensity	See <a href="https://en.wikipedia.org/wiki/Circle_packing">https://en.wikipedia.org/wiki/Circle_packing</a>.
 Pathfinding.ECS.RVO.RVOSystem.JobCopyFromRVOSimulatorToEntities.agentDataVersions	jobcopyfromrvosimulatortoentities.html#agentDataVersions	
 Pathfinding.ECS.RVO.RVOSystem.JobCopyFromRVOSimulatorToEntities.agentOutputData	jobcopyfromrvosimulatortoentities.html#agentOutputData	
+Pathfinding.ECS.RVO.RVOSystem.JobCopyFromRVOSimulatorToEntities.densityPhase	jobcopyfromrvosimulatortoentities.html#densityPhase	
 Pathfinding.ECS.RVO.RVOSystem.JobCopyFromRVOSimulatorToEntities.quadtree	jobcopyfromrvosimulatortoentities.html#quadtree	
-Pathfinding.ECS.RVO.RVOSystem.agentOffMeshLinkTraversalLookup	rvosystem.html#agentOffMeshLinkTraversalLookup	
+Pathfinding.ECS.RVO.RVOSystem.JobCopyRVOSettingsToSimulator.agentData	jobcopyrvosettingstosimulator.html#agentData	
+Pathfinding.ECS.RVO.RVOSystem.JobDisableLocalAvoidanceDuringLinkTraversal.agentDataVersions	jobdisablelocalavoidanceduringlinktravers.html#agentDataVersions	
+Pathfinding.ECS.RVO.RVOSystem.JobDisableLocalAvoidanceDuringLinkTraversal.manuallyControlled	jobdisablelocalavoidanceduringlinktravers.html#manuallyControlled	
+Pathfinding.ECS.RVO.RVOSystem.VERY_LARGE	rvosystem.html#VERY_LARGE	Actual infinity is not handled well by some algorithms, but very large values are ok. \n\nThis should be larger than any reasonable value a user might want to use.
+Pathfinding.ECS.RVO.RVOSystem.densityPhase	rvosystem.html#densityPhase	Which slice of the agents refreshes its crowd density this simulation step. \n\n[more in online documentation]
 Pathfinding.ECS.RVO.RVOSystem.lastSimulator	rvosystem.html#lastSimulator	Keeps track of the last simulator that this RVOSystem saw. \n\nThis is a weak GCHandle to allow it to be stored in an ISystem.
 Pathfinding.ECS.RepairPathSystem.entityQueryPrepare	repairpathsystem.html#entityQueryPrepare	
 Pathfinding.ECS.RepairPathSystem.jobRepairPathScheduler	repairpathsystem.html#jobRepairPathScheduler	
@@ -1032,7 +1076,9 @@ Pathfinding.ECS.SyncTransformsToEntitiesSystem.SyncTransformsToEntitiesJob.syncR
 Pathfinding.ECS.SyncTransformsToEntitiesSystem.YAxisForwardToZAxisForward	synctransformstoentitiessystem.html#YAxisForwardToZAxisForward	
 Pathfinding.ECS.SyncTransformsToEntitiesSystem.ZAxisForwardToYAxisForward	synctransformstoentitiessystem.html#ZAxisForwardToYAxisForward	
 Pathfinding.ECS.TraverseOffMeshLinkSystem.entityQueryOffMeshLinkCleanup	traverseoffmeshlinksystem.html#entityQueryOffMeshLinkCleanup	
+Pathfinding.ECS.TraverseOffMeshLinkSystem.entityQueryOffMeshLinkTransition	traverseoffmeshlinksystem.html#entityQueryOffMeshLinkTransition	
 Pathfinding.ECS.TraverseOffMeshLinkSystem.jobRepairPathScheduler	traverseoffmeshlinksystem.html#jobRepairPathScheduler	
+Pathfinding.ECS.TraverseOffMeshLinkSystem.offMeshLinkTransitionRunner	traverseoffmeshlinksystem.html#offMeshLinkTransitionRunner	
 Pathfinding.EditorBase.cachedTooltips	editorbase.html#cachedTooltips	
 Pathfinding.EditorBase.cachedURLs	editorbase.html#cachedURLs	
 Pathfinding.EditorBase.content	editorbase.html#content	
@@ -1131,11 +1177,13 @@ Pathfinding.Examples.LightweightRVO.LightweightAgentData.color	lightweightagentd
 Pathfinding.Examples.LightweightRVO.LightweightAgentData.maxSpeed	lightweightagentdata.html#maxSpeed	
 Pathfinding.Examples.LightweightRVO.LightweightRVOControlSystem.AlignAgentWithMovementDirectionJob.deltaTime	alignagentwithmovementdirectionjob.html#deltaTime	
 Pathfinding.Examples.LightweightRVO.LightweightRVOControlSystem.AlignAgentWithMovementDirectionJob.rotationSpeed	alignagentwithmovementdirectionjob.html#rotationSpeed	
-Pathfinding.Examples.LightweightRVO.LightweightRVOControlSystem.JobControlAgents.debug	jobcontrolagents.html#debug	
 Pathfinding.Examples.LightweightRVO.LightweightRVOControlSystem.JobControlAgents.deltaTime	jobcontrolagents.html#deltaTime	
+Pathfinding.Examples.LightweightRVO.LightweightRVOControlSystem.JobSetDebugFlags.debug	jobsetdebugflags.html#debug	
 Pathfinding.Examples.LightweightRVO.LightweightRVOControlSystem.debug	lightweightrvocontrolsystem.html#debug	Determines what kind of debug info the RVO system should render as gizmos.
 Pathfinding.Examples.LightweightRVO.LightweightRVOControlSystem.entityQueryControl	lightweightrvocontrolsystem.html#entityQueryControl	
 Pathfinding.Examples.LightweightRVO.LightweightRVOControlSystem.entityQueryDirection	lightweightrvocontrolsystem.html#entityQueryDirection	
+Pathfinding.Examples.LightweightRVO.LightweightRVOControlSystem.lastDebug	lightweightrvocontrolsystem.html#lastDebug	
+Pathfinding.Examples.LightweightRVO.LightweightRVOControlSystem.refreshDebugFlags	lightweightrvocontrolsystem.html#refreshDebugFlags	Set by LightweightRVO when it creates new agents, which start with AgentDebugFlags.Nothing.
 Pathfinding.Examples.LightweightRVO.LightweightRVOMoveSystem.JobMoveAgents.deltaTime	jobmoveagents.html#deltaTime	
 Pathfinding.Examples.LightweightRVO.LightweightRVOMoveSystem.entityQuery	lightweightrvomovesystem.html#entityQuery	
 Pathfinding.Examples.LightweightRVO.LightweightRVORenderSystem.JobGenerateMesh.renderingOffset	jobgeneratemesh.html#renderingOffset	
@@ -1158,6 +1206,7 @@ Pathfinding.Examples.LightweightRVO.maxNeighbours	lightweightrvo.html#maxNeighbo
 Pathfinding.Examples.LightweightRVO.maxSpeed	lightweightrvo.html#maxSpeed	Max speed for an agent.
 Pathfinding.Examples.LightweightRVO.obstacleTimeHorizon	lightweightrvo.html#obstacleTimeHorizon	How far in the future too look for obstacles.
 Pathfinding.Examples.LightweightRVO.radius	lightweightrvo.html#radius	Agent radius.
+Pathfinding.Examples.LightweightRVO.refreshDebugFlags	lightweightrvo.html#refreshDebugFlags	Set when new agents have been created, since they start with AgentDebugFlags.Nothing.
 Pathfinding.Examples.LightweightRVO.renderingOffset	lightweightrvo.html#renderingOffset	Offset from the agent position the actual drawn postition. \n\nUsed to get rid of z-buffer issues
 Pathfinding.Examples.LightweightRVO.type	lightweightrvo.html#type	How the agents are distributed when starting the simulation.
 Pathfinding.Examples.LocalSpaceRichAI.graph	localspacerichai.html#graph	Root of the object we are moving on.
@@ -1538,7 +1587,6 @@ Pathfinding.FollowerEntity.isStopped	followerentity.html#isStopped	Gets or sets 
 Pathfinding.FollowerEntity.isTraversingOffMeshLink	followerentity.html#isTraversingOffMeshLink	True if the agent is currently traversing an off-mesh link. \n\n[more in online documentation]
 Pathfinding.FollowerEntity.localAvoidanceTemporarilyDisabled	followerentity.html#localAvoidanceTemporarilyDisabled	True if the agent's local avoidance is temporarily disabled, due to traversing an off-mesh link. \n\nWhen traversing an off-mesh link, the traversal code may temporarily disable local avoidance to allow the agent to traverse the link without being pushed around by other agents.\n\n[more in online documentation]\nWhen the agent is not traversing an off-mesh link, this will always return false.\n\n[more in online documentation]
 Pathfinding.FollowerEntity.managedSettings	followerentity.html#managedSettings	
-Pathfinding.FollowerEntity.managedState	followerentity.html#managedState	
 Pathfinding.FollowerEntity.maxRotationSpeed	followerentity.html#maxRotationSpeed	Maximum rotation speed in degrees per second. \n\nIf the agent would have to rotate faster than this, it will instead slow down to get more time to rotate.\n\nThe agent may want to rotate faster than rotationSpeed if there's not enough space, so that it has to move in a more narrow arc. It may also want to rotate faster if it is very close to its destination and it wants to make sure it ends up on the right spot without any circling.\n\nIt is recommended to keep this at a value slightly larger than rotationSpeed.\n\n[more in online documentation]
 Pathfinding.FollowerEntity.maxSpeed	followerentity.html#maxSpeed	Max speed in world units per second.
 Pathfinding.FollowerEntity.movement	followerentity.html#movement	
@@ -2849,6 +2897,7 @@ Pathfinding.LinkGraph.nodeCount	linkgraph.html#nodeCount
 Pathfinding.LinkGraph.nodes	linkgraph.html#nodes	
 Pathfinding.LinkGraph.persistent	linkgraph.html#persistent	True if the graph will be included when serializing graph data. \n\nIf false, the graph will be ignored when saving graph data.\n\nMost graphs are persistent, but the LinkGraph is not persistent because links are always re-created from components at runtime.
 Pathfinding.LinkGraph.showInInspector	linkgraph.html#showInInspector	True if the graph should be visible in the editor. \n\nFalse is used for some internal graph types that users don't have to worry about.
+Pathfinding.LinkGraph.supportsNearestNodeQueries	linkgraph.html#supportsNearestNodeQueries	True if GetNearest can return nodes in this graph. \n\nIf false, GetNearest always returns an empty result, and AstarPath.GetNearest will not search this graph at all. This is the case for the LinkGraph, whose nodes only exist to be traversed in the middle of a path, never to start or end one.
 Pathfinding.LinkNode.linkConcrete	linknode.html#linkConcrete	
 Pathfinding.LinkNode.linkSource	linknode.html#linkSource	
 Pathfinding.LinkNode.nodeInGraphIndex	linknode.html#nodeInGraphIndex	
@@ -2918,6 +2967,7 @@ Pathfinding.NavGraph.open	navgraph.html#open	Is the graph open in the editor.
 Pathfinding.NavGraph.persistent	navgraph.html#persistent	True if the graph will be included when serializing graph data. \n\nIf false, the graph will be ignored when saving graph data.\n\nMost graphs are persistent, but the LinkGraph is not persistent because links are always re-created from components at runtime.
 Pathfinding.NavGraph.serializedEditorSettings	navgraph.html#serializedEditorSettings	Used in the Unity editor to store serialized settings for graph inspectors.
 Pathfinding.NavGraph.showInInspector	navgraph.html#showInInspector	True if the graph should be visible in the editor. \n\nFalse is used for some internal graph types that users don't have to worry about.
+Pathfinding.NavGraph.supportsNearestNodeQueries	navgraph.html#supportsNearestNodeQueries	True if GetNearest can return nodes in this graph. \n\nIf false, GetNearest always returns an empty result, and AstarPath.GetNearest will not search this graph at all. This is the case for the LinkGraph, whose nodes only exist to be traversed in the middle of a path, never to start or end one.
 Pathfinding.NavMeshGraph.MaxTileConnectionEdgeDistance	navmeshgraph.html#MaxTileConnectionEdgeDistance	Maximum (vertical) distance between the sides of two nodes for them to be connected across a tile edge. \n\nWhen tiles are connected to each other, the nodes sometimes do not line up perfectly so some allowance must be made to allow tiles that do not match exactly to be connected with each other.
 Pathfinding.NavMeshGraph.NavMeshGraphScanPromise.cutSettings	navmeshgraphscanpromise.html#cutSettings	
 Pathfinding.NavMeshGraph.NavMeshGraphScanPromise.emptyGraph	navmeshgraphscanpromise.html#emptyGraph	
@@ -3493,13 +3543,21 @@ Pathfinding.RVO.IMovementPlaneWrapper.matrix	imovementplanewrapper.html#matrix	M
 Pathfinding.RVO.JobDestinationReached.MarkerAlloc	jobdestinationreached.html#MarkerAlloc	
 Pathfinding.RVO.JobDestinationReached.MarkerFirstPass	jobdestinationreached.html#MarkerFirstPass	
 Pathfinding.RVO.JobDestinationReached.MarkerInvert	jobdestinationreached.html#MarkerInvert	
+Pathfinding.RVO.JobDestinationReached.MarkerPropagate	jobdestinationreached.html#MarkerPropagate	
 Pathfinding.RVO.JobDestinationReached.TempAgentData.blockedAndSlow	tempagentdata.html#blockedAndSlow	
 Pathfinding.RVO.JobDestinationReached.TempAgentData.distToEndSq	tempagentdata.html#distToEndSq	
-Pathfinding.RVO.JobDestinationReached.agentData	jobdestinationreached.html#agentData	
+Pathfinding.RVO.JobDestinationReached.debugFlags	jobdestinationreached.html#debugFlags	
 Pathfinding.RVO.JobDestinationReached.draw	jobdestinationreached.html#draw	
+Pathfinding.RVO.JobDestinationReached.endOfPath	jobdestinationreached.html#endOfPath	
+Pathfinding.RVO.JobDestinationReached.flowFollowingStrength	jobdestinationreached.html#flowFollowingStrength	
+Pathfinding.RVO.JobDestinationReached.height	jobdestinationreached.html#height	
+Pathfinding.RVO.JobDestinationReached.movementPlaneData	jobdestinationreached.html#movementPlaneData	
 Pathfinding.RVO.JobDestinationReached.numAgents	jobdestinationreached.html#numAgents	
 Pathfinding.RVO.JobDestinationReached.output	jobdestinationreached.html#output	
+Pathfinding.RVO.JobDestinationReached.position	jobdestinationreached.html#position	
+Pathfinding.RVO.JobDestinationReached.radius	jobdestinationreached.html#radius	
 Pathfinding.RVO.JobDestinationReached.temporaryAgentData	jobdestinationreached.html#temporaryAgentData	
+Pathfinding.RVO.JobDestinationReached.version	jobdestinationreached.html#version	
 Pathfinding.RVO.JobHardCollisions.CollisionStrength	jobhardcollisions.html#CollisionStrength	How aggressively hard collisions are resolved. \n\nShould be a value between 0 and 1.
 Pathfinding.RVO.JobHardCollisions.agentData	jobhardcollisions.html#agentData	
 Pathfinding.RVO.JobHardCollisions.allowBoundsChecks	jobhardcollisions.html#allowBoundsChecks	
@@ -3634,10 +3692,12 @@ Pathfinding.RVO.RVOObstacleCache.ObstacleSegment.vertex2	obstaclesegment.html#ve
 Pathfinding.RVO.RVOObstacleCache.ObstacleSegment.vertex2LinkId	obstaclesegment.html#vertex2LinkId	
 Pathfinding.RVO.RVOQuadtreeBurst.BitPackingMask	rvoquadtreeburst.html#BitPackingMask	
 Pathfinding.RVO.RVOQuadtreeBurst.BitPackingShift	rvoquadtreeburst.html#BitPackingShift	
-Pathfinding.RVO.RVOQuadtreeBurst.ChildLookup	rvoquadtreeburst.html#ChildLookup	For a given number, contains the index of the first non-zero bit. \n\nOnly the values 0 through 15 are used when movementPlane is XZ or XY.\n\nUse bytes instead of ints to save some precious L1 cache memory.
 Pathfinding.RVO.RVOQuadtreeBurst.DebugDrawJob.draw	debugdrawjob.html#draw	
 Pathfinding.RVO.RVOQuadtreeBurst.DebugDrawJob.quadtree	debugdrawjob.html#quadtree	
 Pathfinding.RVO.RVOQuadtreeBurst.DistanceInfinity	rvoquadtreeburst.html#DistanceInfinity	A very large distance. \n\nUsed as a sentinel value in the QueryKNearest method. We don't use actual infinity, because the code may be compiled using FastMath, which makes the compiler assume that infinities do not exist. This should be much larger than any distance used in practice.
+Pathfinding.RVO.RVOQuadtreeBurst.JobBuild.ChildBits	jobbuild.html#ChildBits	Number of Morton code bits one level of the tree consumes.
+Pathfinding.RVO.RVOQuadtreeBurst.JobBuild.MinAgentsForSort	jobbuild.html#MinAgentsForSort	Crowd size below which the counting sort does not pay for itself. \n\nMeasured: at 500 agents the sort loses 3-11% to plain partitioning, at 1000 it wins 46-53%.
+Pathfinding.RVO.RVOQuadtreeBurst.JobBuild.agentLayers	jobbuild.html#agentLayers	
 Pathfinding.RVO.RVOQuadtreeBurst.JobBuild.agentPositions	jobbuild.html#agentPositions	
 Pathfinding.RVO.RVOQuadtreeBurst.JobBuild.agentRadii	jobbuild.html#agentRadii	
 Pathfinding.RVO.RVOQuadtreeBurst.JobBuild.agentSpeeds	jobbuild.html#agentSpeeds	
@@ -3646,6 +3706,7 @@ Pathfinding.RVO.RVOQuadtreeBurst.JobBuild.agents	jobbuild.html#agents	Length sho
 Pathfinding.RVO.RVOQuadtreeBurst.JobBuild.movementPlane	jobbuild.html#movementPlane	
 Pathfinding.RVO.RVOQuadtreeBurst.JobBuild.numAgents	jobbuild.html#numAgents	
 Pathfinding.RVO.RVOQuadtreeBurst.JobBuild.outAgentCount	jobbuild.html#outAgentCount	Should have size 1.
+Pathfinding.RVO.RVOQuadtreeBurst.JobBuild.outAgentLayers	jobbuild.html#outAgentLayers	
 Pathfinding.RVO.RVOQuadtreeBurst.JobBuild.outAgentPositions	jobbuild.html#outAgentPositions	
 Pathfinding.RVO.RVOQuadtreeBurst.JobBuild.outAgentRadii	jobbuild.html#outAgentRadii	
 Pathfinding.RVO.RVOQuadtreeBurst.JobBuild.outArea	jobbuild.html#outArea	Should have size: InnerNodeCountUpperBound(numAgents)
@@ -3659,7 +3720,6 @@ Pathfinding.RVO.RVOQuadtreeBurst.MaxAgents	rvoquadtreeburst.html#MaxAgents
 Pathfinding.RVO.RVOQuadtreeBurst.MaxDepth	rvoquadtreeburst.html#MaxDepth	
 Pathfinding.RVO.RVOQuadtreeBurst.QuadtreeQuery.agentRadius	quadtreequery.html#agentRadius	
 Pathfinding.RVO.RVOQuadtreeBurst.QuadtreeQuery.layerMask	quadtreequery.html#layerMask	
-Pathfinding.RVO.RVOQuadtreeBurst.QuadtreeQuery.layers	quadtreequery.html#layers	
 Pathfinding.RVO.RVOQuadtreeBurst.QuadtreeQuery.maxCount	quadtreequery.html#maxCount	
 Pathfinding.RVO.RVOQuadtreeBurst.QuadtreeQuery.outputStartIndex	quadtreequery.html#outputStartIndex	
 Pathfinding.RVO.RVOQuadtreeBurst.QuadtreeQuery.position	quadtreequery.html#position	
@@ -3668,6 +3728,7 @@ Pathfinding.RVO.RVOQuadtreeBurst.QuadtreeQuery.resultDistances	quadtreequery.htm
 Pathfinding.RVO.RVOQuadtreeBurst.QuadtreeQuery.speed	quadtreequery.html#speed	
 Pathfinding.RVO.RVOQuadtreeBurst.QuadtreeQuery.timeHorizon	quadtreequery.html#timeHorizon	
 Pathfinding.RVO.RVOQuadtreeBurst.agentCountBuffer	rvoquadtreeburst.html#agentCountBuffer	
+Pathfinding.RVO.RVOQuadtreeBurst.agentLayers	rvoquadtreeburst.html#agentLayers	
 Pathfinding.RVO.RVOQuadtreeBurst.agentPositions	rvoquadtreeburst.html#agentPositions	
 Pathfinding.RVO.RVOQuadtreeBurst.agentRadii	rvoquadtreeburst.html#agentRadii	
 Pathfinding.RVO.RVOQuadtreeBurst.agents	rvoquadtreeburst.html#agents	
@@ -4302,7 +4363,6 @@ Pathfinding.VersionedMonoBehaviour.version	versionedmonobehaviour.html#version	V
 Pathfinding.WelcomeScreen.FirstSceneToLoad	welcomescreen.html#FirstSceneToLoad	
 Pathfinding.WelcomeScreen.askedAboutQuitting	welcomescreen.html#askedAboutQuitting	
 Pathfinding.WelcomeScreen.isImportingSamples	welcomescreen.html#isImportingSamples	
-Pathfinding.WelcomeScreen.m_VisualTreeAsset	welcomescreen.html#m_VisualTreeAsset	
 Pathfinding.WorkItemProcessor.BoundsVisualization.BoundsVisualizationType	boundsvisualization.html#BoundsVisualizationType	
 Pathfinding.WorkItemProcessor.BoundsVisualization.bounds	boundsvisualization.html#bounds	
 Pathfinding.WorkItemProcessor.BoundsVisualization.createdFrame	boundsvisualization.html#createdFrame	

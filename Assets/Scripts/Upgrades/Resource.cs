@@ -10,6 +10,11 @@ namespace TimelessEchoes.Upgrades
     [CreateAssetMenu(fileName = "Resource", menuName = "SO/Resource Item")]
     public class Resource : ScriptableObject
     {
+        public enum FoodEligibility { Automatic, Food, NotFood }
+
+        [Tooltip("Automatic retains existing Farming/Fishing food rules. Propagation items must use NotFood.")]
+        public FoodEligibility foodEligibility;
+
         public enum CauldronCategory
         {
             Auto,

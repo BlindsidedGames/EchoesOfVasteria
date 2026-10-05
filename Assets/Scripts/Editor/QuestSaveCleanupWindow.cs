@@ -79,6 +79,11 @@ namespace Blindsided.EditorTools
                 }
 
                 var data = load.data;
+                if (!measureOnly && data.SchemaVersion != GameData.CurrentSchemaVersion)
+                {
+                    logLines.Add($"{slotName}: Legacy data must be migrated through the supported import/load flow before cleanup. No files changed.");
+                    return;
+                }
                 var before = GetPayloadSize(data);
                 var (trimmedCount, trimmedAny) = TrimCompletedQuests(data);
                 var after = GetPayloadSize(data);

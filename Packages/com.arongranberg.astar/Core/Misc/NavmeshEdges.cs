@@ -63,17 +63,17 @@ namespace Pathfinding {
 			}
 		}
 
-		public void OnDrawGizmos (DrawingData gizmos, bool renderInGame) {
+		public void OnDrawGizmos (bool renderInGame) {
 			if (!obstacleData.obstacleVertices.IsCreated) return;
 
 			var hasher = new NodeHasher(AstarPath.active);
 			hasher.Add(12314127); // Some random constant to avoid hash collisions with other systems
 			hasher.Add(gizmoVersion);
 
-			if (!gizmos.Draw(hasher)) {
+			if (!DrawingManager.TryDrawHasher(hasher)) {
 				var readLock = rwLock.ReadSync();
 				try {
-					using (var builder = gizmos.GetBuilder(hasher, default, renderInGame)) {
+					using (var builder = DrawingManager.GetBuilder(hasher, default, renderInGame)) {
 						for (int i = 1; i < obstacleData.obstacles.Length; i++) {
 							var ob = obstacleData.obstacles[i];
 							var vertices = obstacleData.obstacleVertices.GetSpan(ob.verticesAllocation);

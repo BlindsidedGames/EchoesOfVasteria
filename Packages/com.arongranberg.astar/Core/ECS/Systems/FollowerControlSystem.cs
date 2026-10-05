@@ -23,15 +23,17 @@ namespace Pathfinding.ECS {
 		EntityQuery entityQueryControlManaged;
 		EntityQuery entityQueryControlManaged2;
 		RedrawScope redrawScope;
+		MovementOverrideRunner movementOverrideRunner;
 
 		static readonly ProfilerMarker MarkerMovementOverrideBeforeControl = new ProfilerMarker("MovementOverrideBeforeControl");
 		static readonly ProfilerMarker MarkerMovementOverrideAfterControl = new ProfilerMarker("MovementOverrideAfterControl");
 
 		public void OnCreate (ref SystemState state) {
 			redrawScope = DrawingManager.GetRedrawScope();
+			movementOverrideRunner = new MovementOverrideRunner(ref state);
 
 			entityQueryControlManaged = state.GetEntityQuery(
-				ComponentType.ReadWrite<ManagedMovementOverrideBeforeControl>(),
+				ComponentType.ReadOnly<AgentHasBeforeControlOverride>(),
 
 				ComponentType.ReadWrite<LocalTransform>(),
 				ComponentType.ReadWrite<AgentCylinderShape>(),
@@ -39,7 +41,7 @@ namespace Pathfinding.ECS {
 				ComponentType.ReadWrite<DestinationPoint>(),
 				ComponentType.ReadWrite<MovementState>(),
 				ComponentType.ReadWrite<MovementStatistics>(),
-				ComponentType.ReadWrite<ManagedState>(),
+				ComponentType.ReadWrite<AgentManagedRef>(),
 				ComponentType.ReadWrite<MovementSettings>(),
 				ComponentType.ReadWrite<ResolvedMovement>(),
 				ComponentType.ReadWrite<MovementControl>(),
@@ -50,7 +52,7 @@ namespace Pathfinding.ECS {
 				);
 
 			entityQueryControlManaged2 = state.GetEntityQuery(
-				ComponentType.ReadWrite<ManagedMovementOverrideAfterControl>(),
+				ComponentType.ReadOnly<AgentHasAfterControlOverride>(),
 
 				ComponentType.ReadWrite<LocalTransform>(),
 				ComponentType.ReadWrite<AgentCylinderShape>(),
@@ -58,7 +60,7 @@ namespace Pathfinding.ECS {
 				ComponentType.ReadWrite<DestinationPoint>(),
 				ComponentType.ReadWrite<MovementState>(),
 				ComponentType.ReadWrite<MovementStatistics>(),
-				ComponentType.ReadWrite<ManagedState>(),
+				ComponentType.ReadWrite<AgentManagedRef>(),
 				ComponentType.ReadWrite<MovementSettings>(),
 				ComponentType.ReadWrite<ResolvedMovement>(),
 				ComponentType.ReadWrite<MovementControl>(),
@@ -85,12 +87,11 @@ namespace Pathfinding.ECS {
 		void ProcessControlLoop (ref SystemState systemState, float dt) {
 			// This is a hook for other systems to modify the movement of agents.
 			// Normally it is not used.
+			PendingMovementOverrideChanges.Apply();
 			if (!entityQueryControlManaged.IsEmpty) {
 				MarkerMovementOverrideBeforeControl.Begin();
 				systemState.Dependency.Complete();
-				new JobManagedMovementOverrideBeforeControl {
-					dt = dt,
-				}.Run(entityQueryControlManaged);
+				movementOverrideRunner.Run(ref systemState, entityQueryControlManaged, MovementOverrideRunner.Phase.BeforeControl, dt);
 				MarkerMovementOverrideBeforeControl.End();
 			}
 
@@ -105,12 +106,11 @@ namespace Pathfinding.ECS {
 			readLock.UnlockAfter(systemState.Dependency);
 			draw.DisposeAfter(systemState.Dependency);
 
+			PendingMovementOverrideChanges.Apply();
 			if (!entityQueryControlManaged2.IsEmpty) {
 				MarkerMovementOverrideAfterControl.Begin();
 				systemState.Dependency.Complete();
-				new JobManagedMovementOverrideAfterControl {
-					dt = dt,
-				}.Run(entityQueryControlManaged2);
+				movementOverrideRunner.Run(ref systemState, entityQueryControlManaged2, MovementOverrideRunner.Phase.AfterControl, dt);
 				MarkerMovementOverrideAfterControl.End();
 			}
 		}

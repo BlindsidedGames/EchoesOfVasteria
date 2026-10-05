@@ -16,15 +16,24 @@ MonoBehaviour:
   stewPerRoll: 1
   resourceTierThresholds: 01000000190000004b000000c8000000ee020000dc050000ac0d000010270000
   buffTierThresholds: 0100000005000000190000004b000000c8000000ee020000dc050000b80b0000
-  resourcePowerBonusPerTier:
+  resourceYieldBonusPerTier:
+  - 1
+  - 2
+  - 3
+  - 5
+  - 7
   - 10
-  - 25
+  - 15
+  - 20
+  categoryYieldBonusPerTier:
+  - 2
+  - 5
+  - 10
+  - 15
+  - 20
+  - 30
+  - 40
   - 50
-  - 75
-  - 120
-  - 180
-  - 250
-  - 400
   buffCooldownReductionPerTier:
   - 5
   - 10

@@ -1,0 +1,67 @@
+{
+  "conceptual": true,
+  "approvedGameplay": false,
+  "separateArea": [
+    -63,
+    -19,
+    -53,
+    -13
+  ],
+  "cropBedsRetained": 6,
+  "cropSpritesUnchanged": 60,
+  "newCultivatedTiles": 0,
+  "additionalStandingTreeRemoval": 0,
+  "usesPreviouslyReclaimedStumpFieldGrass": true,
+  "candidateActiveSpriteBlockers": [],
+  "trees": [
+    {
+      "name": "OPTIONAL Separate Orchard - FruitTree_Growth_SmallSapling",
+      "sprite": "FruitTree_Growth_SmallSapling",
+      "source": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+      "alignedAnchor": [
+        -61.0,
+        -17.0
+      ],
+      "position": [
+        -61.0,
+        -17.0,
+        0.0
+      ],
+      "boundsMin": [
+        -62.0,
+        -18.0,
+        -0.1
+      ],
+      "boundsMax": [
+        -60.0,
+        -14.0,
+        0.1
+      ]
+    },
+    {
+      "name": "OPTIONAL Separate Orchard - Apple_Tree_Fruiting_WholeTree",
+      "sprite": "Apple_Tree_Fruiting_WholeTree",
+      "source": "Assets/Art/Packs/Cute_Fantasy/Crops/Apple_Tree.png",
+      "alignedAnchor": [
+        -56.0,
+        -17.0
+      ],
+      "position": [
+        -55.9842377,
+        -16.93512,
+        0.0
+      ],
+      "boundsMin": [
+        -57.0,
+        -18.0,
+        -0.1
+      ],
+      "boundsMax": [
+        -55.0,
+        -14.0,
+        0.1
+      ]
+    }
+  ],
+  "mainDirty": false
+}

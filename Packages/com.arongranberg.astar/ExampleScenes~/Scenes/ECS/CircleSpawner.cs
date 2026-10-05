@@ -50,7 +50,11 @@ namespace Pathfinding.Examples {
 
 		[System.Serializable]
 		public struct CircleSpawnerData : IComponentData {
+			// UAC1001: [System.Serializable] here exists for the Entities Inspector's property bag, not for
+			// Unity's serializer, which never sees this component.
+#pragma warning disable UAC1001
 			public Entity prefab;
+#pragma warning restore UAC1001
 			public int count;
 			public float radius;
 			public float spreadAngle;

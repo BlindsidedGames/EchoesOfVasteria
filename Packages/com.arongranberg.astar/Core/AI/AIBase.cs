@@ -240,6 +240,7 @@ namespace Pathfinding {
 		/// This is used to convert between world space and a movement plane to make it possible to use this script in
 		/// both 2D games and 3D games.
 		/// </summary>
+		[System.NonSerialized]
 		public SimpleMovementPlane movementPlane = new SimpleMovementPlane(Quaternion.identity);
 
 		/// <summary>

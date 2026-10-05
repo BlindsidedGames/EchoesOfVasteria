@@ -107,6 +107,14 @@ namespace Pathfinding.ECS {
 			lastRepathTime = float.NegativeInfinity;
 		}
 
+		/// <summary>
+		/// Counter used to decorrelate the repath jitter between agents.
+		///
+		/// A counter rather than a hash of the agent's own state, because the case the jitter exists for is
+		/// many agents instantiated on the same frame, which is exactly when their state is identical.
+		/// </summary>
+		static int jitterCounter;
+
 		/// <summary>Must be called when a path request has been scheduled</summary>
 		public void OnScheduledPathRecalculation (float3 destination, float time) {
 			lastRepathTime = time;
@@ -114,7 +122,11 @@ namespace Pathfinding.ECS {
 			// Randomize the repath time slightly so that all agents don't request a path at the same time
 			// in the future. This is useful when there are a lot of agents instantiated at exactly the same time.
 			const float JITTER_AMOUNT = 0.3f;
-			lastRepathTime -= (UnityEngine.Random.value - 0.5f) * JITTER_AMOUNT * period;
+			// Not UnityEngine.Random: this runs inside a job, where main-thread-only APIs throw, and
+			// advancing the global RNG from a job would be a race even where it does not throw.
+			var seed = math.hash(new int2(System.Threading.Interlocked.Increment(ref jitterCounter), 0x2545F491));
+			var jitter = new Unity.Mathematics.Random(math.max(1u, seed)).NextFloat();
+			lastRepathTime -= (jitter - 0.5f) * JITTER_AMOUNT * period;
 		}
 	}
 }

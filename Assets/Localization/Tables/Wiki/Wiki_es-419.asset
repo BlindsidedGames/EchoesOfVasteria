@@ -1,0 +1,121 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Wiki_es-419
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: es-419
+  m_SharedData: {fileID: 11400000, guid: bfa36fdea331abe4cb2b293833ff63a0, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 188400156672
+    m_Localized: "La producci\xF3n de Alter-Echo se retir\xF3. Re\xFAne recursos en tus aventuras o cosecha cultivos plantados."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 478381752320
+    m_Localized: "Las mejoras son poderes temporales que expiran cuando se agotan o al volver al pueblo.  Pueden lanzarse autom\xE1ticamente tras completar la misi\xF3n requerida para el espacio; el lanzamiento autom\xE1tico est\xE1 activado por defecto. Puedes desactivarlo haciendo clic en el espacio en la ventana de gesti\xF3n de mejoras.\n\nLos tiempos de recarga de las mejoras pueden reducirse mediante el Caldero de Eva."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 492340396032
+    m_Localized: "Caleb entrar\xE1 en combate autom\xE1ticamente y solo enfrentar\xE1 a los enemigos que se interpongan. \xA1Primero las tareas, luego la diversi\xF3n!\n\nD' = D \xD7 (1 - A / (A + N))\n\nD = da\xF1o entrante\nA = valor de defensa (limitado a 0 o m\xE1s)\nN = constante que controla los rendimientos decrecientes (por defecto = 25)\nD' = da\xF1o final recibido\n\nAl alcanzar tu baja 10, 100, 1,000 y 10,000 contra un enemigo espec\xEDfico, obtendr\xE1s un 25% de da\xF1o adicional contra ese enemigo.\nAl alcanzar tu baja 25,000 y 100,000 contra un enemigo espec\xEDfico, obtendr\xE1s un 50% de da\xF1o adicional contra ese enemigo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 512217202688
+    m_Localized: "Los ecos son versiones alternativas de Caleb que se asoman a su realidad para ayudar en distintas circunstancias.\n\nCada eco puede tener una combinaci\xF3n de las habilidades de Caleb, pero la mayor\xEDa no las tendr\xE1 todas.\n\nLa principal diferencia en su comportamiento depende de si pueden combatir.\nLos ecos capaces de combatir tienen dos estilos seg\xFAn si tambi\xE9n pueden completar tareas. \n\nUn eco de combate que NO puede realizar tareas buscar\xE1 enemigos espec\xEDficamente.\nUn eco de combate que S\xCD puede realizar tareas dar\xE1 prioridad a las tareas y solo enfrentar\xE1 a los enemigos que lo vean.\n\nLos ecos sin combate no ser\xE1n objetivo de enemigos ni los atacar\xE1n.\n\nNota del desarrollador | Actualmente no hay ecos que hagan tanto combate como tareas. Los ecos de los hitos buscan espec\xEDficamente tareas de la habilidad de ese hito. Por ejemplo, un eco de Tala solo buscar\xE1 tareas de Tala."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 532437942272
+    m_Localized: "Por cada baja que consigas en una aventura, tu bonificaci\xF3n de recursos aumenta un 2%. Durante el combate, se fija temporalmente en 0%.\n\n\xA1Intenta retirarte justo antes de que el combate se vuelva demasiado dif\xEDcil para obtener tantos recursos adicionales como sea posible!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 698595295232
+    m_Localized: "Las tareas son el objetivo principal del viaje de Caleb. Reunir recursos para el pueblo es esencial para crecer.\n\nSe completan autom\xE1ticamente y lo har\xE1s m\xE1s r\xE1pido a medida que suban tus habilidades.\n\nLas tareas aparecen entre una distancia m\xEDnima y una m\xE1xima. Sin embargo, al superar la distancia m\xE1xima, su probabilidad de aparecer disminuye un 90%. Por ello, cuando todas las tareas superan su m\xE1ximo, el sistema de pesos se equilibra y todas quedan disponibles seg\xFAn sus pesos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 505754247643136
+    m_Localized: "Las misiones tienen diferentes condiciones que deben cumplirse antes de entregarlas.\n\n<b>Informaci\xF3n</b> | Se completan al instante, ya sea para contar la historia o guiarte al principio.\n<b>Recolecci\xF3n</b> | Requieren reunir recursos y entregarlos para completarlas.\n<b>Bajas</b> | Elimina enemigos y vuelve a informar para completarlas.\n<b>Encuentro</b> | Requieren conocer a un personaje, la mayor\xEDa en distancias concretas."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3785742338113536
+    m_Localized: "Al alcanzar ciertas distancias del pueblo, Carl segar\xE1 tu alma para impedir que te alejes demasiado. \nPuedes ver tu distancia m\xE1xima de siega en la pesta\xF1a General de las estad\xEDsticas.\n\nLa distancia de siega aumenta de las siguientes formas:\n<b>Ser segado</b> | Aumenta la distancia un 1% de tu m\xE1ximo actual. (Excepto en las Tierras de cultivo)\n<b>Misiones</b> | Algunas misiones aumentan la distancia de siega."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6939642239008768
+    m_Localized: v1.4.3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7986628786536448
+    m_Localized: 'Dragon slaying pope
+
+      tanty.
+
+      Mellifas
+
+      Latimer Cross
+
+      MatHeadGetz
+
+      appleguy
+
+      AwesomePhoenix
+
+      boiledpotato
+
+      eli
+
+      GLUTTONY
+
+      Gudu
+
+      Mentocado
+
+      Nuclearion
+
+      Quackers
+
+      Rugmuk
+
+      SaintPlays
+
+      SCHMUGGLER
+
+      WaringMcMarrin'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9824133160779776
+    m_Localized: "La forja de Ivan es un lugar m\xE1gico. Ya sea que descanses en el pueblo o est\xE9s de aventura, puedes guiarlo mientras mejora sus habilidades de herrer\xEDa.\n\nAl forjar tienes dos opciones:\n\n<b>Detener por Vastium:</b> Se detiene siempre que salga una pieza de Vastium, aunque sea peor.\n\n<b>Coincidir atributos:</b> Cuando est\xE1 activado, la forja seguir\xE1 trabajando hasta que una mejora tenga exactamente los mismos tipos de atributos que tu equipo actual.\n\nLa calidad se representa con este icono: <sprite=206>\n\nAqu\xED fabricas equipo y eliges los mejores atributos para tu estilo. \nActualmente pueden salir 8 atributos en el equipo, y cada pieza garantiza uno espec\xEDfico.\n\n<sprite=198> = Da\xF1o.\n<sprite=200> = Velocidad de ataque.\n<sprite=199> = Probabilidad cr\xEDtica.\n<sprite=205> = Da\xF1o cr\xEDtico. \n\n<sprite=202> = Salud.\n<sprite=203> = Regeneraci\xF3n.\n<sprite=201> = Defensa.\n<sprite=204> = Movimiento.\n\n<sprite=192> = Mejora.\n<sprite=193> = Empeoramiento. \n<sprite=194> = Sin cambios.\n<sprite=195> El atributo no est\xE1 en el objeto nuevo.\n<sprite=196> El atributo no est\xE1 en el objeto anterior.\n\n<b>Arma</b> | Garantiza <sprite=198>\n<b>Casco</b> | Garantiza <sprite=202>\n<b>Pechera</b> | Garantiza <sprite=201>\n<b>Botas</b> | Garantizan <sprite=204>, exclusivo de este espacio.\n\nEl equipo se desmantela autom\xE1ticamente al fabricar una pieza nueva, seleccionar otro espacio o cerrar el juego.\n\nSeg\xFAn su rareza, una pieza puede tener hasta 5 atributos. \xA1Est\xE1 previsto a\xF1adir m\xE1s atributos en el futuro!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9824133185945600
+    m_Localized: "Hola, aqu\xED el desarrollador. \n\nSi quieren que sus nombres aparezcan entre los nombres aleatorios de los enemigos, entren a Discord y p\xEDdanlo en el chat de EoV :)\n\n\u2022 Estoy considerando pasar el desbloqueo de tareas al sistema de hitos. \xA1Las misiones dar\xEDan XP de habilidades en lugar de desbloquear tareas! Cu\xE9ntenme qu\xE9 les parece."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9898115700506624
+    m_Localized: "<b>Cambios</b>\n\u2022 Se a\xF1adieron dos misiones: \xA1Por la mermelada! y Los viajes de Gilliver.\n\u2022 Se mejor\xF3 el mensaje inicial.\n\u2022 Se corrigieron las alertas de nivel que mostraban valores inferiores a los reales.\n\u2022 Se elimin\xF3 el bloque de calidad equipada de las estad\xEDsticas de la Forja.\n\u2022 Las misiones fijadas ahora dicen \"Lista para entregar\" en lugar de \"Completa.\n\u2022 Se a\xF1adi\xF3 una pantalla superpuesta al cargar un mapa.\n\u2022 Se a\xF1adi\xF3 el bot\xF3n Mezclar todo.\n<b>Aspectos internos</b>\n\u2022 Se actualiz\xF3 A* a una versi\xF3n m\xE1s reciente."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12027031164698624
+    m_Localized: "El Caldero convierte los alimentos seleccionados en estofado. Eliges cu\xE1nto mezclar; el estofado obtenido depende del valor definido del alimento y su cantidad. Prueba el estofado para recibir cartas seg\xFAn los pesos de recompensa que muestra Eva.\n\nLas cartas de recursos mejoran la recolecci\xF3n real, los recursos que sueltan los enemigos y las cosechas del pueblo del recurso correspondiente. Sus umbrales de copias son 1, 25, 75, 200, 750, 1500, 3500 y 10000; las bonificaciones de rendimiento son 1%, 2%, 3%, 5%, 7%, 10%, 15% y 20%.\n\nCada categor\xEDa usa el nivel de carta m\xE1s bajo entre sus recursos desbloqueados. Las cartas sin obtener cuentan como nivel cero. Los niveles de categor\xEDa 1 a 8 a\xF1aden 2%, 5%, 10%, 15%, 20%, 30%, 40% y 50% de rendimiento a esa categor\xEDa. Las bonificaciones de carta y categor\xEDa se suman hasta un 70%. Las recompensas, semillas, reembolsos y conversiones no reciben estas bonificaciones.\n\nEstos niveles de carta son independientes de la rareza del recurso. Los beneficios existentes de recarga y poder de las cartas de mejoras no cambian. Completa todas las colecciones disponibles de recursos y mejoras para desbloquear Bendiciones eternas."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18915029441462272
+    m_Localized: "Los objetos tienen una baja probabilidad de subir de nivel cada vez que los recolectas. Las cosechas de la granja del pueblo no pueden mejorar el nivel de los recursos.\nCada nivel por encima del primero otorga recursos adicionales cada vez que lo recolectas en el futuro.\n\nNo me entusiasma compartir esta informaci\xF3n contigo, pero aqu\xED va - Orin...\n\nNivel | Bonificaci\xF3n | Probabilidad\n<b>Nivel 1</b> - 0%\\tBase\n<b>Nivel 2</b> - 10%\\t1 /1,000\n<b>Nivel 3</b> - 20%\\t1 / 5,000\n<b>Nivel 4</b> - 30%\\t1 / 10,000\n<b>Nivel 5</b> - 50%\\t1 / 50,000\n<b>Nivel 6</b> - 75%\\t1 / 100,000\n<b>Nivel 7</b> - 100%\\t1 / 250,000\n<b>Nivel 8</b> - 150%\\t1 / 1,000,000"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25772880722018304
+    m_Localized: "Ingl\xE9s (en)"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

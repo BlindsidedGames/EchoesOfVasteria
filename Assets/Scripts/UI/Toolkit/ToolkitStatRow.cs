@@ -33,7 +33,7 @@ namespace TimelessEchoes.UI.Toolkit
             var body = new VisualElement(); body.AddToClassList("eov-stat-entry-fields"); content.Add(body);
             Fields = new Label[taskStyle ? columns : 0];
             if (taskStyle)
-                for (var i = 0; i < columns; i++) { Fields[i] = ToolkitControls.Text("", ToolkitControls.TextRole.Caption); Fields[i].AddToClassList("eov-stat-entry-field"); body.Add(Fields[i]); }
+                for (var i = 0; i < columns; i++) { Fields[i] = ToolkitControls.Text("", ToolkitControls.TextRole.Caption); Fields[i].AddToClassList("eov-stat-entry-field"); Fields[i].EnableInClassList("row-end", i == columns - 1); body.Add(Fields[i]); }
             else
             {
                 EnemyValues = new Label[8];
@@ -42,6 +42,7 @@ namespace TimelessEchoes.UI.Toolkit
                 for (var col = 0; col < 4; col++)
                 {
                     var column = ToolkitGameplay.E(body, "enemy-stat-column");
+                    column.EnableInClassList("row-end", col == 3);
                     for (var line = 0; line < 2; line++)
                     {
                         var index = col * 2 + line;
@@ -73,8 +74,13 @@ namespace TimelessEchoes.UI.Toolkit
         public void SetEntryIcon(Sprite sprite, bool known, bool boosted = false)
         {
             Icon.sprite = sprite;
-            Icon.style.width = sprite ? sprite.rect.width * 16 / sprite.pixelsPerUnit : 0;
-            Icon.style.height = sprite ? sprite.rect.height * 16 / sprite.pixelsPerUnit : 0;
+            var size = sprite ? sprite.rect.size * (16f / sprite.pixelsPerUnit) : Vector2.zero;
+            // Task art may be taller than resource art (for example an orchard tree).
+            // Keep its full silhouette inside the task thumbnail's 32px frame.
+            if (taskStyle && Mathf.Max(size.x, size.y) > 32f)
+                size *= 32f / Mathf.Max(size.x, size.y);
+            Icon.style.width = size.x;
+            Icon.style.height = size.y;
             Root.EnableInClassList("known", known);
             Root.EnableInClassList("boosted", known && boosted);
         }

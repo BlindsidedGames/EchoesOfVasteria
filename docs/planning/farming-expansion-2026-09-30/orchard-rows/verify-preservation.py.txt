@@ -1,0 +1,31 @@
+from pathlib import Path
+import json,re,hashlib,subprocess,shutil
+p=Path.cwd();root=p.parent/'Echoes Farming Planning Evidence/2026-09-30';e=root/'orchard-rows-2026-10-01';d=p/'docs/planning/farming-expansion-2026-09-30';sha=lambda f:hashlib.sha256(f.read_bytes()).hexdigest()
+source=json.loads((root/'source-baseline.json').read_text());changes=[n for n,h in source.items() if (sha(p/n) if (p/n).is_file() else None)!=h];assert not changes
+base=json.loads((e/'baseline.json').read_text());assetChanges=[n for n,h in base.items() if (sha(p/n) if (p/n).is_file() else None)!=h];assert not assetChanges
+backup=json.loads((root/'player-backup-manifest.json').read_text());actual={n:v for n,v in backup.items() if '/Unity/' not in n};assert all(Path(n).is_file() and sha(Path(n))==v['sha256'] for n,v in actual.items());assert all(Path(v['backup']).is_file() and sha(Path(v['backup']))==v['sha256'] for v in backup.values())
+figs=['farm-progression','farm-town-context-annotated','farm-layout-alternatives','farm-normal-scale','farm-clearing-close-comparison'];assert all(sha(d/'visuals'/f'{n}.png')==sha(e/'prior-documents/visuals'/f'{n}.png') for n in figs)
+icons=['seed-pack-before-after','unity-inventory','unity-drops'];assert all(sha(d/'visuals/seed-icon-preparation'/f'{n}.png')==sha(e/'prior-documents/visuals/seed-icon-preparation'/f'{n}.png') for n in icons)
+for old in (root/'seed-icon-assets-2026-10-01/prior-v4/FarmingPreviewsV4').rglob('*'):
+ if old.is_file():assert sha(old)==sha(p/'Assets/Editor/FarmingPreviewsV4'/old.relative_to(root/'seed-icon-assets-2026-10-01/prior-v4/FarmingPreviewsV4'))
+j=json.loads((e/'geometry-proof.json').read_text());assert j['rows']==2 and j['columns']==2 and j['treeCount']==4 and j['addedOrchardSoilTiles']==16;assert j['sixCropBedsRetained'] and j['cropRenderersPreserved']==60 and j['allOriginalSpritePosesPreserved'] and j['existingPathTileCountPreserved']==150 and j['newPathCells']==0 and j['newStandingTreeRemoval']==0;assert j['matureVisibleRowClearance']==.625 and j['matureVisibleClearanceFromMiddleFieldSouthFence']==.4375 and j['verifiedEntranceCorridorWidth']==1.5 and j['aisleBlockers']==[] and j['existingPathAisleAccessCells'] and j['successfulRenderLogs']==[] and not j['mainDirty']
+guards=json.loads((e/'main-guard-proof.json').read_text());assert not guards['mainDirtyAfterRestore'] and len(guards['guards'])==2 and all(x['before']==x['after'] for x in guards['guards'])
+allowed=set(re.findall(r'm_Script: \{fileID: 11500000, guid: (\w+)',(p/'Assets/Editor/FarmingPreviewsV4/A3-southeast-clearing.unity').read_text()))
+scenes=[]
+for f in (p/'Assets/Editor/FarmingOrchardRowsPreview').glob('*.unity'):
+ text=f.read_text();assert set(re.findall(r'm_Script: \{fileID: 11500000, guid: (\w+)',text))==allowed;assert text.count('m_Name: Orchard-specific soil with matching edge/corner\n')==16;assert text.count('m_Name: Optional orderly orchard tree - ')==4;scenes.append(str(f.relative_to(p)))
+assert len(scenes)==2 and len(allowed)==2 and not (p/'Assets/Editor/OrchardRowsPreview.cs').exists();assert not json.loads(Path('/tmp/eov-unity-coordination.json').read_text())['editorReserved'];assert 'Orchard' not in (p/'ProjectSettings/EditorBuildSettings.asset').read_text()
+lib=json.loads((e/'library-delivery.json').read_text());assert lib['status']=='succeeded' and lib['library_file_id']=='libfile_555f413a50c881919dc35beb045aa5c4' and lib['current_version_number']==2
+ledger=json.loads((d/'library-delivery.json').read_text());assert all(x['current_version_number']==3 for x in ledger['results']);assert sha(d/'visuals/farm-optional-orchard.png')==sha(e/'farm-optional-orchard.png')
+links=[];html=[]
+for f in d.rglob('*.md'):
+ text=f.read_text()
+ if re.search(r'<!--|</?(?:html|div|style|span|table)\b',text):html.append(str(f))
+ for link in re.findall(r'!?\[[^\]]*\]\(([^)]+)\)',text):
+  if '://' in link or link.startswith('#'):continue
+  target=f.parent/link.split('#')[0]
+  if not target.exists() and target.resolve()!=(d/'orchard-rows/verification.json').resolve():links.append({'file':str(f),'link':link})
+assert not links and not html,(links,html)
+assert 'orchard-specific dirt planting plots' in (d/'optional-orchard.md').read_text() and 'planning annotation only' in (d/'optional-orchard.md').read_text()
+report={'stage':'orchard-orderly-rows','mainDirty':False,'mainSha256':sha(p/'Assets/Scenes/Main.unity'),'playing':False,'branch':subprocess.check_output(['git','branch','--show-current'],text=True).strip(),'head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'protectedCleanupPaths':len(source),'protectedSourceChanges':changes,'preservedSeedAndPriorOrchardPaths':len(base),'assetChanges':assetChanges,'actualPlayerFilesPreserved':len(actual),'verifiedBackups':len(backup),'approvedV4FiguresPreserved':5,'seedLibraryImageBytesPreserved':3,'cropRenderersPreserved':60,'cropBedsRetained':6,'existingPathTilesPreserved':150,'newSoilTiles':16,'newTrees':4,'newPathCells':0,'standingTreeRemoval':0,'visibleMatureRowClearance':.625,'matureCanopyToExistingFenceClearance':.4375,'clearAccessWidth':1.5,'pathValidation':'Static tile bounds and existing-scenery bounds; runtime navigation/colliders not tested','renderLogs':[],'MainLightGuardsRestored':True,'previewScenes':scenes,'temporaryHelperRemoved':True,'visualsReviewed':['rows-mixed-close','rows-all-mature-close','farm-optional-orchard'],'priorVersionsRetained':True,'brokenMarkdownLinks':links,'rawHtml':html,'library':{'library_file_id':lib['library_file_id'],'file_id':lib['file_id'],'version':2},'farmingOrOrchardImplementation':False,'commitPush':False}
+(e/'verification.json').write_text(json.dumps(report,indent=2));(d/'orchard-rows/verification.json').write_text(json.dumps(report,indent=2));print(json.dumps(report,indent=2))

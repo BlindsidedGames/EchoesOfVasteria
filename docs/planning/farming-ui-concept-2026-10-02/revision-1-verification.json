@@ -1,0 +1,615 @@
+{
+  "checkedAtUTC": "2026-10-02T03:08:32.543720+00:00",
+  "stage": "copy revision of three farming screens",
+  "renderer": "Tesseract 0.3.1, Apple M3 Max / Metal, saved-source offscreen preview",
+  "outputs": [
+    {
+      "name": "Farm-desktop",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pngSha256": "a93488589ee953d5d423e4c7a69f3bd1fc7a8b5626459255d6aff780e863329b",
+      "sourceSha256": "1787736b5d0abb67fcf7653586187c78993f6a12e012662443fe6872be54ea10",
+      "nativeLayers": 117,
+      "textLayers": 55,
+      "plantCommitActions": 1,
+      "allTextCategorized": true,
+      "textWithinCanvas": true,
+      "pixelsReviewedAtIntendedSize": true
+    },
+    {
+      "name": "Farm-narrow-landscape",
+      "dimensions": [
+        844,
+        390
+      ],
+      "pngSha256": "88c7c3fbfbbc5a5e3084848a90440483bc68322cb9ec7d6b0631f615c8eb209f",
+      "sourceSha256": "4c7272201797e7e545fdc83e99ca69b033ea80a3f6890284e038e9526765c227",
+      "nativeLayers": 85,
+      "textLayers": 41,
+      "plantCommitActions": 1,
+      "allTextCategorized": true,
+      "textWithinCanvas": true,
+      "pixelsReviewedAtIntendedSize": true
+    },
+    {
+      "name": "Farm-seed-and-bed-detail",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pngSha256": "baeeded0bcb92dffe101e1a3be1e6ee8845b91150f588921d21f2f3099020393",
+      "sourceSha256": "d9cd14665cf45ec7f7f89cb563f4d32274475094eab8e0315adadc372f476242",
+      "nativeLayers": 86,
+      "textLayers": 35,
+      "plantCommitActions": 1,
+      "allTextCategorized": true,
+      "textWithinCanvas": true,
+      "pixelsReviewedAtIntendedSize": true
+    }
+  ],
+  "copyAudit": [
+    {
+      "screen": "Farm-desktop",
+      "beforeTextLayers": 71,
+      "afterTextLayers": 55,
+      "strings": [
+        {
+          "text": "Plant",
+          "purpose": "necessary action"
+        },
+        {
+          "text": "Radish \u2192 Bed 3",
+          "purpose": "value or state"
+        },
+        {
+          "text": "Focus garden",
+          "purpose": "necessary action"
+        },
+        {
+          "text": "4",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "3",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "2",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "1",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Garden",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Details",
+          "purpose": "necessary action"
+        },
+        {
+          "text": "Locked",
+          "purpose": "value or state"
+        },
+        {
+          "text": "6",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Details",
+          "purpose": "necessary action"
+        },
+        {
+          "text": "Locked",
+          "purpose": "value or state"
+        },
+        {
+          "text": "5",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Harvest",
+          "purpose": "necessary action"
+        },
+        {
+          "text": "Ready",
+          "purpose": "value or state"
+        },
+        {
+          "text": "Wheat",
+          "purpose": "item or control"
+        },
+        {
+          "text": "4",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Empty",
+          "purpose": "value or state"
+        },
+        {
+          "text": "3",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Details",
+          "purpose": "necessary action"
+        },
+        {
+          "text": "Growing \u00b7 12 min",
+          "purpose": "value or state"
+        },
+        {
+          "text": "Corn",
+          "purpose": "item or control"
+        },
+        {
+          "text": "2",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Harvest",
+          "purpose": "necessary action"
+        },
+        {
+          "text": "Ready",
+          "purpose": "value or state"
+        },
+        {
+          "text": "Carrot",
+          "purpose": "item or control"
+        },
+        {
+          "text": "1",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Beds",
+          "purpose": "item or control"
+        },
+        {
+          "text": "All seeds",
+          "purpose": "necessary action"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "1",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Wheat",
+          "purpose": "item or control"
+        },
+        {
+          "text": "2",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Carrot",
+          "purpose": "item or control"
+        },
+        {
+          "text": "3",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Corn",
+          "purpose": "item or control"
+        },
+        {
+          "text": "6",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Radish",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Seeds",
+          "purpose": "item or control"
+        },
+        {
+          "text": "382 / 600 XP",
+          "purpose": "value or state"
+        },
+        {
+          "text": "Flora & Tillman | Level 8",
+          "purpose": "item or control"
+        },
+        {
+          "text": "\u00d7",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Library",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Quests",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Townsfolk",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Hub",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Adventure",
+          "purpose": "item or control"
+        }
+      ]
+    },
+    {
+      "screen": "Farm-narrow-landscape",
+      "beforeTextLayers": 46,
+      "afterTextLayers": 41,
+      "strings": [
+        {
+          "text": "Harvest",
+          "purpose": "necessary action"
+        },
+        {
+          "text": "Ready",
+          "purpose": "value or state"
+        },
+        {
+          "text": "Wheat",
+          "purpose": "item or control"
+        },
+        {
+          "text": "4",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Plant",
+          "purpose": "necessary action"
+        },
+        {
+          "text": "Radish \u00b7 6 packs",
+          "purpose": "value or state"
+        },
+        {
+          "text": "Empty",
+          "purpose": "value or state"
+        },
+        {
+          "text": "3",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Details",
+          "purpose": "necessary action"
+        },
+        {
+          "text": "Growing \u00b7 12 min",
+          "purpose": "value or state"
+        },
+        {
+          "text": "Corn",
+          "purpose": "item or control"
+        },
+        {
+          "text": "2",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Harvest",
+          "purpose": "necessary action"
+        },
+        {
+          "text": "Ready",
+          "purpose": "value or state"
+        },
+        {
+          "text": "Carrot",
+          "purpose": "item or control"
+        },
+        {
+          "text": "1",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Beds",
+          "purpose": "item or control"
+        },
+        {
+          "text": "\u203a",
+          "purpose": "necessary action"
+        },
+        {
+          "text": "1 / 3",
+          "purpose": "value or state"
+        },
+        {
+          "text": "\u2039",
+          "purpose": "necessary action"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "1",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Wheat",
+          "purpose": "item or control"
+        },
+        {
+          "text": "2",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Carrot",
+          "purpose": "item or control"
+        },
+        {
+          "text": "3",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Corn",
+          "purpose": "item or control"
+        },
+        {
+          "text": "6",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Radish",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Seeds",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Town view",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Progression",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Beds",
+          "purpose": "item or control"
+        },
+        {
+          "text": "382 / 600 XP",
+          "purpose": "value or state"
+        },
+        {
+          "text": "Flora & Tillman | Level 8",
+          "purpose": "item or control"
+        },
+        {
+          "text": "\u00d7",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Garden",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Townsfolk",
+          "purpose": "item or control"
+        }
+      ]
+    },
+    {
+      "screen": "Farm-seed-and-bed-detail",
+      "beforeTextLayers": 56,
+      "afterTextLayers": 35,
+      "strings": [
+        {
+          "text": "Plant",
+          "purpose": "necessary action"
+        },
+        {
+          "text": "Back",
+          "purpose": "necessary action"
+        },
+        {
+          "text": "Packs: 6",
+          "purpose": "value or state"
+        },
+        {
+          "text": "Radish",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Bed 3 \u00b7 Empty",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "???",
+          "purpose": "value or state"
+        },
+        {
+          "text": "1",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Wheat",
+          "purpose": "item or control"
+        },
+        {
+          "text": "2",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Carrot",
+          "purpose": "item or control"
+        },
+        {
+          "text": "3",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Corn",
+          "purpose": "item or control"
+        },
+        {
+          "text": "6",
+          "purpose": "value: packet quantity or bed number"
+        },
+        {
+          "text": "Radish",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Seeds",
+          "purpose": "item or control"
+        },
+        {
+          "text": "382 / 600 XP",
+          "purpose": "value or state"
+        },
+        {
+          "text": "Flora & Tillman | Level 8",
+          "purpose": "item or control"
+        },
+        {
+          "text": "\u00d7",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Library",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Quests",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Townsfolk",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Hub",
+          "purpose": "item or control"
+        },
+        {
+          "text": "Adventure",
+          "purpose": "item or control"
+        }
+      ]
+    }
+  ],
+  "minimumTextContrast": 6.25,
+  "labelsContrastChecked": 131,
+  "mainSha256": "8f912645ea9216c7f25a833da730c44524aaea0dab7ba4cd76a9c0e1ac0d9d54",
+  "otherTwoConceptsPreserved": [
+    "Farm-progression",
+    "Farm-watering-exploration"
+  ],
+  "priorVersionsPreserved": "revision-1-before",
+  "UnityDesktopGameplayOrSaveChanges": false,
+  "mechanicsDecisionsMade": false,
+  "limits": [
+    "Static mockups; controls do not interact",
+    "Shared XP header, values and time remain illustrative, with assumptions in notes only",
+    "Garden geometry maps beds 1\u20134 but underlying crop art is not a simulation of the bed-list states",
+    "Unrevised progression and watering images remain historical references"
+  ]
+}

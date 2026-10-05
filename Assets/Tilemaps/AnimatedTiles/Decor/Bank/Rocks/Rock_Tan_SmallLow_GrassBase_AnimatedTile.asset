@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: Rock_Tan_SmallLow_GrassBase_AnimatedTile
+  m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AnimatedTile
+  m_AnimatedSprites:
+  - {fileID: -8447609200938644246, guid: 09947324f0457444fb73a700ddd49714, type: 3}
+  - {fileID: -6369424051072336947, guid: 09947324f0457444fb73a700ddd49714, type: 3}
+  - {fileID: -1155482651570435504, guid: 09947324f0457444fb73a700ddd49714, type: 3}
+  - {fileID: -513905207376371675, guid: 09947324f0457444fb73a700ddd49714, type: 3}
+  - {fileID: -2422473873574229094, guid: 09947324f0457444fb73a700ddd49714, type: 3}
+  - {fileID: 2717066054249092578, guid: 09947324f0457444fb73a700ddd49714, type: 3}
+  - {fileID: 3843314263853086419, guid: 09947324f0457444fb73a700ddd49714, type: 3}
+  - {fileID: -84026893046850056, guid: 09947324f0457444fb73a700ddd49714, type: 3}
+  m_MinSpeed: 3
+  m_MaxSpeed: 5
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 0

@@ -27,8 +27,8 @@ namespace Pathfinding.ECS {
 			// only scheduling paths during the first substep is typically good enough.
 			if (AstarPath.active == null || !AIMovementSystemGroup.TimeScaledRateManager.IsFirstSubstep) return;
 
-			// Skip system if there are no ECS agents that use pathfinding
-			if (SystemAPI.QueryBuilder().WithAll<ManagedState>().Build().IsEmptyIgnoreFilter) return;
+			// Skip system if there are no ECS agents that use pathfinding.
+			if (SystemAPI.QueryBuilder().WithAll<AgentManagedBackupRef>().Build().IsEmptyIgnoreFilter) return;
 
 			MarkerSchedulePathSearch.Begin();
 			var bits = new NativeBitArray(512, Allocator.TempJob);
@@ -70,13 +70,18 @@ namespace Pathfinding.ECS {
 			MarkerSchedulePathSearch.End();
 		}
 
-		[WithAbsent(typeof(ManagedAgentOffMeshLinkTraversal))] // Do not recalculate the path of agents that are currently traversing an off-mesh link.
+		[WithAbsent(typeof(AgentOffMeshLinkTraversalCleanup))] // Do not recalculate the path of agents that are currently traversing an off-mesh link.
 		[WithPresent(typeof(AgentShouldRecalculatePath))]
+		// Invariant: this job and JobShouldRecalculatePaths must match exactly the same entities in the same
+		// order, because they share #isPathStale and each advances its own index as it goes. This job
+		// requires AgentManagedRef through its Execute parameter, so JobShouldRecalculatePaths must require
+		// it too, or they would desync for one frame after an agent is cloned.
 		partial struct JobCheckStaleness : IJobEntity, IJobEntityChunkBeginEnd {
 			public NativeBitArray isPathStale;
 			int index;
 
-			public void Execute (ManagedState state) {
+			public void Execute (ref AgentManagedRef managedRef) {
+				var state = AgentManagedStorage.entries[managedRef.slot].state;
 				isPathStale.Set(index++, state.pathTracer.isStale);
 				isPathStale.Set(index++, state.pendingPath != null);
 			}
@@ -91,8 +96,10 @@ namespace Pathfinding.ECS {
 
 
 		[BurstCompile]
-		[WithAbsent(typeof(ManagedAgentOffMeshLinkTraversal))] // Do not recalculate the path of agents that are currently traversing an off-mesh link.
+		[WithAbsent(typeof(AgentOffMeshLinkTraversalCleanup))] // Do not recalculate the path of agents that are currently traversing an off-mesh link.
 		[WithPresent(typeof(AgentShouldRecalculatePath))]
+		// See the invariant on JobCheckStaleness. These two queries must stay identical.
+		[WithAll(typeof(AgentManagedRef))]
 		partial struct JobShouldRecalculatePaths : IJobEntity {
 			public float time;
 			public NativeBitArray isPathStale;
@@ -106,14 +113,15 @@ namespace Pathfinding.ECS {
 			}
 		}
 
-		[WithAbsent(typeof(ManagedAgentOffMeshLinkTraversal))] // Do not recalculate the path of agents that are currently traversing an off-mesh link.
+		[WithAbsent(typeof(AgentOffMeshLinkTraversalCleanup))] // Do not recalculate the path of agents that are currently traversing an off-mesh link.
 		[WithAll(typeof(AgentShouldRecalculatePath))]
 		public partial struct JobRecalculatePaths : IJobEntity {
 			public float time;
 
-			public void Execute (ManagedState state, ManagedSettings settings, ref ECS.AutoRepathPolicy autoRepathPolicy, ref LocalTransform transform, ref DestinationPoint destination, ref AgentMovementPlane movementPlane) {
+			public void Execute (ref AgentManagedRef managedRef, ref ECS.AutoRepathPolicy autoRepathPolicy, ref LocalTransform transform, ref DestinationPoint destination, ref AgentMovementPlane movementPlane) {
 				// If we reach this point, the agent always wants to recalculate its path, because the AgentShouldRecalculatePath component is enabled
-				MaybeRecalculatePath(state, settings, ref autoRepathPolicy, ref transform, ref destination, ref movementPlane, time, true);
+				ref readonly var entry = ref AgentManagedStorage.entries[managedRef.slot];
+				MaybeRecalculatePath(entry.state, entry.settings, ref autoRepathPolicy, ref transform, ref destination, ref movementPlane, time, true);
 			}
 
 			public static void MaybeRecalculatePath (ManagedState state, ManagedSettings settings, ref ECS.AutoRepathPolicy autoRepathPolicy, ref LocalTransform transform, ref DestinationPoint destination, ref AgentMovementPlane movementPlane, float time, bool wantsToRecalculatePath) {

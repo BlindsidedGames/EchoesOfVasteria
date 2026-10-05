@@ -1,0 +1,43 @@
+from pathlib import Path
+import json,re,hashlib,subprocess
+p=Path.cwd();e=p.parent/'Echoes Farming Planning Evidence/2026-09-30';a=e/'seed-icon-assets-2026-10-01';d=p/'docs/planning/farming-expansion-2026-09-30';sha=lambda f:hashlib.sha256(f.read_bytes()).hexdigest()
+baseline=json.loads((e/'source-baseline.json').read_text());sourceChanges=[n for n,h in baseline.items() if (sha(p/n) if (p/n).is_file() else None)!=h];assert not sourceChanges
+baks=json.loads((e/'player-backup-manifest.json').read_text());actual={n:v for n,v in baks.items() if '/Unity/' not in n};playerChanges=[n for n,v in actual.items() if not Path(n).is_file() or sha(Path(n))!=v['sha256']];backupProblems=[n for n,v in baks.items() if not Path(v['backup']).is_file() or sha(Path(v['backup']))!=v['sha256']];assert not playerChanges and not backupProblems
+approved=['farm-progression','farm-town-context-annotated','farm-layout-alternatives','farm-normal-scale','farm-clearing-close-comparison'];figures=[]
+for name in approved:
+ f=d/'visuals'/f'{name}.png';before=a/'prior-v4/farming-expansion-2026-09-30/visuals'/f.name;assert sha(f)==sha(before);figures.append({'name':f.name,'sha256':sha(f)})
+scenePreservation=[]
+for folder in ['FarmingPreviewsV4','FarmingOrchardOptionPreview']:
+ for before in (a/'prior-v4'/folder).rglob('*'):
+  if before.is_file():current=p/'Assets/Editor'/folder/before.relative_to(a/'prior-v4'/folder);assert sha(before)==sha(current);scenePreservation.append(str(current.relative_to(p)))
+base=json.loads((a/'baseline.json').read_text());sourceCrop=['Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png','Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png.meta'];assert all(sha(p/f)==base[f] for f in sourceCrop)
+meta='Assets/Resources/Fonts/FloatingTextIcons.png.meta';old=(a/'baseline'/meta).read_text();new=(p/meta).read_text();rows=re.findall(r'    - serializedVersion: 2\n      name:.*?(?=    - serializedVersion: 2\n|    outline: \[\]\n    customData:)',old,re.S);assert len(rows)==213 and all(x in new for x in rows);assert re.search(r'^guid: (\w+)',old,re.M)[1]==re.search(r'^guid: (\w+)',new,re.M)[1]
+textChecks=[]
+for path in ['Assets/Resources/Fonts/FloatingTextIcons.asset','Assets/UI/Toolkit/InlineSprites.asset']:
+ old=(a/'baseline'/path).read_text();new=(p/path).read_text();marker='  m_GlyphTable:' if '  m_GlyphTable:' in old else '  m_SpriteGlyphTable:'
+ chars=old.split('  m_SpriteCharacterTable:\n')[1].split(marker)[0];glyphs=old.split(marker+'\n')[1].split('  spriteInfoList:')[0].split('  fallbackSpriteAssets:')[0];assert chars in new and glyphs in new;assert new.count('  - m_ElementType:')==236 and new.count('  - m_Index:')==236;assert old.split('  m_SpriteCharacterTable:')[0]==new.split('  m_SpriteCharacterTable:')[0];textChecks.append({'asset':path,'oldCharacterAndGlyphEntriesUnchanged':213,'newEntries':23,'materialAndHeaderUnchanged':True})
+consumers=json.loads((a/'consumer-audit.json').read_text());allowed={'Assets/Resources/Fonts/FloatingTextIcons.asset','Assets/UI/Toolkit/InlineSprites.asset'};assert all(sha(p/x['path'])==x['sha256'] for x in consumers['serialized'] if x['path'] not in allowed)
+for path in ['Assets/Resources/Fonts/FloatingTextIconsNoOutline.png','Assets/Resources/Fonts/FloatingTextIconsNoOutline.png.meta','Assets/Resources/Fonts/FloatingTextIconsShadow.png','Assets/Resources/Fonts/FloatingTextIconsShadow.png.meta','Assets/Art/Atlas.spriteatlasv2','Assets/Art/Atlas.spriteatlasv2.meta']:assert subprocess.run(['git','diff','--quiet','--',path]).returncode==0
+pixels=json.loads((a/'pixel-verification.json').read_text());assert pixels['oldRegionRGBAChanges']==0 and pixels['oldAtlasRegionPixelsCompared']==55296 and pixels['sharedUnknownMatchesEveryInventorySilhouette'] and pixels['interiorPalePixelsPreservedAcrossKnownPackets']==3
+unity=json.loads((a/'unity-verification.json').read_text());assert not unity['mainDirtyBefore'] and not unity['mainDirtyAfter'] and not unity['playing'] and unity['allNamedTMPGlyphsVisible']==23 and not unity['logs'];assert len(unity['spriteChecks'])==23 and unity['nativeUIRootWidth']==1180
+orchard=json.loads((a/'orchard-space-proof.json').read_text());assert orchard['cropBedsRetained']==6 and orchard['cropSpritesUnchanged']==60 and orchard['additionalStandingTreeRemoval']==0 and orchard['newCultivatedTiles']==0 and not orchard['mainDirty'] and orchard['candidateActiveSpriteBlockers']==[]
+guards=json.loads((a/'orchard-light-isolation.json').read_text());assert not guards['mainDirtyAfterRestore'] and all(x['before']==x['after'] for x in guards['guards'])
+scene=(p/'Assets/Editor/FarmingOrchardSeparatePreview/E-separate-orchard.unity').read_text();scripts=set(re.findall(r'm_Script: \{fileID: 11500000, guid: (\w+)',scene));oldScene=(p/'Assets/Editor/FarmingPreviewsV4/A3-southeast-clearing.unity').read_text();assert scripts==set(re.findall(r'm_Script: \{fileID: 11500000, guid: (\w+)',oldScene));assert len(scripts)==2
+assert not (p/'Assets/Editor/SeedPackAssetVerification.cs').exists() and not (p/'Assets/Resources/Sprite Assets').exists()
+build=(p/'ProjectSettings/EditorBuildSettings.asset').read_text();assert 'FarmingPreview' not in build and 'Orchard' not in build
+coord=json.loads(Path('/tmp/eov-unity-coordination.json').read_text());assert not coord['editorReserved']
+library=json.loads((a/'library-delivery.json').read_text());assert len(library['results'])==4 and all(x['status']=='succeeded' for x in library['results']);assert [x['current_version_number'] for x in library['results']]==[1,0,0,1]
+oldLibrary=json.loads((d/'library-delivery.json').read_text());assert len(oldLibrary['results'])==5 and all(x['current_version_number']==3 for x in oldLibrary['results'])
+links=[];html=[]
+for f in d.rglob('*.md'):
+ text=f.read_text()
+ if re.search(r'<!--|</?(?:html|div|style|span|table)\b',text):html.append(str(f))
+ for link in re.findall(r'!?\[[^\]]*\]\(([^)]+)\)',text):
+  if '://' in link or link.startswith('#'):continue
+  target=f.parent/link.split('#')[0]
+  if not target.exists() and target.resolve()!=(d/'seed-icon-preparation/verification.json').resolve():links.append({'file':str(f),'target':link})
+assert not links and not html,(links,html)
+assert 'separate area' in (d/'optional-orchard.md').read_text() and 'replacing the final two crop beds' not in (d/'README.md').read_text()
+assert subprocess.run(['git','diff','--check','--',meta,'Assets/Resources/Fonts/FloatingTextIcons.asset','Assets/UI/Toolkit/InlineSprites.asset']).returncode==0
+report={'stage':'seed-icon-preparation-and-separate-orchard','branch':subprocess.check_output(['git','branch','--show-current'],text=True).strip(),'head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'protectedSourcePaths':len(baseline),'sourceChanges':sourceChanges,'actualPlayerFiles':len(actual),'playerChanges':playerChanges,'verifiedBackups':len(baks),'backupProblems':backupProblems,'mainSha256':sha(p/'Assets/Scenes/Main.unity'),'mainDirty':False,'playing':False,'approvedV4FiguresUnchanged':figures,'existingPreviewFilesUnchanged':scenePreservation,'oldSpriteDefinitionsExact':213,'oldAtlasRGBARegionChanges':0,'oldAtlasPixelComparison':55296,'textAssets':textChecks,'unchangedSerializedConsumers':len(consumers['serialized'])-2,'sourceConsumersAudited':len(consumers['code']),'newInventorySprites':23,'newTextGlyphs':23,'pixels':pixels,'successfulValidationLogs':[],'TMPNamedGlyphVertices':23,'nativeImageControlsReviewed':23,'nativeTextCoreNamedGlyphsVisuallyReviewed':3,'oldRepresentativeTMPGlyphsReviewed':[56,192,198,207,211],'MetalEditModeRendering':True,'runtimePlayerMobileDiscoveryNotTested':True,'separateOrchardCropBedsRetained':6,'orchardCropSpritesPreserved':60,'orchardAdditionalStandingTreeRemoval':0,'orchardPreviewScripts':list(scripts),'lightGuardsRestored':True,'temporaryHelperAndAliasRemoved':True,'brokenMarkdownLinks':links,'rawHtmlClutter':html,'focusedDiffCheckPassed':True,'libraryFiles':[{'library_file_id':x['library_file_id'],'file_id':x['file_id'],'version':x['current_version_number'],'file_name':x['file_name']} for x in library['results']],'productionFarmingOrOrchardImplemented':False,'committedOrPushed':False}
+(a/'verification.json').write_text(json.dumps(report,indent=2));(d/'seed-icon-preparation/verification.json').write_text(json.dumps(report,indent=2));print(json.dumps({k:v for k,v in report.items() if k not in ['approvedV4FiguresUnchanged','existingPreviewFilesUnchanged','textAssets','pixels','libraryFiles']},indent=2))

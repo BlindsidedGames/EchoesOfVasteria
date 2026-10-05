@@ -1,0 +1,3977 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: TownUI_fr
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: fr
+  m_SharedData: {fileID: 11400000, guid: 79e2dd3ef4efaf5459ce0f738238ca3e, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 87000000000003857
+    m_Localized: "D\xE9sactiv\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003856
+    m_Localized: "Activ\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003855
+    m_Localized: "Dur\xE9e {0}   \xB7   Recharge {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003854
+    m_Localized: Distance {0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003853
+    m_Localized: Attribuer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003852
+    m_Localized: Emplacement {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003851
+    m_Localized: Annuler
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003850
+    m_Localized: Emplacement vide
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003849
+    m_Localized: "{0} \xB7 Lancement auto verrouill\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003848
+    m_Localized: "{0} \xB7 Lancement auto d\xE9sactiv\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003847
+    m_Localized: "{0} \xB7 Lancement auto activ\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003846
+    m_Localized: "Emplacement verrouill\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003845
+    m_Localized: "S\xE9lectionnez un buff \xE0 attribuer. S\xE9lectionnez un emplacement occup\xE9 pour activer ou d\xE9sactiver son lancement automatique."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003844
+    m_Localized: "Choisissez un emplacement pour {0}. S\xE9lectionnez Annuler pour terminer sans attribution."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003843
+    m_Localized: "Les attributions sont verrouill\xE9es en aventure. S\xE9lectionnez un emplacement occup\xE9 pour activer ou d\xE9sactiver son lancement automatique."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003842
+    m_Localized: "Vitesse des t\xE2ches"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003841
+    m_Localized: "\xC9cho | T\xE2ches"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003840
+    m_Localized: "Vitesse de d\xE9placement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003839
+    m_Localized: Multiplicateur de ressources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003838
+    m_Localized: "\xC9cho | Combat"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003837
+    m_Localized: Jet critique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003836
+    m_Localized: "R\xE9sonance des \xC9chos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003835
+    m_Localized: Amplificateur de combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003834
+    m_Localized: Instinct du collectionneur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003833
+    m_Localized: "Exp\xE9rience bonus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003832
+    m_Localized: Aubaine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003831
+    m_Localized: "R\xE9g\xE9n\xE9ration"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003830
+    m_Localized: "Les t\xE2ches se terminent instantan\xE9ment"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003829
+    m_Localized: Vitesse du jeu +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003828
+    m_Localized: "Ressources de suivi des \xC9chos +{0:0.#}% (10s)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003827
+    m_Localized: "Bonus de ressources +{0:0.#}% toutes les 10 t\xE2ches"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003826
+    m_Localized: "Pond\xE9ration des t\xE2ches inconnues jusqu\u2019\xE0 +{0:0.#}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003825
+    m_Localized: "Pond\xE9ration d\u2019apparition de la cible +{0:0.#}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003824
+    m_Localized: "D\xE9g\xE2ts critiques +{0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003823
+    m_Localized: Chances de critique +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003822
+    m_Localized: "{0:0.#}% d\u2019XP bonus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003821
+    m_Localized: Gains de ressources +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003820
+    m_Localized: Distance max. de Fauche +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003819
+    m_Localized: Distance max. de Fauche +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003818
+    m_Localized: "R\xE9g\xE9n\xE9ration de sant\xE9 +{0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003817
+    m_Localized: "Vitesse des t\xE2ches +{0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003816
+    m_Localized: "Vitesse d\u2019attaque +{0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003815
+    m_Localized: "D\xE9fense +{0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003814
+    m_Localized: "D\xE9g\xE2ts +{0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003813
+    m_Localized: "Vitesse de d\xE9placement +{0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003812
+    m_Localized: "Dur\xE9e : {0}, recharge : {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003811
+    m_Localized: 'Distance : {0}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003810
+    m_Localized: "\xC9chos : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003809
+    m_Localized: "Vitesse de d\xE9placement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003808
+    m_Localized: "R\xE9g\xE9n\xE9ration"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003807
+    m_Localized: "Sant\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003806
+    m_Localized: "D\xE9fense"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003805
+    m_Localized: "  \u2022 noyau {0} : {1:0.#}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003804
+    m_Localized: "Annul\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003803
+    m_Localized: "Am\xE9lior\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003802
+    m_Localized: Vastium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003801
+    m_Localized: "  \u2022 recyclages de {0} : {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003800
+    m_Localized: "  \u2022 \xE9quipements de {0} : {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003799
+    m_Localized: "  \u2022 fabrications de {0} : {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003798
+    m_Localized: "\u2022 Pierre : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003797
+    m_Localized: "\u2022 Slime : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003796
+    m_Localized: "\u2022 Total des noyaux : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003795
+    m_Localized: "\u2022 Total des lingots : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003794
+    m_Localized: "\u2022 Total des cristaux : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003793
+    m_Localized: "\u2022 Conversions de noyaux : {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003792
+    m_Localized: "\u2022 Conversions de lingots : {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003791
+    m_Localized: "\u2022 Jets \xE9lev\xE9s | Jets dans les meilleurs {0:0.#}% de la stat :"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003790
+    m_Localized: "\u2022 Fabrications moy. / am\xE9lioration : {0:N2}  \u2022 Plus long intervalle : {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003789
+    m_Localized: "gagn\xE9 : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003788
+    m_Localized: "raret\xE9 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003787
+    m_Localized: "\u2022 Objets : {0:N0}  \u2022 Entr\xE9es : {1:N0}  \u2022 Moy./objet : {2:N2}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003786
+    m_Localized: noyau {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003785
+    m_Localized: "\u2022 Sessions : {0:N0}, fabrications : {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003784
+    m_Localized: "\u2022 XP totale gagn\xE9e : {0:N0} (niveaux gagn\xE9s : {1:N0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003783
+    m_Localized: "\u2022 XP : {0:N0} / {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003782
+    m_Localized: "\u2022 Niveau : {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003781
+    m_Localized: "\u2022 Total recycl\xE9 : {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003780
+    m_Localized: "\u2022 \xC9quip\xE9 apr\xE8s fabrication : {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003779
+    m_Localized: "\u2022 Total des fabrications : {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003778
+    m_Localized: "• Meilleur jet :"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003777
+    m_Localized: "Limite d\u2019it\xE9rations"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003776
+    m_Localized: "Ressources \xE9puis\xE9es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003775
+    m_Localized: "Consomm\xE9 :"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003774
+    m_Localized: "Cr\xE9\xE9 :"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003773
+    m_Localized: "\u2022 Maximum :"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003772
+    m_Localized: "\u2022 Totaux :"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003771
+    m_Localized: "\u2022 Noyaux :"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003770
+    m_Localized: "\u2022 Ensemble :"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003769
+    m_Localized: "\u2022 Meilleurs par raret\xE9 :"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003768
+    m_Localized: "\u2022 Meilleurs par noyau :"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003767
+    m_Localized: "\u2022 Motifs d\u2019arr\xEAt :"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003766
+    m_Localized: "Aucune donn\xE9e pour le moment."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003765
+    m_Localized: <size=120%><b>Statistiques de la Forge</b></size>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003764
+    m_Localized: "Qualit\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003763
+    m_Localized: Conversions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003762
+    m_Localized: Jets de statistiques
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003761
+    m_Localized: Totaux par emplacement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003760
+    m_Localized: "Am\xE9liorations"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003759
+    m_Localized: "R\xE9partitions"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003758
+    m_Localized: Recyclage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003757
+    m_Localized: Fabrication auto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003756
+    m_Localized: Ivan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003755
+    m_Localized: Totaux
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003754
+    m_Localized: Combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003753
+    m_Localized: '{0} {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003752
+    m_Localized: '{0} {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003751
+    m_Localized: un {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003750
+    m_Localized: un {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003749
+    m_Localized: "T\xE2che"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003748
+    m_Localized: "S\xE9lectif"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003747
+    m_Localized: "\xC9limination"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003746
+    m_Localized: "un \xC9cho"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003745
+    m_Localized: "\xC9chos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003744
+    m_Localized: "\xC9cho"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003743
+    m_Localized: Statistique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003742
+    m_Localized: "Comp\xE9tence associ\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003741
+    m_Localized: "Comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003740
+    m_Localized: ' lors de {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003739
+    m_Localized: "{0:0.#}% de chances de faire appara\xEEtre {1}{2}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003738
+    m_Localized: "{0:0.#}% d\u2019XP bonus ({1})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003737
+    m_Localized: '{0:0.#}% de ressources bonus ({1})'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003736
+    m_Localized: "{0:0.#}% de chances de doubler l\u2019XP"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003735
+    m_Localized: '{0:0.#}% de chances de doubler les ressources'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003734
+    m_Localized: "{0:0.#}% de chances de tuer instantan\xE9ment"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003733
+    m_Localized: "{0:0.#}% de chances de terminer les t\xE2ches instantan\xE9ment"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003732
+    m_Localized: "{0:0.#}% d\u2019XP bonus (toutes les comp\xE9tences)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003731
+    m_Localized: "{0:0.#}% de ressources bonus (toutes les t\xE2ches)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003730
+    m_Localized: "+{0:0.#}% de vitesse des t\xE2ches {1} (selon le niveau de {1})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003729
+    m_Localized: "\u2022 \xC9lan d\u2019Orin : "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003728
+    m_Localized: "\u2022 B\xE9n\xE9diction d\u2019Eva : "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003727
+    m_Localized: "\u2022 Cartes faibles : "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003726
+    m_Localized: "\u2022 Buffs : "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003725
+    m_Localized: "\u2022 Cartes de ressources : "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003724
+    m_Localized: "\u2022 Ressources - Combat : "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003723
+    m_Localized: "\u2022 Ressources - Butin : "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003722
+    m_Localized: "\u2022 Ressources - B\xFBcheronnage : "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003721
+    m_Localized: "\u2022 Ressources - Minage : "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003720
+    m_Localized: "\u2022 Ressources - P\xEAche : "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003719
+    m_Localized: "\u2022 Ressources - Agriculture : "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003718
+    m_Localized: "\u2022 Aucun gain : "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003717
+    m_Localized: "<b>R\xE9partition des tirages</b>\n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003716
+    m_Localized: "\u2022 Cartes gagn\xE9es : "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003715
+    m_Localized: "\u2022 D\xE9gustations : "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003714
+    m_Localized: '<b>Totaux</b>
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003713
+    m_Localized: "\xC9ternel"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003712
+    m_Localized: "\xC9lan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003711
+    m_Localized: "B\xE9n\xE9diction"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003710
+    m_Localized: Le plus bas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003709
+    m_Localized: Buffs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003708
+    m_Localized: Combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003707
+    m_Localized: Butin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003706
+    m_Localized: "B\xFBcheronnage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003705
+    m_Localized: Minage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003704
+    m_Localized: "P\xEAche"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003703
+    m_Localized: Agriculture
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003702
+    m_Localized: Rien
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003701
+    m_Localized: S.O.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003700
+    m_Localized: 'Bonus de palier : {0:0.#}%
+
+      {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003699
+    m_Localized: "Fabriqu\xE9\n{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003698
+    m_Localized: "Meilleure r\xE9colte/min : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003697
+    m_Localized: "Collect\xE9 : {0}\nD\xE9pens\xE9 : {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003696
+    m_Localized: '{0} | {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003695
+    m_Localized: Niv. -
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003694
+    m_Localized: Niv. {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003693
+    m_Localized: "Victoires : {0}\nD\xE9g\xE2ts bonus : {1:0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003692
+    m_Localized: "D\xE9placement : {0}\nVision : {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003691
+    m_Localized: "D\xE9fense : {0}\nCadence d\u2019attaque : {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003690
+    m_Localized: "Sant\xE9 : {0}\nD\xE9g\xE2ts : {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003689
+    m_Localized: ', distance max. : {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003688
+    m_Localized: "Prochaine am\xE9lioration : maximum atteint"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003687
+    m_Localized: Infini
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003686
+    m_Localized: "Chance d\u2019apparition : -- ({0})\nProchaine am\xE9lioration : --\n{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003685
+    m_Localized: "Chance d\u2019apparition : {0:0.##}% ({1})\n{2}\n{3}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003684
+    m_Localized: "Prochaine am\xE9lioration : {0} t\xE2ches"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003683
+    m_Localized: 'Distance min. : {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003682
+    m_Localized: "T\xE2ches termin\xE9es : {0}\nTemps pass\xE9 : {1}\nXP gagn\xE9e : {2}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003681
+    m_Localized: "Aventure {0}\nCarte : {1}\nDur\xE9e : {2}\nDistance : {3:N0}\nT\xE2ches : {4:N0}\n{5}\nVictoires : {6:N0}\nD\xE9g\xE2ts inflig\xE9s : {7:N0}\nD\xE9g\xE2ts subis : {8:N0}\nStatut : {9}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003680
+    m_Localized: 'Ressources : {0:N0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003679
+    m_Localized: Plus longue aventure
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003678
+    m_Localized: Plus de victoires
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003677
+    m_Localized: Nombre de Fauches
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003676
+    m_Localized: "D\xE9g\xE2ts subis"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003675
+    m_Localized: Morts
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003674
+    m_Localized: "D\xE9g\xE2ts inflig\xE9s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003673
+    m_Localized: Victoires
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003672
+    m_Localized: Distance de Fauche
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003671
+    m_Localized: "Ressources r\xE9colt\xE9es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003670
+    m_Localized: "T\xE2ches termin\xE9es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003669
+    m_Localized: "Pas effectu\xE9s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003668
+    m_Localized: Afficher tous les {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003667
+    m_Localized: '{0} ressources'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003666
+    m_Localized: "{0} des {1} derni\xE8res aventures sauvegard\xE9es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003665
+    m_Localized: "{0} / {1} d\xE9couverts"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003664
+    m_Localized: Afficher moins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003663
+    m_Localized: Ressources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003662
+    m_Localized: Ennemis
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003661
+    m_Localized: "Les d\xE9couvertes sont partag\xE9es entre toutes les cartes. Ces groupes de butin sont pr\xE9d\xE9finis ; leur disponibilit\xE9 d\xE9pend de la progression."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003660
+    m_Localized: "Pr\xE9sent ici"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003659
+    m_Localized: Choisissez une carte pour consulter ses ressources, ses ennemis et vos records.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003658
+    m_Localized: Explorer une carte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003657
+    m_Localized: "Aucune aventure r\xE9cente ici. Vos records cumul\xE9s restent affich\xE9s."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003656
+    m_Localized: Cumul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003655
+    m_Localized: "Aventures r\xE9centes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003654
+    m_Localized: "D\xE9pens\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003653
+    m_Localized: "Collect\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003652
+    m_Localized: Palier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003651
+    m_Localized: Palier de ressource {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003650
+    m_Localized: '{0} disponibles'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003649
+    m_Localized: 'ID : {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003648
+    m_Localized: Inconnu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003647
+    m_Localized: "Dur\xE9e des t\xE2ches"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003646
+    m_Localized: "T\xE2ches termin\xE9es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003645
+    m_Localized: "Par d\xE9faut"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003644
+    m_Localized: Vision
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003643
+    m_Localized: "D\xE9placement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003642
+    m_Localized: "Cadence d\u2019attaque"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003641
+    m_Localized: "D\xE9fense"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003640
+    m_Localized: "Sant\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003639
+    m_Localized: "D\xE9g\xE2ts"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003638
+    m_Localized: "Distance d\u2019aper\xE7u : {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003637
+    m_Localized: "Augmente la pond\xE9ration d\u2019apparition de cette t\xE2che. Les jalons de r\xE9alisation augmentent le bonus."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003636
+    m_Localized: "Bonus d\u2019apparition activ\xE9. Cliquez pour retirer le bonus de pond\xE9ration."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003635
+    m_Localized: "Probabilit\xE9s de raret\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003634
+    m_Localized: Meilleurs jets
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003633
+    m_Localized: Automatisation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003632
+    m_Localized: Historique de fabrication
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003631
+    m_Localized: "Fabriquez un objet pour le comparer \xE0 votre \xE9quipement."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003630
+    m_Localized: Total
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003629
+    m_Localized: Statistique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003628
+    m_Localized: "Qualit\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003627
+    m_Localized: "\xC9quip\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003626
+    m_Localized: En attente
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003625
+    m_Localized: 'Lots : {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003624
+    m_Localized: "Arr\xEAter"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003623
+    m_Localized: '{0:N0} fabrications possibles'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003622
+    m_Localized: Ivan | Niveau {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003621
+    m_Localized: Taille du lot de conversion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003620
+    m_Localized: Fondre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003619
+    m_Localized: Noyaux
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003618
+    m_Localized: Lingots
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003617
+    m_Localized: Cristaux
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003616
+    m_Localized: Morceaux
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003615
+    m_Localized: "Aventure #{0} \xB7 {1} \xB7 {2}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003614
+    m_Localized: Moy. {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003613
+    m_Localized: "{0} des {1} derni\xE8res aventures sauvegard\xE9es{2}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003612
+    m_Localized: " \xB7 {0} sans dur\xE9e exclus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003611
+    m_Localized: "Moyenne {0}{1}   \xB7   {2} {3}{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003610
+    m_Localized: Meilleur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003609
+    m_Localized: Le plus long
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003608
+    m_Localized: ' / min'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003607
+    m_Localized: "D\xE9g\xE2ts subis"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003606
+    m_Localized: "D\xE9g\xE2ts inflig\xE9s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003605
+    m_Localized: Victoires
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003604
+    m_Localized: Ressources bonus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003603
+    m_Localized: Ressources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003602
+    m_Localized: "T\xE2ches"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003601
+    m_Localized: Distance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003600
+    m_Localized: "Dur\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003599
+    m_Localized: "S\xE9lectionnez une carte avec des aventures sauvegard\xE9es pour consulter son historique."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003598
+    m_Localized: "D\xE9tails de l\u2019aventure"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003597
+    m_Localized: "Aucune donn\xE9e r\xE9cente"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003596
+    m_Localized: "Abandonn\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003595
+    m_Localized: Mort
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003594
+    m_Localized: "Fauch\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003593
+    m_Localized: Retraite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003592
+    m_Localized: "Survolez pour pr\xE9visualiser \xB7 cliquez ou touchez pour s\xE9lectionner"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003591
+    m_Localized: "Num\xE9ro d\u2019aventure"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003590
+    m_Localized: "Aucune aventure sauvegard\xE9e pour cette s\xE9lection."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003589
+    m_Localized: Toutes les cartes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003588
+    m_Localized: Par minute
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003587
+    m_Localized: Totaux
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003586
+    m_Localized: Informations de version indisponibles.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003585
+    m_Localized: 'Votre rang : {0:N0} sur {1:N0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003584
+    m_Localized: "Vous \xB7 {0:N0} class\xE9s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003583
+    m_Localized: Vous
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003582
+    m_Localized: "Classement indisponible. Essayez d\u2019actualiser."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003581
+    m_Localized: "Votre score appara\xEEtra ici apr\xE8s son envoi."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003580
+    m_Localized: "Aucun score envoy\xE9. Affichage des meilleurs joueurs."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003579
+    m_Localized: Aucun score pour le moment.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003578
+    m_Localized: "Chargement\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003577
+    m_Localized: Temps
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003576
+    m_Localized: "T\xE2ches"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003575
+    m_Localized: Joueur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003574
+    m_Localized: Rang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003573
+    m_Localized: Actualiser
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003572
+    m_Localized: Autour de moi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003571
+    m_Localized: Meilleurs joueurs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003570
+    m_Localized: "T\xE2ches termin\xE9es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003569
+    m_Localized: "Temps de r\xE9alisation"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003568
+    m_Localized: "Gagn\xE9 : {0} ({1})\nPar minute : {2} ({3})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003567
+    m_Localized: "D\xE9g\xE2ts / s : {0:N0}\nVictoires / min : {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003566
+    m_Localized: "Touchez \xE0 l\u2019ext\xE9rieur pour fermer\nDistance / min : {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003565
+    m_Localized: "D\xE9tail de l\u2019aventure\n<size=75%>+{0:0}% de ressources</size>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003564
+    m_Localized: "Touchez \xE0 l\u2019ext\xE9rieur pour fermer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003563
+    m_Localized: "R\xE9sum\xE9 de l\u2019aventure"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003562
+    m_Localized: Trop loin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003561
+    m_Localized: Mort
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003560
+    m_Localized: "Verrouill\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003559
+    m_Localized: "Vous \xEAtes mort..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003558
+    m_Localized: "Vous avez \xE9t\xE9 fauch\xE9..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003557
+    m_Localized: "D\xE9tail de l\u2019aventure"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003556
+    m_Localized: "D\xE9tail de l\u2019aventure"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003555
+    m_Localized: "Retour \xE0 la mort"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003554
+    m_Localized: Taux de base (bonus de retour)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003553
+    m_Localized: Dad-O-Cado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003552
+    m_Localized: "Voir le r\xE9sum\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003551
+    m_Localized: Retour au village
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003550
+    m_Localized: Recommencer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003549
+    m_Localized: 'XP : {0:N0} / {1:N0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003548
+    m_Localized: "Eva \xB7 Niveau {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003547
+    m_Localized: "Disponible : {0} \xB7 {1} rago\xFBt / unit\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003546
+    m_Localized: "Augmenter la quantit\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003545
+    m_Localized: "R\xE9duire la quantit\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003544
+    m_Localized: Fermer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003543
+    m_Localized: "Suspendre la d\xE9gustation"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003542
+    m_Localized: "Commencer \xE0 go\xFBter"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003541
+    m_Localized: Ajouter au Chaudron
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003540
+    m_Localized: Max
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003539
+    m_Localized: "D\xE9tails de d\xE9gustation"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003538
+    m_Localized: Choisir un aliment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003537
+    m_Localized: "R\xE9sultats de d\xE9gustation"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003536
+    m_Localized: "Actuel \u2192 Niveau suivant"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003535
+    m_Localized: "Chances de r\xE9compense"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003534
+    m_Localized: "Rago\xFBt / tirage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003533
+    m_Localized: Tirages / s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003532
+    m_Localized: "Rago\xFBt"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003531
+    m_Localized: "D\xE9gustation"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003530
+    m_Localized: "Rago\xFBt obtenu"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003529
+    m_Localized: "Quantit\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003528
+    m_Localized: "Ingr\xE9dients"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003527
+    m_Localized: Collection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003526
+    m_Localized: Collection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003525
+    m_Localized: "D\xE9gustation"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003524
+    m_Localized: "Ingr\xE9dients"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003523
+    m_Localized: Ensemble
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003522
+    m_Localized: Objets
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003521
+    m_Localized: "T\xE2ches"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003520
+    m_Localized: Ennemis
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003519
+    m_Localized: Graphiques
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003518
+    m_Localized: Rang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003517
+    m_Localized: "G\xE9n\xE9ral"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003516
+    m_Localized: Stats identiques
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003515
+    m_Localized: "Arr\xEAt sur Vastium"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003514
+    m_Localized: Infos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003513
+    m_Localized: Inventaire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003512
+    m_Localized: Remplacer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003511
+    m_Localized: "Fabriquer jusqu\u2019\xE0 am\xE9lioration"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003510
+    m_Localized: Fabriquer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003509
+    m_Localized: "Noyaux poss\xE9d\xE9s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003508
+    m_Localized: Fabrications possibles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003507
+    m_Localized: Comparaison
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003506
+    m_Localized: "Totaux de l\u2019\xE9quipement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003505
+    m_Localized: Noyaux
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003504
+    m_Localized: "\xC9quipement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003503
+    m_Localized: "??? | <size=80%>D\xE9bloqu\xE9 au niveau {0}</size>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003502
+    m_Localized: "{0} | <size=80%>D\xE9bloqu\xE9 au niveau {1}</size>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003501
+    m_Localized: "\xC9quip\xE9s : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003500
+    m_Localized: 'Actifs : {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003499
+    m_Localized: 'Passifs : {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003498
+    m_Localized: "D\xE9bloqu\xE9 au niveau {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003497
+    m_Localized: "Am\xE9lior\xE9 au niveau {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003496
+    m_Localized: <b>Bonus de {0}</b>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003495
+    m_Localized: '<b><smallcaps>Emplacements actifs : {0}({1})</smallcaps></b>'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003494
+    m_Localized: '<b>Niv. : {0}</b>'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003493
+    m_Localized: <b><smallcaps>{0} | Niv. {1}</smallcaps></b>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003492
+    m_Localized: Tous les bonus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003491
+    m_Localized: Palier {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003490
+    m_Localized: '{0} - Palier {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003489
+    m_Localized: "{0} \xB7 Palier {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003488
+    m_Localized: "Non d\xE9couvert"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003487
+    m_Localized: "S\xE9lectionner une ressource"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003486
+    m_Localized: Active
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003485
+    m_Localized: "Historique des qu\xEAtes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003484
+    m_Localized: "Termin\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003483
+    m_Localized: "R\xE9compense : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003482
+    m_Localized: "\xC9pingler"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003481
+    m_Localized: "\xC9pingl\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003480
+    m_Localized: Rendre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003479
+    m_Localized: "Termin\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003478
+    m_Localized: "D\u2019accord"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003477
+    m_Localized: "{0} \xB7 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003476
+    m_Localized: "Qu\xEAtes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003475
+    m_Localized: "Donne {0}% de chances d\u2019invoquer {1} \xC9chos accomplissant des t\xE2ches de {2} pendant {3:0.#} secondes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003474
+    m_Localized: "Donne {0}% de chances d\u2019invoquer un \xC9cho accomplissant des t\xE2ches de {1} pendant {2:0.#} secondes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003473
+    m_Localized: "Donne {0}% de chances d\u2019invoquer {1} \xC9chos aidant au combat pendant {2:0.#} secondes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003472
+    m_Localized: "Donne {0}% de chances d\u2019invoquer un \xC9cho aidant au combat pendant {1:0.#} secondes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003471
+    m_Localized: diverses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003470
+    m_Localized: "Un jour, je lavais la voiture avec mon fils. Il m\u2019a dit : \xAB Papa, pourquoi tu n\u2019utilises pas plut\xF4t une \xE9ponge ? \xBB"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003469
+    m_Localized: "Pourquoi les bateaux norv\xE9giens ont-ils un code-barres ? Pour qu\u2019au port, on puisse scanner des Scandinaves."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003468
+    m_Localized: "Deux perroquets sont sur une perche.\nL\u2019un dit : \xAB Tu ne trouves pas que \xE7a sent le poisson ? \xBB"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003467
+    m_Localized: "Pourquoi n\u2019entend-on pas Pterry le pt\xE9rodactyle aux toilettes ?\nParce que son \xAB p \xBB est muet."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003466
+    m_Localized: "Tu connais le math\xE9maticien qui a peur des nombres n\xE9gatifs ?\nIl s\u2019arr\xEAte \xE0 z\xE9ro pour les \xE9viter."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003465
+    m_Localized: "Pourquoi un cercle a-t-il 360\xB0 ?\nIl a fait beaucoup trop de degr\xE9s \xE0 l\u2019universit\xE9."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003464
+    m_Localized: "Quelle diff\xE9rence entre un diam\xE8tre et un rayon ?\nUn rayon."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003463
+    m_Localized: "Les blagues d\u2019ascenseur me tapent sur les boutons.\nElles me font descendre.\n\nElles sont mauvaises \xE0 tous les \xE9tages."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003462
+    m_Localized: "Pourquoi les Anglais disent-ils \xAB lift \xBB et les Am\xE9ricains \xAB elevator \xBB ?\nParce qu\u2019ils n\u2019ont pas \xE9t\xE9 \xE9lev\xE9s de la m\xEAme fa\xE7on."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003461
+    m_Localized: "Les ascenseurs me terrifient... Je prends des marches pour les \xE9viter."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003460
+    m_Localized: "Pourquoi les requins vivent-ils dans l\u2019eau sal\xE9e ?\nL\u2019eau poivr\xE9e les fait \xE9ternuer."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003459
+    m_Localized: "Pourquoi le poulet est-il all\xE9 \xE0 une s\xE9ance de spiritisme ?\nPour passer de l\u2019autre c\xF4t\xE9."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003458
+    m_Localized: "Tu as entendu ? J\u2019ai invent\xE9 un nouveau mot !\n\xAB Plagiat \xBB"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003457
+    m_Localized: 'Quel arbre tient dans la main ?
+
+      Un palmier.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003456
+    m_Localized: "Comment appelle-t-on quelqu\u2019un qui ne p\xE8te jamais en public ?\nUn pr\xE9cepteur particulier, tr\xE8s particulier."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003455
+    m_Localized: "Pourquoi l\u2019enfant a-t-il jet\xE9 du beurre par la fen\xEAtre ?\nPour voir un papillon de beurre voler."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003454
+    m_Localized: 'Que dit un chat bilingue ?
+
+      Ouaf.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003453
+    m_Localized: "Que dit l\u2019oc\xE9an devant un bol de sel ?\n\xAB Je mer le sel. \xBB"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003452
+    m_Localized: "Quelle diff\xE9rence entre une patate douce br\xFBlante et un cochon jet\xE9 par la fen\xEAtre ?\nL\u2019une est une patate chauff\xE9e, l\u2019autre un jambon \xE9ject\xE9. "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003451
+    m_Localized: "Pourquoi les mouettes volent-elles pr\xE8s de la mer ?\nPr\xE8s de la baie, elles deviendraient des baie-gels."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003450
+    m_Localized: "Pourquoi les plongeurs tombent-ils en arri\xE8re du bateau ?\nEn tombant en avant, ils resteraient dedans."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003449
+    m_Localized: "Un grain de caf\xE9 travaille \xE0 c\xF4t\xE9 de moi. On ne fait pas grand-chose : il raconte tout un latte."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003448
+    m_Localized: "Comment appelle-t-on une plante \xE9lectrique ? Une centrale \xE0 plantes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003447
+    m_Localized: "Qui est Jack, et pourquoi n\u2019a-t-il qu\u2019un seul mento ?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003446
+    m_Localized: "Quand une blague devient-elle une blague de papa ? Quand elle devient \xAB un parent \xBB."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003445
+    m_Localized: "J\u2019ai vu quelqu\u2019un freiner sur un petit pain. Il roulait sur la mie."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003444
+    m_Localized: "J\u2019ai demand\xE9 au fermier pourquoi il avait mal \xE0 la t\xEAte. Il a r\xE9pondu : \xAB Mes graines... mes migraines. \xBB"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003443
+    m_Localized: "Pourquoi le Mexicain a-t-il jet\xE9 sa femme du pont ? Tequila... t\u2019es qui, l\xE0 !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003442
+    m_Localized: "Je connais 25 lettres de l\u2019alphabet. Je ne sais pas \xAB y \xBB."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003441
+    m_Localized: "Que se passe-t-il si on te gifle \xE0 haute fr\xE9quence ? \xC7a fait des hertz."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003440
+    m_Localized: "J\u2019ai jet\xE9 mon voisin dans un r\xE9acteur nucl\xE9aire et il est mort. Que faire ? Barium... l\u2019enterrer."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003439
+    m_Localized: "Comment appelle-t-on un poisson arm\xE9 ? Un brochet."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003438
+    m_Localized: "Tu connais le restaurant Karma ? Pas de menu : tu re\xE7ois ce que tu m\xE9rites."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003437
+    m_Localized: "Qu\u2019a command\xE9 Batman au bar ? Juste de la glace... justice."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003436
+    m_Localized: "J\u2019allais vous raconter une blague sur les voyages temporels, mais vous ne l\u2019avez pas aim\xE9e."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003435
+    m_Localized: Comment appelle-t-on un loup-garou youtubeur ? Un lycan-abonne-toi.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003434
+    m_Localized: "J\u2019ai mis des taches sur un dalmatien albinos. C\u2019\xE9tait le moins que je pouvais faire."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003433
+    m_Localized: "Moi, pour I, j\u2019aime les chiffres romains."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003432
+    m_Localized: "Le cargo va dans l\u2019espace ? Non, il va sur la route."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003431
+    m_Localized: Comment appelle-t-on une femme sur une jambe ? Eileen... elle penche.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003430
+    m_Localized: "cette comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003429
+    m_Localized: statistique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003428
+    m_Localized: "+{0} rago\xFBt par d\xE9gustation ; cartes obtenues x{1}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003427
+    m_Localized: diverses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003426
+    m_Localized: diverses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003425
+    m_Localized: diverses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003424
+    m_Localized: diverses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003423
+    m_Localized: diverses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003422
+    m_Localized: diverses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003421
+    m_Localized: diverses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003420
+    m_Localized: diverses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003419
+    m_Localized: "cette comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003418
+    m_Localized: "Augmente l\u2019XP gagn\xE9e de toutes les comp\xE9tences de {0}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003417
+    m_Localized: "Augmente l\u2019XP gagn\xE9e de {0} de {1}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003416
+    m_Localized: "cette comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003415
+    m_Localized: "Augmente l\u2019XP gagn\xE9e de toutes les comp\xE9tences de {0}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003414
+    m_Localized: "Augmente l\u2019XP gagn\xE9e de {0} de {1}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003413
+    m_Localized: "cette comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003412
+    m_Localized: "Augmente l\u2019XP gagn\xE9e de toutes les comp\xE9tences de {0}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003411
+    m_Localized: "Augmente l\u2019XP gagn\xE9e de {0} de {1}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003410
+    m_Localized: "cette comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003409
+    m_Localized: "Augmente l\u2019XP gagn\xE9e de toutes les comp\xE9tences de {0}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003408
+    m_Localized: "Augmente l\u2019XP gagn\xE9e de {0} de {1}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003407
+    m_Localized: "cette comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003406
+    m_Localized: "Augmente l\u2019XP gagn\xE9e de toutes les comp\xE9tences de {0}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003405
+    m_Localized: "Augmente l\u2019XP gagn\xE9e de {0} de {1}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003404
+    m_Localized: "cette comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003403
+    m_Localized: "Augmente l\u2019XP gagn\xE9e de toutes les comp\xE9tences de {0}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003402
+    m_Localized: "Augmente l\u2019XP gagn\xE9e de {0} de {1}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003401
+    m_Localized: "cette comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003400
+    m_Localized: Augmente tous les gains de ressources de {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003399
+    m_Localized: Augmente les gains de ressources de {0} de {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003398
+    m_Localized: "cette comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003397
+    m_Localized: Augmente tous les gains de ressources de {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003396
+    m_Localized: Augmente les gains de ressources de {0} de {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003395
+    m_Localized: "cette comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003394
+    m_Localized: Augmente tous les gains de ressources de {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003393
+    m_Localized: Augmente les gains de ressources de {0} de {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003392
+    m_Localized: "cette comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003391
+    m_Localized: Augmente tous les gains de ressources de {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003390
+    m_Localized: Augmente les gains de ressources de {0} de {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003389
+    m_Localized: "cette comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003388
+    m_Localized: Augmente tous les gains de ressources de {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003387
+    m_Localized: Augmente les gains de ressources de {0} de {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003386
+    m_Localized: "cette comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003385
+    m_Localized: Augmente tous les gains de ressources de {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003384
+    m_Localized: Augmente les gains de ressources de {0} de {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003383
+    m_Localized: "cette comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003382
+    m_Localized: Augmente tous les gains de ressources de {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003381
+    m_Localized: Augmente les gains de ressources de {0} de {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003380
+    m_Localized: "Donne {0}% de chances de se d\xE9clencher."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003379
+    m_Localized: "Donne {0}% de chances de se d\xE9clencher."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003378
+    m_Localized: "Donne {0}% de chances de se d\xE9clencher."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003377
+    m_Localized: "Donne {0}% de chances de se d\xE9clencher."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003376
+    m_Localized: "Donne {0}% de chances de se d\xE9clencher."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003375
+    m_Localized: Augmente {1} de {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003374
+    m_Localized: Augmente {1} de {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003373
+    m_Localized: Augmente {1} de {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003372
+    m_Localized: Augmente {1} de {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003371
+    m_Localized: Augmente {1} de {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003370
+    m_Localized: Augmente {1} de {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003369
+    m_Localized: Augmente {1} de {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003368
+    m_Localized: Augmente {1} de {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003367
+    m_Localized: Lirium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003366
+    m_Localized: Vastium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003365
+    m_Localized: Idle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003364
+    m_Localized: Erif
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003363
+    m_Localized: Nori
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003362
+    m_Localized: Copium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003361
+    m_Localized: Dlog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003360
+    m_Localized: Eznorb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003359
+    m_Localized: "D\xE9placement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003358
+    m_Localized: Critique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003357
+    m_Localized: "D\xE9g\xE2ts"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003356
+    m_Localized: "Sant\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003355
+    m_Localized: "R\xE9g\xE9n\xE9ration"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003354
+    m_Localized: "Vitesse d\u2019attaque"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003353
+    m_Localized: "D\xE9g\xE2ts critiques"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003352
+    m_Localized: "D\xE9fense"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003351
+    m_Localized: "XP bonus de B\xFBcheronnage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003350
+    m_Localized: "\xC9cho de Minage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003349
+    m_Localized: "\xC9cho de Butin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003348
+    m_Localized: Ressources bonus de Butin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003347
+    m_Localized: XP bonus de Combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003346
+    m_Localized: Ressources bonus de Minage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003345
+    m_Localized: "XP bonus d\u2019Agriculture"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003344
+    m_Localized: "Ressources bonus de P\xEAche"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003343
+    m_Localized: XP bonus de Butin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003342
+    m_Localized: "\xC9cho de P\xEAche"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003341
+    m_Localized: "\xC9cho d\u2019Agriculture"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003340
+    m_Localized: "Sant\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003339
+    m_Localized: "Ressources bonus d\u2019Agriculture"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003338
+    m_Localized: "R\xE9g\xE9n\xE9ration"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003337
+    m_Localized: XP bonus de Minage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003336
+    m_Localized: "Tourmente de d\xE9gustation"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003335
+    m_Localized: "D\xE9g\xE2ts"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003334
+    m_Localized: "D\xE9placement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003333
+    m_Localized: "D\xE9g\xE2ts critiques"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003332
+    m_Localized: "\xC9cho de combat"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003331
+    m_Localized: "Ressources bonus de B\xFBcheronnage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003330
+    m_Localized: "\xC9cho de B\xFBcheronnage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003329
+    m_Localized: "XP bonus de P\xEAche"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003328
+    m_Localized: Noyau de Copium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003327
+    m_Localized: Lingot de Dlog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003326
+    m_Localized: "Morceaux d\u2019Erif"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003325
+    m_Localized: Poireau
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003324
+    m_Localized: "Morceaux d\u2019Idle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003323
+    m_Localized: Watermelone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003322
+    m_Localized: Morceaux de Dlog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003321
+    m_Localized: "\u0152uf"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003320
+    m_Localized: Sir Splashford III
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003319
+    m_Localized: "Noyau d\u2019Idle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003318
+    m_Localized: "Lingot d\u2019Erif"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003317
+    m_Localized: "Cristal d\u2019Erif"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003316
+    m_Localized: "Niblet l\u2019Audacieux"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003315
+    m_Localized: "Cristal d\u2019Idle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003314
+    m_Localized: Plume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003313
+    m_Localized: "P\xEAche"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003312
+    m_Localized: Cristal de Dlog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003311
+    m_Localized: Navet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003310
+    m_Localized: Flipzoid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003309
+    m_Localized: Panais
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003308
+    m_Localized: Noyau de Vastium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003307
+    m_Localized: Noyau de Nori
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003306
+    m_Localized: Wigglelittle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003305
+    m_Localized: Lingot de Nori
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003304
+    m_Localized: Poulet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003303
+    m_Localized: Cuir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003302
+    m_Localized: "Ma\xEFs"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003301
+    m_Localized: Lingot de Vastium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003300
+    m_Localized: "B\xFBche"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003299
+    m_Localized: "B\xE2ton de ch\xEAne"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003298
+    m_Localized: "B\xFBche de sapin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003297
+    m_Localized: "B\xE2ton"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003296
+    m_Localized: Bloopicus Maximus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003295
+    m_Localized: "Lingot d\u2019Eznorb"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003294
+    m_Localized: Morceaux de Lirium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003293
+    m_Localized: Gobe-vase boueux
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003292
+    m_Localized: Pomme
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003291
+    m_Localized: Porc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003290
+    m_Localized: Cristal de Nori
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003289
+    m_Localized: Plant de poirier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003288
+    m_Localized: Concombre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003287
+    m_Localized: Morceaux de Copium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003286
+    m_Localized: Chillie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003285
+    m_Localized: "B\xE2ton de bouleau"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003284
+    m_Localized: Cerise
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003283
+    m_Localized: Tomate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003282
+    m_Localized: Cristal de Copium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003281
+    m_Localized: "Noyau d\u2019Eznorb"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003280
+    m_Localized: Radis
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003279
+    m_Localized: Fraise
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003278
+    m_Localized: Cristal de Lirium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003277
+    m_Localized: Pumking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003276
+    m_Localized: "Bl\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003275
+    m_Localized: Flippy Floppy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003274
+    m_Localized: "Morceaux d\u2019Eznorb"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003273
+    m_Localized: Os
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003272
+    m_Localized: Pierre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003271
+    m_Localized: Morceaux de Nori
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003270
+    m_Localized: "B\xFBche de ch\xEAne"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003269
+    m_Localized: Snapjaw Jr.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003268
+    m_Localized: Steak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003267
+    m_Localized: "B\xFBche de bouleau"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003266
+    m_Localized: Lingot de Copium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003265
+    m_Localized: Lingot de Lirium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003264
+    m_Localized: "Plant de p\xEAcher"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003263
+    m_Localized: Plant de pommier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003262
+    m_Localized: "Lingot d\u2019Idle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003261
+    m_Localized: Noyau de Dlog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003260
+    m_Localized: "Cristal d\u2019Eznorb"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003259
+    m_Localized: Plant de cerisier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003258
+    m_Localized: Laitue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003257
+    m_Localized: Mouton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003256
+    m_Localized: Funion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003255
+    m_Localized: Poivron
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003254
+    m_Localized: Noyau de Lirium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003253
+    m_Localized: Slime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003252
+    m_Localized: Poire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003251
+    m_Localized: Cristal de Vastium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003250
+    m_Localized: "Noyau d\u2019Erif"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003249
+    m_Localized: Carotte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003248
+    m_Localized: "B\xE2ton de sapin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003247
+    m_Localized: Patate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003246
+    m_Localized: Morceaux de Vastium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003245
+    m_Localized: Grand bouleau
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003244
+    m_Localized: Grand sapin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003243
+    m_Localized: "Ch\xEAne de taille moyenne"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003242
+    m_Localized: Bouleau de taille moyenne
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003241
+    m_Localized: "Grand ch\xEAne"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003240
+    m_Localized: Sapin de taille moyenne
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003239
+    m_Localized: Grand arbre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003238
+    m_Localized: Arbre de taille moyenne
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003237
+    m_Localized: Poireau
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003236
+    m_Localized: Navet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003235
+    m_Localized: Panais
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003234
+    m_Localized: "Ma\xEFs"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003233
+    m_Localized: Wartermelone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003232
+    m_Localized: Concombre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003231
+    m_Localized: Chillie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003230
+    m_Localized: Tomate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003229
+    m_Localized: Radis
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003228
+    m_Localized: Fraise
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003227
+    m_Localized: Pumking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003226
+    m_Localized: "Bl\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003225
+    m_Localized: Poirier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003224
+    m_Localized: Cerisier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003223
+    m_Localized: "P\xEAcher"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003222
+    m_Localized: Pommier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003221
+    m_Localized: Laitue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003220
+    m_Localized: Funion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003219
+    m_Localized: Poivron
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003218
+    m_Localized: Carotte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003217
+    m_Localized: Patate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003216
+    m_Localized: Minerai de Copium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003215
+    m_Localized: "Minerai d\u2019Idle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003214
+    m_Localized: Minerai de Lirium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003213
+    m_Localized: Minerai de Vastium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003212
+    m_Localized: Minerai de Dlog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003211
+    m_Localized: "Minerai d\u2019Erif"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003210
+    m_Localized: "Minerai d\u2019Eznorb"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003209
+    m_Localized: Minerai de Nori
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003208
+    m_Localized: Coffre de Vastium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003207
+    m_Localized: Coffre de Nori
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003206
+    m_Localized: "Coffre d\u2019Erif"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003205
+    m_Localized: Coffre de Dlog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003204
+    m_Localized: "Coffre d\u2019Idle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003203
+    m_Localized: "Coffre d\u2019Eznorb"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003202
+    m_Localized: Coffre de Copium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003201
+    m_Localized: Coffre de Lirium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003200
+    m_Localized: Sir Splashford III
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003199
+    m_Localized: "Niblet l\u2019Audacieux"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003198
+    m_Localized: Flipzoid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003197
+    m_Localized: Wigglelittle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003196
+    m_Localized: Bloopicus Maximus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003195
+    m_Localized: Gobe-vase boueux
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003194
+    m_Localized: Flippy Floppy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003193
+    m_Localized: Snapjaw Jr.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003192
+    m_Localized: "XP bonus de P\xEAche"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003191
+    m_Localized: "\xC9cho de B\xFBcheronnage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003190
+    m_Localized: "Ressources bonus de B\xFBcheronnage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003189
+    m_Localized: "Tourmente de d\xE9gustation"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003188
+    m_Localized: "Ressources bonus d\u2019Agriculture"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003187
+    m_Localized: "\xC9cho d\u2019Agriculture"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003186
+    m_Localized: XP bonus de Butin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003185
+    m_Localized: "XP bonus de B\xFBcheronnage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003184
+    m_Localized: "\xC9cho de Minage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003183
+    m_Localized: Ressources bonus de Minage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003182
+    m_Localized: XP bonus de Combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003181
+    m_Localized: Ressources bonus de Butin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003180
+    m_Localized: "\xC9cho de Butin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003179
+    m_Localized: "\xC9cho de combat"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003178
+    m_Localized: "D\xE9placement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003177
+    m_Localized: "R\xE9g\xE9n\xE9ration"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003176
+    m_Localized: "Sant\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003175
+    m_Localized: "D\xE9g\xE2ts critiques"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003174
+    m_Localized: "D\xE9g\xE2ts"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003173
+    m_Localized: XP bonus de Minage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003172
+    m_Localized: "\xC9cho de P\xEAche"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003171
+    m_Localized: "Ressources bonus de P\xEAche"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003170
+    m_Localized: "XP bonus d\u2019Agriculture"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003169
+    m_Localized: "B\xFBcheronnage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003168
+    m_Localized: "P\xEAche"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003167
+    m_Localized: Minage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003166
+    m_Localized: Agriculture
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003165
+    m_Localized: Combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003164
+    m_Localized: Butin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003163
+    m_Localized: Mini-slime vert
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003162
+    m_Localized: Mini-slime rouge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003161
+    m_Localized: Mini-slime bleu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003160
+    m_Localized: Mini-slime rose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003159
+    m_Localized: Mini-slime jaune
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003158
+    m_Localized: Slime jaune
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003157
+    m_Localized: Slime vert
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003156
+    m_Localized: Slime bleu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003155
+    m_Localized: Slime rose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003154
+    m_Localized: Slime rouge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003153
+    m_Localized: Grand slime bleu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003152
+    m_Localized: Grand slime vert
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003151
+    m_Localized: Grand slime rose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003150
+    m_Localized: Grand slime rouge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003149
+    m_Localized: Grand slime jaune
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003148
+    m_Localized: Cochon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003147
+    m_Localized: Poulet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003146
+    m_Localized: Mouton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003145
+    m_Localized: Vache
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003144
+    m_Localized: "Squelette \xE9p\xE9iste"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003143
+    m_Localized: Squelette mage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003142
+    m_Localized: Squelette archer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003141
+    m_Localized: "Victoires : {0}\nD\xE9g\xE2ts inflig\xE9s : {1}\nMorts : {2}\nD\xE9g\xE2ts subis : {3}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003140
+    m_Localized: "Pas effectu\xE9s : {0}\nPlus longue aventure : {1}\nT\xE2ches termin\xE9es : {2}\nRessources r\xE9colt\xE9es : {3}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003139
+    m_Localized: "Pas effectu\xE9s : {0}\nRecord de victoires : {1}\nT\xE2ches termin\xE9es : {2}\nRessources r\xE9colt\xE9es : {3}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003138
+    m_Localized: +{0:0}% de ressources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003137
+    m_Localized: Retraite en attente +{0:0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003136
+    m_Localized: "Vous \xEAtes mort..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003135
+    m_Localized: "Vous avez \xE9t\xE9 fauch\xE9..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003134
+    m_Localized: En attente
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003133
+    m_Localized: "Retour \xE0 la mort"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003132
+    m_Localized: Retour au village
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003131
+    m_Localized: Programmer la retraite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003130
+    m_Localized: Retraite en cours...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003129
+    m_Localized: Niv. {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003128
+    m_Localized: '{0} niv. {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003127
+    m_Localized: Retraite avec {0} victoires pour {1:0}% de bonus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003126
+    m_Localized: 'Distance de Fauche : {0}<sprite=9>{1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003125
+    m_Localized: "Mort {0} fois, fauch\xE9 par Carl {1} fois"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003124
+    m_Localized: "Vous avez voyag\xE9 pendant {0}, parcourant {1} pas au total"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003123
+    m_Localized: "Comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003122
+    m_Localized: <size=8>{0} {1}<sprite=194>{2}</size>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003121
+    m_Localized: "<size=8>{0} d\xE9bloqu\xE9 !</size>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003120
+    m_Localized: '{0} niv. {1}<sprite=194>{2}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003119
+    m_Localized: Palier {0}<sprite=194>{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003118
+    m_Localized: "Le fichier {0} est temporairement indisponible ou n\u2019a pas pu \xEAtre appliqu\xE9 au jeu en cours. La sauvegarde automatique est d\xE9sactiv\xE9e et les instantan\xE9s existants restent pr\xE9serv\xE9s. Fermez tout outil de synchronisation ou de sauvegarde susceptible d\u2019utiliser ces fichiers, puis r\xE9essayez.\n\n{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003117
+    m_Localized: "Le fichier {0} pr\xE9sente un conflit confirm\xE9 d\u2019int\xE9grit\xE9 ou d\u2019autorit\xE9 du cloud. R\xE9essayer est le premier choix le plus s\xFBr ; tous les instantan\xE9s existants restent pr\xE9serv\xE9s. Si vous choisissez explicitement de repartir de z\xE9ro, une nouvelle lign\xE9e cloud est cr\xE9\xE9e sans supprimer les anciens fichiers.\n\n{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003116
+    m_Localized: "Le fichier {0} a \xE9t\xE9 \xE9crit par une version plus r\xE9cente du jeu. Il n\u2019a pas \xE9t\xE9 modifi\xE9. Installez cette version, puis r\xE9essayez, ou consultez le dossier des sauvegardes. Repartir de z\xE9ro est d\xE9sactiv\xE9 pour prot\xE9ger votre progression.\n\n{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003115
+    m_Localized: Ouvrir le dossier des sauvegardes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003114
+    m_Localized: Garder les anciens fichiers et recommencer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003113
+    m_Localized: "R\xE9essayer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003112
+    m_Localized: Sauvegarde temporairement indisponible
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003111
+    m_Localized: "R\xE9cup\xE9ration de sauvegarde n\xE9cessaire"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003110
+    m_Localized: "Sauvegarde d\u2019une version plus r\xE9cente"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003109
+    m_Localized: "\xC9chec du collage : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003108
+    m_Localized: "\xC9chec de la copie : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003107
+    m_Localized: "Exception d\u2019importation : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003106
+    m_Localized: "\xC9chec de l\u2019importation : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003105
+    m_Localized: "\xC9chec de l\u2019exportation : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003104
+    m_Localized: "Texte d\u2019exportation copi\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003103
+    m_Localized: "Import\xE9 en s\xE9curit\xE9 sur le disque ; red\xE9marrez le jeu ou utilisez R\xE9essayer pour terminer le chargement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003102
+    m_Localized: "Rien \xE0 importer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003101
+    m_Localized: "Exportation de secours copi\xE9e depuis la m\xE9moire ; la sauvegarde sur disque a \xE9chou\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003100
+    m_Localized: "Export\xE9 dans le presse-papiers"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003099
+    m_Localized: 'Temps de jeu : {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003098
+    m_Localized: "Cr\xE9\xE9 avec la version : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003097
+    m_Localized: Fichier {0} | {1:0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003096
+    m_Localized: Fichier {0} | {1:0}% - Actif
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003095
+    m_Localized: "Derni\xE8re partie : {0} \u2022 il y a {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003094
+    m_Localized: "Derni\xE8re sauvegarde : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003093
+    m_Localized: "Fichier {0} - R\xE9cup\xE9ration n\xE9cessaire"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003092
+    m_Localized: Inconnu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003091
+    m_Localized: "Derni\xE8re partie : jamais"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003090
+    m_Localized: "Derni\xE8re sauvegarde : jamais"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003089
+    m_Localized: 'Temps de jeu : indisponible'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003088
+    m_Localized: 'Temps de jeu : aucun'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003087
+    m_Localized: "D\xE9g\xE2ts inflig\xE9s \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003086
+    m_Localized: "D\xE9g\xE2ts re\xE7us \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003085
+    m_Localized: "Butin \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003084
+    m_Localized: 'FPS : {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003083
+    m_Localized: 'FPS : VSync'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003082
+    m_Localized: "D\xE9sactiv\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003081
+    m_Localized: "Activ\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003080
+    m_Localized: Charger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003079
+    m_Localized: Supprimer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003078
+    m_Localized: Sauvegarder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003077
+    m_Localized: Effacer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003076
+    m_Localized: "Ex\xE9cuter"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003075
+    m_Localized: Fermer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003074
+    m_Localized: Console
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003073
+    m_Localized: Chargement...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003072
+    m_Localized: "Retrouve-moi au village. J\u2019ai quelque chose de sp\xE9cial pour toi, et j\u2019ai besoin de ton aide pour r\xE9cup\xE9rer des b\xFBches."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003071
+    m_Localized: Mais il me faut le bois parfait pour ma maison...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003070
+    m_Localized: "Je suis venu chercher des arbres \xE0 abattre. "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003069
+    m_Localized: "Ny\xE9h\xE9h\xE9, aventurier. Je suis la sorci\xE8re qui t\u2019apprendra \xE0 cultiver la terre. Quoi, tu pensais que je ferais des potions ? Garde tes clich\xE9s ! Et rapporte cinq radis bien m\xFBrs. Comme preuve, certainement pas pour ma confiture de radis."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003068
+    m_Localized: "Je retourne dans mes mines. Retrouve-moi l\xE0-bas si tu veux voir du vrai MINERAI !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003067
+    m_Localized: "IL A OUBLI\xC9 DE DIRE QUE C\u2019\xC9TAIT CE TAS DE FERRAILLE !!!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003066
+    m_Localized: "Hmph... Quand Barkley m\u2019a dit qu\u2019il y avait du minerai par ici..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003065
+    m_Localized: Eva veut combien de radis !?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003064
+    m_Localized: "Ton aide serait vraiment bienvenue pour s\u2019en d\xE9barrasser..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003063
+    m_Localized: "Mais les slimes sont venus plus loin que d\u2019habitude."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003062
+    m_Localized: On est venus chercher de nouvelles graines.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003061
+    m_Localized: Ravi de te rencontrer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003060
+    m_Localized: "Voil\xE0 une \xE9p\xE9e que j\u2019ai fabriqu\xE9e ! Je rentre au village."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003059
+    m_Localized: "Je crois que je suis plus dou\xE9 pour fabriquer de l\u2019\xE9quipement que pour combattre ces types. "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003058
+    m_Localized: "Ah, te voil\xE0, frangin ! "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003057
+    m_Localized: Niveau {0} des jumeaux requis.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003056
+    m_Localized: Cette action des Champs est indisponible ({0}).
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003055
+    m_Localized: Plate-bande {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003054
+    m_Localized: Parcelle de verger {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003053
+    m_Localized: '{0:N0} {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003052
+    m_Localized: Graines de {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003051
+    m_Localized: "Source de r\xE9colte encore inaccessible."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003050
+    m_Localized: "Sources de r\xE9colte manquantes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003049
+    m_Localized: "Terminez la qu\xEAte de construction pr\xE9c\xE9dente."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003048
+    m_Localized: Construction inconnue.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003047
+    m_Localized: "Pr\xE9parez les plates-bandes avant de planter."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003046
+    m_Localized: "Une culture pousse d\xE9j\xE0 dans cette plate-bande."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003045
+    m_Localized: "Trouvez d\u2019abord un sachet de graines de radis en aventure."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003044
+    m_Localized: "Aucune plate-bande pr\xEAte \xE0 r\xE9colter."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003043
+    m_Localized: Retournez au village pour entretenir les plates-bandes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003042
+    m_Localized: "R\xE9unissez les mat\xE9riaux de construction"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003041
+    m_Localized: "Pr\xEAt \xE0 construire"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003040
+    m_Localized: Construit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003039
+    m_Localized: Rencontrez Flora et Tillman en aventure
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003038
+    m_Localized: "\xC9coutez la pr\xE9sentation de Flora et Tillman"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003037
+    m_Localized: "Termin\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003036
+    m_Localized: Rencontrer Flora et Tillman
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003035
+    m_Localized: Remettre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003034
+    m_Localized: Concentrer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003033
+    m_Localized: "Replantation : d\xE9sactiv\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003032
+    m_Localized: "Replantation : activ\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003031
+    m_Localized: Arroser une fois
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003030
+    m_Localized: "Arros\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003029
+    m_Localized: "S\xE9lectionner"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003028
+    m_Localized: Concentrer les Champs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003027
+    m_Localized: Planter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003026
+    m_Localized: "R\xE9colter les cultures m\xFBres"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003025
+    m_Localized: "{0} \xB7 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003024
+    m_Localized: "{0} \xB7 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003023
+    m_Localized: "{0} \xB7 Jumeaux {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003022
+    m_Localized: " \u2192 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003021
+    m_Localized: " \xB7 S\xE9lectionnez une plate-bande vide"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003020
+    m_Localized: "{0} \xB7 Agriculture {1} requise"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003019
+    m_Localized: "{0} \xB7 Agriculture {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003018
+    m_Localized: "Rendement \xD7{0:0.00} \xB7 Temps de pousse \xD7{1:0.0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003017
+    m_Localized: '{0} / {1} XP'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003016
+    m_Localized: "{0} \xB7 Flora & Tillman \xB7 Niveau {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003015
+    m_Localized: "Niveau 20 des jumeaux : r\u00e9colte et replante avec 9 sachets de graines correspondantes ou 1 jeune arbre correspondant. S\u2019arr\u00eate quand les r\u00e9serves sont \u00e9puis\u00e9es."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003014
+    m_Localized: Retournez au village pour entretenir les Champs.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003013
+    m_Localized: "Pr\xEAt"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003012
+    m_Localized: Vide
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003011
+    m_Localized: "Verrouill\xE9 \xB7 construction requise"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003010
+    m_Localized: "Termin\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003009
+    m_Localized: "Non d\xE9couvert"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003008
+    m_Localized: "D\xE9couvrez d\u2019abord cette graine ou ce plant."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003007
+    m_Localized: Construction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003006
+    m_Localized: "S\xE9lectionnez des graines et une plate-bande vide"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003005
+    m_Localized: Parcelles de verger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003004
+    m_Localized: "Champs \xB7 Flora & Tillman"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003003
+    m_Localized: "{0} XP des jumeaux par r\xE9colte. Pousse pendant le jeu."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003002
+    m_Localized: Champs du village
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003001
+    m_Localized: Plates-bandes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003000
+    m_Localized: Graines et plants
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000001000
+    m_Localized: Champs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002000
+    m_Localized: Audio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002001
+    m_Localized: Sauvegarde automatiquement le fichier actif chaque minute. Changer de fichier sauvegarde votre progression actuelle.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002002
+    m_Localized: "Activez ou d\xE9sactivez le lancement automatique en cliquant sur chaque emplacement de buff d\xE9bloqu\xE9 hors du mode d\u2019attribution. Vous ne pouvez pas attribuer de buff pendant une aventure."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002003
+    m_Localized: Copier dans le presse-papiers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002004
+    m_Localized: "Cr\xE9dits"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002005
+    m_Localized: "D\xE9veloppeur principal"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002006
+    m_Localized: Matthew Rushworth
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002007
+    m_Localized: Musique et effets sonores
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002008
+    m_Localized: 'Technishift '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002009
+    m_Localized: Effets sonores
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002010
+    m_Localized: dqssq
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002011
+    m_Localized: "Artiste principal | D\xE9couvrez sa page Itch.io !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002012
+    m_Localized: Kenmi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002013
+    m_Localized: 'Latimer Cross
+
+      Patrick Kennedy
+
+      solocommand'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002014
+    m_Localized: "Un grand merci \xE0 mes m\xE9c\xE8nes Patreon"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002015
+    m_Localized: "Champions du d\xE9veloppement\nVous me motivez chaque jour de d\xE9veloppement !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002016
+    m_Localized: "MatHeadGetz | Des encouragements enthousiastes depuis les tribunes !\nDragonmaster100 | Des heures et des heures de tests.\nQuackers | Des coin-coin l\xE0 o\xF9 il le faut.\nGLUTTONY | Des encouragements pour mon b\xFBcheronnage."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002017
+    m_Localized: "Et merci \xE0..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002018
+    m_Localized: Affichage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002019
+    m_Localized: Butin | 1.55s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002020
+    m_Localized: "D\xE9g\xE2ts de Caleb | 1.55s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002021
+    m_Localized: Exporter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002022
+    m_Localized: "Exporter l\u2019emplacement actif"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002023
+    m_Localized: Textes flottants
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002024
+    m_Localized: Texte flottant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002025
+    m_Localized: Ouvrir le dossier des sauvegardes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002026
+    m_Localized: 'FPS : 60'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002027
+    m_Localized: "Plein \xE9cran"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002028
+    m_Localized: Importer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002029
+    m_Localized: Importer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002030
+    m_Localized: "Importer dans l\u2019emplacement actif"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002031
+    m_Localized: Saisissez du texte...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002032
+    m_Localized: "Je sais que le jeu peut \xEAtre un peu d\xE9routant au d\xE9but. Un v\xE9ritable tutoriel est en pr\xE9paration ; ce message sert d\u2019introduction provisoire.\n\nC\u2019est avant tout un jeu incr\xE9mental : la progression se fait automatiquement, en arri\xE8re-plan, pendant que vous faites autre chose !\n\nLe bouton Biblioth\xE8que, en haut, explique les diff\xE9rents syst\xE8mes.\n\nCommencez par les qu\xEAtes : elles vous guideront dans votre progression.\n\nVotre h\xE9ros se d\xE9place et accomplit les t\xE2ches tout seul pendant une aventure.\n\nJ\u2019esp\xE8re que vous vous amuserez. Si vous \xEAtes bloqu\xE9, retrouvez-moi sur Discord !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002033
+    m_Localized: "Cliquez pour fermer d\xE9finitivement !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002034
+    m_Localized: Bienvenue dans Echoes of Vasteria
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002035
+    m_Localized: Feuille de route
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002036
+    m_Localized: "Qu\xEAtes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002037
+    m_Localized: "T\xE2ches\n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002038
+    m_Localized: Paliers des objets
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002039
+    m_Localized: "Notes de mise \xE0 jour"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002040
+    m_Localized: Forge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002041
+    m_Localized: Chaudron
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002042
+    m_Localized: Buffs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002043
+    m_Localized: 'Combat
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002044
+    m_Localized: Fauche
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002045
+    m_Localized: "\xC9chos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002046
+    m_Localized: Retraite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002047
+    m_Localized: Charger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002048
+    m_Localized: Charger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002049
+    m_Localized: Charger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002050
+    m_Localized: Anglais (en)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002051
+    m_Localized: Russe (ru)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002052
+    m_Localized: "Volume g\xE9n\xE9ral"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002053
+    m_Localized: Fermer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002054
+    m_Localized: Rencontrer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002055
+    m_Localized: Suivant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002056
+    m_Localized: Musique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002057
+    m_Localized: "Couper le son en arri\xE8re-plan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002058
+    m_Localized: Aventure
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002059
+    m_Localized: "\xC9pinglage auto"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002060
+    m_Localized: Buffs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002061
+    m_Localized: Chaudron
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002062
+    m_Localized: "Cr\xE9dits"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002063
+    m_Localized: Forge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002064
+    m_Localized: Accueil
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002065
+    m_Localized: Terres agricoles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002066
+    m_Localized: Bois
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002067
+    m_Localized: Mines
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002068
+    m_Localized: "Rivi\xE8re"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002069
+    m_Localized: "Hant\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002070
+    m_Localized: Options
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002071
+    m_Localized: "Qu\xEAtes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002072
+    m_Localized: "Comp\xE9tences"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002073
+    m_Localized: Habitants
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002074
+    m_Localized: "Biblioth\xE8que"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002075
+    m_Localized: Coller le presse-papiers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002076
+    m_Localized: "D\xE9g\xE2ts des ennemis | 1.55s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002077
+    m_Localized: "Pr\xE9f\xE9rences"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002078
+    m_Localized: "\xC9pinglez un objectif en touchant son nom, sa description ou sa zone de r\xE9compense."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002079
+    m_Localized: Non !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002080
+    m_Localized: Quitter ?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002081
+    m_Localized: Sauvegarder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002082
+    m_Localized: Sauvegarder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002083
+    m_Localized: Sauvegarder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002084
+    m_Localized: "\xC9craser / supprimer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002085
+    m_Localized: Fichiers de sauvegarde
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002086
+    m_Localized: Fichiers de sauvegarde
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002087
+    m_Localized: "Param\xE8tres"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002088
+    m_Localized: Effets sonores
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002089
+    m_Localized: "Total des am\xE9liorations de comp\xE9tence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002090
+    m_Localized: "Derni\xE8re sauvegarde : 13s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002091
+    m_Localized: 'Temps de jeu : 12h 32m 16s'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002092
+    m_Localized: Fichier 1 | 38.4%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002093
+    m_Localized: "Derni\xE8re sauvegarde : 13s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002094
+    m_Localized: 'Temps de jeu : 12h 32m 16s'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002095
+    m_Localized: Fichier 1 | 38.4%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002096
+    m_Localized: "Derni\xE8re sauvegarde : 13s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002097
+    m_Localized: 'Temps de jeu : 12h 32m 16s'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002098
+    m_Localized: Fichier 1 | 38.4%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002099
+    m_Localized: "La traduction est en cours. Si vous l\u2019utilisez, certains textes peuvent s\u2019afficher incorrectement et beaucoup restent en anglais."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002100
+    m_Localized: Synchronisation verticale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002101
+    m_Localized: "Largeur maximale de l\u2019interface"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002102
+    m_Localized: "Fen\xEAtr\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004000
+    m_Localized: Statistiques
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004001
+    m_Localized: "Fermer la fen\xEAtre"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004002
+    m_Localized: "Sachet de graines : Radis"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004003
+    m_Localized: "Sachet de graines : Maïs"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004004
+    m_Localized: "Sachet de graines : Blé"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004005
+    m_Localized: "Sachet de graines : Watermelone"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004006
+    m_Localized: "Sachet de graines : Carotte"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004007
+    m_Localized: "Sachet de graines : Patate"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004008
+    m_Localized: "Sachet de graines : Tomate"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004009
+    m_Localized: "Sachet de graines : Laitue"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004010
+    m_Localized: "Sachet de graines : Concombre"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004011
+    m_Localized: "Sachet de graines : Poireau"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004012
+    m_Localized: "Sachet de graines : Panais"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004013
+    m_Localized: "Sachet de graines : Poivron"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004014
+    m_Localized: "Sachet de graines : Chillie"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004015
+    m_Localized: "Sachet de graines : Pumking"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004016
+    m_Localized: "Sachet de graines : Fraise"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004017
+    m_Localized: "Sachet de graines : Funion"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004018
+    m_Localized: "Sachet de graines : Navet"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004019
+    m_Localized: "Il faut 9 sachets de graines correspondantes pour ensemencer une parcelle."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004020
+    m_Localized: "Trouvez d’abord un jeune arbre adapté lors d’une aventure."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004021
+    m_Localized: "N\u00e9cessite {0} sachets de graines correspondantes par parcelle."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004022
+    m_Localized: "N\u00e9cessite {0} jeune arbre correspondant par emplacement."
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

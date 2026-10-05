@@ -9,7 +9,6 @@ using System.Linq;
 using Blindsided.SaveData;
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Enemies;
-using TimelessEchoes.NpcGeneration;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Upgrades;
@@ -30,7 +29,6 @@ namespace TimelessEchoes.Quests
     {
         private ResourceManager resourceManager;
         private EnemyKillTracker killTracker;
-        private AlterEchoGenerationManager generationManager;
         private QuestUIManager uiManager;
         private GameplayStatTracker statTracker;
         private TimelessEchoes.Upgrades.CauldronManager cauldronManager;
@@ -73,9 +71,6 @@ namespace TimelessEchoes.Quests
             killTracker = EnemyKillTracker.Instance;
             if (killTracker == null)
                 Log("EnemyKillTracker missing", TELogCategory.Combat, this);
-            generationManager = AlterEchoGenerationManager.Instance;
-            if (generationManager == null)
-                Log("AlterEchoGenerationManager missing", TELogCategory.General, this);
             uiManager = QuestUIManager.Instance;
 
             statTracker = GameplayStatTracker.Instance;
@@ -238,7 +233,12 @@ namespace TimelessEchoes.Quests
             }
         }
 
-        private void OnResourcesMixed(int amount)
+        public List<string> GetActiveCauldronQuestIds() => active.Values
+            .Where(inst => inst?.data?.requirements != null && inst.data.requirements.Any(
+                req => req != null && req.type == QuestData.RequirementType.CauldronMix))
+            .Select(inst => inst.data.questId).Distinct().ToList();
+
+        private void OnResourcesMixed(double amount)
         {
             if (amount <= 0) return;
             foreach (var inst in active.Values)
@@ -255,10 +255,7 @@ namespace TimelessEchoes.Quests
                 }
                 if (!has) continue;
 
-                if (oracle.saveData.Quests.TryGetValue(inst.data.questId, out var rec))
-                {
-                    rec.CauldronMixProgress += amount;
-                }
+                // The conversion command already committed this progress with food/stew.
                 UpdateProgress(inst);
             }
         }
@@ -351,6 +348,12 @@ namespace TimelessEchoes.Quests
                     return false;
             }
 
+            if (quest.questId == TimelessEchoes.Farming.FarmContent.IntroductionId)
+                return oracle.saveData.CompletedNpcTasks.Contains("Farmers1");
+            var fields = TimelessEchoes.Farming.FarmContent.Load();
+            var construction = fields ? fields.Build(quest.questId) : null;
+            if (quest.questId.StartsWith("Farm.Garden.Build", StringComparison.Ordinal) || quest.questId.StartsWith("Farm.Orchard.Build", StringComparison.Ordinal))
+                return fields && construction != null && fields.BuildGate(oracle.saveData, construction) == null;
             return true;
         }
 
@@ -518,9 +521,11 @@ namespace TimelessEchoes.Quests
             PinnedQuestUIManager.Instance?.UpdateProgress();
         }
 
-        private void CompleteQuest(QuestInstance inst)
+        private bool CompleteQuest(QuestInstance inst)
         {
-            if (inst == null) return;
+            if (inst == null) return false;
+            var fieldQuest = inst.data.questId.StartsWith("Farm.Garden.", StringComparison.Ordinal) || inst.data.questId.StartsWith("Farm.Orchard.", StringComparison.Ordinal);
+            if (fieldQuest && (TimelessEchoes.Farming.FarmService.Instance == null || !TimelessEchoes.Farming.FarmService.Instance.BuildQuest(inst.data.questId))) return false;
             var id = inst.data.questId;
             if (!oracle.saveData.Quests.TryGetValue(id, out var record))
             {
@@ -528,7 +533,7 @@ namespace TimelessEchoes.Quests
                 oracle.saveData.Quests[id] = record;
             }
 
-            if (resourceManager != null)
+            if (!fieldQuest && resourceManager != null)
                 foreach (var req in inst.data.requirements)
                     if (req.type == QuestData.RequirementType.Resource)
                         resourceManager.Spend(req.resource, req.amount);
@@ -579,11 +584,6 @@ namespace TimelessEchoes.Quests
                 // Quest rewards should bypass the demo cap and apply to the true backing value
                 // so players don't miss progression when moving to the main version.
                 GameplayStatTracker.Instance?.IncreaseMaxRunDistance(inst.data.maxDistanceIncrease, oracle != null && oracle.demo);
-            if (inst.data.disciplePercentReward > 0f)
-            {
-                oracle.saveData.DisciplePercent += inst.data.disciplePercentReward;
-                AlterEchoGenerationManager.Instance?.RefreshRates();
-            }
             if (!string.IsNullOrEmpty(inst.data.npcId))
                 CompletedNpcTasks.Add(inst.data.npcId);
             if (inst.ui != null)
@@ -618,12 +618,13 @@ namespace TimelessEchoes.Quests
             // Immediately persist rewards and quest state so saved data matches live inventory.
             try
             {
-                SaveData();
+                if (!fieldQuest) SaveData();
             }
             catch (System.Exception ex)
             {
                 Debug.LogError($"Immediate save after quest completion failed: {ex}");
             }
+            return true;
         }
 
         /// <summary>
@@ -853,13 +854,23 @@ namespace TimelessEchoes.Quests
             return entries;
         }
 
+        public void RefreshFieldsProgression()
+        {
+            if (oracle?.saveData == null) return;
+            foreach (var quest in quests)
+                if (quest && (quest.questId == TimelessEchoes.Farming.FarmContent.IntroductionId ||
+                    quest.questId.StartsWith("Farm.Garden.Build", StringComparison.Ordinal) ||
+                    quest.questId.StartsWith("Farm.Orchard.Build", StringComparison.Ordinal))) TryStartQuest(quest);
+            UpdateAllProgress();
+            RefreshNoticeboard();
+        }
+
         public bool TryTurnInQuest(string questId)
         {
             if (string.IsNullOrEmpty(questId) || !active.TryGetValue(questId, out var inst)) return false;
             UpdateProgress(inst);
             if (!inst.ReadyForTurnIn) return false;
-            CompleteQuest(inst);
-            return true;
+            return CompleteQuest(inst);
         }
 
         public void RefreshNoticeboard()
@@ -915,12 +926,10 @@ namespace TimelessEchoes.Quests
             if (oracle == null || quests == null)
                 return;
 
-            var total = 0;
-            for (int i = 0; i < quests.Count; i++)
-            {
-                if (quests[i] != null)
-                    total++;
-            }
+            var cohort = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var quest in quests)
+                if (quest != null && !string.IsNullOrWhiteSpace(quest.questId)) cohort.Add(quest.questId);
+            var total = cohort.Count;
             cachedTotalQuestCount = total;
 
             var completed = 0;
@@ -930,7 +939,7 @@ namespace TimelessEchoes.Quests
                 foreach (var pair in oracle.saveData.Quests)
                 {
                     var record = pair.Value;
-                    if (record != null && record.Completed)
+                    if (cohort.Contains(pair.Key) && record != null && record.Completed)
                     {
                         completed++;
                         if (record.CompletedTimestamp > latestTicks)

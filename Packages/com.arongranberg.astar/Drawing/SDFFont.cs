@@ -1,3 +1,5 @@
+// Compiled out when ALINE is excluded from standalone builds.
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Collections;
@@ -228,3 +230,4 @@ namespace Pathfinding.Drawing {
 		}
 	}
 }
+#endif

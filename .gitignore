@@ -107,3 +107,59 @@ Assets/Localization/Sheets Service Provider.asset.meta
 
 # Temporary scene snapshots used during visual review
 /output/scene-review/Main.*.unity
+
+# Private asset-owner tile catalogues and disposable review evidence.
+# The public repository tracks semantic mappings and authoring tools; private
+# Library holds native pack contact sheets/PDFs, not a redistributed art pack.
+/output/tile-catalogues/*.pdf
+/output/tile-catalogues/*.png
+/output/scene-review/path-stage-captures/
+/output/scene-review/*-preview-*.txt
+/output/scene-review/waterfalls-independent-review.png
+/docs/TerrainTiles/*-catalogue.png
+/docs/TerrainTiles/LightGreenTerrain-*.png
+/docs/TerrainTiles/AllPacks/Duplicate-lookalike-review.png
+/output/tile-catalogues/library-*.json
+/output/tile-catalogues/pdf-manifest.json
+
+# Local migration and save-isolation helpers; not needed by the game or Mac checkout.
+/output/scene-review/ApplyAllTileNames.cs
+/output/scene-review/ApplyRegularTerrainNames.cs
+/output/scene-review/ApplyCatalogueCorrections.cs
+/output/scene-review/BuildAllTilePlan.py
+/output/scene-review/ConfigurePathIsolation.py
+/output/scene-review/CorrectCatalogueNames.py
+/output/scene-review/CorrectSampleNW.py
+/output/scene-review/FinalExactByteAudit.py
+/output/scene-review/FocusSceneRepair.py
+/output/scene-review/FinishEncodingRecord.py
+/output/scene-review/InspectPathStages.cs
+/output/scene-review/InspectRepairTransforms.cs
+/output/scene-review/PreviewPathStage.cs
+/output/scene-review/RepairPathContours.cs
+/output/scene-review/RestoreAutomaticImporterFields.py
+/output/scene-review/RestoreDynamicFontCache.py
+/output/scene-review/RestoreUnusedSceneSlots.py
+/output/scene-review/RuntimePathBeforeAfter.cs
+/output/scene-review/SyncTileCatalogueLabels.cs
+/output/scene-review/AuditUnresolvedImpact.py
+/output/scene-review/HIGH-REVIEW-CHECKPOINT.md
+/output/scene-review/semantic-*.json
+/output/scene-review/semantic-*-notes.md
+/output/scene-review/duplicate-review-*.json
+/output/scene-review/all-tiles-independent-scope-audit.json
+/output/scene-review/all-tile-review/
+/output/scene-review/catalogue-correction-delta.json
+/output/scene-review/AuditTilePixels.ps1
+/output/scene-review/BuildGrassTileMapping.py
+/output/scene-review/BuildRegularTerrainMapping.py
+/output/scene-review/FinalizeExpansionCatalogueQA.py
+/output/scene-review/InspectMainTerrain.cs
+/output/scene-review/RenderAllTileInventory.ps1
+/output/scene-review/RenderDuplicateReview.ps1
+/output/scene-review/RenderGrassTileCatalogue.ps1
+/output/scene-review/RenderRegularInventory.ps1
+/output/scene-review/RenderRegularTerrainCatalogue.ps1
+/output/scene-review/SampleRegularTerrain.ps1
+/output/scene-review/VerifyGrassTileMigration.py
+/output/scene-review/VerifyRegularTerrainMigration.py

@@ -1,0 +1,302 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using Blindsided;
+using Blindsided.SaveData;
+using TimelessEchoes;
+using TimelessEchoes.Farming;
+using TimelessEchoes.Hero;
+using TimelessEchoes.MapGeneration;
+using TimelessEchoes.Quests;
+using TimelessEchoes.Tasks;
+using TimelessEchoes.UI;
+using TimelessEchoes.UI.Toolkit;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
+
+// Disposable snapshot only. All controlled fixture grants are recorded as such.
+public sealed class FieldsPlayerProof : MonoBehaviour
+{
+    const BindingFlags Hidden = BindingFlags.Instance | BindingFlags.NonPublic;
+    static string output;
+    readonly List<string> facts = new();
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    static void Install()
+    {
+        output = Environment.GetEnvironmentVariable("EOV_FIELDS_PROOF_DIR");
+        if (string.IsNullOrEmpty(output)) throw new InvalidOperationException("Protected proof output is required.");
+        Directory.CreateDirectory(output);
+        var field = typeof(SaveManager).GetField("rootPathOverride", BindingFlags.Static | BindingFlags.NonPublic);
+        if (field == null) throw new InvalidOperationException("Save isolation seam missing.");
+        field.SetValue(null, Path.Combine(output, "test-save-root"));
+        var go = new GameObject("Disposable Fields normal-game proof");
+        DontDestroyOnLoad(go); go.AddComponent<FieldsPlayerProof>();
+    }
+    IEnumerator Start()
+    {
+        var run = Run();
+        while (true)
+        {
+            object yielded;
+            try { if (!run.MoveNext()) break; yielded = run.Current; }
+            catch (Exception ex) { File.WriteAllText(Path.Combine(output,"FAILED.txt"),ex.ToString()); File.WriteAllLines(Path.Combine(output,"runtime-proof-partial.txt"),facts); Debug.LogException(ex); Application.Quit(1); yield break; }
+            yield return yielded;
+        }
+        File.WriteAllLines(Path.Combine(output,"runtime-proof.txt"), facts);
+        Application.Quit(0);
+    }
+    void Check(bool condition,string fact) { if (!condition) throw new InvalidOperationException(fact); facts.Add("PASS " + fact); }
+    IEnumerator Run()
+    {
+        Screen.SetResolution(1440,900,false);
+        double end = Time.realtimeSinceStartupAsDouble + 120;
+        while (SceneManager.GetActiveScene().name != "Main" || FarmService.Instance?.Ready != true)
+        { if (Time.realtimeSinceStartupAsDouble > end) throw new TimeoutException("Loading -> Main failed"); yield return null; }
+        var farm = FarmService.Instance; var oracle = Oracle.oracle; var qm = QuestManager.Instance;
+        // Dismiss the real welcome after its authored countdown through its normal API.
+        yield return null;
+        foreach(var intro in FindObjectsByType<ToolkitIntroScreen>(FindObjectsInactive.Include))
+        {
+            end=Time.realtimeSinceStartupAsDouble+60;
+            while(intro.IsVisible && !intro.IsReady)
+            { if(Time.realtimeSinceStartupAsDouble>end) throw new TimeoutException("Welcome countdown did not finish"); yield return null; }
+            if(intro.IsVisible) intro.TryClose();
+            Check(!intro.IsVisible,"actual welcome dismissed through normal ready TryClose API");
+        }
+        Check(qm != null,"normal Main QuestManager exists");
+        Check(farm.State.GardenCapacity == 0 && farm.State.TwinsLevel == 1 && farm.State.TwinsXp == 0,"fresh normal game: no free capacity or Twins XP");
+        Check(!qm.TryTurnInQuest(FarmContent.IntroductionId),"intro cannot hand in before Farmers1 meeting");
+        var manager=GameManager.Instance;
+        var entries=(IEnumerable)typeof(GameManager).GetField("generationButtons",Hidden).GetValue(manager);
+        MapGenerationConfig config=null;
+        foreach(var entry in entries)
+        {
+            if(entry==null) continue;
+            var property=entry.GetType().GetProperty("Config");
+            var field=entry.GetType().GetField("Config");
+            config=(MapGenerationConfig)(property!=null?property.GetValue(entry):field?.GetValue(entry));
+            if(config) break;
+        }
+        Check(config!=null,"actual first authored adventure config found");
+        Check(manager.BeginAdventure(config),"real authored first adventure starts before intro");
+        end=Time.realtimeSinceStartupAsDouble+120;
+        while(manager.IsInTown || manager.RunLoadingActive || !HeroController.Instance)
+        { if(Time.realtimeSinceStartupAsDouble>end) throw new TimeoutException("First adventure load failed"); yield return null; }
+        var hero=HeroController.Instance; hero.SetActiveState(false);
+        var radish=farm.Content.Recipe(FarmCommands.RadishRecipeId);
+        Check(radish?.source?.taskPrefab!=null,"actual matching Radish task prefab exists");
+        var beforeSeeds=farm.State.Seeds.TryGetValue(radish.seedId,out var oldSeed)?oldSeed.Quantity:0;
+        var beforePending=farm.State.PendingCredits.Count;
+        var firstTask=CompleteActualCrop(radish,hero,manager.CurrentMap.transform);
+        Check((farm.State.Seeds.TryGetValue(radish.seedId,out var beforeIntroSeed)?beforeIntroSeed.Quantity:0)==beforeSeeds && farm.State.PendingCredits.Count==beforePending,
+            "actual matching adventure task before intro grants no seed or pending seed intent");
+        Destroy(firstTask.gameObject);
+        var farmers = Instantiate(Resources.Load<GameObject>("FieldsProof/Farmers"),manager.CurrentMap.transform);
+        Check(farmers != null,"actual authored Flora/Tillman meeting prefab loaded");
+        var talk = farmers.GetComponent<TalkToNpcTask>();
+        Check(talk != null,"actual TalkToNpcTask present");
+        talk.Claim(hero); talk.StartTask(); talk.OnArrival(hero);
+        var meeting = (GameObject)typeof(TalkToNpcTask).GetField("meetingInstance",Hidden).GetValue(talk);
+        Check(meeting != null,"actual native meeting view opens");
+        typeof(ToolkitMeetingScreen).GetMethod("Finish",Hidden).Invoke(meeting.GetComponent<ToolkitMeetingScreen>(),null);
+        yield return null;
+        Check(StaticReferences.CompletedNpcTasks.Contains("Farmers1"),"actual meeting callback records Farmers1");
+        manager.AbandonRun();
+        end=Time.realtimeSinceStartupAsDouble+120;
+        while(!manager.IsInTown || manager.RunLoadingActive)
+        { if(Time.realtimeSinceStartupAsDouble>end) throw new TimeoutException("Return after meeting failed"); yield return null; }
+        Check(qm.TryTurnInQuest(FarmContent.IntroductionId),"normal QuestManager intro hand-in succeeds after meeting");
+        Check(farm.State.GardenCapacity == 0 && farm.State.Seeds.Count == 0 && farm.State.TwinsXp == 0,"intro gives no free seed, build or XP");
+        Destroy(farmers);
+        // Exact resource fixture is injected through real inventory, then actual quest lane pays it.
+        var resources = TimelessEchoes.Upgrades.ResourceManager.Instance;
+        var all = Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Upgrades.Resource>("");
+        foreach (var pair in new[] { ("Log",10d), ("Stick",20d) })
+        { var resource=all.Single(r=>r.name==pair.Item1); var amount=resources.GetAmount(resource); resources.Add(resource,pair.Item2-amount,trackStats:false,eligibleForTierRoll:false); }
+        oracle.saveData.General.MaxRunDistance = Math.Max(100,oracle.saveData.General.MaxRunDistance);
+        qm.RefreshFieldsProgression();
+        Check(qm.TryTurnInQuest("Farm.Garden.Build01.v1"),"real first construction hand-in succeeds with controlled 10Log20Stick fixture");
+        Check(farm.State.GardenCapacity==1 && oracle.saveData.Resources["Log"].Amount==0 && oracle.saveData.Resources["Stick"].Amount==0,"first construction charges exact materials once and unlocks one bed");
+        Check(manager.BeginAdventure(config),"real second authored adventure starts after intro");
+        end=Time.realtimeSinceStartupAsDouble+120;
+        while(manager.IsInTown || manager.RunLoadingActive || !HeroController.Instance)
+        { if(Time.realtimeSinceStartupAsDouble>end) throw new TimeoutException("Second adventure load failed"); yield return null; }
+        hero=HeroController.Instance; hero.SetActiveState(false);
+        var oldChance=farm.Content.seedChance;
+        ContinuousTask secondTask;
+        try { farm.Content.seedChance=1; secondTask=CompleteActualCrop(radish,hero,manager.CurrentMap.transform); }
+        finally { farm.Content.seedChance=oldChance; }
+        Check(farm.State.Seeds[radish.seedId].Quantity==1,"actual post-intro matching adventure completion commits exactly one seed with controlled chance1");
+        var credit=(FarmService.StagedTaskCredit)typeof(ContinuousTask).GetField("farmCredit",Hidden).GetValue(secondTask);
+        Check(credit!=null && farm.CommitStagedTask(credit) && farm.State.Seeds[radish.seedId].Quantity==1,"actual task token retry retains exactly one seed");
+        Destroy(secondTask.gameObject);
+        manager.AbandonRun();
+        end=Time.realtimeSinceStartupAsDouble+120;
+        while(!manager.IsInTown || manager.RunLoadingActive)
+        { if(Time.realtimeSinceStartupAsDouble>end) throw new TimeoutException("Return after seed task failed"); yield return null; }
+        Check(farm.Plant(FarmCommands.WestBedId),"actual service plants paid Radish batch");
+        Check(farm.Water(FarmCommands.WestBedId),"actual service waters once");
+        Check(!farm.Water(FarmCommands.WestBedId),"second watering rejected");
+        var elapsed=farm.State.Beds[FarmCommands.WestBedId].ElapsedSeconds;
+        farm.State.Beds[FarmCommands.WestBedId].LastGrowthUtcTicks=DateTime.UtcNow.AddYears(-1).Ticks;
+        typeof(FarmService).GetMethod("OnApplicationPause",Hidden).Invoke(farm,new object[]{true});
+        typeof(FarmService).GetMethod("OnApplicationPause",Hidden).Invoke(farm,new object[]{false});
+        typeof(FarmService).GetMethod("Loaded",Hidden).Invoke(farm,null);
+        Check(farm.State.Beds[FarmCommands.WestBedId].ElapsedSeconds==elapsed,"actual service resume/reload does not settle year-old UTC gap");
+        FarmCommands.TickFields(farm.State,900); // Deterministic supplied active time, not offline time.
+        Check(farm.HarvestReady(),"actual service harvest durably succeeds after supplied active time");
+        Check(farm.State.TwinsLevel==2 && farm.State.TwinsXp==5,"one 10XP batch advances level1 -> level2 with5XP carried");
+        Check(!farm.HarvestReady(),"same paid batch cannot harvest twice");
+        // Controlled long-name seed fixture checks wrapping and full-name access without bypassing hero planting gates.
+        var longNameRecipe=farm.Content.recipes.First(r=>r.output.name=="Watermelone");
+        var longNameSeed=FarmJournal.StageSeed(farm.State,longNameRecipe.seedId,true,DateTime.UtcNow);
+        Check(oracle.TryCommitFarmCommand(state=>FarmCommands.CreditSeed(state,longNameSeed,DateTime.UtcNow,longNameRecipe.seedId,true),out _),
+            "controlled long-name Watermelone seed fixture commits for caption verification");
+        DismissRunSummary();
+        TownWindowManager.Instance.OpenWindow(TownWindowManager.Window.Farm);
+        yield return null; yield return null;
+        var screen=FindObjectsByType<ToolkitFarmScreen>(FindObjectsInactive.Include).FirstOrDefault(s=>s.IsOpen);
+        Check(screen != null,"normal Main opens actual combined Fields screen");
+        var document=screen.GetComponent<UIDocument>();
+        Check(document.rootVisualElement.Q("fields-town-preview") != null,"combined native Fields UI includes live town preview");
+        Check(document.rootVisualElement.Query<Image>("bed-crop-icon").ToList().Count==0,"empty and locked beds render no stale crop icon");
+        foreach(var recipe in farm.CapturePresentation().Recipes.Where(r=>r.Discovered))
+        {
+            var card=document.rootVisualElement.Q("fields-seed-"+recipe.Id);
+            var caption=card?.Q<Label>("seed-caption");
+            Check(card!=null && caption!=null && caption.text==recipe.Title && card.tooltip.Contains(recipe.Title),
+                "discovered seed retains full readable caption and full-name tooltip "+recipe.Title);
+            Check(caption.resolvedStyle.whiteSpace==WhiteSpace.Normal,"seed caption wraps instead of clipping its full name "+recipe.Title);
+        }
+        var longNameCard=document.rootVisualElement.Q<Button>("fields-seed-"+longNameRecipe.id);
+        using(var submit=NavigationSubmitEvent.GetPooled()) { submit.target=longNameCard; longNameCard.SendEvent(submit); }
+        yield return null;
+        Check(document.rootVisualElement.Q<Label>("fields-seed-selection").text.Contains(longNameRecipe.output.name+" seeds"),
+            "native seed button selection exposes full long name before a bed is selected");
+        yield return new WaitForEndOfFrame();
+        var columns=(VisualElement)typeof(ToolkitFarmScreen).GetField("columns",Hidden).GetValue(screen);
+        var seedColumn=(VisualElement)typeof(ToolkitFarmScreen).GetField("seedColumn",Hidden).GetValue(screen);
+        var bedColumn=(VisualElement)typeof(ToolkitFarmScreen).GetField("bedColumn",Hidden).GetValue(screen);
+        var townColumn=(VisualElement)typeof(ToolkitFarmScreen).GetField("townColumn",Hidden).GetValue(screen);
+        Check(columns.resolvedStyle.flexDirection==FlexDirection.Row,"actual desktop Fields columns use one combined row");
+        Check(seedColumn.worldBound.width>0 && bedColumn.worldBound.width>0 && townColumn.worldBound.width>0 &&
+            seedColumn.worldBound.xMax<=bedColumn.worldBound.xMin+1 && bedColumn.worldBound.xMax<=townColumn.worldBound.xMin+1,
+            "actual desktop seed/beds/town columns have ordered nonoverlapping bounds");
+        var image=document.rootVisualElement.Q<Image>("fields-town-preview");
+        Check(image.image is RenderTexture,"actual combined town preview uses live runtime RenderTexture");
+        var target=(RenderTexture)image.image; var oldTarget=RenderTexture.active; RenderTexture.active=target;
+        var pixels=new Texture2D(target.width,target.height,TextureFormat.RGBA32,false);
+        pixels.ReadPixels(new Rect(0,0,target.width,target.height),0,0); pixels.Apply(); RenderTexture.active=oldTarget;
+        var colors=pixels.GetPixels(); var first=colors[0];
+        Check(colors.Any(c=>Math.Abs(c.r-first.r)+Math.Abs(c.g-first.g)+Math.Abs(c.b-first.b)>.05f),"live town preview pixels contain rendered color variation");
+        Destroy(pixels);
+        File.WriteAllText(Path.Combine(output,"desktop-column-bounds.txt"),seedColumn.worldBound+"\n"+bedColumn.worldBound+"\n"+townColumn.worldBound);
+        ScreenCapture.CaptureScreenshot(Path.Combine(output,"fields-normal-combined.png"));
+        yield return new WaitForSecondsRealtime(1);
+        // Additional controlled two-bed fixture protects empty/growing/ready presentation.
+        farm.State.GardenCapacity=2;
+        farm.State.Beds[FarmCommands.EastBedId]=new FarmBedState { Unlocked=true };
+        for(int i=0;i<2;i++)
+        {
+            var seedOperation=FarmJournal.StageSeed(farm.State,radish.seedId,true,DateTime.UtcNow);
+            Check(oracle.TryCommitFarmCommand(state=>FarmCommands.CreditSeed(state,seedOperation,DateTime.UtcNow,radish.seedId,true),out _),
+                "controlled matching seed fixture commits for growing/ready presentation "+i);
+        }
+        Check(farm.Plant(FarmCommands.WestBedId) && farm.Plant(FarmCommands.EastBedId),"two controlled paid batches planted through actual service");
+        FarmCommands.TickFields(farm.State,900);
+        Check(farm.Water(FarmCommands.WestBedId),"late watering makes one controlled batch ready while other remains growing");
+        screen.Refresh();
+        yield return new WaitForSecondsRealtime(.3f); // Wait past the world's normal .2-second refresh cadence.
+        var populatedWorld=FindAnyObjectByType<FieldsWorldView>();
+        var populatedGeometry=(Transform)typeof(FieldsWorldView).GetField("geometry",Hidden).GetValue(populatedWorld);
+        foreach(var bedId in new[]{FarmCommands.WestBedId,FarmCommands.EastBedId})
+        {
+            var cropRenderers=populatedGeometry.Find(bedId).GetComponentsInChildren<SpriteRenderer>();
+            Check(cropRenderers.Count(r=>r.gameObject.name=="Crop growth" && r.enabled && r.sprite)==9,
+                "actual town world renders nine current crop sprites for populated bed "+bedId);
+        }
+        Check(populatedGeometry.Find(FarmCommands.WestBedId).GetComponentsInChildren<SpriteRenderer>().Count(r=>r.gameObject.name=="Matched watered overlay" && r.enabled)==9,
+            "actual ready watered bed renders nine matching wet soil overlays in live preview");
+        yield return new WaitForEndOfFrame();
+        var readyRow=document.rootVisualElement.Q("farm-bed-"+FarmCommands.WestBedId);
+        var growingRow=document.rootVisualElement.Q("farm-bed-"+FarmCommands.EastBedId);
+        Check(readyRow?.Q<Image>("bed-crop-icon")!=null && readyRow.Q<Label>("bed-status").text.Contains("Ready"),
+            "actual ready bed shows current crop icon and Ready status");
+        Check(growingRow?.Q<Image>("bed-crop-icon")!=null && !growingRow.Q<Label>("bed-status").text.Contains("Ready") &&
+            farm.State.Beds[FarmCommands.EastBedId].IsPlanted && !farm.State.Beds[FarmCommands.EastBedId].IsReady,
+            "actual growing bed shows current crop icon and remaining time");
+        foreach(var row in document.rootVisualElement.Query<VisualElement>().ToList().Where(e=>e.name!=null && e.name.StartsWith("farm-bed-")))
+            if(row!=readyRow && row!=growingRow) Check(row.Q<Image>("bed-crop-icon")==null,"other empty/locked bed has no crop icon "+row.name);
+        ScreenCapture.CaptureScreenshot(Path.Combine(output,"fields-growing-ready.png"));
+        yield return new WaitForSecondsRealtime(1);
+        // Controlled fully unlocked world fixture. Never describe this as naturally earned progression.
+        farm.State.GardenCapacity=6; farm.State.OrchardCapacity=6; farm.State.TwinsLevel=225;
+        var orchard=farm.Content.recipes.First(r=>r.orchard);
+        oracle.saveData.SkillData["Farming"] = new GameData.SkillProgress { Level=100 };
+        typeof(TimelessEchoes.Skills.SkillController).GetMethod("LoadState",Hidden).Invoke(TimelessEchoes.Skills.SkillController.Instance,null);
+        resources.Add(orchard.paidInput,6,trackStats:false,eligibleForTierRoll:false);
+        for(int i=0;i<6;i++)
+        {
+            farm.State.Beds[FarmCommands.OrchardBeds[i]]=new FarmBedState { Unlocked=true };
+            Check(farm.Plant(FarmCommands.OrchardBeds[i],orchard.id),"controlled full-capacity orchard paid planting "+i);
+            if(i%2==1) Check(farm.Water(FarmCommands.OrchardBeds[i]),"orchard matching wet overlay "+i);
+        }
+        TownWindowManager.Instance.CloseAllWindows();
+        DismissRunSummary();
+        var world=FindAnyObjectByType<FieldsWorldView>(); world.Refresh();
+        Check(world.ClearedStumps==23,"world clears exactly23 approved stumps");
+        Check(world.ClearedStandingTrees==20,"world clears exactly20 approved standing trees");
+        Camera camera=null;
+        foreach(var pan in FindObjectsByType<TownCameraPan>(FindObjectsInactive.Include))
+        {
+            if(pan.gameObject.activeInHierarchy)
+                camera=(Camera)typeof(TownCameraPan).GetField("outputCamera",Hidden).GetValue(pan);
+            pan.enabled=false;
+        }
+        camera ??= Camera.main;
+        Check(camera != null && camera.gameObject.activeInHierarchy,"actual active town output camera exists");
+        // Proof-only framing: stop the virtual-camera follower before positioning its real output.
+        var brain=camera.GetComponent<Unity.Cinemachine.CinemachineBrain>();
+        if(brain) brain.enabled=false;
+        camera.orthographic=true; camera.orthographicSize=4.6f;
+        camera.transform.position=new Vector3(-56,-15.25f,camera.transform.position.z);
+        yield return null; yield return null; yield return new WaitForEndOfFrame();
+        Check(Vector2.Distance(camera.transform.position,new Vector2(-56,-15.25f))<.1f,"actual town camera retains controlled orchard close-up framing");
+        foreach(var anchor in FieldsWorldView.OrchardAnchors)
+        {
+            var viewport=camera.WorldToViewportPoint(new Vector3(anchor.x,anchor.y,0));
+            Check(viewport.x>0 && viewport.x<1 && viewport.y>0 && viewport.y<1,"actual orchard plot center inside live camera viewport "+anchor);
+        }
+        ScreenCapture.CaptureScreenshot(Path.Combine(output,"fields-orchard-runtime-dry-wet.png"));
+        yield return new WaitForSecondsRealtime(1);
+        var geometry=(Transform)typeof(FieldsWorldView).GetField("geometry",Hidden).GetValue(world);
+        var renderers=geometry.GetComponentsInChildren<SpriteRenderer>().Where(r=>r.gameObject.name.Contains("Rounded") && r.enabled).ToArray();
+        Check(renderers.Length>=24,"actual authored rounded soil sprite renderers present");
+        File.WriteAllLines(Path.Combine(output,"rounded-soil-runtime.txt"),renderers.Select(r=>r.sprite.name+" | "+r.transform.position+" | flips "+r.flipX+","+r.flipY));
+        Check(oracle.SaveToSlot(oracle.CurrentSlot),"normal owner snapshot durable save succeeds in protected namespace");
+        var loaded=SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
+        Check(loaded.Succeeded && loaded.Data.Farm.OrchardCapacity==6,"protected normal-game save reload retains controlled orchard fixture");
+        yield return null;
+    }
+    void DismissRunSummary()
+    {
+        foreach(var run in FindObjectsByType<ToolkitRunScreen>(FindObjectsInactive.Include)) run.HideDetails();
+        facts.Add("PASS actual run summaries dismissed through normal HideDetails API before capture");
+    }
+    ContinuousTask CompleteActualCrop(FarmRecipe recipe,HeroController hero,Transform parent)
+    {
+        var task=Instantiate(recipe.source.taskPrefab,parent) as ContinuousTask;
+        Check(task!=null,"actual authored crop prefab is ContinuousTask");
+        task.taskData=recipe.source; task.associatedSkill=recipe.source.associatedSkill;
+        Check(task.Claim(hero),"actual primary hero claims controlled crop fixture");
+        task.StartTask();
+        typeof(ContinuousTask).GetField("timer",Hidden).SetValue(task,recipe.source.taskDuration);
+        task.Tick(hero); // Real public completion path; never invoke private CompleteWork.
+        Check(task.IsComplete(),"actual matching task public Tick completes controlled duration fixture");
+        return task;
+    }
+}

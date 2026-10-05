@@ -29,6 +29,7 @@ namespace TimelessEchoes.Skills
         [SerializeField] private List<MilestoneSetDefinition> setDefinitions = new();
 
         private readonly Dictionary<Skill, SkillProgress> progress = new();
+        private Blindsided.SaveData.GameData stateOwner;
         private readonly Dictionary<Skill, Dictionary<MilestoneDefinition, MilestoneRuntimeState>> milestoneStates = new();
         private readonly MilestoneEffectAggregator effectAggregator = new();
         private readonly Dictionary<MilestoneSet, MilestoneSetDefinition> setLookup = new();
@@ -130,6 +131,13 @@ namespace TimelessEchoes.Skills
         public int GetLevel(Skill skill)
         {
             return GetProgress(skill)?.Level ?? 1;
+        }
+
+        public int GetLevel(Skill skill, Blindsided.SaveData.GameData owner)
+        {
+            if (skill == null || owner == null) return 1;
+            if (ReferenceEquals(owner, stateOwner) && ReferenceEquals(owner, oracle?.saveData)) return Math.Max(1, GetLevel(skill));
+            return owner.SkillData?.TryGetValue(skill.name, out var saved) == true ? Math.Max(1, saved.Level) : 1;
         }
 
         public IReadOnlyList<MilestoneDefinition> GetMilestones(Skill skill)
@@ -630,6 +638,7 @@ namespace TimelessEchoes.Skills
 
         private void LoadState()
         {
+            stateOwner = oracle?.saveData;
             if (oracle == null)
                 return;
 

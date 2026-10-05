@@ -1,0 +1,220 @@
+using System;
+using System.IO;
+using System.Linq;
+using Newtonsoft.Json.Linq;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Tilemaps;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+
+[InitializeOnLoad]
+public static class FarmingPlanningPreview
+{
+    const string Out = "/Users/matthewrushworth/Projects/Echoes Farming Planning Evidence/2026-09-30/revision-3/";
+    static FarmingPlanningPreview() { EditorApplication.update += Poll; }
+    static string PathOf(Transform t) { return t.parent == null ? t.name : PathOf(t.parent) + "/" + t.name; }
+    static JArray V(Vector3 p) { return new JArray(p.x,p.y,p.z); }
+    static void Poll()
+    {
+        if(EditorApplication.isCompiling || EditorApplication.isUpdating || !File.Exists(Out+"request.txt")) return;
+        var command=File.ReadAllText(Out+"request.txt").Trim(); File.Delete(Out+"request.txt");
+        try { if(command=="inventory") Inventory(); else if(command=="previews") Previews(); else if(command=="audit") Audit(); }
+        catch(Exception ex) { File.WriteAllText(Out+"preview-error.txt",ex.ToString()); Debug.LogException(ex); }
+    }
+    static void Inventory()
+    {
+        var scene=SceneManager.GetActiveScene();
+        if(EditorApplication.isPlayingOrWillChangePlaymode || scene.path!="Assets/Scenes/Main.unity" || scene.isDirty) throw new Exception("Main must be clean in Edit mode");
+        var roots=scene.GetRootGameObjects(); var all=roots.SelectMany(x=>x.GetComponentsInChildren<Transform>(true)).ToArray();
+        var sprites=new JArray(all.SelectMany(x=>x.GetComponents<SpriteRenderer>()).Where(x=>x.sprite!=null).Select(x=>new JObject{
+            ["path"]=PathOf(x.transform),["active"]=x.gameObject.activeInHierarchy,["position"]=V(x.transform.position),["scale"]=V(x.transform.lossyScale),["sprite"]=x.sprite.name,["asset"]=AssetDatabase.GetAssetPath(x.sprite),["boundsCenter"]=V(x.bounds.center),["boundsSize"]=V(x.bounds.size),["layer"]=x.sortingLayerName,["order"]=x.sortingOrder}));
+        var tilemaps=new JArray(all.SelectMany(x=>x.GetComponents<Tilemap>()).Select(x=>new JObject{["path"]=PathOf(x.transform),["position"]=V(x.transform.position),["cellSize"]=V(x.layoutGrid.cellSize),["boundsMin"]=V(x.cellBounds.min),["boundsMax"]=V(x.cellBounds.max),["count"]=x.GetUsedTilesCount()}));
+        var cameras=new JArray(all.SelectMany(x=>x.GetComponents<Camera>()).Select(x=>new JObject{["path"]=PathOf(x.transform),["position"]=V(x.transform.position),["rotation"]=V(x.transform.eulerAngles),["ortho"]=x.orthographicSize,["active"]=x.gameObject.activeInHierarchy}));
+        File.WriteAllText(Out+"scene-inventory.json",new JObject{["scene"]=scene.path,["dirty"]=scene.isDirty,["sprites"]=sprites,["tilemaps"]=tilemaps,["cameras"]=cameras}.ToString());
+    }
+    static void Audit() {
+        var main=SceneManager.GetActiveScene();var result=new JArray();
+        foreach(var tm in main.GetRootGameObjects().SelectMany(x=>x.GetComponentsInChildren<Tilemap>(true)).Where(x=>x.name.Contains("Path"))) {
+            var cells=new JArray();foreach(var cell in tm.cellBounds.allPositionsWithin) {
+                var tile=tm.GetTile(cell);if(tile==null)continue;var world=tm.CellToWorld(cell);if(world.x < -72 || world.x > -48)continue;
+                cells.Add(new JObject{["cell"]=V(cell),["world"]=V(world),["tile"]=tile.name,["asset"]=AssetDatabase.GetAssetPath(tile),["transform"]=tm.GetTransformMatrix(cell).ToString(),["sprite"]=tm.GetSprite(cell)?.name});
+            }
+            result.Add(new JObject{["path"]=PathOf(tm.transform),["order"]=tm.GetComponent<TilemapRenderer>().sortingOrder,["layer"]=tm.GetComponent<TilemapRenderer>().sortingLayerName,["cells"]=cells});
+        }
+        File.WriteAllText(Out+"path-audit.json",result.ToString());
+        File.WriteAllText(Out+"audit-complete.txt",main.path+" dirty="+main.isDirty);
+    }
+    static Sprite SpriteAt(string asset,string name) { return AssetDatabase.LoadAllAssetsAtPath(asset).OfType<Sprite>().First(x=>x.name==name); }
+    static void Put(Transform root,Sprite sprite,float x,float y,int order,string name)
+    {
+        var go=new GameObject(name);go.transform.SetParent(root,false);go.transform.position=new Vector3(x,y,0);
+        var sr=go.AddComponent<SpriteRenderer>();sr.sprite=sprite;sr.sortingOrder=order;
+    }
+    static void Bed(Transform root,int x,int y,string crop,int stage)
+    {
+        string soilAsset="Assets/Art/Packs/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png";
+        var soilSprites=AssetDatabase.LoadAllAssetsAtPath(soilAsset).OfType<Sprite>().ToArray();
+        var sprites=AssetDatabase.LoadAllAssetsAtPath("Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png").OfType<Sprite>().ToArray();
+        var cropSprite=sprites.First(s=>s.name.StartsWith("Crop_"+crop+"_") && s.name.Contains(stage==0?"EarlySprout":stage==1?"YoungPlant":stage==2?"DevelopedPlant":"MaturePlant"));
+        for(int a=0;a<3;a++) for(int b=0;b<3;b++) {
+            Func<int,int,bool> inside=(dx,dy)=>a+dx>=0 && a+dx<3 && b+dy>=0 && b+dy<3;
+            var soil=soilSprites.First(z=>z.name.StartsWith(JoinPrefix("Farmland_DryTanBorder",inside)));
+            Put(root,soil,x+a,y+b,1,"Cultivated soil with matched perimeter");Put(root,cropSprite,x+a,y+b,2,"Crop "+crop);
+        }
+        var sign=sprites.First(s=>s.name=="Crop_"+crop+"_MarkerSign");Put(root,sign,x-1,y+1,3,"Crop sign");
+    }
+    static void Fence(Transform root,int x0,int y0,int x1,int y1,bool northGate=false)
+    {
+        const string asset="Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Fence_Big.png";
+        var rail=SpriteAt(asset,"Fence_Wood_Big_RailJoin_EW_Variant01");
+        var side=SpriteAt(asset,"Fence_Wood_Big_RailJoin_None_Variant02");
+        // Match authored Main: upper corners have downward post continuation;
+        // lower corners terminate it. E/W identifies only the horizontal arm.
+        Put(root,SpriteAt(asset,"Fence_Wood_Big_RailJoin_E_Variant02"),x0,y1,3,"NW corner - E arm, post south");
+        Put(root,SpriteAt(asset,"Fence_Wood_Big_RailJoin_W_Variant02"),x1,y1,3,"NE corner - W arm, post south");
+        Put(root,SpriteAt(asset,"Fence_Wood_Big_RailJoin_E_Variant04"),x0,y0,3,"SW corner - E arm, post end");
+        Put(root,SpriteAt(asset,"Fence_Wood_Big_RailJoin_W_Variant04"),x1,y0,3,"SE corner - W arm, post end");
+        int gateX=(x0+x1)/2;
+        for(int x=x0+1;x<x1;x++) {
+            if(!northGate || Math.Abs(x-gateX)>1)Put(root,rail,x,y1,3,"North fence");
+            if(northGate || Math.Abs(x-gateX)>1)Put(root,rail,x,y0,3,"South fence");
+        }
+        for(int y=y0+1;y<y1;y++) {Put(root,side,x0,y,3,"West fence");Put(root,side,x1,y,3,"East fence");}
+        // Gate includes two end posts and external rail joins; no duplicate posts.
+        // North frames place posts in the lower row (+0.5 pivot offset);
+        // south frames place them in the upper row (-0.5). Do not share the offset.
+        const string gateAsset="Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Other_Animations/Fence_Big_Gate.png";
+        Put(root,SpriteAt(gateAsset,northGate?"Gate_Wood_Big_EW_SwingN_Frame04":"Gate_Wood_Big_EW_SwingS_Frame09"),gateX,northGate?y1+0.5f:y0-0.5f,3,northGate?"North open gate - outward leaves and integral end posts":"South open gate - outward leaves and integral end posts");
+    }
+    static string JoinPrefix(string material,Func<int,int,bool> inside) {
+        string join="";if(inside(0,1))join+="N";if(inside(1,0))join+="E";if(inside(0,-1))join+="S";if(inside(-1,0))join+="W";
+        var absent=new System.Collections.Generic.List<string>();
+        if(!(inside(-1,0)&&inside(0,1)&&inside(-1,1)))absent.Add("NW");
+        if(!(inside(1,0)&&inside(0,1)&&inside(1,1)))absent.Add("NE");
+        if(!(inside(1,0)&&inside(0,-1)&&inside(1,-1)))absent.Add("SE");
+        if(!(inside(-1,0)&&inside(0,-1)&&inside(-1,-1)))absent.Add("SW");
+        return material+"_SoilJoin_"+(join==""?"None":join)+"_AbsentCorners_"+(absent.Count==0?"None":string.Join("_",absent))+"_Variant";
+    }
+    static void RefineGroundAndPaths(GameObject town,int stage) {
+        // The currently visible thin brown town track is WetOverlay, not bright-green dirt fill.
+        var tm=town.GetComponentsInChildren<Tilemap>(true).First(x=>x.name=="-2 Old Path");
+        var tileAssets=AssetDatabase.FindAssets("t:Tile",new[]{"Assets/Tilemaps/Tiles"}).Select(g=>AssetDatabase.LoadAssetAtPath<Tile>(AssetDatabase.GUIDToAssetPath(g))).Where(t=>t!=null && t.name.StartsWith("Farmland_WetOverlay_")).ToArray();
+        var changed=new System.Collections.Generic.HashSet<Vector3Int>();
+        Action<int,int> add=(x,y)=>changed.Add(tm.WorldToCell(new Vector3(x,y,0)));
+        // Existing north lane to the original-field south gate; windmill approach stays clear.
+        for(int x=-62;x<=-60;x++)add(x,-3);for(int y=-3;y<=4;y++)add(-60,y);
+        if(stage>=2)for(int y=-5;y<=-3;y++)add(-59,y);
+        // Branch the existing logging lane directly through the new field's north gate.
+        if(stage>=3){int gateX=town.name.Contains("A3")?-59:-58;for(int x=-60;x<=gateX;x++)add(x,-22);for(int y=-24;y<=-22;y++)add(gateX,y);}
+        foreach(var cell in changed)tm.SetTile(cell,tileAssets.First());
+        var affected=new System.Collections.Generic.HashSet<Vector3Int>(changed);
+        foreach(var cell in changed)for(int dx=-1;dx<=1;dx++)for(int dy=-1;dy<=1;dy++)affected.Add(cell+new Vector3Int(dx,dy,0));
+        foreach(var cell in affected) {
+            if(tm.GetTile(cell)==null)continue;
+            Func<int,int,bool> occupied=(dx,dy)=>tm.GetTile(cell+new Vector3Int(dx,dy,0))!=null;
+            var prefix=JoinPrefix("Farmland_WetOverlay",occupied);
+            var tile=tileAssets.First(t=>t.name.StartsWith(prefix));tm.SetTile(cell,tile);tm.SetTileFlags(cell,TileFlags.None);tm.SetTransformMatrix(cell,Matrix4x4.identity);
+        }
+        // Remove small ground clutter only inside the proposed enclosures, preserving surrounding woodland.
+        var decor=town.GetComponentsInChildren<Tilemap>(true).First(x=>x.name=="BG_Decor 0");
+        foreach(var cell in decor.cellBounds.allPositionsWithin) {
+            var p=decor.GetCellCenterWorld(cell);bool inField=p.x>-64 && p.x<-54 && p.y>3 && p.y<10;
+            inField|=stage>=2 && p.x>-64 && p.x<-52 && p.y>-11 && p.y<-4;
+            inField|=stage>=3 && p.x>-65 && p.x<-50 && p.y>-33 && p.y<-23;
+            if(inField)decor.SetTile(cell,null);
+        }
+        Func<Vector3,bool> within=p=> (p.x>-64 && p.x<-54 && p.y>3 && p.y<10)
+            || (stage>=2 && p.x>-64 && p.x<-52 && p.y>-11 && p.y<-4)
+            || (stage>=3 && p.x>(town.name.Contains("C3")?-65:-63) && p.x<(town.name.Contains("A3")?-53:town.name.Contains("B3")?-51:-50) && p.y>(town.name.Contains("A3")?-29:-33) && p.y<-23);
+        var clutter=new JArray();
+        foreach(var sr in town.GetComponentsInChildren<SpriteRenderer>(true)) {
+            if(sr.sprite==null || !sr.gameObject.activeInHierarchy)continue;
+            bool prop=sr.sprite.name.StartsWith("Outdoor_Decor_") || sr.sprite.name.StartsWith("Crate_");
+            var b=sr.bounds;var plots=new System.Collections.Generic.List<Bounds>{new Bounds(new Vector3(-59,6.5f,0),new Vector3(10.9f,7.9f,10))};
+            if(stage>=2)plots.Add(new Bounds(new Vector3(-58,-7.5f,0),new Vector3(12.9f,7.9f,10)));
+            if(stage>=3)plots.Add(new Bounds(town.name.Contains("A3")?new Vector3(-58,-26,0):town.name.Contains("B3")?new Vector3(-57,-28,0):new Vector3(-57.5f,-28,0),town.name.Contains("A3")?new Vector3(10.9f,6.9f,10):town.name.Contains("B3")?new Vector3(12.9f,10.9f,10):new Vector3(15.9f,10.9f,10)));
+            bool overlap=plots.Any(plot=>plot.Intersects(b));
+            if(prop && overlap) {clutter.Add(new JObject{["path"]=PathOf(sr.transform),["sprite"]=sr.sprite.name,["position"]=V(sr.transform.position)});sr.gameObject.SetActive(false);}
+        }
+        var gates=new JArray();
+        Action<int,int,int,int,int,int> prove=(gx,gy,ix,iy,ax,ay)=> {
+            var start=tm.WorldToCell(new Vector3(ax,ay,0));var target=tm.WorldToCell(new Vector3(ix,iy,0));
+            var seen=new System.Collections.Generic.HashSet<Vector3Int>();var pending=new System.Collections.Generic.Queue<Vector3Int>();pending.Enqueue(start);
+            while(pending.Count>0){var c=pending.Dequeue();if(!seen.Add(c)||tm.GetTile(c)==null)continue;foreach(var d in new[]{Vector3Int.up,Vector3Int.down,Vector3Int.left,Vector3Int.right})if(!seen.Contains(c+d)&&tm.GetTile(c+d)!=null)pending.Enqueue(c+d);}
+            var center=tm.GetCellCenterWorld(target);var north=gy<0;var apertureOpen=!town.scene.GetRootGameObjects().SelectMany(g=>g.GetComponentsInChildren<SpriteRenderer>(true)).Any(r=>r.gameObject.activeInHierarchy&&r.name==(north?"North fence":"South fence")&&Mathf.Abs(r.transform.position.y-gy)<0.01f&&Mathf.Abs(r.transform.position.x-center.x)<0.8f);
+            if(!seen.Contains(target)||!apertureOpen)throw new Exception("Gate visual route failed at "+gx+","+gy);
+            gates.Add(new JObject{["center"]=new JArray(gx,gy),["insideTrack"]=V(center),["connectedToExistingTrack"]=true,["fenceApertureOpen"]=apertureOpen,["runtimeNavigationTested"]=false});
+        };
+        prove(-59,3,-60,4,-62,-3);
+        if(stage>=2)prove(-58,-4,-59,-5,-59,-3);
+        if(stage>=3)prove(town.name.Contains("A3")?-58:-57,-23,town.name.Contains("A3")?-59:-58,-24,-60,-22);
+        var info=new JObject{["clearedGroundProps"]=clutter,["pathTilemap"]=PathOf(tm.transform),["active"]=tm.gameObject.activeInHierarchy,["material"]="Farmland_WetOverlay",["cellsAdded"]=new JArray(changed.Select(c=>V(tm.GetCellCenterWorld(c)))),["gates"]=gates};
+        File.WriteAllText(Out+town.name.Replace("Preview Town - ","")+"-path-proof.json",info.ToString());
+    }
+    static void Capture(Camera cam,string path,int width,int height)
+    {
+        var rt=new RenderTexture(width,height,24,RenderTextureFormat.ARGB32);rt.Create();var previous=RenderTexture.active;
+        try {
+            cam.aspect=(float)width/height;cam.targetTexture=rt;
+            RenderPipeline.SubmitRenderRequest(cam,new UniversalRenderPipeline.SingleCameraRequest{destination=rt});
+            RenderTexture.active=rt;var tex=new Texture2D(width,height,TextureFormat.RGB24,false);tex.ReadPixels(new Rect(0,0,width,height),0,0);tex.Apply();File.WriteAllBytes(path,tex.EncodeToPNG());UnityEngine.Object.DestroyImmediate(tex);
+        } finally {cam.targetTexture=null;RenderTexture.active=previous;rt.Release();UnityEngine.Object.DestroyImmediate(rt);}
+    }
+    static void Previews()
+    {
+        var main=SceneManager.GetActiveScene();if(EditorApplication.isPlayingOrWillChangePlaymode || main.path!="Assets/Scenes/Main.unity" || main.isDirty)throw new Exception("Main must be clean");
+        var home=main.GetRootGameObjects().First(x=>x.name=="Hometown");var originalCam=main.GetRootGameObjects().SelectMany(x=>x.GetComponentsInChildren<Camera>(true)).First(x=>x.name=="Main Camera");
+        Directory.CreateDirectory("Assets/Editor/FarmingPreviewsV3");Directory.CreateDirectory(Out+"renders");var reports=new JArray();
+        var oldMask=EditorSceneManager.GetSceneCullingMask(main);
+        EditorSceneManager.SetSceneCullingMask(main,1UL<<40);
+        try {
+        foreach(var label in new[]{"A0-existing","A1-first-beds","A2-stump-reclamation","A2b-southeast-work","A3-southeast-clearing","B3-terraced-rows","C3-grove-courtyard"}) {
+            var preview=EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Additive);
+            EditorSceneManager.SetSceneCullingMask(preview,1UL<<41);
+            try {
+                SceneManager.SetActiveScene(preview);var town=UnityEngine.Object.Instantiate(home);town.name="Preview Town - "+label;
+                foreach(var m in town.GetComponentsInChildren<MonoBehaviour>(true)) UnityEngine.Object.DestroyImmediate(m);
+                // Remove abandoned construction stages and farm task roots. Visual-only authored fields replace them.
+                int stage=label[1]-'0';
+                var farmers=town.transform.Find("Farmers/FarmingTasks");if(stage>0 && farmers!=null)farmers.gameObject.SetActive(false);
+                var barkleyHouse=town.transform.Find("Barkley/House");if(barkleyHouse!=null)foreach(Transform child in barkleyHouse)child.gameObject.SetActive(child.name=="Built");
+                foreach(var t in town.GetComponentsInChildren<Transform>(true).Where(t=>t.name=="Crops"))t.gameObject.SetActive(false);
+                var root=new GameObject("CONCEPT Farm Layout - no progression or scripts").transform;
+                bool terrace=label.StartsWith("B");bool grove=label.StartsWith("C");bool work=label.Contains("southeast-work");
+                var removed=new JArray();
+                if(stage>=2) foreach(var sr in town.GetComponentsInChildren<SpriteRenderer>(true)) {
+                    var p=sr.transform.position;if(sr.sprite!=null && sr.sprite.name.Contains("Stump") && p.x>=-66 && p.x<=-51 && p.y>=-17 && p.y<=-5) {removed.Add(new JObject{["path"]=PathOf(sr.transform),["position"]=V(p),["kind"]="existing stump"});sr.gameObject.SetActive(false);}
+                }
+                if(stage>=3 || work) foreach(var sr in town.GetComponentsInChildren<SpriteRenderer>(true)) {
+                    var p=sr.transform.position;var clearance=new Bounds(terrace?new Vector3(-57,-28,0):grove?new Vector3(-57.5f,-28,0):new Vector3(-58,-26,0),terrace?new Vector3(14,12,10):grove?new Vector3(16,12,10):new Vector3(12,8,10));bool preserve=grove && Vector2.Distance(p,new Vector2(-58.7f,-30))<0.6f && sr.sprite!=null && sr.sprite.name.Contains("Standing");bool clear=sr.bounds.Intersects(clearance)&&!preserve;
+                    if(sr.sprite!=null && clear && (sr.sprite.name.Contains("Tree_Standing") || sr.sprite.name.Contains("Tree_Stump"))) {removed.Add(new JObject{["path"]=PathOf(sr.transform),["position"]=V(p),["kind"]="standing woodland",["action"]=work?"cut to stump":"cleared"});if(work){var stump=AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(sr.sprite)).OfType<Sprite>().FirstOrDefault(x=>x.name.EndsWith("_Stump"));if(stump!=null)sr.sprite=stump;else sr.gameObject.SetActive(false);}else sr.gameObject.SetActive(false);}
+                }
+                if(stage>=1) { Bed(root,-62,5,"Corn",1);Bed(root,-58,5,"Carrot",3);Fence(root,-64,3,-54,10);}
+                if(stage>=2) {Bed(root,-62,-9,"Tomato",3);Bed(root,-57,-9,"Pumpkin",1);Fence(root,-64,-11,-52,-4,true);}
+                if(stage>=3) {
+                    if(terrace) {Bed(root,-61,-27,"Corn",3);Bed(root,-56,-27,"Carrot",1);Bed(root,-61,-31,"Tomato",2);Bed(root,-56,-31,"Pumpkin",0);Fence(root,-63,-33,-51,-23,true);}
+                    else if(grove) {Bed(root,-63,-26,"Tomato",3);Bed(root,-54,-26,"Corn",1);Fence(root,-65,-33,-50,-23,true);}
+                    else {Bed(root,-61,-27,"Corn",3);Bed(root,-57,-27,"Carrot",1);Fence(root,-63,-29,-53,-23,true);}
+                }
+                if(stage>0) RefineGroundAndPaths(town,stage);
+                var light=new GameObject("Preview Global Light").AddComponent<Light2D>();light.lightType=Light2D.LightType.Global;light.intensity=1;
+                var camObj=new GameObject("Preview Camera");var cam=camObj.AddComponent<Camera>();cam.CopyFrom(originalCam);cam.enabled=false;cam.transform.rotation=Quaternion.identity;cam.overrideSceneCullingMask=EditorSceneManager.GetSceneCullingMask(preview);
+                var data=cam.GetUniversalAdditionalCameraData();data.renderPostProcessing=false;
+                cam.transform.position=new Vector3(-70,-10,-10);cam.orthographicSize=32;Capture(cam,Out+"renders/"+label+"-town.png",1600,900);
+                cam.transform.position=new Vector3(-61,-11,-10);cam.orthographicSize=18;Capture(cam,Out+"renders/"+label+"-normal.png",1280,720);
+                cam.transform.position=new Vector3(-67,0,-10);Capture(cam,Out+"renders/"+label+"-north-normal.png",1280,720);
+                cam.transform.position=new Vector3(-61,-23,-10);Capture(cam,Out+"renders/"+label+"-south-normal.png",1280,720);
+                cam.transform.position=new Vector3(-58,-27,-10);cam.orthographicSize=9;Capture(cam,Out+"renders/"+label+"-south-close.png",1600,900);
+                cam.transform.position=new Vector3(-60,-0.5f,-10);cam.orthographicSize=12;Capture(cam,Out+"renders/"+label+"-north-close.png",1600,900);
+                cam.transform.position=new Vector3(-59,6.5f,-10);cam.orthographicSize=5.5f;Capture(cam,Out+"renders/"+label+"-fence-detail.png",1600,900);
+                var path="Assets/Editor/FarmingPreviewsV3/"+label+".unity";EditorSceneManager.SaveScene(preview,path);
+                reports.Add(new JObject{["label"]=label,["scene"]=path,["removed"]=removed,["stage"]=stage,["conceptual"]=true,["normalCameraPosition"]=new JArray(-61,-23,-10),["normalOrtho"]=18,["southCloseCameraPosition"]=new JArray(-58,-27,-10),["southCloseOrtho"]=9,["northCloseCameraPosition"]=new JArray(-60,-0.5f,-10),["northCloseOrtho"]=12});
+            } finally {EditorSceneManager.CloseScene(preview,true);SceneManager.SetActiveScene(main);}
+        }
+        } finally {EditorSceneManager.SetSceneCullingMask(main,oldMask);}
+        File.WriteAllText(Out+"preview-manifest.json",new JObject{["mainScene"]=main.path,["mainDirty"]=main.isDirty,["playing"]=EditorApplication.isPlaying,["previews"]=reports}.ToString());
+    }
+}

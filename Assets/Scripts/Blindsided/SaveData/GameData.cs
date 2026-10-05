@@ -7,10 +7,11 @@ namespace Blindsided.SaveData
 {
     public class GameData
     {
-        public const int CurrentSchemaVersion = 3;
+        public const int CurrentSchemaVersion = 7;
 
         public int SchemaVersion = CurrentSchemaVersion;
         public HashSet<string> AppliedMigrationIds = new();
+        public TimelessEchoes.Farming.FarmState Farm = new();
         [ShowInInspector] [TabGroup("GameDataTabs", "Preferences")]
         public Preferences SavedPreferences = new();
 
@@ -59,6 +60,7 @@ namespace Blindsided.SaveData
         public HashSet<string> CompletedNpcTasks = new();
 
         [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Disciples")]
+        // Retired Alter-Echo records remain inert for save compatibility; there is no payout.
         public Dictionary<string, DiscipleGenerationRecord> Disciples = new();
 
         [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Quests")]
@@ -102,6 +104,17 @@ namespace Blindsided.SaveData
 
         // --- Cauldron (Stew/Collections) ---
         [TabGroup("GameDataTabs", "Cauldron")] public double CauldronStew;
+        // Bounded last receipt: older sequence numbers cannot execute again after reload.
+        [TabGroup("GameDataTabs", "Cauldron")] public long CauldronConversionSequence;
+        [TabGroup("GameDataTabs", "Cauldron")] public CauldronConversionReceipt LastCauldronConversion;
+
+        public class CauldronConversionReceipt
+        {
+            public long Sequence;
+            public string ResourceName;
+            public double Quantity;
+            public double UnitValue;
+        }
         [TabGroup("GameDataTabs", "Cauldron")] public int CauldronEvaLevel = 1;
         [TabGroup("GameDataTabs", "Cauldron")] public double CauldronEvaXp;
         [ShowInInspector] [HideReferenceObjectPicker]
@@ -219,7 +232,6 @@ namespace Blindsided.SaveData
 
             // Preserve typed milestone records written under the original field name. String-era
             // milestone values are derived from skill level and safely normalize to an empty list.
-            [PreviouslySerializedAs("Milestones")]
             public List<MilestoneProgressRecord> MilestoneRecords = new();
 
             public List<MilestoneProgressRecord> Milestones
@@ -687,4 +699,3 @@ namespace Blindsided.SaveData
         public List<GearAffixRecord> affixes = new();
     }
 }
-

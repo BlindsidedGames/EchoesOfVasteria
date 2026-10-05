@@ -53,7 +53,7 @@ namespace TimelessEchoes.UI.Toolkit
         public string MembershipKey()
         {
             var qm = TimelessEchoes.Quests.QuestManager.Instance;
-            return string.Join("|", Blindsided.Utilities.AssetCache.GetAll<Resource>("").Where(r => r && !r.DisableAlterEcho && resources.IsUnlocked(r)).Select(r => r.name))
+            return string.Join("|", Blindsided.Utilities.AssetCache.GetAll<Resource>("").Where(r => r && !r.DisableAlterEcho && resources.IsUnlocked(r, oracle?.saveData)).Select(r => r.name))
                 + string.Join("|", BuffRecipe.LoadAvailable("").Where(b => b && (!b.requiredQuest || qm && qm.IsQuestCompleted(b.requiredQuest))).Select(b => b.name)) + manager.IsInfinityActive();
         }
         public void Rebuild()
@@ -73,12 +73,12 @@ namespace TimelessEchoes.UI.Toolkit
                 foreach (var buff in buffs) { var id = "BUFF:" + buff.name; buffById[id] = buff; AddCard(section, id, buff.buffIcon); }
             }
             var groups = new Dictionary<CauldronManager.AEResourceGroup, Section>();
-            foreach (var resource in Blindsided.Utilities.AssetCache.GetAll<Resource>("").Where(r => r && !r.DisableAlterEcho && resources.IsUnlocked(r)).OrderBy(r => r.resourceID).ThenBy(r => r.name))
+            foreach (var resource in Blindsided.Utilities.AssetCache.GetAll<Resource>("").Where(r => r && !r.DisableAlterEcho && resources.IsUnlocked(r, oracle?.saveData)).OrderBy(r => r.resourceID).ThenBy(r => r.name))
             {
                 var group = manager.GetResourceGroup(resource);
                 if (!groups.TryGetValue(group, out var section))
                 {
-                    section = AddSection("Alter-Echoes — " + CauldronCollectionPresentation.FormatGroupName(group), group, false, false);
+                    section = AddSection("Resources — " + CauldronCollectionPresentation.FormatGroupName(group), group, false, false);
                     groups[group] = section;
                 }
                 var id = "RES:" + resource.name; resourceById[id] = resource; AddCard(section, id, resource.icon);
@@ -88,7 +88,7 @@ namespace TimelessEchoes.UI.Toolkit
         private Section AddSection(string title, CauldronManager.AEResourceGroup? group, bool buffs, bool infinity)
         {
             var section = new Section { group = group, buffs = buffs, infinity = infinity };
-            section.border=E(content,"collection-section");var head=E(section.border,"row between group-heading");L(head,title.Replace("Alter-Echoes — ",""),"strong");var bonus=E(head,"row section-bonus");bonus.Add(new ToolkitRarityStar());section.bonus=L(bonus,"","small muted");section.background=E(section.border,"card-grid");
+            section.border=E(content,"collection-section");var head=E(section.border,"row between group-heading");L(head,title.Replace("Resources — ",""),"strong");var bonus=E(head,"row section-bonus");bonus.Add(new ToolkitRarityStar());section.bonus=L(bonus,"","small muted");section.background=E(section.border,"card-grid");
             sections.Add(section); return section;
         }
         private void AddCard(Section section, string id, Sprite sprite)
@@ -101,8 +101,8 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private Sprite Tier(Sprite[] sprites, int tier) => sprites.Length == 0 ? null : sprites[Mathf.Clamp(tier - 1, 0, sprites.Length - 1)];
         private int CardTier(string id) => id.StartsWith("INF:") ? 7 : Mathf.Max(1, id.StartsWith("RES:") ? manager.GetResourceTier(id.Substring(4)) : manager.GetBuffTier(id.Substring(5)));
-        private int SectionTier(Section section) => section.infinity ? 7 : section.buffs ? manager.GetBuffsGroupTier() : section.ids.Count == 0 ? 1 : section.ids.Min(CardTier);
-        private int GroupTier(CauldronManager.AEResourceGroup group) => sections.FirstOrDefault(s => s.group == group) is { } section ? SectionTier(section) : 1;
+        private int SectionTier(Section section) => section.infinity ? 7 : section.buffs ? manager.GetBuffsGroupTier() : CauldronResourceYield.CategoryTier(oracle?.saveData, section.group.Value, definition.config);
+        private int GroupTier(CauldronManager.AEResourceGroup group) => sections.FirstOrDefault(s => s.group == group) is { } section ? SectionTier(section) : 0;
         public void Refresh()
         {
             if (oracle?.saveData == null) return;
@@ -131,7 +131,7 @@ namespace TimelessEchoes.UI.Toolkit
             foreach (var section in sections)
             {
                 var tier = SectionTier(section);
-                if(section.lastTier!=tier){section.bonus.parent.RemoveFromClassList("tier-"+section.lastTier);section.bonus.parent.AddToClassList("tier-"+tier);section.lastTier=tier;}section.bonus.parent.style.display=section.infinity?DisplayStyle.None:DisplayStyle.Flex;section.bonus.text=section.infinity?"":"+"+(tier*(section.buffs?2.5f:.1f)).ToString("0.0")+"%";
+                if(section.lastTier!=tier){section.bonus.parent.RemoveFromClassList("tier-"+section.lastTier);section.bonus.parent.AddToClassList("tier-"+tier);section.lastTier=tier;}section.bonus.parent.style.display=section.infinity?DisplayStyle.None:DisplayStyle.Flex;section.bonus.text=section.infinity?"":"+"+(section.buffs ? tier * 2.5f : CauldronResourceYield.CategoryBonusPercent(tier, definition.config)).ToString("0.#")+"%";
             }
             if (tooltipId != null) ShowTooltip(tooltipId);
         }
@@ -144,12 +144,6 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (Time.unscaledTime < nextRefresh) return;
             nextRefresh = Time.unscaledTime + .2f; Refresh();
-        }
-        // The existing view applies this only on load and tasting stop. Preserve those triggers.
-        public void ApplyCollectionsBonus()
-        {
-            Blindsided.SaveData.StaticReferences.DisciplePercentCollectionsBonus = .001f * sections.Where(s => s.group.HasValue).Sum(s => Mathf.Max(1, SectionTier(s)));
-            TimelessEchoes.NpcGeneration.AlterEchoGenerationManager.Instance?.RefreshRates();
         }
         public void ShowTooltip(string id)
         {

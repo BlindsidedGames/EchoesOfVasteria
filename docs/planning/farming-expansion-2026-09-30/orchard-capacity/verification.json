@@ -1,0 +1,73 @@
+{
+  "stage": "orchard-six-eight-capacity-comparison",
+  "branch": "fix/editor-startup-terrain-catalogue",
+  "head": "b3cedc38b2ba75490aa0970346b246cff591d0f4",
+  "mainSha256": "8f912645ea9216c7f25a833da730c44524aaea0dab7ba4cd76a9c0e1ac0d9d54",
+  "mainDirty": false,
+  "playing": false,
+  "protectedOriginalAssetPaths": 30,
+  "originalAssetChanges": [],
+  "protectedCleanupSourcePaths": 38,
+  "cleanupSourceChanges": [],
+  "actualPlayerFilesPreserved": 77,
+  "verifiedBackupsPreserved": 93,
+  "priorPreviewScenesAndGuidsPreserved": true,
+  "seedAssetsAndAtlasReferencesPreserved": true,
+  "cropLibraryFiguresAndFenceComparisonPreserved": 6,
+  "seedLibraryImagesPreserved": 3,
+  "newPreviewScenes": [
+    "Assets/Editor/FarmingOrchardCapacityPreview/G6-clear-mature.unity",
+    "Assets/Editor/FarmingOrchardCapacityPreview/G6-clear-mixed.unity",
+    "Assets/Editor/FarmingOrchardCapacityPreview/G6-one-tile-up.unity",
+    "Assets/Editor/FarmingOrchardCapacityPreview/H8-clear-mature.unity",
+    "Assets/Editor/FarmingOrchardCapacityPreview/H8-clear-mixed.unity",
+    "Assets/Editor/FarmingOrchardCapacityPreview/H8-one-tile-up.unity"
+  ],
+  "originalSceneComponentsByteExact": true,
+  "newRootOnlyAddsOrchardTreesAndSoil": true,
+  "sixCropBedsAnd60CropRenderersPreserved": true,
+  "all150PathTilesPreserved": true,
+  "actualTileStepUp": 1,
+  "exactOneTileMatureIntrusion": 0.5625,
+  "minimalSouthCorrectionFromRequest": 0.625,
+  "actualNetMoveUpFromPrior": 0.375,
+  "clearMatureCanopyFenceGap": 0.0625,
+  "rowSpacing": 3.5,
+  "matureRowGap": 0.625,
+  "sixTreePlotEnvelope": [
+    10,
+    5.5
+  ],
+  "eightTreePlotEnvelope": [
+    12.5,
+    5.5
+  ],
+  "sixTreeAisleWidth": 2,
+  "eightTreeAisleWidth": 1.5,
+  "adjustedFenceBuildingStandingTreeIntersections": 0,
+  "eightMatureGroundGrassOcclusions": 1,
+  "additionalSceneryRemoval": 0,
+  "successfulRenderWarningsOrErrors": [],
+  "renderMode": "Unity Metal Editor",
+  "matchedCloseExactConstraintMixedNormalTownViewsVisuallyInspected": true,
+  "currentLibraryImageVisuallyInspected": true,
+  "lightAndCullingGuardsRestored": true,
+  "temporaryHelperRemoved": true,
+  "editorReleased": true,
+  "priorDocumentsAndLibraryVersionPreserved": true,
+  "brokenMarkdownLinks": [],
+  "rawHtml": [],
+  "library": {
+    "library_file_id": "libfile_555f413a50c881919dc35beb045aa5c4",
+    "file_id": "file_00000000323481fda834e8a26e04cfbc",
+    "version": 4
+  },
+  "provisionalPreference": "Six trees for wider aisles and smaller footprint; eight viable denser option",
+  "limits": [
+    "One native pixel is a narrow static-art margin, not a runtime walking guarantee",
+    "Exact-shift scenes are deliberately failed fits, not accepted endpoints",
+    "Orchard economy, capacity and final row heights remain unapproved; no implementation or runtime navigation test"
+  ],
+  "gameplayOrMigrationImplemented": false,
+  "commitPushRelease": false
+}

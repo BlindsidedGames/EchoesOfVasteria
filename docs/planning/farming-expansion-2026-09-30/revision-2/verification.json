@@ -1,0 +1,124 @@
+{
+  "branch": "fix/editor-startup-terrain-catalogue",
+  "head": "b3cedc38b2ba75490aa0970346b246cff591d0f4",
+  "baselineSourcePaths": 38,
+  "sourceChanges": [],
+  "mainSha256": "8f912645ea9216c7f25a833da730c44524aaea0dab7ba4cd76a9c0e1ac0d9d54",
+  "mainDirty": false,
+  "playing": false,
+  "actualPlayerFiles": 77,
+  "playerChanges": [],
+  "verifiedBackups": 93,
+  "backupProblems": [],
+  "archivedVersion1Files": 63,
+  "archiveChanges": [],
+  "originalPreviewChanges": [],
+  "revisedPreviewScenes": [
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV2/A0-existing.unity",
+      "bytes": 11062877,
+      "sha256": "6beda1d289bd09d3b9134dbffd1aa917a17f9c9e2638d4fa1c5dee4a6f451711",
+      "scriptGuids": [
+        "073797afb82c5a1438f328866b10b3f0",
+        "a79441f348de89743a2939f4d699eac1"
+      ]
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV2/A1-first-beds.unity",
+      "bytes": 11239708,
+      "sha256": "5244fe1c1322d03afa601903546f5a048f795867721550748d5bb01a9a1b1118",
+      "scriptGuids": [
+        "073797afb82c5a1438f328866b10b3f0",
+        "a79441f348de89743a2939f4d699eac1"
+      ]
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV2/A2-stump-reclamation.unity",
+      "bytes": 11415610,
+      "sha256": "51b8c67ba648b2caff7ddc647ae19eec7f9ea0a932e062ea744ac50e07669c5d",
+      "scriptGuids": [
+        "073797afb82c5a1438f328866b10b3f0",
+        "a79441f348de89743a2939f4d699eac1"
+      ]
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV2/A2b-southeast-work.unity",
+      "bytes": 11415172,
+      "sha256": "124b788cc2e0b6e031a7c26c3464169b7c45603a0f8307d9b4b6864aab46b65e",
+      "scriptGuids": [
+        "073797afb82c5a1438f328866b10b3f0",
+        "a79441f348de89743a2939f4d699eac1"
+      ]
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV2/A3-southeast-clearing.unity",
+      "bytes": 11578661,
+      "sha256": "1d904a43a9e7ee3bb011881d5fd3077b08c5b769039c550d70e37aef3c52f5ef",
+      "scriptGuids": [
+        "073797afb82c5a1438f328866b10b3f0",
+        "a79441f348de89743a2939f4d699eac1"
+      ]
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV2/B3-terraced-rows.unity",
+      "bytes": 11704698,
+      "sha256": "5b7193826204aac5d19cacbbd4faae216e0f94bf0927ef85a9fe1700dc4006f1",
+      "scriptGuids": [
+        "073797afb82c5a1438f328866b10b3f0",
+        "a79441f348de89743a2939f4d699eac1"
+      ]
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV2/C3-grove-courtyard.unity",
+      "bytes": 11623605,
+      "sha256": "60ffed2b6260a161baab0611633b4a9d7848513a2402ff7bcede7bc21c3c6e54",
+      "scriptGuids": [
+        "073797afb82c5a1438f328866b10b3f0",
+        "a79441f348de89743a2939f4d699eac1"
+      ]
+    }
+  ],
+  "gameplayMonoBehavioursInRevisedPreviews": 0,
+  "normalBuildSettings": "%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!1045 &1\nEditorBuildSettings:\n  m_ObjectHideFlags: 0\n  serializedVersion: 2\n  m_Scenes:\n  - enabled: 1\n    path: Assets/Scenes/Loading.unity\n    guid: c77eff40f1538f3478d850cfc801bcfd\n  - enabled: 1\n    path: Assets/Scenes/Main.unity\n    guid: 8c9cfa26abfee488c85f1582747f6a02\n  m_configObjects:\n    com.unity.addressableassets: {fileID: 11400000, guid: a2cf4a331b8e9d44c8d768eed1476525, type: 2}\n    com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}\n    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}\n    com.unity.localization.settings: {fileID: 11400000, guid: 1a861559c8288554286aeccac27b0943, type: 2}\n",
+  "rawRevisedRenders": 42,
+  "passingStaticGateChecks": 14,
+  "runtimeNavigationTested": false,
+  "cohortIds": 94,
+  "unicodeIdDecoded": true,
+  "brokenLinks": [],
+  "liveGeneratorPresent": false,
+  "libraryVersions": [
+    {
+      "file_name": "farm-progression.png",
+      "library_file_id": "libfile_4290e227795c819183f5826bb552bcd6",
+      "file_id": "file_0000000033cc81fdbf0892b79d83880e",
+      "current_version_number": 1
+    },
+    {
+      "file_name": "farm-town-context-annotated.png",
+      "library_file_id": "libfile_55dc1bf70d2c8191913b34d67fd4d5b0",
+      "file_id": "file_00000000130081fdaa622c321fcf07b9",
+      "current_version_number": 1
+    },
+    {
+      "file_name": "farm-layout-alternatives.png",
+      "library_file_id": "libfile_59daf4a6afe48191836dc4db2fcba97c",
+      "file_id": "file_000000008af8823099835087a2a8d2ae",
+      "current_version_number": 1
+    },
+    {
+      "file_name": "farm-normal-scale.png",
+      "library_file_id": "libfile_9ff4f1694a5c8191aa0bea167966eb1a",
+      "file_id": "file_000000009ecc8230ab22e386cdf3f2ff",
+      "current_version_number": 1
+    },
+    {
+      "file_name": "farm-clearing-close-comparison.png",
+      "library_file_id": "libfile_60fa8b9963948191a90a1ca509811167",
+      "file_id": "file_00000000018081fdba9a8ae56701a251",
+      "current_version_number": 1
+    }
+  ],
+  "farmingImplementation": false,
+  "committedOrPushed": false
+}

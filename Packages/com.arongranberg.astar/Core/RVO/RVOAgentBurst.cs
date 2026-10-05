@@ -17,13 +17,17 @@ namespace Pathfinding.RVO {
 
 	[BurstCompile(CompileSynchronously = false, FloatMode = FloatMode.Fast)]
 	public struct JobRVOPreprocess<MovementPlaneWrapper> : IJob where MovementPlaneWrapper : struct, IMovementPlaneWrapper {
-		[ReadOnly]
+		// Burst infers no-alias for NativeContainers declared directly in a job struct, but not for
+		// ones nested inside a plain struct field. Without NoAlias, the store to
+		// temporaryAgentData.desiredTargetPointInVelocitySpace forces agentData.position to be
+		// re-read for the second use below.
+		[ReadOnly][NoAlias]
 		public SimulatorBurst.AgentData agentData;
 
-		[ReadOnly]
+		[ReadOnly][NoAlias]
 		public SimulatorBurst.AgentOutputData previousOutput;
 
-		[WriteOnly]
+		[WriteOnly][NoAlias]
 		public SimulatorBurst.TemporaryAgentData temporaryAgentData;
 
 		public int startIndex;
@@ -56,12 +60,17 @@ namespace Pathfinding.RVO {
 					// Calculate the desired velocity from the point we want to reach
 					temporaryAgentData.desiredVelocity[i] = movementPlane.ToWorld(math.normalizesafe(desiredTargetPointInVelocitySpace) * agentData.desiredSpeed[i], 0);
 
-					var collisionNormal = math.normalizesafe(agentData.collisionNormal[i]);
-					// Check if the velocity is going into the wall
-					// If so: remove that component from the velocity
-					// Note: if the collisionNormal is zero then the dot prodct will produce a zero as well and nothing will happen.
-					float dot = math.dot(currentVelocity, collisionNormal);
-					currentVelocity -= math.min(0, dot) * collisionNormal;
+					var rawCollisionNormal = agentData.collisionNormal[i];
+					var collisionNormalLengthSq = math.lengthsq(rawCollisionNormal);
+
+					// collisionNormal is cleared every simulation tick and only a handful of agents ever have one.
+					if (Unity.Burst.CompilerServices.Hint.Unlikely(collisionNormalLengthSq > math.FLT_MIN_NORMAL)) {
+						var collisionNormal = rawCollisionNormal * math.rsqrt(collisionNormalLengthSq);
+						// Check if the velocity is going into the wall
+						// If so: remove that component from the velocity
+						float dot = math.dot(currentVelocity, collisionNormal);
+						currentVelocity -= math.min(0, dot) * collisionNormal;
+					}
 					temporaryAgentData.currentVelocity[i] = currentVelocity;
 				}
 			}
@@ -415,7 +424,6 @@ namespace Pathfinding.RVO {
 				maxCount = maxNeighbourCount,
 				result = neighbours,
 				layerMask = agentData.collidesWith[agentIndex],
-				layers = agentData.layer,
 				resultDistances = neighbourDistances,
 			});
 
@@ -484,8 +492,20 @@ namespace Pathfinding.RVO {
 	/// </summary>
 	[BurstCompile(CompileSynchronously = false, FloatMode = FloatMode.Fast)]
 	public struct JobDestinationReached<MovementPlaneWrapper>: IJob where MovementPlaneWrapper : struct, IMovementPlaneWrapper {
+		// The individual arrays are taken instead of the whole SimulatorBurst.AgentData, so that the
+		// per-tick clearing jobs for the unused arrays can run in parallel with this job.
 		[ReadOnly]
-		public SimulatorBurst.AgentData agentData;
+		public NativeArray<AgentIndex> version;
+		[ReadOnly]
+		public NativeArray<float> radius;
+		[ReadOnly]
+		public NativeArray<float> height;
+		[ReadOnly]
+		public NativeArray<float3> position;
+		[ReadOnly]
+		public NativeArray<NativeMovementPlane> movementPlaneData;
+		[ReadOnly]
+		public NativeArray<float3> endOfPath;
 
 		[ReadOnly]
 		public SimulatorBurst.TemporaryAgentData temporaryAgentData;
@@ -493,12 +513,17 @@ namespace Pathfinding.RVO {
 		public SimulatorBurst.AgentOutputData output;
 		public int numAgents;
 #if UNITY_EDITOR
+		[ReadOnly]
+		public NativeArray<AgentDebugFlags> debugFlags;
+		[ReadOnly]
+		public NativeArray<float> flowFollowingStrength;
 		public CommandBuilder draw;
 #endif
 
-		private static readonly ProfilerMarker MarkerInvert = new ProfilerMarker("InvertArrows");
-		private static readonly ProfilerMarker MarkerAlloc = new ProfilerMarker("Alloc");
-		private static readonly ProfilerMarker MarkerFirstPass = new ProfilerMarker("FirstPass");
+		private static readonly ProfilerMarker MarkerInvert = new ProfilerMarker("JobDestinationReached.InvertArrows");
+		private static readonly ProfilerMarker MarkerAlloc = new ProfilerMarker("JobDestinationReached.Alloc");
+		private static readonly ProfilerMarker MarkerFirstPass = new ProfilerMarker("JobDestinationReached.FirstPass");
+		private static readonly ProfilerMarker MarkerPropagate = new ProfilerMarker("JobDestinationReached.Propagate");
 
 		struct TempAgentData {
 			public bool blockedAndSlow;
@@ -511,49 +536,29 @@ namespace Pathfinding.RVO {
 				output.effectivelyReachedDestination[agentIndex] = ReachedEndOfPath.NotReached;
 			}
 
-			// For each agent, store which agents it blocks
-			var inArrows = new NativeArray<int>(agentData.position.Length*SimulatorBurst.MaxBlockingAgentCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
-			// Number of agents that each agent blocks
-			var inArrowCounts = new NativeArray<int>(agentData.position.Length, Allocator.Temp, NativeArrayOptions.ClearMemory);
-			var que = new NativeCircularBuffer<int>(16, Allocator.Temp);
-			// True for an agent if it is in the queue, or if it should never be queued again
-			var queued = new NativeArray<bool>(numAgents, Allocator.Temp, NativeArrayOptions.ClearMemory);
 			var tempData = new NativeArray<TempAgentData>(numAgents, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
 			MarkerAlloc.End();
-			MarkerInvert.Begin();
-
-			for (int agentIndex = 0; agentIndex < numAgents; agentIndex++) {
-				if (!agentData.version[agentIndex].Valid) continue;
-				for (int i = 0; i < SimulatorBurst.MaxBlockingAgentCount; i++) {
-					var blockingAgentIndex = output.blockedByAgents[agentIndex*SimulatorBurst.MaxBlockingAgentCount + i];
-					if (blockingAgentIndex == -1) break;
-					var count = inArrowCounts[blockingAgentIndex];
-					if (count >= SimulatorBurst.MaxBlockingAgentCount) continue;
-					inArrows[blockingAgentIndex*SimulatorBurst.MaxBlockingAgentCount + count] = agentIndex;
-					inArrowCounts[blockingAgentIndex] = count+1;
-				}
-			}
-			MarkerInvert.End();
 
 			MarkerFirstPass.Begin();
+			var anyReached = false;
 			for (int agentIndex = 0; agentIndex < numAgents; agentIndex++) {
-				if (!agentData.version[agentIndex].Valid) continue;
+				if (!version[agentIndex].Valid) continue;
 
-				var position = agentData.position[agentIndex];
+				var ourPosition = position[agentIndex];
 				MovementPlaneWrapper movementPlane = default;
-				movementPlane.Set(agentData.movementPlane[agentIndex]);
+				movementPlane.Set(movementPlaneData[agentIndex]);
 
 				var ourSpeed = output.speed[agentIndex];
-				var ourEndOfPath = agentData.endOfPath[agentIndex];
+				var ourEndOfPath = endOfPath[agentIndex];
 
 				// Ignore if destination is not set
 				if (!math.isfinite(ourEndOfPath.x)) continue;
 
-				var distToEndSq = math.lengthsq(movementPlane.ToPlane(ourEndOfPath - position, out float endOfPathElevationDifference));
-				var ourHeight = agentData.height[agentIndex];
+				var distToEndSq = math.lengthsq(movementPlane.ToPlane(ourEndOfPath - ourPosition, out float endOfPathElevationDifference));
+				var ourHeight = height[agentIndex];
 				var reachedEndOfPath = false;
 				var flowFollowing = false;
-				var ourRadius = agentData.radius[agentIndex];
+				var ourRadius = radius[agentIndex];
 				var forwardClearance = output.forwardClearance[agentIndex];
 
 				// Heuristic 2
@@ -574,17 +579,17 @@ namespace Pathfinding.RVO {
 					var blockingAgentIndex = output.blockedByAgents[agentIndex*SimulatorBurst.MaxBlockingAgentCount + i];
 					if (blockingAgentIndex == -1) break;
 
-					var otherPosition = agentData.position[blockingAgentIndex];
-					var distBetweenAgentsSq = math.lengthsq(movementPlane.ToPlane(position - otherPosition));
-					var circleRadius = (math.sqrt(distBetweenAgentsSq) + ourRadius + agentData.radius[blockingAgentIndex])*0.5f;
-					var endWithinCircle = math.lengthsq(movementPlane.ToPlane(ourEndOfPath - 0.5f*(position + otherPosition))) < circleRadius*circleRadius;
+					var otherPosition = position[blockingAgentIndex];
+					var distBetweenAgentsSq = math.lengthsq(movementPlane.ToPlane(ourPosition - otherPosition));
+					var circleRadius = (math.sqrt(distBetweenAgentsSq) + ourRadius + radius[blockingAgentIndex])*0.5f;
+					var endWithinCircle = math.lengthsq(movementPlane.ToPlane(ourEndOfPath - 0.5f*(ourPosition + otherPosition))) < circleRadius*circleRadius;
 					if (endWithinCircle) {
-						// Check if the other agent has an arrow pointing to this agent (i.e. it is blocked by this agent)
+						// Check if the other agent is blocked by this agent too, i.e. the two block each other
 						var loop = false;
 						for (int j = 0; j < SimulatorBurst.MaxBlockingAgentCount; j++) {
-							var arrowFromAgent = inArrows[agentIndex*SimulatorBurst.MaxBlockingAgentCount + j];
-							if (arrowFromAgent == -1) break;
-							if (arrowFromAgent == blockingAgentIndex) {
+							var blockedByOther = output.blockedByAgents[blockingAgentIndex*SimulatorBurst.MaxBlockingAgentCount + j];
+							if (blockedByOther == -1) break;
+							if (blockedByOther == agentIndex) {
 								loop = true;
 								break;
 							}
@@ -601,88 +606,125 @@ namespace Pathfinding.RVO {
 				}
 
 				var effectivelyReached = reachedEndOfPath ? ReachedEndOfPath.Reached : (flowFollowing ? ReachedEndOfPath.ReachedSoon : ReachedEndOfPath.NotReached);
-				if (effectivelyReached != output.effectivelyReachedDestination[agentIndex]) {
+				if (effectivelyReached != ReachedEndOfPath.NotReached) {
 					output.effectivelyReachedDestination[agentIndex] = effectivelyReached;
-
-					if (effectivelyReached == ReachedEndOfPath.Reached) {
-						// Mark this agent as queued to prevent it from being added to the queue again.
-						queued[agentIndex] = true;
-
-						// Changing to the Reached flag may affect the calculations for other agents.
-						// So we iterate over all agents that may be affected and enqueue them again.
-						var count = inArrowCounts[agentIndex];
-						for (int i = 0; i < count; i++) {
-							var inArrow = inArrows[agentIndex*SimulatorBurst.MaxBlockingAgentCount + i];
-							if (!queued[inArrow]) que.PushEnd(inArrow);
-						}
-					}
+					anyReached |= effectivelyReached == ReachedEndOfPath.Reached;
 				}
 			}
 			MarkerFirstPass.End();
 
-
-			int iteration = 0;
-			while (que.Length > 0) {
-				var agentIndex = que.PopStart();
-				iteration++;
-				// If we are already at the reached stage, the result can never change.
-				if (output.effectivelyReachedDestination[agentIndex] == ReachedEndOfPath.Reached) continue;
-				queued[agentIndex] = false;
-
-				var ourSpeed = output.speed[agentIndex];
-				var ourEndOfPath = agentData.endOfPath[agentIndex];
-				// Ignore if destination is not set
-				// TODO: Will this never trigger due to FloatMode.Fast?
-				// Should be ok anyway, since the distance calculations below will filter it out anyway.
-				if (!math.isfinite(ourEndOfPath.x)) continue;
-
-				var ourPosition = agentData.position[agentIndex];
-				var blockedAndSlow = tempData[agentIndex].blockedAndSlow;
-				var distToEndSq = tempData[agentIndex].distToEndSq;
-				var ourRadius = agentData.radius[agentIndex];
-				var reachedEndOfPath = false;
-				var flowFollowing = false;
-
-				// Heuristic 4
-				for (int i = 0; i < SimulatorBurst.MaxBlockingAgentCount; i++) {
-					var blockingAgentIndex = output.blockedByAgents[agentIndex*SimulatorBurst.MaxBlockingAgentCount + i];
-					if (blockingAgentIndex == -1) break;
-
-					var otherEndOfPath = agentData.endOfPath[blockingAgentIndex];
-					var otherRadius = agentData.radius[blockingAgentIndex];
-
-					// Check if the other agent has a destination in roughly the same position as this agent.
-					// If we are further from the destination we tolarate larger deviations.
-					var endOfPathsOverlapping = math.lengthsq(otherEndOfPath - ourEndOfPath) <= distToEndSq*(0.5f*0.5f);
-					var otherReached = output.effectivelyReachedDestination[blockingAgentIndex] == ReachedEndOfPath.Reached;
-
-					if (otherReached && (endOfPathsOverlapping || math.lengthsq(ourEndOfPath - agentData.position[blockingAgentIndex]) < math.lengthsq(ourRadius+otherRadius))) {
-						var otherSpeed = output.speed[blockingAgentIndex];
-						flowFollowing |= math.min(ourSpeed, otherSpeed) < 0.01f;
-						reachedEndOfPath |= blockedAndSlow;
+			// Only an agent that has reached its destination can change the result for anyone else. With no
+			// such agent there is nothing to propagate, and building the inverted graph would be pure cost.
+			// This is the common case for a crowd that is still on its way somewhere.
+			if (anyReached) {
+				MarkerInvert.Begin();
+				// Invariant: every index in blockedByAgents is below numAgents, since JobRVO rewrites the
+				// list for all of agents [0, numAgents) every step. So these only need to cover the live
+				// agents, not the whole allocated capacity, which may be far larger after a crowd has shrunk.
+				// For each agent, store which agents it blocks
+				var inArrows = new NativeArray<int>(numAgents*SimulatorBurst.MaxBlockingAgentCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
+				// Number of agents that each agent blocks
+				var inArrowCounts = new NativeArray<int>(numAgents, Allocator.Temp, NativeArrayOptions.ClearMemory);
+				for (int agentIndex = 0; agentIndex < numAgents; agentIndex++) {
+					if (!version[agentIndex].Valid) continue;
+					for (int i = 0; i < SimulatorBurst.MaxBlockingAgentCount; i++) {
+						var blockingAgentIndex = output.blockedByAgents[agentIndex*SimulatorBurst.MaxBlockingAgentCount + i];
+						if (blockingAgentIndex == -1) break;
+						var count = inArrowCounts[blockingAgentIndex];
+						if (count >= SimulatorBurst.MaxBlockingAgentCount) continue;
+						inArrows[blockingAgentIndex*SimulatorBurst.MaxBlockingAgentCount + count] = agentIndex;
+						inArrowCounts[blockingAgentIndex] = count+1;
 					}
 				}
+				MarkerInvert.End();
 
-				var effectivelyReached = reachedEndOfPath ? ReachedEndOfPath.Reached : (flowFollowing ? ReachedEndOfPath.ReachedSoon : ReachedEndOfPath.NotReached);
-				// We do not check for all things that are checked in the first pass. So incorporate the previous information by taking the max.
-				effectivelyReached = (ReachedEndOfPath)math.max((int)effectivelyReached, (int)output.effectivelyReachedDestination[agentIndex]);
+				MarkerPropagate.Begin();
+				var que = new NativeCircularBuffer<int>(16, Allocator.Temp);
+				// True for an agent if it is in the queue, or if it should never be queued again
+				var queued = new NativeArray<bool>(numAgents, Allocator.Temp, NativeArrayOptions.ClearMemory);
 
-				if (effectivelyReached != output.effectivelyReachedDestination[agentIndex]) {
-					output.effectivelyReachedDestination[agentIndex] = effectivelyReached;
+				// Seed the queue with every agent that a reached agent blocks, since those are the only ones
+				// whose result the first pass may have gotten wrong.
+				for (int agentIndex = 0; agentIndex < numAgents; agentIndex++) {
+					if (output.effectivelyReachedDestination[agentIndex] != ReachedEndOfPath.Reached) continue;
 
-					if (effectivelyReached == ReachedEndOfPath.Reached) {
-						// Mark this agent as queued to prevent it from being added to the queue again.
-						queued[agentIndex] = true;
-
-						// Changes to the Reached flag may affect the calculations for other agents.
-						// So we iterate over all agents that may be affected and enqueue them again.
-						var count = inArrowCounts[agentIndex];
-						for (int i = 0; i < count; i++) {
-							var inArrow = inArrows[agentIndex*SimulatorBurst.MaxBlockingAgentCount + i];
-							if (!queued[inArrow]) que.PushEnd(inArrow);
+					// Reached is final, so this agent must never enter the queue itself.
+					queued[agentIndex] = true;
+					var count = inArrowCounts[agentIndex];
+					for (int i = 0; i < count; i++) {
+						var inArrow = inArrows[agentIndex*SimulatorBurst.MaxBlockingAgentCount + i];
+						if (!queued[inArrow]) {
+							queued[inArrow] = true;
+							que.PushEnd(inArrow);
 						}
 					}
 				}
+
+				while (que.Length > 0) {
+					var agentIndex = que.PopStart();
+					// If we are already at the reached stage, the result can never change.
+					if (output.effectivelyReachedDestination[agentIndex] == ReachedEndOfPath.Reached) continue;
+					queued[agentIndex] = false;
+
+					var ourSpeed = output.speed[agentIndex];
+					var ourEndOfPath = endOfPath[agentIndex];
+					// Ignore if destination is not set
+					// TODO: Will this never trigger due to FloatMode.Fast?
+					// Should be ok anyway, since the distance calculations below will filter it out anyway.
+					if (!math.isfinite(ourEndOfPath.x)) continue;
+
+					var ourPosition = position[agentIndex];
+					var blockedAndSlow = tempData[agentIndex].blockedAndSlow;
+					var distToEndSq = tempData[agentIndex].distToEndSq;
+					var ourRadius = radius[agentIndex];
+					var reachedEndOfPath = false;
+					var flowFollowing = false;
+
+					// Heuristic 4
+					for (int i = 0; i < SimulatorBurst.MaxBlockingAgentCount; i++) {
+						var blockingAgentIndex = output.blockedByAgents[agentIndex*SimulatorBurst.MaxBlockingAgentCount + i];
+						if (blockingAgentIndex == -1) break;
+
+						var otherEndOfPath = endOfPath[blockingAgentIndex];
+						var otherRadius = radius[blockingAgentIndex];
+
+						// Check if the other agent has a destination in roughly the same position as this agent.
+						// If we are further from the destination we tolarate larger deviations.
+						var endOfPathsOverlapping = math.lengthsq(otherEndOfPath - ourEndOfPath) <= distToEndSq*(0.5f*0.5f);
+						var otherReached = output.effectivelyReachedDestination[blockingAgentIndex] == ReachedEndOfPath.Reached;
+
+						if (otherReached && (endOfPathsOverlapping || math.lengthsq(ourEndOfPath - position[blockingAgentIndex]) < math.lengthsq(ourRadius+otherRadius))) {
+							var otherSpeed = output.speed[blockingAgentIndex];
+							flowFollowing |= math.min(ourSpeed, otherSpeed) < 0.01f;
+							reachedEndOfPath |= blockedAndSlow;
+						}
+					}
+
+					var effectivelyReached = reachedEndOfPath ? ReachedEndOfPath.Reached : (flowFollowing ? ReachedEndOfPath.ReachedSoon : ReachedEndOfPath.NotReached);
+					// We do not check for all things that are checked in the first pass. So incorporate the previous information by taking the max.
+					effectivelyReached = (ReachedEndOfPath)math.max((int)effectivelyReached, (int)output.effectivelyReachedDestination[agentIndex]);
+
+					if (effectivelyReached != output.effectivelyReachedDestination[agentIndex]) {
+						output.effectivelyReachedDestination[agentIndex] = effectivelyReached;
+
+						if (effectivelyReached == ReachedEndOfPath.Reached) {
+							// Mark this agent as queued to prevent it from being added to the queue again.
+							queued[agentIndex] = true;
+
+							// Changes to the Reached flag may affect the calculations for other agents.
+							// So we iterate over all agents that may be affected and enqueue them again.
+							var count = inArrowCounts[agentIndex];
+							for (int i = 0; i < count; i++) {
+								var inArrow = inArrows[agentIndex*SimulatorBurst.MaxBlockingAgentCount + i];
+								if (!queued[inArrow]) {
+									queued[inArrow] = true;
+									que.PushEnd(inArrow);
+								}
+							}
+						}
+					}
+				}
+				MarkerPropagate.End();
 			}
 		}
 	}

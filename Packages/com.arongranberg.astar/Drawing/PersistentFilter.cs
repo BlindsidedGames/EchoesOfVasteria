@@ -1,3 +1,5 @@
+// Compiled out when ALINE is excluded from standalone builds.
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
 using UnityEngine;
@@ -121,3 +123,4 @@ namespace Pathfinding.Drawing {
 		}
 	}
 }
+#endif

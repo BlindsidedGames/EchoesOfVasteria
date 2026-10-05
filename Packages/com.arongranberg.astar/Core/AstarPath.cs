@@ -32,7 +32,7 @@ using Thread = System.Threading.Thread;
 [HelpURL("https://arongranberg.com/astar/documentation/stable/astarpath.html")]
 public class AstarPath : VersionedMonoBehaviour {
 	/// <summary>The version number for the A* Pathfinding Project</summary>
-	public static readonly System.Version Version = new System.Version(5, 4, 6);
+	public static readonly System.Version Version = new System.Version(5, 4, 7);
 
 	/// <summary>Information about where the package was downloaded</summary>
 	public enum AstarDistribution { WebsiteDownload, AssetStore, PackageManager };
@@ -836,14 +836,14 @@ public class AstarPath : VersionedMonoBehaviour {
 		// Loop through all graphs and draw their gizmos
 		for (int i = 0; i < graphs.Length; i++) {
 			if (graphs[i] != null && graphs[i].drawGizmos)
-				graphs[i].OnDrawGizmos(DrawingManager.instance.gizmos, render, default, renderInGame);
+				graphs[i].OnDrawGizmos(render, default, renderInGame);
 		}
 		Profiler.EndSample();
 
 		if (render) {
 			euclideanEmbedding.OnDrawGizmos();
-			if (debugMode == GraphDebugMode.HierarchicalNode) hierarchicalGraph.OnDrawGizmos(DrawingManager.instance.gizmos, renderInGame);
-			if (debugMode == GraphDebugMode.NavmeshBorderObstacles) hierarchicalGraph.navmeshEdges.OnDrawGizmos(DrawingManager.instance.gizmos, renderInGame);
+			if (debugMode == GraphDebugMode.HierarchicalNode) hierarchicalGraph.OnDrawGizmos(renderInGame);
+			if (debugMode == GraphDebugMode.NavmeshBorderObstacles) hierarchicalGraph.navmeshEdges.OnDrawGizmos(renderInGame);
 		}
 
 		workItems.DrawGizmos();
@@ -2233,25 +2233,46 @@ public class AstarPath : VersionedMonoBehaviour {
 	}
 
 	internal NNInfo GetNearest (Vector3 position, ref NearestNodeConstraint constraint) {
+		// Contract: the caller's constraint is only read, never written to.
+		// Callers may reuse one constraint for several queries, or share it between threads.
+		// Each graph resolves a negative maxDistanceSqr to the default limit itself, so the resolved
+		// value below is only needed by this method.
+		//
 		// Cache property lookups
 		var graphs = this.graphs;
-		constraint.maxDistanceSqr = constraint.maxDistanceSqrOrDefault(active);
-		UnityEngine.Assertions.Assert.IsTrue(constraint.maxDistanceSqr >= 0);
+		var maxDistanceSqr = constraint.maxDistanceSqrOrDefault(active);
+		UnityEngine.Assertions.Assert.IsTrue(maxDistanceSqr >= 0);
 		NNInfo nearestNode = NNInfo.Empty;
 
-		if (graphs == null || graphs.Length == 0) return nearestNode;
+		if (graphs == null) return nearestNode;
 
-		// Use a fast path in case there is only one graph.
-		// This improves performance by about 10% when there is only one graph.
-		if (graphs.Length == 1) {
-			var graph = graphs[0];
-			if (graph == null || !constraint.graphMask.Contains(graph)) {
-				return nearestNode;
+		// Find the graphs which may contain the nearest node, stopping as soon as a second one is found.
+		// A scene with a single navigation graph very often has a LinkGraph next to it, and the graph mask may
+		// also narrow the search down to a single graph, so this is a much better test than graphs.Length == 1.
+		NavGraph onlyCandidateGraph = null;
+		bool multipleCandidateGraphs = false;
+		for (int i = 0; i < graphs.Length; i++) {
+			var graph = graphs[i];
+			if (graph == null || !graph.supportsNearestNodeQueries || !constraint.graphMask.Contains(graph)) continue;
+			if (onlyCandidateGraph != null) {
+				multipleCandidateGraphs = true;
+				break;
 			}
+			onlyCandidateGraph = graph;
+		}
 
-			nearestNode = graph.GetNearest(position, ref constraint);
-			UnityEngine.Assertions.Assert.IsTrue(nearestNode.node == null || nearestNode.distanceCostSqr <= constraint.maxDistanceSqr);
+		// Use a fast path in case there is only one graph to search.
+		// This improves performance by about 10% when there is only one graph.
+		if (!multipleCandidateGraphs) {
+			if (onlyCandidateGraph == null) return nearestNode;
+
+			nearestNode = onlyCandidateGraph.GetNearest(position, ref constraint);
+			UnityEngine.Assertions.Assert.IsTrue(nearestNode.node == null || nearestNode.distanceCostSqr <= maxDistanceSqr);
 		} else {
+			// Copy constraint to avoid mutating it as we tighten the distance limit
+			var searchConstraint = constraint;
+			searchConstraint.maxDistanceSqr = maxDistanceSqr;
+
 			UnsafeSpan<(float, uint)> distances;
 			unsafe {
 				// The number of graphs is limited to GraphNode.MaxGraphIndex (256),
@@ -2268,22 +2289,22 @@ public class AstarPath : VersionedMonoBehaviour {
 				NavGraph graph = graphs[i];
 
 				// Check if this graph should be searched
-				if (graph == null || !constraint.graphMask.Contains(i)) {
+				if (graph == null || !graph.supportsNearestNodeQueries || !searchConstraint.graphMask.Contains(i)) {
 					continue;
 				}
-				var lowerBound = graph.NearestNodeDistanceSqrLowerBound(position, ref constraint);
-				if (lowerBound > constraint.maxDistanceSqr) continue;
+				var lowerBound = graph.NearestNodeDistanceSqrLowerBound(position, ref searchConstraint);
+				if (lowerBound > searchConstraint.maxDistanceSqr) continue;
 
 				distances[numCandidateGraphs++] = (lowerBound, i);
 			}
 			distances = distances.Slice(0, numCandidateGraphs);
 			distances.Sort();
 			for (int i = 0; i < distances.Length; i++) {
-				if (distances[i].Item1 > constraint.maxDistanceSqr) break;
+				if (distances[i].Item1 > searchConstraint.maxDistanceSqr) break;
 				var graph = graphs[distances[i].Item2];
-				NNInfo nnInfo = graph.GetNearest(position, ref constraint);
-				if (nnInfo.distanceCostSqr < constraint.maxDistanceSqr) {
-					constraint.maxDistanceSqr = nnInfo.distanceCostSqr;
+				NNInfo nnInfo = graph.GetNearest(position, ref searchConstraint);
+				if (nnInfo.distanceCostSqr < searchConstraint.maxDistanceSqr) {
+					searchConstraint.maxDistanceSqr = nnInfo.distanceCostSqr;
 					nearestNode = nnInfo;
 				}
 			}

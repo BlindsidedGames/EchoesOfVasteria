@@ -1,0 +1,89 @@
+{
+  "resourceAssetsScanned": 69,
+  "orchardFruitResourceNamesFound": [],
+  "sharedCoreUnknown": [
+    {
+      "asset": "Assets/Resources/Resource Items/Erif Core.asset",
+      "unknownIcon": "{fileID: 90599415, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}",
+      "sha256": "822bc4cb7210a3b10f807f59ee65ac8fefda254f513961bfac48b3d8e0095127"
+    },
+    {
+      "asset": "Assets/Resources/Resource Items/Lirium Core.asset",
+      "unknownIcon": "{fileID: 90599415, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}",
+      "sha256": "91e2039a23a33be9aa4e67406fdc8bb8025a5b645c71e1cbf320e51ce2724e6b"
+    },
+    {
+      "asset": "Assets/Resources/Resource Items/Dlog Core.asset",
+      "unknownIcon": "{fileID: 90599415, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}",
+      "sha256": "229fa07205e829437304f3db0bc702ac421a3b8f659ca841867c849a17b935dc"
+    },
+    {
+      "asset": "Assets/Resources/Resource Items/Eznorb Core.asset",
+      "unknownIcon": "{fileID: 90599415, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}",
+      "sha256": "5736fc91891d4b6b760240676034c2f1aa8929236ea60843ac4fd44d249b8b84"
+    },
+    {
+      "asset": "Assets/Resources/Resource Items/Nori Core.asset",
+      "unknownIcon": "{fileID: 90599415, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}",
+      "sha256": "b24e669d84f222e0471ee277c51ab33dd96060a833de2bdea77e381c24e59582"
+    },
+    {
+      "asset": "Assets/Resources/Resource Items/Vastium Core.asset",
+      "unknownIcon": "{fileID: 90599415, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}",
+      "sha256": "27870c49278b1ad705beb299574d4f1e6cdeecdc9a5b895dd447ebeb9d8b1df6"
+    },
+    {
+      "asset": "Assets/Resources/Resource Items/Idle Core.asset",
+      "unknownIcon": "{fileID: 90599415, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}",
+      "sha256": "680752c8e5ed9cc87c3530e18713c4bb01236f99ea0b13b6af3c8921b10b571d"
+    },
+    {
+      "asset": "Assets/Resources/Resource Items/Copium Core.asset",
+      "unknownIcon": "{fileID: 90599415, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}",
+      "sha256": "862fa35c392443a86cf8bb33095e5e876f2a2ec10995472e3e1eb5e607e3af31"
+    }
+  ],
+  "sourceHashes": {
+    "Assets/Scripts/Upgrades/Resource.cs": "ae5ed49747b6c73da031a08bc91f4ac90505c452ad6881986f45511fe9d49c0e",
+    "Assets/Scripts/Upgrades/ResourceManager.cs": "341636193a32428c7b2ef59a08ef0391c3b79db8b2fcbbb779bcac7d06e7d679",
+    "Assets/Scripts/Upgrades/ResourceInventoryUI.cs": "7384b58d04865ce0e67ed4a50c961c6af5a8742bc9ed3b0e1650f1e42300b6a2",
+    "Assets/Scripts/UI/Toolkit/ToolkitResourceInventoryScreen.cs": "249cf36b591736254b88a335400cd43b7fb5f53fe7ca92a9bff44608c8b2c072",
+    "Assets/Scripts/UI/Toolkit/ToolkitStatisticsJournal.cs": "100ccbc85f647bfab21f76b8f41466bb279e7305ef78c61aa17dedfa555148c1",
+    "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png": "7b0d6335b1dbe6c276528eba75bc4eb3ffa9fb5d4a69bfa3828df7a426aadff6",
+    "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png.meta": "67162abb6becc0564b45b4b0f9e723addf8b7af751744ef53a61d80106c915b3",
+    "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png": "acb204163d669a29b5a39b4e0b405425846e28b87736b4899c29b4a1807be87d",
+    "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Trees_Fruit_Objects.png": "48465737790029cdea0df2cfbeac8244caeafb5ec17fda8d995c73ede38740b3",
+    "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Trees_Fruit_Objects.png.meta": "19814403ab803e73b805491f683835d7093699cf79517b4641f13a5103a1cf40"
+  },
+  "freshSeedDiscoveryDecision": {
+    "initialBalance": 0,
+    "initialDiscovered": false,
+    "appliesTo": "All fresh and legacy slots, irrespective of crop Earned, levels or card history",
+    "firstDiscovery": "First durably committed new-version pack reward",
+    "keepDiscoveryAfterSpend": true,
+    "proposedMinimalRecord": {
+      "quantity": "Integer finite balance",
+      "lifetimeAcquired": "Cumulative committed new-version pack acquisition count",
+      "discovered": "Computed lifetimeAcquired > 0; no separate flag"
+    }
+  },
+  "packetArt": {
+    "totalPackets": 22,
+    "distinctTightAlphaMasks": 1,
+    "tightVisiblePixels": [
+      12,
+      15
+    ],
+    "authoredUnknownVariant": false,
+    "oneSharedUnknownArtRecommended": true,
+    "normalizedCanvasNeeded": "21 frame rectangles16x32; Wheat16x16; same visible12x15 alpha shape. Normalize presentation without reslicing referenced assets."
+  },
+  "hiddenUI": {
+    "inventory": "Earned/IsUnlocked selects normal icon versus authored UnknownIcon. No automatic tint fallback.",
+    "statisticsJournal": "Undiscovered resource hides image and shows question mark.",
+    "newSeedState": "Derive pack discovery from new cumulative committed acquisition count; do not reuse old crop discovery or save another eligibility flag."
+  },
+  "worldTreeSprites": "Verified three growth sprites and separate fruiting Apple_Tree, 32x64 at PPU16, not icons only",
+  "fruitObjectArt": "Five imported16x16 generic sprites; colors/shapes viewed, species mapping not authored or approved",
+  "productionImplemented": false
+}

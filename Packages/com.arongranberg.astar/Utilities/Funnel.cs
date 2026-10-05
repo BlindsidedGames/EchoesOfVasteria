@@ -143,8 +143,8 @@ namespace Pathfinding {
 
 					if (i - startIndex == 0) {
 						// The link is a single node.
-						// Just ignore it. It can happen in very rare circumstances with some path types.
-						// For example, a RandomPath can stop at the first node of a node link, without including the other end of the link.
+						// Just ignore it. It can happen in very rare circumstances with a custom path type which picks its
+						// endpoint during the search, and stops at the first node of a link without including the other end.
 
 						if (startIndex > 0 && startIndex + 1 < nodes.Count && nodes[startIndex - 1] == nodes[startIndex + 1]) {
 							// We can also move to a node link node and then immediately move back to the previous node in rare circumstances.
@@ -180,15 +180,36 @@ namespace Pathfinding {
 				}
 			}
 
-			// The path should always start and stop on regular nodes
-			if (result[0].type == PartType.OffMeshLink) {
-				result.RemoveAt(0);
-			}
+			// The path should always start and stop on regular nodes.
+			// The built-in path types guarantee this, but a custom path type which picks its endpoint during the
+			// search may not. In that case we truncate the path so that it ends on the last regular node before the link.
+			// The nodes themselves must be removed too.
 			if (result[result.Count - 1].type == PartType.OffMeshLink) {
+				var part = result[result.Count - 1];
+				nodes.RemoveRange(part.startIndex, part.endIndex - part.startIndex + 1);
 				result.RemoveAt(result.Count - 1);
 			}
+			if (result.Count > 0 && result[0].type == PartType.OffMeshLink) {
+				var part = result[0];
+				var removedNodes = part.endIndex - part.startIndex + 1;
+				nodes.RemoveRange(part.startIndex, removedNodes);
+				result.RemoveAt(0);
+				// All parts after the removed one refer to nodes which have now been shifted
+				for (int j = 0; j < result.Count; j++) {
+					var p = result[j];
+					p.startIndex -= removedNodes;
+					p.endIndex -= removedNodes;
+					result[j] = p;
+				}
+			}
 
-			Assert.IsTrue(result.Count > 0);
+			// The path consisted only of off-mesh link nodes. This should never happen, since a path always starts on a regular node.
+			Assert.AreNotEqual(0, result.Count);
+			if (result.Count == 0) {
+				nodes.Clear();
+				return result;
+			}
+
 			Assert.AreEqual(result[0].startIndex, 0);
 			Assert.AreEqual(result[0].type, PartType.NodeSequence);
 			Assert.AreEqual(result[result.Count-1].type, PartType.NodeSequence);

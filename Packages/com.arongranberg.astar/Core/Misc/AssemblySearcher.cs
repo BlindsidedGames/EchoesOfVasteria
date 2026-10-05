@@ -4,9 +4,24 @@ using System.Reflection;
 
 namespace Pathfinding.Util {
 	internal static class AssemblySearcher {
+		/// <summary>
+		/// Assemblies currently loaded into this process.
+		///
+		/// AppDomain.GetAssemblies can return assemblies Unity has already unloaded, which then throw
+		/// when reflected over. Unity 6000.6 added a filtered list; older versions have no equivalent,
+		/// which is why the GetTypes call below is wrapped in a try-catch.
+		/// </summary>
+		static IEnumerable<Assembly> LoadedAssemblies () {
+#if UNITY_6000_6_OR_NEWER
+			return UnityEngine.Assemblies.CurrentAssemblies.GetLoadedAssemblies();
+#else
+			return System.AppDomain.CurrentDomain.GetAssemblies();
+#endif
+		}
+
 		public static List<System.Type> FindTypesInheritingFrom<T>() {
 			var result = new List<System.Type>();
-			foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies()) {
+			foreach (var assembly in LoadedAssemblies()) {
 				// Skip some assemblies which are known to not contain any graph types, for performance
 				var name = assembly.GetName().Name;
 				if (name.StartsWith("Unity.") || name.StartsWith("UnityEngine.") || name == "UnityEngine" || name.StartsWith("UnityEditor.") || name == "UnityEditor" || name.StartsWith("Mono.") || name.StartsWith("System.") || name == "System" || name.StartsWith("mscorlib") || name.StartsWith("I18N") || name == "netstandard" || name == "nunit.framework") continue;

@@ -1,0 +1,121 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Wiki_pt-BR
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: pt-BR
+  m_SharedData: {fileID: 11400000, guid: bfa36fdea331abe4cb2b293833ff63a0, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 188400156672
+    m_Localized: "A produ\xE7\xE3o de Alter-Ecos foi descontinuada. Junte recursos nas aventuras ou colha plantas cultivadas."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 478381752320
+    m_Localized: "Poderes s\xE3o efeitos tempor\xE1rios com dura\xE7\xE3o limitada, que acabam quando o tempo termina ou ao voltar \xE0 cidade. Eles podem ser conjurados automaticamente ap\xF3s concluir a miss\xE3o exigida para o espa\xE7o, e a conjura\xE7\xE3o autom\xE1tica come\xE7a ativada. Para desativ\xE1-la, clique no espa\xE7o na janela de gerenciamento de poderes.\n\nO Caldeir\xE3o da Eva pode reduzir os tempos de recarga dos poderes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 492340396032
+    m_Localized: "Caleb entra em combate automaticamente e s\xF3 enfrenta inimigos que atrapalham o caminho! Primeiro as tarefas, depois a divers\xE3o.\n\nD' = D \xD7 (1 - A / (A + N))\n\nD = dano recebido\nA = valor de defesa (limitado a 0 ou mais)\nN = constante que controla os retornos decrescentes (padr\xE3o = 25)\nD' = dano final recebido\n\nAo alcan\xE7ar sua 10\xAA, 100\xAA, 1,000\xAA e 10,000\xAA derrota de um inimigo espec\xEDfico, voc\xEA ganha 25% de dano extra contra esse inimigo.\nAo alcan\xE7ar sua 25,000\xAA e 100,000\xAA derrota de um inimigo espec\xEDfico, voc\xEA ganha 50% de dano extra contra esse inimigo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 512217202688
+    m_Localized: "Ecos s\xE3o vers\xF5es alternativas de Caleb que atravessam um pouco para a realidade dele e ajudam em diversas situa\xE7\xF5es.\n\nCada eco pode ter uma combina\xE7\xE3o das habilidades de Caleb, mas a maioria n\xE3o possui todas.\n\nA principal diferen\xE7a no comportamento dos Ecos \xE9 poderem ou n\xE3o combater.\nEcos capazes de combater t\xEAm dois estilos, dependendo de tamb\xE9m poderem concluir tarefas. \n\nUm Eco de combate que N\xC3O consegue fazer tarefas procura especificamente por inimigos.\nUm Eco de combate que CONSEGUE fazer tarefas prioriza tarefas e s\xF3 enfrenta inimigos que o avistam.\n\nEcos sem combate n\xE3o atacam nem s\xE3o alvo de inimigos.\n\nNota do desenvolvedor | Atualmente nenhum eco do jogo faz combate e tarefas ao mesmo tempo. Ecos de Marcos procuram especificamente tarefas da habilidade daquele marco. Por exemplo, um eco criado por Corte de Madeira s\xF3 procura tarefas de Corte de Madeira."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 532437942272
+    m_Localized: "Cada inimigo derrotado numa expedi\xE7\xE3o aumenta seu b\xF4nus de recursos em 2%. Durante o combate, ele fica temporariamente em 0%\n\nTente recuar pouco antes de o combate ficar dif\xEDcil demais, para conseguir o m\xE1ximo de recursos extras!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 698595295232
+    m_Localized: "As tarefas s\xE3o o principal objetivo da jornada de Caleb. Juntar recursos para a cidade \xE9 essencial ao crescimento.\n\nElas s\xE3o conclu\xEDdas automaticamente e ficam mais r\xE1pidas conforme suas habilidades sobem de n\xEDvel.\n\nAs tarefas aparecem numa faixa de dist\xE2ncia m\xEDnima a m\xE1xima. Por\xE9m, ap\xF3s a dist\xE2ncia m\xE1xima, sua chance de aparecer cai 90%. Assim, quando todas as tarefas chegam ao m\xE1ximo, o sistema de pesos se equilibra, e todas ficam igualmente dispon\xEDveis conforme seus pesos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 505754247643136
+    m_Localized: "Miss\xF5es t\xEAm diferentes condi\xE7\xF5es que precisam ser cumpridas antes da entrega.\n\n<b>Informa\xE7\xE3o</b> | S\xE3o conclu\xEDdas imediatamente, para contar a hist\xF3ria ou orientar voc\xEA na introdu\xE7\xE3o.\n<b>Coleta</b> | Exigem juntar recursos e entreg\xE1-los para concluir.\n<b>Abates</b> | Derrote inimigos e reporte para concluir.\n<b>Encontro</b> | Exigem conhecer um NPC espec\xEDfico; a maioria aparece em determinadas dist\xE2ncias."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3785742338113536
+    m_Localized: "Ao chegar a certas dist\xE2ncias da cidade, Carl ceifa sua alma para impedir que voc\xEA se afaste demais. \nVoc\xEA pode ver sua dist\xE2ncia m\xE1xima de Ceifa nas estat\xEDsticas, na aba Geral.\n\nA dist\xE2ncia de Ceifa aumenta das seguintes formas.\n<b>Ser ceifado</b> | Aumenta a dist\xE2ncia em 1% da dist\xE2ncia m\xE1xima atual. (Exceto nas Terras de Cultivo)\n<b>Miss\xF5es</b> | Algumas miss\xF5es aumentam a dist\xE2ncia de Ceifa."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6939642239008768
+    m_Localized: v1.4.3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7986628786536448
+    m_Localized: 'Dragon slaying pope
+
+      tanty.
+
+      Mellifas
+
+      Latimer Cross
+
+      MatHeadGetz
+
+      appleguy
+
+      AwesomePhoenix
+
+      boiledpotato
+
+      eli
+
+      GLUTTONY
+
+      Gudu
+
+      Mentocado
+
+      Nuclearion
+
+      Quackers
+
+      Rugmuk
+
+      SaintPlays
+
+      SCHMUGGLER
+
+      WaringMcMarrin'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9824133160779776
+    m_Localized: "A forja do Ivan \xE9 um lugar m\xE1gico. Na cidade ou na estrada, voc\xEA pode orientar Ivan enquanto ele aprimora suas habilidades de ferreiro.\n\nVoc\xEA tem acesso a duas op\xE7\xF5es ao forjar:\n\n<b>Parar por Vastium:</b> Sempre para ao criar uma pe\xE7a de Vastium, mesmo que seja pior.\n\n<b>Combinar atributos:</b> Com esta op\xE7\xE3o ativada, a forja continua at\xE9 uma melhoria ter exatamente os mesmos tipos de atributos da pe\xE7a equipada.\n\nEste \xEDcone representa qualidade: <sprite=206>\n\nAqui voc\xEA cria equipamentos e escolhe os melhores atributos para seu estilo. \nAtualmente h\xE1 8 atributos poss\xEDveis; cada pe\xE7a garante um espec\xEDfico.\n\n<sprite=198> = Dano.\n<sprite=200> = Velocidade de ataque.\n<sprite=199> = Chance cr\xEDtica.\n<sprite=205> = Dano cr\xEDtico. \n\n<sprite=202> = Vida.\n<sprite=203> = Regenera\xE7\xE3o.\n<sprite=201> = Defesa.\n<sprite=204> = Movimento.\n\n<sprite=192> = Melhoria.\n<sprite=193> = Piora. \n<sprite=194> = Sem mudan\xE7a.\n<sprite=195> Atributo ausente no item novo.\n<sprite=196> Atributo ausente no item antigo.\n\n<b>Arma</b> | Garante <sprite=198>\n<b>Elmo</b> | Garante <sprite=202>\n<b>Peitoral</b> | Garante <sprite=201>\n<b>Botas</b> | Garantem <sprite=204>, exclusivo deste espa\xE7o.\n\nEquipamentos s\xE3o reciclados automaticamente quando voc\xEA cria uma nova pe\xE7a, seleciona outro espa\xE7o ou fecha o jogo.\n\nDependendo da raridade, uma pe\xE7a pode ter at\xE9 5 atributos. H\xE1 planos para adicionar mais atributos aos equipamentos no futuro!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9824133185945600
+    m_Localized: "Oi, pessoal, aqui \xE9 o desenvolvedor. \n\nSe quiserem seus nomes na lista aleat\xF3ria de nomes de inimigos, entrem no Discord e pe\xE7am no chat de EoV :)\n\n\u2022 Estou pensando em passar os desbloqueios de tarefas para o sistema de Marcos. As miss\xF5es passariam a dar XP de habilidade em vez de desbloquear tarefas! Contem o que acham."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9898115700506624
+    m_Localized: "<b>Mudan\xE7as</b>\n\u2022 Adicionadas duas miss\xF5es: Pela geleia! e As viagens de Gilliver.\n\u2022 Melhorada a mensagem de introdu\xE7\xE3o.\n\u2022 Corrigidos alertas de n\xEDvel mostrando valores menores que os atuais.\n\u2022 Removido o bloco de qualidade equipada das estat\xEDsticas da Forja.\n\u2022 Miss\xF5es fixadas agora dizem \"Pronta para entregar\" em vez de \"Conclu\xEDda.\n\u2022 Adicionada uma sobreposi\xE7\xE3o ao carregar um mapa.\n\u2022 Adicionado um novo bot\xE3o Misturar tudo.\n<b>Backend</b>\n\u2022 Atualizado A* para uma vers\xE3o mais recente."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12027031164698624
+    m_Localized: "O Caldeir\xE3o transforma alimentos selecionados em ensopado. Voc\xEA escolhe quanto misturar; o ensopado obtido depende do valor definido do alimento e da quantidade. Prove ensopado para receber cartas segundo os pesos de recompensa exibidos pela Eva.\n\nCartas de recursos melhoram a coleta real, os itens derrubados por inimigos e as colheitas na cidade do recurso correspondente. Os limites de c\xF3pias s\xE3o 1, 25, 75, 200, 750, 1500, 3500 e 10000; os b\xF4nus de rendimento s\xE3o 1%, 2%, 3%, 5%, 7%, 10%, 15% e 20%.\n\nUma categoria de recursos usa o menor n\xEDvel de carta entre seus recursos desbloqueados. Cartas n\xE3o obtidas contam como n\xEDvel zero. Os n\xEDveis de categoria de 1 a 8 acrescentam 2%, 5%, 10%, 15%, 20%, 30%, 40% e 50% ao rendimento da categoria. Os b\xF4nus de carta e categoria se somam, at\xE9 70%. Recompensas, sementes, reembolsos e convers\xF5es n\xE3o recebem esses b\xF4nus.\n\nEsses n\xEDveis de cartas s\xE3o separados da raridade dos recursos. Os benef\xEDcios atuais de recarga e for\xE7a das cartas de poderes n\xE3o mudam. Complete todas as cole\xE7\xF5es dispon\xEDveis de recursos e poderes para desbloquear D\xE1divas Eternas."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18915029441462272
+    m_Localized: "Itens t\xEAm uma pequena chance de subir de n\xEDvel a cada coleta. Colheitas na horta da cidade n\xE3o sorteiam melhorias de n\xEDvel de recursos.\nCada n\xEDvel acima do primeiro d\xE1 recursos extras nas pr\xF3ximas coletas.\n\nN\xE3o gosto muito de compartilhar esta informa\xE7\xE3o, mas aqui est\xE1 - Orin...\n\nN\xEDvel | B\xF4nus | Chance\n<b>N\xEDvel 1</b> - 0%\\tBase\n<b>N\xEDvel 2</b> - 10%\\t1 /1,000\n<b>N\xEDvel 3</b> - 20%\\t1 / 5,000\n<b>N\xEDvel 4</b> - 30%\\t1 / 10,000\n<b>N\xEDvel 5</b> - 50%\\t1 / 50,000\n<b>N\xEDvel 6</b> - 75%\\t1 / 100,000\n<b>N\xEDvel 7</b> - 100%\\t1 / 250,000\n<b>N\xEDvel 8</b> - 150%\\t1 / 1,000,000"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25772880722018304
+    m_Localized: "Ingl\xEAs (en)"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

@@ -12,22 +12,29 @@ namespace Pathfinding.Drawing {
 	public partial struct CommandBuilder {
 		/// <summary>\copydocref{Line(float3,float3)}</summary>
 		public void Line (float3 a, float3 b, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			Reserve<Color32, LineData>();
 			Add(Command.Line | Command.PushColorInline);
 			Add(ConvertColor(color));
 			Add(new LineData { a = a, b = b });
+#endif
 		}
 		/// <summary>\copydocref{Ray(float3,float3)}</summary>
 		public void Ray (float3 origin, float3 direction, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			Line(origin, origin + direction, color);
+#endif
 		}
 		/// <summary>\copydocref{Ray(Ray,float)}</summary>
 		public void Ray (Ray ray, float length, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			Line(ray.origin, ray.origin + ray.direction * length, color);
+#endif
 		}
 		/// <summary>\copydocref{Arc(float3,float3,float3)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void Arc (float3 center, float3 start, float3 end, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 			var d1 = start - center;
 			var d2 = end - center;
@@ -41,27 +48,34 @@ namespace Pathfinding.Drawing {
 				PopMatrix();
 			}
 			PopColor();
+#endif
 		}
 		/// <summary>\copydocref{CircleXZ(float3,float,float,float)}</summary>
 		/// <param name="color">Color of the object</param>
 		[System.Obsolete("Use Draw.xz.Circle instead")]
 		public void CircleXZ (float3 center, float radius, float startAngle, float endAngle, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			CircleXZInternal(center, radius, startAngle, endAngle, color);
+#endif
 		}
 		/// <summary>\copydocref{CircleXZ(float3,float,float,float)}</summary>
 		/// <param name="color">Color of the object</param>
 		[System.Obsolete("Use Draw.xz.Circle instead")]
 		public void CircleXZ (float3 center, float radius, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			CircleXZ(center, radius, 0f, 2 * Mathf.PI, color);
+#endif
 		}
 
 
 		/// <summary>\copydocref{Circle(float3,float3,float)}</summary>
 		public void Circle (float3 center, float3 normal, float radius, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			Reserve<Color32, CircleData>();
 			Add(Command.Circle | Command.PushColorInline);
 			Add(ConvertColor(color));
 			Add(new CircleData { center = center, normal = normal, radius = radius });
+#endif
 		}
 
 
@@ -72,11 +86,14 @@ namespace Pathfinding.Drawing {
 
 		/// <summary>\copydocref{WireCylinder(float3,float3,float)}</summary>
 		public void WireCylinder (float3 bottom, float3 top, float radius, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			WireCylinder(bottom, top - bottom, math.length(top - bottom), radius, color);
+#endif
 		}
 		/// <summary>\copydocref{WireCylinder(float3,float3,float,float)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void WireCylinder (float3 position, float3 up, float height, float radius, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			up = math.normalizesafe(up);
 			if (math.all(up == 0) || math.any(math.isnan(up)) || math.isnan(height) || math.isnan(radius)) return;
 			PushColor(color);
@@ -100,10 +117,12 @@ namespace Pathfinding.Drawing {
 			}
 			PopMatrix();
 			PopColor();
+#endif
 		}
 		/// <summary>\copydocref{WireCapsule(float3,float3,float)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void WireCapsule (float3 start, float3 end, float radius, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 			var dir = end - start;
 			var length = math.length(dir);
@@ -118,10 +137,12 @@ namespace Pathfinding.Drawing {
 				WireCapsule(start - normalized_dir*radius, normalized_dir, length + 2*radius, radius);
 			}
 			PopColor();
+#endif
 		}
 		/// <summary>\copydocref{WireCapsule(float3,float3,float,float)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void WireCapsule (float3 position, float3 direction, float length, float radius, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			direction = math.normalizesafe(direction);
 			if (math.all(direction == 0) || math.any(math.isnan(direction)) || math.isnan(length) || math.isnan(radius)) return;
 			PushColor(color);
@@ -163,107 +184,133 @@ namespace Pathfinding.Drawing {
 				PopMatrix();
 			}
 			PopColor();
+#endif
 		}
 		/// <summary>\copydocref{WireSphere(float3,float)}</summary>
 		public void WireSphere (float3 position, float radius, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 			SphereOutline(position, radius);
 			Circle(position, new float3(1, 0, 0), radius);
 			Circle(position, new float3(0, 1, 0), radius);
 			Circle(position, new float3(0, 0, 1), radius);
 			PopColor();
+#endif
 		}
 		/// <summary>\copydocref{Polyline(List<Vector3>,bool)}</summary>
 		/// <param name="color">Color of the object</param>
 		[BurstDiscard]
 		public void Polyline (List<Vector3> points, bool cycle, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 			for (int i = 0; i < points.Count - 1; i++) {
 				Line(points[i], points[i+1]);
 			}
 			if (cycle && points.Count > 1) Line(points[points.Count - 1], points[0]);
 			PopColor();
+#endif
 		}
 		/// <summary>\copydocref{Polyline(List<Vector3>,bool)}</summary>
 		/// <param name="color">Color of the object</param>
 		[BurstDiscard]
 		public void Polyline (List<Vector3> points, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			Polyline(points, false, color);
+#endif
 		}
 		/// <summary>\copydocref{Polyline(Vector3[],bool)}</summary>
 		/// <param name="color">Color of the object</param>
 		[BurstDiscard]
 		public void Polyline (Vector3[] points, bool cycle, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 			for (int i = 0; i < points.Length - 1; i++) {
 				Line(points[i], points[i+1]);
 			}
 			if (cycle && points.Length > 1) Line(points[points.Length - 1], points[0]);
 			PopColor();
+#endif
 		}
 		/// <summary>\copydocref{Polyline(Vector3[],bool)}</summary>
 		/// <param name="color">Color of the object</param>
 		[BurstDiscard]
 		public void Polyline (Vector3[] points, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			Polyline(points, false, color);
+#endif
 		}
 		/// <summary>\copydocref{Polyline(float3[],bool)}</summary>
 		/// <param name="color">Color of the object</param>
 		[BurstDiscard]
 		public void Polyline (float3[] points, bool cycle, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 			for (int i = 0; i < points.Length - 1; i++) {
 				Line(points[i], points[i+1]);
 			}
 			if (cycle && points.Length > 1) Line(points[points.Length - 1], points[0]);
 			PopColor();
+#endif
 		}
 		/// <summary>\copydocref{Polyline(float3[],bool)}</summary>
 		/// <param name="color">Color of the object</param>
 		[BurstDiscard]
 		public void Polyline (float3[] points, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			Polyline(points, false, color);
+#endif
 		}
 		/// <summary>\copydocref{Polyline(NativeArray<float3>,bool)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void Polyline (NativeArray<float3> points, bool cycle, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 			for (int i = 0; i < points.Length - 1; i++) {
 				Line(points[i], points[i+1]);
 			}
 			if (cycle && points.Length > 1) Line(points[points.Length - 1], points[0]);
 			PopColor();
+#endif
 		}
 		/// <summary>\copydocref{Polyline(NativeArray<float3>,bool)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void Polyline (NativeArray<float3> points, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			Polyline(points, false, color);
+#endif
 		}
 
 
 		/// <summary>\copydocref{WireBox(float3,float3)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void WireBox (float3 center, float3 size, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			Reserve<Color32, BoxData>();
 			Add(Command.WireBox | Command.PushColorInline);
 			Add(ConvertColor(color));
 			Add(new BoxData { center = center, size = size });
+#endif
 		}
 		/// <summary>\copydocref{WireBox(float3,quaternion,float3)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void WireBox (float3 center, quaternion rotation, float3 size, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 			PushMatrix(float4x4.TRS(center, rotation, size));
 			WireBox(float3.zero, new float3(1, 1, 1));
 			PopMatrix();
 			PopColor();
+#endif
 		}
 		/// <summary>\copydocref{WireBox(Bounds)}</summary>
 		public void WireBox (Bounds bounds, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			WireBox(bounds.center, bounds.size, color);
+#endif
 		}
 		/// <summary>\copydocref{WireMesh(Mesh)}</summary>
 		public void WireMesh (Mesh mesh, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 #if UNITY_2020_1_OR_NEWER
 			if (mesh == null) throw new System.ArgumentNullException();
 			PushColor(color);
@@ -279,9 +326,11 @@ namespace Pathfinding.Drawing {
 			Debug.LogError("The WireMesh method is only suppored in Unity 2020.1 or later");
 #endif
 			PopColor();
+#endif
 		}
 		/// <summary>\copydocref{WireMesh(NativeArray<float3>,NativeArray<int>)}</summary>
 		public void WireMesh (NativeArray<float3> vertices, NativeArray<int> triangles, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 #if UNITY_2020_1_OR_NEWER
 			unsafe {
@@ -291,52 +340,66 @@ namespace Pathfinding.Drawing {
 			Debug.LogError("The WireMesh method is only suppored in Unity 2020.1 or later");
 #endif
 			PopColor();
+#endif
 		}
 
 		/// <summary>\copydocref{Cross(float3,float)}</summary>
 		public void Cross (float3 position, float size, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 			size *= 0.5f;
 			Line(position - new float3(size, 0, 0), position + new float3(size, 0, 0));
 			Line(position - new float3(0, size, 0), position + new float3(0, size, 0));
 			Line(position - new float3(0, 0, size), position + new float3(0, 0, size));
 			PopColor();
+#endif
 		}
 		/// <summary>\copydocref{Cross(float3,float)}</summary>
 		public void Cross (float3 position, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			Cross(position, 1, color);
+#endif
 		}
 		/// <summary>\copydocref{CrossXZ(float3,float)}</summary>
 		[System.Obsolete("Use Draw.xz.Cross instead")]
 		public void CrossXZ (float3 position, float size, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 			size *= 0.5f;
 			Line(position - new float3(size, 0, 0), position + new float3(size, 0, 0));
 			Line(position - new float3(0, 0, size), position + new float3(0, 0, size));
 			PopColor();
+#endif
 		}
 		/// <summary>\copydocref{CrossXZ(float3,float)}</summary>
 		[System.Obsolete("Use Draw.xz.Cross instead")]
 		public void CrossXZ (float3 position, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			CrossXZ(position, 1, color);
+#endif
 		}
 		/// <summary>\copydocref{CrossXY(float3,float)}</summary>
 		[System.Obsolete("Use Draw.xy.Cross instead")]
 		public void CrossXY (float3 position, float size, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 			size *= 0.5f;
 			Line(position - new float3(size, 0, 0), position + new float3(size, 0, 0));
 			Line(position - new float3(0, size, 0), position + new float3(0, size, 0));
 			PopColor();
+#endif
 		}
 		/// <summary>\copydocref{CrossXY(float3,float)}</summary>
 		[System.Obsolete("Use Draw.xy.Cross instead")]
 		public void CrossXY (float3 position, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			CrossXY(position, 1, color);
+#endif
 		}
 		/// <summary>\copydocref{Bezier(float3,float3,float3,float3)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void Bezier (float3 p0, float3 p1, float3 p2, float3 p3, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 			float3 prev = p0;
 
@@ -347,17 +410,21 @@ namespace Pathfinding.Drawing {
 				prev = p;
 			}
 			PopColor();
+#endif
 		}
 
 
 		/// <summary>\copydocref{Arrow(float3,float3)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void Arrow (float3 from, float3 to, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			ArrowRelativeSizeHead(from, to, DEFAULT_UP, 0.2f, color);
+#endif
 		}
 		/// <summary>\copydocref{Arrow(float3,float3,float3,float)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void Arrow (float3 from, float3 to, float3 up, float headSize, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 			var length_sq = math.lengthsq(to - from);
 
@@ -365,10 +432,12 @@ namespace Pathfinding.Drawing {
 				ArrowRelativeSizeHead(from, to, up, headSize * math.rsqrt(length_sq));
 			}
 			PopColor();
+#endif
 		}
 		/// <summary>\copydocref{ArrowRelativeSizeHead(float3,float3,float3,float)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void ArrowRelativeSizeHead (float3 from, float3 to, float3 up, float headFraction, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 			Line(from, to);
 			var dir = to - from;
@@ -383,12 +452,14 @@ namespace Pathfinding.Drawing {
 			Line(to, to - (dir + normal) * headFraction);
 			Line(to, to - (dir - normal) * headFraction);
 			PopColor();
+#endif
 		}
 
 
 		/// <summary>\copydocref{ArrowheadArc(float3,float3,float,float)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void ArrowheadArc (float3 origin, float3 direction, float offset, float width, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			if (!math.any(direction)) return;
 			if (offset < 0) throw new System.ArgumentOutOfRangeException(nameof(offset));
 			if (offset == 0) return;
@@ -407,15 +478,19 @@ namespace Pathfinding.Drawing {
 			Line(p3, p2);
 			PopMatrix();
 			PopColor();
+#endif
 		}
 		/// <summary>\copydocref{ArrowheadArc(float3,float3,float,float)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void ArrowheadArc (float3 origin, float3 direction, float offset, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			ArrowheadArc(origin, direction, offset, 60, color);
+#endif
 		}
 		/// <summary>\copydocref{WireGrid(float3,quaternion,int2,float2)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void WireGrid (float3 center, quaternion rotation, int2 cells, float2 totalSize, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 			cells = math.max(cells, new int2(1, 1));
 			PushMatrix(float4x4.TRS(center, rotation, new Vector3(totalSize.x, 0, totalSize.y)));
@@ -425,17 +500,22 @@ namespace Pathfinding.Drawing {
 			for (int i = 0; i <= h; i++) Line(new float3(-0.5f, 0, i/(float)h - 0.5f), new float3(0.5f, 0, i/(float)h - 0.5f));
 			PopMatrix();
 			PopColor();
+#endif
 		}
 
 
 		/// <summary>\copydocref{WireRectangle(float3,quaternion,float2)}</summary>
 		public void WireRectangle (float3 center, quaternion rotation, float2 size, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			WirePlane(center, rotation, size, color);
+#endif
 		}
 		/// <summary>\copydocref{WireRectangle(Rect)}</summary>
 		[System.Obsolete("Use Draw.xy.WireRectangle instead")]
 		public void WireRectangle (Rect rect, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			xy.WireRectangle(rect, color);
+#endif
 		}
 
 
@@ -447,19 +527,23 @@ namespace Pathfinding.Drawing {
 		/// <summary>\copydocref{WirePlane(float3,float3,float2)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void WirePlane (float3 center, float3 normal, float2 size, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 			if (math.any(normal)) {
 				WirePlane(center, Quaternion.LookRotation(calculateTangent(normal), normal), size);
 			}
 			PopColor();
+#endif
 		}
 		/// <summary>\copydocref{WirePlane(float3,quaternion,float2)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void WirePlane (float3 center, quaternion rotation, float2 size, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			Reserve<Color32, PlaneData>();
 			Add(Command.WirePlane | Command.PushColorInline);
 			Add(ConvertColor(color));
 			Add(new PlaneData { center = center, rotation = rotation, size = size });
+#endif
 		}
 
 
@@ -467,24 +551,30 @@ namespace Pathfinding.Drawing {
 		/// <summary>\copydocref{SolidBox(float3,float3)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void SolidBox (float3 center, float3 size, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			Reserve<Color32, BoxData>();
 			Add(Command.Box | Command.PushColorInline);
 			Add(ConvertColor(color));
 			Add(new BoxData { center = center, size = size });
+#endif
 		}
 		/// <summary>\copydocref{SolidBox(Bounds)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void SolidBox (Bounds bounds, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			SolidBox(bounds.center, bounds.size, color);
+#endif
 		}
 		/// <summary>\copydocref{SolidBox(float3,quaternion,float3)}</summary>
 		/// <param name="color">Color of the object</param>
 		public void SolidBox (float3 center, quaternion rotation, float3 size, Color color) {
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 			PushColor(color);
 			PushMatrix(float4x4.TRS(center, rotation, size));
 			SolidBox(float3.zero, Vector3.one);
 			PopMatrix();
 			PopColor();
+#endif
 		}
 	}
 }

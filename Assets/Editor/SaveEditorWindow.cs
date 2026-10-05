@@ -248,6 +248,11 @@ namespace TimelessEchoes.Editor
         {
             try
             {
+                if (Data != null && Data.SchemaVersion != GameData.CurrentSchemaVersion)
+                {
+                    ShowNotificationSafe("Legacy data must be migrated through the supported import/load flow before editing and saving. No files changed.");
+                    return;
+                }
                 var slotName = SlotToName(Slot);
                 SaveManager.Instance.SetCurrentSlot(slotName);
                 var ok = SaveManager.Instance.SaveAsync(Data).GetAwaiter().GetResult();

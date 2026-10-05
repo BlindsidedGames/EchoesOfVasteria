@@ -227,7 +227,7 @@ namespace Pathfinding {
 
 		#endregion
 
-		/// <summary>\copydocref{IAstarAI.GetRemainingPath(List<Vector3>,bool)}</summary>
+		/// <summary>\copydocref{IAstarAI.GetRemainingPath(List<Vector3>,out bool)}</summary>
 		public void GetRemainingPath (List<Vector3> buffer, out bool stale) {
 			buffer.Clear();
 			buffer.Add(position);
@@ -240,7 +240,7 @@ namespace Pathfinding {
 			interpolator.GetRemainingPath(buffer);
 		}
 
-		/// <summary>\copydocref{IAstarAI.GetRemainingPath(List<Vector3>,List<PathPartWithLinkInfo>,bool)}</summary>
+		/// <summary>\copydocref{IAstarAI.GetRemainingPath(List<Vector3>,List<PathPartWithLinkInfo>,out bool)}</summary>
 		public void GetRemainingPath (List<Vector3> buffer, List<PathPartWithLinkInfo> partsBuffer, out bool stale) {
 			GetRemainingPath(buffer, out stale);
 			// This movement script doesn't keep track of path parts, so we just add the whole path as a single part

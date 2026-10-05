@@ -5,6 +5,7 @@ namespace Pathfinding.Examples.RTS {
 	public class RTSManager : VersionedMonoBehaviour {
 		public static RTSManager instance;
 
+		[System.NonSerialized]
 		public RTSUnitManager units;
 
 		[UnityEngine.Serialization.FormerlySerializedAs("audio")]

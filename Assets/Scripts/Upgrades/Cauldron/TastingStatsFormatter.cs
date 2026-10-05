@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using System.Text;
 
 namespace TimelessEchoes.Upgrades.Cauldron
@@ -15,24 +16,24 @@ namespace TimelessEchoes.Upgrades.Cauldron
         /// <param name="stats">The tasting stats to format.</param>
         /// <param name="showSubcategories">
         /// When true and AE subcategory data exists, shows individual AE categories (Farming, Fishing, etc.).
-        /// When false or no subcategory data exists, shows only the total Alter-Echo count.
+        /// When false or no subcategory data exists, shows only the total resource-card count.
         /// </param>
         public static void Format(StringBuilder sb, CauldronManager.TastingStats stats, bool showSubcategories = true)
         {
             sb.Clear();
 
             // Header - Totals section
-            sb.Append("<b>Totals</b>\n");
-            sb.Append("• Tastings: ");
+            sb.Append(ToolkitLocalization.Text("cauldron.stats-totals", "<b>Totals</b>\n"));
+            sb.Append(ToolkitLocalization.Text("cauldron.stats-tastings", "• Tastings: "));
             sb.Append(stats.tastings.ToString("N0"));
             sb.Append('\n');
-            sb.Append("• Cards Gained: ");
+            sb.Append(ToolkitLocalization.Text("cauldron.stats-cards-gained", "• Cards Gained: "));
             sb.Append(stats.cardsGained.ToString("N0"));
             sb.Append('\n');
 
             // Roll Distribution section
-            sb.Append("<b>Roll Distribution</b>\n");
-            sb.Append("• Gained Nothing: ");
+            sb.Append(ToolkitLocalization.Text("cauldron.stats-roll-distribution", "<b>Roll Distribution</b>\n"));
+            sb.Append(ToolkitLocalization.Text("cauldron.stats-gained-nothing", "• Gained Nothing: "));
             sb.Append(stats.gainedNothing.ToString("N0"));
             sb.Append('\n');
 
@@ -42,43 +43,43 @@ namespace TimelessEchoes.Upgrades.Cauldron
 
             if (showSubcategories && hasSubcategoryData)
             {
-                sb.Append("• AE - Farming: ");
+                sb.Append(ToolkitLocalization.Text("cauldron.stats-farming", "• Resources - Farming: "));
                 sb.Append(stats.aeFarming.ToString("N0"));
                 sb.Append('\n');
-                sb.Append("• AE - Fishing: ");
+                sb.Append(ToolkitLocalization.Text("cauldron.stats-fishing", "• Resources - Fishing: "));
                 sb.Append(stats.aeFishing.ToString("N0"));
                 sb.Append('\n');
-                sb.Append("• AE - Mining: ");
+                sb.Append(ToolkitLocalization.Text("cauldron.stats-mining", "• Resources - Mining: "));
                 sb.Append(stats.aeMining.ToString("N0"));
                 sb.Append('\n');
-                sb.Append("• AE - Logging: ");
+                sb.Append(ToolkitLocalization.Text("cauldron.stats-logging", "• Resources - Logging: "));
                 sb.Append(stats.aeWoodcutting.ToString("N0"));
                 sb.Append('\n');
-                sb.Append("• AE - Looting: ");
+                sb.Append(ToolkitLocalization.Text("cauldron.stats-looting", "• Resources - Looting: "));
                 sb.Append(stats.aeLooting.ToString("N0"));
                 sb.Append('\n');
-                sb.Append("• AE - Combat: ");
+                sb.Append(ToolkitLocalization.Text("cauldron.stats-combat", "• Resources - Combat: "));
                 sb.Append(stats.aeCombat.ToString("N0"));
                 sb.Append('\n');
             }
             else
             {
-                sb.Append("• Alter-Echo: ");
+                sb.Append(ToolkitLocalization.Text("cauldron.stats-resource-cards", "• Resource cards: "));
                 sb.Append(stats.alterEcho.ToString("N0"));
                 sb.Append('\n');
             }
 
             // Remaining roll types
-            sb.Append("• Buffs: ");
+            sb.Append(ToolkitLocalization.Text("cauldron.stats-buffs", "• Buffs: "));
             sb.Append(stats.buffs.ToString("N0"));
             sb.Append('\n');
-            sb.Append("• Low Cards: ");
+            sb.Append(ToolkitLocalization.Text("cauldron.stats-low-cards", "• Low Cards: "));
             sb.Append(stats.lowCards.ToString("N0"));
             sb.Append('\n');
-            sb.Append("• Eva's Blessing: ");
+            sb.Append(ToolkitLocalization.Text("cauldron.stats-eva-blessing", "• Eva's Blessing: "));
             sb.Append(stats.evasBlessing.ToString("N0"));
             sb.Append('\n');
-            sb.Append("• The Vast One's Surge: ");
+            sb.Append(ToolkitLocalization.Text("cauldron.stats-orin-surge", "• Orin's Surge: "));
             sb.Append(stats.vastSurge.ToString("N0"));
             // Note: No trailing newline after the last line to match original behavior
         }
@@ -89,7 +90,7 @@ namespace TimelessEchoes.Upgrades.Cauldron
         /// <param name="stats">The tasting stats to format.</param>
         /// <param name="showSubcategories">
         /// When true and AE subcategory data exists, shows individual AE categories.
-        /// When false or no subcategory data exists, shows only the total Alter-Echo count.
+        /// When false or no subcategory data exists, shows only the total resource-card count.
         /// </param>
         /// <returns>The formatted stats string.</returns>
         public static string FormatToString(CauldronManager.TastingStats stats, bool showSubcategories = true)

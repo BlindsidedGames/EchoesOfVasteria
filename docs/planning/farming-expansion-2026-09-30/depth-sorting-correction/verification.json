@@ -1,0 +1,163 @@
+{
+  "stage": "restore-scenery-ground-depth-full-orchard-shift",
+  "branch": "fix/editor-startup-terrain-catalogue",
+  "head": "b3cedc38b2ba75490aa0970346b246cff591d0f4",
+  "mainSha256": "8f912645ea9216c7f25a833da730c44524aaea0dab7ba4cd76a9c0e1ac0d9d54",
+  "mainOpenCleanEdit": true,
+  "mainDirty": false,
+  "protectedOriginalAssetPaths": 41,
+  "expectedPreviewSceneChanges": [
+    "Assets/Editor/FarmingPreviewsV4/A2-stump-reclamation.unity",
+    "Assets/Editor/FarmingPreviewsV4/B3-terraced-rows.unity",
+    "Assets/Editor/FarmingPreviewsV4/A2b-southeast-work.unity",
+    "Assets/Editor/FarmingPreviewsV4/C3-grove-courtyard.unity",
+    "Assets/Editor/FarmingPreviewsV4/A3-southeast-clearing.unity",
+    "Assets/Editor/FarmingOrchardRowsPreview/F-orderly-rows.unity",
+    "Assets/Editor/FarmingOrchardRowsPreview/F-all-mature-clearance.unity",
+    "Assets/Editor/FarmingOrchardCapacityPreview/H8-clear-mature.unity",
+    "Assets/Editor/FarmingOrchardCapacityPreview/H8-clear-mixed.unity",
+    "Assets/Editor/FarmingOrchardCapacityPreview/G6-clear-mature.unity",
+    "Assets/Editor/FarmingOrchardCapacityPreview/G6-clear-mixed.unity",
+    "Assets/Editor/FarmingOrchardCapacityPreview/H8-one-tile-up.unity",
+    "Assets/Editor/FarmingOrchardCapacityPreview/G6-one-tile-up.unity"
+  ],
+  "protectedCleanupSourcePaths": 38,
+  "cleanupSourceChanges": [],
+  "actualPlayerFilesPreserved": 77,
+  "verifiedBackupsPreserved": 93,
+  "seedAssetsAndFourAtlasReferencesUnchanged": true,
+  "threeSeedLibraryImagesUnchanged": true,
+  "sourceSpritesAndTilesAndGuidReferencesUnchanged": true,
+  "twoRetainedSceneryTreesAtOriginalFeet": true,
+  "newSceneryRemovals": 0,
+  "groundPixelControl": {
+    "southOpaqueSamples": 396,
+    "southIncorrectFenceOcclusions": 0,
+    "southPriorOcclusions": 159,
+    "northOpaqueSamples": 396,
+    "northTrunkFenceOverlaps": 9,
+    "northIncorrectDepthAtFence": 0,
+    "axis": [
+      0,
+      1,
+      0
+    ],
+    "northGroundY": -10.9375,
+    "southGroundY": -12.5,
+    "fenceY": -11,
+    "northOverlapSamples": [
+      [
+        782,
+        383
+      ],
+      [
+        789,
+        383
+      ],
+      [
+        804,
+        383
+      ],
+      [
+        818,
+        383
+      ],
+      [
+        789,
+        376
+      ],
+      [
+        804,
+        376
+      ],
+      [
+        811,
+        376
+      ],
+      [
+        796,
+        369
+      ],
+      [
+        804,
+        369
+      ]
+    ]
+  },
+  "orchardPixelControl": {
+    "treeCount": 3,
+    "opaqueVisibleSamples": 2046,
+    "incorrectFenceOcclusions": 0,
+    "sortingGroupUpdatesExplicitBeforeCapture": true
+  },
+  "groundPathEvidence": "ground-path-proof.json",
+  "runtimeNavigationValidated": false,
+  "previewCollider": "Inherited Town Camera Land Bounds BoxCollider2D trigger; no authored navigation tree/fence colliders",
+  "sixCropBedsAnd60CropRenderersPreserved": true,
+  "all150PathTilesPreserved": true,
+  "fullOneTileShift": 1,
+  "sixTreeAisleWidth": 2,
+  "eightTreeAisleWidth": 1,
+  "columnRebalance": "Explicit provisional presentation around original tree root/plot boundary; shadow/canopy overlap alone is not a collision defect",
+  "narrowSerializedProof": "narrow-serialized-proof.json",
+  "renderLogs": [],
+  "currentFiguresVisuallyInspected": 7,
+  "rawUnityCaptures": 136,
+  "temporaryHelperRemoved": true,
+  "editorReleased": true,
+  "priorSceneImagesAndDocumentsArchived": true,
+  "brokenMarkdownLinks": [],
+  "rawHtml": [],
+  "gameplayOrMigrationImplemented": false,
+  "commitPushRelease": false,
+  "limits": [
+    "Editor static Metal rendering, not Player/mobile validation",
+    "Walking, interactions and dynamic collision need later gameplay implementation",
+    "Orchard economics/capacity and column rebalance remain provisional",
+    "Earlier canopy-only failed-fit/two-tree-removal claims superseded"
+  ],
+  "library": [
+    {
+      "library_file_id": "libfile_4290e227795c819183f5826bb552bcd6",
+      "file_id": "file_0000000005d08230ac0621a27479cd62",
+      "version": 5,
+      "local_path": "/Users/matthewrushworth/Projects/Echoes of Vasteria/docs/planning/farming-expansion-2026-09-30/visuals/farm-progression.png"
+    },
+    {
+      "library_file_id": "libfile_55dc1bf70d2c8191913b34d67fd4d5b0",
+      "file_id": "file_000000000c4881fa94fbd1ceb8c86a67",
+      "version": 5,
+      "local_path": "/Users/matthewrushworth/Projects/Echoes of Vasteria/docs/planning/farming-expansion-2026-09-30/visuals/farm-town-context-annotated.png"
+    },
+    {
+      "library_file_id": "libfile_59daf4a6afe48191836dc4db2fcba97c",
+      "file_id": "file_000000008efc81fab30f68a5627d62c6",
+      "version": 5,
+      "local_path": "/Users/matthewrushworth/Projects/Echoes of Vasteria/docs/planning/farming-expansion-2026-09-30/visuals/farm-layout-alternatives.png"
+    },
+    {
+      "library_file_id": "libfile_9ff4f1694a5c8191aa0bea167966eb1a",
+      "file_id": "file_0000000035a481fa84d5e95f86175c9e",
+      "version": 5,
+      "local_path": "/Users/matthewrushworth/Projects/Echoes of Vasteria/docs/planning/farming-expansion-2026-09-30/visuals/farm-normal-scale.png"
+    },
+    {
+      "library_file_id": "libfile_60fa8b9963948191a90a1ca509811167",
+      "file_id": "file_00000000f88881fa92783004b007942f",
+      "version": 5,
+      "local_path": "/Users/matthewrushworth/Projects/Echoes of Vasteria/docs/planning/farming-expansion-2026-09-30/visuals/farm-clearing-close-comparison.png"
+    },
+    {
+      "library_file_id": "libfile_555f413a50c881919dc35beb045aa5c4",
+      "file_id": "file_00000000941882309387a12e7e11e05b",
+      "version": 5,
+      "local_path": "/Users/matthewrushworth/Projects/Echoes of Vasteria/docs/planning/farming-expansion-2026-09-30/visuals/farm-optional-orchard.png"
+    },
+    {
+      "library_file_id": "libfile_4e57971a1ab48191a4a2eb7fe8d47cb5",
+      "file_id": "file_00000000548081fa8792be620d246a5f",
+      "version": 1,
+      "local_path": "/Users/matthewrushworth/Projects/Echoes of Vasteria/docs/planning/farming-expansion-2026-09-30/visuals/farm-fence-scenery-before-after.png"
+    }
+  ]
+}

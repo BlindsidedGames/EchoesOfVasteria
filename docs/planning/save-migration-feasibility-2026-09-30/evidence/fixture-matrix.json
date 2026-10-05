@@ -1,0 +1,165 @@
+{
+  "currentVariant": "Isolated current GameData with typed serialized Milestones field retained; not production source",
+  "cases": [
+    {
+      "fixture": "Saves/Save1/snapshot.bin",
+      "releasedExitCode": 0,
+      "released": {
+        "schema": 1,
+        "lastVersion": "1.4.3",
+        "resourceCount": 69,
+        "skillCount": 6,
+        "milestoneCount": 23
+      },
+      "currentExitCode": 0,
+      "current": {
+        "schema": 1,
+        "lastVersion": "1.4.3",
+        "resourceCount": 69,
+        "skillCount": 6,
+        "milestoneCount": 23
+      },
+      "exactSkillEqualityWithRetainedField": true
+    },
+    {
+      "fixture": "Saves/Save2/snapshot.bin",
+      "releasedExitCode": 0,
+      "released": {
+        "schema": 1,
+        "lastVersion": "1.4.3",
+        "resourceCount": 32,
+        "skillCount": 6,
+        "milestoneCount": 23
+      },
+      "currentExitCode": 0,
+      "current": {
+        "schema": 1,
+        "lastVersion": "1.4.3",
+        "resourceCount": 32,
+        "skillCount": 6,
+        "milestoneCount": 23
+      },
+      "exactSkillEqualityWithRetainedField": true
+    },
+    {
+      "fixture": "Saves/Save3/snapshot.bin",
+      "releasedExitCode": 0,
+      "released": {
+        "schema": 1,
+        "lastVersion": "1.4.3",
+        "resourceCount": 69,
+        "skillCount": 6,
+        "milestoneCount": 23
+      },
+      "currentExitCode": 0,
+      "current": {
+        "schema": 1,
+        "lastVersion": "1.4.3",
+        "resourceCount": 69,
+        "skillCount": 6,
+        "milestoneCount": 23
+      },
+      "exactSkillEqualityWithRetainedField": true
+    },
+    {
+      "fixture": "Saves/BetaSave1/snapshot.bin",
+      "releasedExitCode": 0,
+      "released": {
+        "schema": 1,
+        "lastVersion": "1.4",
+        "resourceCount": 21,
+        "skillCount": 6,
+        "milestoneCount": 72
+      },
+      "currentExitCode": 0,
+      "current": {
+        "schema": 1,
+        "lastVersion": "1.4",
+        "resourceCount": 21,
+        "skillCount": 6,
+        "milestoneCount": 72
+      },
+      "exactSkillEqualityWithRetainedField": true
+    },
+    {
+      "fixture": "Saves/BetaSave2/snapshot.bin",
+      "releasedExitCode": 0,
+      "released": {
+        "schema": 1,
+        "lastVersion": "1.4",
+        "resourceCount": 1,
+        "skillCount": 6,
+        "milestoneCount": 72
+      },
+      "currentExitCode": 0,
+      "current": {
+        "schema": 1,
+        "lastVersion": "1.4",
+        "resourceCount": 1,
+        "skillCount": 6,
+        "milestoneCount": 72
+      },
+      "exactSkillEqualityWithRetainedField": true
+    },
+    {
+      "fixture": "Saves/BetaSave3/snapshot.bin",
+      "releasedExitCode": 0,
+      "released": {
+        "schema": 1,
+        "lastVersion": "1.4",
+        "resourceCount": 0,
+        "skillCount": 6,
+        "milestoneCount": 72
+      },
+      "currentExitCode": 0,
+      "current": {
+        "schema": 1,
+        "lastVersion": "1.4",
+        "resourceCount": 0,
+        "skillCount": 6,
+        "milestoneCount": 72
+      },
+      "exactSkillEqualityWithRetainedField": true
+    },
+    {
+      "fixture": "Saves/Save1/Archive/snapshot_migrated_20250910_062033.bin",
+      "releasedExitCode": 0,
+      "released": {
+        "schema": 1,
+        "lastVersion": null,
+        "resourceCount": 69,
+        "skillCount": 6,
+        "milestoneCount": 0
+      },
+      "currentExitCode": 0,
+      "current": {
+        "schema": 1,
+        "lastVersion": null,
+        "resourceCount": 69,
+        "skillCount": 6,
+        "milestoneCount": 0
+      },
+      "exactSkillEqualityWithRetainedField": true
+    },
+    {
+      "fixture": "Saves/Save3/Archive/snapshot_migrated_20251014_010756.bin",
+      "releasedExitCode": 0,
+      "released": {
+        "schema": 1,
+        "lastVersion": "1.2.16",
+        "resourceCount": 69,
+        "skillCount": 6,
+        "milestoneCount": 0
+      },
+      "currentExitCode": 0,
+      "current": {
+        "schema": 1,
+        "lastVersion": "1.2.16",
+        "resourceCount": 69,
+        "skillCount": 6,
+        "milestoneCount": 0
+      },
+      "exactSkillEqualityWithRetainedField": true
+    }
+  ]
+}

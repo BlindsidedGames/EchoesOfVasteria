@@ -9,3 +9,4 @@ ASTAR_RECAST_LARGER_TILES            ; Raises the vertex count limit on recast t
 ProfileAstar                         ; Enables profiling of the pathfinding process.
 ASTAR_UNITY_PRO_PROFILER             ; Requires ProfileAstar, profiles section of astar code which will show up in the Unity Pro Profiler.
 ASTAR_LARGER_GRIDS                   ; Enables grid graphs larger than 1024x1024. This is not recommended for most users since such large grid graphs use a lot of memory and can be quite slow.
+ALINE_EXCLUDED_IN_BUILD              ; Removes debug drawing code from standalone builds, reducing build size, but has barely any impact on performance.

@@ -1,5 +1,4 @@
 #if MODULE_ENTITIES
-using System.Runtime.InteropServices;
 using Pathfinding.Drawing;
 using Pathfinding.PID;
 using Pathfinding.Util;
@@ -28,7 +27,6 @@ namespace Pathfinding.ECS {
 
 	public partial struct JobDrawFollowerGizmos : IJobChunk {
 		public CommandBuilder draw;
-		public GCHandle entityManagerHandle;
 		[ReadOnly]
 		public ComponentTypeHandle<LocalTransform> LocalTransformTypeHandleRO;
 		[ReadOnly]
@@ -37,10 +35,11 @@ namespace Pathfinding.ECS {
 		public ComponentTypeHandle<MovementSettings> MovementSettingsHandleRO;
 		[ReadOnly]
 		public ComponentTypeHandle<AgentMovementPlane> AgentMovementPlaneHandleRO;
-		// This is actually not read only, because the GetNextCorners function can modify internal state
-		// See JobRepairPath.Scheduler.ManagedStateTypeHandleRW for details about why NativeDisableContainerSafetyRestriction is required
-		[NativeDisableContainerSafetyRestriction]
-		public ComponentTypeHandle<ManagedState> ManagedStateHandleRW;
+		// AgentManagedRef is declared ReadWrite even though the slot integer itself is only ever read.
+		// The component handle is the only thing the ECS dependency system can serialize on, so it has to
+		// carry the access mode of the managed data behind the slot. Declaring it read-only would let two
+		// jobs mutate the same PathTracer in parallel.
+		public ComponentTypeHandle<AgentManagedRef> AgentManagedRefHandleRW;
 		[ReadOnly]
 		public ComponentTypeHandle<MovementState> MovementStateHandleRO;
 		[ReadOnly]
@@ -60,12 +59,13 @@ namespace Pathfinding.ECS {
 				var agentCylinderShapes = (AgentCylinderShape*)chunk.GetNativeArray(ref AgentCylinderShapeHandleRO).GetUnsafeReadOnlyPtr();
 				var movementSettings = (MovementSettings*)chunk.GetNativeArray(ref MovementSettingsHandleRO).GetUnsafeReadOnlyPtr();
 				var movementPlanes = (AgentMovementPlane*)chunk.GetNativeArray(ref AgentMovementPlaneHandleRO).GetUnsafeReadOnlyPtr();
-				var managedStates = chunk.GetManagedComponentAccessor(ref ManagedStateHandleRW, (EntityManager)entityManagerHandle.Target);
+				var managedRefs = (AgentManagedRef*)chunk.GetNativeArray(ref AgentManagedRefHandleRW).GetUnsafeReadOnlyPtr();
 				var movementStates = (MovementState*)chunk.GetNativeArray(ref MovementStateHandleRO).GetUnsafeReadOnlyPtr();
 				var resolvedMovement = (ResolvedMovement*)chunk.GetNativeArray(ref ResolvedMovementHandleRO).GetUnsafeReadOnlyPtr();
+				var managedData = AgentManagedStorage.entries;
 
 				for (int i = 0; i < chunk.Count; i++) {
-					Execute(ref localTransforms[i], ref movementPlanes[i], ref agentCylinderShapes[i], managedStates[i], ref movementSettings[i], ref movementStates[i], ref resolvedMovement[i]);
+					Execute(ref localTransforms[i], ref movementPlanes[i], ref agentCylinderShapes[i], managedData[managedRefs[i].slot].state, ref movementSettings[i], ref movementStates[i], ref resolvedMovement[i]);
 				}
 			}
 		}

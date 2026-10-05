@@ -1,0 +1,121 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Wiki_de
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: de
+  m_SharedData: {fileID: 11400000, guid: bfa36fdea331abe4cb2b293833ff63a0, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 188400156672
+    m_Localized: Die Alter-Echo-Produktion wurde eingestellt. Sammle Ressourcen auf Abenteuern oder ernte angebaute Pflanzen.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 478381752320
+    m_Localized: "Zauber sind zeitlich begrenzte Kr\xE4fte. Sie enden, wenn ihre Dauer abl\xE4uft oder du in die Stadt zur\xFCckkehrst. Nach dem n\xF6tigen Auftrag f\xFCr einen Platz k\xF6nnen sie automatisch gewirkt werden; standardm\xE4\xDFig ist das aktiviert. Klicke im Zaubermen\xFC auf den Platz, um es auszuschalten.\n\nDie Abklingzeit von Zaubern l\xE4sst sich mit Evas Kessel verk\xFCrzen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 492340396032
+    m_Localized: "Caleb k\xE4mpft automatisch und greift nur Gegner an, die im Weg sind! Erst Aufgaben, dann Vergn\xFCgen.\n\nD' = D \xD7 (1 - A / (A + N))\n\nD = eingehender Schaden\nA = Verteidigungswert (mindestens 0)\nN = Konstante f\xFCr den abnehmenden Nutzen (Standard = 25)\nD' = tats\xE4chlich erlittener Schaden\n\nNach dem 10., 100., 1,000. und 10,000. Sieg gegen einen bestimmten Gegner erh\xE4ltst du jeweils 25% Bonusschaden gegen diesen Gegner.\nNach dem 25,000. und 100,000. Sieg gegen einen bestimmten Gegner erh\xE4ltst du jeweils 50% Bonusschaden gegen diesen Gegner."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 512217202688
+    m_Localized: "Echos sind alternative Versionen von Caleb, die unter verschiedenen Umst\xE4nden kurz in seine Realit\xE4t wechseln, um zu helfen.\n\nJedes Echo kann eine Kombination von Calebs F\xE4higkeiten besitzen. Die meisten haben aber nicht alle.\n\nDer wichtigste Unterschied im Verhalten ist, ob ein Echo k\xE4mpfen kann.\nKampff\xE4hige Echos verhalten sich unterschiedlich, je nachdem, ob sie auch Aufgaben erledigen k\xF6nnen. \n\nEin kampff\xE4higes Echo, das KEINE Aufgaben erledigen kann, sucht gezielt Gegner.\nEin kampff\xE4higes Echo, das Aufgaben erledigen KANN, bevorzugt Aufgaben und bek\xE4mpft nur Gegner, die es bemerken.\n\nEchos ohne Kampff\xE4higkeit werden von Gegnern nicht angegriffen und greifen sie nicht an.\n\nEntwicklerhinweis | Derzeit gibt es keine Echos, die k\xE4mpfen und Aufgaben erledigen k\xF6nnen. Echos aus Meilensteinen suchen gezielt Aufgaben ihrer jeweiligen F\xE4higkeit: Ein durch Holzf\xE4llen erzeugtes Echo sucht beispielsweise nur Holzf\xE4llaufgaben."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 532437942272
+    m_Localized: "Jeder Sieg w\xE4hrend einer Reise erh\xF6ht deinen Ressourcenbonus um 2%. Im Kampf wird er vor\xFCbergehend auf 0% gesetzt.\n\nZieh dich m\xF6glichst kurz bevor die K\xE4mpfe zu schwer werden zur\xFCck, damit du so viele Bonusressourcen wie m\xF6glich erh\xE4ltst!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 698595295232
+    m_Localized: "Aufgaben sind das Hauptziel von Calebs Reise. Ressourcen f\xFCr die Stadt zu sammeln, ist entscheidend f\xFCr ihr Wachstum.\n\nAufgaben werden automatisch erledigt, und mit steigender F\xE4higkeitsstufe geht das schneller.\n\nAufgaben erscheinen zwischen einer Mindest- und einer H\xF6chstdistanz. Nach der H\xF6chstdistanz sinkt ihre Erscheinungswahrscheinlichkeit um 90%. Sobald alle Aufgaben ihre H\xF6chstdistanz erreicht haben, gleicht sich das Gewichtungssystem daher an: Ihre Verf\xFCgbarkeit richtet sich wieder nach ihren jeweiligen Gewichtungen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 505754247643136
+    m_Localized: "Auftr\xE4ge haben unterschiedliche Bedingungen, die vor der Abgabe erf\xFCllt sein m\xFCssen.\n\n<b>Information</b> | Diese Auftr\xE4ge werden sofort abgeschlossen und erz\xE4hlen die Geschichte oder f\xFChren dich ins Spiel ein.\n<b>Sammeln</b> | Sammle die verlangten Ressourcen und gib sie ab.\n<b>Siege</b> | Besiege Gegner und berichte anschlie\xDFend davon.\n<b>Begegnung</b> | Triff einen bestimmten Stadtbewohner. Die meisten findest du an bestimmten Entfernungen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3785742338113536
+    m_Localized: "Wenn du bestimmte Entfernungen zur Stadt erreichst, erntet Carl deine Seele, damit du nicht zu weit wegkommst. \nDeine maximale Reisedistanz findest du in der Statistik im Reiter Allgemein.\n\nDie Reisedistanz steigt auf folgende Weise:\n<b>Seelenernte</b> | Erh\xF6ht die Distanz um 1% deiner aktuellen maximalen Reisedistanz. (Au\xDFer im Ackerland)\n<b>Auftr\xE4ge</b> | Manche Auftr\xE4ge erh\xF6hen deine Reisedistanz."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6939642239008768
+    m_Localized: v1.4.3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7986628786536448
+    m_Localized: 'Dragon slaying pope
+
+      tanty.
+
+      Mellifas
+
+      Latimer Cross
+
+      MatHeadGetz
+
+      appleguy
+
+      AwesomePhoenix
+
+      boiledpotato
+
+      eli
+
+      GLUTTONY
+
+      Gudu
+
+      Mentocado
+
+      Nuclearion
+
+      Quackers
+
+      Rugmuk
+
+      SaintPlays
+
+      SCHMUGGLER
+
+      WaringMcMarrin'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9824133160779776
+    m_Localized: "Ivans Schmiede ist ein magischer Ort. Ob du in der Stadt entspannst oder unterwegs bist: Du kannst ihm helfen, seine Schmiedekunst zu verbessern.\n\nBeim Schmieden stehen dir zwei Schalter zur Verf\xFCgung:\n\n<b>Bei Vastium stoppen:</b> Stoppt immer bei einem Vastium-Gegenstand, selbst wenn er schlechter ist.\n\n<b>Werte abgleichen:</b> Die Schmiede arbeitet weiter, bis eine Verbesserung genau dieselben Werttypen wie dein ausger\xFCsteter Gegenstand hat.\n\nDieses Symbol steht f\xFCr Qualit\xE4t: <sprite=206>\n\nHier schmiedest du Ausr\xFCstung und w\xE4hlst die besten Werte f\xFCr deinen Spielstil. \nDerzeit k\xF6nnen 8 Werte auf Ausr\xFCstung erscheinen. Jeder Ausr\xFCstungstyp garantiert einen bestimmten Wert.\n\n<sprite=198> = Schaden.\n<sprite=200> = Angriffstempo.\n<sprite=199> = kritische Trefferchance.\n<sprite=205> = kritischer Schaden. \n\n<sprite=202> = Gesundheit.\n<sprite=203> = Regeneration.\n<sprite=201> = Verteidigung.\n<sprite=204> = Bewegungstempo.\n\n<sprite=192> = Verbesserung.\n<sprite=193> = Verschlechterung. \n<sprite=194> = Unver\xE4ndert.\n<sprite=195> Wert fehlt auf dem neuen Gegenstand.\n<sprite=196> Wert fehlt auf dem alten Gegenstand.\n\n<b>Waffe</b> | Garantiert <sprite=198>\n<b>Helm</b> | Garantiert <sprite=202>\n<b>Brust</b> | Garantiert <sprite=201>\n<b>Stiefel</b> | Garantieren <sprite=204>, exklusiv f\xFCr diesen Platz.\n\nAusr\xFCstung wird automatisch zerlegt, wenn du ein neues St\xFCck schmiedest, einen anderen Platz ausw\xE4hlst oder das Spiel schlie\xDFt.\n\nJe nach Seltenheit kann ein Ausr\xFCstungsteil bis zu 5 Werte haben. Weitere Werte sind f\xFCr die Zukunft geplant!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9824133185945600
+    m_Localized: "Hey Leute, hier ist der Entwickler. \n\nWenn ihr eure Namen im zuf\xE4lligen Namenspool der Gegner sehen m\xF6chtet, kommt auf Discord vorbei und fragt im EoV-Chat :)\n\n\u2022 Ich \xFCberlege, Aufgabenfreischaltungen ins Meilensteinsystem zu verlegen. Auftr\xE4ge w\xFCrden dann F\xE4higkeits-XP statt Aufgabenfreischaltungen geben! Sagt mir, was ihr davon haltet."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9898115700506624
+    m_Localized: "<b>\xC4nderungen</b>\n\u2022 Zwei neue Auftr\xE4ge: F\xFCr die Marmelade! und Gillivers Reisen.\n\u2022 Einf\xFChrungstext verbessert.\n\u2022 Falsche, zu niedrige Werte in Stufenaufstiegsmeldungen behoben.\n\u2022 Den Block Qualit\xE4t der Ausr\xFCstung aus der Schmiedestatistik entfernt.\n\u2022 Angeheftete Auftr\xE4ge zeigen jetzt \"Bereit zur Abgabe\" statt \"Abgeschlossen.\n\u2022 Anzeige beim Laden einer Karte hinzugef\xFCgt.\n\u2022 Neue Schaltfl\xE4che Alles mischen hinzugef\xFCgt.\n<b>Technik</b>\n\u2022 A* auf eine neuere Version aktualisiert."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12027031164698624
+    m_Localized: "Der Kessel wandelt ausgew\xE4hlte Lebensmittel in Eintopf um. Du bestimmst die Menge; der Ertrag h\xE4ngt vom festgelegten Lebensmittelwert und der Menge ab. Koste den Eintopf, um Karten nach Evas angezeigten Belohnungsgewichtungen zu erhalten.\n\nRessourcenkarten verbessern das tats\xE4chliche Sammeln, Gegnerbeute und Feldernten in der Stadt f\xFCr die jeweilige Ressource. Die Kartenschwellen sind 1, 25, 75, 200, 750, 1500, 3500 und 10000; die Ertragsboni sind 1%, 2%, 3%, 5%, 7%, 10%, 15% und 20%.\n\nEine Ressourcenkategorie verwendet die niedrigste Kartenstufe ihrer freigeschalteten Ressourcen. Fehlende Karten z\xE4hlen als Stufe null. Die Kategoriestufen 1 bis 8 geben 2%, 5%, 10%, 15%, 20%, 30%, 40% und 50% mehr Ertrag f\xFCr diese Kategorie. Karten- und Kategorieboni werden addiert, bis zu 70%. Belohnungen, Saatgut, Erstattungen und Umwandlungen erhalten diese Boni nicht.\n\nDiese Kartenstufen sind unabh\xE4ngig von der Ressourcenseltenheit. Bestehende Abklingzeit- und Kraftvorteile von Zauberkarten bleiben unver\xE4ndert. Vervollst\xE4ndige alle verf\xFCgbaren Ressourcen- und Zaubersammlungen, um Ewige Gaben freizuschalten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18915029441462272
+    m_Localized: "Gegenst\xE4nde haben bei jedem Sammeln eine geringe Chance, eine Seltenheitsstufe aufzusteigen. Ernten auf den Feldern der Stadt l\xF6sen solche Stufenaufstiege nicht aus.\nJede Stufe \xFCber der ersten gibt dir beim zuk\xFCnftigen Sammeln dieser Ressource einen Bonus.\n\nIch teile diese Information nur ungern mit dir, aber hier ist sie - Orin ...\n\nStufe | Bonus | Chance\n<b>Stufe 1</b> - 0%\\tBasis\n<b>Stufe 2</b> - 10%\\t1 /1,000\n<b>Stufe 3</b> - 20%\\t1 / 5,000\n<b>Stufe 4</b> - 30%\\t1 / 10,000\n<b>Stufe 5</b> - 50%\\t1 / 50,000\n<b>Stufe 6</b> - 75%\\t1 / 100,000\n<b>Stufe 7</b> - 100%\\t1 / 250,000\n<b>Stufe 8</b> - 150%\\t1 / 1,000,000"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25772880722018304
+    m_Localized: Englisch (en)
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

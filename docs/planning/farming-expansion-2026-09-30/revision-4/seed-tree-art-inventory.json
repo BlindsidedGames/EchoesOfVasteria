@@ -1,0 +1,1285 @@
+[
+  {
+    "path": "Assets/Art/Packs/Cute_Fantasy/Crops/Apple_Tree.png",
+    "explicitTileDirectory": false,
+    "sprites": [
+      {
+        "name": "Apple_Tree_Fruiting_WholeTree",
+        "guid": "8a835532a72d6bc43a5e13ee677c43de",
+        "localId": "-1027468092030900218",
+        "rect": {
+          "x": 0.0,
+          "y": 0.0,
+          "width": 32.0,
+          "height": 64.0
+        },
+        "pivot": {
+          "x": 16.2521667,
+          "y": 17.0380859
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Apple_Tree_0",
+        "semantic_review": {
+          "key": "8a835532a72d6bc43a5e13ee677c43de:-1027468092030900218",
+          "guid": "8a835532a72d6bc43a5e13ee677c43de",
+          "localId": "-1027468092030900218",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Apple_Tree.png",
+          "oldName": "Apple_Tree_0",
+          "newName": "Apple_Tree_Fruiting_WholeTree",
+          "role": "Whole standing fruit tree with visible fruit",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "Source species retained; not a terrain edge or tree fragment.",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-001.png"
+        },
+        "reviewed": true,
+        "original_name": "Apple_Tree_0"
+      }
+    ],
+    "old_path": "Assets/Art/Packs/Cute_Fantasy/Crops/Apple_Tree.png",
+    "sprite_mode": 2
+  },
+  {
+    "path": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+    "explicitTileDirectory": false,
+    "sprites": [
+      {
+        "name": "Crop_Tomato_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "-7474529693045490863",
+        "rect": {
+          "x": 16.0,
+          "y": 640.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_1",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:-7474529693045490863",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "-7474529693045490863",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_1",
+          "newName": "Crop_Tomato_SeedPacket",
+          "role": "Tomato crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-005.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_1"
+      },
+      {
+        "name": "Crop_Carrot_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "-7911878910390060541",
+        "rect": {
+          "x": 16.0,
+          "y": 608.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_8",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:-7911878910390060541",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "-7911878910390060541",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_8",
+          "newName": "Crop_Carrot_SeedPacket",
+          "role": "Carrot crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-005.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_8"
+      },
+      {
+        "name": "Crop_Eggplant_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "2580307749077769709",
+        "rect": {
+          "x": 16.0,
+          "y": 576.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_15",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:2580307749077769709",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "2580307749077769709",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_15",
+          "newName": "Crop_Eggplant_SeedPacket",
+          "role": "Eggplant crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-005.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_15"
+      },
+      {
+        "name": "Crop_Corn_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "6088432766868391303",
+        "rect": {
+          "x": 16.0,
+          "y": 544.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_22",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:6088432766868391303",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "6088432766868391303",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_22",
+          "newName": "Crop_Corn_SeedPacket",
+          "role": "Corn crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-005.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_22"
+      },
+      {
+        "name": "Crop_Pumpkin_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "9097839083451968670",
+        "rect": {
+          "x": 16.0,
+          "y": 512.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_29",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:9097839083451968670",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "9097839083451968670",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_29",
+          "newName": "Crop_Pumpkin_SeedPacket",
+          "role": "Pumpkin crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-006.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_29"
+      },
+      {
+        "name": "Crop_PaleRoot_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "-8566547230339426620",
+        "rect": {
+          "x": 16.0,
+          "y": 480.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_36",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:-8566547230339426620",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "-8566547230339426620",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_36",
+          "newName": "Crop_PaleRoot_SeedPacket",
+          "role": "PaleRoot crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "Art catalogue only; no farming implementation or growth rules are changed.",
+          "uncertainty": [
+            "Species inferred only where identifiable; retain visible shape/material rather than asserting a gameplay crop identity."
+          ],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-006.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_36"
+      },
+      {
+        "name": "Crop_Cabbage_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "-3035954457510803908",
+        "rect": {
+          "x": 16.0,
+          "y": 448.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_43",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:-3035954457510803908",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "-3035954457510803908",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_43",
+          "newName": "Crop_Cabbage_SeedPacket",
+          "role": "Cabbage crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-006.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_43"
+      },
+      {
+        "name": "Crop_Cucumber_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "5545933079755841674",
+        "rect": {
+          "x": 16.0,
+          "y": 416.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_50",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:5545933079755841674",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "5545933079755841674",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_50",
+          "newName": "Crop_Cucumber_SeedPacket",
+          "role": "Cucumber crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-006.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_50"
+      },
+      {
+        "name": "Crop_RedPepper_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "1389175112014230003",
+        "rect": {
+          "x": 16.0,
+          "y": 384.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_57",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:1389175112014230003",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "1389175112014230003",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_57",
+          "newName": "Crop_RedPepper_SeedPacket",
+          "role": "RedPepper crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-006.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_57"
+      },
+      {
+        "name": "Crop_Beet_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "4707258222161254498",
+        "rect": {
+          "x": 16.0,
+          "y": 352.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_64",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:4707258222161254498",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "4707258222161254498",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_64",
+          "newName": "Crop_Beet_SeedPacket",
+          "role": "Beet crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "Art catalogue only; no farming implementation or growth rules are changed.",
+          "uncertainty": [
+            "Species inferred only where identifiable; retain visible shape/material rather than asserting a gameplay crop identity."
+          ],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-006.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_64"
+      },
+      {
+        "name": "Crop_Pineapple_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "-1986824382549274702",
+        "rect": {
+          "x": 16.0,
+          "y": 320.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_71",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:-1986824382549274702",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "-1986824382549274702",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_71",
+          "newName": "Crop_Pineapple_SeedPacket",
+          "role": "Pineapple crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-006.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_71"
+      },
+      {
+        "name": "Crop_DarkTealOvalFruit_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "-3774452615117868460",
+        "rect": {
+          "x": 16.0,
+          "y": 288.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_78",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:-3774452615117868460",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "-3774452615117868460",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_78",
+          "newName": "Crop_DarkTealOvalFruit_SeedPacket",
+          "role": "DarkTealOvalFruit crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "Art catalogue only; no farming implementation or growth rules are changed.",
+          "uncertainty": [
+            "Species inferred only where identifiable; retain visible shape/material rather than asserting a gameplay crop identity."
+          ],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-006.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_78"
+      },
+      {
+        "name": "Crop_Watermelon_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "3970009790766053041",
+        "rect": {
+          "x": 16.0,
+          "y": 256.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_85",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:3970009790766053041",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "3970009790766053041",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_85",
+          "newName": "Crop_Watermelon_SeedPacket",
+          "role": "Watermelon crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-007.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_85"
+      },
+      {
+        "name": "Crop_Sunflower_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "-7153879334015468698",
+        "rect": {
+          "x": 16.0,
+          "y": 224.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_92",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:-7153879334015468698",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "-7153879334015468698",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_92",
+          "newName": "Crop_Sunflower_SeedPacket",
+          "role": "Sunflower crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-007.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_92"
+      },
+      {
+        "name": "Crop_TanBulb_A_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "3614151479051087722",
+        "rect": {
+          "x": 16.0,
+          "y": 192.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_99",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:3614151479051087722",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "3614151479051087722",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_99",
+          "newName": "Crop_TanBulb_A_SeedPacket",
+          "role": "TanBulb_A crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "Art catalogue only; no farming implementation or growth rules are changed.",
+          "uncertainty": [
+            "Species inferred only where identifiable; retain visible shape/material rather than asserting a gameplay crop identity."
+          ],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-007.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_99"
+      },
+      {
+        "name": "Crop_Potato_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "5302348848808465107",
+        "rect": {
+          "x": 16.0,
+          "y": 160.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_106",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:5302348848808465107",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "5302348848808465107",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_106",
+          "newName": "Crop_Potato_SeedPacket",
+          "role": "Potato crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-007.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_106"
+      },
+      {
+        "name": "Crop_Strawberry_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "2264594466298315286",
+        "rect": {
+          "x": 16.0,
+          "y": 128.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_113",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:2264594466298315286",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "2264594466298315286",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_113",
+          "newName": "Crop_Strawberry_SeedPacket",
+          "role": "Strawberry crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-007.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_113"
+      },
+      {
+        "name": "Crop_Radish_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "9187449002736131800",
+        "rect": {
+          "x": 16.0,
+          "y": 96.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_120",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:9187449002736131800",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "9187449002736131800",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_120",
+          "newName": "Crop_Radish_SeedPacket",
+          "role": "Radish crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-007.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_120"
+      },
+      {
+        "name": "Crop_TanBulb_B_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "7492094207177981557",
+        "rect": {
+          "x": 16.0,
+          "y": 64.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_127",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:7492094207177981557",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "7492094207177981557",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_127",
+          "newName": "Crop_TanBulb_B_SeedPacket",
+          "role": "TanBulb_B crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "Art catalogue only; no farming implementation or growth rules are changed.",
+          "uncertainty": [
+            "Species inferred only where identifiable; retain visible shape/material rather than asserting a gameplay crop identity."
+          ],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-007.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_127"
+      },
+      {
+        "name": "Crop_Leek_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "-590013225539145547",
+        "rect": {
+          "x": 16.0,
+          "y": 32.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_134",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:-590013225539145547",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "-590013225539145547",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_134",
+          "newName": "Crop_Leek_SeedPacket",
+          "role": "Leek crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-007.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_134"
+      },
+      {
+        "name": "Crop_Grapes_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "5826110034985819068",
+        "rect": {
+          "x": 16.0,
+          "y": 0.0,
+          "width": 16.0,
+          "height": 32.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_141",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:5826110034985819068",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "5826110034985819068",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_141",
+          "newName": "Crop_Grapes_SeedPacket",
+          "role": "Grapes crop artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-007.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_141"
+      },
+      {
+        "name": "Crop_Wheat_SeedPacket",
+        "guid": "9cb02e74c571af045af4e6f90876850b",
+        "localId": "657143368",
+        "rect": {
+          "x": 16.0,
+          "y": 672.0,
+          "width": 16.0,
+          "height": 16.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Crops_148",
+        "semantic_review": {
+          "key": "9cb02e74c571af045af4e6f90876850b:657143368",
+          "guid": "9cb02e74c571af045af4e6f90876850b",
+          "localId": "657143368",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+          "oldName": "Crops_148",
+          "newName": "Crop_Wheat_SeedPacket",
+          "role": "Wheat artwork: SeedPacket",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-008.png"
+        },
+        "reviewed": true,
+        "original_name": "Crops_148"
+      }
+    ],
+    "old_path": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+    "sprite_mode": 2
+  },
+  {
+    "path": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+    "explicitTileDirectory": false,
+    "sprites": [
+      {
+        "name": "FruitTree_Growth_MatureTree",
+        "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+        "localId": "-6927793014847252990",
+        "rect": {
+          "x": 64.0,
+          "y": 0.0,
+          "width": 32.0,
+          "height": 64.0
+        },
+        "pivot": {
+          "x": 16.0,
+          "y": 16.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Fruit_Tree_Stages_2",
+        "semantic_review": {
+          "key": "fb2d20a85bb1e404abf5ec5eef672073:-6927793014847252990",
+          "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+          "localId": "-6927793014847252990",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+          "oldName": "Fruit_Tree_Stages_2",
+          "newName": "FruitTree_Growth_MatureTree",
+          "role": "MatureTree",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "Visual growth illustration only; gameplay growth behavior is not inferred.",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-008.png"
+        },
+        "reviewed": true,
+        "original_name": "Fruit_Tree_Stages_2"
+      },
+      {
+        "name": "FruitTree_Growth_SmallSapling",
+        "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+        "localId": "-8582943164656172086",
+        "rect": {
+          "x": 0.0,
+          "y": 0.0,
+          "width": 32.0,
+          "height": 64.0
+        },
+        "pivot": {
+          "x": 16.0,
+          "y": 16.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Fruit_Tree_Stages_0",
+        "semantic_review": {
+          "key": "fb2d20a85bb1e404abf5ec5eef672073:-8582943164656172086",
+          "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+          "localId": "-8582943164656172086",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+          "oldName": "Fruit_Tree_Stages_0",
+          "newName": "FruitTree_Growth_SmallSapling",
+          "role": "SmallSapling",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "Visual growth illustration only; gameplay growth behavior is not inferred.",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-008.png"
+        },
+        "reviewed": true,
+        "original_name": "Fruit_Tree_Stages_0"
+      },
+      {
+        "name": "FruitTree_Growth_YoungTree",
+        "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+        "localId": "6735665171789789739",
+        "rect": {
+          "x": 32.0,
+          "y": 0.0,
+          "width": 32.0,
+          "height": 64.0
+        },
+        "pivot": {
+          "x": 16.0,
+          "y": 16.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Fruit_Tree_Stages_1",
+        "semantic_review": {
+          "key": "fb2d20a85bb1e404abf5ec5eef672073:6735665171789789739",
+          "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+          "localId": "6735665171789789739",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+          "oldName": "Fruit_Tree_Stages_1",
+          "newName": "FruitTree_Growth_YoungTree",
+          "role": "YoungTree",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "Visual growth illustration only; gameplay growth behavior is not inferred.",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-008.png"
+        },
+        "reviewed": true,
+        "original_name": "Fruit_Tree_Stages_1"
+      }
+    ],
+    "old_path": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+    "sprite_mode": 2
+  },
+  {
+    "path": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+    "explicitTileDirectory": false,
+    "sprites": [
+      {
+        "name": "Big_Fruit_Tree_Stump",
+        "guid": "b45d02bebb0bae34490e63de2e1440b9",
+        "localId": "-1417621601314111017",
+        "rect": {
+          "x": 0.0,
+          "y": 0.0,
+          "width": 32.0,
+          "height": 64.0
+        },
+        "pivot": {
+          "x": 16.0,
+          "y": 16.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Big_Fruit_Tree_0",
+        "semantic_review": {
+          "key": "b45d02bebb0bae34490e63de2e1440b9:-1417621601314111017",
+          "guid": "b45d02bebb0bae34490e63de2e1440b9",
+          "localId": "-1417621601314111017",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+          "oldName": "Big_Fruit_Tree_0",
+          "newName": "Big_Fruit_Tree_Stump",
+          "role": "Stump",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-149.png"
+        },
+        "reviewed": true,
+        "original_name": "Big_Fruit_Tree_0"
+      },
+      {
+        "name": "Big_Fruit_Tree_Standing_GroundShadow",
+        "guid": "b45d02bebb0bae34490e63de2e1440b9",
+        "localId": "621266246945384593",
+        "rect": {
+          "x": 32.0,
+          "y": 0.0,
+          "width": 32.0,
+          "height": 64.0
+        },
+        "pivot": {
+          "x": 16.0,
+          "y": 16.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Big_Fruit_Tree_1",
+        "semantic_review": {
+          "key": "b45d02bebb0bae34490e63de2e1440b9:621266246945384593",
+          "guid": "b45d02bebb0bae34490e63de2e1440b9",
+          "localId": "621266246945384593",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+          "oldName": "Big_Fruit_Tree_1",
+          "newName": "Big_Fruit_Tree_Standing_GroundShadow",
+          "role": "Standing_GroundShadow",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-150.png"
+        },
+        "reviewed": true,
+        "original_name": "Big_Fruit_Tree_1"
+      },
+      {
+        "name": "Big_Fruit_Tree_Standing_NoGroundShadow",
+        "guid": "b45d02bebb0bae34490e63de2e1440b9",
+        "localId": "-3920717480266063861",
+        "rect": {
+          "x": 64.0,
+          "y": 0.0,
+          "width": 32.0,
+          "height": 64.0
+        },
+        "pivot": {
+          "x": 16.0,
+          "y": 16.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Big_Fruit_Tree_2",
+        "semantic_review": {
+          "key": "b45d02bebb0bae34490e63de2e1440b9:-3920717480266063861",
+          "guid": "b45d02bebb0bae34490e63de2e1440b9",
+          "localId": "-3920717480266063861",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+          "oldName": "Big_Fruit_Tree_2",
+          "newName": "Big_Fruit_Tree_Standing_NoGroundShadow",
+          "role": "Standing_NoGroundShadow",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "Alternate standing foliage/trunk crop without the broad ground shadow; lower trunk/root extent differs from variant 1. Not asserted to be a pure canopy overlay.",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-150.png"
+        },
+        "reviewed": true,
+        "original_name": "Big_Fruit_Tree_2"
+      }
+    ],
+    "old_path": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+    "sprite_mode": 2
+  },
+  {
+    "path": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Fruit_Tree.png",
+    "explicitTileDirectory": false,
+    "sprites": [
+      {
+        "name": "Medium_Fruit_Tree_Standing_GroundShadow",
+        "guid": "25ec107e317209041985b70a5dc05d93",
+        "localId": "-6213476910104009479",
+        "rect": {
+          "x": 32.0,
+          "y": 0.0,
+          "width": 32.0,
+          "height": 64.0
+        },
+        "pivot": {
+          "x": 16.0,
+          "y": 16.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Medium_Fruit_Tree_1",
+        "semantic_review": {
+          "key": "25ec107e317209041985b70a5dc05d93:-6213476910104009479",
+          "guid": "25ec107e317209041985b70a5dc05d93",
+          "localId": "-6213476910104009479",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Fruit_Tree.png",
+          "oldName": "Medium_Fruit_Tree_1",
+          "newName": "Medium_Fruit_Tree_Standing_GroundShadow",
+          "role": "Standing_GroundShadow",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-150.png"
+        },
+        "reviewed": true,
+        "original_name": "Medium_Fruit_Tree_1"
+      },
+      {
+        "name": "Medium_Fruit_Tree_Stump",
+        "guid": "25ec107e317209041985b70a5dc05d93",
+        "localId": "7974180874811359161",
+        "rect": {
+          "x": 0.0,
+          "y": 0.0,
+          "width": 32.0,
+          "height": 64.0
+        },
+        "pivot": {
+          "x": 16.0,
+          "y": 16.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Medium_Fruit_Tree_0",
+        "semantic_review": {
+          "key": "25ec107e317209041985b70a5dc05d93:7974180874811359161",
+          "guid": "25ec107e317209041985b70a5dc05d93",
+          "localId": "7974180874811359161",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Fruit_Tree.png",
+          "oldName": "Medium_Fruit_Tree_0",
+          "newName": "Medium_Fruit_Tree_Stump",
+          "role": "Stump",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-150.png"
+        },
+        "reviewed": true,
+        "original_name": "Medium_Fruit_Tree_0"
+      },
+      {
+        "name": "Medium_Fruit_Tree_Standing_NoGroundShadow",
+        "guid": "25ec107e317209041985b70a5dc05d93",
+        "localId": "342871925107748138",
+        "rect": {
+          "x": 64.0,
+          "y": 0.0,
+          "width": 32.0,
+          "height": 64.0
+        },
+        "pivot": {
+          "x": 16.0,
+          "y": 16.0
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Medium_Fruit_Tree_2",
+        "semantic_review": {
+          "key": "25ec107e317209041985b70a5dc05d93:342871925107748138",
+          "guid": "25ec107e317209041985b70a5dc05d93",
+          "localId": "342871925107748138",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Fruit_Tree.png",
+          "oldName": "Medium_Fruit_Tree_2",
+          "newName": "Medium_Fruit_Tree_Standing_NoGroundShadow",
+          "role": "Standing_NoGroundShadow",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "Alternate standing foliage/trunk crop without the broad ground shadow; lower trunk/root extent differs from variant 1. Not asserted to be a pure canopy overlay.",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-150.png"
+        },
+        "reviewed": true,
+        "original_name": "Medium_Fruit_Tree_2"
+      }
+    ],
+    "old_path": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Fruit_Tree.png",
+    "sprite_mode": 2
+  },
+  {
+    "path": "Assets/Art/Packs/Cute_Fantasy/Trees/Small_Fruit_Tree.png",
+    "explicitTileDirectory": false,
+    "sprites": [
+      {
+        "name": "Small_Fruit_Tree_Standing_GroundShadow",
+        "guid": "c0379aa4fd42660418cc76d22a3de2e1",
+        "localId": "-799831649384477707",
+        "rect": {
+          "x": 32.0,
+          "y": 0.0,
+          "width": 32.0,
+          "height": 64.0
+        },
+        "pivot": {
+          "x": 16.0,
+          "y": 22.4
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Small_Fruit_Tree_1",
+        "semantic_review": {
+          "key": "c0379aa4fd42660418cc76d22a3de2e1:-799831649384477707",
+          "guid": "c0379aa4fd42660418cc76d22a3de2e1",
+          "localId": "-799831649384477707",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Trees/Small_Fruit_Tree.png",
+          "oldName": "Small_Fruit_Tree_1",
+          "newName": "Small_Fruit_Tree_Standing_GroundShadow",
+          "role": "Standing_GroundShadow",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-150.png"
+        },
+        "reviewed": true,
+        "original_name": "Small_Fruit_Tree_1"
+      },
+      {
+        "name": "Small_Fruit_Tree_Stump",
+        "guid": "c0379aa4fd42660418cc76d22a3de2e1",
+        "localId": "-580788211008675207",
+        "rect": {
+          "x": 0.0,
+          "y": 0.0,
+          "width": 32.0,
+          "height": 64.0
+        },
+        "pivot": {
+          "x": 16.0,
+          "y": 22.4
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Small_Fruit_Tree_0",
+        "semantic_review": {
+          "key": "c0379aa4fd42660418cc76d22a3de2e1:-580788211008675207",
+          "guid": "c0379aa4fd42660418cc76d22a3de2e1",
+          "localId": "-580788211008675207",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Trees/Small_Fruit_Tree.png",
+          "oldName": "Small_Fruit_Tree_0",
+          "newName": "Small_Fruit_Tree_Stump",
+          "role": "Stump",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-151.png"
+        },
+        "reviewed": true,
+        "original_name": "Small_Fruit_Tree_0"
+      },
+      {
+        "name": "Small_Fruit_Tree_Standing_NoGroundShadow",
+        "guid": "c0379aa4fd42660418cc76d22a3de2e1",
+        "localId": "7935072713231967012",
+        "rect": {
+          "x": 64.0,
+          "y": 0.0,
+          "width": 32.0,
+          "height": 64.0
+        },
+        "pivot": {
+          "x": 16.0,
+          "y": 22.4
+        },
+        "pixelsPerUnit": 16.0,
+        "old_name": "Small_Fruit_Tree_2",
+        "semantic_review": {
+          "key": "c0379aa4fd42660418cc76d22a3de2e1:7935072713231967012",
+          "guid": "c0379aa4fd42660418cc76d22a3de2e1",
+          "localId": "7935072713231967012",
+          "sourcePath": "Assets/Art/Packs/Cute_Fantasy/Trees/Small_Fruit_Tree.png",
+          "oldName": "Small_Fruit_Tree_2",
+          "newName": "Small_Fruit_Tree_Standing_NoGroundShadow",
+          "role": "Standing_NoGroundShadow",
+          "orientation": null,
+          "variant": null,
+          "frame": null,
+          "notes": "Alternate standing foliage/trunk crop without the broad ground shadow; lower trunk/root extent differs from variant 1. Not asserted to be a pure canopy overlay.",
+          "uncertainty": [],
+          "visuallyReviewed": true,
+          "reviewSheet": "Cute_Fantasy-151.png"
+        },
+        "reviewed": true,
+        "original_name": "Small_Fruit_Tree_2"
+      }
+    ],
+    "old_path": "Assets/Art/Packs/Cute_Fantasy/Trees/Small_Fruit_Tree.png",
+    "sprite_mode": 2
+  }
+]

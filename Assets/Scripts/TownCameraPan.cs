@@ -37,6 +37,15 @@ namespace TimelessEchoes
             moveAction = InputSystem.actions?.FindAction("Player/Move");
         }
 
+        public void Focus(Vector2 worldPosition)
+        {
+            if (panTarget == null || landBounds == null || outputCamera == null) return;
+            ResetGesture();
+            requestedSize = preferredSize * .5f;
+            panTarget.position = new Vector3(worldPosition.x, worldPosition.y, panTarget.position.z);
+            // Normal Update applies the same authored confiner/aspect bounds as touch/keyboard.
+        }
+
         private void OnDisable() => ResetGesture();
         private void OnApplicationFocus(bool focused) { if (!focused) ResetGesture(); }
 

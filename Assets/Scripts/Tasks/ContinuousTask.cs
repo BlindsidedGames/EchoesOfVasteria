@@ -17,6 +17,7 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private GameObject progressBarObject;
         [SerializeField] private SlicedFilledImage progressBar;
         private bool isComplete;
+        private TimelessEchoes.Farming.FarmService.StagedTaskCredit farmCredit;
 
         private float timer;
         public float ProgressRemaining => TaskDuration > 0 ? Mathf.Clamp01((TaskDuration - timer) / TaskDuration) : 1;
@@ -34,6 +35,7 @@ namespace TimelessEchoes.Tasks
             base.OnEnable();
             // Reset progress and completion state on reuse (e.g., after pooling)
             isComplete = false;
+            farmCredit = null;
             timer = 0f;
             HideProgressBar();
         }
@@ -41,6 +43,7 @@ namespace TimelessEchoes.Tasks
         public override void StartTask()
         {
             isComplete = false;
+            farmCredit = null;
             timer = 0f;
             HideProgressBar();
         }
@@ -52,15 +55,12 @@ namespace TimelessEchoes.Tasks
 
         public override void OnArrival(HeroBase hero)
         {
+            if (isComplete) return;
             if (ShouldInstantComplete())
             {
                 AnimatorUtils.SetTriggerAndReset(hero, hero.Animator, CompletionTriggerName);
                 isComplete = true;
-                HideProgressBar();
-                var xpGranted = GrantCompletionXP();
-                GenerateDrops(xpGranted);
-                OnTaskCompleted(hero);
-                NotifyCompleted();
+                CompleteWork(hero);
                 return;
             }
 
@@ -72,6 +72,7 @@ namespace TimelessEchoes.Tasks
 
         public override void Tick(HeroBase hero)
         {
+            if (isComplete) return;
             var delta = Time.deltaTime;
             var controller = SkillController.Instance;
             if (controller != null && associatedSkill != null)
@@ -89,12 +90,29 @@ namespace TimelessEchoes.Tasks
             {
                 AnimatorUtils.SetTriggerAndReset(hero, hero.Animator, CompletionTriggerName);
                 isComplete = true;
+                CompleteWork(hero);
+                // The hero will get a new task automatically now
+            }
+        }
+
+        private void CompleteWork(HeroBase hero)
+        {
+            var farm = TimelessEchoes.Farming.FarmService.Instance;
+            var credit = farm?.StageCompletedTask(farmCredit, taskData, hero);
+            farmCredit = credit;
+            try
+            {
                 HideProgressBar();
                 var xpGranted = GrantCompletionXP();
                 GenerateDrops(xpGranted);
                 OnTaskCompleted(hero);
                 NotifyCompleted();
-                // The hero will get a new task automatically now
+            }
+            finally
+            {
+                // Ordinary rewards/notifications may throw or return the hero to town. Work
+                // already completed; preserve its selected intent and then capture contributors.
+                if (farm) farm.CommitStagedTask(credit);
             }
         }
 

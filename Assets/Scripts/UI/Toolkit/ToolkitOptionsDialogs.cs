@@ -17,8 +17,11 @@ namespace TimelessEchoes.UI.Toolkit
         private VisualElement root, frame;
         private TextField input;
         private Label status;
+        private UnityEngine.Localization.LocalizedString placeholderLocalized;
         private string importText = string.Empty, exportText = string.Empty;
         private string mode;
+        private string statusKey, statusEnglish;
+        private object[] statusArguments = Array.Empty<object>();
         private readonly List<ToolkitTextBinding> bindings = new();
         public bool IsOpen => root != null;
         public event Action Imported;
@@ -37,6 +40,8 @@ namespace TimelessEchoes.UI.Toolkit
             frame = new VisualElement { name = requested + "-dialog" }; frame.AddToClassList("eov-options-dialog"); frame.AddToClassList("surface"); root.Add(frame);
             if (requested == "language") BuildLanguages(); else BuildTransfer(requested == "import");
             document.rootVisualElement.Add(root); root.focusable=true; root.RegisterCallback<KeyDownEvent>(e=>{if(e.keyCode==KeyCode.Escape){Hide();e.StopPropagation();}});root.Focus(); Layout();
+            ToolkitLocalization.Changed += RefreshLocalizedText;
+            RefreshLocalizedText();
             if (requested == "export") Export();
         }
         private Label Text(VisualElement parent, string id, float size)
@@ -61,7 +66,12 @@ namespace TimelessEchoes.UI.Toolkit
             var close = Button(header, "transfer-close", Hide, 22, false); close.style.width = 22; close.text="×";
             var inset = new VisualElement(); inset.AddToClassList("eov-options-input-frame");  frame.Add(inset);
             input = new TextField { name = "transfer-input", multiline = true, isReadOnly = !importing, value = importing ? importText : exportText };
-            input.AddToClassList("eov-options-input"); input.textEdition.placeholder = definition.Text("input-placeholder").fallback;
+            input.AddToClassList("eov-options-input");
+            var placeholder = definition.Text("input-placeholder");
+            placeholderLocalized = placeholder.localized;
+            if (placeholderLocalized != null && !placeholderLocalized.IsEmpty)
+                placeholderLocalized.StringChanged += SetPlaceholder;
+            RefreshPlaceholder();
             input.RegisterValueChangedCallback(e => { if (importing) importText = e.newValue; else exportText = e.newValue; }); inset.Add(input);
             status = new Label { name = "transfer-status", enableRichText = false }; status.AddToClassList("eov-options-transfer-status"); frame.Add(status);
             var actions = new VisualElement(); actions.AddToClassList("eov-options-row"); frame.Add(actions);
@@ -79,51 +89,68 @@ namespace TimelessEchoes.UI.Toolkit
                 var value = SaveImportExport.ExportCurrentSlot(copyToClipboard: true, out var durable);
                 if (string.IsNullOrEmpty(value)) throw new InvalidOperationException("No in-memory save data is available to export.");
                 input.value = value;
-                status.text = durable ? "Exported to clipboard" : "Rescue export copied from memory; the disk save failed";
+                if (durable) SetStatus("options.transfer.exported", "Exported to clipboard");
+                else SetStatus("options.transfer.rescue-export", "Rescue export copied from memory; the disk save failed");
             }
-            catch (Exception ex) { status.text = $"Export failed: {ex.Message}"; }
+            catch (Exception ex) { SetStatus("options.transfer.export-failed", "Export failed: {0}", ex.Message); }
         }
         private void Import()
         {
             try
             {
                 var source = !string.IsNullOrWhiteSpace(input.value) ? input.value : GUIUtility.systemCopyBuffer;
-                if (string.IsNullOrWhiteSpace(source)) { status.text = "Nothing to import"; return; }
+                if (string.IsNullOrWhiteSpace(source)) { SetStatus("options.transfer.empty-import", "Nothing to import"); return; }
                 if (SaveImportExport.TryImportToCurrentSlot(source, out var error, out var committed)) { Imported?.Invoke(); Hide(); }
-                else if (committed) { Imported?.Invoke(); status.text = "Imported safely to disk; restart the game or use Retry to finish loading it"; }
-                else status.text = $"Import failed: {error}";
+                else if (committed) { Imported?.Invoke(); SetStatus("options.transfer.import-committed", "Imported safely to disk; restart the game or use Retry to finish loading it"); }
+                else SetStatus("options.transfer.import-failed", "Import failed: {0}", error);
             }
-            catch (Exception ex) { if (status != null) status.text = $"Import exception: {ex.Message}"; }
+            catch (Exception ex) { if (status != null) SetStatus("options.transfer.import-exception", "Import exception: {0}", ex.Message); }
         }
-        private void Copy() { try { GUIUtility.systemCopyBuffer = input.value ?? string.Empty; status.text = "Copied export string"; } catch (Exception ex) { status.text = $"Copy failed: {ex.Message}"; } }
-        private void Paste() { try { input.value = GUIUtility.systemCopyBuffer ?? string.Empty; } catch (Exception ex) { status.text = $"Paste failed: {ex.Message}"; } }
+        private void Copy() { try { GUIUtility.systemCopyBuffer = input.value ?? string.Empty; SetStatus("options.transfer.copied", "Copied export string"); } catch (Exception ex) { SetStatus("options.transfer.copy-failed", "Copy failed: {0}", ex.Message); } }
+        private void Paste() { try { input.value = GUIUtility.systemCopyBuffer ?? string.Empty; } catch (Exception ex) { SetStatus("options.transfer.paste-failed", "Paste failed: {0}", ex.Message); } }
+        private void SetStatus(string key, string english, params object[] arguments)
+        {
+            statusKey = key; statusEnglish = english; statusArguments = arguments;
+            RefreshLocalizedText();
+        }
+        private void SetPlaceholder(string value)
+        {
+            if (input != null) input.textEdition.placeholder = string.IsNullOrEmpty(value)
+                ? definition.Text("input-placeholder").fallback : value;
+        }
+        private void RefreshPlaceholder()
+        {
+            if (input == null) return;
+            var text = definition.Text("input-placeholder");
+            if (placeholderLocalized == null || placeholderLocalized.IsEmpty)
+                input.textEdition.placeholder = ToolkitLocalization.Text(text.key, text.fallback);
+        }
+        private void RefreshLocalizedText()
+        {
+            RefreshPlaceholder();
+            if (status != null && !string.IsNullOrEmpty(statusKey))
+                status.text = ToolkitLocalization.Text(statusKey, statusEnglish, statusArguments);
+        }
         private void BuildLanguages()
         {
             frame.style.width = 160; frame.style.paddingLeft = frame.style.paddingRight = frame.style.paddingTop = frame.style.paddingBottom = 8;
             var inset = new VisualElement(); inset.style.paddingLeft = inset.style.paddingRight = inset.style.paddingTop = inset.style.paddingBottom = 2;
              frame.Add(inset);
-            foreach (var code in new[] { "en", "ru" })
+            var languages = new[] { ("en", "English"), ("fr", "Français"), ("de", "Deutsch"),
+                ("es-419", "Español (Latinoamérica)"), ("pt-BR", "Português (Brasil)"),
+                ("zh-CN", "简体中文"), ("ru", "Русский"), ("ja", "日本語") };
+            foreach (var language in languages)
             {
+                var code = language.Item1;
                 var button = Button(inset, "locale-" + code, () =>
                 {
                     Hide(); FindAnyObjectByType<LocalizationManager>()?.SelectLocale(code);
-                    if (code == "ru") ShowTranslationWarning();
-                }, 24);
-                button.Q<Label>().style.fontSize = 7; if (code == "en") button.style.marginBottom = 4;
+                }, 24, false);
+                var label = new Label(language.Item2) { pickingMode = PickingMode.Ignore };
+                label.AddToClassList("eov-options-label"); label.style.fontSize = 7;
+                label.style.unityTextAlign = TextAnchor.MiddleCenter;
+                button.Add(label); button.style.marginBottom = 4;
             }
-        }
-        private void ShowTranslationWarning()
-        {
-            var document = GetComponent<UIDocument>();
-            root = new VisualElement { name = "translation-warning-root", pickingMode = PickingMode.Ignore }; theme.Apply(root);ToolkitGameplay.Apply(root,theme);
-            var button = new Button(Hide) { name = "translation-warning" }; frame = button;
-            frame.AddToClassList("eov-options-dialog"); frame.style.width = 188.96f;
-            frame.style.paddingLeft = frame.style.paddingRight = frame.style.paddingTop = frame.style.paddingBottom = 3;
-            frame.AddToClassList("surface");
-            var inset = new VisualElement(); inset.style.paddingLeft = inset.style.paddingRight = inset.style.paddingTop = inset.style.paddingBottom = 2;
-             frame.Add(inset);
-            var label = Text(inset, "translation-warning-label", 7); label.style.whiteSpace = WhiteSpace.Normal; label.style.color = StyleKeyword.Null; label.style.letterSpacing = .14f; label.style.unityFontStyleAndWeight = FontStyle.Normal; label.style.unityTextOutlineWidth = 0; label.style.textShadow = new TextShadow(); label.style.minHeight = 47.68f;
-            root.Add(frame); document.rootVisualElement.Add(root); Layout();
         }
         private void Layout()
         {
@@ -135,6 +162,11 @@ namespace TimelessEchoes.UI.Toolkit
         private void Update() { if (IsOpen) Layout(); }
         public void Hide()
         {
+            ToolkitLocalization.Changed -= RefreshLocalizedText;
+            if (placeholderLocalized != null && !placeholderLocalized.IsEmpty)
+                placeholderLocalized.StringChanged -= SetPlaceholder;
+            placeholderLocalized = null;
+            statusKey = statusEnglish = null; statusArguments = Array.Empty<object>();
             foreach (var binding in bindings) binding.Dispose(); bindings.Clear();
             root?.RemoveFromHierarchy(); root = null; frame = null; input = null; status = null;
         }
@@ -142,5 +174,4 @@ namespace TimelessEchoes.UI.Toolkit
         private void OnDestroy() { if (panel) Destroy(panel); }
     }
 }
-
 

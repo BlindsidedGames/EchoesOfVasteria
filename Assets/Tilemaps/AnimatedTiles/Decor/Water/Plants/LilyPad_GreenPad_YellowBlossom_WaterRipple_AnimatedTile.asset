@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: LilyPad_GreenPad_YellowBlossom_WaterRipple_AnimatedTile
+  m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AnimatedTile
+  m_AnimatedSprites:
+  - {fileID: 9141908417654365696, guid: c1419075af1f4b945b9edeeb72ebcda8, type: 3}
+  - {fileID: -7530496319135175899, guid: c1419075af1f4b945b9edeeb72ebcda8, type: 3}
+  - {fileID: 2946074530984490212, guid: c1419075af1f4b945b9edeeb72ebcda8, type: 3}
+  - {fileID: 2617793221882257814, guid: c1419075af1f4b945b9edeeb72ebcda8, type: 3}
+  - {fileID: -7991332328903588398, guid: c1419075af1f4b945b9edeeb72ebcda8, type: 3}
+  - {fileID: 58742569031036039, guid: c1419075af1f4b945b9edeeb72ebcda8, type: 3}
+  - {fileID: -5470378922595658357, guid: c1419075af1f4b945b9edeeb72ebcda8, type: 3}
+  - {fileID: 5760201820540121251, guid: c1419075af1f4b945b9edeeb72ebcda8, type: 3}
+  m_MinSpeed: 3
+  m_MaxSpeed: 5
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 0

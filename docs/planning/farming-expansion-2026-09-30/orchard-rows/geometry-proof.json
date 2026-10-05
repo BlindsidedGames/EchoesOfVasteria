@@ -1,0 +1,344 @@
+{
+  "conceptual": true,
+  "rows": 2,
+  "columns": 2,
+  "treeCount": 4,
+  "horizontalSpacing": 5,
+  "verticalSpacing": 3.5,
+  "plantingPlotSize": [
+    2,
+    2
+  ],
+  "soilTiles": [
+    {
+      "treeAnchor": [
+        -61.0,
+        -14.5
+      ],
+      "position": [
+        -61.5,
+        -15.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_NE_AbsentCorners_NW_SE_SW_Variant15"
+    },
+    {
+      "treeAnchor": [
+        -61.0,
+        -14.5
+      ],
+      "position": [
+        -61.5,
+        -14.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_ES_AbsentCorners_NW_NE_SW_Variant01"
+    },
+    {
+      "treeAnchor": [
+        -61.0,
+        -14.5
+      ],
+      "position": [
+        -60.5,
+        -15.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_NW_AbsentCorners_NE_SE_SW_Variant17"
+    },
+    {
+      "treeAnchor": [
+        -61.0,
+        -14.5
+      ],
+      "position": [
+        -60.5,
+        -14.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_SW_AbsentCorners_NW_NE_SE_Variant03"
+    },
+    {
+      "treeAnchor": [
+        -56.0,
+        -14.5
+      ],
+      "position": [
+        -56.5,
+        -15.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_NE_AbsentCorners_NW_SE_SW_Variant15"
+    },
+    {
+      "treeAnchor": [
+        -56.0,
+        -14.5
+      ],
+      "position": [
+        -56.5,
+        -14.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_ES_AbsentCorners_NW_NE_SW_Variant01"
+    },
+    {
+      "treeAnchor": [
+        -56.0,
+        -14.5
+      ],
+      "position": [
+        -55.5,
+        -15.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_NW_AbsentCorners_NE_SE_SW_Variant17"
+    },
+    {
+      "treeAnchor": [
+        -56.0,
+        -14.5
+      ],
+      "position": [
+        -55.5,
+        -14.0
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_SW_AbsentCorners_NW_NE_SE_Variant03"
+    },
+    {
+      "treeAnchor": [
+        -61.0,
+        -18.0
+      ],
+      "position": [
+        -61.5,
+        -18.5
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_NE_AbsentCorners_NW_SE_SW_Variant15"
+    },
+    {
+      "treeAnchor": [
+        -61.0,
+        -18.0
+      ],
+      "position": [
+        -61.5,
+        -17.5
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_ES_AbsentCorners_NW_NE_SW_Variant01"
+    },
+    {
+      "treeAnchor": [
+        -61.0,
+        -18.0
+      ],
+      "position": [
+        -60.5,
+        -18.5
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_NW_AbsentCorners_NE_SE_SW_Variant17"
+    },
+    {
+      "treeAnchor": [
+        -61.0,
+        -18.0
+      ],
+      "position": [
+        -60.5,
+        -17.5
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_SW_AbsentCorners_NW_NE_SE_Variant03"
+    },
+    {
+      "treeAnchor": [
+        -56.0,
+        -18.0
+      ],
+      "position": [
+        -56.5,
+        -18.5
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_NE_AbsentCorners_NW_SE_SW_Variant15"
+    },
+    {
+      "treeAnchor": [
+        -56.0,
+        -18.0
+      ],
+      "position": [
+        -56.5,
+        -17.5
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_ES_AbsentCorners_NW_NE_SW_Variant01"
+    },
+    {
+      "treeAnchor": [
+        -56.0,
+        -18.0
+      ],
+      "position": [
+        -55.5,
+        -18.5
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_NW_AbsentCorners_NE_SE_SW_Variant17"
+    },
+    {
+      "treeAnchor": [
+        -56.0,
+        -18.0
+      ],
+      "position": [
+        -55.5,
+        -17.5
+      ],
+      "sprite": "Farmland_DryTanBorder_SoilJoin_SW_AbsentCorners_NW_NE_SE_Variant03"
+    }
+  ],
+  "plots": [
+    {
+      "anchor": [
+        -61.0,
+        -14.5
+      ],
+      "soilBoundsMin": [
+        -62.0,
+        -15.5,
+        -0.1
+      ],
+      "soilBoundsMax": [
+        -60.0,
+        -13.5,
+        0.1
+      ],
+      "stage": "FruitTree_Growth_YoungTree",
+      "spriteCanvasMin": [
+        -62.0,
+        -15.5,
+        -0.1
+      ],
+      "spriteCanvasMax": [
+        -60.0,
+        -11.5,
+        0.1
+      ]
+    },
+    {
+      "anchor": [
+        -56.0,
+        -14.5
+      ],
+      "soilBoundsMin": [
+        -57.0,
+        -15.5,
+        -0.1
+      ],
+      "soilBoundsMax": [
+        -55.0,
+        -13.5,
+        0.1
+      ],
+      "stage": "Apple_Tree_Fruiting_WholeTree",
+      "spriteCanvasMin": [
+        -57.0,
+        -15.5,
+        -0.1
+      ],
+      "spriteCanvasMax": [
+        -55.0,
+        -11.5,
+        0.1
+      ]
+    },
+    {
+      "anchor": [
+        -61.0,
+        -18.0
+      ],
+      "soilBoundsMin": [
+        -62.0,
+        -19.0,
+        -0.1
+      ],
+      "soilBoundsMax": [
+        -60.0,
+        -17.0,
+        0.1
+      ],
+      "stage": "FruitTree_Growth_SmallSapling",
+      "spriteCanvasMin": [
+        -62.0,
+        -19.0,
+        -0.1
+      ],
+      "spriteCanvasMax": [
+        -60.0,
+        -15.0,
+        0.1
+      ]
+    },
+    {
+      "anchor": [
+        -56.0,
+        -18.0
+      ],
+      "soilBoundsMin": [
+        -57.0,
+        -19.0,
+        -0.1
+      ],
+      "soilBoundsMax": [
+        -55.0,
+        -17.0,
+        0.1
+      ],
+      "stage": "FruitTree_Growth_MatureTree",
+      "spriteCanvasMin": [
+        -57.0,
+        -19.0,
+        -0.1
+      ],
+      "spriteCanvasMax": [
+        -55.0,
+        -15.0,
+        0.1
+      ]
+    }
+  ],
+  "columnGrassAisleWidth": 3,
+  "soilRowGrassGap": 1.5,
+  "matureVisibleRowClearance": 0.625,
+  "matureVisibleColumnClearance": 3.3125,
+  "matureVisibleClearanceFromMiddleFieldSouthFence": 0.4375,
+  "existingPathTileCountPreserved": 150,
+  "existingPathAisleAccessCells": [
+    [
+      -59.5,
+      -21.5,
+      0.0
+    ],
+    [
+      -58.5,
+      -21.5,
+      0.0
+    ],
+    [
+      -57.5,
+      -21.5,
+      0.0
+    ],
+    [
+      -59.5,
+      -20.5,
+      0.0
+    ],
+    [
+      -59.5,
+      -19.5,
+      0.0
+    ]
+  ],
+  "verifiedEntranceCorridorWidth": 1.5,
+  "aisleBlockers": [],
+  "cropRenderersPreserved": 60,
+  "allOriginalSpritePosesPreserved": true,
+  "sixCropBedsRetained": true,
+  "newPathCells": 0,
+  "newStandingTreeRemoval": 0,
+  "addedOrchardSoilTiles": 16,
+  "runtimeNavigationTested": false,
+  "successfulRenderLogs": [],
+  "mainDirty": false
+}

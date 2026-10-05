@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace TimelessEchoes.Gear
         [Tooltip("Optional global weight modifier for this rarity.")]
         public float globalWeightMultiplier = 1f;
 
-        public string GetName() => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
+        public string GetName() => ToolkitLocalization.Text("rarity." + name + ".name", string.IsNullOrWhiteSpace(displayName) ? name : displayName);
     }
 }
 

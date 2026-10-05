@@ -1,0 +1,7 @@
+{
+  "name": "Localization.Behaviour.Tests",
+  "references": ["TimelessEchoes.Runtime", "Unity.Localization", "Unity.Addressables", "Unity.ResourceManager"],
+  "includePlatforms": ["Editor"],
+  "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

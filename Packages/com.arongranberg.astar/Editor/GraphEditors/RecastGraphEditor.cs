@@ -561,7 +561,7 @@ namespace Pathfinding {
 				//Write vertices
 				for (int i = 0; i < vertices.Length; i++) {
 					var v = (Vector3)vertices[i];
-					sb.Append(string.Format("v {0} {1} {2}\n", -v.x, v.y, v.z));
+					sb.Append(string.Format(System.Globalization.CultureInfo.InvariantCulture, "v {0} {1} {2}\n", -v.x, v.y, v.z));
 				}
 
 				//Write triangles

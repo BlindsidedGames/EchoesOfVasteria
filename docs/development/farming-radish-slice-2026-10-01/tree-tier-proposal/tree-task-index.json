@@ -1,0 +1,346 @@
+[
+  {
+    "path": "Assets/Resources/Tasks/Woodcutting/Large Birch Tree.asset",
+    "guid": "936d408e4a462034db61d9e94a22a424",
+    "taskName": "Large Birch Tree",
+    "taskID": "8",
+    "requiredSkillLevel": "36",
+    "taskDuration": "7",
+    "minX": "500",
+    "maxX": "5000",
+    "enforceMaxDistance": "0",
+    "taskIcon": {
+      "path": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Birch_Tree.png",
+      "guid": "53248977f321e9648bbbe8718c39a315",
+      "fileID": 2630977764869979562,
+      "name": "Big_Birch_Tree_Standing_GroundShadow",
+      "rect": {
+        "x": 32.0,
+        "y": 0.0,
+        "width": 32.0,
+        "height": 80.0
+      }
+    },
+    "drops": [
+      {
+        "guid": "024c1162874b64e43be92b8892b40efb",
+        "resource": "Assets/Resources/Resource Items/Stick.asset",
+        "range": [
+          4,
+          10
+        ],
+        "weight": 1.0
+      },
+      {
+        "guid": "e8ace32c9cea7aa4aa202557d1f972ea",
+        "resource": "Assets/Resources/Resource Items/Log.asset",
+        "range": [
+          5,
+          12
+        ],
+        "weight": 1.0
+      }
+    ]
+  },
+  {
+    "path": "Assets/Resources/Tasks/Woodcutting/Large Oak Tree.asset",
+    "guid": "5b79a1d3e3b8c6049ac8306d32db9416",
+    "taskName": "Large Oak Tree",
+    "taskID": "5",
+    "requiredSkillLevel": "18",
+    "taskDuration": "6",
+    "minX": "100",
+    "maxX": "2500",
+    "enforceMaxDistance": "0",
+    "taskIcon": {
+      "path": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Oak_Tree.png",
+      "guid": "c79f924a676f900408ab47fe98ae9935",
+      "fileID": -6043950617988251759,
+      "name": "Big_Oak_Tree_Standing_GroundShadow",
+      "rect": {
+        "x": 64.0,
+        "y": 0.0,
+        "width": 64.0,
+        "height": 80.0
+      }
+    },
+    "drops": [
+      {
+        "guid": "024c1162874b64e43be92b8892b40efb",
+        "resource": "Assets/Resources/Resource Items/Stick.asset",
+        "range": [
+          3,
+          9
+        ],
+        "weight": 1.0
+      },
+      {
+        "guid": "e8ace32c9cea7aa4aa202557d1f972ea",
+        "resource": "Assets/Resources/Resource Items/Log.asset",
+        "range": [
+          3,
+          8
+        ],
+        "weight": 1.0
+      }
+    ]
+  },
+  {
+    "path": "Assets/Resources/Tasks/Woodcutting/Large Spruce Tree.asset",
+    "guid": "311095139adb56e4baedb88f0634fdc4",
+    "taskName": "Large Spruce Tree",
+    "taskID": "11",
+    "requiredSkillLevel": "86",
+    "taskDuration": "10",
+    "minX": "2500",
+    "maxX": "7500",
+    "enforceMaxDistance": "0",
+    "taskIcon": {
+      "path": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Spruce_tree.png",
+      "guid": "6dcc684ee8a4e9a428482ed2a78beb66",
+      "fileID": -2161423198996946198,
+      "name": "Big_Spruce_Tree_Standing_GroundShadow",
+      "rect": {
+        "x": 64.0,
+        "y": 0.0,
+        "width": 64.0,
+        "height": 80.0
+      }
+    },
+    "drops": [
+      {
+        "guid": "024c1162874b64e43be92b8892b40efb",
+        "resource": "Assets/Resources/Resource Items/Stick.asset",
+        "range": [
+          4,
+          15
+        ],
+        "weight": 1.0
+      },
+      {
+        "guid": "e8ace32c9cea7aa4aa202557d1f972ea",
+        "resource": "Assets/Resources/Resource Items/Log.asset",
+        "range": [
+          7,
+          22
+        ],
+        "weight": 1.0
+      }
+    ]
+  },
+  {
+    "path": "Assets/Resources/Tasks/Woodcutting/Large Tree.asset",
+    "guid": "be28fd76aeb073b499a5fe6d63225d6b",
+    "taskName": "Large Tree",
+    "taskID": "2",
+    "requiredSkillLevel": "6",
+    "taskDuration": "3",
+    "minX": "0",
+    "maxX": "500",
+    "enforceMaxDistance": "0",
+    "taskIcon": {
+      "path": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+      "guid": "b45d02bebb0bae34490e63de2e1440b9",
+      "fileID": 621266246945384593,
+      "name": "Big_Fruit_Tree_Standing_GroundShadow",
+      "rect": {
+        "x": 32.0,
+        "y": 0.0,
+        "width": 32.0,
+        "height": 64.0
+      }
+    },
+    "drops": [
+      {
+        "guid": "024c1162874b64e43be92b8892b40efb",
+        "resource": "Assets/Resources/Resource Items/Stick.asset",
+        "range": [
+          2,
+          8
+        ],
+        "weight": 1.0
+      },
+      {
+        "guid": "e8ace32c9cea7aa4aa202557d1f972ea",
+        "resource": "Assets/Resources/Resource Items/Log.asset",
+        "range": [
+          1,
+          5
+        ],
+        "weight": 1.0
+      }
+    ]
+  },
+  {
+    "path": "Assets/Resources/Tasks/Woodcutting/Medium Birch Tree.asset",
+    "guid": "b64ee94d97b7f3e4d9a2185969b31623",
+    "taskName": "Medium Birch Tree",
+    "taskID": "7",
+    "requiredSkillLevel": "31",
+    "taskDuration": "3",
+    "minX": "500",
+    "maxX": "5000",
+    "enforceMaxDistance": "0",
+    "taskIcon": {
+      "path": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Birch_Tree.png",
+      "guid": "ff597bf836f9fb24a9d6b5c4190007a7",
+      "fileID": -2044317885256534180,
+      "name": "Medium_Birch_Tree_Standing_GroundShadow",
+      "rect": {
+        "x": 32.0,
+        "y": 0.0,
+        "width": 32.0,
+        "height": 48.0
+      }
+    },
+    "drops": [
+      {
+        "guid": "024c1162874b64e43be92b8892b40efb",
+        "resource": "Assets/Resources/Resource Items/Stick.asset",
+        "range": [
+          1,
+          6
+        ],
+        "weight": 1.0
+      },
+      {
+        "guid": "e8ace32c9cea7aa4aa202557d1f972ea",
+        "resource": "Assets/Resources/Resource Items/Log.asset",
+        "range": [
+          2,
+          4
+        ],
+        "weight": 1.0
+      }
+    ]
+  },
+  {
+    "path": "Assets/Resources/Tasks/Woodcutting/Medium Oak Tree.asset",
+    "guid": "f47cc95a61027c549af94e61a3609e02",
+    "taskName": "Medium Oak Tree",
+    "taskID": "4",
+    "requiredSkillLevel": "13",
+    "taskDuration": "3",
+    "minX": "100",
+    "maxX": "2500",
+    "enforceMaxDistance": "0",
+    "taskIcon": {
+      "path": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Oak_Tree.png",
+      "guid": "974fe87578622624abd01a4856b266ef",
+      "fileID": 6013379132409528037,
+      "name": "Medium_Oak_Tree_Standing_GroundShadow",
+      "rect": {
+        "x": 32.0,
+        "y": 0.0,
+        "width": 32.0,
+        "height": 48.0
+      }
+    },
+    "drops": [
+      {
+        "guid": "024c1162874b64e43be92b8892b40efb",
+        "resource": "Assets/Resources/Resource Items/Stick.asset",
+        "range": [
+          1,
+          5
+        ],
+        "weight": 1.0
+      },
+      {
+        "guid": "e8ace32c9cea7aa4aa202557d1f972ea",
+        "resource": "Assets/Resources/Resource Items/Log.asset",
+        "range": [
+          1,
+          3
+        ],
+        "weight": 1.0
+      }
+    ]
+  },
+  {
+    "path": "Assets/Resources/Tasks/Woodcutting/Medium Spruce Tree.asset",
+    "guid": "30abf53f32318cf418c3f6120c389b1b",
+    "taskName": "Medium Spruce Tree",
+    "taskID": "10",
+    "requiredSkillLevel": "81",
+    "taskDuration": "4",
+    "minX": "2500",
+    "maxX": "7500",
+    "enforceMaxDistance": "0",
+    "taskIcon": {
+      "path": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Spruce_Tree.png",
+      "guid": "70c5d1de0a66bab45bd496acee38f43e",
+      "fileID": -3194247907673141736,
+      "name": "Medium_Spruce_Tree_Standing_GroundShadow",
+      "rect": {
+        "x": 32.0,
+        "y": 0.0,
+        "width": 32.0,
+        "height": 48.0
+      }
+    },
+    "drops": [
+      {
+        "guid": "024c1162874b64e43be92b8892b40efb",
+        "resource": "Assets/Resources/Resource Items/Stick.asset",
+        "range": [
+          1,
+          7
+        ],
+        "weight": 1.0
+      },
+      {
+        "guid": "e8ace32c9cea7aa4aa202557d1f972ea",
+        "resource": "Assets/Resources/Resource Items/Log.asset",
+        "range": [
+          4,
+          8
+        ],
+        "weight": 1.0
+      }
+    ]
+  },
+  {
+    "path": "Assets/Resources/Tasks/Woodcutting/Medium Tree.asset",
+    "guid": "8d93789f09a37544e9dda9870a26098c",
+    "taskName": "Medium Tree",
+    "taskID": "1",
+    "requiredSkillLevel": "1",
+    "taskDuration": "2",
+    "minX": "0",
+    "maxX": "500",
+    "enforceMaxDistance": "0",
+    "taskIcon": {
+      "path": "Assets/Art/Packs/Cute_Fantasy/Trees/Medium_Fruit_Tree.png",
+      "guid": "25ec107e317209041985b70a5dc05d93",
+      "fileID": -6213476910104009479,
+      "name": "Medium_Fruit_Tree_Standing_GroundShadow",
+      "rect": {
+        "x": 32.0,
+        "y": 0.0,
+        "width": 32.0,
+        "height": 64.0
+      }
+    },
+    "drops": [
+      {
+        "guid": "024c1162874b64e43be92b8892b40efb",
+        "resource": "Assets/Resources/Resource Items/Stick.asset",
+        "range": [
+          1,
+          3
+        ],
+        "weight": 1.0
+      },
+      {
+        "guid": "e8ace32c9cea7aa4aa202557d1f972ea",
+        "resource": "Assets/Resources/Resource Items/Log.asset",
+        "range": [
+          1,
+          2
+        ],
+        "weight": 1.0
+      }
+    ]
+  }
+]

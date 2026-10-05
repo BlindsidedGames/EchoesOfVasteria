@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Localization-String-Tables-Deutsch (de)
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Localization-String-Tables-Deutsch (de)
+  m_GUID: b41117b36844e48588baaf10e1e3a97d
+  m_SerializeEntries:
+  - m_GUID: 4dcf766456b8d4f758e61df407d83ad3
+    m_Address: Wiki_de
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-de
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7cf90e9ab8da540788830bf5268256f7
+    m_Address: TownUI_de
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-de
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aa588289227f04eaabd0a6ad9e38635d
+    m_Address: Quests_de
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-de
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 1
+  m_Settings: {fileID: 11400000, guid: 28b1847c10109ba4fbdcda4cdd81fd8c, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: ecaed91fe34de4575b5f567ca87c6bc1, type: 2}
+    - {fileID: 11400000, guid: 373ea86cb98d940499c78fc035655c1c, type: 2}
+    - {fileID: 11400000, guid: 63d99a9a13d804b79b666e1dd4666373, type: 2}
+    m_SchemaDisplayOrder:
+    - Localization-String-Tables-Deutsch (de)_BundledAssetGroupSchema
+    - Localization-String-Tables-Deutsch (de)_ContentUpdateGroupSchema
+    - Localization-String-Tables-Deutsch (de)_LocalizationGroupSchema
+  m_IncludeInBuild: 1
+  m_IncludeInBuildMigrated: 1

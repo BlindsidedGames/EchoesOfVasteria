@@ -11,14 +11,14 @@ namespace TimelessEchoes.UI.Toolkit
         public static (string left, string right) General(GameplayStatTracker stats, bool killScaling)
         {
             string Number(double value) => CalcUtils.FormatNumber(value, true);
-            return ($"Steps Taken: {Number(stats.DistanceTravelled)}\n{(killScaling ? "Most Kills: " + Number(stats.MostKillsSingleRun) : "Longest Run: " + Number(stats.LongestRun))}\nTasks Completed: {Number(stats.TasksCompleted)}\nResources Gathered: {Number(stats.TotalResourcesGathered)}\nReaping Distance: {stats.MaxRunDistance:N0}",
-                $"Kills: {Number(stats.TotalKills)}\nDamage Dealt: {Number(stats.DamageDealt)}\nDeaths: {Number(stats.Deaths)}\nDamage Taken: {Number(stats.DamageTaken)}\nTimes Reaped: {stats.TimesReaped}");
+            return ($"{ToolkitLocalization.Text("statistics.steps", "Steps Taken")}: {Number(stats.DistanceTravelled)}\n{(killScaling ? ToolkitLocalization.Text("statistics.most-kills", "Most Kills") + ": " + Number(stats.MostKillsSingleRun) : ToolkitLocalization.Text("statistics.longest-run", "Longest Run") + ": " + Number(stats.LongestRun))}\n{ToolkitLocalization.Text("statistics.tasks-completed", "Tasks Completed")}: {Number(stats.TasksCompleted)}\n{ToolkitLocalization.Text("statistics.resources-gathered", "Resources Gathered")}: {Number(stats.TotalResourcesGathered)}\n{ToolkitLocalization.Text("statistics.reaping-distance", "Reaping Distance")}: {stats.MaxRunDistance:N0}",
+                $"{ToolkitLocalization.Text("statistics.kills", "Kills")}: {Number(stats.TotalKills)}\n{ToolkitLocalization.Text("statistics.damage-dealt", "Damage Dealt")}: {Number(stats.DamageDealt)}\n{ToolkitLocalization.Text("statistics.deaths", "Deaths")}: {Number(stats.Deaths)}\n{ToolkitLocalization.Text("statistics.damage-taken", "Damage Taken")}: {Number(stats.DamageTaken)}\n{ToolkitLocalization.Text("statistics.times-reaped", "Times Reaped")}: {stats.TimesReaped}");
         }
         public static (string left, string right) Map(GameData.MapStatistics stats, bool killScaling)
         {
             string Number(double value) => CalcUtils.FormatNumber(value, true);
-            return ($"Steps Taken: {Number(stats.StepsAsDouble)}\n{(killScaling ? "Most Kills: " + Number(stats.MostKillsSingleRun) : "Longest Run: " + Number(stats.LongestTrekAsDouble))}\nTasks Completed: {Number(stats.TasksCompleted)}\nResources Gathered: {Number(stats.ResourcesGathered)}",
-                $"Kills: {Number(stats.Kills)}\nDamage Dealt: {Number(stats.DamageDealtAsDouble)}\nDeaths: {Number(stats.Deaths)}\nDamage Taken: {Number(stats.DamageTakenAsDouble)}");
+            return ($"{ToolkitLocalization.Text("statistics.steps", "Steps Taken")}: {Number(stats.StepsAsDouble)}\n{(killScaling ? ToolkitLocalization.Text("statistics.most-kills", "Most Kills") + ": " + Number(stats.MostKillsSingleRun) : ToolkitLocalization.Text("statistics.longest-run", "Longest Run") + ": " + Number(stats.LongestTrekAsDouble))}\n{ToolkitLocalization.Text("statistics.tasks-completed", "Tasks Completed")}: {Number(stats.TasksCompleted)}\n{ToolkitLocalization.Text("statistics.resources-gathered", "Resources Gathered")}: {Number(stats.ResourcesGathered)}",
+                $"{ToolkitLocalization.Text("statistics.kills", "Kills")}: {Number(stats.Kills)}\n{ToolkitLocalization.Text("statistics.damage-dealt", "Damage Dealt")}: {Number(stats.DamageDealtAsDouble)}\n{ToolkitLocalization.Text("statistics.deaths", "Deaths")}: {Number(stats.Deaths)}\n{ToolkitLocalization.Text("statistics.damage-taken", "Damage Taken")}: {Number(stats.DamageTakenAsDouble)}");
         }
         public static double Value(GameData.RunRecord run, RunStatsPanelUI.GraphMode mode) => mode switch
         {
@@ -35,11 +35,11 @@ namespace TimelessEchoes.UI.Toolkit
         }
         public static string RunDetails(GameData.RunRecord run)
         {
-            var resources = $"Resources: {run.ResourcesCollected:N0}";
+            var resources = ToolkitLocalization.Text("statistics.run-resources", "Resources: {0:N0}", run.ResourcesCollected);
             var bonus = Mathf.FloorToInt((float)run.BonusResourcesCollected);
             if (bonus >= 1) resources += $" (+{bonus:N0})";
-            var status = run.Abandoned ? "Abandoned" : run.Reaped ? "Reaped" : run.Died ? "Died" : "Retreated";
-            return $"Run {run.RunNumber}\nMap: {(string.IsNullOrEmpty(run.MapType) ? "Unknown" : run.MapType)}\nDuration: {CalcUtils.FormatTime(run.Duration)}\nDistance: {run.Distance:N0}\nTasks: {run.TasksCompleted:N0}\n{resources}\nKills: {run.EnemiesKilled:N0}\nDamage Dealt: {run.DamageDealtAsDouble:N0}\nDamage Taken: {run.DamageTakenAsDouble:N0}\nStatus: {status}";
+            var status = run.Abandoned ? ToolkitLocalization.Text("run.outcome-abandoned", "Abandoned") : run.Reaped ? ToolkitLocalization.Text("run.outcome-reaped", "Reaped") : run.Died ? ToolkitLocalization.Text("run.outcome-died", "Died") : ToolkitLocalization.Text("run.outcome-retreated", "Retreated");
+            return ToolkitLocalization.Text("statistics.run-details", "Run {0}\nMap: {1}\nDuration: {2}\nDistance: {3:N0}\nTasks: {4:N0}\n{5}\nKills: {6:N0}\nDamage Dealt: {7:N0}\nDamage Taken: {8:N0}\nStatus: {9}", run.RunNumber, string.IsNullOrEmpty(run.MapType) ? ToolkitLocalization.Text("common.unknown", "Unknown") : ToolkitLocalization.Text("map." + run.MapType, run.MapType), CalcUtils.FormatTime(run.Duration), run.Distance, run.TasksCompleted, resources, run.EnemiesKilled, run.DamageDealtAsDouble, run.DamageTakenAsDouble, status);
         }
     }
 }

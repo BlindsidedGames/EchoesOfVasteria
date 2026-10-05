@@ -3,6 +3,7 @@ using Unity.Profiling;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
 namespace Pathfinding.Collections {
@@ -46,12 +47,11 @@ namespace Pathfinding.Collections {
 		/// Creates a new UnsafeSpan from a C# array.
 		/// The array is pinned to ensure it does not move while the span is in use.
 		///
-		/// You must unpin the pinned memory using UnsafeUtility.ReleaseGCObject when you are done with the span.
+		/// You must unpin the pinned memory using GCHandle.Free when you are done with the span.
 		/// </summary>
-		public unsafe UnsafeSpan(T[] data, out ulong gcHandle) {
-			unsafe {
-				this.ptr = (T*)UnsafeUtility.PinGCArrayAndGetDataAddress(data, out gcHandle);
-			}
+		public unsafe UnsafeSpan(T[] data, out GCHandle gcHandle) {
+			gcHandle = GCHandle.Alloc(data, GCHandleType.Pinned);
+			this.ptr = (T*)gcHandle.AddrOfPinnedObject();
 			this.length = (uint)data.Length;
 			this.Allocator = Unity.Collections.Allocator.None;
 		}
@@ -60,12 +60,11 @@ namespace Pathfinding.Collections {
 		/// Creates a new UnsafeSpan from a 2D C# array.
 		/// The array is pinned to ensure it does not move while the span is in use.
 		///
-		/// You must unpin the pinned memory using UnsafeUtility.ReleaseGCObject when you are done with the span.
+		/// You must unpin the pinned memory using GCHandle.Free when you are done with the span.
 		/// </summary>
-		public unsafe UnsafeSpan(T[,] data, out ulong gcHandle) {
-			unsafe {
-				this.ptr = (T*)UnsafeUtility.PinGCArrayAndGetDataAddress(data, out gcHandle);
-			}
+		public unsafe UnsafeSpan(T[,] data, out GCHandle gcHandle) {
+			gcHandle = GCHandle.Alloc(data, GCHandleType.Pinned);
+			this.ptr = (T*)gcHandle.AddrOfPinnedObject();
 			this.length = (uint)data.Length;
 			this.Allocator = Unity.Collections.Allocator.None;
 		}
@@ -195,6 +194,17 @@ namespace Pathfinding.Collections {
 			unsafe {
 				// If length is zero, the pointers may be null, which is technically undefined behavior (but in practice usually fine)
 				if (length > 0) UnsafeUtility.MemCpy(other.ptr, ptr, (long)sizeof(T) * (long)length);
+			}
+		}
+
+		/// <summary>
+		/// Copies the memory of this span to another span, handling overlapping memory correctly.
+		/// The other span must be large enough to hold the contents of this span.
+		/// </summary>
+		public void CopyToOverlapping (UnsafeSpan<T> other) {
+			if (other.length < length) throw new System.ArgumentException();
+			unsafe {
+				if (length > 0) UnsafeUtility.MemMove(other.ptr, ptr, (long)sizeof(T) * (long)length);
 			}
 		}
 
@@ -332,9 +342,9 @@ namespace Pathfinding.Collections {
 			if (array.Length > span.Length) throw new System.InvalidOperationException();
 			if (array.Length == 0) return;
 			unsafe {
-				var ptr = UnsafeUtility.PinGCArrayAndGetDataAddress(array, out var gcHandle);
-				UnsafeUtility.MemCpy(span.ptr, ptr, (long)sizeof(T) * (long)array.Length);
-				UnsafeUtility.ReleaseGCObject(gcHandle);
+				fixed (T* ptr = array) {
+					UnsafeUtility.MemCpy(span.ptr, ptr, (long)sizeof(T) * (long)array.Length);
+				}
 			}
 		}
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEngine;
 
 namespace Pathfinding.Drawing {
@@ -35,6 +36,8 @@ namespace Pathfinding.Drawing {
 					EditorGUILayout.Separator();
 					EditorGUILayout.Slider(settings.FindProperty("settings.curveResolution"), 0.1f, 3f, new GUIContent("Curve resolution", "Higher values will make curves smoother, but also a bit slower to draw."));
 
+					EditorGUILayout.Separator();
+
 					settings.ApplyModifiedProperties();
 					if (GUILayout.Button("Reset to default")) {
 						var def = DrawingSettings.DefaultSettings;
@@ -48,13 +51,88 @@ namespace Pathfinding.Drawing {
 						current.settings.curveResolution = def.curveResolution;
 						EditorUtility.SetDirty(current);
 					}
+
+					EditorGUILayout.Separator();
+					EditorGUILayout.LabelField("Builds", EditorStyles.boldLabel);
+					DrawExcludeFromBuildsToggle();
 				},
 
 				// Populate the search keywords to enable smart search filtering and label highlighting:
-				keywords = new HashSet<string>(new[] { "Drawing", "Wire", "aline", "opacity" })
+				keywords = new HashSet<string>(new[] { "Drawing", "Wire", "aline", "opacity", "build", "exclude", "strip" })
 			};
 
 			return provider;
+		}
+
+		const string EXCLUDE_DEFINE = "ALINE_EXCLUDED_IN_BUILD";
+
+		/// <summary>
+		/// The value the user last requested, or null if the toggle already matches the compiled state.
+		///
+		/// Toggling the define only takes effect after Unity has recompiled all scripts, which takes several seconds.
+		/// The domain reload ending that recompilation resets this to null, which is exactly when the request has taken effect.
+		/// </summary>
+		static bool? pendingExclude;
+
+		static void DrawExcludeFromBuildsToggle () {
+#if ALINE_EXCLUDED_IN_BUILD
+			bool excluded = true;
+#else
+			bool excluded = false;
+#endif
+
+			var waiting = pendingExclude.HasValue || EditorApplication.isCompiling;
+
+			var label = new GUIContent("Exclude from builds", "Removes drawing code from standalone builds. Drawing still works in the editor and in play mode.");
+			bool newValue;
+			// Disabled while waiting, since a second toggle would show a state that no recompilation is going to produce.
+			using (new EditorGUI.DisabledScope(waiting)) {
+				newValue = EditorGUILayout.Toggle(label, pendingExclude ?? excluded);
+			}
+
+			if (waiting) {
+				EditorGUILayout.HelpBox("Recompiling...", MessageType.Info);
+			} else if (excluded) {
+				EditorGUILayout.HelpBox("Drawing code is removed from standalone builds. Draw.ingame will not render anything in a build.", MessageType.Info);
+			}
+
+			if (!waiting && newValue != excluded) {
+				pendingExclude = newValue;
+				SetDefineForAllBuildTargets(EXCLUDE_DEFINE, newValue);
+			}
+		}
+
+		/// <summary>
+		/// Adds or removes a scripting define symbol for every build target group.
+		///
+		/// Applying it to all groups avoids the define being set for one platform but not another,
+		/// which would silently change what a build contains depending on the active platform.
+		/// </summary>
+		static void SetDefineForAllBuildTargets (string define, bool enable) {
+			foreach (BuildTargetGroup group in System.Enum.GetValues(typeof(BuildTargetGroup))) {
+				if (group == BuildTargetGroup.Unknown) continue;
+
+				// Unity throws for build target groups it has deprecated, and there is no API to enumerate only the supported ones.
+				var field = typeof(BuildTargetGroup).GetField(group.ToString());
+				if (field == null || field.IsDefined(typeof(System.ObsoleteAttribute), false)) continue;
+
+				string[] symbols;
+				try {
+					PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(group), out symbols);
+				} catch (System.Exception) {
+					continue;
+				}
+
+				var parts = new List<string>(symbols);
+				parts.RemoveAll(s => s.Trim().Length == 0);
+				var contains = parts.Contains(define);
+				if (enable == contains) continue;
+
+				if (enable) parts.Add(define);
+				else parts.RemoveAll(s => s == define);
+
+				PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(group), parts.ToArray());
+			}
 		}
 	}
 }

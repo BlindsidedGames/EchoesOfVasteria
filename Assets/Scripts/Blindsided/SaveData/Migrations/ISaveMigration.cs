@@ -31,5 +31,16 @@ namespace Blindsided.SaveData.Migrations
         /// </summary>
         void Apply(GameData data);
     }
-}
 
+    /// <summary>
+    /// Schema projections which consume legacy fields only after historical version migrations
+    /// have read them. These still run on the same detached candidate before publication.
+    /// </summary>
+    internal interface IPostVersionSaveMigration : ISaveMigration { }
+
+    /// <summary>A current-schema container repair may still be needed after its first receipt.</summary>
+    internal interface IConditionalRepairSaveMigration : ISaveMigration
+    {
+        bool NeedsRepair(GameData data);
+    }
+}

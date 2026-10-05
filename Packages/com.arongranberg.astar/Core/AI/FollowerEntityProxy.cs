@@ -68,10 +68,8 @@ namespace Pathfinding.ECS {
 		internal static EntityAccess<MovementControl> movementControlAccessRW = new EntityAccess<MovementControl>(false);
 		internal static EntityAccess<MovementStatistics> movementStatisticsAccessRW = new EntityAccess<MovementStatistics>(false);
 		internal static EntityAccess<MovementStatistics> movementStatisticsAccessRO = new EntityAccess<MovementStatistics>(true);
-		internal static ManagedEntityAccess<ManagedState> managedStateAccessRO = new ManagedEntityAccess<ManagedState>(true);
-		internal static ManagedEntityAccess<ManagedState> managedStateAccessRW = new ManagedEntityAccess<ManagedState>(false);
-		internal static ManagedEntityAccess<ManagedSettings> managedSettingsAccessRO = new ManagedEntityAccess<ManagedSettings>(true);
-		internal static ManagedEntityAccess<ManagedSettings> managedSettingsAccessRW = new ManagedEntityAccess<ManagedSettings>(false);
+		internal static AgentManagedAccess managedAccessRO = new AgentManagedAccess(true);
+		internal static AgentManagedAccess managedAccessRW = new AgentManagedAccess(false);
 		internal static EntityAccess<ECS.AutoRepathPolicy> autoRepathPolicyRW = new EntityAccess<ECS.AutoRepathPolicy>(false);
 		internal static EntityAccess<LocalTransform> localTransformAccessRO = new EntityAccess<LocalTransform>(true);
 		internal static EntityAccess<LocalTransform> localTransformAccessRW = new EntityAccess<LocalTransform>(false);
@@ -151,7 +149,7 @@ namespace Pathfinding.ECS {
 			get {
 				// Complete any job dependencies
 				// Need RW because this getter has a ref return.
-				if (entityStorageCache.GetComponentData(world, entity, ref managedSettingsAccessRW, out var managedSettings)) {
+				if (entityStorageCache.GetManagedSettings(world, entity, ref managedAccessRW, out var managedSettings)) {
 					return ref managedSettings.pathfindingSettings;
 				} else {
 					throw new EntityDoesNotExistException();
@@ -188,7 +186,7 @@ namespace Pathfinding.ECS {
 			set {
 				if (entityStorageCache.Update(World.DefaultGameObjectInjectionWorld, entity, out var entityManager, out var storage)) {
 					movementStateAccessRW.Update(entityManager);
-					managedStateAccessRW.Update(entityManager);
+					managedAccessRW.Update(entityManager);
 					agentCylinderShapeAccessRO.Update(entityManager);
 					movementSettingsAccessRO.Update(entityManager);
 					destinationPointAccessRO.Update(entityManager);
@@ -196,13 +194,15 @@ namespace Pathfinding.ECS {
 					localTransformAccessRW.Update(entityManager);
 					readyToTraverseOffMeshLinkRW.Update(entityManager);
 					autoRepathPolicyRW.Update(entityManager);
+					agentOffMeshLinkTraversalRO.Update(entityManager);
 
 					ref var localTransform = ref localTransformAccessRW[storage];
 					localTransform.Position = value;
 					ref var movementState = ref movementStateAccessRW[storage];
 					movementState.positionOffset = float3.zero;
-					var managedState = managedStateAccessRW[storage];
-					if (managedState.pathTracer.hasPath) {
+					var managedState = managedAccessRW.State(entity, storage);
+					// See the invariant in #SetDestination for why an agent on an off-mesh link is not repaired here.
+					if (managedState.pathTracer.hasPath && !agentOffMeshLinkTraversalRO.HasComponent(storage)) {
 						Profiler.BeginSample("RepairStart");
 						ref var movementPlane = ref movementPlaneAccessRO[storage];
 						var oldVersion = managedState.pathTracer.version;
@@ -250,7 +250,8 @@ namespace Pathfinding.ECS {
 				if (entityStorageCache.Update(World.DefaultGameObjectInjectionWorld, entity, out var entityManager, out var storage) && entityManager.HasComponent<AgentOffMeshLinkTraversal>(entity)) {
 					agentOffMeshLinkTraversalRO.Update(entityManager);
 					var linkTraversal = agentOffMeshLinkTraversalRO[storage];
-					var linkTraversalManaged = entityManager.GetComponentData<ManagedAgentOffMeshLinkTraversal>(entity);
+					managedAccessRO.Update(entityManager);
+					var linkTraversalManaged = managedAccessRO.LinkTraversal(entity, storage);
 					return new OffMeshLinks.OffMeshLinkTracer(linkTraversalManaged.context.concreteLink, linkTraversal.relativeStart, linkTraversal.relativeEnd, linkTraversal.isReverse);
 				} else {
 					return default;
@@ -264,7 +265,7 @@ namespace Pathfinding.ECS {
 				var l = offMeshLink;
 				if (l.link != null) return l;
 
-				if (entityStorageCache.GetComponentData(world, entity, ref managedStateAccessRO, out var managedState)) {
+				if (entityStorageCache.GetManagedState(world, entity, ref managedAccessRO, out var managedState)) {
 					if (managedState.pathTracer.isNextPartValidLink) {
 						return managedState.pathTracer.GetLinkInfo(1);
 					}
@@ -275,19 +276,33 @@ namespace Pathfinding.ECS {
 
 		/// <summary>\copydocref{FollowerEntity.onTraverseOffMeshLink}</summary>
 		public IOffMeshLinkHandler onTraverseOffMeshLink {
-			get => entityStorageCache.GetComponentData(world, entity, ref managedSettingsAccessRO, out var managedSettings) ? managedSettings.onTraverseOffMeshLink : null;
+			get => entityStorageCache.GetManagedSettings(world, entity, ref managedAccessRO, out var managedSettings) ? managedSettings.onTraverseOffMeshLink : null;
 			set {
 				// Complete any job dependencies
-				if (entityStorageCache.GetComponentData(world, entity, ref managedSettingsAccessRO, out var managedSettings)) {
+				if (entityStorageCache.GetManagedSettings(world, entity, ref managedAccessRO, out var managedSettings)) {
 					managedSettings.onTraverseOffMeshLink = value;
 				}
 			}
 		}
 
+		/// <summary>
+		/// Runtime state for this agent that requires managed types, such as its current path.
+		///
+		/// This is not a component. It lives in a storage array that the agent refers to by index, because
+		/// the Entities package is removing class-based IComponentData.
+		///
+		/// Returns: Null if the entity does not exist.
+		/// Throws: System.InvalidOperationException If this entity is a clone whose managed data has not been
+		/// repaired yet. See <see cref="AgentManagedRef"/>.
+		/// </summary>
+		public ManagedState managedState {
+			get => entityStorageCache.GetManagedState(world, entity, ref managedAccessRO, out var value) ? value : null;
+		}
+
 		/// <summary>\copydocref{FollowerEntity.currentNode}</summary>
 		public GraphNode currentNode {
 			get {
-				if (entityStorageCache.GetComponentData(world, entity, ref managedStateAccessRO, out var managedState)) {
+				if (entityStorageCache.GetManagedState(world, entity, ref managedAccessRO, out var managedState)) {
 					var node = managedState.pathTracer.startNode;
 					if (node == null || node.Destroyed) return null;
 					return node;
@@ -425,8 +440,8 @@ namespace Pathfinding.ECS {
 				if (!entityStorageCache.Update(World.DefaultGameObjectInjectionWorld, entity, out var entityManager, out var storage)) return float.PositiveInfinity;
 
 				movementStateAccessRO.Update(entityManager);
-				managedStateAccessRO.Update(entityManager);
-				var managedState = managedStateAccessRO[storage];
+				managedAccessRO.Update(entityManager);
+				var managedState = managedAccessRO.State(entity, storage);
 				// TODO: Should this perhaps only check if the start/end points are stale, and ignore the case when the graph is updated and some nodes are destroyed?
 				if (managedState.pathTracer.hasPath && !managedState.pathTracer.isStale) {
 					ref var movementState = ref movementStateAccessRO[storage];
@@ -486,8 +501,8 @@ namespace Pathfinding.ECS {
 					if (agentIndex.TryGetIndex(ref simulator.simulationData, out var index)) {
 						var effectivelyReachedDestination = simulator.outputData.effectivelyReachedDestination[index];
 						if (effectivelyReachedDestination == ReachedEndOfPath.Reached) {
-							managedStateAccessRO.Update(entityManager);
-							var managedState = managedStateAccessRO[entityManager.GetStorageInfo(entity)];
+							managedAccessRO.Update(entityManager);
+							var managedState = managedAccessRO.State(entity, entityManager.GetStorageInfo(entity));
 
 							// Check if the RVO simulator state is roughly in sync with the path tracer
 							var rvoEndOfPath = (Vector3)simulator.simulationData.endOfPath[index];
@@ -510,7 +525,7 @@ namespace Pathfinding.ECS {
 		/// <summary>\copydocref{FollowerEntity.endOfPath}</summary>
 		public Vector3 endOfPath {
 			get {
-				if (entityStorageCache.GetComponentData(world, entity, ref managedStateAccessRO, out var managedState)) {
+				if (entityStorageCache.GetManagedState(world, entity, ref managedAccessRO, out var managedState)) {
 					if (managedState.pathTracer.hasPath) {
 						return managedState.pathTracer.endPoint;
 					} else {
@@ -538,7 +553,7 @@ namespace Pathfinding.ECS {
 			AssertEntityExists();
 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 			movementStateAccessRW.Update(entityManager);
-			managedStateAccessRW.Update(entityManager);
+			managedAccessRW.Update(entityManager);
 			agentCylinderShapeAccessRO.Update(entityManager);
 			movementSettingsAccessRO.Update(entityManager);
 			localTransformAccessRO.Update(entityManager);
@@ -546,6 +561,7 @@ namespace Pathfinding.ECS {
 			destinationPointAccessRW.Update(entityManager);
 			movementPlaneAccessRO.Update(entityManager);
 			readyToTraverseOffMeshLinkRW.Update(entityManager);
+			agentOffMeshLinkTraversalRO.Update(entityManager);
 
 			var storage = entityManager.GetStorageInfo(entity);
 			destinationPointAccessRW[storage] = new DestinationPoint {
@@ -553,11 +569,14 @@ namespace Pathfinding.ECS {
 				facingDirection = facingDirection,
 			};
 
-			var managedState = managedStateAccessRW[storage];
+			var managedState = managedAccessRW.State(entity, storage);
 
 			// If we already have a path, we try to repair it immediately.
 			// This ensures that the #reachedDestination and #reachedEndOfPath flags are as up to date as possible.
-			if (managedState.pathTracer.hasPath) {
+			//
+			// Invariant: the path is never repaired while the agent is traversing an off-mesh link. The agent is
+			// off the navmesh for the duration of the link, so a repair from its current position is meaningless. The off-mesh link code also assumes the path stays unchanged, as it will want to remove the link parts once it's done with traversing the link.
+			if (managedState.pathTracer.hasPath && !agentOffMeshLinkTraversalRO.HasComponent(storage)) {
 				Profiler.BeginSample("RepairEnd");
 				ref var movementPlane = ref movementPlaneAccessRO[storage];
 				managedState.pathTracer.UpdateEnd(destination, PathTracer.RepairQuality.High, movementPlane.value);
@@ -629,7 +648,7 @@ namespace Pathfinding.ECS {
 		/// <summary>\copydocref{FollowerEntity.simulateMovement}</summary>
 		public bool simulateMovement {
 			get => entityExists && world.EntityManager.HasComponent<SimulateMovement>(entity);
-			set => ToggleComponent<SimulateMovement>(world, entity, value, true);
+			set => ToggleComponent<SimulateMovement>(world, entity, value, throwIfMissing: false);
 		}
 
 		/// <summary>\copydocref{FollowerEntity.movementPlane}</summary>
@@ -639,12 +658,12 @@ namespace Pathfinding.ECS {
 		public bool enableGravity {
 			get => entityExists && world.EntityManager.IsComponentEnabled<GravityState>(entity);
 			set {
-				ToggleComponentEnabled<GravityState>(world, entity, value, false);
+				ToggleComponentEnabled<GravityState>(world, entity, value, throwIfMissing: false);
 			}
 		}
 
 		/// <summary>
-		/// \copydocref{ManagedState.enableLocalAvoidance}
+		/// \copydocref{FollowerEntity.enableLocalAvoidance}
 		///
 		/// Note: Setting this property cannot be done via this proxy. Instead, you must add or remove the <see cref="RVOAgent"/> component from the entity.
 		///
@@ -664,7 +683,7 @@ namespace Pathfinding.ECS {
 		public bool updatePosition {
 			get => entityExists && world.EntityManager.HasComponent<SyncPositionWithTransform>(entity);
 			set {
-				ToggleComponent<SyncPositionWithTransform>(world, entity, value, false);
+				ToggleComponent<SyncPositionWithTransform>(world, entity, value, throwIfMissing: false);
 			}
 		}
 
@@ -673,7 +692,7 @@ namespace Pathfinding.ECS {
 		public bool updateRotation {
 			get => entityExists && world.EntityManager.HasComponent<SyncRotationWithTransform>(entity);
 			set {
-				ToggleComponent<SyncRotationWithTransform>(world, entity, value, false);
+				ToggleComponent<SyncRotationWithTransform>(world, entity, value, throwIfMissing: false);
 			}
 		}
 
@@ -681,18 +700,18 @@ namespace Pathfinding.ECS {
 		public OrientationMode orientation {
 			get => entityExists && world.EntityManager.HasComponent<OrientationYAxisForward>(entity) ? OrientationMode.YAxisForward : OrientationMode.ZAxisForward;
 			set {
-				ToggleComponent<OrientationYAxisForward>(world, entity, value == OrientationMode.YAxisForward, false);
+				ToggleComponent<OrientationYAxisForward>(world, entity, value == OrientationMode.YAxisForward, throwIfMissing: false);
 			}
 		}
 
 		/// <summary>\copydocref{FollowerEntity.hasPath}</summary>
 		public bool hasPath {
-			get => entityStorageCache.GetComponentData(world, entity, ref managedStateAccessRO, out var managedState) && !managedState.pathTracer.isStale;
+			get => entityStorageCache.GetManagedState(world, entity, ref managedAccessRO, out var managedState) && !managedState.pathTracer.isStale;
 		}
 
 		/// <summary>\copydocref{FollowerEntity.pathPending}</summary>
 		public bool pathPending {
-			get => entityStorageCache.GetComponentData(world, entity, ref managedStateAccessRO, out var managedState) && managedState.pendingPath != null;
+			get => entityStorageCache.GetManagedState(world, entity, ref managedAccessRO, out var managedState) && managedState.pendingPath != null;
 		}
 
 		/// <summary>\copydocref{FollowerEntity.isStopped}</summary>
@@ -732,12 +751,12 @@ namespace Pathfinding.ECS {
 			throw new System.InvalidOperationException("The FollowerEntity component does not support FinalizeMovement. Use an ECS system to override movement instead, or use the movementOverrides property. If you just want to move the agent to a position, set ai.position or call ai.Teleport.");
 		}
 
-		/// <summary>\copydocref{FollowerEntity.GetRemainingPath(List<Vector3>,bool)}</summary>
+		/// <summary>\copydocref{FollowerEntity.GetRemainingPath(List<Vector3>,out bool)}</summary>
 		public void GetRemainingPath (List<Vector3> buffer, out bool stale) {
 			GetRemainingPath(buffer, null, out stale);
 		}
 
-		/// <summary>\copydocref{FollowerEntity.GetRemainingPath(List<Vector3>,List<PathPartWithLinkInfo>,bool)}</summary>
+		/// <summary>\copydocref{FollowerEntity.GetRemainingPath(List<Vector3>,List<PathPartWithLinkInfo>,out bool)}</summary>
 		public void GetRemainingPath (List<Vector3> buffer, List<PathPartWithLinkInfo> partsBuffer, out bool stale) {
 			buffer.Clear();
 			if (partsBuffer != null) partsBuffer.Clear();
@@ -748,7 +767,9 @@ namespace Pathfinding.ECS {
 				return;
 			}
 
-			var ms = world.EntityManager.GetComponentData<ManagedState>(entity);
+			var entityManager = world.EntityManager;
+			managedAccessRO.Update(entityManager);
+			var ms = managedAccessRO.State(entity, entityManager.GetStorageInfo(entity));
 			stale = false;
 			if (ms.pathTracer.hasPath) {
 				var nativeBuffer = new NativeList<float3>(Allocator.Temp);
@@ -810,7 +831,7 @@ namespace Pathfinding.ECS {
 			var dest = destination;
 			if (!float.IsFinite(dest.x)) return;
 
-			if (entityStorageCache.GetComponentData(world, entity, ref managedSettingsAccessRO, out var managedSettings)) {
+			if (entityStorageCache.GetManagedSettings(world, entity, ref managedAccessRO, out var managedSettings)) {
 				var movementPlane = this.movementPlane;
 				var path = ABPath.Construct(position, dest, null);
 				path.UseSettings(managedSettings.pathfindingSettings);
@@ -819,7 +840,7 @@ namespace Pathfinding.ECS {
 		}
 
 		internal void CancelCurrentPathRequest () {
-			if (entityStorageCache.GetComponentData(world, entity, ref managedStateAccessRO, out var managedState)) {
+			if (entityStorageCache.GetManagedState(world, entity, ref managedAccessRO, out var managedState)) {
 				managedState.CancelCurrentPathRequest();
 			}
 		}
@@ -830,18 +851,22 @@ namespace Pathfinding.ECS {
 
 				if (agentOffMeshLinkTraversalRO.HasComponent(storage)) {
 					// Agent is traversing an off-mesh link. We must abort this link traversal.
-					var managedInfo = entityManager.GetComponentData<ManagedAgentOffMeshLinkTraversal>(entity);
-					if (managedInfo.stateMachine != null) managedInfo.stateMachine.OnAbortTraversingOffMeshLink();
-					managedInfo.context.Restore();
+					managedAccessRW.Update(entityManager);
+					var managedInfo = managedAccessRW.LinkTraversal(entity, storage);
+					if (managedInfo != null) {
+						if (managedInfo.stateMachine != null) managedInfo.stateMachine.OnAbortTraversingOffMeshLink();
+						managedInfo.context.Restore();
+						AgentManagedStorage.SetLinkTraversal(entityManager.GetComponentData<AgentManagedRef>(entity).slot, entity, null);
+					}
 					entityManager.RemoveComponent<AgentOffMeshLinkTraversal>(entity);
-					entityManager.RemoveComponent<ManagedAgentOffMeshLinkTraversal>(entity);
+					entityManager.RemoveComponent<AgentOffMeshLinkTraversalCleanup>(entity);
 					// We need to get the storage info again, because the entity will have been moved to another chunk
 					entityStorageCache.Update(world, entity, out entityManager, out storage);
 				}
 
 				entityManager.SetComponentEnabled<ReadyToTraverseOffMeshLink>(entity, false);
 
-				managedStateAccessRW.Update(entityManager);
+				managedAccessRW.Update(entityManager);
 				movementStateAccessRW.Update(entityManager);
 				localTransformAccessRO.Update(entityManager);
 				movementPlaneAccessRO.Update(entityManager);
@@ -853,7 +878,7 @@ namespace Pathfinding.ECS {
 				ref var movementPlane = ref movementPlaneAccessRO[storage];
 				ref var resolvedMovement = ref resolvedMovementAccessRW[storage];
 				ref var controlOutput = ref movementControlAccessRW[storage];
-				var managedState = managedStateAccessRW[storage];
+				var managedState = managedAccessRW.State(entity, storage);
 
 				managedState.ClearPath();
 				managedState.CancelCurrentPathRequest();
@@ -865,10 +890,14 @@ namespace Pathfinding.ECS {
 			}
 		}
 
-		/// <summary>Adds or removes a component from an entity</summary>
-		internal static void ToggleComponent<T>(World world, Entity entity, bool enabled, bool mustExist) where T : struct, IComponentData {
+		/// <summary>Adds or removes a component from an entity.</summary>
+		/// <param name="world">The ECS world containing the entity.</param>
+		/// <param name="entity">The entity to modify.</param>
+		/// <param name="enabled">If true, adds the component. If false, removes it.</param>
+		/// <param name="throwIfMissing">If true, throws an InvalidOperationException if the entity does not exist. If false, silently returns.</param>
+		internal static void ToggleComponent<T>(World world, Entity entity, bool enabled, bool throwIfMissing) where T : struct, IComponentData {
 			if (world == null || !world.IsCreated || !world.EntityManager.Exists(entity)) {
-				if (!mustExist) throw new System.InvalidOperationException("Entity does not exist. You can only access this if the component is active and enabled.");
+				if (throwIfMissing) throw new System.InvalidOperationException("Entity does not exist. You can only access this if the component is active and enabled.");
 				return;
 			}
 			if (enabled) {
@@ -878,10 +907,14 @@ namespace Pathfinding.ECS {
 			}
 		}
 
-		/// <summary>Enables or disables a component on an entity</summary>
-		internal static void ToggleComponentEnabled<T>(World world, Entity entity, bool enabled, bool mustExist) where T : struct, IComponentData, IEnableableComponent {
+		/// <summary>Enables or disables a component on an entity.</summary>
+		/// <param name="world">The ECS world containing the entity.</param>
+		/// <param name="entity">The entity to modify.</param>
+		/// <param name="enabled">If true, enables the component. If false, disables it.</param>
+		/// <param name="throwIfMissing">If true, throws an InvalidOperationException if the entity does not exist. If false, silently returns.</param>
+		internal static void ToggleComponentEnabled<T>(World world, Entity entity, bool enabled, bool throwIfMissing) where T : struct, IComponentData, IEnableableComponent {
 			if (world == null || !world.IsCreated || !world.EntityManager.Exists(entity)) {
-				if (!mustExist) throw new System.InvalidOperationException("Entity does not exist. You can only access this if the component is active and enabled.");
+				if (throwIfMissing) throw new System.InvalidOperationException("Entity does not exist. You can only access this if the component is active and enabled.");
 				return;
 			}
 			world.EntityManager.SetComponentEnabled<T>(entity, enabled);
@@ -902,7 +935,7 @@ namespace Pathfinding.ECS {
 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 			if (!entityManager.Exists(entity)) throw new System.InvalidOperationException("Entity does not exist. You can only assign a path if the component is active and enabled.");
 
-			managedStateAccessRW.Update(entityManager);
+			managedAccessRW.Update(entityManager);
 			movementPlaneAccessRO.Update(entityManager);
 			agentOffMeshLinkTraversalRO.Update(entityManager);
 			movementStateAccessRW.Update(entityManager);
@@ -925,7 +958,7 @@ namespace Pathfinding.ECS {
 				return;
 			}
 
-			var managedState = managedStateAccessRW[storage];
+			var managedState = managedAccessRW.State(entity, storage);
 			ref var movementPlane = ref movementPlaneAccessRO[storage];
 			ref var movementState = ref movementStateAccessRW[storage];
 			ref var localTransform = ref localTransformAccessRO[storage];
@@ -995,8 +1028,8 @@ namespace Pathfinding.ECS {
 
 			var entityManager = world.EntityManager;
 			movementOutputAccessRW.Update(entityManager);
-			managedStateAccessRW.Update(entityManager);
-			managedSettingsAccessRO.Update(entityManager);
+			managedAccessRW.Update(entityManager);
+			managedAccessRO.Update(entityManager);
 			movementPlaneAccessRW.Update(entityManager);
 			resolvedMovementAccessRW.Update(entityManager);
 			movementControlAccessRW.Update(entityManager);
@@ -1004,8 +1037,8 @@ namespace Pathfinding.ECS {
 
 			ref var movementOutput = ref movementOutputAccessRW[storage];
 			movementOutput.lastPosition = newPosition;
-			var managedState = managedStateAccessRW[storage];
-			var managedSettings = managedSettingsAccessRO[storage];
+			var managedState = managedAccessRW.State(entity, storage);
+			var managedSettings = managedAccessRO.Settings(entity, storage);
 			if (clearPath) managedState.CancelCurrentPathRequest();
 
 			if (!managedState.pathTracer.hasPath && AstarPath.active != null) {
@@ -1058,7 +1091,7 @@ namespace Pathfinding.ECS {
 		/// If the entity does not exist, this does nothing.
 		/// </summary>
 		public void Destroy () {
-			if (entityExists) world.EntityManager.DestroyEntity(entity);
+			if (entityExists) AgentManagedStorage.DestroyAgent(world.EntityManager, entity);
 			this = default; // Clear the proxy to avoid dangling references
 		}
 	}

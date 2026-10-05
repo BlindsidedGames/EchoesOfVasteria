@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using TimelessEchoes.Farming;
 using Blindsided.Utilities;
-using TimelessEchoes.NpcGeneration;
 using TimelessEchoes.Quests;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -27,7 +27,6 @@ namespace TimelessEchoes.UI.Toolkit
         private VisualElement root, popup, autoPinGroup;
         private Button autoPin, discord;
         private Image forgeAttention, cauldronAttention, questAttention;
-        private Label echoBalance;
         private VisualElement progressRoot, progressFill;
         private Image progressHero;
         private Label progressText;
@@ -71,8 +70,13 @@ namespace TimelessEchoes.UI.Toolkit
                 button.AddToClassList("button");
                 button.RegisterCallback<PointerDownEvent>(e => { if (e.button == 0) Audio.AudioManager.Instance?.PlayUIButtonClick(); });
                 button.RegisterCallback<NavigationSubmitEvent>(_ => Audio.AudioManager.Instance?.PlayUIButtonClick());
-                if(entry.id=="stats") { button.Add(new ToolkitStatisticsGlyph()); button.tooltip="Statistics"; }
-                else if (entry.action == NavAction.Close) { button.text="×";button.AddToClassList("close-control");button.tooltip="Close window"; }
+                if(entry.id=="stats") { button.Add(new ToolkitStatisticsGlyph()); ToolkitLocalization.BindTooltip(button,"navigation.stats-tooltip","Statistics"); }
+                else if (entry.action == NavAction.Close) { button.text="×";button.AddToClassList("close-control");ToolkitLocalization.BindTooltip(button,"navigation.close-tooltip","Close window"); }
+                else if (entry.action == NavAction.Window && entry.window == TownWindowManager.Window.Farm)
+                {
+                    var label = new Label { name = "fields-navigation-label", text = FarmContent.Load()?.DisplayName ?? "Fields", pickingMode = PickingMode.Ignore };
+                    label.AddToClassList("eov-navigation-label"); button.Add(label);
+                }
                 else if (entry.icon)
                 {
                     VisualElement icon;
@@ -99,16 +103,6 @@ namespace TimelessEchoes.UI.Toolkit
                 {
                     questAttention = AddAttention(button, definition.questAttention);
                     questAttention.AddToClassList("eov-navigation-quest-attention");
-                }
-                if (entry.group == Group.Hub && entry.window == TownWindowManager.Window.AlterEchoes)
-                {
-                    echoBalance = new Label { name = "echo-balance", pickingMode = PickingMode.Ignore };
-                    echoBalance.AddToClassList("eov-navigation-balance-label");
-                    echoBalance.style.color = definition.balanceColor;
-                    var balanceFrame = new VisualElement { pickingMode = PickingMode.Ignore };
-                    balanceFrame.AddToClassList("eov-navigation-balance");
-                    balanceFrame.AddToClassList("surface");
-                    balanceFrame.Add(echoBalance); row.Add(balanceFrame);
                 }
                 if (entry.group == Group.Toolbar)
                 {
@@ -219,6 +213,11 @@ namespace TimelessEchoes.UI.Toolkit
                 var visible = ToolkitVisibilityRule.All(entry.visibility) && (entry.group == Group.Toolbar || entry.group == openGroup);
                 if (entry.action == NavAction.Close) visible &= windows != null && windows.HasOpenWindow;
                 rows[entry].style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+                if (entry.action == NavAction.Window && entry.window == TownWindowManager.Window.Farm)
+                {
+                    var label = buttons[entry].Q<Label>("fields-navigation-label");
+                    if (label != null) label.text = FarmContent.Load()?.DisplayName ?? "Fields";
+                }
                 buttons[entry].SetEnabled(entry.action != NavAction.Window || windows == null || windows.CanOpenWindow(entry.window));
             }
             SetVisible(forgeAttention, windows != null && windows.ForgeNeedsAttention);
@@ -238,15 +237,6 @@ namespace TimelessEchoes.UI.Toolkit
                 lastProgress = current; hasProgress = true;
             }
             ToolkitGameplay.SetToggle(autoPin,AutoPinActiveQuests);
-            if (echoBalance != null && openGroup == Group.Hub)
-            {
-                double total = 0;
-                var manager = AlterEchoGenerationManager.Instance;
-                if (manager != null) foreach (var generator in manager.Generators)
-                    if (generator != null && generator.RequirementsMet && generator.Resource != null)
-                        total += generator.GetStoredAmount(generator.Resource);
-                echoBalance.text = "<b>" + CalcUtils.FormatNumber(total, true) + "</b>";
-            }
         }
 
         private static void SetVisible(VisualElement element, bool visible)
@@ -276,4 +266,3 @@ namespace TimelessEchoes.UI.Toolkit
         private void OnDestroy() { if (panel) Destroy(panel); }
     }
 }
-

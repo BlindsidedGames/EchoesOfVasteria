@@ -48,7 +48,19 @@ namespace Pathfinding.ECS {
 	///
 	/// See: <see cref="AgentOffMeshLinkTraversal"/>
 	/// </summary>
-	public class ManagedAgentOffMeshLinkTraversal : IComponentData, System.ICloneable, ICleanupComponentData {
+	/// <summary>
+	/// Marks an agent that is in the middle of traversing an off-mesh link.
+	///
+	/// A cleanup component, so it outlives DestroyEntity. If this exists but
+	/// <see cref="AgentOffMeshLinkTraversal"/> does not, the agent was destroyed part way through a link and
+	/// its state machine still needs to be told that the traversal was aborted.
+	///
+	/// The traversal state itself lives in <see cref="AgentManagedStorage"/>, reachable through the agent's
+	/// <see cref="AgentManagedRef"/> slot.
+	/// </summary>
+	public struct AgentOffMeshLinkTraversalCleanup : ICleanupComponentData {}
+
+	public class ManagedAgentOffMeshLinkTraversal : System.ICloneable {
 		/// <summary>Internal context used to pass component data to the coroutine</summary>
 		public AgentOffMeshLinkTraversalContext context;
 

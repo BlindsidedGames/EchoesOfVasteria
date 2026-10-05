@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -101,7 +102,7 @@ namespace TimelessEchoes.UI
 
             var oldTier = Mathf.Max(1, newTier - 1);
             var backgroundSprite = GetBackgroundSprite(newTier - 1);
-            var text = $"Tier {oldTier}<sprite=194>{newTier}";
+            var text = ToolkitLocalization.Text("notification.resource-tier", "Tier {0}<sprite=194>{1}" , oldTier, newTier);
 
             ShowNotification(new NotificationData(resource.icon, text, backgroundSprite));
         }
@@ -144,11 +145,11 @@ namespace TimelessEchoes.UI
             var endLevel = Mathf.Max(startLevel, range.EndLevel);
             pendingLevelRanges.Remove(skill);
 
-            var name = string.IsNullOrWhiteSpace(skill.skillName) ? "Skill" : skill.skillName;
+            var name = string.IsNullOrWhiteSpace(skill.skillName) ? ToolkitLocalization.Text("notification.skill", "Skill") : ToolkitLocalization.Text("skill." + skill.name, skill.skillName);
             var backgroundSprite = GetBackgroundSprite(0);
 
             var builder = new StringBuilder();
-            builder.Append($"{name} Lv {startLevel}<sprite=194>{endLevel}");
+            builder.Append(ToolkitLocalization.Text("notification.skill-level", "{0} Lv {1}<sprite=194>{2}" , name, startLevel, endLevel));
 
             if (pendingMilestoneMessages.TryGetValue(skill, out var messages) && messages.Count > 0)
             {
@@ -170,7 +171,7 @@ namespace TimelessEchoes.UI
                 return;
 
             var messages = GetOrCreateMessages(skill);
-            messages.Add($"<size=8>{GetMilestoneName(milestone)} Unlocked!</size>");
+            messages.Add(ToolkitLocalization.Text("notification.milestone-unlocked", "<size=8>{0} Unlocked!</size>" , GetMilestoneName(milestone)));
 
             UpdateMilestoneTierCache(skill, milestone);
         }
@@ -188,7 +189,7 @@ namespace TimelessEchoes.UI
             var newTierDisplay = Mathf.Max(oldTierDisplay, newTierIndex + 1);
 
             var messages = GetOrCreateMessages(skill);
-            messages.Add($"<size=8>{GetMilestoneName(milestone)} {oldTierDisplay}<sprite=194>{newTierDisplay}</size>");
+            messages.Add(ToolkitLocalization.Text("notification.milestone-tier", "<size=8>{0} {1}<sprite=194>{2}</size>" , GetMilestoneName(milestone), oldTierDisplay, newTierDisplay));
         }
 
         private List<string> GetOrCreateMessages(Skill skill)
@@ -228,7 +229,7 @@ namespace TimelessEchoes.UI
 
         private string GetMilestoneName(MilestoneDefinition milestone)
         {
-            return string.IsNullOrWhiteSpace(milestone.DisplayName) ? milestone.name : milestone.DisplayName;
+            return ToolkitLocalization.Text("milestone." + milestone.name, string.IsNullOrWhiteSpace(milestone.DisplayName) ? milestone.name : milestone.DisplayName);
         }
 
         private void ShowNotification(NotificationData data)

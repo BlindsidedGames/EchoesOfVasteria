@@ -20,29 +20,36 @@ namespace TimelessEchoes.UI.Toolkit
             foreach (var type in new[] { ConversionType.Chunk, ConversionType.Crystal, ConversionType.Ingot, ConversionType.Core })
             {
                 var row = new ConversionRow(); row.root = Panel(grid, "eov-forge-conversion"); row.root.name = "conversion-" + type;
-                Label(row.root, type.ToString() + "s", ToolkitControls.TextRole.Heading).AddToClassList("forge-conversion-title");
+                LocalizedLabel(row.root, "forge.conversion-" + type.ToString().ToLowerInvariant(), ConversionTitle(type), ToolkitControls.TextRole.Heading).AddToClassList("forge-conversion-title");
                 var recipe = Row(row.root); var costs = new VisualElement(); recipe.Add(costs);
                 var first = Row(costs); first.AddToClassList("forge-ingredient"); row.first = ToolkitControls.Icon(null); first.Add(row.first); row.firstCount = Label(first, "", ToolkitControls.TextRole.Caption);
                 var second = Row(costs); second.AddToClassList("forge-ingredient"); row.second = ToolkitControls.Icon(null); second.Add(row.second); row.secondCount = Label(second, "", ToolkitControls.TextRole.Caption);
                 row.arrow = ToolkitControls.Icon(null); recipe.Add(row.arrow); var result = new VisualElement(); recipe.Add(result); row.result = ToolkitControls.Icon(null); result.Add(row.result); row.resultCount = Label(result, "", ToolkitControls.TextRole.Caption);
                 var control = new VisualElement(); control.AddToClassList("eov-forge-conversion-control"); control.style.flexGrow = 1; row.root.Add(control);
                 row.maximum = Label(control, "", ToolkitControls.TextRole.Caption);
-                row.button = Button(control, "smelt-" + type, "Smelt", () => session.Convert(type));
+                row.button = LocalizedButton(control, "smelt-" + type, "forge.smelt", "Smelt", () => session.Convert(type));
                 // Keep press-and-hold conversion behavior while using native pointer capture.
                 ToolkitControls.RepeatWhileHeld(row.button, () => session.Convert(type));
-                row.amount = new TextField { name = "amount-" + type, keyboardType = TouchScreenKeyboardType.NumberPad }; row.amount.AddToClassList("eov-number-field"); row.amount.tooltip = "Conversion batch size"; control.Insert(1, row.amount);
+                row.amount = new TextField { name = "amount-" + type, keyboardType = TouchScreenKeyboardType.NumberPad }; row.amount.AddToClassList("eov-number-field"); ToolkitLocalization.BindTooltip(row.amount, "forge.conversion-batch-size", "Conversion batch size"); control.Insert(1, row.amount);
                 row.amount.SetValueWithoutNotify(session.Desired(type).ToString("0"));
                 row.amount.RegisterValueChangedCallback(e => { session.SetAmount(type, double.TryParse(e.newValue, out var value) ? value : 1); row.amount.SetValueWithoutNotify(session.Desired(type).ToString("0")); }); conversions.Add(type, row);
             }
         }
+        private static string ConversionTitle(ConversionType type) => type switch
+        {
+            ConversionType.Chunk => "Chunks",
+            ConversionType.Crystal => "Crystals",
+            ConversionType.Ingot => "Ingots",
+            _ => "Cores"
+        };
         private Sprite ResourceSprite(Resource resource, double needed = 0) => resource ? resources.IsUnlocked(resource) && resources.GetAmount(resource) >= needed ? resource.icon : resource.UnknownIcon : null;
         private void Refresh()
         {
             dirty = false; nextRefresh = Time.unscaledTime + .1f;
-            var (level, current, needed) = crafting.GetIvanXpState(); ivan.text = "Ivan | Level " + Math.Max(0, level); xp.text = $"{current:N0}/{needed:N0}"; xpFill.style.width = Length.Percent(needed > 0 ? Mathf.Clamp01(current / needed) * 100 : 0);
+            var (level, current, needed) = crafting.GetIvanXpState(); ivan.text = ToolkitLocalization.Text("forge.ivan-level", "Ivan | Level {0}", Math.Max(0, level)); xp.text = $"{current:N0}/{needed:N0}"; xpFill.style.width = Length.Percent(needed > 0 ? Mathf.Clamp01(current / needed) * 100 : 0);
             foreach (var entry in gearSlots)
             {
-                var item = equipment.GetEquipped(entry.Key); entry.Value.icon.sprite = definition.GearSprite(item, entry.Key); entry.Value.selected.style.display = session.Slot == entry.Key ? DisplayStyle.Flex : DisplayStyle.None; entry.Value.tier.text = item?.rarity ? "Tier " + Mathf.Clamp(item.rarity.tierIndex + 1, 1, 8) : "";
+                var item = equipment.GetEquipped(entry.Key); entry.Value.icon.sprite = definition.GearSprite(item, entry.Key); entry.Value.selected.style.display = session.Slot == entry.Key ? DisplayStyle.Flex : DisplayStyle.None; entry.Value.tier.text = item?.rarity ? ToolkitLocalization.Text("inventory.tier", "Tier {0}", Mathf.Clamp(item.rarity.tierIndex + 1, 1, 8)) : "";
             }
             for (var i = 0; i < coreSlots.Count; i++)
             {
@@ -58,10 +65,10 @@ namespace TimelessEchoes.UI.Toolkit
             coreCost.EnableInClassList("forge-loss", !(bindingSelected?.coreResource) || resources.GetAmount(bindingSelected.coreResource) < 1);
             ingotCost.EnableInClassList("forge-loss", !ingot || resources.GetAmount(ingot) < (core ? core.ingotCost : 0));
             craftArrow.sprite = session.CanCraft() ? definition.arrowValid : definition.arrowInvalid;
-            maxCrafts.text = $"{session.MaxCrafts:N0} crafts available"; craft.text = session.IsAutoCrafting ? "Stop" : "Craft"; craft.SetEnabled(session.IsAutoCrafting || session.CanCraft()); autoCraft.SetEnabled(!session.IsAutoCrafting && session.CanCraft()); replace.SetEnabled(session.CanReplace);
+            maxCrafts.text = ToolkitLocalization.Text("forge.crafts-available", "{0:N0} crafts available", session.MaxCrafts); craft.text = session.IsAutoCrafting ? ToolkitLocalization.Text("common.stop", "Stop") : ToolkitLocalization.Text("forge.craft", "Craft"); craft.SetEnabled(session.IsAutoCrafting || session.CanCraft()); autoCraft.SetEnabled(!session.IsAutoCrafting && session.CanCraft()); replace.SetEnabled(session.CanReplace);
             var pending = session.HasResult ? session.Pending : null;
             RefreshComparison(pending, equipment.GetEquipped(session.Slot));
-            resultIcon.sprite = definition.GearSprite(pending, session.Slot); resultTier.text = pending?.rarity ? "Tier " + Mathf.Clamp(pending.rarity.tierIndex + 1, 1, 8) : "";
+            resultIcon.sprite = definition.GearSprite(pending, session.Slot); resultTier.text = pending?.rarity ? ToolkitLocalization.Text("inventory.tier", "Tier {0}", Mathf.Clamp(pending.rarity.tierIndex + 1, 1, 8)) : "";
             ToolkitGameplay.SetToggle(stopIcon,StopAutocraftOnVastium);ToolkitGameplay.SetToggle(lockIcon,LockAutocraftStatSet);
             var weights = RarityOddsCalculator.BuildRarityWeightInfo(core).weights;
             odds.SetWeights(weights); RefreshOddsPopup(weights);
@@ -79,7 +86,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void RefreshStatistics()
         {
             if (!statisticsDirty || showInventory || Time.unscaledTime < nextStatsRefresh) return;
-            RefreshHistory(statsPresentation.BuildStatsText(Oracle.oracle?.saveData?.Forge));
+            RefreshHistory(statsPresentation.BuildStatsText(Oracle.oracle?.saveData?.Forge, preserveSectionIds: true));
             nextStatsRefresh = Time.unscaledTime + .75f; statisticsDirty = false;
         }
         private void RefreshConversion(ConversionType type, ConversionRow row)
@@ -99,7 +106,7 @@ namespace TimelessEchoes.UI.Toolkit
             row.firstCount.text = CalcUtils.FormatNumber(costA * shownAmount, true); row.secondCount.text = CalcUtils.FormatNumber(costB * shownAmount, true); row.resultCount.text = CalcUtils.FormatNumber(output * shownAmount, true);
             row.firstCount.EnableInClassList("forge-loss", first && resources.GetAmount(first) < costA * shownAmount);
             row.secondCount.EnableInClassList("forge-loss", second && resources.GetAmount(second) < costB * shownAmount);
-            var max = session.ConversionMaximum(type); var desired = session.Desired(type); var batches = max <= 0 ? 0 : desired > max ? 1 : Math.Floor(max / desired); row.maximum.text = "Batches: " + CalcUtils.FormatNumber(batches, true);
+            var max = session.ConversionMaximum(type); var desired = session.Desired(type); var batches = max <= 0 ? 0 : desired > max ? 1 : Math.Floor(max / desired); row.maximum.text = ToolkitLocalization.Text("forge.batches", "Batches: {0}", CalcUtils.FormatNumber(batches, true));
             row.button.SetEnabled(session.CanConvert(type)); row.arrow.sprite = session.CanConvert(type) ? definition.arrowValid : definition.arrowInvalid;
         }
     }

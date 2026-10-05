@@ -118,6 +118,16 @@ namespace Pathfinding.Graphs.Navmesh {
 
 		public RecastMeshGatherer.MeshCollection CollectMeshes (Bounds bounds) {
 			Profiler.BeginSample("Find Meshes for rasterization");
+
+			// Make sure the physics engine data is up to date.
+			// Scans and graph updates already do this, in AstarPath.ScanInternal and WorkItemProcessor respectively,
+			// but this method can be reached without going through either of them. For example from
+			// RecastGraph.SnapBoundsToScene, from a NavmeshPrefab, or by using RecastBuilder directly.
+			Profiler.BeginSample("Sync transforms");
+			Physics.SyncTransforms();
+			if (dimensionMode == RecastGraph.DimensionMode.Dimension2D) Physics2D.SyncTransforms();
+			Profiler.EndSample();
+
 			var mask = collectionSettings.layerMask;
 			var tagMask = collectionSettings.tagMask;
 			if (collectionSettings.collectionMode == RecastGraph.CollectionSettings.FilterMode.Layers) {

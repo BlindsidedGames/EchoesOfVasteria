@@ -1,0 +1,60 @@
+{
+  "southFoot": [
+    -61.5,
+    -12.5
+  ],
+  "northFoot": [
+    -61.5,
+    -10.9375
+  ],
+  "fenceRowY": -11,
+  "southTree": {
+    "path": "RESTORED scenery trees - ground depth - preview only/Restored scenery tree - original cell (13, -13, 0)",
+    "type": "SpriteRenderer",
+    "sprite": "FruitTree_Growth_YoungTree",
+    "position": [
+      -61.5,
+      -12.5,
+      0.0
+    ],
+    "order": 3,
+    "layer": "Default",
+    "layerId": 0,
+    "sortPoint": "Pivot",
+    "tileMode": "",
+    "materials": [
+      {
+        "name": "Sprite-Lit-Default",
+        "asset": "Packages/com.unity.render-pipelines.universal/Runtime/Materials/Sprite-Lit-Default.mat",
+        "shader": "Universal Render Pipeline/2D/Sprite-Lit-Default",
+        "queue": 3000,
+        "renderType": "Transparent"
+      }
+    ]
+  },
+  "tilemap": {
+    "path": "Preview Town - A3-southeast-clearing/Tilemaps/BG_Decor 0",
+    "type": "TilemapRenderer",
+    "sprite": "",
+    "position": [
+      -75.0,
+      0.0,
+      0.0
+    ],
+    "order": 0,
+    "layer": "Background",
+    "layerId": 934246347,
+    "sortPoint": "",
+    "tileMode": "Individual",
+    "materials": [
+      {
+        "name": "Sprite-Lit-Default",
+        "asset": "Packages/com.unity.render-pipelines.universal/Runtime/Materials/Sprite-Lit-Default.mat",
+        "shader": "Universal Render Pipeline/2D/Sprite-Lit-Default",
+        "queue": 3000,
+        "renderType": "Transparent"
+      }
+    ]
+  },
+  "notSaved": true
+}

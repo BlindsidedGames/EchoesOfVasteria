@@ -1041,14 +1041,14 @@ namespace Pathfinding {
 		public void ReplaceTile (int x, int z, Int3[] verts, int[] tris, uint[] tags = null, bool tryPreserveExistingTagsAndPenalties = true) {
 			var vertsSpan = new UnsafeSpan<Int3>(verts, out var handle1);
 			var trisSpan = new UnsafeSpan<int>(tris, out var handle2);
-			ulong handle3 = 0;
+			System.Runtime.InteropServices.GCHandle handle3 = default;
 			var tagsSpan = tags != null ? new UnsafeSpan<uint>(tags, out handle3) : default;
 			try {
 				ReplaceTile(x, z, vertsSpan, trisSpan, tagsSpan, tryPreserveExistingTagsAndPenalties);
 			} finally {
-				UnsafeUtility.ReleaseGCObject(handle1);
-				UnsafeUtility.ReleaseGCObject(handle2);
-				if (tags != null) UnsafeUtility.ReleaseGCObject(handle3);
+				handle1.Free();
+				handle2.Free();
+				if (handle3.IsAllocated) handle3.Free();
 			}
 		}
 
@@ -1979,12 +1979,12 @@ namespace Pathfinding {
 			if (OnRecalculatedTiles != null) OnRecalculatedTiles(updatedTiles);
 		}
 
-		public override void OnDrawGizmos (DrawingData gizmos, bool drawNodes, RedrawScope redrawScope, bool renderInGame) {
+		public override void OnDrawGizmos (bool drawNodes, RedrawScope redrawScope, bool renderInGame) {
 			if (!drawNodes) {
 				return;
 			}
 
-			using (var builder = gizmos.GetBuilder(redrawScope, renderInGame)) {
+			using (var builder = DrawingManager.GetBuilder(redrawScope, renderInGame)) {
 				var bounds = new Bounds();
 				bounds.SetMinMax(Vector3.zero, forcedBoundsSize);
 				// Draw a write cube using the latest transform
@@ -2026,8 +2026,8 @@ namespace Pathfinding {
 					// When restricting the caches to row by row a change in a row
 					// will never invalidate the cache in another row.
 					if (hashedNodes > 1024 || (i % tileXCount) == tileXCount - 1 || i == tiles.Length - 1) {
-						if (!gizmos.Draw(hasher, redrawScope)) {
-							using (var helper = GraphGizmoHelper.GetGizmoHelper(gizmos, active, hasher, redrawScope, renderInGame)) {
+						if (!DrawingManager.TryDrawHasher(hasher, redrawScope)) {
+							using (var helper = GraphGizmoHelper.GetGizmoHelper(active, hasher, redrawScope, renderInGame)) {
 								if (showMeshSurface || showMeshOutline) {
 									CreateNavmeshSurfaceVisualization(tiles, startTileIndex, i + 1, helper);
 									CreateNavmeshOutlineVisualization(tiles, startTileIndex, i + 1, helper);
@@ -2055,7 +2055,7 @@ namespace Pathfinding {
 				}
 			}
 
-			if (active.showUnwalkableNodes) DrawUnwalkableNodes(gizmos, active.unwalkableNodeDebugSize, redrawScope, renderInGame);
+			if (active.showUnwalkableNodes) DrawUnwalkableNodes(active.unwalkableNodeDebugSize, redrawScope, renderInGame);
 		}
 
 		/// <summary>Creates a mesh of the surfaces of the navmesh for use in OnDrawGizmos in the editor</summary>

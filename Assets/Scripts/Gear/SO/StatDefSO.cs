@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
@@ -111,7 +112,7 @@ namespace TimelessEchoes.Gear
 
         public string GetName()
         {
-            return string.IsNullOrWhiteSpace(displayName) ? name : displayName;
+            return ToolkitLocalization.Text("gear-stat." + (string.IsNullOrEmpty(id) ? name : id) + ".name", string.IsNullOrWhiteSpace(displayName) ? name : displayName);
         }
 
         public RarityBand GetBandForRarity(RaritySO r)

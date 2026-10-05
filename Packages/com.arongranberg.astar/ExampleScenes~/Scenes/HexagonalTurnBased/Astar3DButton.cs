@@ -5,6 +5,7 @@ namespace Pathfinding.Examples {
 	/// <summary>Helper script in the example scene 'Turn Based'</summary>
 	[HelpURL("https://arongranberg.com/astar/documentation/stable/astar3dbutton.html")]
 	public class Astar3DButton : MonoBehaviour {
+		[System.NonSerialized]
 		public GraphNode node;
 
 		public void OnHover (bool hover) {

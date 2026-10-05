@@ -1,0 +1,453 @@
+[
+  {
+    "path": "Assets/Development/Farming/Main.unity",
+    "sha256": "7fe02dc6557a8a326329a8940c380bf4a17e4529877cd629648511d314831974",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Development/Farming/Navigation.asset",
+    "sha256": "be5e7e4ad05cb0510ce734b7d9c48bb6ab9c70804f6e2f6f1944590c32a6547c",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Localization/Tables/Quests/Quests Shared Data.asset",
+    "sha256": "b430d11538245acc6e3dcd942364d7ce5489e7c02e403a6ffc3f2abe06594290",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Localization/Tables/Quests/Quests_en.asset",
+    "sha256": "a6a2d65c1fc2b2af8a44c1779f2e96b6d79c358fc10d33c6ed514f7e00d30757",
+    "matches_final_test_input": false,
+    "matches_runtime_proof_input": false,
+    "independentChange": "Orin attribution-only commit f455471a8; Fields entries/IDs unchanged; not staged by Fields follow-up"
+  },
+  {
+    "path": "Assets/Localization/Tables/Town/TownUI Shared Data.asset",
+    "sha256": "909db6b5ae0b3bc8d979e26a37fbaa90ac9160544fcc6b02bddcd5a42e52ebc3",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Localization/Tables/Town/TownUI_en.asset",
+    "sha256": "1645e4cb04d855179ce8be7537412e567b2d539adf8fb5288c1cb2ca13593793",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Farming.meta",
+    "sha256": "4471784532d9251649d59a251ce4c1ed87dd147929ec3cbf05aeddd79ba08303",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Farming/FarmContent.asset",
+    "sha256": "e9176f906df16e4306f0ce514d3eb9670f358bdba3ddd11843452e85c8e5e4f3",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Farming/FarmContent.asset.meta",
+    "sha256": "2e4f8992003a725307a6fae409295f566c922957e34633f6ad711009fb24d999",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Farming/FieldsWorldAppearance.asset",
+    "sha256": "11a60855b8df1f1630582f4b2bf05e97f4b96328fc681fd24369b6a3aaf210ad",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Farming/FieldsWorldAppearance.asset.meta",
+    "sha256": "380790585437ae807889a1694cc50953270bb2a34afb43ac4148c629a28cea3d",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields.meta",
+    "sha256": "fbff9abeecf91e68ce2d3059f9fe74309d2ef3959c08eb4ea0d1f23e098d8e75",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Garden.Build01.v1.asset",
+    "sha256": "0da3d37c605fb9ac233545d9746299ae3d806df40001c431de27c940bfb2ba7f",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Garden.Build01.v1.asset.meta",
+    "sha256": "397ec7833bb79f4672825f05994b646eeaf9bbf50e77c148ee7709803cf84a5c",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Garden.Build02.v1.asset",
+    "sha256": "95515cffc766906a5f511ab817875b26d335b8dda7d2ffdbfbc22e7801eb792f",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Garden.Build02.v1.asset.meta",
+    "sha256": "90d4910a1ac2f82aa7107cd4276803911965b2fdd7ae9d9d0e1c1e69ec05acb3",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Garden.Build03.v1.asset",
+    "sha256": "6db8379c1bf118befaa9fcdec8261b05c082eb3dd3a43b8d1ce59187ad95d6c2",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Garden.Build03.v1.asset.meta",
+    "sha256": "0046e8c5692169ff79fdfee2cd7e286a4ebd081d54b8534c4d99e0f7f53c5e0f",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Garden.Build04.v1.asset",
+    "sha256": "a51b9f6036802f819c096824d62d65409b97292584607e4ccbadd8a5da42697d",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Garden.Build04.v1.asset.meta",
+    "sha256": "91b6c3f6d49281af88b4644670c3d372b784866fd4237ed8e128a5362a2b6cc1",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Garden.Build05.v1.asset",
+    "sha256": "15f3048fce8e28813fbaa0959b06b87e24128751d474931e620d6ef949ad8b31",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Garden.Build05.v1.asset.meta",
+    "sha256": "5b8552dfadd9290254d0394d53be0a4639c4531fc31f31ea43b72b5721c1bfc0",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Garden.Build06.v1.asset",
+    "sha256": "53b122992fabef82c52dde9fed0d434bb53b04efc92620bb33bbd0581b97dbc9",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Garden.Build06.v1.asset.meta",
+    "sha256": "6a36512e3c5d104c0a00222bcc5e64f0b7bd70846e5e2944ec7edb35cabe235d",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Garden.Introduction.v1.asset",
+    "sha256": "240b0586b063e8172500a76de650a380a91c36ce8612c7beee3da8165bdb14f1",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Garden.Introduction.v1.asset.meta",
+    "sha256": "2df8c482be0d3ca930906f2b2aecaa3510c25b1c7c89e9965776350a0ff8518e",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Orchard.Build01.v1.asset",
+    "sha256": "74ac76ce2a37896aee274c71e4166980cfc011f87b383cdc3b1ca7d5e7834ee1",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Orchard.Build01.v1.asset.meta",
+    "sha256": "3b113ee512f128272b25e26843ef8cd3659c12fd588233b19610c1dfa942fcdc",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Orchard.Build02.v1.asset",
+    "sha256": "953f598fb1af7cc414aca69b5b22d44f1c28bc313456036ac7bd41e4b80d8bda",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Orchard.Build02.v1.asset.meta",
+    "sha256": "560d26b17dac0b9292437678ee83fbcb786042bb569d4e8bfc30745302059f7b",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Orchard.Build03.v1.asset",
+    "sha256": "925fa0ba522dc48bb28cdb9261ef70911cee3ae9ba8d1345ff6769999c2d2753",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Resources/Quests/Fields/Farm.Orchard.Build03.v1.asset.meta",
+    "sha256": "160ac2d263e436accf0880e43ab2cd12755ab6de71c74c8d723aebdb9d9007f6",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scenes/Main.unity",
+    "sha256": "51323fec2d5025b7299444b45f8a7d55cf5e21c92861e0dab9f9d6f1eba93625",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Blindsided/Oracle.FarmTransactions.cs",
+    "sha256": "804c4eab7998af307a9e62af8df1159fa0a48d0235eac28a6cf73cdf75df68b2",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Blindsided/SaveData/GameData.cs",
+    "sha256": "7c3181288bdb073d01896a6196f1a145ed92f53950d7b5c465fe74fa811e6d82",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Blindsided/SaveData/Migrations/Migration_SchemaV6Fields.cs",
+    "sha256": "19e75e94a5b0754210153e45c0664f0e790badb51f380322132d127ad2d28c2a",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Blindsided/SaveData/Migrations/Migration_SchemaV6Fields.cs.meta",
+    "sha256": "81f4e66f139362fc2c1255f8089323b3c8eac542115b71643e634fd28b2cbbf5",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Blindsided/SaveData/Migrations/SaveMigrationRunner.cs",
+    "sha256": "9a360de2787058d60bff13632915328e2d38b5f7800fb053cf023f8b22c59bbf",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Farming/FarmCommands.cs",
+    "sha256": "789c4aff1349264d11882bb64ef5044da649cd9fc98e333dd86fe243c1c69f76",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Farming/FarmContent.cs",
+    "sha256": "feca0fa4daec2abeca0d203f56104d83e03e178fbdeabbf72ac3cd79e0f55d71",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Farming/FarmContent.cs.meta",
+    "sha256": "326ba1fb8e5cb183055329437a98d40c627489957383fc22ee3aa09817607a4d",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Farming/FarmJournal.cs",
+    "sha256": "76377dc998a075d4003d63027ff7bd439867316967c8dc1dd079af8674bab679",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Farming/FarmProductionCommands.cs",
+    "sha256": "924375800a11f0702b8fb58676b12b031fb3cf71612f8a6a48182885219059ef",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Farming/FarmProductionCommands.cs.meta",
+    "sha256": "51ce794b67c1b44b22d5b07a12bd3fb94e3ee348d294241543358c61296dc042",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Farming/FarmService.cs",
+    "sha256": "5dfc72b66050fb6389875ac44bf9b40f7dd31602bfe9a2ead56cacdf9466cf28",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Farming/FarmState.cs",
+    "sha256": "7c726ed5c4dcaee8b0a8453243c1ef6dc4c762aae7e975ca7dedbe67bad671ac",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Farming/FarmTransaction.cs",
+    "sha256": "310b47d7029e41ea574e49c1dac10ca46c32d165f68bd35b053bf39867d8858a",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Farming/FarmView.cs",
+    "sha256": "329b5421fbd86934a132a5c6159f67bb2851b08b2e8db751ad0184d188f610d6",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Farming/FieldsWorldAppearance.cs",
+    "sha256": "9e3d17ba776233bbdbf3aad3ef31773a4aea34cd88d16f7e76533cedef8c0f0d",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Farming/FieldsWorldAppearance.cs.meta",
+    "sha256": "aca29bd821137db74854ea68851fe8934dfffb93fc1af364d53130a546c6b4fb",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Farming/FieldsWorldView.cs",
+    "sha256": "71be451073adf7a44d2b92c8414891acaaaa83d3bf10f258c77667180f68a655",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Farming/FieldsWorldView.cs.meta",
+    "sha256": "8d3a1a5a7c8b4156149be250140b7acced0972b81a81cf9e359928cbc13bd874",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Farming/ToolkitFarmScreen.cs",
+    "sha256": "7a356c27eee5561f7fe482b595c15e807da7d1f9001bb1562f5adf05b4e32f02",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Quests/QuestManager.cs",
+    "sha256": "b5f8f7c5bab67f9fb0ff4d932dc9fda89d42ea0105ef51562b215b12a30b1c74",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Skills/SkillController.cs",
+    "sha256": "5a072531826e85dfb947161159d497f233d7f805584c84bce6265f30788384b7",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/UI/Toolkit/ToolkitNavigationScreen.cs",
+    "sha256": "f154e26f50f83c7d717aecbef3e4b866662a605f14d4cdb360462e523f4d762b",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Scripts/Upgrades/ResourceManager.cs",
+    "sha256": "d98a080b61db6399278a72f4f455ff9b7b3a280a1a9dc8ac9c8cf17e51ca08f4",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Tests/EditMode/EditMode.Tests.asmdef",
+    "sha256": "2be924bcdd617f067233d9eaa3f325fda7bde9792cf7497a1145a46c5bc0b098",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Tests/EditMode/FarmCommandsTests.cs",
+    "sha256": "74d9b7b24ff8b48745e77e8a0ce3acffe7a81ef301c779271dbeecdd43f88aab",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Tests/EditMode/FarmJournalTests.cs",
+    "sha256": "93bb4afda92c88a07c1ca886cf3efe3695e70e585f86b0210bd97ae33b1a9b7e",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Tests/EditMode/FarmTransactionTests.cs",
+    "sha256": "483774eccbcf0aebcad067fb3974fb19926f8e97252f9c6f27edd05ed4afb43e",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Tests/EditMode/FieldsContentTests.cs",
+    "sha256": "de9cb537bffe565b85ecc237c1449f29310eb202074bbef4195c3ba576d87e19",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Tests/EditMode/FieldsContentTests.cs.meta",
+    "sha256": "f20bc4dd19b897d51fb5d8ba499de923df1dabf7d5d89bac0c4e5c44380ff4d9",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Tests/EditMode/FieldsHeroGateTests.cs",
+    "sha256": "b55c66aa9fe20318327a67c794d7f4f17adf8d0ae675e6a6e22a012293ce070e",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Tests/EditMode/FieldsHeroGateTests.cs.meta",
+    "sha256": "663be5d6f78a22f8764653385eace8678410dc81c92875113e4147c23262bb10",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Tests/EditMode/FieldsMigrationTests.cs",
+    "sha256": "114d4bdcf4d80f798a996a32d924a2a487445c48d966f1e31e2391932203e04c",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Tests/EditMode/FieldsMigrationTests.cs.meta",
+    "sha256": "7b325f55ae67a50f6df9e23358861fdd381581cee256575444efa1a7d65dc582",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Tests/EditMode/FieldsProductionTests.cs",
+    "sha256": "5686b43e4e3b7f282888c05be6619a9058c625c70e11a5ea1bb9642c5d8981ed",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Tests/EditMode/FieldsProductionTests.cs.meta",
+    "sha256": "cd929b363ded613c318026da3a8abc80bcf9e469b04cd20d173c73ffbd284ee9",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Tests/EditMode/FieldsProgressionRulesTests.cs",
+    "sha256": "c3a7da82302f3781e717b4913bc4095baf71c2c3f8077c59069a940bd33eff90",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Tests/EditMode/FieldsProgressionRulesTests.cs.meta",
+    "sha256": "21b3ebbe707a97eef6981bca33f30c860a9f76c2cf7bb45b1052dc3d91d99ef0",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Tests/EditMode/SaveMigrationValidationTests.cs",
+    "sha256": "af04ee57e2420440cdf3690479ce458d15fe3ebe05272b68e47e3d6dd9c0d855",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Tests/PlayMode/Tests/FieldsProductionPlayModeTests.cs",
+    "sha256": "02ac92639dfdbbabc0a8741a0674610f1057b713fa6bd4f28f5b083473277b07",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/Tests/PlayMode/Tests/FieldsProductionPlayModeTests.cs.meta",
+    "sha256": "7d44a80ff845a7ba6156fa226f6cc8a04bd7596eb98da511a20f40ba20bfd09c",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  },
+  {
+    "path": "Assets/UI/Toolkit/Navigation.asset",
+    "sha256": "cfe14ebaf53c1f705bf7e0e0acbc6cd0ce544ca17a4c00214f869df8183d3c03",
+    "matches_final_test_input": true,
+    "matches_runtime_proof_input": true
+  }
+]

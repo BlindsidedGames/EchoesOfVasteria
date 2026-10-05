@@ -26,34 +26,68 @@ namespace TimelessEchoes.UI.Toolkit
         private float deselectAt = -1;
         private bool dirty;
         private bool embedded;
+        private bool forgePresentation;
         public bool IsOpen => root != null;
         public bool IsConfigured => definition && theme && runtimeTheme && textSettings;
         public Rect Bounds { get; set; }
         public bool ManualLayout { get; set; }
 
+        // Each owner keeps its own visual tree and subscriptions; only resource data is shared.
+        public ToolkitResourceInventoryScreen CreateCompanionView()
+        {
+            // Keep UIDocument objects independent: parenting below another UIDocument
+            // makes Unity inherit its PanelSettings and disallows our own assignment.
+            // Quests explicitly owns and disposes this view when its window closes.
+            var viewObject = new GameObject("Quests resource inventory", typeof(UIDocument));
+            var view = viewObject.AddComponent<ToolkitResourceInventoryScreen>();
+            view.definition = definition;
+            view.theme = theme;
+            view.runtimeTheme = runtimeTheme;
+            view.textSettings = textSettings;
+            return view;
+        }
+
         public bool Show() => Show(false);
-        private bool Show(bool inForge)
+        private bool Show(bool inForge, bool inQuests = false)
         {
             if (IsOpen) return true;
             if (!IsConfigured || !(manager = ResourceManager.Instance)) return false;
-            embedded = inForge;
+            embedded = inForge || inQuests;
+            forgePresentation = inForge;
             if (!settings) { settings = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); settings.sortingOrder = 100; }
             var document = GetComponent<UIDocument>(); document.panelSettings = settings; document.rootVisualElement.pickingMode = PickingMode.Ignore;
             root = new VisualElement { name = "resource-inventory" }; root.AddToClassList("eov-resource-inventory"); theme.Apply(root);ToolkitGameplay.Apply(root,theme);root.AddToClassList("menu-surface"); document.rootVisualElement.Add(root);
-            var title = new VisualElement(); title.AddToClassList("eov-resource-title");  root.Add(title);
-            selectedName = new Label { name = "selected-resource", pickingMode = PickingMode.Ignore }; selectedName.AddToClassList("eov-resource-name"); title.Add(selectedName);
-            if (embedded)
+            if (!embedded) root.AddToClassList("inventory-standalone");
+            var title = new VisualElement(); title.AddToClassList("eov-resource-title"); root.Add(title);
+            if (!embedded)
             {
-                selectedName.text = "Select a resource";
+                var heading = ToolkitGameplay.L(title, string.Empty, "heading");
+                ToolkitLocalization.Bind(heading, "forge.inventory", "Inventory");
+                heading.style.flexShrink = 0;
+            }
+            selectedName = new Label { name = "selected-resource", pickingMode = PickingMode.Ignore }; selectedName.AddToClassList("eov-resource-name"); title.Add(selectedName);
+            selectedName.text = ToolkitLocalization.Text("inventory.select-resource", "Select a resource");
+            if (forgePresentation)
+            {
+                selectedName.text = ToolkitLocalization.Text("inventory.select-resource", "Select a resource");
                 selectedRarity = new VisualElement(); selectedRarity.AddToClassList("forge-resource-rarity");
                 selectedRarity.Add(new ToolkitRarityStar()); selectedTier = new Label(); selectedRarity.Add(selectedTier); title.Add(selectedRarity);
                 selectedRarity.style.display = DisplayStyle.None;
             }
+            if (!embedded)
+            {
+                selectedName.style.flexGrow = 1;
+                selectedName.style.textOverflow = TextOverflow.Ellipsis;
+                var close = ToolkitGameplay.B(title, "×", () => TownWindowManager.Instance?.CloseAllWindows());
+                close.name = "inventory-close";
+                ToolkitLocalization.BindTooltip(close, "navigation.close-tooltip", "Close window");
+            }
             var frame = new VisualElement(); frame.AddToClassList("eov-resource-frame");  root.Add(frame);
             scroll = new ScrollView(ScrollViewMode.Vertical) { name = "resource-scroll", horizontalScrollerVisibility = ScrollerVisibility.Hidden, verticalScrollerVisibility = ScrollerVisibility.Auto };
             scroll.AddToClassList("eov-scroll"); scroll.AddToClassList("eov-resource-scroll"); theme.StyleScroll(scroll);ToolkitGameplay.StyleScroll(scroll); frame.Add(scroll);
-            grid = new ToolkitGrid(6, embedded ? new Vector2(32, 38) : new Vector2(26, 32), embedded ? new Vector2(2,2) : Vector2.one); grid.AddToClassList("eov-resource-grid"); scroll.Add(grid);
-            scroll.contentViewport.RegisterCallback<GeometryChangedEvent>(_=>grid.FitWidth(scroll.contentViewport.contentRect.width));
+            var cellSize = inQuests ? new Vector2(26, 32) : embedded ? new Vector2(32, 38) : new Vector2(40, 44);
+            grid = new ToolkitGrid(embedded ? 6 : 14, cellSize, inQuests ? Vector2.one : new Vector2(2,2)); grid.AddToClassList("eov-resource-grid"); scroll.Add(grid);
+            scroll.contentViewport.RegisterCallback<GeometryChangedEvent>(_=>grid.FitWidth(scroll.contentViewport.contentRect.width, embedded ? 6 : 14));
             for (var i = 0; i < definition.resources.Length; i++)
             {
                 var index = i;
@@ -66,19 +100,26 @@ namespace TimelessEchoes.UI.Toolkit
                 var icon = new Image { pickingMode = PickingMode.Ignore, scaleMode = ScaleMode.ScaleToFit }; icon.AddToClassList("eov-resource-icon"); background.Add(icon);
                 var selection = new VisualElement { pickingMode = PickingMode.Ignore }; selection.AddToClassList("eov-resource-selection"); selection.AddToClassList("selection-outline"); selection.style.unitySliceScale = .5f; background.Add(selection);
                 var count = new Label { pickingMode = PickingMode.Ignore }; count.AddToClassList("eov-resource-count"); button.Add(count);
+                if (!forgePresentation)
+                {
+                    var quality = new VisualElement { pickingMode = PickingMode.Ignore };
+                    quality.AddToClassList("eov-resource-quality"); button.Add(quality);
+                }
                 slots.Add((button, background, icon, selection, count));
             }
+            ToolkitLocalization.Changed += LocaleChanged;
             manager.OnInventoryChanged += Changed; Blindsided.EventHandler.OnLoadData += Changed;
             selected = -1; deselectAt = -1; Refresh(); Layout(); return true;
         }
-        public bool ShowIn(VisualElement host)
+        public bool ShowIn(VisualElement host) => ShowEmbedded(host, true);
+        public bool ShowInQuests(VisualElement host) => ShowEmbedded(host, false);
+        private bool ShowEmbedded(VisualElement host, bool inForge)
         {
             Hide();
-            if (!Show(true)) return false;
-            embedded = true;
+            if (!Show(inForge, !inForge)) return false;
             root.RemoveFromHierarchy();
             root.RemoveFromClassList("menu-surface");
-            root.AddToClassList("forge-embedded-inventory");
+            root.AddToClassList(inForge ? "forge-embedded-inventory" : "quests-embedded-inventory");
             root.style.position = Position.Relative;
             root.style.left = root.style.top = 0;
             root.style.width = root.style.height = StyleKeyword.Auto;
@@ -88,12 +129,24 @@ namespace TimelessEchoes.UI.Toolkit
             Refresh();
             return true;
         }
+
         private int Tier(Resource resource)
         {
             if (!manager.IsUnlocked(resource)) return 1;
-            return Mathf.Max(1, resource.DisableAlterEcho && definition.tierBackgrounds.Length > 0 ? definition.tierBackgrounds.Length : manager.GetTier(resource));
+            return Mathf.Max(1, forgePresentation && resource.DisableAlterEcho && definition.tierBackgrounds.Length > 0 ? definition.tierBackgrounds.Length : manager.GetTier(resource));
         }
         private static Sprite TierSprite(Sprite[] sprites, bool showTier, int tier) => sprites != null && sprites.Length > 0 ? sprites[showTier ? Mathf.Clamp(tier - 1, 0, sprites.Length - 1) : 0] : null;
+        private void LocaleChanged()
+        {
+            if (selected >= 0)
+            {
+                var previousExpiry = deselectAt;
+                HighlightResource(definition.resources[selected], false);
+                deselectAt = previousExpiry;
+            }
+            else selectedName.text = ToolkitLocalization.Text("inventory.select-resource", "Select a resource");
+            dirty = true;
+        }
         private void Changed() => dirty = true;
         private void Refresh()
         {
@@ -104,11 +157,11 @@ namespace TimelessEchoes.UI.Toolkit
                 
                 slot.icon.sprite = manager.IsUnlocked(resource) ? resource.icon : resource.UnknownIcon;
                 var art = slot.icon.sprite;
-                if (embedded && art) { slot.icon.style.width = art.rect.width * 16 / art.pixelsPerUnit; slot.icon.style.height = art.rect.height * 16 / art.pixelsPerUnit; }
-                slot.button.tooltip = manager.IsUnlocked(resource) ? resource.name + " · Tier " + tier : "Undiscovered";
-                slot.count.text = embedded ? FormatNumber(manager.GetAmount(resource), true) : "<b>" + FormatNumber(manager.GetAmount(resource), true) + "</b>";
+                if (forgePresentation && art) { slot.icon.style.width = art.rect.width * 16 / art.pixelsPerUnit; slot.icon.style.height = art.rect.height * 16 / art.pixelsPerUnit; }
+                slot.button.tooltip = manager.IsUnlocked(resource) ? ToolkitLocalization.Text("inventory.resource-tier-tooltip", "{0} · Tier {1}", ToolkitLocalization.Name(resource), tier) : ToolkitLocalization.Text("common.undiscovered", "Undiscovered");
+                slot.count.text = forgePresentation ? FormatNumber(manager.GetAmount(resource), true) : "<b>" + FormatNumber(manager.GetAmount(resource), true) + "</b>";
                 slot.button.EnableInClassList("resource-selected", i == selected);
-                slot.selection.style.display = i == selected && !embedded ? DisplayStyle.Flex : DisplayStyle.None;
+                slot.selection.style.display = i == selected && !forgePresentation ? DisplayStyle.Flex : DisplayStyle.None;
             }
         }
         public void HighlightResource(Resource resource, bool scrollToSlot = true)
@@ -117,13 +170,13 @@ namespace TimelessEchoes.UI.Toolkit
             if (index < 0) return;
             if (!IsOpen && !Show()) return;
             selected = index;
-            selectedName.text = manager.IsUnlocked(definition.resources[index]) ? definition.resources[index].name + " - Tier " + Tier(definition.resources[index]) : "???";
-            if (embedded)
+            selectedName.text = manager.IsUnlocked(definition.resources[index]) ? ToolkitLocalization.Text("inventory.resource-tier", "{0} - Tier {1}", ToolkitLocalization.Name(definition.resources[index]), Tier(definition.resources[index])) : "???";
+            if (forgePresentation)
             {
                 var known = manager.IsUnlocked(definition.resources[index]);
-                selectedName.text = known ? definition.resources[index].name : "Undiscovered";
+                selectedName.text = known ? ToolkitLocalization.Name(definition.resources[index]) : ToolkitLocalization.Text("common.undiscovered", "Undiscovered");
                 selectedRarity.style.display = known ? DisplayStyle.Flex : DisplayStyle.None;
-                selectedTier.text = "Tier " + Tier(definition.resources[index]);
+                selectedTier.text = ToolkitLocalization.Text("inventory.tier", "Tier {0}", Tier(definition.resources[index]));
                 for (int tier=1;tier<=8;tier++) selectedRarity.EnableInClassList("tier-"+tier,tier==Tier(definition.resources[index]));
             }
             FitName(); Refresh();
@@ -132,15 +185,17 @@ namespace TimelessEchoes.UI.Toolkit
                 // A newly opened document needs its first layout before scrolling.
                 pendingScroll = index;
             }
-            deselectAt = !embedded && definition.highlightDuration > 0 ? Time.time + definition.highlightDuration : -1;
+            deselectAt = !forgePresentation && definition.highlightDuration > 0 ? Time.time + definition.highlightDuration : -1;
         }
         private void FitName()
         {
-            if (embedded) { selectedName.style.fontSize = 8; return; }
-            var size = 5.87f;
-            selectedName.style.fontSize = size;
-            var width = selectedName.MeasureTextSize(selectedName.text, 0, VisualElement.MeasureMode.Undefined, 0, VisualElement.MeasureMode.Undefined).x;
-            if (width > 172) selectedName.style.fontSize = size * 172 / width;
+            selectedName.style.fontSize = 8;
+            if (embedded && !forgePresentation)
+            {
+                selectedName.style.fontSize = 5.87f;
+                var width = selectedName.MeasureTextSize(selectedName.text, 0, VisualElement.MeasureMode.Undefined, 0, VisualElement.MeasureMode.Undefined).x;
+                if (width > 172) selectedName.style.fontSize = 5.87f * 172 / width;
+            }
         }
         private readonly ToolkitWindowLayout windowLayout = new();
         private void Layout() { if (!embedded) windowLayout.Apply(root, new Rect(Bounds.x + 4, Bounds.y, Mathf.Max(0, Bounds.width - 4), Bounds.height)); }
@@ -149,7 +204,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (!IsOpen) return; Layout();
             if (pendingScroll >= 0 && grid.layout.height > 0 && scroll.contentViewport.layout.height > 0)
             {
-                var y = (pendingScroll / grid.Columns) * (embedded ? 40 : 33);
+                var y = (pendingScroll / grid.Columns) * (forgePresentation ? 40 : embedded ? 33 : 46);
                 scroll.scrollOffset = new Vector2(0, Mathf.Min(y, Mathf.Max(0, scroll.contentContainer.layout.height - scroll.contentViewport.layout.height)));
                 pendingScroll = -1;
             }
@@ -158,6 +213,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         public void Hide()
         {
+            ToolkitLocalization.Changed -= LocaleChanged;
             if (manager) manager.OnInventoryChanged -= Changed;
             Blindsided.EventHandler.OnLoadData -= Changed; root?.RemoveFromHierarchy(); root = null; embedded = false; slots.Clear(); selected = -1; pendingScroll = -1; deselectAt = -1; dirty = false;
         }

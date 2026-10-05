@@ -12,6 +12,21 @@ namespace Pathfinding.RVO {
 	/// See: Pathfinding.RVO.Simulator
 	/// </summary>
 	public struct RVOQuadtreeBurst {
+		/// <summary>
+		/// Reads one component of a position.
+		///
+		/// Burst devirtualizes the call when the type argument is a concrete struct, so JobBuild.Partition
+		/// becomes a loop over a constant offset. A runtime component index would spill the float3 to the
+		/// stack and reload it instead.
+		/// </summary>
+		interface IAxis {
+			float Get(float3 p);
+		}
+
+		struct AxisX : IAxis { public float Get(float3 p) => p.x; }
+		struct AxisY : IAxis { public float Get(float3 p) => p.y; }
+		struct AxisZ : IAxis { public float Get(float3 p) => p.z; }
+
 		const int LeafSize = 16;
 		const int MaxDepth = 10;
 
@@ -21,6 +36,7 @@ namespace Pathfinding.RVO {
 		NativeArray<int> agentCountBuffer;
 		NativeArray<float3> agentPositions;
 		NativeArray<float> agentRadii;
+		NativeArray<RVOLayer> agentLayers;
 		NativeArray<float> maxSpeeds;
 		NativeArray<float> maxRadius;
 		NativeArray<float> nodeAreas;
@@ -30,25 +46,6 @@ namespace Pathfinding.RVO {
 		const int BitPackingShift = 15;
 		const int BitPackingMask = (1 << BitPackingShift) - 1;
 		const int MaxAgents = BitPackingMask;
-
-		/// <summary>
-		/// For a given number, contains the index of the first non-zero bit.
-		/// Only the values 0 through 15 are used when movementPlane is XZ or XY.
-		///
-		/// Use bytes instead of ints to save some precious L1 cache memory.
-		/// </summary>
-		static readonly byte[] ChildLookup = new byte[256];
-
-		static RVOQuadtreeBurst() {
-			for (int v = 0; v < 256; v++) {
-				for (int i = 0; i < 8; i++) {
-					if (((v >> i) & 0x1) != 0) {
-						ChildLookup[v] = (byte)i;
-						break;
-					}
-				}
-			}
-		}
 
 		public Rect bounds {
 			get {
@@ -74,6 +71,7 @@ namespace Pathfinding.RVO {
 			nodeAreas.Dispose();
 			agentPositions.Dispose();
 			agentRadii.Dispose();
+			agentLayers.Dispose();
 		}
 
 		void Reserve (int minSize) {
@@ -86,13 +84,14 @@ namespace Pathfinding.RVO {
 			Util.Memory.Realloc(ref agents, roundedAgents, Allocator.Persistent, NativeArrayOptions.ClearMemory);
 			Util.Memory.Realloc(ref agentPositions, roundedAgents, Allocator.Persistent, NativeArrayOptions.ClearMemory);
 			Util.Memory.Realloc(ref agentRadii, roundedAgents, Allocator.Persistent, NativeArrayOptions.ClearMemory);
+			Util.Memory.Realloc(ref agentLayers, roundedAgents, Allocator.Persistent, NativeArrayOptions.ClearMemory);
 			Util.Memory.Realloc(ref childPointers, InnerNodeCountUpperBound(roundedAgents, movementPlane), Allocator.Persistent, NativeArrayOptions.ClearMemory);
 			Util.Memory.Realloc(ref maxSpeeds, childPointers.Length, Allocator.Persistent, NativeArrayOptions.ClearMemory);
 			Util.Memory.Realloc(ref nodeAreas, childPointers.Length, Allocator.Persistent, NativeArrayOptions.ClearMemory);
 			Util.Memory.Realloc(ref maxRadius, childPointers.Length, Allocator.Persistent, NativeArrayOptions.ClearMemory);
 		}
 
-		public JobBuild BuildJob (NativeArray<float3> agentPositions, NativeArray<AgentIndex> agentVersions, NativeArray<float> agentSpeeds, NativeArray<float> agentRadii, int numAgents, MovementPlane movementPlane) {
+		public JobBuild BuildJob (NativeArray<float3> agentPositions, NativeArray<AgentIndex> agentVersions, NativeArray<float> agentSpeeds, NativeArray<float> agentRadii, NativeArray<RVOLayer> agentLayers, int numAgents, MovementPlane movementPlane) {
 			if (numAgents >= MaxAgents) throw new System.Exception("Too many agents. Cannot have more than " + MaxAgents);
 			Reserve(numAgents);
 
@@ -104,11 +103,15 @@ namespace Pathfinding.RVO {
 					   agentPositions = agentPositions,
 					   agentSpeeds = agentSpeeds,
 					   agentRadii = agentRadii,
+					   agentLayers = agentLayers,
 					   outMaxSpeeds = maxSpeeds,
 					   outMaxRadius = maxRadius,
 					   outArea = nodeAreas,
-					   outAgentRadii = this.agentRadii, // Will be copied. These are copied so that the quadtree remains in a valid state even after new agents have been added/removed. This is important for the QueryArea method which may be called at any time.
-					   outAgentPositions = this.agentPositions, // Will be copied
+					   // Snapshotted, permuted into leaf order. The snapshot keeps the quadtree valid even after agents
+					   // have been added or removed, which QueryArea relies on since it may be called at any time.
+					   outAgentRadii = this.agentRadii,
+					   outAgentPositions = this.agentPositions,
+					   outAgentLayers = this.agentLayers,
 					   outBoundingBox = boundingBoxBuffer,
 					   outAgentCount = agentCountBuffer,
 					   outChildPointers = childPointers,
@@ -134,6 +137,9 @@ namespace Pathfinding.RVO {
 			[ReadOnly]
 			public NativeArray<float> agentRadii;
 
+			[ReadOnly]
+			public NativeArray<RVOLayer> agentLayers;
+
 			/// <summary>Should have size 2</summary>
 			[WriteOnly]
 			public NativeArray<float3> outBoundingBox;
@@ -154,19 +160,30 @@ namespace Pathfinding.RVO {
 			/// <summary>Should have size: InnerNodeCountUpperBound(numAgents)</summary>
 			public NativeArray<float> outArea;
 
-			[WriteOnly]
 			public NativeArray<float3> outAgentPositions;
 
-			[WriteOnly]
 			public NativeArray<float> outAgentRadii;
+
+			public NativeArray<RVOLayer> outAgentLayers;
 
 			public int numAgents;
 
 			public MovementPlane movementPlane;
 
-			static int Partition (NativeSlice<int> indices, int startIndex, int endIndex, NativeSlice<float> coordinates, float splitPoint) {
+			/// <summary>
+			/// Moves every agent above splitPoint on the given axis to the end of [startIndex, endIndex).
+			///
+			/// Returns the index where the upper partition begins.
+			///
+			/// Takes the positions as a plain array rather than a strided NativeSlice: a slice indexes through
+			/// a stride held in a struct field, which costs a multiply per access and blocks the coordinate
+			/// read from folding into a constant offset.
+			/// </summary>
+			static int Partition<TAxis>(NativeArray<int> indices, int startIndex, int endIndex, NativeArray<float3> positions, float splitPoint) where TAxis : struct, IAxis {
+				var axis = default(TAxis);
+
 				for (int i = startIndex; i < endIndex; i++) {
-					if (coordinates[indices[i]] > splitPoint) {
+					if (axis.Get(positions[indices[i]]) > splitPoint) {
 						endIndex--;
 						var tmp = indices[i];
 						indices[i] = indices[endIndex];
@@ -181,20 +198,16 @@ namespace Pathfinding.RVO {
 				if (agentsEnd - agentsStart > LeafSize && depth < MaxDepth) {
 					if (movementPlane == MovementPlane.Arbitrary) {
 						// Split the node into 8 equally sized (by volume) child nodes
-						var xs = new NativeSlice<float3>(agentPositions).SliceWithStride<float>(0);
-						var ys = new NativeSlice<float3>(agentPositions).SliceWithStride<float>(4);
-						var zs = new NativeSlice<float3>(agentPositions).SliceWithStride<float>(8);
-
 						float3 boundsMid = (boundsMin + boundsMax) * 0.5f;
 						int s0 = agentsStart;
 						int s8 = agentsEnd;
-						int s4 = Partition(agents, s0, s8, xs, boundsMid.x);
-						int s2 = Partition(agents, s0, s4, ys, boundsMid.y);
-						int s6 = Partition(agents, s4, s8, ys, boundsMid.y);
-						int s1 = Partition(agents, s0, s2, zs, boundsMid.z);
-						int s3 = Partition(agents, s2, s4, zs, boundsMid.z);
-						int s5 = Partition(agents, s4, s6, zs, boundsMid.z);
-						int s7 = Partition(agents, s6, s8, zs, boundsMid.z);
+						int s4 = Partition<AxisX>(agents, s0, s8, agentPositions, boundsMid.x);
+						int s2 = Partition<AxisY>(agents, s0, s4, agentPositions, boundsMid.y);
+						int s6 = Partition<AxisY>(agents, s4, s8, agentPositions, boundsMid.y);
+						int s1 = Partition<AxisZ>(agents, s0, s2, agentPositions, boundsMid.z);
+						int s3 = Partition<AxisZ>(agents, s2, s4, agentPositions, boundsMid.z);
+						int s5 = Partition<AxisZ>(agents, s4, s6, agentPositions, boundsMid.z);
+						int s7 = Partition<AxisZ>(agents, s6, s8, agentPositions, boundsMid.z);
 
 						// Note: guaranteed to be large enough
 						int childIndex = firstFreeChild;
@@ -223,15 +236,12 @@ namespace Pathfinding.RVO {
 						BuildNode(new float3(mid.x, mid.y, mid.z), new float3(max.x, max.y, max.z), depth + 1, s7, s8, childIndex + 7, ref firstFreeChild);
 					} else if (movementPlane == MovementPlane.XY) {
 						// Split the node into 4 equally sized (by area) child nodes
-						var xs = new NativeSlice<float3>(agentPositions).SliceWithStride<float>(0);
-						var ys = new NativeSlice<float3>(agentPositions).SliceWithStride<float>(4);
-
 						float3 boundsMid = (boundsMin + boundsMax) * 0.5f;
 						int s0 = agentsStart;
 						int s4 = agentsEnd;
-						int s2 = Partition(agents, s0, s4, xs, boundsMid.x);
-						int s1 = Partition(agents, s0, s2, ys, boundsMid.y);
-						int s3 = Partition(agents, s2, s4, ys, boundsMid.y);
+						int s2 = Partition<AxisX>(agents, s0, s4, agentPositions, boundsMid.x);
+						int s1 = Partition<AxisY>(agents, s0, s2, agentPositions, boundsMid.y);
+						int s3 = Partition<AxisY>(agents, s2, s4, agentPositions, boundsMid.y);
 
 						// Note: guaranteed to be large enough
 						int childIndex = firstFreeChild;
@@ -249,15 +259,12 @@ namespace Pathfinding.RVO {
 						BuildNode(new float3(boundsMid.x, boundsMid.y, boundsMin.z), new float3(boundsMax.x, boundsMax.y, boundsMax.z), depth + 1, s3, s4, childIndex + 3, ref firstFreeChild);
 					} else {
 						// Split the node into 4 equally sized (by area) child nodes
-						var xs = new NativeSlice<float3>(agentPositions).SliceWithStride<float>(0);
-						var zs = new NativeSlice<float3>(agentPositions).SliceWithStride<float>(8);
-
 						float3 boundsMid = (boundsMin + boundsMax) * 0.5f;
 						int s0 = agentsStart;
 						int s4 = agentsEnd;
-						int s2 = Partition(agents, s0, s4, xs, boundsMid.x);
-						int s1 = Partition(agents, s0, s2, zs, boundsMid.z);
-						int s3 = Partition(agents, s2, s4, zs, boundsMid.z);
+						int s2 = Partition<AxisX>(agents, s0, s4, agentPositions, boundsMid.x);
+						int s1 = Partition<AxisZ>(agents, s0, s2, agentPositions, boundsMid.z);
+						int s3 = Partition<AxisZ>(agents, s2, s4, agentPositions, boundsMid.z);
 
 						// Note: guaranteed to be large enough
 						int childIndex = firstFreeChild;
@@ -280,21 +287,192 @@ namespace Pathfinding.RVO {
 				}
 			}
 
+
+			/// <summary>Number of Morton code bits one level of the tree consumes.</summary>
+			int ChildBits => movementPlane == MovementPlane.Arbitrary ? 3 : 2;
+
+			/// <summary>
+			/// Child index <see cref="BuildNode"/> would pick for p at each of the top levels, root level in the high bits.
+			///
+			/// Contract: bit group (levels-1-d) of the result is the child index of the node containing p at
+			/// depth d, for every d < levels.
+			///
+			/// Repeats the exact (min+max)*0.5 sequence that <see cref="BuildNode"/> splits on and QueryRec prunes by,
+			/// rather than scaling p into a fixed grid. A scaled code disagrees with that sequence for a
+			/// position within a few ulp of a cell boundary, which files the agent under a node whose bounds
+			/// exclude it, and QueryRec would then prune the node away and never find it.
+			///
+			/// Branchless because the comparisons are near 50/50 on any realistic crowd. Written with ifs it
+			/// costs two mispredicts per level per agent, which is enough to dominate the whole build.
+			/// </summary>
+			static uint MortonCode2D (float2 p, float2 boundsMin, float2 boundsMax, int levels) {
+				uint code = 0;
+
+				for (int d = 0; d < levels; d++) {
+					var mid = (boundsMin + boundsMax) * 0.5f;
+					var high = p > mid;
+					boundsMin = math.select(boundsMin, mid, high);
+					boundsMax = math.select(mid, boundsMax, high);
+					var bits = math.select(new int2(0, 0), new int2(2, 1), high);
+					code = (code << 2) | (uint)(bits.x | bits.y);
+				}
+				return code;
+			}
+
+			/// <summary>\copydoc MortonCode2D</summary>
+			static uint MortonCode3D (float3 p, float3 boundsMin, float3 boundsMax, int levels) {
+				uint code = 0;
+
+				for (int d = 0; d < levels; d++) {
+					var mid = (boundsMin + boundsMax) * 0.5f;
+					var high = p > mid;
+					boundsMin = math.select(boundsMin, mid, high);
+					boundsMax = math.select(mid, boundsMax, high);
+					var bits = math.select(new int3(0, 0, 0), new int3(4, 2, 1), high);
+					code = (code << 3) | (uint)(bits.x | bits.y | bits.z);
+				}
+				return code;
+			}
+
+			/// <summary>
+			/// Crowd size below which the counting sort does not pay for itself.
+			///
+			/// Measured: at 500 agents the sort loses 3-11% to plain partitioning, at 1000 it wins 46-53%.
+			/// </summary>
+			const int MinAgentsForSort = 750;
+
+			/// <summary>
+			/// Sort depth that resolves the tree down to roughly leaf granularity.
+			///
+			/// Picks the shallowest depth whose buckets average at most <see cref="LeafSize"/> agents, so the sort absorbs
+			/// the levels <see cref="BuildNode"/> would otherwise spend a full pass on, and <see cref="BuildNode"/> is left only the
+			/// buckets that overflowed.
+			///
+			/// Chosen from a sweep of depths 2..6 over 300..10000 agents: this is the measured optimum at every
+			/// uniform crowd size tested. Clustered crowds pile into a few buckets and want one level deeper,
+			/// losing up to 31% here, but biasing a level towards them costs uniform crowds 13-21% and only
+			/// recovers to within 5%, so the tie goes to the distribution that is not a synthetic extreme.
+			/// Either way the sort still beats Partition by 37-49% on the clustered case.
+			///
+			/// The number of sorting buckets will be roughly count/LeafSize.
+			/// </summary>
+			static int AutoLevels (int count, int childBits) {
+				if (count < MinAgentsForSort) return 0;
+
+				int levels = 1;
+				while (levels < MaxDepth && (1 << (childBits * levels)) * LeafSize < count) levels++;
+				return levels;
+			}
+
+			/// <summary>Fills agentCodes with morton codes for the first count entries of <see cref="agents"/></summary>
+			void ComputeCodes (NativeArray<uint> agentCodes, int count, float3 mn, float3 mx, int levels) {
+				if (movementPlane == MovementPlane.Arbitrary) {
+					for (int i = 0; i < count; i++) agentCodes[i] = MortonCode3D(agentPositions[agents[i]], mn, mx, levels);
+				} else if (movementPlane == MovementPlane.XY) {
+					for (int i = 0; i < count; i++) agentCodes[i] = MortonCode2D(agentPositions[agents[i]].xy, mn.xy, mx.xy, levels);
+				} else {
+					for (int i = 0; i < count; i++) agentCodes[i] = MortonCode2D(agentPositions[agents[i]].xz, mn.xz, mx.xz, levels);
+				}
+			}
+
+			/// <summary>
+			/// Orders the first count entries of <see cref="agents"/> by the cell they fall in at the given depth.
+			///
+			/// Returns where each cell's agents begin, with numBuckets+1 entries, so a node spanning cells
+			/// [lo, hi) contains the agents in the slice [result[lo], result[hi]).
+			/// </summary>
+			NativeArray<int> CountingSortAgents (int count, int numBuckets, float3 mn, float3 mx, int levels) {
+				var codes = new NativeArray<uint>(count, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
+
+				ComputeCodes(codes, count, mn, mx, levels);
+
+				var bucketStart = new NativeArray<int>(numBuckets + 1, Allocator.Temp, NativeArrayOptions.ClearMemory);
+				for (int i = 0; i < count; i++) bucketStart[(int)codes[i] + 1]++;
+				for (int b = 0; b < numBuckets; b++) bucketStart[b + 1] += bucketStart[b];
+
+				var cursor = new NativeArray<int>(numBuckets, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
+				NativeArray<int>.Copy(bucketStart, cursor, numBuckets);
+
+				var permuted = new NativeArray<int>(count, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
+				for (int i = 0; i < count; i++) permuted[cursor[(int)codes[i]]++] = agents[i];
+				NativeArray<int>.Copy(permuted, agents, count);
+
+				return bucketStart;
+			}
+
+			/// <summary>Child bounds of a node where child goes from 0 to 7</summary>
+			void ChildBounds (float3 boundsMin, float3 boundsMax, int child, out float3 childMin, out float3 childMax) {
+				var mid = (boundsMin + boundsMax) * 0.5f;
+
+				if (movementPlane == MovementPlane.Arbitrary) {
+					var selector = new bool3((child & 4) != 0, (child & 2) != 0, (child & 1) != 0);
+					childMin = math.select(boundsMin, mid, selector);
+					childMax = math.select(mid, boundsMax, selector);
+				} else if (movementPlane == MovementPlane.XY) {
+					var selector = new bool3((child & 2) != 0, (child & 1) != 0, false);
+					childMin = math.select(boundsMin, mid, selector);
+					childMax = math.select(mid, boundsMax, selector);
+					childMin.z = boundsMin.z;
+					childMax.z = boundsMax.z;
+				} else {
+					var selector = new bool3((child & 2) != 0, false, (child & 1) != 0);
+					childMin = math.select(boundsMin, mid, selector);
+					childMax = math.select(mid, boundsMax, selector);
+					childMin.y = boundsMin.y;
+					childMax.y = boundsMax.y;
+				}
+			}
+
+			/// <summary>
+			/// Builds the subtree at nodeOffset from the counting sort's bucket table.
+			///
+			/// Once the bucketed nodes run out, we use BuildNode to handle the final levels if agents turned out to be clustered.
+			/// </summary>
+			void BuildNodeSorted (NativeArray<int> bucketStart, float3 boundsMin, float3 boundsMax, int depth, uint prefix, int levels, int nodeOffset, ref int firstFreeChild) {
+				int childBits = ChildBits;
+				int shift = childBits * (levels - depth);
+				int agentsStart = bucketStart[(int)(prefix << shift)];
+				int agentsEnd = bucketStart[(int)((prefix + 1) << shift)];
+
+				if (agentsEnd - agentsStart <= LeafSize || depth >= MaxDepth) {
+					outChildPointers[nodeOffset] = agentsStart | (agentsEnd << BitPackingShift) | LeafNodeBit;
+					return;
+				}
+
+				if (depth >= levels) {
+					BuildNode(boundsMin, boundsMax, depth, agentsStart, agentsEnd, nodeOffset, ref firstFreeChild);
+					return;
+				}
+
+				int childCount = 1 << childBits;
+				int childIndex = firstFreeChild;
+				outChildPointers[nodeOffset] = childIndex;
+				firstFreeChild += childCount;
+
+				for (int c = 0; c < childCount; c++) {
+					ChildBounds(boundsMin, boundsMax, c, out var childMin, out var childMax);
+					BuildNodeSorted(bucketStart, childMin, childMax, depth + 1, (prefix << childBits) | (uint)c, levels, childIndex + c, ref firstFreeChild);
+				}
+			}
+
 			void CalculateSpeeds (int nodeCount) {
 				for (int i = nodeCount - 1; i >= 0; i--) {
 					if ((outChildPointers[i] & LeafNodeBit) != 0) {
 						int startIndex = outChildPointers[i] & BitPackingMask;
 						int endIndex = (outChildPointers[i] >> BitPackingShift) & BitPackingMask;
+						// One pass over the leaf, not three: agents[j] is loaded once and the radius feeds both
+						// reductions from a register.
 						float speed = 0;
-						for (int j = startIndex; j < endIndex; j++) speed = math.max(speed, agentSpeeds[agents[j]]);
-						outMaxSpeeds[i] = speed;
-
 						float radius = 0;
-						for (int j = startIndex; j < endIndex; j++) radius = math.max(radius, agentRadii[agents[j]]);
-						outMaxRadius[i] = radius;
-
 						float area = 0;
-						for (int j = startIndex; j < endIndex; j++) area += agentRadii[agents[j]]*agentRadii[agents[j]];
+						for (int j = startIndex; j < endIndex; j++) {
+							speed = math.max(speed, agentSpeeds[agents[j]]);
+							var r = outAgentRadii[j];
+							radius = math.max(radius, r);
+							area += r*r;
+						}
+						outMaxSpeeds[i] = speed;
+						outMaxRadius[i] = radius;
 						outArea[i] = area;
 					} else {
 						// Take the maximum of all child speeds
@@ -307,7 +485,7 @@ namespace Pathfinding.RVO {
 							float area = 0;
 							for (int j = 0; j < 8; j++) {
 								maxSpeed = math.max(maxSpeed, outMaxSpeeds[childIndex + j]);
-								maxRadius = math.max(maxRadius, outMaxSpeeds[childIndex + j]);
+								maxRadius = math.max(maxRadius, outMaxRadius[childIndex + j]);
 								area += outArea[childIndex + j];
 							}
 							outMaxSpeeds[i] = maxSpeed;
@@ -348,12 +526,25 @@ namespace Pathfinding.RVO {
 				outBoundingBox[1] = mx;
 
 				int firstFreeChild = 1;
-				BuildNode(mn, mx, 0, 0, existingAgentCount, 0, ref firstFreeChild);
+				int sortLevels = AutoLevels(existingAgentCount, ChildBits);
+				if (sortLevels > 0) {
+					var bucketStart = CountingSortAgents(existingAgentCount, 1 << (ChildBits * sortLevels), mn, mx, sortLevels);
+					BuildNodeSorted(bucketStart, mn, mx, 0, 0, sortLevels, 0, ref firstFreeChild);
+				} else {
+					BuildNode(mn, mx, 0, 0, existingAgentCount, 0, ref firstFreeChild);
+				}
+
+				// Snapshot the per-agent data permuted into leaf order, so that every consumer of the tree reads it
+				// sequentially instead of gathering through #agents. The gather happens once per build here, while
+				// the queries would otherwise gather once per scanned candidate, which is orders of magnitude more often.
+				for (int j = 0; j < existingAgentCount; j++) {
+					var agent = agents[j];
+					outAgentPositions[j] = agentPositions[agent];
+					outAgentRadii[j] = agentRadii[agent];
+					outAgentLayers[j] = agentLayers[agent];
+				}
 
 				CalculateSpeeds(firstFreeChild);
-
-				NativeArray<float3>.Copy(agentPositions, outAgentPositions, numAgents);
-				NativeArray<float>.Copy(agentRadii, outAgentRadii, numAgents);
 			}
 		}
 
@@ -362,7 +553,6 @@ namespace Pathfinding.RVO {
 			public float speed, timeHorizon, agentRadius;
 			public int outputStartIndex, maxCount;
 			public RVOLayer layerMask;
-			public NativeArray<RVOLayer> layers;
 			public NativeArray<int> result;
 			public NativeArray<float> resultDistances;
 		}
@@ -406,10 +596,11 @@ namespace Pathfinding.RVO {
 				var result = query.result;
 				var resultDistances = query.resultDistances;
 				for (int j = startIndex; j < endIndex; j++) {
-					var agent = agents[j];
-					float sqrDistance = math.lengthsq(p - agentPositions[agent]);
-					if (sqrDistance < radius*radius && (query.layers[agent] & query.layerMask) != 0) {
+					float sqrDistance = math.lengthsq(p - agentPositions[j]);
+					if (sqrDistance < radius*radius && (agentLayers[j] & query.layerMask) != 0) {
 						// Close enough
+						// Only resolve the original agent index once a candidate is actually a hit
+						var agent = agents[j];
 
 						// Insert the agent into the results list using insertion sort
 						for (int k = 0; k < maxCount; k++) {
@@ -422,10 +613,10 @@ namespace Pathfinding.RVO {
 								result[query.outputStartIndex + k] = agent;
 								resultDistances[k] = sqrDistance;
 
-								if (k == maxCount - 1) {
-									// We reached the end of the array. This means that we just updated the largest distance.
-									// We can use this to restrict the future search. We know that no other agent distance we find can be larger than this value.
-									maxRadius = math.min(maxRadius, math.sqrt(sqrDistance));
+								// If we have found maxCount agents, tighten the upper bound to the distance to the furthest away agent.
+								var worstKept = resultDistances[maxCount - 1];
+								if (worstKept < DistanceInfinity) {
+									maxRadius = math.min(maxRadius, math.sqrt(worstKept));
 									radius = math.min(radius, maxRadius);
 								}
 								break;
@@ -472,7 +663,7 @@ namespace Pathfinding.RVO {
 					// Loop over all children that we will visit.
 					// It's nice with a loop because we will usually only have a single branch.
 					while (childrenToVisit != 0) {
-						var childIndex = ChildLookup[childrenToVisit];
+						var childIndex = math.tzcnt(childrenToVisit);
 						var selector = new bool3((childIndex & 0x4) != 0, (childIndex & 0x2) != 0, (childIndex & 0x1) != 0);
 
 						var mn = math.select(nodeMin, nodeMid, selector);
@@ -504,7 +695,7 @@ namespace Pathfinding.RVO {
 					// Loop over all children that we will visit.
 					// It's nice with a loop because we will usually only have a single branch.
 					while (childrenToVisit != 0) {
-						var childIndex = ChildLookup[childrenToVisit];
+						var childIndex = math.tzcnt(childrenToVisit);
 						// Note: mx.z will become nodeMid.z which is technically incorrect, but we don't care about the Z coordinate here anyway
 						var selector = new bool3((childIndex & 0x2) != 0, (childIndex & 0x1) != 0, false);
 
@@ -534,7 +725,7 @@ namespace Pathfinding.RVO {
 					childrenToVisit &= ~(1 << mainChildIndex);
 
 					while (childrenToVisit != 0) {
-						var childIndex = ChildLookup[childrenToVisit];
+						var childIndex = math.tzcnt(childrenToVisit);
 						// Note: mx.y will become nodeMid.y which is technically incorrect, but we don't care about the Y coordinate here anyway
 						var selector = new bool3((childIndex & 0x2) != 0, false, (childIndex & 0x1) != 0);
 
@@ -556,18 +747,23 @@ namespace Pathfinding.RVO {
 
 		float QueryAreaRec (int treeNodeIndex, float3 p, float radius, float3 nodeMin, float3 nodeMax) {
 			float3 nodeMid = (nodeMin + nodeMax) * 0.5f;
-			// Radius of a circle that is guaranteed to cover the entire node
-			float nodeRadius = math.length(nodeMax - nodeMid);
-			float dist = math.lengthsq(nodeMid - p);
 			var maxAgentRadius = maxRadius[treeNodeIndex];
-			var thresholdDistance = radius - (nodeRadius + maxAgentRadius);
 
-			if (thresholdDistance > 0 && dist < thresholdDistance*thresholdDistance) {
-				// Node is completely inside the circle. Return the precalculated area of all agents inside the node.
+			// Squared distances to the closest and furthest points of the node's box. Bounding the node by
+			// a sphere through its corners instead would be looser in both directions, and would cost a
+			// square root per visited node. The query radius is only a few agent radii, so at a realistic
+			// crowd density it is far smaller than a leaf, and a bound that loose never prunes anything.
+			var outside = math.max(math.max(nodeMin - p, p - nodeMax), 0);
+			var nearSqrDistance = math.lengthsq(outside);
+			var farSqrDistance = math.lengthsq(math.max(math.abs(p - nodeMin), math.abs(p - nodeMax)));
+
+			var fullyInsideRadius = radius - maxAgentRadius;
+			if (fullyInsideRadius > 0 && farSqrDistance < fullyInsideRadius*fullyInsideRadius) {
+				// Every agent in the node is completely inside the circle. Return their precalculated total area.
 				return nodeAreas[treeNodeIndex];
 			}
 
-			if (dist > (radius + (nodeRadius + maxAgentRadius))*(radius + (nodeRadius + maxAgentRadius))) {
+			if (nearSqrDistance > (radius + maxAgentRadius)*(radius + maxAgentRadius)) {
 				return 0;
 			}
 
@@ -578,13 +774,10 @@ namespace Pathfinding.RVO {
 				int startIndex = childPointers[treeNodeIndex] & BitPackingMask;
 				int endIndex = (childPointers[treeNodeIndex] >> BitPackingShift) & BitPackingMask;
 
-				float k = 0;
 				float area = 0;
 				for (int j = startIndex; j < endIndex; j++) {
-					var agent = agents[j];
-					k += agentRadii[agent]*agentRadii[agent];
-					float sqrDistance = math.lengthsq(p - agentPositions[agent]);
-					float agentRadius = agentRadii[agent];
+					float sqrDistance = math.lengthsq(p - agentPositions[j]);
+					float agentRadius = agentRadii[j];
 					if (sqrDistance < (radius + agentRadius)*(radius + agentRadius)) {
 						float innerRadius = radius - agentRadius;
 						// Slight approximation at the edge of the circle.
@@ -667,7 +860,7 @@ namespace Pathfinding.RVO {
 
 			DebugDraw(0, boundingBoxBuffer[0], boundingBoxBuffer[1], draw);
 			for (int i = 0; i < numAgents; i++) {
-				draw.Cross(agentPositions[agents[i]], 0.5f, Palette.Colorbrewer.Set1.Red);
+				draw.Cross(agentPositions[i], 0.5f, Palette.Colorbrewer.Set1.Red);
 			}
 		}
 
@@ -681,7 +874,7 @@ namespace Pathfinding.RVO {
 				int endIndex = (childPointers[nodeIndex] >> BitPackingShift) & BitPackingMask;
 
 				for (int j = startIndex; j < endIndex; j++) {
-					draw.Line(nodeMid, agentPositions[agents[j]], Color.black);
+					draw.Line(nodeMid, agentPositions[j], Color.black);
 				}
 			} else {
 				int childIndex = childPointers[nodeIndex];

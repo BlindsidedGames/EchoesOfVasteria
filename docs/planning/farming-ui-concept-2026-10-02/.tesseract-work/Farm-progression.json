@@ -1,0 +1,2271 @@
+{
+  "$schema": "https://jerboa.dev/schemas/fx-composition/editable/v1/document.schema.json",
+  "formatVersion": 1,
+  "dimensions": {
+    "width": 1280,
+    "height": 720
+  },
+  "duration": 3,
+  "composition": {
+    "id": "main",
+    "layers": [
+      {
+        "id": 49,
+        "name": "Actual approved preview geometry. The third image shows the southern addition; stages 1/2 share a camera. XP and quest costs illustrative.",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            48,
+            651
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Actual approved preview geometry. The third image shows the southern addition; stages 1/2 share a camera. XP and quest costs illustrative.",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 13,
+          "fillColor": [
+            0.7843137254901961,
+            0.6823529411764706,
+            0.6313725490196078,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "left",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            1184,
+            26
+          ],
+          "verticalAlign": "center",
+          "leading": 15.86
+        }
+      },
+      {
+        "id": 48,
+        "name": "Panel",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            48,
+            641
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            1184,
+            1
+          ],
+          "fillColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ]
+        }
+      },
+      {
+        "id": 47,
+        "name": "View requirements",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            864,
+            590
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "View requirements",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 15,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            329,
+            34
+          ],
+          "verticalAlign": "center",
+          "leading": 18.3
+        }
+      },
+      {
+        "id": 46,
+        "name": "View requirements button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            856,
+            590
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            345,
+            34
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 45,
+        "name": "Next expansion",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            856,
+            566
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Next expansion",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.7843137254901961,
+            0.6823529411764706,
+            0.6313725490196078,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            345,
+            22
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 44,
+        "name": "garden-third",
+        "type": "Image",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            932,
+            341
+          ],
+          "scale": [
+            58.18181818181818,
+            58.201058201058196
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "source": {
+          "assetId": "garden-third-c7c2ad842e2d",
+          "fit": "contain"
+        }
+      },
+      {
+        "id": 43,
+        "name": "Six beds total \u00b7 southeast addition",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            856,
+            306
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Six beds total \u00b7 southeast addition",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 15,
+          "fillColor": [
+            0.7843137254901961,
+            0.6823529411764706,
+            0.6313725490196078,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "left",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            345,
+            24
+          ],
+          "verticalAlign": "center",
+          "leading": 18.3
+        }
+      },
+      {
+        "id": 42,
+        "name": "3 \u00b7 Southern field",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            856,
+            273
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "3 \u00b7 Southern field",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 20,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "left",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            345,
+            28
+          ],
+          "verticalAlign": "center",
+          "leading": 24.4
+        }
+      },
+      {
+        "id": 41,
+        "name": "Panel",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            842,
+            260
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            373,
+            364
+          ],
+          "fillColor": [
+            0.2196078431372549,
+            0.1803921568627451,
+            0.19215686274509805,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 40,
+        "name": "Focus garden",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            467,
+            590
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Focus garden",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 15,
+          "fillColor": [
+            0.18823529411764706,
+            0.12941176470588237,
+            0.14901960784313725,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            329,
+            34
+          ],
+          "verticalAlign": "center",
+          "leading": 18.3
+        }
+      },
+      {
+        "id": 39,
+        "name": "Focus garden button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            459,
+            590
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            345,
+            34
+          ],
+          "fillColor": [
+            0.9372549019607843,
+            0.7254901960784313,
+            0.5176470588235295,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 38,
+        "name": "Current garden",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            459,
+            566
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Current garden",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            345,
+            22
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 37,
+        "name": "garden",
+        "type": "Image",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            535,
+            341
+          ],
+          "scale": [
+            58.18181818181818,
+            58.201058201058196
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "source": {
+          "assetId": "garden-19b7b4b5ef19",
+          "fit": "contain"
+        }
+      },
+      {
+        "id": 36,
+        "name": "Four beds \u00b7 old stump area",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            459,
+            306
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Four beds \u00b7 old stump area",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 15,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "left",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            345,
+            24
+          ],
+          "verticalAlign": "center",
+          "leading": 18.3
+        }
+      },
+      {
+        "id": 35,
+        "name": "2 \u00b7 Reclaim the field",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            459,
+            273
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "2 \u00b7 Reclaim the field",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 20,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "left",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            345,
+            28
+          ],
+          "verticalAlign": "center",
+          "leading": 24.4
+        }
+      },
+      {
+        "id": 34,
+        "name": "Panel",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            445,
+            260
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            373,
+            364
+          ],
+          "fillColor": [
+            0.403921568627451,
+            0.27450980392156865,
+            0.20784313725490197,
+            1
+          ],
+          "strokeColor": [
+            0.9372549019607843,
+            0.7254901960784313,
+            0.5176470588235295,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 33,
+        "name": "View first field",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            70,
+            590
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "View first field",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 15,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            329,
+            34
+          ],
+          "verticalAlign": "center",
+          "leading": 18.3
+        }
+      },
+      {
+        "id": 32,
+        "name": "View first field button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            62,
+            590
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            345,
+            34
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 31,
+        "name": "Complete",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            62,
+            566
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Complete",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.5803921568627451,
+            0.796078431372549,
+            0.49019607843137253,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            345,
+            22
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 30,
+        "name": "garden-first",
+        "type": "Image",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            138,
+            341
+          ],
+          "scale": [
+            58.18181818181818,
+            58.201058201058196
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "source": {
+          "assetId": "garden-first-02ab71be9586",
+          "fit": "contain"
+        }
+      },
+      {
+        "id": 29,
+        "name": "Two beds \u00b7 original farm",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            62,
+            306
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Two beds \u00b7 original farm",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 15,
+          "fillColor": [
+            0.7843137254901961,
+            0.6823529411764706,
+            0.6313725490196078,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "left",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            345,
+            24
+          ],
+          "verticalAlign": "center",
+          "leading": 18.3
+        }
+      },
+      {
+        "id": 28,
+        "name": "1 \u00b7 First garden",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            62,
+            273
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "1 \u00b7 First garden",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 20,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "left",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            345,
+            28
+          ],
+          "verticalAlign": "center",
+          "leading": 24.4
+        }
+      },
+      {
+        "id": 27,
+        "name": "Panel",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            48,
+            260
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            373,
+            364
+          ],
+          "fillColor": [
+            0.2196078431372549,
+            0.1803921568627451,
+            0.19215686274509805,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 26,
+        "name": "Progression preview \u00b7 materials and unlock rules remain to be chosen",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            48,
+            218
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Progression preview \u00b7 materials and unlock rules remain to be chosen",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.7843137254901961,
+            0.6823529411764706,
+            0.6313725490196078,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "left",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            1148,
+            24
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 25,
+        "name": "Growing the garden",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            48,
+            183
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Growing the garden",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 22,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "left",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            730,
+            30
+          ],
+          "verticalAlign": "center",
+          "leading": 26.84
+        }
+      },
+      {
+        "id": 24,
+        "name": "XP/progress fill",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            136,
+            164
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            698.88,
+            4
+          ],
+          "fillColor": [
+            0.9372549019607843,
+            0.7254901960784313,
+            0.5176470588235295,
+            1
+          ]
+        }
+      },
+      {
+        "id": 23,
+        "name": "XP/progress track",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            136,
+            164
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            1092,
+            4
+          ],
+          "fillColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ]
+        }
+      },
+      {
+        "id": 22,
+        "name": "382 / 600 XP",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            984,
+            130
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "382 / 600 XP",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 14,
+          "fillColor": [
+            0.7843137254901961,
+            0.6823529411764706,
+            0.6313725490196078,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "right",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            244,
+            24
+          ],
+          "verticalAlign": "center",
+          "leading": 17.08
+        }
+      },
+      {
+        "id": 21,
+        "name": "Shared XP display \u00b7 illustrative",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            868,
+            100
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Shared XP display \u00b7 illustrative",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 14,
+          "fillColor": [
+            0.7843137254901961,
+            0.6823529411764706,
+            0.6313725490196078,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "right",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            360,
+            26
+          ],
+          "verticalAlign": "center",
+          "leading": 17.08
+        }
+      },
+      {
+        "id": 20,
+        "name": "\u201cBring back seeds. Let\u2019s grow the garden.\u201d",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            136,
+            134
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "\u201cBring back seeds. Let\u2019s grow the garden.\u201d",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.7843137254901961,
+            0.6823529411764706,
+            0.6313725490196078,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "left",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            620,
+            24
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 19,
+        "name": "Flora & Tillman  |  Level 8",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            136,
+            100
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Flora & Tillman  |  Level 8",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 20,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "left",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            480,
+            28
+          ],
+          "verticalAlign": "center",
+          "leading": 24.4
+        }
+      },
+      {
+        "id": 18,
+        "name": "Tillman",
+        "type": "Image",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            85,
+            104
+          ],
+          "scale": [
+            94.11764705882352,
+            86.36363636363636
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "source": {
+          "assetId": "Tillman-bac73bc92192",
+          "fit": "contain"
+        }
+      },
+      {
+        "id": 17,
+        "name": "Flora",
+        "type": "Image",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            49,
+            104
+          ],
+          "scale": [
+            94.11764705882352,
+            86.36363636363636
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "source": {
+          "assetId": "Flora-69a68b4ce6f1",
+          "fit": "contain"
+        }
+      },
+      {
+        "id": 16,
+        "name": "Panel",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            28,
+            82
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            1224,
+            610
+          ],
+          "fillColor": [
+            0.1607843137254902,
+            0.1411764705882353,
+            0.14901960784313725,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 15,
+        "name": "\u00d7",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            1220,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "\u00d7",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 24,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            24,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 29.28
+        }
+      },
+      {
+        "id": 14,
+        "name": "\u00d7 button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            1212,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            40,
+            38
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 13,
+        "name": "STATIC CONCEPT \u00b7 illustrative values",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            792,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "STATIC CONCEPT \u00b7 illustrative values",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 14,
+          "fillColor": [
+            0.7843137254901961,
+            0.6823529411764706,
+            0.6313725490196078,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "right",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            390,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 17.08
+        }
+      },
+      {
+        "id": 12,
+        "name": "Library",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            420,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Library",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            70,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 11,
+        "name": "Library button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            412,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            86,
+            38
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 10,
+        "name": "Quests",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            330,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Quests",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            66,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 9,
+        "name": "Quests button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            322,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            82,
+            38
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 8,
+        "name": "Townsfolk",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            212,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Townsfolk",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.18823529411764706,
+            0.12941176470588237,
+            0.14901960784313725,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            94,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 7,
+        "name": "Townsfolk button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            204,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            110,
+            38
+          ],
+          "fillColor": [
+            0.9372549019607843,
+            0.7254901960784313,
+            0.5176470588235295,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 6,
+        "name": "Hub",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            148,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Hub",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            40,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 5,
+        "name": "Hub button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            140,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            56,
+            38
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 4,
+        "name": "Adventure",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            36,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Adventure",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            88,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 3,
+        "name": "Adventure button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            28,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            104,
+            38
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 2,
+        "name": "Dim town backdrop",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            0,
+            0
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            1280,
+            720
+          ],
+          "fillColor": [
+            0.09803921568627451,
+            0.07058823529411765,
+            0.0784313725490196,
+            0.72
+          ]
+        }
+      },
+      {
+        "id": 1,
+        "name": "town",
+        "type": "Image",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            0,
+            0
+          ],
+          "scale": [
+            100.0,
+            100.0
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "source": {
+          "assetId": "town-98f0a56201a7",
+          "fit": "contain"
+        }
+      }
+    ],
+    "name": "Farm-progression"
+  }
+}

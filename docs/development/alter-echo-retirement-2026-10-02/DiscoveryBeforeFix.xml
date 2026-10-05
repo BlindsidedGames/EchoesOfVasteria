@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-02 11:59:58Z" end-time="2026-10-02 11:59:59Z" duration="0.4543954">
+  <test-suite type="TestSuite" id="2938" name="EOVTests_d785be61d01c1210" fullname="EOVTests_d785be61d01c1210" runstate="Runnable" testcasecount="1785" result="Failed" site="Child" start-time="2026-10-02 11:59:58Z" end-time="2026-10-02 11:59:59Z" duration="0.454395" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1063" name="Tests.dll" fullname="/private/tmp/eov-ae-retirement-tests-v4/project/Library/ScriptAssemblies/Tests.dll" runstate="Runnable" testcasecount="56" result="Failed" site="Child" start-time="2026-10-02 11:59:59Z" end-time="2026-10-02 11:59:59Z" duration="0.416188" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="81941" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1067" name="TimelessEchoes" fullname="TimelessEchoes" runstate="Runnable" testcasecount="10" result="Failed" site="Child" start-time="2026-10-02 11:59:59Z" end-time="2026-10-02 11:59:59Z" duration="0.415498" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1068" name="Tests" fullname="TimelessEchoes.Tests" runstate="Runnable" testcasecount="10" result="Failed" site="Child" start-time="2026-10-02 11:59:59Z" end-time="2026-10-02 11:59:59Z" duration="0.415229" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1069" name="RealTime" fullname="TimelessEchoes.Tests.RealTime" runstate="Runnable" testcasecount="8" result="Failed" site="Child" start-time="2026-10-02 11:59:59Z" end-time="2026-10-02 11:59:59Z" duration="0.414937" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1050" name="RealTimeSystemsTests" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" testcasecount="8" result="Failed" site="Child" start-time="2026-10-02 11:59:59Z" end-time="2026-10-02 11:59:59Z" duration="0.414304" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1057" name="LiveResourceDiscoveryImmediatelyBlocksCategoryAndSurvivesOwnerReload" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.LiveResourceDiscoveryImmediatelyBlocksCategoryAndSurvivesOwnerReload" methodname="LiveResourceDiscoveryImmediatelyBlocksCategoryAndSurvivesOwnerReload" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" seed="874578126" result="Failed" start-time="2026-10-02 11:59:59Z" end-time="2026-10-02 11:59:59Z" duration="0.407302" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Unowned Corn must immediately block Farming category yield.
+  Expected: 20
+  But was:  70.0f
+]]></message>
+                  <stack-trace><![CDATA[at TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.LiveResourceDiscoveryImmediatelyBlocksCategoryAndSurvivesOwnerReload () [0x00238] in /private/tmp/eov-ae-retirement-tests-v4/project/Assets/Tests/PlayMode/Tests/RealTimeSystemsTests.cs:130
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Saving results to: /Users/matthewrushworth/Library/Application Support/EchoesTests/EOVTests_d785be61d01c1210/TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

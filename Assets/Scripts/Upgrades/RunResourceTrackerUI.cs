@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using System.Collections.Generic;
 using References.UI;
 using UnityEngine;
@@ -39,12 +40,14 @@ namespace TimelessEchoes.Upgrades
 
         private void OnEnable()
         {
+            ToolkitLocalization.Changed += RefreshVisibleSummary;
             if (resourceManager != null)
                 resourceManager.OnResourceAdded += OnResourceAdded;
         }
 
         private void OnDisable()
         {
+            ToolkitLocalization.Changed -= RefreshVisibleSummary;
             if (resourceManager != null)
                 resourceManager.OnResourceAdded -= OnResourceAdded;
         }
@@ -178,6 +181,11 @@ namespace TimelessEchoes.Upgrades
             runSummaryText.gameObject.SetActive(true);
         }
 
+        private void RefreshVisibleSummary()
+        {
+            if (window != null && window.activeInHierarchy) UpdateSummaryText();
+        }
+
         public string BuildSummaryText()
         {
             var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
@@ -190,18 +198,18 @@ namespace TimelessEchoes.Upgrades
             var sessionSteps = Mathf.Max(0f, tracker.SessionSteps);
             var timeStr = Blindsided.Utilities.CalcUtils.FormatTime(sessionDuration);
             var stepsStr = Blindsided.Utilities.CalcUtils.FormatNumber(sessionSteps, true);
-            lines.Add($"You travelled for {timeStr}, walking a total of {stepsStr} steps");
+            lines.Add(ToolkitLocalization.Text("run.summary.travel", "You travelled for {0}, walking a total of {1} steps" , timeStr, stepsStr));
 
             // Line 2: Died/Reaped (session totals)
             var diedTotal = tracker.SessionDeaths;
             var reapedTotal = tracker.SessionReaps;
-            lines.Add($"Died {diedTotal} times, Reaped by Carl {reapedTotal} times");
+            lines.Add(ToolkitLocalization.Text("run.summary.deaths", "Died {0} times, Reaped by Carl {1} times" , diedTotal, reapedTotal));
 
             if (startingReapDistance != 0f && !Mathf.Approximately(startingReapDistance, tracker.MaxRunDistance))
             {
                 var oldDist = $"{startingReapDistance:N0}";
                 var newDist = $"{tracker.MaxRunDistance:N0}";
-                lines.Add($"Reaping Distance: {oldDist}<sprite=9>{newDist}");
+                lines.Add(ToolkitLocalization.Text("run.summary.reaping-distance", "Reaping Distance: {0}<sprite=9>{1}" , oldDist, newDist));
             }
 
             // Line 3 (optional): Retreated with K kills for P% bonus (only if last run retreated)
@@ -217,7 +225,7 @@ namespace TimelessEchoes.Upgrades
                         ? TimelessEchoes.GameManager.Instance.BonusPercentPerKill
                         : 2f;
                     float bonusPercent = kills * perKill;
-                    lines.Add($"Retreated with {kills} kills for {bonusPercent:0}% bonus");
+                    lines.Add(ToolkitLocalization.Text("run.summary.retreat", "Retreated with {0} kills for {1:0}% bonus" , kills, bonusPercent));
                 }
             }
 

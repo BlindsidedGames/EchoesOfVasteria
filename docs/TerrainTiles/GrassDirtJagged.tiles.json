@@ -1,0 +1,1580 @@
+{
+  "schema_version": 1,
+  "texture_guid": "8c523df2568d56a42a43f494d14f321b",
+  "original_texture_path": "Assets/Art/Packs/Cute_Fantasy/Tiles/Grass/Grass_Tiles_3_Blob_TEST.png",
+  "texture_path": "Assets/Art/Packs/Cute_Fantasy/Tiles/Grass/GrassDirtJagged_Blob.png",
+  "texture_sha256": "8ee256a5224f761e6c11bfd9ddcec1e0fdd3ee93c50f3975d7b54fe612ced13f",
+  "orientation": "N=up, E=right, S=down, W=left in the unrotated sprite. Edge/outer corner names identify grass-border side(s); cap names identify the closed tip, not the dirt connection.",
+  "semantics": "Connections describe dirt at cell edge midpoints. Inner grass notches remove an otherwise possible diagonal dirt connection. Neighbor masks are authoring guidance, not collider/walkability data. Existing cells may be rotated/flipped; apply their transform to these directions.",
+  "review_status": "All previews visually inspected; descriptive occupancy names assigned. Intended purpose of duplicate solid grass variants remains unknown.",
+  "tiles": [
+    {
+      "original_index": 0,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_0",
+      "new_name": "GrassDirtJagged_DirtIslet",
+      "role": "DirtIslet",
+      "dirt_connections": [],
+      "grass_borders": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [],
+      "occupancy": "isolated_dirt",
+      "rect_pixels": {
+        "x": 0,
+        "y": 96,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "372453216799020652",
+      "sprite_id": "c66d1c23a383b2500800000000000000",
+      "asset_guid": "27068dd7071134841961fbc62cd1a555",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Decor/Grass/Grass_Tiles_3_Blob_TEST_0.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/Decor/Grass/GrassDirtJagged_DirtIslet.asset",
+      "note": "Opaque grass surrounding a small isolated dirt patch; decor asset."
+    },
+    {
+      "original_index": 1,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_1",
+      "new_name": "GrassDirtJagged_DirtCap_W",
+      "role": "DirtCap_W",
+      "dirt_connections": [
+        "E"
+      ],
+      "grass_borders": [
+        "N",
+        "S",
+        "W"
+      ],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 16,
+        "y": 96,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-114726429",
+      "sprite_id": "dd42e69bfceb2324090f5fd357582544",
+      "asset_guid": "fa7140244c9f3934ab2f881562cb18d8",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_1.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtCap_W.asset",
+      "note": ""
+    },
+    {
+      "original_index": 2,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_2",
+      "new_name": "GrassDirtJagged_DirtEdge_N_GrassNotch_SW",
+      "role": "DirtEdge_N",
+      "dirt_connections": [
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [
+        "N"
+      ],
+      "inner_grass_notches": [
+        "SW"
+      ],
+      "dirt_diagonal_connections": [
+        "SE"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 32,
+        "y": 96,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "1607247760",
+      "sprite_id": "92fffd441bc9516478890d45726b36ad",
+      "asset_guid": "fc06d24e2b869204088b7ee970de39e3",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_2.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtEdge_N_GrassNotch_SW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 3,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_3",
+      "new_name": "GrassDirtJagged_DirtEdge_N",
+      "role": "DirtEdge_N",
+      "dirt_connections": [
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [
+        "N"
+      ],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [
+        "SE",
+        "SW"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 48,
+        "y": 96,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-1658337423",
+      "sprite_id": "a711c8078198c5443981b3fec057ddad",
+      "asset_guid": "8b380ca2abed10a40ba344a4a1576e9d",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_3.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtEdge_N.asset",
+      "note": ""
+    },
+    {
+      "original_index": 4,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_4",
+      "new_name": "GrassDirtJagged_DirtEdge_N_GrassNotch_SE",
+      "role": "DirtEdge_N",
+      "dirt_connections": [
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [
+        "N"
+      ],
+      "inner_grass_notches": [
+        "SE"
+      ],
+      "dirt_diagonal_connections": [
+        "SW"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 64,
+        "y": 96,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-619597267",
+      "sprite_id": "9414eb3f3459d084cb1f1a72778dc8b7",
+      "asset_guid": "ad73382e7c9aa344ab50f8b87ccfef9e",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_4.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtEdge_N_GrassNotch_SE.asset",
+      "note": ""
+    },
+    {
+      "original_index": 5,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_5",
+      "new_name": "GrassDirtJagged_DirtOuterCorner_NE_GrassNotch_SW",
+      "role": "DirtOuterCorner_NE",
+      "dirt_connections": [
+        "S",
+        "W"
+      ],
+      "grass_borders": [
+        "N",
+        "E"
+      ],
+      "inner_grass_notches": [
+        "SW"
+      ],
+      "dirt_diagonal_connections": [],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 80,
+        "y": 96,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-1313846262",
+      "sprite_id": "72636b99992c99a44acd8d9dc46741b2",
+      "asset_guid": "23f2add2f649ef242bacb43b6c1b38c1",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_5.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtOuterCorner_NE_GrassNotch_SW.asset",
+      "note": "Outer corner also includes an opposite inner grass notch. Do not use where continuous dirt is required at that corner."
+    },
+    {
+      "original_index": 6,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_6",
+      "new_name": "GrassDirtJagged_GrassSolid_DuplicateA",
+      "role": "GrassSolid_DuplicateA",
+      "dirt_connections": [],
+      "grass_borders": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [],
+      "occupancy": "solid_grass",
+      "rect_pixels": {
+        "x": 96,
+        "y": 96,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "393573652",
+      "sprite_id": "8af35883c2c88f7489dd308484924625",
+      "asset_guid": "f14724553960a2f4baa13ec1dd552996",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_6.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_GrassSolid_DuplicateA.asset",
+      "note": "Visually identical solid grass entries; retained separately to preserve references. No intended A/B distinction is known."
+    },
+    {
+      "original_index": 7,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_7",
+      "new_name": "GrassDirtJagged_DirtCap_N",
+      "role": "DirtCap_N",
+      "dirt_connections": [
+        "S"
+      ],
+      "grass_borders": [
+        "N",
+        "E",
+        "W"
+      ],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 0,
+        "y": 80,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "1740741643",
+      "sprite_id": "aa084388044a25d4d98bfa5c033c4831",
+      "asset_guid": "71f924e302f60bd4eacee06c3db4288c",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_7.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtCap_N.asset",
+      "note": ""
+    },
+    {
+      "original_index": 8,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_8",
+      "new_name": "GrassDirtJagged_DirtOuterCorner_NW_GrassNotch_SE",
+      "role": "DirtOuterCorner_NW",
+      "dirt_connections": [
+        "E",
+        "S"
+      ],
+      "grass_borders": [
+        "N",
+        "W"
+      ],
+      "inner_grass_notches": [
+        "SE"
+      ],
+      "dirt_diagonal_connections": [],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 16,
+        "y": 80,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "834606962",
+      "sprite_id": "be5e3b09b76d494409fb06a76f5e7ee9",
+      "asset_guid": "d06218840610f28458d2e0533fbe9d13",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_8.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtOuterCorner_NW_GrassNotch_SE.asset",
+      "note": "Outer corner also includes an opposite inner grass notch. Do not use where continuous dirt is required at that corner."
+    },
+    {
+      "original_index": 9,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_9",
+      "new_name": "GrassDirtJagged_DirtInterior_GrassNotches_NW_SE_SW",
+      "role": "DirtInterior",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [],
+      "inner_grass_notches": [
+        "NW",
+        "SE",
+        "SW"
+      ],
+      "dirt_diagonal_connections": [
+        "NE"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 32,
+        "y": 80,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "1805756551",
+      "sprite_id": "62c91f466a99b004da7e6d38640aca98",
+      "asset_guid": "4992eb5d212ee804cac91e76d7aaab21",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_9.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtInterior_GrassNotches_NW_SE_SW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 10,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_10",
+      "new_name": "GrassDirtJagged_DirtInterior_GrassNotch_SW",
+      "role": "DirtInterior",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [],
+      "inner_grass_notches": [
+        "SW"
+      ],
+      "dirt_diagonal_connections": [
+        "NW",
+        "NE",
+        "SE"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 48,
+        "y": 80,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-1521879500",
+      "sprite_id": "be731709b3ddb6b46827a03ceec3ee72",
+      "asset_guid": "e637e54720b39124092e601a3d2195c3",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_10.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtInterior_GrassNotch_SW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 11,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_11",
+      "new_name": "GrassDirtJagged_DirtEdge_E",
+      "role": "DirtEdge_E",
+      "dirt_connections": [
+        "N",
+        "S",
+        "W"
+      ],
+      "grass_borders": [
+        "E"
+      ],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [
+        "NW",
+        "SW"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 64,
+        "y": 80,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "1567255581",
+      "sprite_id": "2be0c2f17d5c2534fbefc421358a98df",
+      "asset_guid": "fca2c0b3a796c9d43a759d520590d580",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_11.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtEdge_E.asset",
+      "note": ""
+    },
+    {
+      "original_index": 12,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_12",
+      "new_name": "GrassDirtJagged_DirtEdge_W_GrassNotches_NE_SE",
+      "role": "DirtEdge_W",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S"
+      ],
+      "grass_borders": [
+        "W"
+      ],
+      "inner_grass_notches": [
+        "NE",
+        "SE"
+      ],
+      "dirt_diagonal_connections": [],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 80,
+        "y": 80,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "837266617",
+      "sprite_id": "cebc2353a0268c1408d682f9f53725c6",
+      "asset_guid": "949c9f292069afe4098045bc2a04d1b5",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_12.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtEdge_W_GrassNotches_NE_SE.asset",
+      "note": ""
+    },
+    {
+      "original_index": 13,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_13",
+      "new_name": "GrassDirtJagged_DirtCap_E",
+      "role": "DirtCap_E",
+      "dirt_connections": [
+        "W"
+      ],
+      "grass_borders": [
+        "N",
+        "E",
+        "S"
+      ],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 96,
+        "y": 80,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "1508389917",
+      "sprite_id": "bee6e69c684df684782b53737b20c261",
+      "asset_guid": "b700a1cae02f3ec4cbfb99ef303d2b7e",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_13.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtCap_E.asset",
+      "note": ""
+    },
+    {
+      "original_index": 14,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_14",
+      "new_name": "GrassDirtJagged_DirtEdge_W_GrassNotch_NE",
+      "role": "DirtEdge_W",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S"
+      ],
+      "grass_borders": [
+        "W"
+      ],
+      "inner_grass_notches": [
+        "NE"
+      ],
+      "dirt_diagonal_connections": [
+        "SE"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 0,
+        "y": 64,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "1481020485",
+      "sprite_id": "9e55c850082808a4da6dbfd098ef3ee9",
+      "asset_guid": "40c289aafcc6daa46ae561ce6a3aad90",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_14.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtEdge_W_GrassNotch_NE.asset",
+      "note": ""
+    },
+    {
+      "original_index": 15,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_15",
+      "new_name": "GrassDirtJagged_DirtInterior_GrassNotches_NW_NE_SE",
+      "role": "DirtInterior",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [],
+      "inner_grass_notches": [
+        "NW",
+        "NE",
+        "SE"
+      ],
+      "dirt_diagonal_connections": [
+        "SW"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 16,
+        "y": 64,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-1664446944",
+      "sprite_id": "2fa0daa720b9b8247bc24fb733fb363f",
+      "asset_guid": "9f23200d7ea973f41a1c4882603aa5b6",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_15.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtInterior_GrassNotches_NW_NE_SE.asset",
+      "note": ""
+    },
+    {
+      "original_index": 16,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_16",
+      "new_name": "GrassDirtJagged_DirtInterior_GrassNotches_NW_NE_SE_SW",
+      "role": "DirtInterior",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [],
+      "inner_grass_notches": [
+        "NW",
+        "NE",
+        "SE",
+        "SW"
+      ],
+      "dirt_diagonal_connections": [],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 32,
+        "y": 64,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "929226372",
+      "sprite_id": "932b60e7404ad1642a7809ca78657151",
+      "asset_guid": "0a7697ca603be4740b311f8297a7864a",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_16.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtInterior_GrassNotches_NW_NE_SE_SW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 17,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_17",
+      "new_name": "GrassDirtJagged_DirtEdge_S_GrassNotch_NW",
+      "role": "DirtEdge_S",
+      "dirt_connections": [
+        "N",
+        "E",
+        "W"
+      ],
+      "grass_borders": [
+        "S"
+      ],
+      "inner_grass_notches": [
+        "NW"
+      ],
+      "dirt_diagonal_connections": [
+        "NE"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 48,
+        "y": 64,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "1956164608",
+      "sprite_id": "4f1acf5d2aabf9b40915dcd460afea09",
+      "asset_guid": "87b734cea8f17aa4181977f00a8b5b32",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_17.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtEdge_S_GrassNotch_NW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 18,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_18",
+      "new_name": "GrassDirtJagged_DirtInterior_GrassNotches_NE_SW",
+      "role": "DirtInterior",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [],
+      "inner_grass_notches": [
+        "NE",
+        "SW"
+      ],
+      "dirt_diagonal_connections": [
+        "NW",
+        "SE"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 64,
+        "y": 64,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-1573280354",
+      "sprite_id": "1fc137e5895b46245bc81ef5a50aa19c",
+      "asset_guid": "5446da9c3883c654380ee2ff8c820353",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_18.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtInterior_GrassNotches_NE_SW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 19,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_19",
+      "new_name": "GrassDirtJagged_DirtInterior_GrassNotches_NW_NE",
+      "role": "DirtInterior",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [],
+      "inner_grass_notches": [
+        "NW",
+        "NE"
+      ],
+      "dirt_diagonal_connections": [
+        "SE",
+        "SW"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 80,
+        "y": 64,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "2022925866",
+      "sprite_id": "07535a0d5853dd84d9dce880690cc347",
+      "asset_guid": "a9c9b0010b82c6e4295ad7fc30bcd263",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_19.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtInterior_GrassNotches_NW_NE.asset",
+      "note": ""
+    },
+    {
+      "original_index": 20,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_20",
+      "new_name": "GrassDirtJagged_DirtOuterCorner_NE",
+      "role": "DirtOuterCorner_NE",
+      "dirt_connections": [
+        "S",
+        "W"
+      ],
+      "grass_borders": [
+        "N",
+        "E"
+      ],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [
+        "SW"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 96,
+        "y": 64,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-1270750962",
+      "sprite_id": "e207e0c5fc7433640aad3c10f2fd7ca7",
+      "asset_guid": "34290cde409e7064c8904399af3f73c7",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_20.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtOuterCorner_NE.asset",
+      "note": ""
+    },
+    {
+      "original_index": 21,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_21",
+      "new_name": "GrassDirtJagged_DirtEdge_W",
+      "role": "DirtEdge_W",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S"
+      ],
+      "grass_borders": [
+        "W"
+      ],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [
+        "NE",
+        "SE"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 0,
+        "y": 48,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "232594368",
+      "sprite_id": "a0a5e5d6f8df83e439b3f36e2b44fe77",
+      "asset_guid": "6e71c2f4e2461e541a7019c03bad9c63",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_21.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtEdge_W.asset",
+      "note": ""
+    },
+    {
+      "original_index": 22,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_22",
+      "new_name": "GrassDirtJagged_DirtInterior_GrassNotch_NE",
+      "role": "DirtInterior",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [],
+      "inner_grass_notches": [
+        "NE"
+      ],
+      "dirt_diagonal_connections": [
+        "NW",
+        "SE",
+        "SW"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 16,
+        "y": 48,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "280889650",
+      "sprite_id": "7058c7444000e3d44adbc6e29b04c3f8",
+      "asset_guid": "28362549de219e44c95860064337f7a3",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_22.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtInterior_GrassNotch_NE.asset",
+      "note": ""
+    },
+    {
+      "original_index": 23,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_23",
+      "new_name": "GrassDirtJagged_DirtEdge_E_GrassNotch_NW",
+      "role": "DirtEdge_E",
+      "dirt_connections": [
+        "N",
+        "S",
+        "W"
+      ],
+      "grass_borders": [
+        "E"
+      ],
+      "inner_grass_notches": [
+        "NW"
+      ],
+      "dirt_diagonal_connections": [
+        "SW"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 32,
+        "y": 48,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "433936670",
+      "sprite_id": "e3e388055d95f24419235f680984e1ba",
+      "asset_guid": "07f3aa17754ad4f4094f395165dda150",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_23.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtEdge_E_GrassNotch_NW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 24,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_24",
+      "new_name": "GrassDirtJagged_DirtOuterCorner_NW",
+      "role": "DirtOuterCorner_NW",
+      "dirt_connections": [
+        "E",
+        "S"
+      ],
+      "grass_borders": [
+        "N",
+        "W"
+      ],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [
+        "SE"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 48,
+        "y": 48,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "1269114774",
+      "sprite_id": "42bbf33f7a613374392cac2f26857a15",
+      "asset_guid": "0eec2e5cff046ee46b711c05937eb1f2",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_24.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtOuterCorner_NW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 25,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_25",
+      "new_name": "GrassDirtJagged_DirtInterior_GrassNotch_NW",
+      "role": "DirtInterior",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [],
+      "inner_grass_notches": [
+        "NW"
+      ],
+      "dirt_diagonal_connections": [
+        "NE",
+        "SE",
+        "SW"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 64,
+        "y": 48,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-1885730551",
+      "sprite_id": "a34d861df879618418f065e417ded681",
+      "asset_guid": "ab075d15a136380489bf0dc2051699a4",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_25.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtInterior_GrassNotch_NW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 26,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_26",
+      "new_name": "GrassDirtJagged_DirtInterior_GrassNotch_SE",
+      "role": "DirtInterior",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [],
+      "inner_grass_notches": [
+        "SE"
+      ],
+      "dirt_diagonal_connections": [
+        "NW",
+        "NE",
+        "SW"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 80,
+        "y": 48,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "835725641",
+      "sprite_id": "85e955dca7e16df44b7b4a17f9881ad7",
+      "asset_guid": "071311ddab8b57745b2b02d58b166715",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_26.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtInterior_GrassNotch_SE.asset",
+      "note": ""
+    },
+    {
+      "original_index": 27,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_27",
+      "new_name": "GrassDirtJagged_DirtEdge_E_GrassNotch_SW",
+      "role": "DirtEdge_E",
+      "dirt_connections": [
+        "N",
+        "S",
+        "W"
+      ],
+      "grass_borders": [
+        "E"
+      ],
+      "inner_grass_notches": [
+        "SW"
+      ],
+      "dirt_diagonal_connections": [
+        "NW"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 96,
+        "y": 48,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-1439486800",
+      "sprite_id": "e42c43331e8dc644b92d44520c97d94d",
+      "asset_guid": "20d77012883d91e49986b4ae94e858aa",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_27.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtEdge_E_GrassNotch_SW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 28,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_28",
+      "new_name": "GrassDirtJagged_DirtEdge_W_GrassNotch_SE",
+      "role": "DirtEdge_W",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S"
+      ],
+      "grass_borders": [
+        "W"
+      ],
+      "inner_grass_notches": [
+        "SE"
+      ],
+      "dirt_diagonal_connections": [
+        "NE"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 0,
+        "y": 32,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "1422241322",
+      "sprite_id": "ebd28d7ae62da944c9f3f6c0e09e46af",
+      "asset_guid": "1105e793b10c6e14b8d2f983662b76cd",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_28.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtEdge_W_GrassNotch_SE.asset",
+      "note": ""
+    },
+    {
+      "original_index": 29,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_29",
+      "new_name": "GrassDirtJagged_DirtEdge_S",
+      "role": "DirtEdge_S",
+      "dirt_connections": [
+        "N",
+        "E",
+        "W"
+      ],
+      "grass_borders": [
+        "S"
+      ],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [
+        "NW",
+        "NE"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 16,
+        "y": 32,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "579282585",
+      "sprite_id": "fd9a54d23a886d948ad5c3601a553b39",
+      "asset_guid": "40c4692570ec07546a7d685c4854f2b9",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_29.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtEdge_S.asset",
+      "note": ""
+    },
+    {
+      "original_index": 30,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_30",
+      "new_name": "GrassDirtJagged_DirtInterior_GrassNotches_NE_SE_SW",
+      "role": "DirtInterior",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [],
+      "inner_grass_notches": [
+        "NE",
+        "SE",
+        "SW"
+      ],
+      "dirt_diagonal_connections": [
+        "NW"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 32,
+        "y": 32,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "1402401107",
+      "sprite_id": "634d5f438e02ea94696921fab753aa68",
+      "asset_guid": "2745a9e555abef644ac27e7d9b20f2d8",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_30.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtInterior_GrassNotches_NE_SE_SW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 31,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_31",
+      "new_name": "GrassDirtJagged_DirtInterior_GrassNotches_NW_SW",
+      "role": "DirtInterior",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [],
+      "inner_grass_notches": [
+        "NW",
+        "SW"
+      ],
+      "dirt_diagonal_connections": [
+        "NE",
+        "SE"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 48,
+        "y": 32,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-595458483",
+      "sprite_id": "1e1259fbdc811b84cb370c5212201839",
+      "asset_guid": "287d0546957bcd4468fcb1df4baa250e",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_31.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtInterior_GrassNotches_NW_SW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 32,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_32",
+      "new_name": "GrassDirtJagged_DirtInterior",
+      "role": "DirtInterior",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [
+        "NW",
+        "NE",
+        "SE",
+        "SW"
+      ],
+      "occupancy": "solid_dirt",
+      "rect_pixels": {
+        "x": 64,
+        "y": 32,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-937340696",
+      "sprite_id": "322e688989a198646a82992799cb6d32",
+      "asset_guid": "3f14a14660c1c5349abeb0885fa4e174",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_32.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtInterior.asset",
+      "note": ""
+    },
+    {
+      "original_index": 33,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_33",
+      "new_name": "GrassDirtJagged_DirtInterior_GrassNotches_NE_SE",
+      "role": "DirtInterior",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [],
+      "inner_grass_notches": [
+        "NE",
+        "SE"
+      ],
+      "dirt_diagonal_connections": [
+        "NW",
+        "SW"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 80,
+        "y": 32,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-1668144947",
+      "sprite_id": "34c3df50a71d5a044b12fe99429fd6f6",
+      "asset_guid": "2970874aa5f689b4993c4a57c3328c84",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_33.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtInterior_GrassNotches_NE_SE.asset",
+      "note": ""
+    },
+    {
+      "original_index": 34,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_34",
+      "new_name": "GrassDirtJagged_DirtEdge_E_GrassNotches_NW_SW",
+      "role": "DirtEdge_E",
+      "dirt_connections": [
+        "N",
+        "S",
+        "W"
+      ],
+      "grass_borders": [
+        "E"
+      ],
+      "inner_grass_notches": [
+        "NW",
+        "SW"
+      ],
+      "dirt_diagonal_connections": [],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 96,
+        "y": 32,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "1356140329",
+      "sprite_id": "44a3fb161bbbbe04dab423325195f750",
+      "asset_guid": "ba87fac4de9cc43458b6a0d6d2ff269d",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_34.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtEdge_E_GrassNotches_NW_SW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 35,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_35",
+      "new_name": "GrassDirtJagged_DirtOuterCorner_SW_GrassNotch_NE",
+      "role": "DirtOuterCorner_SW",
+      "dirt_connections": [
+        "N",
+        "E"
+      ],
+      "grass_borders": [
+        "S",
+        "W"
+      ],
+      "inner_grass_notches": [
+        "NE"
+      ],
+      "dirt_diagonal_connections": [],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 0,
+        "y": 16,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "1629788581",
+      "sprite_id": "8c19b8733c4785c448245800ac4911cf",
+      "asset_guid": "91b924dc1cab73e4897d2d5cb0dd7f85",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_35.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtOuterCorner_SW_GrassNotch_NE.asset",
+      "note": "Outer corner also includes an opposite inner grass notch. Do not use where continuous dirt is required at that corner."
+    },
+    {
+      "original_index": 36,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_36",
+      "new_name": "GrassDirtJagged_DirtEdge_N_GrassNotches_SE_SW",
+      "role": "DirtEdge_N",
+      "dirt_connections": [
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [
+        "N"
+      ],
+      "inner_grass_notches": [
+        "SE",
+        "SW"
+      ],
+      "dirt_diagonal_connections": [],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 16,
+        "y": 16,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-874237056",
+      "sprite_id": "1701fe164f24e6b429eff711bf1a1ad9",
+      "asset_guid": "ef33585f682eb66498a70b34d8bd93ef",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_36.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtEdge_N_GrassNotches_SE_SW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 37,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_37",
+      "new_name": "GrassDirtJagged_DirtInterior_GrassNotches_NW_NE_SW",
+      "role": "DirtInterior",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [],
+      "inner_grass_notches": [
+        "NW",
+        "NE",
+        "SW"
+      ],
+      "dirt_diagonal_connections": [
+        "SE"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 32,
+        "y": 16,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-1310792974",
+      "sprite_id": "a61202bd53c8aac40b9312e0de9ba0c3",
+      "asset_guid": "8c736f1707db32e46a9e007806715c96",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_37.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtInterior_GrassNotches_NW_NE_SW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 38,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_38",
+      "new_name": "GrassDirtJagged_DirtInterior_GrassNotches_NW_SE",
+      "role": "DirtInterior",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [],
+      "inner_grass_notches": [
+        "NW",
+        "SE"
+      ],
+      "dirt_diagonal_connections": [
+        "NE",
+        "SW"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 48,
+        "y": 16,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-1304129235",
+      "sprite_id": "49ec4083c92672c47a008be2eb965e8c",
+      "asset_guid": "b2634aa5ba6e1be4e85096c24ec7f0c7",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_38.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtInterior_GrassNotches_NW_SE.asset",
+      "note": ""
+    },
+    {
+      "original_index": 39,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_39",
+      "new_name": "GrassDirtJagged_DirtInterior_GrassNotches_SE_SW",
+      "role": "DirtInterior",
+      "dirt_connections": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "grass_borders": [],
+      "inner_grass_notches": [
+        "SE",
+        "SW"
+      ],
+      "dirt_diagonal_connections": [
+        "NW",
+        "NE"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 64,
+        "y": 16,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "346140910",
+      "sprite_id": "45fb5584d51427e44bd73cf83da0062f",
+      "asset_guid": "2b9b655edc2e2924cbb08cfb2896d630",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_39.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtInterior_GrassNotches_SE_SW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 40,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_40",
+      "new_name": "GrassDirtJagged_DirtOuterCorner_SE",
+      "role": "DirtOuterCorner_SE",
+      "dirt_connections": [
+        "N",
+        "W"
+      ],
+      "grass_borders": [
+        "E",
+        "S"
+      ],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [
+        "NW"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 80,
+        "y": 16,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-25508798",
+      "sprite_id": "9517933dcb2920e4288af1259fe7df9e",
+      "asset_guid": "c27f58b1291286240939198bbc3b245b",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_40.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtOuterCorner_SE.asset",
+      "note": ""
+    },
+    {
+      "original_index": 41,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_41",
+      "new_name": "GrassDirtJagged_DirtStrip_NS",
+      "role": "DirtStrip_NS",
+      "dirt_connections": [
+        "N",
+        "S"
+      ],
+      "grass_borders": [
+        "E",
+        "W"
+      ],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 96,
+        "y": 16,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "814965100",
+      "sprite_id": "bb73e4190171a4f448a804db71a5b847",
+      "asset_guid": "21f9d5f2c0f75e045b39a858b9aaca10",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_41.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtStrip_NS.asset",
+      "note": ""
+    },
+    {
+      "original_index": 42,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_42",
+      "new_name": "GrassDirtJagged_GrassSolid_DuplicateB",
+      "role": "GrassSolid_DuplicateB",
+      "dirt_connections": [],
+      "grass_borders": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [],
+      "occupancy": "solid_grass",
+      "rect_pixels": {
+        "x": 0,
+        "y": 0,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-1128940269",
+      "sprite_id": "173f844caa840fc4b8e62e9e3331cf38",
+      "asset_guid": "a54f0a6e66077494ea05b4400b01b670",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_42.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_GrassSolid_DuplicateB.asset",
+      "note": "Visually identical solid grass entries; retained separately to preserve references. No intended A/B distinction is known."
+    },
+    {
+      "original_index": 43,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_43",
+      "new_name": "GrassDirtJagged_DirtCap_S",
+      "role": "DirtCap_S",
+      "dirt_connections": [
+        "N"
+      ],
+      "grass_borders": [
+        "E",
+        "S",
+        "W"
+      ],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 16,
+        "y": 0,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-353514203",
+      "sprite_id": "2943991ad747244469c9537fcb6d1c83",
+      "asset_guid": "a65878b2f936a994cbcb3e57f28d4242",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_43.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtCap_S.asset",
+      "note": ""
+    },
+    {
+      "original_index": 44,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_44",
+      "new_name": "GrassDirtJagged_DirtOuterCorner_SW",
+      "role": "DirtOuterCorner_SW",
+      "dirt_connections": [
+        "N",
+        "E"
+      ],
+      "grass_borders": [
+        "S",
+        "W"
+      ],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [
+        "NE"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 32,
+        "y": 0,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-274694764",
+      "sprite_id": "ad3fb900f0ad5974dbcc8c650e11a141",
+      "asset_guid": "aa41154e1ce69eb43953a55d0b9da13a",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_44.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtOuterCorner_SW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 45,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_45",
+      "new_name": "GrassDirtJagged_DirtEdge_S_GrassNotch_NE",
+      "role": "DirtEdge_S",
+      "dirt_connections": [
+        "N",
+        "E",
+        "W"
+      ],
+      "grass_borders": [
+        "S"
+      ],
+      "inner_grass_notches": [
+        "NE"
+      ],
+      "dirt_diagonal_connections": [
+        "NW"
+      ],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 48,
+        "y": 0,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-1737324894",
+      "sprite_id": "5f88c165e31918e4ab5f0e9074207575",
+      "asset_guid": "e72d5f4ee86b05d4d88c08fa05b5fd07",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_45.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtEdge_S_GrassNotch_NE.asset",
+      "note": ""
+    },
+    {
+      "original_index": 46,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_46",
+      "new_name": "GrassDirtJagged_DirtEdge_S_GrassNotches_NW_NE",
+      "role": "DirtEdge_S",
+      "dirt_connections": [
+        "N",
+        "E",
+        "W"
+      ],
+      "grass_borders": [
+        "S"
+      ],
+      "inner_grass_notches": [
+        "NW",
+        "NE"
+      ],
+      "dirt_diagonal_connections": [],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 64,
+        "y": 0,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "442762940",
+      "sprite_id": "261855a32a34381438b9fb3538bf00c9",
+      "asset_guid": "7beea8f0a2e55d4489ae6f2b33bf8f51",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_46.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtEdge_S_GrassNotches_NW_NE.asset",
+      "note": ""
+    },
+    {
+      "original_index": 47,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_47",
+      "new_name": "GrassDirtJagged_DirtStrip_EW",
+      "role": "DirtStrip_EW",
+      "dirt_connections": [
+        "E",
+        "W"
+      ],
+      "grass_borders": [
+        "N",
+        "S"
+      ],
+      "inner_grass_notches": [],
+      "dirt_diagonal_connections": [],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 80,
+        "y": 0,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-775615514",
+      "sprite_id": "d553151e3459c25428bbc8d06198a8ad",
+      "asset_guid": "6e070616135e6254eb3c18633f470cac",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_47.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtStrip_EW.asset",
+      "note": ""
+    },
+    {
+      "original_index": 48,
+      "original_sprite_name": "Grass_Tiles_3_Blob_TEST_48",
+      "new_name": "GrassDirtJagged_DirtOuterCorner_SE_GrassNotch_NW",
+      "role": "DirtOuterCorner_SE",
+      "dirt_connections": [
+        "N",
+        "W"
+      ],
+      "grass_borders": [
+        "E",
+        "S"
+      ],
+      "inner_grass_notches": [
+        "NW"
+      ],
+      "dirt_diagonal_connections": [],
+      "occupancy": "mixed_grass_dirt",
+      "rect_pixels": {
+        "x": 96,
+        "y": 0,
+        "width": 16,
+        "height": 16
+      },
+      "sprite_local_id": "-1871596925",
+      "sprite_id": "97111d7bdd7d19f4c89984f770b0fc69",
+      "asset_guid": "532733ab04386ae44a886264b42a91e4",
+      "original_asset_path": "Assets/Tilemaps/Tiles/Grass_Tiles_3_Blob_TEST_48.asset",
+      "asset_path": "Assets/Tilemaps/Tiles/GrassDirtJagged_DirtOuterCorner_SE_GrassNotch_NW.asset",
+      "note": "Outer corner also includes an opposite inner grass notch. Do not use where continuous dirt is required at that corner."
+    }
+  ]
+}

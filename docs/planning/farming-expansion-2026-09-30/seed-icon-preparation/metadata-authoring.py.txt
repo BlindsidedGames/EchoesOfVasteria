@@ -1,0 +1,67 @@
+from pathlib import Path
+import json,re,hashlib,uuid
+p=Path.cwd();e=p.parent/'Echoes Farming Planning Evidence/2026-09-30/seed-icon-assets-2026-10-01';manifest=json.loads((e/'asset-manifest.json').read_text());atlas=p/'Assets/Resources/Fonts/FloatingTextIcons.png.meta';original=(e/'baseline/Assets/Resources/Fonts/FloatingTextIcons.png.meta').read_text();guid=re.search(r'^guid: (\w+)',original,re.M)[1]
+def ident(name,kind):
+ h=hashlib.sha256(('eov:prepared-seed-icons:v1:'+kind+':'+name).encode()).hexdigest()
+ return h[:32],int(h[:15],16)
+def block(name,r,kind):
+ sprite,id=ident(name,kind)
+ return f'''    - serializedVersion: 2
+      name: {name}
+      rect:
+        serializedVersion: 2
+        x: {r['x']}
+        y: {r['y']}
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {{x: 0.5, y: 0.5}}
+      border: {{x: 0, y: 0, z: 0, w: 0}}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: {sprite}
+      internalID: {id}
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+'''
+def internal(names,kind):return ''.join(f'  - first:\n      213: {ident(n,kind)[1]}\n    second: {n}\n' for n in names)
+names=[i['dropName'] for i in manifest['icons']];s=original.replace('  externalObjects:',internal(names,'drop')+'  externalObjects:',1);s=s.replace('    outline: []\n    customData:', ''.join(block(i['dropName'],i['dropRect'],'drop') for i in manifest['icons'])+'    outline: []\n    customData:',1);s=s.replace('  mipmapLimitGroupNameName:','  mipmapLimitGroupNameName:') # retain import fields
+s=s.replace('  mipmapLimitGroupName:', ''.join(f"      {i['dropName']}: {ident(i['dropName'],'drop')[1]}\n" for i in manifest['icons'])+'  mipmapLimitGroupName:',1);atlas.write_text(s)
+invguid=uuid.uuid4().hex;manifest['inventoryTextureGuid']=invguid;prefix=original.split('  spriteSheet:')[0];prefix=re.sub(r'^guid: \w+',f'guid: {invguid}',prefix,flags=re.M);prefix=re.sub(r'  internalIDToNameTable:\n.*?(?=  externalObjects:)', '  internalIDToNameTable:\n'+internal(names,'inventory'),prefix,flags=re.S);suffix=original.split('    outline: []\n    customData:')[1].split('    nameFileIdTable:')[0];suffix=re.sub(r'    spriteID: \w+',f'    spriteID: {uuid.uuid4().hex}',suffix)
+new=prefix+'  spriteSheet:\n    serializedVersion: 2\n    sprites:\n'+''.join(block(i['inventoryName'],i['inventoryRect'],'inventory') for i in manifest['icons'])+'    outline: []\n    customData:'+suffix+'    nameFileIdTable:\n'+''.join(f"      {i['inventoryName']}: {ident(i['inventoryName'],'inventory')[1]}\n" for i in manifest['icons'])+'  mipmapLimitGroupName: \n  pSDRemoveMatte: 0\n  userData: Authored seed-pack variants; normalized16x16; source Crops unchanged\n  assetBundleName: \n  assetBundleVariant: \n'
+(p/'Assets/Art/Derived/SeedPacks/SeedPackInventory.png.meta').write_text(new)
+for folder in ['Assets/Art/Derived','Assets/Art/Derived/SeedPacks']:
+ f=p/(folder+'.meta')
+ if not f.exists():f.write_text('fileFormatVersion: 2\nguid: '+uuid.uuid4().hex+'\nfolderAsset: yes\nDefaultImporter:\n  externalObjects: {}\n  userData: \n  assetBundleName: \n  assetBundleVariant: \n')
+for i in manifest['icons']:
+ i['dropSpriteId'],i['dropFileId']=ident(i['dropName'],'drop');i['inventorySpriteId'],i['inventoryFileId']=ident(i['inventoryName'],'inventory')
+chars=''.join(f"  - m_ElementType: 2\n    m_Unicode: 65534\n    m_GlyphIndex: {i['dropIndex']}\n    m_Scale: 1\n    m_Name: {i['dropName']}\n" for i in manifest['icons'])
+glyphs=''
+for i in manifest['icons']:
+ r=i['dropRect'];glyphs+=f'''  - m_Index: {i['dropIndex']}
+    m_Metrics:
+      m_Width: 16
+      m_Height: 16
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 12
+      m_HorizontalAdvance: 16
+    m_GlyphRect:
+      m_X: {r['x']}
+      m_Y: {r['y']}
+      m_Width: 16
+      m_Height: 16
+    m_Scale: 1
+    m_AtlasIndex: 0
+    m_ClassDefinitionType: 0
+    sprite: {{fileID: {i['dropFileId']}, guid: {guid}, type: 3}}
+'''
+for path in ['Assets/Resources/Fonts/FloatingTextIcons.asset','Assets/UI/Toolkit/InlineSprites.asset']:
+ s=(e/'baseline'/path).read_text();marker='  m_GlyphTable:' if '  m_GlyphTable:' in s else '  m_SpriteGlyphTable:';s=s.replace(marker,chars+marker,1)
+ marker='  spriteInfoList:' if '  spriteInfoList:' in s else '  fallbackSpriteAssets:'
+ s=s.replace(marker,glyphs+marker,1);(p/path).write_text(s)
+(e/'asset-manifest.json').write_text(json.dumps(manifest,indent=2));print('Appended23 to both text tables; all213old definitions unchanged. New inventoryGUID '+invguid)

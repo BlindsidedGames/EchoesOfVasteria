@@ -21,6 +21,8 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private Sprite npcSprite;
         [TextArea]
         [SerializeField] private List<string> lines = new();
+        // Stable presentation identities; existing raw lines remain the fallback.
+        [SerializeField] private List<string> lineKeys = new();
 
         private bool talked;
         private GameObject meetingInstance;
@@ -57,11 +59,11 @@ namespace TimelessEchoes.Tasks
             var toolkit = meetingInstance.GetComponent<TimelessEchoes.UI.Toolkit.ToolkitMeetingScreen>();
             if (toolkit != null)
             {
-                toolkit.Init(npcSprite, lines, OnMeetingFinished);
+                toolkit.Init(npcSprite, lines, OnMeetingFinished, lineKeys);
                 return;
             }
             var controller = meetingInstance.GetComponent<MeetingController>();
-            controller?.Init(npcSprite, lines, OnMeetingFinished);
+            controller?.Init(npcSprite, lines, OnMeetingFinished, lineKeys);
         }
 
         private void OnMeetingFinished()

@@ -3,29 +3,64 @@ using Unity.Entities;
 
 namespace Pathfinding.ECS {
 	/// <summary>
+	/// Baked form of the persistent parts of <see cref="ManagedSettings"/>.
+	///
+	/// Baking runs ahead of time and its output is serialized, so a baked agent cannot be given a slot in
+	/// <see cref="AgentManagedStorage"/> directly. Instead the settings that survive baking are written to this
+	/// unmanaged component, and <see cref="InitManagedStateSystem"/> turns it into a real
+	/// <see cref="ManagedSettings"/> the first time the entity is seen at runtime.
+	///
+	/// The parts of <see cref="ManagedSettings"/> that cannot be baked at all, namely
+	/// <see cref="ManagedSettings.onTraverseOffMeshLink"/> and
+	/// <see cref="PathRequestSettings.traversalProvider"/>, are not represented here. They were already dropped
+	/// by <see cref="ManagedSettings.CloneAndSimplifyDefaults"/> before baking.
+	/// </summary>
+	public struct AgentBakedSettings : IComponentData {
+		/// <summary>\copydocref{PathRequestSettings.graphMask}</summary>
+		public GraphMask graphMask;
+
+		/// <summary>\copydocref{PathRequestSettings.traversableTags}</summary>
+		public int traversableTags;
+	}
+
+	/// <summary>
+	/// Baked <see cref="PathRequestSettings.tagEntryCosts"/>, one element per tag.
+	///
+	/// Absent when the agent leaves every entry cost at zero, which is the common case. A buffer is used
+	/// rather than a fixed-size array in the component so that those agents pay nothing.
+	/// </summary>
+	[InternalBufferCapacity(0)]
+	public struct AgentBakedTagEntryCost : IBufferElementData {
+		public uint value;
+	}
+
+	/// <summary>
+	/// Baked <see cref="PathRequestSettings.tagCostMultipliers"/>, one element per tag.
+	///
+	/// \copydetails AgentBakedTagEntryCost
+	/// </summary>
+	[InternalBufferCapacity(0)]
+	public struct AgentBakedTagCostMultiplier : IBufferElementData {
+		public float value;
+	}
+
+	/// <summary>
 	/// Settings for agent movement that require managed types.
 	///
-	/// This component is used to store settings for agent movement that cannot be put anywhere else.
+	/// This class is used to store settings for agent movement that cannot be put anywhere else.
 	/// For example, it can store delegates, interfaces and objects.
 	///
 	/// It is used by the <see cref="FollowerEntity"/> component to store settings for how the agent should move.
-	/// Fortunately, the settings here are not used often, and so putting them in a managed component does not affect performance much.
 	///
 	/// In contrast to <see cref="ManagedState"/>, these settings are persistent.
+	///
+	/// This is not a component. Each agent reaches its instance through an <see cref="AgentManagedRef"/>
+	/// component, which indexes <see cref="AgentManagedStorage"/>.
 	///
 	/// See: <see cref="FollowerEntity"/>
 	/// </summary>
 	[System.Serializable]
-	// Generate source code for a property bag for this struct. This improves performance for some ECS operations. Otherwise it will fall back on a slower reflection-based implementation.
-	[Unity.Properties.GeneratePropertyBag]
-	// Unity cannot guarantee that this struct does not contain any entity references (because we have, for example, some interface fields),
-	// so it will try to patch entity references sometimes (in particular when live-patching entities), which is slow. So we promise that we will not use entity references in this struct to improve performance.
-#if MODULE_ENTITIES_1_3_0_OR_NEWER
-	[Unity.Entities.TypeManager.TypeOverrides(hasNoEntityReferences: true, hasNoBlobReferences: true, hasNoUnityObjectReferences: true)]
-#else
-	[Unity.Entities.TypeManager.TypeOverrides(hasNoEntityReferences: true, hasNoBlobReferences: true)]
-#endif
-	public class ManagedSettings : IComponentData, System.ICloneable, System.IEquatable<ManagedSettings> {
+	public class ManagedSettings : System.ICloneable, System.IEquatable<ManagedSettings> {
 		/// <summary>
 		/// Callback for when the agent starts to traverse an off-mesh link.
 		///
@@ -87,7 +122,6 @@ namespace Pathfinding.ECS {
 			};
 		}
 
-		// Used by the unity editor when patching baked entities. If not defined it has to fall back to a slower method.
 		public bool Equals (ManagedSettings other) {
 			if (other == null) return false;
 

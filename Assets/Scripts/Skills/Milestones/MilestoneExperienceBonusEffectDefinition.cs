@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using System.Globalization;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -55,13 +56,13 @@ namespace TimelessEchoes.Skills
             string formattedPercent = percent.ToString(percentageFormat, CultureInfo.InvariantCulture) + "%";
 
             if (applyToAllSkills)
-                return string.Format(globalDescriptionTemplate, formattedPercent);
+                return ToolkitLocalization.Text("milestone-effect." + name + ".globalDescriptionTemplate", globalDescriptionTemplate, formattedPercent);
 
-            string resolvedSkill = overrideSkill != null ? overrideSkill.skillName : skillName;
+            string resolvedSkill = overrideSkill != null ? ToolkitLocalization.Text("skill." + overrideSkill.name, overrideSkill.skillName) : skillName;
             if (string.IsNullOrWhiteSpace(resolvedSkill))
-                resolvedSkill = fallbackSkillLabel;
+                resolvedSkill = ToolkitLocalization.Text("milestone-effect." + name + ".fallbackSkillLabel", fallbackSkillLabel);
 
-            return string.Format(skillDescriptionTemplate, resolvedSkill, formattedPercent);
+            return ToolkitLocalization.Text("milestone-effect." + name + ".skillDescriptionTemplate", skillDescriptionTemplate, resolvedSkill, formattedPercent);
         }
     }
 }

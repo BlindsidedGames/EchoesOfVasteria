@@ -4,25 +4,25 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 5610385612084593228
-    second: FarmLand_Wet_Tile_0
+    second: Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00
   - first:
       213: 8158670078252447221
-    second: FarmLand_Wet_Tile_1
+    second: Farmland_WetOverlay_SoilJoin_ES_AbsentCorners_NW_NE_SW_Variant01
   - first:
       213: -7890057014233389154
-    second: FarmLand_Wet_Tile_2
+    second: Farmland_WetOverlay_SoilJoin_ESW_AbsentCorners_NW_NE_Variant02
   - first:
       213: 7042695545425960597
-    second: FarmLand_Wet_Tile_3
+    second: Farmland_WetOverlay_SoilJoin_SW_AbsentCorners_NW_NE_SE_Variant03
   - first:
       213: -7665817778320928230
-    second: FarmLand_Wet_Tile_4
+    second: Farmland_WetOverlay_SoilJoin_ES_AbsentCorners_NW_NE_SE_SW_Variant04
   - first:
       213: -8091119991103756802
-    second: FarmLand_Wet_Tile_5
+    second: Farmland_WetOverlay_SoilJoin_ESW_AbsentCorners_NW_NE_SE_SW_Variant05
   - first:
       213: -3306948508049573734
-    second: FarmLand_Wet_Tile_6
+    second: Farmland_WetOverlay_SoilJoin_SW_AbsentCorners_NW_NE_SE_SW_Variant06
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -118,7 +118,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_0
+      name: Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00
       rect:
         serializedVersion: 2
         x: 0
@@ -140,7 +140,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_1
+      name: Farmland_WetOverlay_SoilJoin_ES_AbsentCorners_NW_NE_SW_Variant01
       rect:
         serializedVersion: 2
         x: 16
@@ -162,7 +162,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_2
+      name: Farmland_WetOverlay_SoilJoin_ESW_AbsentCorners_NW_NE_Variant02
       rect:
         serializedVersion: 2
         x: 32
@@ -184,7 +184,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_3
+      name: Farmland_WetOverlay_SoilJoin_SW_AbsentCorners_NW_NE_SE_Variant03
       rect:
         serializedVersion: 2
         x: 48
@@ -206,7 +206,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_4
+      name: Farmland_WetOverlay_SoilJoin_ES_AbsentCorners_NW_NE_SE_SW_Variant04
       rect:
         serializedVersion: 2
         x: 64
@@ -228,7 +228,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_5
+      name: Farmland_WetOverlay_SoilJoin_ESW_AbsentCorners_NW_NE_SE_SW_Variant05
       rect:
         serializedVersion: 2
         x: 80
@@ -250,7 +250,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_6
+      name: Farmland_WetOverlay_SoilJoin_SW_AbsentCorners_NW_NE_SE_SW_Variant06
       rect:
         serializedVersion: 2
         x: 96
@@ -272,7 +272,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_7
+      name: Farmland_WetOverlay_SoilJoin_S_AbsentCorners_NW_NE_SE_SW_Variant07
       rect:
         serializedVersion: 2
         x: 0
@@ -294,7 +294,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_8
+      name: Farmland_WetOverlay_SoilJoin_NES_AbsentCorners_NW_SW_Variant08
       rect:
         serializedVersion: 2
         x: 16
@@ -316,7 +316,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_9
+      name: Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_None_Variant09
       rect:
         serializedVersion: 2
         x: 32
@@ -338,7 +338,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_10
+      name: Farmland_WetOverlay_SoilJoin_NSW_AbsentCorners_NE_SE_Variant10
       rect:
         serializedVersion: 2
         x: 48
@@ -360,7 +360,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_11
+      name: Farmland_WetOverlay_SoilJoin_NES_AbsentCorners_NW_NE_SE_SW_Variant11
       rect:
         serializedVersion: 2
         x: 64
@@ -382,7 +382,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_12
+      name: Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NW_NE_SE_SW_Variant12
       rect:
         serializedVersion: 2
         x: 80
@@ -404,7 +404,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_13
+      name: Farmland_WetOverlay_SoilJoin_NSW_AbsentCorners_NW_NE_SE_SW_Variant13
       rect:
         serializedVersion: 2
         x: 96
@@ -426,7 +426,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_14
+      name: Farmland_WetOverlay_SoilJoin_NS_AbsentCorners_NW_NE_SE_SW_Variant14
       rect:
         serializedVersion: 2
         x: 0
@@ -448,7 +448,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_15
+      name: Farmland_WetOverlay_SoilJoin_NE_AbsentCorners_NW_SE_SW_Variant15
       rect:
         serializedVersion: 2
         x: 16
@@ -470,7 +470,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_16
+      name: Farmland_WetOverlay_SoilJoin_NEW_AbsentCorners_SE_SW_Variant16
       rect:
         serializedVersion: 2
         x: 32
@@ -492,7 +492,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_17
+      name: Farmland_WetOverlay_SoilJoin_NW_AbsentCorners_NE_SE_SW_Variant17
       rect:
         serializedVersion: 2
         x: 48
@@ -514,7 +514,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_18
+      name: Farmland_WetOverlay_SoilJoin_NE_AbsentCorners_NW_NE_SE_SW_Variant18
       rect:
         serializedVersion: 2
         x: 64
@@ -536,7 +536,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_19
+      name: Farmland_WetOverlay_SoilJoin_NEW_AbsentCorners_NW_NE_SE_SW_Variant19
       rect:
         serializedVersion: 2
         x: 80
@@ -558,7 +558,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_20
+      name: Farmland_WetOverlay_SoilJoin_NW_AbsentCorners_NW_NE_SE_SW_Variant20
       rect:
         serializedVersion: 2
         x: 96
@@ -580,7 +580,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_21
+      name: Farmland_WetOverlay_SoilJoin_N_AbsentCorners_NW_NE_SE_SW_Variant21
       rect:
         serializedVersion: 2
         x: 0
@@ -602,7 +602,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_22
+      name: Farmland_WetOverlay_SoilJoin_E_AbsentCorners_NW_NE_SE_SW_Variant22
       rect:
         serializedVersion: 2
         x: 16
@@ -624,7 +624,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_23
+      name: Farmland_WetOverlay_SoilJoin_EW_AbsentCorners_NW_NE_SE_SW_Variant23
       rect:
         serializedVersion: 2
         x: 32
@@ -646,7 +646,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_24
+      name: Farmland_WetOverlay_SoilJoin_W_AbsentCorners_NW_NE_SE_SW_Variant24
       rect:
         serializedVersion: 2
         x: 48
@@ -668,7 +668,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_25
+      name: Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_SE_Variant25
       rect:
         serializedVersion: 2
         x: 64
@@ -690,7 +690,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_26
+      name: Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_SW_Variant26
       rect:
         serializedVersion: 2
         x: 80
@@ -712,7 +712,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_27
+      name: Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NE_SW_Variant27
       rect:
         serializedVersion: 2
         x: 96
@@ -734,7 +734,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_28
+      name: Farmland_WetOverlay_SoilJoin_NES_AbsentCorners_NW_SE_SW_Variant28
       rect:
         serializedVersion: 2
         x: 0
@@ -756,7 +756,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_29
+      name: Farmland_WetOverlay_SoilJoin_ESW_AbsentCorners_NW_NE_SE_Variant29
       rect:
         serializedVersion: 2
         x: 16
@@ -778,7 +778,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_30
+      name: Farmland_WetOverlay_SoilJoin_ESW_AbsentCorners_NW_NE_SW_Variant30
       rect:
         serializedVersion: 2
         x: 32
@@ -800,7 +800,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_31
+      name: Farmland_WetOverlay_SoilJoin_NSW_AbsentCorners_NE_SE_SW_Variant31
       rect:
         serializedVersion: 2
         x: 48
@@ -822,7 +822,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_32
+      name: Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NE_Variant32
       rect:
         serializedVersion: 2
         x: 64
@@ -844,7 +844,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_33
+      name: Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NW_Variant33
       rect:
         serializedVersion: 2
         x: 80
@@ -866,7 +866,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_34
+      name: Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NW_SE_Variant34
       rect:
         serializedVersion: 2
         x: 96
@@ -888,7 +888,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_35
+      name: Farmland_WetOverlay_SoilJoin_NES_AbsentCorners_NW_NE_SW_Variant35
       rect:
         serializedVersion: 2
         x: 0
@@ -910,7 +910,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_36
+      name: Farmland_WetOverlay_SoilJoin_NEW_AbsentCorners_NE_SE_SW_Variant36
       rect:
         serializedVersion: 2
         x: 16
@@ -932,7 +932,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_37
+      name: Farmland_WetOverlay_SoilJoin_NEW_AbsentCorners_NW_SE_SW_Variant37
       rect:
         serializedVersion: 2
         x: 32
@@ -954,7 +954,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_38
+      name: Farmland_WetOverlay_SoilJoin_NSW_AbsentCorners_NW_NE_SE_Variant38
       rect:
         serializedVersion: 2
         x: 48
@@ -976,7 +976,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_39
+      name: Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_SE_SW_Variant39
       rect:
         serializedVersion: 2
         x: 0
@@ -998,7 +998,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_40
+      name: Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NW_NE_Variant40
       rect:
         serializedVersion: 2
         x: 16
@@ -1020,7 +1020,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_41
+      name: Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NW_NE_SW_Variant41
       rect:
         serializedVersion: 2
         x: 32
@@ -1042,7 +1042,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_42
+      name: Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NW_NE_SE_Variant42
       rect:
         serializedVersion: 2
         x: 48
@@ -1064,7 +1064,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_43
+      name: Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NE_SE_Variant43
       rect:
         serializedVersion: 2
         x: 0
@@ -1086,7 +1086,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_44
+      name: Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NW_SW_Variant44
       rect:
         serializedVersion: 2
         x: 16
@@ -1108,7 +1108,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_45
+      name: Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NW_SE_SW_Variant45
       rect:
         serializedVersion: 2
         x: 32
@@ -1130,7 +1130,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FarmLand_Wet_Tile_46
+      name: Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NE_SE_SW_Variant46
       rect:
         serializedVersion: 2
         x: 48
@@ -1167,53 +1167,53 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"autoSlicingMethod":0,"spriteAlignment":9,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      FarmLand_Wet_Tile_0: 5610385612084593228
-      FarmLand_Wet_Tile_1: 8158670078252447221
-      FarmLand_Wet_Tile_10: -1709682195
-      FarmLand_Wet_Tile_11: -1453237802
-      FarmLand_Wet_Tile_12: -1883529103
-      FarmLand_Wet_Tile_13: 158945787
-      FarmLand_Wet_Tile_14: -583983652
-      FarmLand_Wet_Tile_15: 1034118905
-      FarmLand_Wet_Tile_16: -631703037
-      FarmLand_Wet_Tile_17: -506990095
-      FarmLand_Wet_Tile_18: -1280113959
-      FarmLand_Wet_Tile_19: -1529481874
-      FarmLand_Wet_Tile_2: -7890057014233389154
-      FarmLand_Wet_Tile_20: -1707011648
-      FarmLand_Wet_Tile_21: 240922351
-      FarmLand_Wet_Tile_22: 1474022564
-      FarmLand_Wet_Tile_23: 574691049
-      FarmLand_Wet_Tile_24: 1542040786
-      FarmLand_Wet_Tile_25: -719870584
-      FarmLand_Wet_Tile_26: -452138642
-      FarmLand_Wet_Tile_27: 2042942882
-      FarmLand_Wet_Tile_28: 1750304270
-      FarmLand_Wet_Tile_29: 651605475
-      FarmLand_Wet_Tile_3: 7042695545425960597
-      FarmLand_Wet_Tile_30: -434482492
-      FarmLand_Wet_Tile_31: 1514070739
-      FarmLand_Wet_Tile_32: 795648900
-      FarmLand_Wet_Tile_33: -1859332186
-      FarmLand_Wet_Tile_34: 1866960489
-      FarmLand_Wet_Tile_35: -928761732
-      FarmLand_Wet_Tile_36: 1514347635
-      FarmLand_Wet_Tile_37: -752989054
-      FarmLand_Wet_Tile_38: 1983731981
-      FarmLand_Wet_Tile_39: 1556706983
-      FarmLand_Wet_Tile_4: -7665817778320928230
-      FarmLand_Wet_Tile_40: 847141676
-      FarmLand_Wet_Tile_41: 1702578478
-      FarmLand_Wet_Tile_42: -825588592
-      FarmLand_Wet_Tile_43: -226805439
-      FarmLand_Wet_Tile_44: -1031093962
-      FarmLand_Wet_Tile_45: 822505123
-      FarmLand_Wet_Tile_46: -1973140385
-      FarmLand_Wet_Tile_5: -8091119991103756802
-      FarmLand_Wet_Tile_6: -3306948508049573734
-      FarmLand_Wet_Tile_7: -1563215120
-      FarmLand_Wet_Tile_8: 862700509
-      FarmLand_Wet_Tile_9: -1047387566
+      Farmland_WetOverlay_SoilJoin_None_AbsentCorners_NW_NE_SE_SW_Variant00: 5610385612084593228
+      Farmland_WetOverlay_SoilJoin_ES_AbsentCorners_NW_NE_SW_Variant01: 8158670078252447221
+      Farmland_WetOverlay_SoilJoin_NSW_AbsentCorners_NE_SE_Variant10: -1709682195
+      Farmland_WetOverlay_SoilJoin_NES_AbsentCorners_NW_NE_SE_SW_Variant11: -1453237802
+      Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NW_NE_SE_SW_Variant12: -1883529103
+      Farmland_WetOverlay_SoilJoin_NSW_AbsentCorners_NW_NE_SE_SW_Variant13: 158945787
+      Farmland_WetOverlay_SoilJoin_NS_AbsentCorners_NW_NE_SE_SW_Variant14: -583983652
+      Farmland_WetOverlay_SoilJoin_NE_AbsentCorners_NW_SE_SW_Variant15: 1034118905
+      Farmland_WetOverlay_SoilJoin_NEW_AbsentCorners_SE_SW_Variant16: -631703037
+      Farmland_WetOverlay_SoilJoin_NW_AbsentCorners_NE_SE_SW_Variant17: -506990095
+      Farmland_WetOverlay_SoilJoin_NE_AbsentCorners_NW_NE_SE_SW_Variant18: -1280113959
+      Farmland_WetOverlay_SoilJoin_NEW_AbsentCorners_NW_NE_SE_SW_Variant19: -1529481874
+      Farmland_WetOverlay_SoilJoin_ESW_AbsentCorners_NW_NE_Variant02: -7890057014233389154
+      Farmland_WetOverlay_SoilJoin_NW_AbsentCorners_NW_NE_SE_SW_Variant20: -1707011648
+      Farmland_WetOverlay_SoilJoin_N_AbsentCorners_NW_NE_SE_SW_Variant21: 240922351
+      Farmland_WetOverlay_SoilJoin_E_AbsentCorners_NW_NE_SE_SW_Variant22: 1474022564
+      Farmland_WetOverlay_SoilJoin_EW_AbsentCorners_NW_NE_SE_SW_Variant23: 574691049
+      Farmland_WetOverlay_SoilJoin_W_AbsentCorners_NW_NE_SE_SW_Variant24: 1542040786
+      Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_SE_Variant25: -719870584
+      Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_SW_Variant26: -452138642
+      Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NE_SW_Variant27: 2042942882
+      Farmland_WetOverlay_SoilJoin_NES_AbsentCorners_NW_SE_SW_Variant28: 1750304270
+      Farmland_WetOverlay_SoilJoin_ESW_AbsentCorners_NW_NE_SE_Variant29: 651605475
+      Farmland_WetOverlay_SoilJoin_SW_AbsentCorners_NW_NE_SE_Variant03: 7042695545425960597
+      Farmland_WetOverlay_SoilJoin_ESW_AbsentCorners_NW_NE_SW_Variant30: -434482492
+      Farmland_WetOverlay_SoilJoin_NSW_AbsentCorners_NE_SE_SW_Variant31: 1514070739
+      Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NE_Variant32: 795648900
+      Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NW_Variant33: -1859332186
+      Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NW_SE_Variant34: 1866960489
+      Farmland_WetOverlay_SoilJoin_NES_AbsentCorners_NW_NE_SW_Variant35: -928761732
+      Farmland_WetOverlay_SoilJoin_NEW_AbsentCorners_NE_SE_SW_Variant36: 1514347635
+      Farmland_WetOverlay_SoilJoin_NEW_AbsentCorners_NW_SE_SW_Variant37: -752989054
+      Farmland_WetOverlay_SoilJoin_NSW_AbsentCorners_NW_NE_SE_Variant38: 1983731981
+      Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_SE_SW_Variant39: 1556706983
+      Farmland_WetOverlay_SoilJoin_ES_AbsentCorners_NW_NE_SE_SW_Variant04: -7665817778320928230
+      Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NW_NE_Variant40: 847141676
+      Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NW_NE_SW_Variant41: 1702578478
+      Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NW_NE_SE_Variant42: -825588592
+      Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NE_SE_Variant43: -226805439
+      Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NW_SW_Variant44: -1031093962
+      Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NW_SE_SW_Variant45: 822505123
+      Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_NE_SE_SW_Variant46: -1973140385
+      Farmland_WetOverlay_SoilJoin_ESW_AbsentCorners_NW_NE_SE_SW_Variant05: -8091119991103756802
+      Farmland_WetOverlay_SoilJoin_SW_AbsentCorners_NW_NE_SE_SW_Variant06: -3306948508049573734
+      Farmland_WetOverlay_SoilJoin_S_AbsentCorners_NW_NE_SE_SW_Variant07: -1563215120
+      Farmland_WetOverlay_SoilJoin_NES_AbsentCorners_NW_SW_Variant08: 862700509
+      Farmland_WetOverlay_SoilJoin_NESW_AbsentCorners_None_Variant09: -1047387566
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

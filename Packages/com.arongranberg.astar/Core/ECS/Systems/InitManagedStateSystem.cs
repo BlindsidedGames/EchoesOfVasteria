@@ -4,11 +4,16 @@ using Unity.Entities;
 
 namespace Pathfinding.ECS {
 	/// <summary>
-	/// Creates a ManagedState component for every entity with a ManagedSettings component.
+	/// Initializes managed state for baked agents.
 	///
-	/// This ensures all baked FollowerEntity entities get a <see cref="ManagedState"/> component when they are created.
+	/// A baked entity cannot carry a storage slot in <see cref="AgentManagedStorage"/>, because baking happens ahead of time and its output is
+	/// serialized while the storage only exists at runtime. So a baked <see cref="FollowerEntity"/> arrives with
+	/// an <see cref="AgentBakedSettings"/> component and no <see cref="AgentManagedRef"/>.
 	///
-	/// See: <see cref="ManagedState"/>
+	/// Agents created from a <see cref="FollowerEntity"/> MonoBehaviour do not go through here.
+	/// <see cref="FollowerEntity.CreateEntity"/> allocates their slot directly.
+	///
+	/// See: <see cref="AgentManagedStorage"/>
 	/// See: <see cref="PathTracer"/>
 	/// See: <see cref="FollowerEntity"/>
 	/// </summary>
@@ -18,13 +23,25 @@ namespace Pathfinding.ECS {
 	[RequireMatchingQueriesForUpdate]
 	public partial struct InitManagedStateSystem : ISystem {
 		public void OnUpdate (ref SystemState state) {
-			var query = SystemAPI.QueryBuilder().WithAll<ManagedSettings>().WithNone<ManagedState>().Build();
+			// AgentManagedBackupRef rather than AgentManagedRef: a clone of an initialized baked agent has
+			// the former but not the latter, and it must be handled by AgentManagedDataRepairSystem, not
+			// re-initialized from its baked settings here.
+			var query = SystemAPI.QueryBuilder().WithAll<AgentBakedSettings>().WithNone<AgentManagedBackupRef>().Build();
 			var entities = query.ToEntityArray(Allocator.Temp);
-			state.EntityManager.AddComponent<ManagedState>(entities);
+
+			var slots = new NativeArray<int>(entities.Length, Allocator.Temp);
 			for (int i = 0; i < entities.Length; i++) {
-				state.EntityManager.SetComponentData(entities[i], new ManagedState {
+				slots[i] = AgentManagedStorage.Allocate(entities[i], new ManagedState {
 					pathTracer = new PathTracer(Allocator.Persistent),
-				});
+				}, BuildSettings(ref state, entities[i]));
+			}
+
+			// One batched structural change rather than one per entity, then fill in the slots.
+			state.EntityManager.AddComponent<AgentManagedRef>(entities);
+			state.EntityManager.AddComponent<AgentManagedBackupRef>(entities);
+			for (int i = 0; i < entities.Length; i++) {
+				state.EntityManager.SetComponentData(entities[i], new AgentManagedRef { slot = slots[i] });
+				state.EntityManager.SetComponentData(entities[i], new AgentManagedBackupRef { slot = slots[i] });
 			}
 
 			for (int i = 0; i < entities.Length; i++) {
@@ -33,6 +50,33 @@ namespace Pathfinding.ECS {
 				var proxy = new FollowerEntityProxy(state.World, entities[i]);
 				proxy.Teleport(proxy.position, false);
 			}
+		}
+
+		/// <summary>Reconstructs the settings that were flattened into unmanaged components during baking.</summary>
+		static ManagedSettings BuildSettings (ref SystemState state, Entity entity) {
+			var baked = state.EntityManager.GetComponentData<AgentBakedSettings>(entity);
+			var settings = new ManagedSettings {
+				pathfindingSettings = new PathRequestSettings {
+					graphMask = baked.graphMask,
+					traversableTags = baked.traversableTags,
+				},
+			};
+
+			// The buffers are absent when the agent left these at their defaults, in which case null is the
+			// representation the pathfinding code expects.
+			if (state.EntityManager.HasBuffer<AgentBakedTagEntryCost>(entity)) {
+				var buffer = state.EntityManager.GetBuffer<AgentBakedTagEntryCost>(entity);
+				var costs = new uint[buffer.Length];
+				for (int i = 0; i < buffer.Length; i++) costs[i] = buffer[i].value;
+				settings.pathfindingSettings.tagEntryCosts = costs;
+			}
+			if (state.EntityManager.HasBuffer<AgentBakedTagCostMultiplier>(entity)) {
+				var buffer = state.EntityManager.GetBuffer<AgentBakedTagCostMultiplier>(entity);
+				var multipliers = new float[buffer.Length];
+				for (int i = 0; i < buffer.Length; i++) multipliers[i] = buffer[i].value;
+				settings.pathfindingSettings.tagCostMultipliers = multipliers;
+			}
+			return settings;
 		}
 	}
 }

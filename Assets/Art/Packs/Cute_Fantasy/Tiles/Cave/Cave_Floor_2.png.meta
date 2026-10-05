@@ -4,7 +4,7 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 225093811778024015
-    second: Cave_Floor_2_0
+    second: CaveFloor_RockRing_Islet
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,7 +126,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Cave_Floor_2_0
+      name: CaveFloor_RockRing_Islet
       rect:
         serializedVersion: 2
         x: 0
@@ -148,7 +148,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Floor_2_1
+      name: CaveFloor_RockRing_Corner_NW
       rect:
         serializedVersion: 2
         x: 16
@@ -170,7 +170,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Floor_2_2
+      name: CaveFloor_RockRing_Side_N
       rect:
         serializedVersion: 2
         x: 0
@@ -192,7 +192,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Floor_2_3
+      name: CaveFloor_RockRing_Corner_NE
       rect:
         serializedVersion: 2
         x: 16
@@ -214,7 +214,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Floor_2_4
+      name: CaveFloor_RockRing_Islet_Compact
       rect:
         serializedVersion: 2
         x: 32
@@ -236,7 +236,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Floor_2_5
+      name: CaveFloor_RockRing_Side_W
       rect:
         serializedVersion: 2
         x: 0
@@ -258,7 +258,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Floor_2_6
+      name: CaveFloor_RockRing_Fill
       rect:
         serializedVersion: 2
         x: 16
@@ -280,7 +280,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Floor_2_7
+      name: CaveFloor_RockRing_Side_E
       rect:
         serializedVersion: 2
         x: 32
@@ -302,7 +302,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Floor_2_8
+      name: CaveFloor_RockRing_Corner_SW
       rect:
         serializedVersion: 2
         x: 0
@@ -324,7 +324,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Floor_2_9
+      name: CaveFloor_RockRing_Side_S
       rect:
         serializedVersion: 2
         x: 16
@@ -346,7 +346,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Floor_2_10
+      name: CaveFloor_RockRing_Corner_SE
       rect:
         serializedVersion: 2
         x: 32
@@ -368,7 +368,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Floor_2_11
+      name: CaveFloor_RockRing_Cap_N
       rect:
         serializedVersion: 2
         x: 0
@@ -390,7 +390,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Floor_2_12
+      name: CaveFloor_RockRing_TopHalves
       rect:
         serializedVersion: 2
         x: 16
@@ -412,7 +412,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cave_Floor_2_13
+      name: CaveFloor_RockRing_TopLeftFragment
       rect:
         serializedVersion: 2
         x: 32
@@ -449,20 +449,20 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Cave_Floor_2_0: 225093811778024015
-      Cave_Floor_2_1: 1911861634
-      Cave_Floor_2_10: 1634086953
-      Cave_Floor_2_11: 2076359387
-      Cave_Floor_2_12: -407173505
-      Cave_Floor_2_13: 2115683880
-      Cave_Floor_2_2: -41890388
-      Cave_Floor_2_3: -1784355119
-      Cave_Floor_2_4: 1063088845
-      Cave_Floor_2_5: -725369902
-      Cave_Floor_2_6: -200433584
-      Cave_Floor_2_7: 978855793
-      Cave_Floor_2_8: 701225138
-      Cave_Floor_2_9: -539955570
+      CaveFloor_RockRing_Islet: 225093811778024015
+      CaveFloor_RockRing_Corner_NW: 1911861634
+      CaveFloor_RockRing_Corner_SE: 1634086953
+      CaveFloor_RockRing_Cap_N: 2076359387
+      CaveFloor_RockRing_TopHalves: -407173505
+      CaveFloor_RockRing_TopLeftFragment: 2115683880
+      CaveFloor_RockRing_Side_N: -41890388
+      CaveFloor_RockRing_Corner_NE: -1784355119
+      CaveFloor_RockRing_Islet_Compact: 1063088845
+      CaveFloor_RockRing_Side_W: -725369902
+      CaveFloor_RockRing_Fill: -200433584
+      CaveFloor_RockRing_Side_E: 978855793
+      CaveFloor_RockRing_Corner_SW: 701225138
+      CaveFloor_RockRing_Side_S: -539955570
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

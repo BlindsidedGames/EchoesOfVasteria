@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="59" result="Passed" total="59" passed="59" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-03 02:53:03Z" end-time="2026-10-03 02:54:15Z" duration="71.5318127">
+  <test-suite type="TestSuite" id="6937" name="EOVTests_46a48f63c1c8341d" fullname="EOVTests_46a48f63c1c8341d" runstate="Runnable" testcasecount="5662" result="Passed" start-time="2026-10-03 02:53:03Z" end-time="2026-10-03 02:54:15Z" duration="71.531813" total="59" passed="59" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1067" name="Tests.dll" fullname="/private/tmp/eov-fields-production-v1/project/Library/ScriptAssemblies/Tests.dll" runstate="Runnable" testcasecount="59" result="Passed" start-time="2026-10-03 02:53:03Z" end-time="2026-10-03 02:54:15Z" duration="71.492180" total="59" passed="59" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="30639" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1068" name="Tests" fullname="Tests" runstate="Runnable" testcasecount="49" result="Passed" start-time="2026-10-03 02:53:03Z" end-time="2026-10-03 02:54:15Z" duration="71.379480" total="49" passed="49" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1069" name="EditMode" fullname="Tests.EditMode" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-03 02:53:03Z" end-time="2026-10-03 02:53:03Z" duration="0.016928" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1001" name="LeaderboardFraudTests" fullname="Tests.EditMode.LeaderboardFraudTests" classname="Tests.EditMode.LeaderboardFraudTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-03 02:53:03Z" end-time="2026-10-03 02:53:03Z" duration="0.016404" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1002" name="ConsoleAuthMarksSaveDataWhenCommandsUsed" fullname="Tests.EditMode.LeaderboardFraudTests.ConsoleAuthMarksSaveDataWhenCommandsUsed" methodname="ConsoleAuthMarksSaveDataWhenCommandsUsed" classname="Tests.EditMode.LeaderboardFraudTests" runstate="Runnable" seed="1306383584" result="Passed" start-time="2026-10-03 02:53:03Z" end-time="2026-10-03 02:53:03Z" duration="0.006445" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1003" name="FraudDetectionFlagsConsoleUsageImmediately" fullname="Tests.EditMode.LeaderboardFraudTests.FraudDetectionFlagsConsoleUsageImmediately" methodname="FraudDetectionFlagsConsoleUsageImmediately" classname="Tests.EditMode.LeaderboardFraudTests" runstate="Runnable" seed="1746389407" result="Passed" start-time="2026-10-03 02:53:03Z" end-time="2026-10-03 02:53:03Z" duration="0.003092" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1004" name="FraudDetectionFlagsUnderOneHourCompletion" fullname="Tests.EditMode.LeaderboardFraudTests.FraudDetectionFlagsUnderOneHourCompletion" methodname="FraudDetectionFlagsUnderOneHourCompletion" classname="Tests.EditMode.LeaderboardFraudTests" runstate="Runnable" seed="694543738" result="Passed" start-time="2026-10-03 02:53:03Z" end-time="2026-10-03 02:53:03Z" duration="0.000169" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+        </test-suite>
+        <test-suite type="TestSuite" id="1070" name="PlayMode" fullname="Tests.PlayMode" runstate="Runnable" testcasecount="46" result="Passed" start-time="2026-10-03 02:53:03Z" end-time="2026-10-03 02:54:15Z" duration="71.362147" total="46" passed="46" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1005" name="FieldsProductionPlayModeTests" fullname="Tests.PlayMode.FieldsProductionPlayModeTests" classname="Tests.PlayMode.FieldsProductionPlayModeTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-03 02:53:03Z" end-time="2026-10-03 02:53:04Z" duration="0.455617" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1008" name="DurableManualHarvestPaysOnceAndRepeatConsumesOnlyOneNewDryBatch" fullname="Tests.PlayMode.FieldsProductionPlayModeTests.DurableManualHarvestPaysOnceAndRepeatConsumesOnlyOneNewDryBatch" methodname="DurableManualHarvestPaysOnceAndRepeatConsumesOnlyOneNewDryBatch" classname="Tests.PlayMode.FieldsProductionPlayModeTests" runstate="Runnable" seed="1271526228" result="Passed" start-time="2026-10-03 02:53:03Z" end-time="2026-10-03 02:53:04Z" duration="0.428198" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1006" name="RealOwnerCommitsIntroductionAndExactlyOneConstructionPaymentThenReloads" fullname="Tests.PlayMode.FieldsProductionPlayModeTests.RealOwnerCommitsIntroductionAndExactlyOneConstructionPaymentThenReloads" methodname="RealOwnerCommitsIntroductionAndExactlyOneConstructionPaymentThenReloads" classname="Tests.PlayMode.FieldsProductionPlayModeTests" runstate="Runnable" seed="796106342" result="Passed" start-time="2026-10-03 02:53:04Z" end-time="2026-10-03 02:53:04Z" duration="0.010995" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1007" name="RealServiceResumeAndOwnerReloadNeverSettleUtcGrowth" fullname="Tests.PlayMode.FieldsProductionPlayModeTests.RealServiceResumeAndOwnerReloadNeverSettleUtcGrowth" methodname="RealServiceResumeAndOwnerReloadNeverSettleUtcGrowth" classname="Tests.PlayMode.FieldsProductionPlayModeTests" runstate="Runnable" seed="1650855781" result="Passed" start-time="2026-10-03 02:53:04Z" end-time="2026-10-03 02:53:04Z" duration="0.012812" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1009" name="SaveImportExportBoundaryTests" fullname="Tests.PlayMode.SaveImportExportBoundaryTests" classname="Tests.PlayMode.SaveImportExportBoundaryTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-03 02:53:04Z" end-time="2026-10-03 02:53:04Z" duration="0.044393" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1010" name="CurrentExportImportsExactProgressAndReceiptsIntoDurableSlot" fullname="Tests.PlayMode.SaveImportExportBoundaryTests.CurrentExportImportsExactProgressAndReceiptsIntoDurableSlot" methodname="CurrentExportImportsExactProgressAndReceiptsIntoDurableSlot" classname="Tests.PlayMode.SaveImportExportBoundaryTests" runstate="Runnable" seed="2104175851" result="Passed" start-time="2026-10-03 02:53:04Z" end-time="2026-10-03 02:53:04Z" duration="0.043563" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1011" name="SaveSystemStressPlayModeTests" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" testcasecount="42" result="Passed" start-time="2026-10-03 02:53:04Z" end-time="2026-10-03 02:54:15Z" duration="70.861357" total="42" passed="42" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1024" name="AllCorruptGenerations_ReturnFailureAndRemainUntouched" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.AllCorruptGenerations_ReturnFailureAndRemainUntouched" methodname="AllCorruptGenerations_ReturnFailureAndRemainUntouched" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="885587781" result="Passed" start-time="2026-10-03 02:53:04Z" end-time="2026-10-03 02:53:05Z" duration="1.439902" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1042" name="AuthorityHistory_IsRetainedAcrossManyExplicitReplacements" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.AuthorityHistory_IsRetainedAcrossManyExplicitReplacements" methodname="AuthorityHistory_IsRetainedAcrossManyExplicitReplacements" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="768241898" result="Passed" start-time="2026-10-03 02:53:05Z" end-time="2026-10-03 02:53:08Z" duration="2.429633" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1017" name="CompletedTempGeneration_IsRecoveredAfterInterruptedPublish" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.CompletedTempGeneration_IsRecoveredAfterInterruptedPublish" methodname="CompletedTempGeneration_IsRecoveredAfterInterruptedPublish" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1969590836" result="Passed" start-time="2026-10-03 02:53:08Z" end-time="2026-10-03 02:53:09Z" duration="1.296435" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1041" name="ConcurrentForcedRecoveries_RemainAConflictRegardlessOfLocalRevision" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.ConcurrentForcedRecoveries_RemainAConflictRegardlessOfLocalRevision" methodname="ConcurrentForcedRecoveries_RemainAConflictRegardlessOfLocalRevision" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="472156860" result="Passed" start-time="2026-10-03 02:53:09Z" end-time="2026-10-03 02:53:12Z" duration="2.387191" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1038" name="CorruptHighestRevisionSibling_InvalidatesOtherwiseValidAuthorityState" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.CorruptHighestRevisionSibling_InvalidatesOtherwiseValidAuthorityState" methodname="CorruptHighestRevisionSibling_InvalidatesOtherwiseValidAuthorityState" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="291460061" result="Passed" start-time="2026-10-03 02:53:12Z" end-time="2026-10-03 02:53:13Z" duration="1.839945" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1015" name="CorruptNewestGeneration_FallsBackWithoutDeletingEvidence" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.CorruptNewestGeneration_FallsBackWithoutDeletingEvidence" methodname="CorruptNewestGeneration_FallsBackWithoutDeletingEvidence" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1882743905" result="Passed" start-time="2026-10-03 02:53:13Z" end-time="2026-10-03 02:53:15Z" duration="1.579708" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1028" name="DeletionTombstone_BlocksCloudRestoredSnapshot" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.DeletionTombstone_BlocksCloudRestoredSnapshot" methodname="DeletionTombstone_BlocksCloudRestoredSnapshot" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="339673591" result="Passed" start-time="2026-10-03 02:53:15Z" end-time="2026-10-03 02:53:16Z" duration="1.048170" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1034" name="EqualRevisionActiveLineages_FromCloudMerge_ReturnConflict" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.EqualRevisionActiveLineages_FromCloudMerge_ReturnConflict" methodname="EqualRevisionActiveLineages_FromCloudMerge_ReturnConflict" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="442915688" result="Passed" start-time="2026-10-03 02:53:16Z" end-time="2026-10-03 02:53:18Z" duration="1.872014" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1037" name="EqualRevisionDeletion_FromCloudMerge_WinsOverActiveLineage" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.EqualRevisionDeletion_FromCloudMerge_WinsOverActiveLineage" methodname="EqualRevisionDeletion_FromCloudMerge_WinsOverActiveLineage" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1351873608" result="Passed" start-time="2026-10-03 02:53:18Z" end-time="2026-10-03 02:53:19Z" duration="1.443672" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1052" name="EquipmentSave_CanonicalizesDuplicateLegacySlotAliases" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.EquipmentSave_CanonicalizesDuplicateLegacySlotAliases" methodname="EquipmentSave_CanonicalizesDuplicateLegacySlotAliases" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1279308257" result="Passed" start-time="2026-10-03 02:53:19Z" end-time="2026-10-03 02:53:21Z" duration="1.198423" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1050" name="FailedEquipmentReconstruction_PreservesPreviousRuntimeState" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.FailedEquipmentReconstruction_PreservesPreviousRuntimeState" methodname="FailedEquipmentReconstruction_PreservesPreviousRuntimeState" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1308603667" result="Passed" start-time="2026-10-03 02:53:21Z" end-time="2026-10-03 02:53:22Z" duration="1.195599" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1049" name="FailedExplicitEquip_PreservesPreviousRawAndRuntimeRecords" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.FailedExplicitEquip_PreservesPreviousRawAndRuntimeRecords" methodname="FailedExplicitEquip_PreservesPreviousRawAndRuntimeRecords" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="526484723" result="Passed" start-time="2026-10-03 02:53:22Z" end-time="2026-10-03 02:53:23Z" duration="1.301987" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[EquipmentController: Rarity 'TemporarilyMissingRarity' not found in Resources – item sprite may be missing for slot 'Helmet'.
+EquipmentController: Equip failed (slot='Helmet', rarity='null'). System.InvalidOperationException: EquipmentController could not build a complete snapshot. ---> System.InvalidOperationException: EquipmentController could not serialize slot 'Helmet'. ---> System.NullReferenceException: Object reference not set to an instance of an object
+  at TimelessEchoes.Gear.EquipmentController.SaveState () [0x00171] in /private/tmp/eov-fields-production-v1/project/Assets/Scripts/Gear/EquipmentController.cs:178
+   --- End of inner exception stack trace ---
+  at TimelessEchoes.Gear.EquipmentController.SaveState () [0x003e5] in /private/tmp/eov-fields-production-v1/project/Assets/Scripts/Gear/EquipmentController.cs:239
+   --- End of inner exception stack trace ---
+  at TimelessEchoes.Gear.EquipmentController.SaveState () [0x0043f] in /private/tmp/eov-fields-production-v1/project/Assets/Scripts/Gear/EquipmentController.cs:249
+  at TimelessEchoes.Gear.EquipmentController.Equip (TimelessEchoes.Gear.GearItem item) [0x00053] in /private/tmp/eov-fields-production-v1/project/Assets/Scripts/Gear/EquipmentController.cs:71
+]]></output>
+            </test-case>
+            <test-case id="1053" name="FailedSaveContribution_CanRetryWithinTheSameFrame" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.FailedSaveContribution_CanRetryWithinTheSameFrame" methodname="FailedSaveContribution_CanRetryWithinTheSameFrame" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="369705260" result="Passed" start-time="2026-10-03 02:53:23Z" end-time="2026-10-03 02:53:24Z" duration="0.646012" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1033" name="ForcedRecovery_ArchivesUnrecognizedSnapshotEvidence" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.ForcedRecovery_ArchivesUnrecognizedSnapshotEvidence" methodname="ForcedRecovery_ArchivesUnrecognizedSnapshotEvidence" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="285678769" result="Passed" start-time="2026-10-03 02:53:24Z" end-time="2026-10-03 02:53:25Z" duration="0.932853" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1032" name="ForcedRecovery_ArchivesZeroOperationAuthorityEvidence" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.ForcedRecovery_ArchivesZeroOperationAuthorityEvidence" methodname="ForcedRecovery_ArchivesZeroOperationAuthorityEvidence" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1993557357" result="Passed" start-time="2026-10-03 02:53:25Z" end-time="2026-10-03 02:53:26Z" duration="0.920969" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1039" name="ForcedRecovery_PublishesNewAuthorityAboveMergedConflict" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.ForcedRecovery_PublishesNewAuthorityAboveMergedConflict" methodname="ForcedRecovery_PublishesNewAuthorityAboveMergedConflict" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1214421492" result="Passed" start-time="2026-10-03 02:53:26Z" end-time="2026-10-03 02:53:28Z" duration="2.121728" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1040" name="ForcedRecovery_QuarantinesCyclicAuthorityAndSurvivesReplacement" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.ForcedRecovery_QuarantinesCyclicAuthorityAndSurvivesReplacement" methodname="ForcedRecovery_QuarantinesCyclicAuthorityAndSurvivesReplacement" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1164495344" result="Passed" start-time="2026-10-03 02:53:28Z" end-time="2026-10-03 02:53:29Z" duration="1.208349" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1043" name="ForcedRecovery_SupersedesNamedCorruptAuthorityWithoutDeletingEvidence" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.ForcedRecovery_SupersedesNamedCorruptAuthorityWithoutDeletingEvidence" methodname="ForcedRecovery_SupersedesNamedCorruptAuthorityWithoutDeletingEvidence" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1970486820" result="Passed" start-time="2026-10-03 02:53:29Z" end-time="2026-10-03 02:53:30Z" duration="1.312976" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1031" name="FutureAuthorityFormat_IsDowngradeProtectedFromForcedRecovery" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.FutureAuthorityFormat_IsDowngradeProtectedFromForcedRecovery" methodname="FutureAuthorityFormat_IsDowngradeProtectedFromForcedRecovery" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1679669565" result="Passed" start-time="2026-10-03 02:53:30Z" end-time="2026-10-03 02:53:31Z" duration="1.204738" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1027" name="HeaderVersionBitFlip_FallsBackInsteadOfMasqueradingAsFutureData" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.HeaderVersionBitFlip_FallsBackInsteadOfMasqueradingAsFutureData" methodname="HeaderVersionBitFlip_FallsBackInsteadOfMasqueradingAsFutureData" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1335764368" result="Passed" start-time="2026-10-03 02:53:31Z" end-time="2026-10-03 02:53:33Z" duration="1.717139" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1045" name="LedgeredSave_MissingHistoricalMigrationIdExecutesMigration" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.LedgeredSave_MissingHistoricalMigrationIdExecutesMigration" methodname="LedgeredSave_MissingHistoricalMigrationIdExecutesMigration" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1236021459" result="Passed" start-time="2026-10-03 02:53:33Z" end-time="2026-10-03 02:53:34Z" duration="1.175408" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1021" name="LegacyFallback_UpgradesWhilePreservingCorruptPrimaryEvidence" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.LegacyFallback_UpgradesWhilePreservingCorruptPrimaryEvidence" methodname="LegacyFallback_UpgradesWhilePreservingCorruptPrimaryEvidence" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1545242384" result="Passed" start-time="2026-10-03 02:53:34Z" end-time="2026-10-03 02:53:36Z" duration="1.614938" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1020" name="LegacyRotation_UsesPrimaryBeforeTimestamp" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.LegacyRotation_UsesPrimaryBeforeTimestamp" methodname="LegacyRotation_UsesPrimaryBeforeTimestamp" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="919930174" result="Passed" start-time="2026-10-03 02:53:36Z" end-time="2026-10-03 02:53:37Z" duration="1.450958" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1018" name="LegacySnapshot_LoadsAndUpgradesWithoutModifyingOriginalBytes" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.LegacySnapshot_LoadsAndUpgradesWithoutModifyingOriginalBytes" methodname="LegacySnapshot_LoadsAndUpgradesWithoutModifyingOriginalBytes" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1026460408" result="Passed" start-time="2026-10-03 02:53:37Z" end-time="2026-10-03 02:53:39Z" duration="1.740777" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1048" name="LoadedCandidate_IsNormalizedBeforeAtomicPublication" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.LoadedCandidate_IsNormalizedBeforeAtomicPublication" methodname="LoadedCandidate_IsNormalizedBeforeAtomicPublication" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="34209012" result="Passed" start-time="2026-10-03 02:53:39Z" end-time="2026-10-03 02:53:41Z" duration="1.568263" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1030" name="MalformedAuthorityState_NeverLooksLikeANewSlot" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.MalformedAuthorityState_NeverLooksLikeANewSlot" methodname="MalformedAuthorityState_NeverLooksLikeANewSlot" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="820815550" result="Passed" start-time="2026-10-03 02:53:41Z" end-time="2026-10-03 02:53:41Z" duration="0.669895" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1022" name="MissingAuthority_PrefersVerifiedModernProgressOverPreservedLegacyCopy" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.MissingAuthority_PrefersVerifiedModernProgressOverPreservedLegacyCopy" methodname="MissingAuthority_PrefersVerifiedModernProgressOverPreservedLegacyCopy" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="531060117" result="Passed" start-time="2026-10-03 02:53:41Z" end-time="2026-10-03 02:53:43Z" duration="1.450040" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1023" name="MissingAuthority_RepairKeepsLineageWhenLateCloudStateArrives" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.MissingAuthority_RepairKeepsLineageWhenLateCloudStateArrives" methodname="MissingAuthority_RepairKeepsLineageWhenLateCloudStateArrives" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1735848027" result="Passed" start-time="2026-10-03 02:53:43Z" end-time="2026-10-03 02:53:45Z" duration="1.838474" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1013" name="OverlappingRoutineSaves_DoNotForkTheCachedHead" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.OverlappingRoutineSaves_DoNotForkTheCachedHead" methodname="OverlappingRoutineSaves_DoNotForkTheCachedHead" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="906850548" result="Passed" start-time="2026-10-03 02:53:45Z" end-time="2026-10-03 02:53:47Z" duration="1.934486" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1044" name="ProductionMigration_PreservesCauldronTotalsAndIsIdempotent" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.ProductionMigration_PreservesCauldronTotalsAndIsIdempotent" methodname="ProductionMigration_PreservesCauldronTotalsAndIsIdempotent" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="396332290" result="Passed" start-time="2026-10-03 02:53:47Z" end-time="2026-10-03 02:53:48Z" duration="1.731615" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1012" name="RapidSavesAcrossFrames_AreValid" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.RapidSavesAcrossFrames_AreValid" methodname="RapidSavesAcrossFrames_AreValid" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="2005873045" result="Passed" start-time="2026-10-03 02:53:48Z" end-time="2026-10-03 02:53:52Z" duration="4.249850" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1029" name="ReplacementLineage_IgnoresHigherGenerationFromDeletedCloudBranch" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.ReplacementLineage_IgnoresHigherGenerationFromDeletedCloudBranch" methodname="ReplacementLineage_IgnoresHigherGenerationFromDeletedCloudBranch" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="2068748113" result="Passed" start-time="2026-10-03 02:53:52Z" end-time="2026-10-03 02:53:55Z" duration="2.626571" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1026" name="Retention_NeverDeletesAnUnverifiedGeneration" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.Retention_NeverDeletesAnUnverifiedGeneration" methodname="Retention_NeverDeletesAnUnverifiedGeneration" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1139672668" result="Passed" start-time="2026-10-03 02:53:55Z" end-time="2026-10-03 02:53:58Z" duration="3.294267" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1019" name="RoutineSave_DoesNotSupersedeAnUnloadedLegacySnapshot" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.RoutineSave_DoesNotSupersedeAnUnloadedLegacySnapshot" methodname="RoutineSave_DoesNotSupersedeAnUnloadedLegacySnapshot" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1756424751" result="Passed" start-time="2026-10-03 02:53:58Z" end-time="2026-10-03 02:54:00Z" duration="1.718304" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1051" name="RuntimeContributors_PreserveTemporarilyUnknownEnemyAndTaskRecords" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.RuntimeContributors_PreserveTemporarilyUnknownEnemyAndTaskRecords" methodname="RuntimeContributors_PreserveTemporarilyUnknownEnemyAndTaskRecords" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1388891085" result="Passed" start-time="2026-10-03 02:54:00Z" end-time="2026-10-03 02:54:01Z" duration="1.317493" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1016" name="SameLengthPayloadCorruption_FallsBackByChecksum" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.SameLengthPayloadCorruption_FallsBackByChecksum" methodname="SameLengthPayloadCorruption_FallsBackByChecksum" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="651672510" result="Passed" start-time="2026-10-03 02:54:01Z" end-time="2026-10-03 02:54:03Z" duration="1.707011" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1036" name="SameLineageOfflineForks_WithIdenticalPayloads_StillReturnConflict" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.SameLineageOfflineForks_WithIdenticalPayloads_StillReturnConflict" methodname="SameLineageOfflineForks_WithIdenticalPayloads_StillReturnConflict" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1409631738" result="Passed" start-time="2026-10-03 02:54:03Z" end-time="2026-10-03 02:54:05Z" duration="1.960151" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1035" name="SameLineageOfflineForks_WithUnequalRetainedGenerations_ReturnConflict" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.SameLineageOfflineForks_WithUnequalRetainedGenerations_ReturnConflict" methodname="SameLineageOfflineForks_WithUnequalRetainedGenerations_ReturnConflict" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="96981023" result="Passed" start-time="2026-10-03 02:54:05Z" end-time="2026-10-03 02:54:09Z" duration="3.974083" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1047" name="SlotLoadPreparation_RetainsNonNullTreeButRevokesSaveAuthority" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.SlotLoadPreparation_RetainsNonNullTreeButRevokesSaveAuthority" methodname="SlotLoadPreparation_RetainsNonNullTreeButRevokesSaveAuthority" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1890240540" result="Passed" start-time="2026-10-03 02:54:09Z" end-time="2026-10-03 02:54:10Z" duration="0.783565" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1014" name="SlotSwitching_PreservesLatestPerSlot" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.SlotSwitching_PreservesLatestPerSlot" methodname="SlotSwitching_PreservesLatestPerSlot" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="1664463680" result="Passed" start-time="2026-10-03 02:54:10Z" end-time="2026-10-03 02:54:12Z" duration="2.219210" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1046" name="ThrowingMigration_RollsBackWithoutMutatingSource" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.ThrowingMigration_RollsBackWithoutMutatingSource" methodname="ThrowingMigration_RollsBackWithoutMutatingSource" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="185597576" result="Passed" start-time="2026-10-03 02:54:12Z" end-time="2026-10-03 02:54:14Z" duration="1.953183" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1025" name="UnrecognizedSnapshotFile_IsNotTreatedAsFreshSlot" fullname="Tests.PlayMode.SaveSystemStressPlayModeTests.UnrecognizedSnapshotFile_IsNotTreatedAsFreshSlot" methodname="UnrecognizedSnapshotFile_IsNotTreatedAsFreshSlot" classname="Tests.PlayMode.SaveSystemStressPlayModeTests" runstate="Runnable" seed="168535354" result="Passed" start-time="2026-10-03 02:54:14Z" end-time="2026-10-03 02:54:15Z" duration="0.778381" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+      <test-suite type="TestSuite" id="1071" name="TimelessEchoes" fullname="TimelessEchoes" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-03 02:54:15Z" end-time="2026-10-03 02:54:15Z" duration="0.112083" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1072" name="Tests" fullname="TimelessEchoes.Tests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-03 02:54:15Z" end-time="2026-10-03 02:54:15Z" duration="0.111803" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1074" name="Buffs" fullname="TimelessEchoes.Tests.Buffs" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-03 02:54:15Z" end-time="2026-10-03 02:54:15Z" duration="0.007497" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1064" name="ExperienceBuffTests" fullname="TimelessEchoes.Tests.Buffs.ExperienceBuffTests" classname="TimelessEchoes.Tests.Buffs.ExperienceBuffTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-03 02:54:15Z" end-time="2026-10-03 02:54:15Z" duration="0.007373" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1065" name="ExperienceBuffAppliesToSkillExperience" fullname="TimelessEchoes.Tests.Buffs.ExperienceBuffTests.ExperienceBuffAppliesToSkillExperience" methodname="ExperienceBuffAppliesToSkillExperience" classname="TimelessEchoes.Tests.Buffs.ExperienceBuffTests" runstate="Runnable" seed="492735642" result="Passed" start-time="2026-10-03 02:54:15Z" end-time="2026-10-03 02:54:15Z" duration="0.006331" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1066" name="QuestExperienceBypassesMultipliers" fullname="TimelessEchoes.Tests.Buffs.ExperienceBuffTests.QuestExperienceBypassesMultipliers" methodname="QuestExperienceBypassesMultipliers" classname="TimelessEchoes.Tests.Buffs.ExperienceBuffTests" runstate="Runnable" seed="504121440" result="Passed" start-time="2026-10-03 02:54:15Z" end-time="2026-10-03 02:54:15Z" duration="0.000689" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestSuite" id="1073" name="RealTime" fullname="TimelessEchoes.Tests.RealTime" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-03 02:54:15Z" end-time="2026-10-03 02:54:15Z" duration="0.104108" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1054" name="RealTimeSystemsTests" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-03 02:54:15Z" end-time="2026-10-03 02:54:15Z" duration="0.103869" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1063" name="EquipmentRoundTripCanonicalizesLegacyStatNameWithoutDuplication" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.EquipmentRoundTripCanonicalizesLegacyStatNameWithoutDuplication" methodname="EquipmentRoundTripCanonicalizesLegacyStatNameWithoutDuplication" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" seed="2023397811" result="Passed" start-time="2026-10-03 02:54:15Z" end-time="2026-10-03 02:54:15Z" duration="0.001378" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1062" name="EquipmentRoundTripPreservesTemporarilyUnresolvedContent" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.EquipmentRoundTripPreservesTemporarilyUnresolvedContent" methodname="EquipmentRoundTripPreservesTemporarilyUnresolvedContent" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" seed="2015024" result="Passed" start-time="2026-10-03 02:54:15Z" end-time="2026-10-03 02:54:15Z" duration="0.001571" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[EquipmentController: Rarity 'TemporarilyMissingRarity' not found in Resources – item sprite may be missing for slot 'Helmet'.
+EquipmentController: Stat 'temporarily-missing-stat' not found in Resources — affix skipped for slot 'Helmet'.
+]]></output>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1060" name="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-03 02:54:15Z" end-time="2026-10-03 02:54:15Z" duration="0.051701" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1056" name="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted(0)" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted(0)" methodname="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" seed="123503678" result="Passed" start-time="2026-10-03 02:54:15Z" end-time="2026-10-03 02:54:15Z" duration="0.049600" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1057" name="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted(1)" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted(1)" methodname="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" seed="503481974" result="Passed" start-time="2026-10-03 02:54:15Z" end-time="2026-10-03 02:54:15Z" duration="0.000454" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1058" name="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted(2)" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted(2)" methodname="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" seed="2036790981" result="Passed" start-time="2026-10-03 02:54:15Z" end-time="2026-10-03 02:54:15Z" duration="0.000505" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1059" name="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted(3)" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted(3)" methodname="GenuineTaskDropAddsBaseCardYieldWhileSecondaryAndQuestAwardsStayUnboosted" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" seed="448221357" result="Passed" start-time="2026-10-03 02:54:15Z" end-time="2026-10-03 02:54:15Z" duration="0.000457" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-case id="1061" name="LiveResourceDiscoveryImmediatelyBlocksCategoryAndSurvivesOwnerReload" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.LiveResourceDiscoveryImmediatelyBlocksCategoryAndSurvivesOwnerReload" methodname="LiveResourceDiscoveryImmediatelyBlocksCategoryAndSurvivesOwnerReload" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" seed="933872171" result="Passed" start-time="2026-10-03 02:54:15Z" end-time="2026-10-03 02:54:15Z" duration="0.048200" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1055" name="PlaytimeAccumulatesWithProvidedUnscaledSeconds" fullname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests.PlaytimeAccumulatesWithProvidedUnscaledSeconds" methodname="PlaytimeAccumulatesWithProvidedUnscaledSeconds" classname="TimelessEchoes.Tests.RealTime.RealTimeSystemsTests" runstate="Runnable" seed="719376378" result="Passed" start-time="2026-10-03 02:54:15Z" end-time="2026-10-03 02:54:15Z" duration="0.000312" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: /Users/matthewrushworth/Library/Application Support/EchoesTests/EOVTests_46a48f63c1c8341d/TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

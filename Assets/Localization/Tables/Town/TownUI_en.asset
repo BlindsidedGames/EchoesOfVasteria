@@ -17,7 +17,4073 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: 79e2dd3ef4efaf5459ce0f738238ca3e, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 87000000000003857
+    m_Localized: Disabled
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003856
+    m_Localized: Enabled
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003855
+    m_Localized: "Duration {0}   \xB7   Cooldown {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003854
+    m_Localized: Distance {0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003853
+    m_Localized: Assign
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003852
+    m_Localized: Slot {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003851
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003850
+    m_Localized: Empty slot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003849
+    m_Localized: "{0} \xB7 Autocast locked"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003848
+    m_Localized: "{0} \xB7 Autocast off"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003847
+    m_Localized: "{0} \xB7 Autocast on"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003846
+    m_Localized: Slot locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003845
+    m_Localized: Select a buff to assign it. Select an equipped slot to toggle autocast.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003844
+    m_Localized: Choose a slot for {0}. Select Cancel to finish without assigning.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003843
+    m_Localized: Assignments are locked during runs. Select an equipped slot to toggle autocast.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003842
+    m_Localized: Task Speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003841
+    m_Localized: Echo | Tasks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003840
+    m_Localized: Movement Speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003839
+    m_Localized: Resource Multiplier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003838
+    m_Localized: Echo | Combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003837
+    m_Localized: Critical Roll
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003836
+    m_Localized: Echo Resonance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003835
+    m_Localized: Combat Enhancer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003834
+    m_Localized: Collector's Instinct
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003833
+    m_Localized: Bonus Experience
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003832
+    m_Localized: Windfall
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003831
+    m_Localized: Regeneration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003830
+    m_Localized: Tasks complete instantly
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003829
+    m_Localized: Game Speed +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003828
+    m_Localized: Echo Follow-up Resources +{0:0.#}% (10s)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003827
+    m_Localized: Resource Bonus +{0:0.#}% every 10 tasks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003826
+    m_Localized: Unfamiliar Task Weight up to +{0:0.#}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003825
+    m_Localized: Target Spawn Weight +{0:0.#}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003824
+    m_Localized: Crit Damage +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003823
+    m_Localized: Crit Chance +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003822
+    m_Localized: '{0:0.#}% Bonus Experience'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003821
+    m_Localized: Resource Gains +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003820
+    m_Localized: Max Reap Distance +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003819
+    m_Localized: Max Reap Distance +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003818
+    m_Localized: Health Regen +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003817
+    m_Localized: Task Speed +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003816
+    m_Localized: Attack Speed +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003815
+    m_Localized: Defense +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003814
+    m_Localized: Damage +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003813
+    m_Localized: Move Speed +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003812
+    m_Localized: 'Duration: {0}, Cooldown: {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003811
+    m_Localized: 'Distance: {0}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003810
+    m_Localized: 'Echoes: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003809
+    m_Localized: MoveSpeed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003808
+    m_Localized: Regen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003807
+    m_Localized: Health
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003806
+    m_Localized: Defense
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003805
+    m_Localized: "  \u2022 core {0}: {1:0.#}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003804
+    m_Localized: Cancelled
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003803
+    m_Localized: Upgraded
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003802
+    m_Localized: Vastium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003801
+    m_Localized: "  \u2022 {0} salvages: {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003800
+    m_Localized: "  \u2022 {0} equips: {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003799
+    m_Localized: "  \u2022 {0} crafts: {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003798
+    m_Localized: "\u2022 Stone: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003797
+    m_Localized: "\u2022 Slime: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003796
+    m_Localized: "\u2022 Total Cores: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003795
+    m_Localized: "\u2022 Total Ingots: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003794
+    m_Localized: "\u2022 Total Crystals: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003793
+    m_Localized: "\u2022 Core Conversions: {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003792
+    m_Localized: "\u2022 Ingot Conversions: {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003791
+    m_Localized: "\u2022 High Rolls | Times rolled in top {0:0.#}% of stat:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003790
+    m_Localized: "\u2022 Avg Crafts / Upgrade: {0:N2}  \u2022 Longest Gap: {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003789
+    m_Localized: gained {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003788
+    m_Localized: rarity {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003787
+    m_Localized: "\u2022 Items: {0:N0}  \u2022 Entries: {1:N0}  \u2022 Avg/Item: {2:N2}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003786
+    m_Localized: core {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003785
+    m_Localized: "\u2022 Sessions: {0:N0}, Crafts: {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003784
+    m_Localized: "\u2022 Total XP Gained: {0:N0} (level-ups: {1:N0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003783
+    m_Localized: "\u2022 XP: {0:N0} / {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003782
+    m_Localized: "\u2022 Level: {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003781
+    m_Localized: "\u2022 Total Salvaged: {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003780
+    m_Localized: "\u2022 Equipped From Craft: {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003779
+    m_Localized: "\u2022 Total Crafts: {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003778
+    m_Localized: "• Best Rolled:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003777
+    m_Localized: Max Iterations
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003776
+    m_Localized: Out of Resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003775
+    m_Localized: 'Consumed:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003774
+    m_Localized: 'Created:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003773
+    m_Localized: "\u2022 Highest:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003772
+    m_Localized: "\u2022 Totals:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003771
+    m_Localized: "\u2022 Cores:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003770
+    m_Localized: "\u2022 Overall:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003769
+    m_Localized: "\u2022 Best By Rarity:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003768
+    m_Localized: "\u2022 Best By Core:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003767
+    m_Localized: "\u2022 Stop Reasons:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003766
+    m_Localized: No data yet.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003765
+    m_Localized: <size=120%><b>Forge Stats</b></size>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003764
+    m_Localized: Quality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003763
+    m_Localized: Conversions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003762
+    m_Localized: Stat Rolls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003761
+    m_Localized: Per-Slot Totals
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003760
+    m_Localized: Upgrades
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003759
+    m_Localized: Distributions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003758
+    m_Localized: Salvage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003757
+    m_Localized: Autocraft
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003756
+    m_Localized: Ivan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003755
+    m_Localized: Totals
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003754
+    m_Localized: Combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003753
+    m_Localized: '{0} {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003752
+    m_Localized: '{0} {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003751
+    m_Localized: a {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003750
+    m_Localized: an {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003749
+    m_Localized: Task
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003748
+    m_Localized: Selective
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003747
+    m_Localized: Killing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003746
+    m_Localized: an Echo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003745
+    m_Localized: Echoes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003744
+    m_Localized: Echo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003743
+    m_Localized: Stat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003742
+    m_Localized: Associated Skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003741
+    m_Localized: Skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003740
+    m_Localized: ' when {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003739
+    m_Localized: '{0:0.#}% Chance to spawn {1}{2}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003738
+    m_Localized: '{0:0.#}% Bonus Experience ({1})'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003737
+    m_Localized: '{0:0.#}% Bonus Resources ({1})'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003736
+    m_Localized: '{0:0.#}% Chance to Double XP'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003735
+    m_Localized: '{0:0.#}% Chance to Double Resources'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003734
+    m_Localized: '{0:0.#}% Chance to Instantly Kill'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003733
+    m_Localized: '{0:0.#}% Chance to Instantly Complete Tasks'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003732
+    m_Localized: '{0:0.#}% Bonus Experience (All Skills)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003731
+    m_Localized: '{0:0.#}% Bonus Resources (All Tasks)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003730
+    m_Localized: +{0:0.#}% {1} Task Speed (From {1} lvl)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003729
+    m_Localized: "\u2022 Orin's Surge: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003728
+    m_Localized: "\u2022 Eva's Blessing: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003727
+    m_Localized: "\u2022 Low Cards: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003726
+    m_Localized: "\u2022 Buffs: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003725
+    m_Localized: "\u2022 Resource cards: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003724
+    m_Localized: "\u2022 Resources - Combat: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003723
+    m_Localized: "\u2022 Resources - Looting: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003722
+    m_Localized: "\u2022 Resources - Logging: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003721
+    m_Localized: "\u2022 Resources - Mining: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003720
+    m_Localized: "\u2022 Resources - Fishing: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003719
+    m_Localized: "\u2022 Resources - Farming: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003718
+    m_Localized: "\u2022 Gained Nothing: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003717
+    m_Localized: '<b>Roll Distribution</b>
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003716
+    m_Localized: "\u2022 Cards Gained: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003715
+    m_Localized: "\u2022 Tastings: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003714
+    m_Localized: '<b>Totals</b>
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003713
+    m_Localized: Eternal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003712
+    m_Localized: Surge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003711
+    m_Localized: Blessing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003710
+    m_Localized: Lowest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003709
+    m_Localized: Buffs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003708
+    m_Localized: Combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003707
+    m_Localized: Looting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003706
+    m_Localized: Logging
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003705
+    m_Localized: Mining
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003704
+    m_Localized: Fishing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003703
+    m_Localized: Farming
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003702
+    m_Localized: Nothing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003701
+    m_Localized: N/A
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003700
+    m_Localized: 'Tier Bonus: {0:0.#}%
+
+      {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003699
+    m_Localized: 'Crafted
+
+      {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003698
+    m_Localized: 'Best gathered/min: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003697
+    m_Localized: 'Collected: {0}
+
+      Spent: {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003696
+    m_Localized: '{0} | {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003695
+    m_Localized: Lvl -
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003694
+    m_Localized: Lvl {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003693
+    m_Localized: 'Kills: {0}
+
+      Bonus Damage: {1:0}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003692
+    m_Localized: 'Movement: {0}
+
+      Vision: {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003691
+    m_Localized: 'Defense: {0}
+
+      Attack Rate: {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003690
+    m_Localized: 'Health: {0}
+
+      Damage: {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003689
+    m_Localized: ', Max Distance: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003688
+    m_Localized: 'Next improvement: Maxed'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003687
+    m_Localized: Infinity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003686
+    m_Localized: 'Spawn chance: -- ({0})
+
+      Next improvement: --
+
+      {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003685
+    m_Localized: 'Spawn chance: {0:0.##}% ({1})
+
+      {2}
+
+      {3}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003684
+    m_Localized: 'Next improvement: {0} Tasks'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003683
+    m_Localized: 'Min Distance: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003682
+    m_Localized: 'Completions: {0}
+
+      Time on Task: {1}
+
+      XP Gained: {2}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003681
+    m_Localized: 'Run {0}
+
+      Map: {1}
+
+      Duration: {2}
+
+      Distance: {3:N0}
+
+      Tasks: {4:N0}
+
+      {5}
+
+      Kills: {6:N0}
+
+      Damage Dealt: {7:N0}
+
+      Damage Taken: {8:N0}
+
+      Status: {9}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003680
+    m_Localized: 'Resources: {0:N0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003679
+    m_Localized: Longest Run
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003678
+    m_Localized: Most Kills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003677
+    m_Localized: Times Reaped
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003676
+    m_Localized: Damage Taken
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003675
+    m_Localized: Deaths
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003674
+    m_Localized: Damage Dealt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003673
+    m_Localized: Kills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003672
+    m_Localized: Reaping Distance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003671
+    m_Localized: Resources Gathered
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003670
+    m_Localized: Tasks Completed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003669
+    m_Localized: Steps Taken
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003668
+    m_Localized: Show all {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003667
+    m_Localized: '{0} resources'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003666
+    m_Localized: '{0} of the last {1} saved runs'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003665
+    m_Localized: '{0} / {1} discovered'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003664
+    m_Localized: Show fewer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003663
+    m_Localized: Resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003662
+    m_Localized: Enemies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003661
+    m_Localized: Discoveries are shared across all maps. These are configured drop pools; availability depends on progression.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003660
+    m_Localized: Found here
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003659
+    m_Localized: Choose a map to browse its resources and enemies alongside your records.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003658
+    m_Localized: Explore a map
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003657
+    m_Localized: No recent runs here yet. Your lifetime records are still shown.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003656
+    m_Localized: Lifetime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003655
+    m_Localized: Recent runs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003654
+    m_Localized: Spent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003653
+    m_Localized: Collected
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003652
+    m_Localized: Tier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003651
+    m_Localized: Resource tier {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003650
+    m_Localized: '{0} available'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003649
+    m_Localized: 'ID: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003648
+    m_Localized: Unknown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003647
+    m_Localized: Task Time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003646
+    m_Localized: Completions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003645
+    m_Localized: Default
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003644
+    m_Localized: Vision
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003643
+    m_Localized: Movement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003642
+    m_Localized: Attack Rate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003641
+    m_Localized: Defense
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003640
+    m_Localized: Health
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003639
+    m_Localized: Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003638
+    m_Localized: 'Preview distance: {0:N0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003637
+    m_Localized: Boost this task's spawn weight. Completion milestones increase the bonus.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003636
+    m_Localized: Spawn boost enabled. Click to remove the task weight bonus.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003635
+    m_Localized: Rarity odds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003634
+    m_Localized: Best rolls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003633
+    m_Localized: Automation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003632
+    m_Localized: Crafting history
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003631
+    m_Localized: Craft an item to compare it with your equipment.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003630
+    m_Localized: Total
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003629
+    m_Localized: Stat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003628
+    m_Localized: Quality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003627
+    m_Localized: Equipped
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003626
+    m_Localized: Pending
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003625
+    m_Localized: 'Batches: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003624
+    m_Localized: Stop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003623
+    m_Localized: '{0:N0} crafts available'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003622
+    m_Localized: Ivan | Level {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003621
+    m_Localized: Conversion batch size
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003620
+    m_Localized: Smelt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003619
+    m_Localized: Cores
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003618
+    m_Localized: Ingots
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003617
+    m_Localized: Crystals
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003616
+    m_Localized: Chunks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003615
+    m_Localized: "Run #{0} \xB7 {1} \xB7 {2}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003614
+    m_Localized: Avg {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003613
+    m_Localized: '{0} of last {1} saved runs{2}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003612
+    m_Localized: " \xB7 {0} without duration omitted"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003611
+    m_Localized: "Average {0}{1}   \xB7   {2} {3}{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003610
+    m_Localized: Best
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003609
+    m_Localized: Longest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003608
+    m_Localized: ' / min'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003607
+    m_Localized: Damage taken
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003606
+    m_Localized: Damage dealt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003605
+    m_Localized: Kills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003604
+    m_Localized: Bonus resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003603
+    m_Localized: Resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003602
+    m_Localized: Tasks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003601
+    m_Localized: Distance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003600
+    m_Localized: Duration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003599
+    m_Localized: Select a map with saved runs to inspect its history.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003598
+    m_Localized: Run details
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003597
+    m_Localized: No recent data
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003596
+    m_Localized: Abandoned
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003595
+    m_Localized: Died
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003594
+    m_Localized: Reaped
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003593
+    m_Localized: Retreated
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003592
+    m_Localized: "Hover to preview \xB7 click or tap to select"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003591
+    m_Localized: Run number
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003590
+    m_Localized: No saved runs for this selection.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003589
+    m_Localized: All maps
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003588
+    m_Localized: Per minute
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003587
+    m_Localized: Totals
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003586
+    m_Localized: Version information unavailable.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003585
+    m_Localized: 'Your rank: {0:N0} of {1:N0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003584
+    m_Localized: "You \xB7 {0:N0} ranked"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003583
+    m_Localized: You
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003582
+    m_Localized: Leaderboard unavailable. Try refreshing.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003581
+    m_Localized: Your score will appear here after submission.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003580
+    m_Localized: No submitted score yet. Showing top players.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003579
+    m_Localized: No scores yet.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003578
+    m_Localized: "Loading\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003577
+    m_Localized: Time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003576
+    m_Localized: Tasks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003575
+    m_Localized: Player
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003574
+    m_Localized: Rank
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003573
+    m_Localized: Refresh
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003572
+    m_Localized: Around me
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003571
+    m_Localized: Top players
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003570
+    m_Localized: Tasks completed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003569
+    m_Localized: Completion time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003568
+    m_Localized: 'Earned: {0} ({1})
+
+      Per minute: {2} ({3})'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003567
+    m_Localized: 'Damage / s: {0:N0}
+
+      Kills / min: {1:N0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003566
+    m_Localized: 'Tap outside to close
+
+      Distance / min: {0:N0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003565
+    m_Localized: 'Run breakdown
+
+      <size=75%>+{0:0}% Resources</size>'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003564
+    m_Localized: Tap outside to close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003563
+    m_Localized: Run Summary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003562
+    m_Localized: Too Far
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003561
+    m_Localized: Dead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003560
+    m_Localized: Locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003559
+    m_Localized: You have Died...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003558
+    m_Localized: You were reaped...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003557
+    m_Localized: Run breakdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003556
+    m_Localized: Run Breakdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003555
+    m_Localized: Return On Death
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003554
+    m_Localized: Base rate (return bonus)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003553
+    m_Localized: Dad-O-Cado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003552
+    m_Localized: View Summary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003551
+    m_Localized: Return To Town
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003550
+    m_Localized: Restart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003549
+    m_Localized: 'xp: {0:N0} / {1:N0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003548
+    m_Localized: "Eva \xB7 Level {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003547
+    m_Localized: "Available: {0} \xB7 {1} stew / unit"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003546
+    m_Localized: Increase amount
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003545
+    m_Localized: Decrease amount
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003544
+    m_Localized: Close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003543
+    m_Localized: Pause tasting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003542
+    m_Localized: Start tasting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003541
+    m_Localized: Add to Cauldron
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003540
+    m_Localized: Max
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003539
+    m_Localized: Tasting details
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003538
+    m_Localized: Choose a food
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003537
+    m_Localized: Tasting results
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003536
+    m_Localized: "Current \u2192 Next level"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003535
+    m_Localized: Reward chances
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003534
+    m_Localized: Stew / roll
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003533
+    m_Localized: Rolls / s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003532
+    m_Localized: Stew
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003531
+    m_Localized: Tasting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003530
+    m_Localized: Stew gained
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003529
+    m_Localized: Amount
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003528
+    m_Localized: Ingredients
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003527
+    m_Localized: Collection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003526
+    m_Localized: Collection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003525
+    m_Localized: Tasting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003524
+    m_Localized: Ingredients
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003523
+    m_Localized: Overall
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003522
+    m_Localized: Items
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003521
+    m_Localized: Tasks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003520
+    m_Localized: Enemies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003519
+    m_Localized: Graphs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003518
+    m_Localized: Rank
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003517
+    m_Localized: General
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003516
+    m_Localized: Stat Matching
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003515
+    m_Localized: Stop for Vastium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003514
+    m_Localized: Info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003513
+    m_Localized: Inventory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003512
+    m_Localized: Replace
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003511
+    m_Localized: Craft Until Upgrade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003510
+    m_Localized: Craft
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003509
+    m_Localized: Owned cores
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003508
+    m_Localized: Available crafts
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003507
+    m_Localized: Comparison
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003506
+    m_Localized: Equipment totals
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003505
+    m_Localized: Cores
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003504
+    m_Localized: Equipment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003503
+    m_Localized: ??? | <size=80%>Unlocks at level {0}</size>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003502
+    m_Localized: '{0} | <size=80%>Unlocked at level {1}</size>'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003501
+    m_Localized: 'Set: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003500
+    m_Localized: 'Active: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003499
+    m_Localized: 'Passive: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003498
+    m_Localized: Unlocks at level {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003497
+    m_Localized: Improves at level {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003496
+    m_Localized: <b>{0} bonuses</b>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003495
+    m_Localized: '<b><smallcaps>Active Slots: {0}({1})</smallcaps></b>'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003494
+    m_Localized: '<b>Lvl: {0}</b>'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003493
+    m_Localized: <b><smallcaps>{0} | Lvl {1}</smallcaps></b>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003492
+    m_Localized: All bonuses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003491
+    m_Localized: Tier {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003490
+    m_Localized: '{0} - Tier {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003489
+    m_Localized: "{0} \xB7 Tier {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003488
+    m_Localized: Undiscovered
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003487
+    m_Localized: Select a resource
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003486
+    m_Localized: Active
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003485
+    m_Localized: Quest History
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003484
+    m_Localized: Complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003483
+    m_Localized: 'Reward: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003482
+    m_Localized: Pin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003481
+    m_Localized: Pinned
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003480
+    m_Localized: Turn In
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003479
+    m_Localized: Done
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003478
+    m_Localized: Okay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003477
+    m_Localized: "{0} \xB7 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003476
+    m_Localized: Quests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003475
+    m_Localized: Provides a {0}% chance to summon {1} Echoes that perform {2} tasks for {3:0.#} seconds.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003474
+    m_Localized: Provides a {0}% chance to summon an Echo that perform {1} tasks for {2:0.#} seconds.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003473
+    m_Localized: Provides a {0}% chance to summon {1} Echoes that assist in combat for {2:0.#} seconds.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003472
+    m_Localized: Provides a {0}% chance to summon an Echo that assist in combat for {1:0.#} seconds.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003471
+    m_Localized: various
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003470
+    m_Localized: One day I was washing the car with my son, he turned to me and said "Dad why can't you just use a sponge instead?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003469
+    m_Localized: Why do Norwegian ships have barcodes on them? So when they come in to port, they can... Scandinavian
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003468
+    m_Localized: "Two parrots are sitting on a perch.\nOne says to the other, \u201Cdo you smell fish?\u201D"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003467
+    m_Localized: 'Why can''t you hear Pterry the pterodactyl going to the bathroom?
+
+      His "p" is silent.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003466
+    m_Localized: 'Did you hear about the mathematician who''s afraid of negative numbers?
+
+      He''ll stop at nothing to avoid them.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003465
+    m_Localized: "Why does a circle have 360\xB0?\nIt spent way too much time at university."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003464
+    m_Localized: "What\u2019s the difference between a diameter and a radius?\nA radius."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003463
+    m_Localized: 'Elevator puns really push my buttons.
+
+      They let me down.
+
+
+      They are bad on so many levels.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003462
+    m_Localized: "Why do they call them lifts in the UK & elevators in the US?\nBecause we\u2019re raised differently."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003461
+    m_Localized: "I\u2019m terrified of elevators\u2026 I\u2019ve been taking steps to avoid them."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003460
+    m_Localized: 'Why do sharks live in salt water?
+
+      Pepper water makes them sneeze.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003459
+    m_Localized: "Why did the chicken go to the s\xE9ance?\nTo get to the other side."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003458
+    m_Localized: 'Did you hear? I invented a new word!
+
+      "plagiarism"'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003457
+    m_Localized: 'What kind of tree fits in your hand?
+
+      A palm tree'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003456
+    m_Localized: 'What do you call a guy who never farts in public?
+
+      A private tutor'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003455
+    m_Localized: 'Why did the kid throw a stick of butter out the window?
+
+      To see a butter-fly'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003454
+    m_Localized: 'What does the bi-lingual cat say?
+
+      Woof'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003453
+    m_Localized: 'What does the ocean say when looking at a bowl of salt?
+
+      I sea salt'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003452
+    m_Localized: 'What''s the difference between a hot sweet potato and a pig thrown out the window?
+
+      One is a heated yam and the other is a yeeted ham. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003451
+    m_Localized: 'Why do seagulls fly near the Sea?
+
+      Because if they flew near the bay, they would be bagels.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003450
+    m_Localized: "Why do divers fall backward out of boats?\nBecause if they fell forward, they\u2019d still be in the boat."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003449
+    m_Localized: I have a coffee bean that sits next to me at work. We don't get a lot of work done; he talks a latte.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003448
+    m_Localized: What do you call a flower that runs on electricity? A power plant.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003447
+    m_Localized: Who is Jack and why does he have a singular mento?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003446
+    m_Localized: At what point does a joke become a dad joke? When it becomes apparent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003445
+    m_Localized: Saw someone stopping on a bun the other day. He was on a roll
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003444
+    m_Localized: I asked the farmer why he was having a headache  He replied "My grains"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003443
+    m_Localized: Why did the Mexican throw his wife off the bridge?  Tequila!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003442
+    m_Localized: "I know 25 letters of alphabet   I don\u2019t know y"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003441
+    m_Localized: What happens when someone slaps you at a high frequency?  It hertz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003440
+    m_Localized: I threw my neighbor into a nuclear reactor and now he's dead. What should I do?!  Barium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003439
+    m_Localized: What do you call a weaponized fish?  A pike
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003438
+    m_Localized: You hear about this new restaurant karma?  They have no menu, you get what you deserve
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003437
+    m_Localized: What did batman order at the bar?  Just ice
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003436
+    m_Localized: I was going to tell y'all a joke about time travel, but you didn't like it.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003435
+    m_Localized: What do you call a werewolf youtuber? A lycansubscribe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003434
+    m_Localized: I spotted an albino dalmatian once.  it was the least I could do
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003433
+    m_Localized: I, for one, like roman numerals
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003432
+    m_Localized: Cargo space? No. Cargo road
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003431
+    m_Localized: What do you call a woman with one leg? Eileen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003430
+    m_Localized: this skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003429
+    m_Localized: stat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003428
+    m_Localized: +{0} Stew per taste; cards gained x{1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003427
+    m_Localized: various
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003426
+    m_Localized: various
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003425
+    m_Localized: various
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003424
+    m_Localized: various
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003423
+    m_Localized: various
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003422
+    m_Localized: various
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003421
+    m_Localized: various
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003420
+    m_Localized: various
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003419
+    m_Localized: this skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003418
+    m_Localized: Increases all skills experience gained by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003417
+    m_Localized: Increases {0} experience gained by {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003416
+    m_Localized: this skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003415
+    m_Localized: Increases all skills experience gained by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003414
+    m_Localized: Increases {0} experience gained by {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003413
+    m_Localized: this skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003412
+    m_Localized: Increases all skills experience gained by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003411
+    m_Localized: Increases {0} experience gained by {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003410
+    m_Localized: this skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003409
+    m_Localized: Increases all skills experience gained by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003408
+    m_Localized: Increases {0} experience gained by {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003407
+    m_Localized: this skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003406
+    m_Localized: Increases all skills experience gained by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003405
+    m_Localized: Increases {0} experience gained by {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003404
+    m_Localized: this skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003403
+    m_Localized: Increases all skills experience gained by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003402
+    m_Localized: Increases {0} experience gained by {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003401
+    m_Localized: this skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003400
+    m_Localized: Increases all resource drops by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003399
+    m_Localized: Increases {0} resource drops by {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003398
+    m_Localized: this skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003397
+    m_Localized: Increases all resource drops by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003396
+    m_Localized: Increases {0} resource drops by {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003395
+    m_Localized: this skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003394
+    m_Localized: Increases all resource drops by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003393
+    m_Localized: Increases {0} resource drops by {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003392
+    m_Localized: this skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003391
+    m_Localized: Increases all resource drops by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003390
+    m_Localized: Increases {0} resource drops by {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003389
+    m_Localized: this skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003388
+    m_Localized: Increases all resource drops by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003387
+    m_Localized: Increases {0} resource drops by {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003386
+    m_Localized: this skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003385
+    m_Localized: Increases all resource drops by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003384
+    m_Localized: Increases {0} resource drops by {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003383
+    m_Localized: this skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003382
+    m_Localized: Increases all resource drops by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003381
+    m_Localized: Increases {0} resource drops by {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003380
+    m_Localized: Provides a {0}% chance to trigger.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003379
+    m_Localized: Provides a {0}% chance to trigger.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003378
+    m_Localized: Provides a {0}% chance to trigger.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003377
+    m_Localized: Provides a {0}% chance to trigger.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003376
+    m_Localized: Provides a {0}% chance to trigger.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003375
+    m_Localized: Increases {1} by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003374
+    m_Localized: Increases {1} by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003373
+    m_Localized: Increases {1} by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003372
+    m_Localized: Increases {1} by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003371
+    m_Localized: Increases {1} by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003370
+    m_Localized: Increases {1} by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003369
+    m_Localized: Increases {1} by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003368
+    m_Localized: Increases {1} by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003367
+    m_Localized: Lirium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003366
+    m_Localized: Vastium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003365
+    m_Localized: Idle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003364
+    m_Localized: Erif
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003363
+    m_Localized: Nori
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003362
+    m_Localized: Copium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003361
+    m_Localized: Dlog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003360
+    m_Localized: Eznorb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003359
+    m_Localized: Movement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003358
+    m_Localized: Crit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003357
+    m_Localized: Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003356
+    m_Localized: Health
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003355
+    m_Localized: Regen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003354
+    m_Localized: Attack Speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003353
+    m_Localized: Crit Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003352
+    m_Localized: Defense
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003351
+    m_Localized: Bonus Logging XP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003350
+    m_Localized: Echo Mining
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003349
+    m_Localized: Echo Looting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003348
+    m_Localized: Bonus Looting Resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003347
+    m_Localized: Bonus Combat XP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003346
+    m_Localized: Bonus Mining Resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003345
+    m_Localized: Bonus Farming XP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003344
+    m_Localized: Bonus Fishing Resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003343
+    m_Localized: Bonus Looting XP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003342
+    m_Localized: Echo Fishing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003341
+    m_Localized: Echo Farming
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003340
+    m_Localized: Health
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003339
+    m_Localized: Bonus Farming Resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003338
+    m_Localized: Regeneration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003337
+    m_Localized: Bonus Mining XP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003336
+    m_Localized: Tasting Turmoil
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003335
+    m_Localized: Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003334
+    m_Localized: Movement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003333
+    m_Localized: Critical Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003332
+    m_Localized: Combat Echo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003331
+    m_Localized: Bonus Logging Resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003330
+    m_Localized: Echo Logging
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003329
+    m_Localized: Bonus Fishing XP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003328
+    m_Localized: Copium Core
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003327
+    m_Localized: Dlog Ingot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003326
+    m_Localized: Erif Chunks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003325
+    m_Localized: Leek
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003324
+    m_Localized: Idle Chunks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003323
+    m_Localized: Watermelone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003322
+    m_Localized: Dlog Chunks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003321
+    m_Localized: Egg
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003320
+    m_Localized: Sir Splashford III
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003319
+    m_Localized: Idle Core
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003318
+    m_Localized: Erif Ingot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003317
+    m_Localized: Erif Crystal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003316
+    m_Localized: Niblet the Bold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003315
+    m_Localized: Idle Crystal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003314
+    m_Localized: Feather
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003313
+    m_Localized: Peach
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003312
+    m_Localized: Dlog Crystal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003311
+    m_Localized: Turnip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003310
+    m_Localized: Flipzoid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003309
+    m_Localized: Parsnip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003308
+    m_Localized: Vastium Core
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003307
+    m_Localized: Nori Core
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003306
+    m_Localized: Wigglelittle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003305
+    m_Localized: Nori Ingot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003304
+    m_Localized: Chicken
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003303
+    m_Localized: Leather
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003302
+    m_Localized: Corn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003301
+    m_Localized: Vastium Ingot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003300
+    m_Localized: Log
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003299
+    m_Localized: Oak Stick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003298
+    m_Localized: Spruce Log
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003297
+    m_Localized: Stick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003296
+    m_Localized: Bloopicus Maximus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003295
+    m_Localized: Eznorb Ingot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003294
+    m_Localized: Lirium Chunks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003293
+    m_Localized: Muddy Muck Muncher
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003292
+    m_Localized: Apple
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003291
+    m_Localized: Pork
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003290
+    m_Localized: Nori Crystal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003289
+    m_Localized: Pear Sapling
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003288
+    m_Localized: Cucumber
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003287
+    m_Localized: Copium Chunks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003286
+    m_Localized: Chillie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003285
+    m_Localized: Birch Stick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003284
+    m_Localized: Cherry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003283
+    m_Localized: Tomato
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003282
+    m_Localized: Copium Crystal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003281
+    m_Localized: Eznorb Core
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003280
+    m_Localized: Radish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003279
+    m_Localized: Strawberry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003278
+    m_Localized: Lirium Crystal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003277
+    m_Localized: Pumking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003276
+    m_Localized: Wheat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003275
+    m_Localized: Flippy Floppy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003274
+    m_Localized: Eznorb Chunks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003273
+    m_Localized: Bone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003272
+    m_Localized: Stone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003271
+    m_Localized: Nori Chunks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003270
+    m_Localized: Oak Log
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003269
+    m_Localized: Snapjaw Jr.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003268
+    m_Localized: Steak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003267
+    m_Localized: Birch Log
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003266
+    m_Localized: Copium Ingot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003265
+    m_Localized: Lirium Ingot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003264
+    m_Localized: Peach Sapling
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003263
+    m_Localized: Apple Sapling
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003262
+    m_Localized: Idle Ingot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003261
+    m_Localized: Dlog Core
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003260
+    m_Localized: Eznorb Crystal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003259
+    m_Localized: Cherry Sapling
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003258
+    m_Localized: Lettuce
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003257
+    m_Localized: Mutton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003256
+    m_Localized: Funion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003255
+    m_Localized: Pepper
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003254
+    m_Localized: Lirium Core
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003253
+    m_Localized: Slime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003252
+    m_Localized: Pear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003251
+    m_Localized: Vastium Crystal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003250
+    m_Localized: Erif Core
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003249
+    m_Localized: Carrot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003248
+    m_Localized: Spruce Stick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003247
+    m_Localized: Spud
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003246
+    m_Localized: Vastium Chunks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003245
+    m_Localized: Large Birch Tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003244
+    m_Localized: Large Spruce Tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003243
+    m_Localized: Medium Oak Tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003242
+    m_Localized: Medium Birch Tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003241
+    m_Localized: Large Oak Tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003240
+    m_Localized: Medium Spruce Tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003239
+    m_Localized: Large Tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003238
+    m_Localized: Medium Tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003237
+    m_Localized: Leek
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003236
+    m_Localized: Turnip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003235
+    m_Localized: Parsnip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003234
+    m_Localized: Corn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003233
+    m_Localized: Wartermelone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003232
+    m_Localized: Cucumber
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003231
+    m_Localized: Chillie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003230
+    m_Localized: Tomato
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003229
+    m_Localized: Radish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003228
+    m_Localized: Strawberry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003227
+    m_Localized: Pumking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003226
+    m_Localized: Wheat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003225
+    m_Localized: Pear Tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003224
+    m_Localized: Cherry Tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003223
+    m_Localized: Peach Tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003222
+    m_Localized: Apple Tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003221
+    m_Localized: Lettuce
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003220
+    m_Localized: Funion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003219
+    m_Localized: Pepper
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003218
+    m_Localized: Carrot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003217
+    m_Localized: Spud
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003216
+    m_Localized: Copium Ore
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003215
+    m_Localized: Idle Ore
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003214
+    m_Localized: Lirium Ore
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003213
+    m_Localized: Vastium Ore
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003212
+    m_Localized: Dlog Ore
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003211
+    m_Localized: Erif Ore
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003210
+    m_Localized: Eznorb Ore
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003209
+    m_Localized: Nori Ore
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003208
+    m_Localized: Vastium Chest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003207
+    m_Localized: Nori Chest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003206
+    m_Localized: Erif Chest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003205
+    m_Localized: Dlog Chest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003204
+    m_Localized: Idle Chest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003203
+    m_Localized: Eznorb Chest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003202
+    m_Localized: Copium Chest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003201
+    m_Localized: Lirium Chest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003200
+    m_Localized: Sir Splashford III
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003199
+    m_Localized: Niblet the Bold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003198
+    m_Localized: Flipzoid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003197
+    m_Localized: Wigglelittle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003196
+    m_Localized: Bloopicus Maximus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003195
+    m_Localized: Muddy Muck Muncher
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003194
+    m_Localized: Flippy Floppy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003193
+    m_Localized: Snapjaw Jr.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003192
+    m_Localized: Bonus Fishing XP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003191
+    m_Localized: Echo Logging
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003190
+    m_Localized: Bonus Logging Resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003189
+    m_Localized: Tasting Turmoil
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003188
+    m_Localized: Bonus Farming Resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003187
+    m_Localized: Echo Farming
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003186
+    m_Localized: Bonus Looting XP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003185
+    m_Localized: Bonus Logging XP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003184
+    m_Localized: Echo Mining
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003183
+    m_Localized: Bonus Mining Resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003182
+    m_Localized: Bonus Combat XP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003181
+    m_Localized: Bonus Looting Resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003180
+    m_Localized: Echo Looting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003179
+    m_Localized: Combat Echo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003178
+    m_Localized: Movement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003177
+    m_Localized: Regeneration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003176
+    m_Localized: Health
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003175
+    m_Localized: Critical Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003174
+    m_Localized: Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003173
+    m_Localized: Bonus Mining XP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003172
+    m_Localized: Echo Fishing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003171
+    m_Localized: Bonus Fishing Resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003170
+    m_Localized: Bonus Farming XP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003169
+    m_Localized: Logging
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003168
+    m_Localized: Fishing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003167
+    m_Localized: Mining
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003166
+    m_Localized: Farming
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003165
+    m_Localized: Combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003164
+    m_Localized: Looting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003163
+    m_Localized: Green Minislime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003162
+    m_Localized: Red Minislime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003161
+    m_Localized: Blue Minislime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003160
+    m_Localized: Pink Minislime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003159
+    m_Localized: Yellow Minislime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003158
+    m_Localized: Yellow Slime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003157
+    m_Localized: Green Slime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003156
+    m_Localized: Blue Slime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003155
+    m_Localized: Pink Slime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003154
+    m_Localized: Red Slime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003153
+    m_Localized: Large Blue Slime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003152
+    m_Localized: Large Green Slime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003151
+    m_Localized: Large Pink Slime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003150
+    m_Localized: Large Red Slime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003149
+    m_Localized: Large Yellow Slime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003148
+    m_Localized: Pig
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003147
+    m_Localized: Chicken
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003146
+    m_Localized: Sheep
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003145
+    m_Localized: Cow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003144
+    m_Localized: Skeleton Swordsman
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003143
+    m_Localized: Skeleton Mage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003142
+    m_Localized: Skeleton Archer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003141
+    m_Localized: 'Kills: {0}
+
+      Damage Dealt: {1}
+
+      Deaths: {2}
+
+      Damage Taken: {3}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003140
+    m_Localized: 'Steps Taken: {0}
+
+      Longest Run: {1}
+
+      Tasks Completed: {2}
+
+      Resources Gathered: {3}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003139
+    m_Localized: 'Steps Taken: {0}
+
+      Most Kills: {1}
+
+      Tasks Completed: {2}
+
+      Resources Gathered: {3}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003138
+    m_Localized: +{0:0}% Resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003137
+    m_Localized: Retreat Queued +{0:0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003136
+    m_Localized: You have Died...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003135
+    m_Localized: You were reaped...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003134
+    m_Localized: Queued
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003133
+    m_Localized: Return On Death
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003132
+    m_Localized: Return To Town
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003131
+    m_Localized: Queue Retreat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003130
+    m_Localized: Retreating...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003129
+    m_Localized: Lvl {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003128
+    m_Localized: '{0} Lvl {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003127
+    m_Localized: Retreated with {0} kills for {1:0}% bonus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003126
+    m_Localized: 'Reaping Distance: {0}<sprite=9>{1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003125
+    m_Localized: Died {0} times, Reaped by Carl {1} times
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003124
+    m_Localized: You travelled for {0}, walking a total of {1} steps
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003123
+    m_Localized: Skill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003122
+    m_Localized: <size=8>{0} {1}<sprite=194>{2}</size>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003121
+    m_Localized: <size=8>{0} Unlocked!</size>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003120
+    m_Localized: '{0} Lv {1}<sprite=194>{2}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003119
+    m_Localized: Tier {0}<sprite=194>{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003118
+    m_Localized: 'File {0} is temporarily unavailable or could not be applied to the running game. Autosave is disabled and existing snapshot evidence remains preserved. Retry after closing any sync or backup tool that may be using the files.
+
+
+      {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003117
+    m_Localized: 'File {0} has a confirmed integrity or cloud-authority conflict. Retry is the safest first action and every existing snapshot remains preserved. If you explicitly start fresh, a new cloud lineage is created without deleting the old files.
+
+
+      {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003116
+    m_Localized: 'File {0} was written by a newer game version. It has not been changed. Install the newer version, then Retry, or inspect the save folder. Starting fresh is disabled to protect that progress.
+
+
+      {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003115
+    m_Localized: Open Save Folder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003114
+    m_Localized: Keep Old Files & Start Fresh
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003113
+    m_Localized: Retry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003112
+    m_Localized: Save Temporarily Unavailable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003111
+    m_Localized: Save Recovery Required
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003110
+    m_Localized: Save From Newer Version
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003109
+    m_Localized: 'Paste failed: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003108
+    m_Localized: 'Copy failed: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003107
+    m_Localized: 'Import exception: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003106
+    m_Localized: 'Import failed: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003105
+    m_Localized: 'Export failed: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003104
+    m_Localized: Copied export string
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003103
+    m_Localized: Imported safely to disk; restart the game or use Retry to finish loading it
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003102
+    m_Localized: Nothing to import
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003101
+    m_Localized: Rescue export copied from memory; the disk save failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003100
+    m_Localized: Exported to clipboard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003099
+    m_Localized: 'Playtime: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003098
+    m_Localized: 'Created with version: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003097
+    m_Localized: File {0} | {1:0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003096
+    m_Localized: File {0} | {1:0}% - Active
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003095
+    m_Localized: "Last Played: {0} \u2022 {1} ago"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003094
+    m_Localized: 'Last Save: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003093
+    m_Localized: File {0} - Recovery Required
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003092
+    m_Localized: Unknown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003091
+    m_Localized: 'Last Played: Never'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003090
+    m_Localized: 'Last Save: Never'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003089
+    m_Localized: 'Playtime: Unavailable'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003088
+    m_Localized: 'Playtime: None'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003087
+    m_Localized: "Outgoing damage \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003086
+    m_Localized: "Incoming damage \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003085
+    m_Localized: "Drops \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003084
+    m_Localized: 'FPS: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003083
+    m_Localized: 'FPS: VSync'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003082
+    m_Localized: Off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003081
+    m_Localized: On
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003080
+    m_Localized: Load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003079
+    m_Localized: Delete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003078
+    m_Localized: Save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003077
+    m_Localized: Clear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003076
+    m_Localized: Run
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003075
+    m_Localized: Close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003074
+    m_Localized: Console
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003073
+    m_Localized: Loading...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003072
+    m_Localized: Meet me back in town, I have something special to give you, and I need you to help me get some logs.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003071
+    m_Localized: But I need the perfect timber for my house...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003070
+    m_Localized: 'I came out here looking for some trees to fell. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003069
+    m_Localized: Nyeh heh heh, adventurer.  I am the witch, who will teach you how to tend to the soil.  What, you thought I was going to make potions for you?  Get out of here with your stereotyping.  And bring back five fully grown radishes.  As proof, definitely not for my radish jam.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003068
+    m_Localized: I'm going back to my mines. Meet me there if you want to see some real ORE!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003067
+    m_Localized: HE FAILED TO MENTION IT WAS THIS HUNK OF JUNK!!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003066
+    m_Localized: Hmmph... when Barkley told me there was ore out here...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003065
+    m_Localized: Eva wants how many radishes!?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003064
+    m_Localized: We could really use your help dealing with them...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003063
+    m_Localized: But it seems the slimes have come further than usual.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003062
+    m_Localized: We came out here looking for some new seeds.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003061
+    m_Localized: Pleasure to meet ya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003060
+    m_Localized: Heres a sword I made! I'm heading back to town.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003059
+    m_Localized: 'Think I am better fitted to crafting gear than fighting these guys. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003058
+    m_Localized: 'Oh there you are bro! '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003057
+    m_Localized: Twins level {0} required.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003056
+    m_Localized: This Fields action is unavailable ({0}).
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003055
+    m_Localized: Bed {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003054
+    m_Localized: Orchard plot {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003053
+    m_Localized: '{0:N0} {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003052
+    m_Localized: '{0} seeds'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003051
+    m_Localized: Gathering source not accessible yet.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003050
+    m_Localized: Missing gathering sources.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003049
+    m_Localized: Complete the preceding construction quest.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003048
+    m_Localized: Unknown construction.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003047
+    m_Localized: Prepare the beds before planting.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003046
+    m_Localized: This bed already has a crop growing.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003045
+    m_Localized: Find a Radish seed pack on an adventure first.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003044
+    m_Localized: No beds are ready to harvest.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003043
+    m_Localized: Return to town to tend the beds.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003042
+    m_Localized: Gather the construction materials
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003041
+    m_Localized: Ready to build
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003040
+    m_Localized: Built
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003039
+    m_Localized: Meet Flora and Tillman on an adventure
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003038
+    m_Localized: Hear Flora and Tillman's introduction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003037
+    m_Localized: Complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003036
+    m_Localized: Meet Flora and Tillman
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003035
+    m_Localized: Hand in
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003034
+    m_Localized: Focus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003033
+    m_Localized: 'Repeat: off'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003032
+    m_Localized: 'Repeat: on'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003031
+    m_Localized: Water once
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003030
+    m_Localized: Watered
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003029
+    m_Localized: Select
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003028
+    m_Localized: Focus Fields
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003027
+    m_Localized: Plant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003026
+    m_Localized: Harvest ready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003025
+    m_Localized: "{0} \xB7 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003024
+    m_Localized: "{0} \xB7 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003023
+    m_Localized: "{0} \xB7 Twins {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003022
+    m_Localized: " \u2192 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003021
+    m_Localized: " \xB7 Select an empty bed"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003020
+    m_Localized: "{0} \xB7 Farming {1} required"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003019
+    m_Localized: "{0} \xB7 Farming {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003018
+    m_Localized: "Yield \xD7{0:0.00} \xB7 Growth time \xD7{1:0.0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003017
+    m_Localized: '{0} / {1} XP'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003016
+    m_Localized: "{0} \xB7 Flora & Tillman \xB7 Level {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003015
+    m_Localized: "Twins level 20: harvest and replant using 9 matching seed packs or 1 matching sapling. Stops when inputs run out."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003014
+    m_Localized: Return to town to tend Fields.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003013
+    m_Localized: Ready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003012
+    m_Localized: Empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003011
+    m_Localized: "Locked \xB7 construction required"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003010
+    m_Localized: Completed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003009
+    m_Localized: Undiscovered
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003008
+    m_Localized: Discover this seed or sapling first.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003007
+    m_Localized: Construction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003006
+    m_Localized: Select seeds and an empty bed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003005
+    m_Localized: Orchard plots
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003004
+    m_Localized: "Fields \xB7 Flora & Tillman"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003003
+    m_Localized: '{0} Twins XP per harvest. Growth while playing.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003002
+    m_Localized: Fields in town
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003001
+    m_Localized: Beds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003000
+    m_Localized: Seeds & saplings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000001000
+    m_Localized: Fields
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002000
+    m_Localized: Audio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002001
+    m_Localized: Autosaves the active file every minute. Switching files saves your current progress.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002002
+    m_Localized: Autocast can be toggled by clicking the buttons for each buff slot you have unlocked while not assigning. Buffs cannot be assigned during a run.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002003
+    m_Localized: Copy to clipboard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002004
+    m_Localized: Credits
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002005
+    m_Localized: Lead Developer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002006
+    m_Localized: Matthew Rushworth
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002007
+    m_Localized: Music & SFX
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002008
+    m_Localized: 'Technishift '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002009
+    m_Localized: SFX
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002010
+    m_Localized: dqssq
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002011
+    m_Localized: Primary Artist | Check out their Itch.io!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002012
+    m_Localized: Kenmi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002013
+    m_Localized: 'Latimer Cross
+
+      Patrick Kennedy
+
+      solocommand'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002014
+    m_Localized: A special thank you to my patreons
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002015
+    m_Localized: 'Champions of Development
+
+      Keeping me motivated every day of development!'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002016
+    m_Localized: 'MatHeadGetz | Enthusiastically cheering from the sidelines!
+
+      Dragonmaster100 | Hours upon hours of testing.
+
+      Quackers | Quacking away where necessary.
+
+      GLUTTONY | Encouraging my logging.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002017
+    m_Localized: And thank you to...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002018
+    m_Localized: Display
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002019
+    m_Localized: Drops | 1.55s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002020
+    m_Localized: Caleb's damage | 1.55s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002021
+    m_Localized: Export
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002022
+    m_Localized: Export Active Slot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002023
+    m_Localized: Floating Texts
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002024
+    m_Localized: Floating text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002025
+    m_Localized: Open Save Location
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002026
+    m_Localized: 'FPS: 60'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002027
+    m_Localized: Fullscreen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002028
+    m_Localized: Import
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002029
+    m_Localized: Import
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002030
+    m_Localized: Import To Active Slot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002031
+    m_Localized: Enter text...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002032
+    m_Localized: "I am aware that this game is a little confusing when you first start playing. While a proper tutorial is in the works this message serves as a quick placeholder.\n\nFirst and foremost this is an idle game, progress happens automatically and in the background while you do other things!\n\nYou can find information on various systems by clicking the Library button at the top.\n\nQuests are your starting point and will help guide you as you progress. \n\nYour hero will self navigate and complete tasks while you are in a run.\n\nI hope you have fun, if you get stuck I can always be reached on discord!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002033
+    m_Localized: Click to close this forever!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002034
+    m_Localized: Welcome to Echoes of Vasteria
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002035
+    m_Localized: Roadmap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002036
+    m_Localized: Quests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002037
+    m_Localized: 'Tasks
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002038
+    m_Localized: Item Tiers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002039
+    m_Localized: Patch Notes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002040
+    m_Localized: Forge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002041
+    m_Localized: Cauldron
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002042
+    m_Localized: Buffs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002043
+    m_Localized: 'Combat
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002044
+    m_Localized: Reaping
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002045
+    m_Localized: Echoes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002046
+    m_Localized: Retreating
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002047
+    m_Localized: Load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002048
+    m_Localized: Load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002049
+    m_Localized: Load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002050
+    m_Localized: English (en)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002051
+    m_Localized: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439 (ru)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002052
+    m_Localized: Master
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002053
+    m_Localized: Close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002054
+    m_Localized: Meet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002055
+    m_Localized: Next
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002056
+    m_Localized: Music
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002057
+    m_Localized: Mute when unfocused
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002058
+    m_Localized: Adventure
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002059
+    m_Localized: Auto-Pin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002060
+    m_Localized: Buffs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002061
+    m_Localized: Cauldron
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002062
+    m_Localized: Credits
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002063
+    m_Localized: Forge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002064
+    m_Localized: Hub
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002065
+    m_Localized: Farmlands
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002066
+    m_Localized: Woods
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002067
+    m_Localized: Mines
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002068
+    m_Localized: River
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002069
+    m_Localized: Spooky
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002070
+    m_Localized: Options
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002071
+    m_Localized: Quests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002072
+    m_Localized: Skills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002073
+    m_Localized: Townsfolk
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002074
+    m_Localized: Library
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002075
+    m_Localized: Paste Clipboard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002076
+    m_Localized: Enemies damage | 1.55s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002077
+    m_Localized: Preferences
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002078
+    m_Localized: You can pin goals by tapping anywhere on their Name, Description, or Reward area.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002079
+    m_Localized: No!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002080
+    m_Localized: Quit?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002081
+    m_Localized: Save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002082
+    m_Localized: Save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002083
+    m_Localized: Save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002084
+    m_Localized: Overwrite / delete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002085
+    m_Localized: Save files
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002086
+    m_Localized: Save files
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002087
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002088
+    m_Localized: SFX
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002089
+    m_Localized: Total skill increases
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002090
+    m_Localized: 'Last Save: 13s'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002091
+    m_Localized: 'Playtime: 12h 32m 16s'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002092
+    m_Localized: File 1 | 38.4%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002093
+    m_Localized: 'Last Save: 13s'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002094
+    m_Localized: 'Playtime: 12h 32m 16s'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002095
+    m_Localized: File 1 | 38.4%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002096
+    m_Localized: 'Last Save: 13s'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002097
+    m_Localized: 'Playtime: 12h 32m 16s'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002098
+    m_Localized: File 1 | 38.4%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002099
+    m_Localized: "\u041F\u0435\u0440\u0435\u0432\u043E\u0434 \u043D\u0430\u0445\u043E\u0434\u0438\u0442\u0441\u044F \u0432 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0435 \u0440\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u043A\u0438. \u0415\u0441\u043B\u0438 \u0432\u044B \u0440\u0435\u0448\u0438\u0442\u0435 \u0435\u0433\u043E \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C, \u0443\u0447\u0442\u0438\u0442\u0435, \u0447\u0442\u043E \u0447\u0430\u0441\u0442\u044C \u0442\u0435\u043A\u0441\u0442\u0430 \u043C\u043E\u0436\u0435\u0442 \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0442\u044C\u0441\u044F \u043D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u043E, \u0438 \u043C\u043D\u043E\u0433\u043E\u0435 \u043F\u043E-\u043F\u0440\u0435\u0436\u043D\u0435\u043C\u0443 \u0431\u0443\u0434\u0435\u0442 \u043D\u0430 \u0410\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u043C"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002100
+    m_Localized: Vsync
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002101
+    m_Localized: Maximum interface width
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002102
+    m_Localized: Windowed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004000
+    m_Localized: Statistics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004001
+    m_Localized: Close window
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004002
+    m_Localized: "Radish Seed Pack"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004003
+    m_Localized: "Corn Seed Pack"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004004
+    m_Localized: "Wheat Seed Pack"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004005
+    m_Localized: "Watermelone Seed Pack"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004006
+    m_Localized: "Carrot Seed Pack"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004007
+    m_Localized: "Spud Seed Pack"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004008
+    m_Localized: "Tomato Seed Pack"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004009
+    m_Localized: "Lettuce Seed Pack"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004010
+    m_Localized: "Cucumber Seed Pack"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004011
+    m_Localized: "Leek Seed Pack"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004012
+    m_Localized: "Parsnip Seed Pack"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004013
+    m_Localized: "Pepper Seed Pack"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004014
+    m_Localized: "Chillie Seed Pack"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004015
+    m_Localized: "Pumking Seed Pack"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004016
+    m_Localized: "Strawberry Seed Pack"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004017
+    m_Localized: "Funion Seed Pack"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004018
+    m_Localized: "Turnip Seed Pack"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004019
+    m_Localized: "You need 9 matching seed packs to sow a field."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004020
+    m_Localized: "Find a matching sapling on an adventure first."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004021
+    m_Localized: "Requires {0} matching seed packs per field."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004022
+    m_Localized: "Requires {0} matching sapling per plot."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

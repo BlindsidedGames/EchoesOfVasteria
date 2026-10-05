@@ -293,7 +293,7 @@ namespace Pathfinding.Collections {
 			}
 
 			public void RemoveAt (int index) {
-				span.Slice(index + 1).CopyTo(span.Slice(index, span.Length - index - 1));
+				span.Slice(index + 1).CopyToOverlapping(span.Slice(index, span.Length - index - 1));
 				allocator.Realloc(ref allocationIndex, span.Length - 1);
 				span = allocator.GetSpan(allocationIndex);
 			}

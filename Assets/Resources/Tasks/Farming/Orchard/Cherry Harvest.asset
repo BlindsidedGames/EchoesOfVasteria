@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
+  m_Name: Cherry Harvest
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.Tasks.TaskData
+  taskName: Cherry Tree
+  taskID: 57
+  taskIcon: {fileID: -2960387421028039873, guid: 77565e7591968a240b4e57102a305122, type: 3}
+  associatedSkill: {fileID: 11400000, guid: f3b9fce6557e44d4ac8a2a064e3b0b9b, type: 2}
+  xpForCompletion: 44
+  minX: 10
+  enforceMinDistance: 0
+  maxX: Infinity
+  enforceMaxDistance: 0
+  requiredSkillLevel: 72
+  taskDuration: 11.5
+  sfxInterval: 0
+  taskPrefab: {fileID: 9043583231832525853, guid: 793f30b036fb646c1a608cae9316c6b3, type: 3}
+  weight: 150
+  spawnTerrains:
+  - {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
+  - {fileID: 11400000, guid: 7fb50b98a8abd724bb2b115b095a6432, type: 2}
+  - {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
+  terrainWeights:
+  - terrain: {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
+    multiplier: 1
+  - terrain: {fileID: 11400000, guid: 7fb50b98a8abd724bb2b115b095a6432, type: 2}
+    multiplier: 0.1
+  - terrain: {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
+    multiplier: 0.05
+  resourceDrops:
+  - resource: {fileID: 11400000, guid: 2a300b43027754474b19d88d47a555d7, type: 2}
+    dropRange: {x: 2, y: 6}
+    weight: 1
+    requiredSkillLevel: 0
+  bonusDrops:
+  - resource: {fileID: 11400000, guid: cb8cb6fce4e5145b3811376ef37afb94, type: 2}
+    chance: 0.1
+    range: {x: 1, y: 1}
+  additionalLootChances: []
+  resetProgressOnInterrupt: 0
+  persistent:
+    totalTimesCompleted: 0
+    timeSpent: 0
+    experienceGained: 0

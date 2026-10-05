@@ -76,7 +76,7 @@ namespace TimelessEchoes.Buffs
         }
 
         public void RecordGatheringCompletion(TaskData task, bool isEcho, Dictionary<Resource, double> totals,
-            List<Resource> order, ResourceManager resources)
+            List<Resource> order, ResourceManager resources, Dictionary<Resource, double> windfallInputs = null)
         {
             if (task == null) return;
             foreach (var buff in activeBuffs)
@@ -89,7 +89,7 @@ namespace TimelessEchoes.Buffs
                 }
                 float windfall = Mathf.Clamp(Effect(buff, BuffEffectType.WindfallRewardPercent), 0f, 100f);
                 if (windfall <= 0 || totals.Count == 0) continue;
-                if (!buff.gathering.AccumulateWindfall(totals)) continue;
+                if (!buff.gathering.AccumulateWindfall(windfallInputs ?? totals)) continue;
                 foreach (var pair in buff.gathering.bundle)
                 {
                     double reward = pair.Value * windfall / 100d;

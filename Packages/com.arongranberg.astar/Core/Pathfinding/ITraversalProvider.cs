@@ -145,9 +145,9 @@ namespace Pathfinding {
 		/// This can be used to block movement between specific nodes.
 		///
 		/// If this method returns true then a call to CanTraverse(traversalConstraint,to) must also return true.
-		/// Thus this method is a more flexible version of <see cref="CanTraverse(TraversalConstraint,GraphNode)"/>.
+		/// Thus this method is a more flexible version of <see cref="CanTraverse(ref TraversalConstraint,GraphNode)"/>.
 		///
-		/// The default implementation will just call <see cref="CanTraverse(TraversalConstraint,GraphNode);CanTraverse(traversalConstraint,to)"/>
+		/// The default implementation will just call <see cref="CanTraverse(ref TraversalConstraint,GraphNode);CanTraverse(traversalConstraint,to)"/>
 		///
 		/// <code>
 		/// public bool CanTraverse (ref TraversalConstraint traversalConstraint, GraphNode from, GraphNode to) {
@@ -218,7 +218,7 @@ namespace Pathfinding {
 		/// <summary>
 		/// Can the agent traverse the connection between two nodes.
 		///
-		/// Deprecated: Use <see cref="CanTraverse(TraversalConstraint,GraphNode,GraphNode)"/> instead.
+		/// Deprecated: Use <see cref="CanTraverse(ref TraversalConstraint,GraphNode,GraphNode)"/> instead.
 		/// </summary>
 		[System.Obsolete("Use CanTraverse(ref TraversalConstraint, GraphNode, GraphNode) instead")]
 		bool CanTraverse(Path path, GraphNode from, GraphNode to) => throw new System.NotImplementedException();
@@ -226,7 +226,7 @@ namespace Pathfinding {
 		/// <summary>
 		/// Can the agent traverse the given node.
 		///
-		/// Deprecated: Use <see cref="CanTraverse(TraversalConstraint,GraphNode)"/> instead.
+		/// Deprecated: Use <see cref="CanTraverse(ref TraversalConstraint,GraphNode)"/> instead.
 		/// </summary>
 		[System.Obsolete("Use CanTraverse(ref TraversalConstraint, GraphNode) instead")]
 		bool CanTraverse(Pathfinding.Path path, GraphNode node) => throw new System.NotImplementedException();
@@ -234,7 +234,7 @@ namespace Pathfinding {
 		/// <summary>
 		/// Cost of traversing the given node.
 		///
-		/// Deprecated: Use <see cref="GetTraversalCostMultiplier(TraversalCosts,GraphNode)"/> instead.
+		/// Deprecated: Use <see cref="GetTraversalCostMultiplier(ref TraversalCosts,GraphNode)"/> instead.
 		/// </summary>
 		[System.Obsolete("Use GetTraversalCostMultiplier(ref TraversalCosts, GraphNode) instead")]
 		uint GetTraversalCost(Path path, GraphNode node) => throw new System.NotImplementedException();

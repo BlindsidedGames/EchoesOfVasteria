@@ -122,7 +122,7 @@ namespace Pathfinding {
 				hasher.Add(bounds);
 
 				// Draw a new mesh if the metadata has changed
-				if (!Pathfinding.Drawing.DrawingManager.instance.gizmos.Draw(hasher)) {
+				if (!Pathfinding.Drawing.DrawingManager.TryDrawHasher(hasher)) {
 					var builder = Pathfinding.Drawing.DrawingManager.GetBuilder(hasher);
 
 					var tileMeshes = TileMeshes.Deserialize(serializedNavmesh.bytes);

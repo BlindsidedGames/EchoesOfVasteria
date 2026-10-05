@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -17,6 +18,7 @@ namespace TimelessEchoes
         [SerializeField] private List<string> dadJokes = new();
 
         private int currentJokeIndex;
+        private string currentJokeEnglish;
 
 
         private void Start()
@@ -41,6 +43,14 @@ namespace TimelessEchoes
             }
         }
 
+        private void OnEnable() => ToolkitLocalization.Changed += RefreshJokeLocale;
+        private void OnDisable() => ToolkitLocalization.Changed -= RefreshJokeLocale;
+        private void RefreshJokeLocale()
+        {
+            if (jokeText != null && currentJokeEnglish != null)
+                jokeText.text = ToolkitLocalization.Text(JokeKey(currentJokeEnglish), currentJokeEnglish);
+        }
+
         private void OnDestroy()
         {
             if (jokeButton != null)
@@ -56,7 +66,16 @@ namespace TimelessEchoes
         {
             if (dadJokes.Count == 0) return "";
             if (currentJokeIndex >= dadJokes.Count) { ShuffleJokes(); currentJokeIndex = 0; }
-            return dadJokes[currentJokeIndex++];
+            var english = dadJokes[currentJokeIndex++];
+            currentJokeEnglish = english;
+            return ToolkitLocalization.Text(JokeKey(english), english);
+        }
+
+        private static string JokeKey(string english)
+        {
+            using var hash = System.Security.Cryptography.SHA256.Create();
+            var bytes = hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(english));
+            return "joke." + System.BitConverter.ToString(bytes, 0, 8).Replace("-", string.Empty).ToLowerInvariant();
         }
 
         private void ShowJoke()

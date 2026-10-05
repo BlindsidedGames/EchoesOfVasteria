@@ -253,6 +253,10 @@ namespace BuildTools
             string[] movedFromAssetPaths,
             bool didDomainReload)
         {
+            // Preserve an intentional start-scene override while Play is entering or active.
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                return;
+
             if (!didDomainReload &&
                 !importedAssets.Contains(LoadingScenePath) &&
                 !movedAssets.Contains(LoadingScenePath) &&

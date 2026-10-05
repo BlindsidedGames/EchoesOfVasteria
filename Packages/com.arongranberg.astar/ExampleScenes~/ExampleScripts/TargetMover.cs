@@ -30,6 +30,17 @@ namespace Pathfinding {
 
 		Camera cam;
 
+#if MODULE_INPUT_SYSTEM
+		/// <summary>
+		/// Time within which two clicks count as a double-click.
+		/// Matches the threshold InputSystemUIInputModule uses.
+		/// </summary>
+		const float DoubleClickTime = 0.3f;
+
+		float lastClickTime = float.NegativeInfinity;
+		int clickCount;
+#endif
+
 		public enum Trigger {
 			Continuously,
 			SingleClick,
@@ -58,8 +69,13 @@ namespace Pathfinding {
 				UpdateTargetPosition();
 			}
 #if MODULE_INPUT_SYSTEM
-			if (trigger != Trigger.Continuously && UnityEngine.InputSystem.Mouse.current.leftButton.wasPressedThisFrame) {
-				var clickCount = UnityEngine.InputSystem.Mouse.current.clickCount.ReadValue();
+			var mouse = UnityEngine.InputSystem.Mouse.current;
+			if (trigger != Trigger.Continuously && mouse != null && mouse.leftButton.wasPressedThisFrame) {
+				// Mouse.clickCount is written by the platform's native input backend, and several backends never
+				// write it at all (the Linux editor among them), leaving it at zero forever.
+				// Count clicks manually instead
+				clickCount = Time.unscaledTime - lastClickTime <= DoubleClickTime ? clickCount + 1 : 1;
+				lastClickTime = Time.unscaledTime;
 				if (clickCount >= (trigger == Trigger.DoubleClick ? 2 : 1)) {
 					UpdateTargetPosition();
 				}

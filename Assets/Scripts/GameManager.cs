@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
 #define DISABLESTEAMWORKS
 #endif
@@ -198,11 +199,11 @@ namespace TimelessEchoes
                 {
                     string desired;
                     if (retreatQueued)
-                        desired = "Retreating...";
+                        desired = ToolkitLocalization.Text("run.retreating", "Retreating...");
                     else if (hero != null && hero.InCombat)
-                        desired = "Queue Retreat";
+                        desired = ToolkitLocalization.Text("run.queue-retreat", "Queue Retreat");
                     else
-                        desired = "Return To Town";
+                        desired = ToolkitLocalization.Text("run.return-town", "Return To Town");
 
                     if (!string.Equals(_lastReturnToTavernText, desired))
                     {
@@ -219,12 +220,12 @@ namespace TimelessEchoes
                         var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
                         var percent = kills * bonusPercentPerKill;
                         desired = retreatQueued && hero.InCombat
-                            ? $"Retreat Queued +{percent:0}%"
-                            : $"+{percent:0}% Resources";
+                            ? ToolkitLocalization.Text("run.retreat-queued-bonus", "Retreat Queued +{0:0}%", percent)
+                            : ToolkitLocalization.Text("run.resource-bonus", "+{0:0}% Resources", percent);
                     }
                     else
                     {
-                        desired = "+0% Resources";
+                        desired = ToolkitLocalization.Text("run.resource-bonus", "+{0:0}% Resources", 0);
                     }
 
                     if (!string.Equals(_lastRetreatBonusText, desired))
@@ -330,8 +331,8 @@ namespace TimelessEchoes
                     var mostKills = CalcUtils.FormatNumber(stats.MostKillsSingleRun, true);
                     var isKillScaling = entry.ScalingMode == MapScalingMode.KillBased;
                     entry.StatsUI.distanceLongestTasksText.text = isKillScaling
-                        ? $"Steps Taken: {dist}\nMost Kills: {mostKills}\nTasks Completed: {tasks}\nResources Gathered: {resources}"
-                        : $"Steps Taken: {dist}\nLongest Run: {longest}\nTasks Completed: {tasks}\nResources Gathered: {resources}";
+                        ? ToolkitLocalization.Text("map.stats.kills", "Steps Taken: {0}\nMost Kills: {1}\nTasks Completed: {2}\nResources Gathered: {3}", dist, mostKills, tasks, resources)
+                        : ToolkitLocalization.Text("map.stats.distance", "Steps Taken: {0}\nLongest Run: {1}\nTasks Completed: {2}\nResources Gathered: {3}", dist, longest, tasks, resources);
                 }
 
                 if (entry.StatsUI != null && entry.StatsUI.killsDamageDeathsText != null)
@@ -341,7 +342,7 @@ namespace TimelessEchoes
                     var deaths = CalcUtils.FormatNumber(stats.Deaths, true);
                     var taken = CalcUtils.FormatNumber(stats.DamageTakenAsDouble, true);
                     entry.StatsUI.killsDamageDeathsText.text =
-                        $"Kills: {kills}\nDamage Dealt: {dealt}\nDeaths: {deaths}\nDamage Taken: {taken}";
+                        ToolkitLocalization.Text("map.stats.combat", "Kills: {0}\nDamage Dealt: {1}\nDeaths: {2}\nDamage Taken: {3}", kills, dealt, deaths, taken);
                 }
             }
         }
@@ -422,9 +423,9 @@ namespace TimelessEchoes
             if (deathWindow != null)
                 deathWindow.SetActive(false);
             if (returnToTavernText != null)
-                returnToTavernText.text = "Return To Town";
+                returnToTavernText.text = ToolkitLocalization.Text("run.return-town", "Return To Town");
             if (returnOnDeathText != null)
-                returnOnDeathText.text = "Return On Death";
+                returnOnDeathText.text = ToolkitLocalization.Text("run.return-on-death", "Return On Death");
             npcObjectStateController?.UpdateObjectStates();
             locationObjectStateController?.UpdateObjectStates();
 
@@ -436,16 +437,28 @@ namespace TimelessEchoes
 
         private void OnEnable()
         {
+            ToolkitLocalization.Changed += RefreshLocalizedRunLabels;
             // Run controls are refreshed by ToolkitRunScreen; no hidden uGUI polling.
         }
 
         private void OnDisable()
         {
+            ToolkitLocalization.Changed -= RefreshLocalizedRunLabels;
             if (runButtonsUICoroutine != null)
             {
                 StopCoroutine(runButtonsUICoroutine);
                 runButtonsUICoroutine = null;
             }
+        }
+
+        private void RefreshLocalizedRunLabels()
+        {
+            RefreshRunButtonsUI();
+            UpdateGenerationButtonStats();
+            if (returnOnDeathText != null)
+                returnOnDeathText.text = returnOnDeathQueued
+                    ? ToolkitLocalization.Text("run.queued", "Queued")
+                    : ToolkitLocalization.Text("run.return-on-death", "Return On Death");
         }
 
         private IEnumerator RunButtonsUICoroutine()
@@ -519,12 +532,12 @@ namespace TimelessEchoes
             {
                 retreatQueued = true;
                 if (returnToTavernText != null)
-                    returnToTavernText.text = "Retreating...";
+                    returnToTavernText.text = ToolkitLocalization.Text("run.retreating", "Retreating...");
                 if (retreatBonusText != null)
                 {
                     var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
                     var percent = kills * bonusPercentPerKill;
-                    retreatBonusText.text = $"Retreat Queued +{percent:0}%";
+                    retreatBonusText.text = ToolkitLocalization.Text("run.retreat-queued-bonus", "Retreat Queued +{0:0}%", percent);
                 }
             }
             else
@@ -537,7 +550,7 @@ namespace TimelessEchoes
         {
             returnOnDeathQueued = true;
             if (returnOnDeathText != null)
-                returnOnDeathText.text = "Queued";
+                returnOnDeathText.text = ToolkitLocalization.Text("run.queued", "Queued");
         }
 
         public void AbandonRun()
@@ -581,9 +594,9 @@ namespace TimelessEchoes
             savesObject?.SetActive(false);
             savesHiddenObject?.SetActive(true);
             if (returnOnDeathText != null)
-                returnOnDeathText.text = "Return On Death";
+                returnOnDeathText.text = ToolkitLocalization.Text("run.return-on-death", "Return On Death");
             if (returnToTavernText != null)
-                returnToTavernText.text = "Return To Town";
+                returnToTavernText.text = ToolkitLocalization.Text("run.return-town", "Return To Town");
 #if !DISABLESTEAMWORKS
             RichPresenceManager.Instance?.SetInRun();
 #endif
@@ -897,7 +910,7 @@ namespace TimelessEchoes
             runEndedByDeath = true;
             runEndedByReaper = distanceReaper;
             if (deathText != null)
-                deathText.text = distanceReaper ? "You were reaped..." : "You have Died...";
+                deathText.text = distanceReaper ? ToolkitLocalization.Text("run.reaped", "You were reaped...") : ToolkitLocalization.Text("run.died", "You have Died...");
 
             if (returnOnDeathQueued || retreatQueued)
             {
@@ -1034,9 +1047,9 @@ namespace TimelessEchoes
             returnOnDeathQueued = false;
             retreatQueued = false;
             if (returnOnDeathText != null)
-                returnOnDeathText.text = "Return On Death";
+                returnOnDeathText.text = ToolkitLocalization.Text("run.return-on-death", "Return On Death");
             if (returnToTavernText != null)
-                returnToTavernText.text = "Return To Town";
+                returnToTavernText.text = ToolkitLocalization.Text("run.return-town", "Return To Town");
             if (deathText != null)
                 deathText.text = string.Empty;
             if (statTracker == null)

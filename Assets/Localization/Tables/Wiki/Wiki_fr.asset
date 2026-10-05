@@ -1,0 +1,121 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Wiki_fr
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: fr
+  m_SharedData: {fileID: 11400000, guid: bfa36fdea331abe4cb2b293833ff63a0, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 188400156672
+    m_Localized: "La production des Alter-\xC9chos a \xE9t\xE9 retir\xE9e. R\xE9coltez des ressources en aventure ou r\xE9coltez les cultures plant\xE9es."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 478381752320
+    m_Localized: "Les buffs sont des pouvoirs temporaires. Ils expirent \xE0 la fin de leur dur\xE9e ou au retour en ville. Apr\xE8s avoir termin\xE9 la qu\xEAte requise pour un emplacement, vous pouvez les lancer automatiquement ; cette option est activ\xE9e par d\xE9faut. D\xE9sactivez-la en cliquant sur l\u2019emplacement dans la fen\xEAtre de gestion des buffs.\n\nLe Chaudron d\u2019Eva peut r\xE9duire leurs temps de recharge."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 492340396032
+    m_Localized: "Caleb combat automatiquement et n\u2019affronte que les ennemis qui lui barrent la route ! Les t\xE2ches d\u2019abord, le plaisir ensuite.\n\nD' = D \xD7 (1 - A / (A + N))\n\nD = d\xE9g\xE2ts entrants\nA = d\xE9fense (limit\xE9e \xE0 0 ou plus)\nN = constante contr\xF4lant les rendements d\xE9croissants (par d\xE9faut = 25)\nD' = d\xE9g\xE2ts finaux subis\n\nVotre 10e, 100e, 1,000e et 10,000e victoire contre un ennemi donn\xE9 vous accorde 25% de d\xE9g\xE2ts suppl\xE9mentaires contre cet ennemi.\nVotre 25,000e et 100,000e victoire vous accorde 50% de d\xE9g\xE2ts suppl\xE9mentaires contre cet ennemi."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 512217202688
+    m_Localized: "Les \xC9chos sont d\u2019autres versions de Caleb qui p\xE9n\xE8trent bri\xE8vement dans sa r\xE9alit\xE9 pour l\u2019aider dans diverses situations.\n\nChaque \xC9cho peut poss\xE9der plusieurs comp\xE9tences de Caleb, mais la plupart ne les poss\xE8dent pas toutes.\n\nLeur comportement d\xE9pend surtout de leur capacit\xE9 \xE0 combattre.\nLes \xC9chos combattants ont deux comportements selon qu\u2019ils peuvent aussi accomplir des t\xE2ches.\n\nUn \xC9cho combattant INCAPABLE d\u2019accomplir des t\xE2ches recherche les ennemis.\nUn \xC9cho combattant CAPABLE d\u2019accomplir des t\xE2ches privil\xE9gie les t\xE2ches et n\u2019affronte que les ennemis qui le rep\xE8rent.\n\nLes \xC9chos non combattants ne ciblent pas les ennemis et ne sont pas cibl\xE9s par eux.\n\nNote du d\xE9veloppeur | Aucun \xC9cho actuel ne peut \xE0 la fois combattre et accomplir des t\xE2ches. Les \xC9chos des jalons recherchent les t\xE2ches de leur comp\xE9tence : par exemple, un \xC9cho de B\xFBcheronnage ne cherche que ces t\xE2ches."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 532437942272
+    m_Localized: "Chaque ennemi tu\xE9 pendant une aventure augmente votre bonus de ressources de 2%. Pendant le combat, ce bonus est temporairement fix\xE9 \xE0 0%.\n\nEssayez de rentrer juste avant que les combats ne deviennent trop difficiles, pour obtenir autant de ressources bonus que possible !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 698595295232
+    m_Localized: "Les t\xE2ches sont l\u2019objectif principal du voyage de Caleb. R\xE9colter des ressources pour le village est essentiel \xE0 son d\xE9veloppement.\n\nElles sont accomplies automatiquement, de plus en plus vite \xE0 mesure que vos comp\xE9tences augmentent.\n\nChaque t\xE2che appara\xEEt entre une distance minimale et maximale. Au-del\xE0 de la distance maximale, sa probabilit\xE9 d\u2019apparition baisse de 90%. Une fois toutes les distances maximales atteintes, le syst\xE8me s\u2019\xE9quilibre : les t\xE2ches sont disponibles selon leurs pond\xE9rations."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 505754247643136
+    m_Localized: "Les qu\xEAtes ont plusieurs types de conditions \xE0 remplir avant de les rendre.\n\n<b>Information</b> | Ces qu\xEAtes se terminent imm\xE9diatement pour faire avancer l\u2019histoire ou guider vos premiers pas.\n<b>R\xE9colte</b> | R\xE9coltez les ressources demand\xE9es, puis remettez-les pour terminer.\n<b>Victoires</b> | \xC9liminez les ennemis, puis faites votre rapport.\n<b>Rencontre</b> | Rencontrez un personnage, g\xE9n\xE9ralement \xE0 une distance pr\xE9cise."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3785742338113536
+    m_Localized: "\xC0 certaines distances du village, Carl fauche votre \xE2me pour vous emp\xEAcher de trop vous \xE9loigner.\nLa distance maximale de Fauche figure dans les statistiques de l\u2019onglet G\xE9n\xE9ral.\n\nElle augmente des fa\xE7ons suivantes :\n<b>\xCAtre fauch\xE9</b> | Augmente la distance de 1% de votre maximum actuel. (Sauf dans les Terres agricoles.)\n<b>Qu\xEAtes</b> | Certaines qu\xEAtes augmentent la distance de Fauche."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6939642239008768
+    m_Localized: v1.4.3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7986628786536448
+    m_Localized: 'Dragon slaying pope
+
+      tanty.
+
+      Mellifas
+
+      Latimer Cross
+
+      MatHeadGetz
+
+      appleguy
+
+      AwesomePhoenix
+
+      boiledpotato
+
+      eli
+
+      GLUTTONY
+
+      Gudu
+
+      Mentocado
+
+      Nuclearion
+
+      Quackers
+
+      Rugmuk
+
+      SaintPlays
+
+      SCHMUGGLER
+
+      WaringMcMarrin'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9824133160779776
+    m_Localized: "La forge d\u2019Ivan est magique. En ville comme en aventure, vous pouvez le guider dans son apprentissage de forgeron.\n\nDeux options sont disponibles :\n\n<b>Arr\xEAt sur Vastium :</b> Arr\xEAte toujours la fabrication si vous obtenez une pi\xE8ce de Vastium, m\xEAme moins bonne.\n\n<b>Stats identiques :</b> Continue jusqu\u2019\xE0 obtenir une am\xE9lioration avec exactement les m\xEAmes types de statistiques que votre \xE9quipement actuel.\n\nCette ic\xF4ne repr\xE9sente la qualit\xE9 : <sprite=206>\n\nFabriquez votre \xE9quipement ici et choisissez les statistiques adapt\xE9es \xE0 votre style.\nIl existe actuellement 8 statistiques possibles, chaque pi\xE8ce en garantissant une.\n\n<sprite=198> = D\xE9g\xE2ts.\n<sprite=200> = Vitesse d\u2019attaque.\n<sprite=199> = Chances de critique.\n<sprite=205> = D\xE9g\xE2ts critiques.\n\n<sprite=202> = Sant\xE9.\n<sprite=203> = R\xE9g\xE9n\xE9ration.\n<sprite=201> = D\xE9fense.\n<sprite=204> = D\xE9placement.\n\n<sprite=192> = Am\xE9lioration.\n<sprite=193> = D\xE9gradation.\n<sprite=194> = Aucun changement.\n<sprite=195> Stat absente du nouvel objet.\n<sprite=196> Stat absente de l\u2019ancien objet.\n\n<b>Arme</b> | Garantit <sprite=198>\n<b>Casque</b> | Garantit <sprite=202>\n<b>Plastron</b> | Garantit <sprite=201>\n<b>Bottes</b> | Garantit <sprite=204>, exclusif \xE0 cet emplacement.\n\nL\u2019\xE9quipement est automatiquement recycl\xE9 lorsque vous fabriquez une nouvelle pi\xE8ce, changez d\u2019emplacement ou fermez le jeu.\n\nSelon sa raret\xE9, une pi\xE8ce peut avoir jusqu\u2019\xE0 5 statistiques. D\u2019autres statistiques sont pr\xE9vues !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9824133185945600
+    m_Localized: "Salut tout le monde, ici le d\xE9veloppeur.\n\nSi vous souhaitez ajouter votre nom aux noms al\xE9atoires des ennemis, venez le demander dans le salon EoV sur Discord :)\n\n\u2022 J\u2019envisage de d\xE9placer le d\xE9blocage des t\xE2ches vers les jalons. Les qu\xEAtes donneraient alors de l\u2019XP de comp\xE9tence plut\xF4t que de d\xE9bloquer des t\xE2ches ! Donnez-moi votre avis."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9898115700506624
+    m_Localized: "<b>Changements</b>\n\u2022 Deux nouvelles qu\xEAtes : Pour la confiture ! et Les voyages de Gilliver.\n\u2022 Message d\u2019introduction am\xE9lior\xE9.\n\u2022 Correction des alertes de niveau affichant des valeurs trop faibles.\n\u2022 Suppression du bloc Qualit\xE9 \xE9quip\xE9e des statistiques de la Forge.\n\u2022 Les qu\xEAtes \xE9pingl\xE9es affichent \xAB Pr\xEAte \xE0 rendre \xBB plut\xF4t que \xAB Termin\xE9e \xBB.\n\u2022 Ajout d\u2019un \xE9cran pendant le chargement d\u2019une carte.\n\u2022 Ajout d\u2019un bouton Tout m\xE9langer.\n<b>Technique</b>\n\u2022 Mise \xE0 jour d\u2019A*."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12027031164698624
+    m_Localized: "Le Chaudron transforme les aliments s\xE9lectionn\xE9s en rago\xFBt. Choisissez la quantit\xE9 \xE0 m\xE9langer : le rago\xFBt obtenu d\xE9pend de la valeur d\xE9finie de l\u2019aliment et de sa quantit\xE9. Go\xFBtez-le pour recevoir des cartes selon les pond\xE9rations de r\xE9compense affich\xE9es par Eva.\n\nLes cartes de ressources am\xE9liorent les r\xE9coltes r\xE9elles, le butin des ennemis et les r\xE9coltes des Champs pour la ressource correspondante. Leurs seuils d\u2019exemplaires sont 1, 25, 75, 200, 750, 1500, 3500 et 10000 ; les bonus de rendement sont 1%, 2%, 3%, 5%, 7%, 10%, 15% et 20%.\n\nUne cat\xE9gorie utilise le palier de carte le plus bas parmi ses ressources d\xE9bloqu\xE9es. Une carte non poss\xE9d\xE9e compte comme palier z\xE9ro. Les paliers de cat\xE9gorie de 1 \xE0 8 ajoutent 2%, 5%, 10%, 15%, 20%, 30%, 40% et 50% de rendement \xE0 cette cat\xE9gorie. Les bonus de carte et de cat\xE9gorie s\u2019additionnent, jusqu\u2019\xE0 70%. Les r\xE9compenses, graines, remboursements et conversions n\u2019en b\xE9n\xE9ficient pas.\n\nCes paliers sont distincts de la raret\xE9 des ressources. Les avantages actuels des cartes de buffs sur la recharge et la puissance restent inchang\xE9s. Compl\xE9tez toutes les collections disponibles de ressources et de buffs pour d\xE9bloquer les Bienfaits \xE9ternels."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18915029441462272
+    m_Localized: "Les objets ont une faible chance de monter d\u2019un palier \xE0 chaque collecte. Les r\xE9coltes des Champs ne font pas augmenter le palier des ressources.\nChaque palier au-dessus du premier accorde davantage de ressources lors des collectes suivantes.\n\nJe n\u2019aime pas trop partager cette information, mais la voici. - Orin...\n\nPalier | Bonus | Chance\n<b>Palier 1</b> - 0%\\tBase\n<b>Palier 2</b> - 10%\\t1 /1,000\n<b>Palier 3</b> - 20%\\t1 / 5,000\n<b>Palier 4</b> - 30%\\t1 / 10,000\n<b>Palier 5</b> - 50%\\t1 / 50,000\n<b>Palier 6</b> - 75%\\t1 / 100,000\n<b>Palier 7</b> - 100%\\t1 / 250,000\n<b>Palier 8</b> - 150%\\t1 / 1,000,000"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25772880722018304
+    m_Localized: Anglais (en)
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

@@ -1,0 +1,55 @@
+{
+  "checkedAtUTC": "2026-10-01T07:51:49.746133+00:00",
+  "stage": "read-only-seed-icon-final-recheck",
+  "protectedCheckoutFilesUnchanged": 5392,
+  "mainSha256": "8f912645ea9216c7f25a833da730c44524aaea0dab7ba4cd76a9c0e1ac0d9d54",
+  "originalPlayerFilesUnchanged": 77,
+  "verifiedBackups": 93,
+  "spritesAndReferencesChecked": 23,
+  "previousAtlasEntriesPreserved": 213,
+  "pixelCheck": {
+    "unknownColorRGBA": [
+      145,
+      83,
+      59,
+      255
+    ],
+    "originalAtlasPixelPositionsRetained": true,
+    "oldAtlasRegionPixelsCompared": 55296,
+    "oldRegionRGBAChanges": 0,
+    "newIconPixelsCompared": 5888,
+    "sharedUnknownMatchesEveryInventorySilhouette": true,
+    "haloPixelsRemovedPerIcon": 40,
+    "interiorPalePixelsPreservedAcrossKnownPackets": 3,
+    "opaqueOrTransparentOnly": true,
+    "inventoryDistinctAlphaMasks": 1,
+    "allDropPixelsEqualNormalizedSource": true
+  },
+  "visualInspection": "All three saved contact/native UI/TMP Metal previews opened and inspected; all packets visible, shared unknown coherent, existing representative glyphs retained.",
+  "previews": [
+    {
+      "name": "seed-pack-before-after.png",
+      "libraryFileId": "libfile_7dcc8a97d1188191bc53ffe9f6f3aa81",
+      "recordedVersion": 1,
+      "sha256": "679b27dae5b728fe734b51109fa26f0d6f9f8306abc21bd2043a0dc4a9fa2ca6"
+    },
+    {
+      "name": "unity-inventory.png",
+      "libraryFileId": "libfile_84d50dd664b88191a9f064e5e645ea0d",
+      "recordedVersion": 0,
+      "sha256": "c4c18341c94cd0b3521545a38b9ae6aadd89297e09e321bd00fcf5dd571e93f4"
+    },
+    {
+      "name": "unity-drops.png",
+      "libraryFileId": "libfile_49b174e4a17c819197f43cbfee585cb6",
+      "recordedVersion": 0,
+      "sha256": "f56c370c227a81ec7378361388b24dbe27587718746ac4dfc026fc09610d6d16"
+    }
+  ],
+  "remainingValidation": [
+    "Player/mobile rendering with real content integration",
+    "New seed discovery/persistence and resource routing are not implemented in this asset task"
+  ],
+  "sourceOrSceneChanges": false,
+  "commitOrPush": false
+}

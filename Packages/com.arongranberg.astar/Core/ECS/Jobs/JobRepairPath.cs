@@ -5,7 +5,6 @@ using Unity.Profiling;
 using Unity.Transforms;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
-using GCHandle = System.Runtime.InteropServices.GCHandle;
 
 namespace Pathfinding.ECS {
 	using Pathfinding;
@@ -28,13 +27,11 @@ namespace Pathfinding.ECS {
 			public ComponentTypeHandle<MovementState> MovementStateTypeHandleRW;
 			[ReadOnly]
 			public ComponentTypeHandle<AgentCylinderShape> AgentCylinderShapeTypeHandleRO;
-			// NativeDisableContainerSafetyRestriction seems to be necessary because otherwise we will get an error:
-			// "The ComponentTypeHandle<Pathfinding.ECS.ManagedState> ... can not be accessed. Nested native containers are illegal in jobs."
-			// However, Unity doesn't seem to check for this at all times. Currently, I can only replicate the error if DoTween Pro is also installed.
-			// I have no idea how this unrelated package influences unity to actually do the check.
-			// We know it is safe to access the managed state because we make sure to never access an entity from multiple threads at the same time.
-			[NativeDisableContainerSafetyRestriction]
-			public ComponentTypeHandle<ManagedState> ManagedStateTypeHandleRW;
+			// AgentManagedRef is declared ReadWrite even though the slot integer itself is only ever read.
+			// The component handle is the only thing the ECS dependency system can serialize on, so it has to
+			// carry the access mode of the managed data behind the slot. Declaring it read-only would let two
+			// jobs mutate the same PathTracer in parallel.
+			public ComponentTypeHandle<AgentManagedRef> AgentManagedRefTypeHandleRW;
 			[ReadOnly]
 			public ComponentTypeHandle<MovementSettings> MovementSettingsTypeHandleRO;
 			public ComponentTypeHandle<AutoRepathPolicy> AutoRepathPolicyRW;
@@ -43,13 +40,12 @@ namespace Pathfinding.ECS {
 			[ReadOnly]
 			public ComponentTypeHandle<AgentMovementPlane> AgentMovementPlaneTypeHandleRO;
 			public ComponentTypeHandle<ReadyToTraverseOffMeshLink> ReadyToTraverseOffMeshLinkTypeHandleRW;
-			public GCHandle entityManagerHandle;
 			public bool onlyApplyPendingPaths;
 
 			public EntityQueryBuilder GetEntityQuery (Allocator allocator) {
 				return new EntityQueryBuilder(Allocator.Temp)
 					   .WithAllRW<MovementState>()
-					   .WithAllRW<ManagedState>()
+					   .WithAllRW<AgentManagedRef>()
 					   .WithAll<LocalTransform>()
 					   .WithAll<MovementSettings, AutoRepathPolicy, DestinationPoint, AgentMovementPlane, AgentCylinderShape>()
 				       //    .WithAny<ReadyToTraverseOffMeshLink>() // TODO: Use WithPresent in newer versions
@@ -57,7 +53,6 @@ namespace Pathfinding.ECS {
 			}
 
 			public Scheduler(ref SystemState systemState) {
-				entityManagerHandle = GCHandle.Alloc(systemState.EntityManager);
 				LocalTransformTypeHandleRO = systemState.GetComponentTypeHandle<LocalTransform>(true);
 				MovementStateTypeHandleRW = systemState.GetComponentTypeHandle<MovementState>(false);
 				AgentCylinderShapeTypeHandleRO = systemState.GetComponentTypeHandle<AgentCylinderShape>(true);
@@ -66,13 +61,11 @@ namespace Pathfinding.ECS {
 				AgentMovementPlaneTypeHandleRO = systemState.GetComponentTypeHandle<AgentMovementPlane>(true);
 				MovementSettingsTypeHandleRO = systemState.GetComponentTypeHandle<MovementSettings>(true);
 				ReadyToTraverseOffMeshLinkTypeHandleRW = systemState.GetComponentTypeHandle<ReadyToTraverseOffMeshLink>(false);
-				// Need to bypass the T : unmanaged check in systemState.GetComponentTypeHandle
-				ManagedStateTypeHandleRW = systemState.EntityManager.GetComponentTypeHandle<ManagedState>(false);
+				AgentManagedRefTypeHandleRW = systemState.GetComponentTypeHandle<AgentManagedRef>(false);
 				onlyApplyPendingPaths = false;
 			}
 
 			public void Dispose () {
-				entityManagerHandle.Free();
 			}
 
 			public void Update (ref SystemState systemState) {
@@ -81,7 +74,7 @@ namespace Pathfinding.ECS {
 				AgentCylinderShapeTypeHandleRO.Update(ref systemState);
 				AutoRepathPolicyRW.Update(ref systemState);
 				DestinationPointTypeHandleRO.Update(ref systemState);
-				ManagedStateTypeHandleRW.Update(ref systemState);
+				AgentManagedRefTypeHandleRW.Update(ref systemState);
 				MovementSettingsTypeHandleRO.Update(ref systemState);
 				AgentMovementPlaneTypeHandleRO.Update(ref systemState);
 				ReadyToTraverseOffMeshLinkTypeHandleRW.Update(ref systemState);
@@ -121,7 +114,10 @@ namespace Pathfinding.ECS {
 				var agentMovementPlanes = (AgentMovementPlane*)chunk.GetNativeArray(ref scheduler.AgentMovementPlaneTypeHandleRO).GetUnsafeReadOnlyPtr();
 				var mask = chunk.GetEnabledMask(ref scheduler.ReadyToTraverseOffMeshLinkTypeHandleRW);
 
-				var managedStates = chunk.GetManagedComponentAccessor(ref scheduler.ManagedStateTypeHandleRW, (EntityManager)scheduler.entityManagerHandle.Target);
+				var managedRefs = (AgentManagedRef*)chunk.GetNativeArray(ref scheduler.AgentManagedRefTypeHandleRW).GetUnsafeReadOnlyPtr();
+				// One read of the table per chunk. AgentManagedRef only exists on entities that own their
+				// slot, so no per-entity owner check is needed.
+				var managedData = AgentManagedStorage.entries;
 
 				for (int i = 0; i < chunk.Count; i++) {
 					Execute(
@@ -132,7 +128,7 @@ namespace Pathfinding.ECS {
 						ref autoRepathPolicy[i],
 						ref destinationPoints[i],
 						mask.GetEnabledRefRW<ReadyToTraverseOffMeshLink>(i),
-						managedStates[i],
+						managedData[managedRefs[i].slot].state,
 						in movementSettings[i],
 						nextCornersScratch,
 						ref indicesScratch,

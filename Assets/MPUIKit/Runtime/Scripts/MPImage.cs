@@ -402,6 +402,11 @@ namespace MPUIKIT {
         }
 
         protected override void OnValidate() {
+            // Prefabs can validate before the shader has been imported on a fresh project.
+            // Defer material initialization only during import; runtime failures remain visible.
+            if ((AssetDatabase.IsAssetImportWorkerProcess() || EditorApplication.isUpdating) &&
+                Shader.Find(MpShaderName) == null) return;
+
             InitializeComponents();
             if (_parseAgainOnValidate) {
                 InitValuesFromSharedMaterial();

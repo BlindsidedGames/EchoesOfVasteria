@@ -304,6 +304,9 @@ namespace Pathfinding {
 						otherConnections.Remove(hierarchicalNode);
 						// Update the allocation index of the list, in case it was reallocated
 						connectionAllocations[adjacentHierarchicalNode] = otherConnections.allocationIndex;
+
+						// The connection list may have been reallocated, so we need to get it again
+						conns = hGraph.connectionAllocator.GetSpan(connAllocation);
 					}
 				}
 				Assert.AreEqual(connectionAllocations[hierarchicalNode], connAllocation);
@@ -596,15 +599,15 @@ namespace Pathfinding {
 			RecalculateIfNecessary();
 		}
 
-		public void OnDrawGizmos (DrawingData gizmos, bool renderInGame) {
+		public void OnDrawGizmos (bool renderInGame) {
 			var hasher = new NodeHasher(AstarPath.active);
 
 			hasher.Add(gizmoVersion);
 
-			if (!gizmos.Draw(hasher)) {
+			if (!DrawingManager.TryDrawHasher(hasher)) {
 				var readLock = rwLock.ReadSync();
 				try {
-					using (var builder = gizmos.GetBuilder(hasher, default, renderInGame)) {
+					using (var builder = DrawingManager.GetBuilder(hasher, default, renderInGame)) {
 						for (int i = 0; i < areas.Length; i++) {
 							if (children[i].Count > 0) {
 								builder.WireBox(bounds[i].center, bounds[i].size);

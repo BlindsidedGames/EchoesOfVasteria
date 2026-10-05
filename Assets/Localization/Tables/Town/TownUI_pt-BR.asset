@@ -1,0 +1,3997 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: TownUI_pt-BR
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: pt-BR
+  m_SharedData: {fileID: 11400000, guid: 79e2dd3ef4efaf5459ce0f738238ca3e, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 87000000000003857
+    m_Localized: Desativado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003856
+    m_Localized: Ativado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003855
+    m_Localized: "Dura\xE7\xE3o {0}   \xB7   Recarga {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003854
+    m_Localized: "Dist\xE2ncia {0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003853
+    m_Localized: Atribuir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003852
+    m_Localized: "Espa\xE7o {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003851
+    m_Localized: Cancelar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003850
+    m_Localized: "Espa\xE7o vazio"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003849
+    m_Localized: "{0} \xB7 Conjura\xE7\xE3o autom\xE1tica bloqueada"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003848
+    m_Localized: "{0} \xB7 Conjura\xE7\xE3o autom\xE1tica desativada"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003847
+    m_Localized: "{0} \xB7 Conjura\xE7\xE3o autom\xE1tica ativada"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003846
+    m_Localized: "Espa\xE7o bloqueado"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003845
+    m_Localized: "Selecione um poder para atribu\xED-lo. Selecione um espa\xE7o equipado para alternar a conjura\xE7\xE3o autom\xE1tica."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003844
+    m_Localized: "Escolha um espa\xE7o para {0}. Selecione Cancelar para sair sem atribuir."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003843
+    m_Localized: "As atribui\xE7\xF5es ficam bloqueadas nas expedi\xE7\xF5es. Selecione um espa\xE7o equipado para alternar a conjura\xE7\xE3o autom\xE1tica."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003842
+    m_Localized: Velocidade de tarefas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003841
+    m_Localized: Eco | Tarefas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003840
+    m_Localized: Velocidade de movimento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003839
+    m_Localized: Multiplicador de recursos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003838
+    m_Localized: Eco | Combate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003837
+    m_Localized: "Rolagem cr\xEDtica"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003836
+    m_Localized: "Resson\xE2ncia dos Ecos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003835
+    m_Localized: Potencializador de combate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003834
+    m_Localized: Instinto de Colecionador
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003833
+    m_Localized: "Experi\xEAncia extra"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003832
+    m_Localized: Fortuna
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003831
+    m_Localized: "Regenera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003830
+    m_Localized: "Tarefas conclu\xEDdas instantaneamente"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003829
+    m_Localized: Velocidade do jogo +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003828
+    m_Localized: "Recursos ap\xF3s Eco +{0:0.#}% (10s)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003827
+    m_Localized: "B\xF4nus de recursos +{0:0.#}% a cada 10 tarefas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003826
+    m_Localized: "Peso de tarefas desconhecidas at\xE9 +{0:0.#}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003825
+    m_Localized: "Peso de apari\xE7\xE3o do alvo +{0:0.#}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003824
+    m_Localized: "Dano cr\xEDtico +{0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003823
+    m_Localized: "Chance cr\xEDtica +{0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003822
+    m_Localized: "{0:0.#}% de experi\xEAncia extra"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003821
+    m_Localized: Recursos obtidos +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003820
+    m_Localized: "Dist\xE2ncia m\xE1xima de Ceifa +{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003819
+    m_Localized: "Dist\xE2ncia m\xE1xima de Ceifa +{0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003818
+    m_Localized: "Regenera\xE7\xE3o de vida +{0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003817
+    m_Localized: Velocidade de tarefas +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003816
+    m_Localized: Velocidade de ataque +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003815
+    m_Localized: Defesa +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003814
+    m_Localized: Dano +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003813
+    m_Localized: Velocidade de movimento +{0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003812
+    m_Localized: "Dura\xE7\xE3o: {0}, Recarga: {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003811
+    m_Localized: "Dist\xE2ncia: {0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003810
+    m_Localized: 'Ecos: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003809
+    m_Localized: Velocidade de movimento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003808
+    m_Localized: "Regenera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003807
+    m_Localized: Vida
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003806
+    m_Localized: Defesa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003805
+    m_Localized: "  \u2022 n\xFAcleo {0}: {1:0.#}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003804
+    m_Localized: Cancelado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003803
+    m_Localized: Melhorado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003802
+    m_Localized: Vastium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003801
+    m_Localized: "  \u2022 reciclagens de {0}: {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003800
+    m_Localized: "  \u2022 pe\xE7as {0} equipadas: {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003799
+    m_Localized: "  \u2022 cria\xE7\xF5es de {0}: {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003798
+    m_Localized: "\u2022 Pedra: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003797
+    m_Localized: "\u2022 Gosma: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003796
+    m_Localized: "\u2022 Total de n\xFAcleos: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003795
+    m_Localized: "\u2022 Total de lingotes: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003794
+    m_Localized: "\u2022 Total de cristais: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003793
+    m_Localized: "\u2022 Convers\xF5es de n\xFAcleos: {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003792
+    m_Localized: "\u2022 Convers\xF5es de lingotes: {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003791
+    m_Localized: "\u2022 Rolagens altas | Vezes entre os {0:0.#}% maiores do atributo:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003790
+    m_Localized: "\u2022 M\xE9dia de cria\xE7\xF5es / melhoria: {0:N2}  \u2022 Maior intervalo: {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003789
+    m_Localized: ganhou {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003788
+    m_Localized: ' raridade {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003787
+    m_Localized: "\u2022 Itens: {0:N0}  \u2022 Entradas: {1:N0}  \u2022 M\xE9dia/item: {2:N2}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003786
+    m_Localized: "n\xFAcleo {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003785
+    m_Localized: "\u2022 Sess\xF5es: {0:N0}, Cria\xE7\xF5es: {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003784
+    m_Localized: "\u2022 XP total obtido: {0:N0} (n\xEDveis ganhos: {1:N0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003783
+    m_Localized: "\u2022 XP: {0:N0} / {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003782
+    m_Localized: "\u2022 N\xEDvel: {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003781
+    m_Localized: "\u2022 Total reciclado: {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003780
+    m_Localized: "\u2022 Equipados ap\xF3s cria\xE7\xE3o: {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003779
+    m_Localized: "\u2022 Total de cria\xE7\xF5es: {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003778
+    m_Localized: "• Melhor resultado:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003777
+    m_Localized: "M\xE1ximo de tentativas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003776
+    m_Localized: Sem recursos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003775
+    m_Localized: 'Consumidos:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003774
+    m_Localized: 'Criados:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003773
+    m_Localized: "\u2022 Maiores:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003772
+    m_Localized: "\u2022 Totais:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003771
+    m_Localized: "\u2022 N\xFAcleos:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003770
+    m_Localized: "\u2022 Geral:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003769
+    m_Localized: "\u2022 Melhores por raridade:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003768
+    m_Localized: "\u2022 Melhores por n\xFAcleo:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003767
+    m_Localized: "\u2022 Motivos de parada:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003766
+    m_Localized: Ainda sem dados.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003765
+    m_Localized: "<size=120%><b>Estat\xEDsticas da Forja</b></size>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003764
+    m_Localized: Qualidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003763
+    m_Localized: "Convers\xF5es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003762
+    m_Localized: Rolagens de atributos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003761
+    m_Localized: "Totais por espa\xE7o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003760
+    m_Localized: Melhorias
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003759
+    m_Localized: "Distribui\xE7\xF5es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003758
+    m_Localized: Reciclagem
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003757
+    m_Localized: "Cria\xE7\xE3o autom\xE1tica"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003756
+    m_Localized: Ivan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003755
+    m_Localized: Totais
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003754
+    m_Localized: Combate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003753
+    m_Localized: '{0} {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003752
+    m_Localized: '{0} {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003751
+    m_Localized: um {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003750
+    m_Localized: um {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003749
+    m_Localized: Tarefa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003748
+    m_Localized: Seletivo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003747
+    m_Localized: Abates
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003746
+    m_Localized: um Eco
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003745
+    m_Localized: Ecos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003744
+    m_Localized: Eco
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003743
+    m_Localized: Atributo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003742
+    m_Localized: Habilidade associada
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003741
+    m_Localized: Habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003740
+    m_Localized: ' quando {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003739
+    m_Localized: '{0:0.#}% de chance de criar {1}{2}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003738
+    m_Localized: "{0:0.#}% de experi\xEAncia extra ({1})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003737
+    m_Localized: '{0:0.#}% de recursos extras ({1})'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003736
+    m_Localized: '{0:0.#}% de chance de dobrar XP'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003735
+    m_Localized: '{0:0.#}% de chance de dobrar recursos'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003734
+    m_Localized: '{0:0.#}% de chance de matar instantaneamente'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003733
+    m_Localized: '{0:0.#}% de chance de concluir tarefas instantaneamente'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003732
+    m_Localized: "{0:0.#}% de experi\xEAncia extra (Todas as habilidades)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003731
+    m_Localized: '{0:0.#}% de recursos extras (Todas as tarefas)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003730
+    m_Localized: "+{0:0.#}% de velocidade de tarefas de {1} (Pelo n\xEDvel de {1})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003729
+    m_Localized: "\u2022 Impulso de Orin: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003728
+    m_Localized: "\u2022 B\xEAn\xE7\xE3o da Eva: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003727
+    m_Localized: "\u2022 Cartas inferiores: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003726
+    m_Localized: "\u2022 Poderes: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003725
+    m_Localized: "\u2022 Cartas de recursos: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003724
+    m_Localized: "\u2022 Recursos - Combate: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003723
+    m_Localized: "\u2022 Recursos - Saque: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003722
+    m_Localized: "\u2022 Recursos - Corte de Madeira: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003721
+    m_Localized: "\u2022 Recursos - Minera\xE7\xE3o: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003720
+    m_Localized: "\u2022 Recursos - Pesca: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003719
+    m_Localized: "\u2022 Recursos - Cultivo: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003718
+    m_Localized: "\u2022 N\xE3o ganhou nada: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003717
+    m_Localized: "<b>Distribui\xE7\xE3o das rolagens</b>\n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003716
+    m_Localized: "\u2022 Cartas obtidas: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003715
+    m_Localized: "\u2022 Degusta\xE7\xF5es: "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003714
+    m_Localized: '<b>Totais</b>
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003713
+    m_Localized: Eterno
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003712
+    m_Localized: Impulso
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003711
+    m_Localized: "B\xEAn\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003710
+    m_Localized: Menor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003709
+    m_Localized: Poderes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003708
+    m_Localized: Combate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003707
+    m_Localized: Saque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003706
+    m_Localized: Corte de Madeira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003705
+    m_Localized: "Minera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003704
+    m_Localized: Pesca
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003703
+    m_Localized: Cultivo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003702
+    m_Localized: Nada
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003701
+    m_Localized: N/D
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003700
+    m_Localized: "B\xF4nus de n\xEDvel: {0:0.#}%\n{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003699
+    m_Localized: 'Criados
+
+      {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003698
+    m_Localized: 'Melhor coleta/min: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003697
+    m_Localized: 'Coletados: {0}
+
+      Gastos: {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003696
+    m_Localized: '{0} | {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003695
+    m_Localized: Nv. -
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003694
+    m_Localized: Nv. {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003693
+    m_Localized: 'Abates: {0}
+
+      Dano extra: {1:0}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003692
+    m_Localized: "Movimento: {0}\nVis\xE3o: {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003691
+    m_Localized: "Defesa: {0}\nFrequ\xEAncia de ataque: {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003690
+    m_Localized: 'Vida: {0}
+
+      Dano: {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003689
+    m_Localized: ", Dist\xE2ncia m\xE1xima: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003688
+    m_Localized: "Pr\xF3xima melhoria: M\xE1ximo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003687
+    m_Localized: Infinito
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003686
+    m_Localized: "Chance de aparecer: -- ({0})\nPr\xF3xima melhoria: --\n{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003685
+    m_Localized: 'Chance de aparecer: {0:0.##}% ({1})
+
+      {2}
+
+      {3}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003684
+    m_Localized: "Pr\xF3xima melhoria: {0} tarefas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003683
+    m_Localized: "Dist\xE2ncia m\xEDnima: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003682
+    m_Localized: "Conclus\xF5es: {0}\nTempo na tarefa: {1}\nXP obtido: {2}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003681
+    m_Localized: "Expedi\xE7\xE3o {0}\nMapa: {1}\nDura\xE7\xE3o: {2}\nDist\xE2ncia: {3:N0}\nTarefas: {4:N0}\n{5}\nAbates: {6:N0}\nDano causado: {7:N0}\nDano recebido: {8:N0}\nEstado: {9}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003680
+    m_Localized: 'Recursos: {0:N0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003679
+    m_Localized: "Expedi\xE7\xE3o mais longa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003678
+    m_Localized: Mais abates
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003677
+    m_Localized: Vezes ceifado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003676
+    m_Localized: Dano recebido
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003675
+    m_Localized: Mortes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003674
+    m_Localized: Dano causado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003673
+    m_Localized: Abates
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003672
+    m_Localized: "Dist\xE2ncia de Ceifa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003671
+    m_Localized: Recursos coletados
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003670
+    m_Localized: "Tarefas conclu\xEDdas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003669
+    m_Localized: Passos dados
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003668
+    m_Localized: Mostrar todos os {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003667
+    m_Localized: '{0} recursos'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003666
+    m_Localized: "{0} das \xFAltimas {1} expedi\xE7\xF5es salvas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003665
+    m_Localized: '{0} / {1} descobertos'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003664
+    m_Localized: Mostrar menos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003663
+    m_Localized: Recursos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003662
+    m_Localized: Inimigos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003661
+    m_Localized: "As descobertas s\xE3o compartilhadas entre todos os mapas. Estas s\xE3o as listas de itens configuradas; a disponibilidade depende da progress\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003660
+    m_Localized: Encontrados aqui
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003659
+    m_Localized: Escolha um mapa para ver seus recursos e inimigos junto dos seus recordes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003658
+    m_Localized: Explore um mapa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003657
+    m_Localized: "Ainda n\xE3o h\xE1 expedi\xE7\xF5es recentes aqui. Seus recordes gerais continuam vis\xEDveis."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003656
+    m_Localized: Acumulado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003655
+    m_Localized: "Expedi\xE7\xF5es recentes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003654
+    m_Localized: Gastos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003653
+    m_Localized: Coletados
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003652
+    m_Localized: "N\xEDvel"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003651
+    m_Localized: "N\xEDvel do recurso {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003650
+    m_Localized: "{0} dispon\xEDveis"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003649
+    m_Localized: 'ID: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003648
+    m_Localized: Desconhecido
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003647
+    m_Localized: Tempo da tarefa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003646
+    m_Localized: "Conclus\xF5es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003645
+    m_Localized: "Padr\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003644
+    m_Localized: "Vis\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003643
+    m_Localized: Movimento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003642
+    m_Localized: "Frequ\xEAncia de ataque"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003641
+    m_Localized: Defesa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003640
+    m_Localized: Vida
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003639
+    m_Localized: Dano
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003638
+    m_Localized: "Dist\xE2ncia da pr\xE9via: {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003637
+    m_Localized: "Aumente o peso de apari\xE7\xE3o desta tarefa. Marcos de conclus\xE3o aumentam o b\xF4nus."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003636
+    m_Localized: "B\xF4nus de apari\xE7\xE3o ativado. Clique para remover o b\xF4nus de peso da tarefa."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003635
+    m_Localized: Chances de raridade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003634
+    m_Localized: Melhores rolagens
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003633
+    m_Localized: "Automa\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003632
+    m_Localized: "Hist\xF3rico de cria\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003631
+    m_Localized: "Crie um item para compar\xE1-lo com seu equipamento."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003630
+    m_Localized: Total
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003629
+    m_Localized: Atributo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003628
+    m_Localized: Qualidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003627
+    m_Localized: Equipado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003626
+    m_Localized: Pendente
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003625
+    m_Localized: 'Lotes: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003624
+    m_Localized: Parar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003623
+    m_Localized: "{0:N0} cria\xE7\xF5es dispon\xEDveis"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003622
+    m_Localized: "Ivan | N\xEDvel {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003621
+    m_Localized: "Tamanho do lote de convers\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003620
+    m_Localized: Fundir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003619
+    m_Localized: "N\xFAcleos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003618
+    m_Localized: Lingotes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003617
+    m_Localized: Cristais
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003616
+    m_Localized: "Peda\xE7os"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003615
+    m_Localized: "Expedi\xE7\xE3o #{0} \xB7 {1} \xB7 {2}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003614
+    m_Localized: "M\xE9dia {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003613
+    m_Localized: "{0} das \xFAltimas {1} expedi\xE7\xF5es salvas{2}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003612
+    m_Localized: " \xB7 {0} sem dura\xE7\xE3o omitidas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003611
+    m_Localized: "M\xE9dia {0}{1}   \xB7   {2} {3}{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003610
+    m_Localized: Melhor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003609
+    m_Localized: Mais longa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003608
+    m_Localized: ' / min'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003607
+    m_Localized: Dano recebido
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003606
+    m_Localized: Dano causado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003605
+    m_Localized: Abates
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003604
+    m_Localized: Recursos extras
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003603
+    m_Localized: Recursos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003602
+    m_Localized: Tarefas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003601
+    m_Localized: "Dist\xE2ncia"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003600
+    m_Localized: "Dura\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003599
+    m_Localized: "Selecione um mapa com expedi\xE7\xF5es salvas para ver o hist\xF3rico."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003598
+    m_Localized: "Detalhes da expedi\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003597
+    m_Localized: Sem dados recentes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003596
+    m_Localized: Abandonou
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003595
+    m_Localized: Morreu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003594
+    m_Localized: Ceifado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003593
+    m_Localized: Recuou
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003592
+    m_Localized: "Passe o cursor para ver \xB7 clique ou toque para selecionar"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003591
+    m_Localized: "N\xFAmero da expedi\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003590
+    m_Localized: "N\xE3o h\xE1 expedi\xE7\xF5es salvas para esta sele\xE7\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003589
+    m_Localized: Todos os mapas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003588
+    m_Localized: Por minuto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003587
+    m_Localized: Totais
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003586
+    m_Localized: "Informa\xE7\xF5es da vers\xE3o indispon\xEDveis."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003585
+    m_Localized: "Sua posi\xE7\xE3o: {0:N0} de {1:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003584
+    m_Localized: "Voc\xEA \xB7 {0:N0} classificados"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003583
+    m_Localized: "Voc\xEA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003582
+    m_Localized: "Ranking indispon\xEDvel. Tente atualizar."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003581
+    m_Localized: "Sua pontua\xE7\xE3o aparecer\xE1 aqui ap\xF3s o envio."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003580
+    m_Localized: "Nenhuma pontua\xE7\xE3o enviada. Exibindo os melhores jogadores."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003579
+    m_Localized: "Ainda sem pontua\xE7\xF5es."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003578
+    m_Localized: "Carregando\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003577
+    m_Localized: Tempo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003576
+    m_Localized: Tarefas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003575
+    m_Localized: Jogador
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003574
+    m_Localized: "Posi\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003573
+    m_Localized: Atualizar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003572
+    m_Localized: Perto de mim
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003571
+    m_Localized: Melhores jogadores
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003570
+    m_Localized: "Tarefas conclu\xEDdas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003569
+    m_Localized: "Tempo de conclus\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003568
+    m_Localized: 'Obtidos: {0} ({1})
+
+      Por minuto: {2} ({3})'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003567
+    m_Localized: 'Dano / s: {0:N0}
+
+      Abates / min: {1:N0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003566
+    m_Localized: "Toque fora para fechar\nDist\xE2ncia / min: {0:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003565
+    m_Localized: "Detalhamento da expedi\xE7\xE3o\n<size=75%>+{0:0}% Recursos</size>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003564
+    m_Localized: Toque fora para fechar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003563
+    m_Localized: "Resumo da expedi\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003562
+    m_Localized: Longe demais
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003561
+    m_Localized: Morto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003560
+    m_Localized: Bloqueado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003559
+    m_Localized: "Voc\xEA morreu..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003558
+    m_Localized: "Voc\xEA foi ceifado..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003557
+    m_Localized: "Detalhamento da expedi\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003556
+    m_Localized: "Detalhamento da expedi\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003555
+    m_Localized: Voltar ao morrer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003554
+    m_Localized: "Taxa base (b\xF4nus de retorno)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003553
+    m_Localized: Dad-O-Cado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003552
+    m_Localized: Ver resumo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003551
+    m_Localized: "Voltar \xE0 cidade"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003550
+    m_Localized: Reiniciar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003549
+    m_Localized: 'xp: {0:N0} / {1:N0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003548
+    m_Localized: "Eva \xB7 N\xEDvel {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003547
+    m_Localized: "Dispon\xEDvel: {0} \xB7 {1} de ensopado / unidade"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003546
+    m_Localized: Aumentar quantidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003545
+    m_Localized: Diminuir quantidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003544
+    m_Localized: Fechar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003543
+    m_Localized: "Pausar degusta\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003542
+    m_Localized: "Come\xE7ar degusta\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003541
+    m_Localized: "Adicionar ao Caldeir\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003540
+    m_Localized: "M\xE1x."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003539
+    m_Localized: "Detalhes da degusta\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003538
+    m_Localized: Escolha um alimento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003537
+    m_Localized: "Resultados da degusta\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003536
+    m_Localized: "N\xEDvel atual \u2192 Pr\xF3ximo n\xEDvel"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003535
+    m_Localized: Chances de recompensa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003534
+    m_Localized: Ensopado / rolagem
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003533
+    m_Localized: Rolagens / s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003532
+    m_Localized: Ensopado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003531
+    m_Localized: "Degusta\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003530
+    m_Localized: Ensopado obtido
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003529
+    m_Localized: Quantidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003528
+    m_Localized: Ingredientes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003527
+    m_Localized: "Cole\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003526
+    m_Localized: "Cole\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003525
+    m_Localized: "Degusta\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003524
+    m_Localized: Ingredientes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003523
+    m_Localized: Geral
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003522
+    m_Localized: Itens
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003521
+    m_Localized: Tarefas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003520
+    m_Localized: Inimigos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003519
+    m_Localized: "Gr\xE1ficos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003518
+    m_Localized: "Posi\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003517
+    m_Localized: Geral
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003516
+    m_Localized: Combinar atributos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003515
+    m_Localized: Parar por Vastium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003514
+    m_Localized: "Informa\xE7\xF5es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003513
+    m_Localized: "Invent\xE1rio"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003512
+    m_Localized: Substituir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003511
+    m_Localized: "Criar at\xE9 melhorar"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003510
+    m_Localized: Criar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003509
+    m_Localized: "N\xFAcleos dispon\xEDveis"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003508
+    m_Localized: "Cria\xE7\xF5es dispon\xEDveis"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003507
+    m_Localized: "Compara\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003506
+    m_Localized: Totais do equipamento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003505
+    m_Localized: "N\xFAcleos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003504
+    m_Localized: Equipamento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003503
+    m_Localized: "??? | <size=80%>Desbloqueia no n\xEDvel {0}</size>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003502
+    m_Localized: "{0} | <size=80%>Desbloqueado no n\xEDvel {1}</size>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003501
+    m_Localized: 'Conjunto: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003500
+    m_Localized: 'Ativo: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003499
+    m_Localized: 'Passivo: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003498
+    m_Localized: "Desbloqueia no n\xEDvel {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003497
+    m_Localized: "Melhora no n\xEDvel {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003496
+    m_Localized: "<b>B\xF4nus de {0}</b>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003495
+    m_Localized: "<b><smallcaps>Espa\xE7os ativos: {0}({1})</smallcaps></b>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003494
+    m_Localized: '<b>Nv.: {0}</b>'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003493
+    m_Localized: <b><smallcaps>{0} | Nv. {1}</smallcaps></b>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003492
+    m_Localized: "Todos os b\xF4nus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003491
+    m_Localized: "N\xEDvel {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003490
+    m_Localized: "{0} - N\xEDvel {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003489
+    m_Localized: "{0} \xB7 N\xEDvel {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003488
+    m_Localized: "N\xE3o descoberto"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003487
+    m_Localized: Selecione um recurso
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003486
+    m_Localized: Ativo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003485
+    m_Localized: "Hist\xF3rico de miss\xF5es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003484
+    m_Localized: "Conclu\xEDdo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003483
+    m_Localized: 'Recompensa: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003482
+    m_Localized: Fixar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003481
+    m_Localized: Fixado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003480
+    m_Localized: Entregar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003479
+    m_Localized: Pronto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003478
+    m_Localized: Certo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003477
+    m_Localized: "{0} \xB7 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003476
+    m_Localized: "Miss\xF5es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003475
+    m_Localized: Oferece {0}% de chance de invocar {1} Ecos que fazem tarefas de {2} por {3:0.#} segundos.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003474
+    m_Localized: Oferece {0}% de chance de invocar um Eco que faz tarefas de {1} por {2:0.#} segundos.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003473
+    m_Localized: Oferece {0}% de chance de invocar {1} Ecos que ajudam no combate por {2:0.#} segundos.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003472
+    m_Localized: Oferece {0}% de chance de invocar um Eco que ajuda no combate por {1:0.#} segundos.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003471
+    m_Localized: "v\xE1rias"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003470
+    m_Localized: "Um dia eu lavava o carro com meu filho. Ele virou e perguntou: \"Pai, por que voc\xEA n\xE3o usa uma esponja em vez de mim?\""
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003469
+    m_Localized: "Por que os navios noruegueses t\xEAm c\xF3digo de barras? Para escanear quando chegam ao porto... escaneia-vindo, escandinavo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003468
+    m_Localized: "Dois papagaios est\xE3o num poleiro.\nUm pergunta ao outro: \u201CVoc\xEA est\xE1 sentindo cheiro de peixe?\u201D"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003467
+    m_Localized: "Por que ningu\xE9m ouve Pterry, o pterod\xE1ctilo, indo ao banheiro?\nPorque o \"p\" dele \xE9 silencioso."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003466
+    m_Localized: "Soube do matem\xE1tico que tem medo de n\xFAmeros negativos?\nEle para no zero para evit\xE1-los."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003465
+    m_Localized: "Por que um c\xEDrculo tem 360\xB0?\nPassou tempo demais fazendo cursos na universidade."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003464
+    m_Localized: "Qual a diferen\xE7a entre um di\xE2metro e um raio?\nUm raio."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003463
+    m_Localized: "Piadas de elevador apertam todos os meus bot\xF5es.\nElas me deixam para baixo.\n\nS\xE3o ruins em tantos n\xEDveis."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003462
+    m_Localized: "Por que elevadores t\xEAm nomes diferentes no Reino Unido e nos EUA?\nPorque fomos elevados de formas diferentes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003461
+    m_Localized: "Tenho pavor de elevadores\u2026 Estou tomando degraus para evit\xE1-los."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003460
+    m_Localized: "Por que tubar\xF5es vivem em \xE1gua salgada?\n\xC1gua com pimenta faz eles espirrarem."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003459
+    m_Localized: "Por que a galinha foi \xE0 sess\xE3o esp\xEDrita?\nPara chegar ao outro lado."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003458
+    m_Localized: "Ficou sabendo? Inventei uma palavra nova!\n\"pl\xE1gio\""
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003457
+    m_Localized: "Que \xE1rvore cabe na palma da m\xE3o?\nUma palmeira"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003456
+    m_Localized: "Como se chama um professor que nunca solta gases em p\xFAblico?\nUm tutor privado."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003455
+    m_Localized: "Por que a crian\xE7a jogou manteiga pela janela?\nPara ver uma manteiga voadora, uma butter-fly."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003454
+    m_Localized: "O que diz um gato bil\xEDngue?\nAu-au"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003453
+    m_Localized: 'O que o oceano diz ao ver uma tigela de sal?
+
+      Vejo sal marinho.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003452
+    m_Localized: "Qual a diferen\xE7a entre uma batata-doce quente e um porco jogado pela janela?\nUma \xE9 batata assada; o outro \xE9 presunto lan\xE7ado. "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003451
+    m_Localized: "Por que gaivotas voam perto do mar?\nPorque, perto da ba\xEDa, seriam bagels."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003450
+    m_Localized: "Por que mergulhadores caem dos barcos de costas?\nPorque, se ca\xEDssem para a frente, ainda estariam no barco."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003449
+    m_Localized: "Um gr\xE3o de caf\xE9 senta ao meu lado no trabalho. N\xE3o produzimos muito; ele fala latte demais."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003448
+    m_Localized: "Como se chama uma planta movida a eletricidade? Uma usina de for\xE7a."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003447
+    m_Localized: "Quem \xE9 Jack e por que ele tem um mento s\xF3?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003446
+    m_Localized: Quando uma piada vira piada de pai? Quando fica aparente.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003445
+    m_Localized: "Vi algu\xE9m parando em cima de um p\xE3o outro dia. Estava numa boa rosca."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003444
+    m_Localized: "Perguntei ao fazendeiro por que ele estava com dor de cabe\xE7a. Ele respondeu: \"Enxa-gr\xE3os\"."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003443
+    m_Localized: Por que o mexicano jogou a esposa da ponte? Tequila!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003442
+    m_Localized: "Conhe\xE7o 25 letras do alfabeto. S\xF3 n\xE3o sei o porqu\xEA do y."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003441
+    m_Localized: "O que acontece quando algu\xE9m d\xE1 tapas em voc\xEA numa frequ\xEAncia alta? D\xF3i em hertz."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003440
+    m_Localized: "Joguei meu vizinho num reator nuclear e agora ele morreu. O que fa\xE7o?! B\xE1rio \u2014 enterre-o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003439
+    m_Localized: "Como se chama um peixe armado? Um l\xFAcio com lan\xE7a."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003438
+    m_Localized: "Soube do restaurante novo, Karma? N\xE3o tem card\xE1pio; voc\xEA recebe o que merece."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003437
+    m_Localized: "O que Batman pediu no bar? Justi\xE7a \u2014 s\xF3 gelo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003436
+    m_Localized: "Ia contar uma piada sobre viagem no tempo, mas voc\xEAs n\xE3o gostaram."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003435
+    m_Localized: Como se chama um lobisomem youtuber? Um lican-inscreva-se.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003434
+    m_Localized: "Uma vez pintei manchas num d\xE1lmata albino. Era o m\xEDnimo que eu podia fazer."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003433
+    m_Localized: Eu, por I, gosto de algarismos romanos.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003432
+    m_Localized: "Espa\xE7o para carga? N\xE3o. Estrada para carga."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003431
+    m_Localized: "Como se chama uma mulher com uma perna s\xF3? Eileen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003430
+    m_Localized: esta habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003429
+    m_Localized: atributo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003428
+    m_Localized: "+{0} de ensopado por degusta\xE7\xE3o; cartas obtidas x{1}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003427
+    m_Localized: "v\xE1rias"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003426
+    m_Localized: "v\xE1rias"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003425
+    m_Localized: "v\xE1rias"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003424
+    m_Localized: "v\xE1rias"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003423
+    m_Localized: "v\xE1rias"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003422
+    m_Localized: "v\xE1rias"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003421
+    m_Localized: "v\xE1rias"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003420
+    m_Localized: "v\xE1rias"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003419
+    m_Localized: esta habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003418
+    m_Localized: "Aumenta a experi\xEAncia de todas as habilidades em {0}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003417
+    m_Localized: "Aumenta a experi\xEAncia de {0} em {1}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003416
+    m_Localized: esta habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003415
+    m_Localized: "Aumenta a experi\xEAncia de todas as habilidades em {0}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003414
+    m_Localized: "Aumenta a experi\xEAncia de {0} em {1}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003413
+    m_Localized: esta habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003412
+    m_Localized: "Aumenta a experi\xEAncia de todas as habilidades em {0}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003411
+    m_Localized: "Aumenta a experi\xEAncia de {0} em {1}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003410
+    m_Localized: esta habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003409
+    m_Localized: "Aumenta a experi\xEAncia de todas as habilidades em {0}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003408
+    m_Localized: "Aumenta a experi\xEAncia de {0} em {1}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003407
+    m_Localized: esta habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003406
+    m_Localized: "Aumenta a experi\xEAncia de todas as habilidades em {0}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003405
+    m_Localized: "Aumenta a experi\xEAncia de {0} em {1}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003404
+    m_Localized: esta habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003403
+    m_Localized: "Aumenta a experi\xEAncia de todas as habilidades em {0}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003402
+    m_Localized: "Aumenta a experi\xEAncia de {0} em {1}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003401
+    m_Localized: esta habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003400
+    m_Localized: Aumenta todos os recursos obtidos em {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003399
+    m_Localized: Aumenta os recursos obtidos de {0} em {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003398
+    m_Localized: esta habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003397
+    m_Localized: Aumenta todos os recursos obtidos em {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003396
+    m_Localized: Aumenta os recursos obtidos de {0} em {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003395
+    m_Localized: esta habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003394
+    m_Localized: Aumenta todos os recursos obtidos em {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003393
+    m_Localized: Aumenta os recursos obtidos de {0} em {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003392
+    m_Localized: esta habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003391
+    m_Localized: Aumenta todos os recursos obtidos em {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003390
+    m_Localized: Aumenta os recursos obtidos de {0} em {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003389
+    m_Localized: esta habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003388
+    m_Localized: Aumenta todos os recursos obtidos em {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003387
+    m_Localized: Aumenta os recursos obtidos de {0} em {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003386
+    m_Localized: esta habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003385
+    m_Localized: Aumenta todos os recursos obtidos em {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003384
+    m_Localized: Aumenta os recursos obtidos de {0} em {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003383
+    m_Localized: esta habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003382
+    m_Localized: Aumenta todos os recursos obtidos em {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003381
+    m_Localized: Aumenta os recursos obtidos de {0} em {1}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003380
+    m_Localized: Oferece {0}% de chance de ativar.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003379
+    m_Localized: Oferece {0}% de chance de ativar.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003378
+    m_Localized: Oferece {0}% de chance de ativar.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003377
+    m_Localized: Oferece {0}% de chance de ativar.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003376
+    m_Localized: Oferece {0}% de chance de ativar.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003375
+    m_Localized: Aumenta {1} em {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003374
+    m_Localized: Aumenta {1} em {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003373
+    m_Localized: Aumenta {1} em {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003372
+    m_Localized: Aumenta {1} em {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003371
+    m_Localized: Aumenta {1} em {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003370
+    m_Localized: Aumenta {1} em {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003369
+    m_Localized: Aumenta {1} em {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003368
+    m_Localized: Aumenta {1} em {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003367
+    m_Localized: Lirium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003366
+    m_Localized: Vastium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003365
+    m_Localized: Idle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003364
+    m_Localized: Erif
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003363
+    m_Localized: Nori
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003362
+    m_Localized: Copium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003361
+    m_Localized: Dlog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003360
+    m_Localized: Eznorb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003359
+    m_Localized: Movimento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003358
+    m_Localized: "Cr\xEDtico"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003357
+    m_Localized: Dano
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003356
+    m_Localized: Vida
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003355
+    m_Localized: "Regenera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003354
+    m_Localized: Velocidade de ataque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003353
+    m_Localized: "Dano cr\xEDtico"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003352
+    m_Localized: Defesa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003351
+    m_Localized: XP extra de Corte de Madeira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003350
+    m_Localized: "Eco de Minera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003349
+    m_Localized: Eco de Saque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003348
+    m_Localized: Recursos extras de Saque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003347
+    m_Localized: XP extra de Combate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003346
+    m_Localized: "Recursos extras de Minera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003345
+    m_Localized: XP extra de Cultivo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003344
+    m_Localized: Recursos extras de Pesca
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003343
+    m_Localized: XP extra de Saque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003342
+    m_Localized: Eco de Pesca
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003341
+    m_Localized: Eco de Cultivo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003340
+    m_Localized: Vida
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003339
+    m_Localized: Recursos extras de Cultivo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003338
+    m_Localized: "Regenera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003337
+    m_Localized: "XP extra de Minera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003336
+    m_Localized: "Tumulto na degusta\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003335
+    m_Localized: Dano
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003334
+    m_Localized: Movimento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003333
+    m_Localized: "Dano cr\xEDtico"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003332
+    m_Localized: Eco de Combate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003331
+    m_Localized: Recursos extras de Corte de Madeira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003330
+    m_Localized: Eco de Corte de Madeira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003329
+    m_Localized: XP extra de Pesca
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003328
+    m_Localized: "N\xFAcleo de Copium"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003327
+    m_Localized: Lingote de Dlog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003326
+    m_Localized: "Peda\xE7os de Erif"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003325
+    m_Localized: "Alho-por\xF3"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003324
+    m_Localized: "Peda\xE7os de Idle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003323
+    m_Localized: Watermelone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003322
+    m_Localized: "Peda\xE7os de Dlog"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003321
+    m_Localized: Ovo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003320
+    m_Localized: Sir Splashford III
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003319
+    m_Localized: "N\xFAcleo de Idle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003318
+    m_Localized: Lingote de Erif
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003317
+    m_Localized: Cristal de Erif
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003316
+    m_Localized: Niblet, o Audaz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003315
+    m_Localized: Cristal de Idle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003314
+    m_Localized: Pena
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003313
+    m_Localized: "P\xEAssego"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003312
+    m_Localized: Cristal de Dlog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003311
+    m_Localized: Nabo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003310
+    m_Localized: Flipzoid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003309
+    m_Localized: Pastinaca
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003308
+    m_Localized: "N\xFAcleo de Vastium"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003307
+    m_Localized: "N\xFAcleo de Nori"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003306
+    m_Localized: Wigglelittle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003305
+    m_Localized: Lingote de Nori
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003304
+    m_Localized: Frango
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003303
+    m_Localized: Couro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003302
+    m_Localized: Milho
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003301
+    m_Localized: Lingote de Vastium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003300
+    m_Localized: Tora
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003299
+    m_Localized: Graveto de carvalho
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003298
+    m_Localized: Tora de abeto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003297
+    m_Localized: Graveto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003296
+    m_Localized: Bloopicus Maximus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003295
+    m_Localized: Lingote de Eznorb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003294
+    m_Localized: "Peda\xE7os de Lirium"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003293
+    m_Localized: "Comil\xE3o de lama"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003292
+    m_Localized: "Ma\xE7\xE3"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003291
+    m_Localized: Carne de porco
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003290
+    m_Localized: Cristal de Nori
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003289
+    m_Localized: Muda de pereira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003288
+    m_Localized: Pepino
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003287
+    m_Localized: "Peda\xE7os de Copium"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003286
+    m_Localized: Chillie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003285
+    m_Localized: "Graveto de b\xE9tula"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003284
+    m_Localized: Cereja
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003283
+    m_Localized: Tomate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003282
+    m_Localized: Cristal de Copium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003281
+    m_Localized: "N\xFAcleo de Eznorb"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003280
+    m_Localized: Rabanete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003279
+    m_Localized: Morango
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003278
+    m_Localized: Cristal de Lirium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003277
+    m_Localized: Pumking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003276
+    m_Localized: Trigo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003275
+    m_Localized: Flippy Floppy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003274
+    m_Localized: "Peda\xE7os de Eznorb"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003273
+    m_Localized: Osso
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003272
+    m_Localized: Pedra
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003271
+    m_Localized: "Peda\xE7os de Nori"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003270
+    m_Localized: Tora de carvalho
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003269
+    m_Localized: Snapjaw Jr.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003268
+    m_Localized: Bife
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003267
+    m_Localized: "Tora de b\xE9tula"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003266
+    m_Localized: Lingote de Copium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003265
+    m_Localized: Lingote de Lirium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003264
+    m_Localized: Muda de pessegueiro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003263
+    m_Localized: Muda de macieira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003262
+    m_Localized: Lingote de Idle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003261
+    m_Localized: "N\xFAcleo de Dlog"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003260
+    m_Localized: Cristal de Eznorb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003259
+    m_Localized: Muda de cerejeira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003258
+    m_Localized: Alface
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003257
+    m_Localized: Carne de carneiro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003256
+    m_Localized: Funion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003255
+    m_Localized: Pimenta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003254
+    m_Localized: "N\xFAcleo de Lirium"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003253
+    m_Localized: Gosma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003252
+    m_Localized: Pera
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003251
+    m_Localized: Cristal de Vastium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003250
+    m_Localized: "N\xFAcleo de Erif"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003249
+    m_Localized: Cenoura
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003248
+    m_Localized: Graveto de abeto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003247
+    m_Localized: Batata
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003246
+    m_Localized: "Peda\xE7os de Vastium"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003245
+    m_Localized: "B\xE9tula grande"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003244
+    m_Localized: Abeto grande
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003243
+    m_Localized: "Carvalho m\xE9dio"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003242
+    m_Localized: "B\xE9tula m\xE9dia"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003241
+    m_Localized: Carvalho grande
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003240
+    m_Localized: "Abeto m\xE9dio"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003239
+    m_Localized: "\xC1rvore grande"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003238
+    m_Localized: "\xC1rvore m\xE9dia"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003237
+    m_Localized: "Alho-por\xF3"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003236
+    m_Localized: Nabo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003235
+    m_Localized: Pastinaca
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003234
+    m_Localized: Milho
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003233
+    m_Localized: Wartermelone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003232
+    m_Localized: Pepino
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003231
+    m_Localized: Chillie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003230
+    m_Localized: Tomate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003229
+    m_Localized: Rabanete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003228
+    m_Localized: Morango
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003227
+    m_Localized: Pumking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003226
+    m_Localized: Trigo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003225
+    m_Localized: Pereira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003224
+    m_Localized: Cerejeira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003223
+    m_Localized: Pessegueiro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003222
+    m_Localized: Macieira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003221
+    m_Localized: Alface
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003220
+    m_Localized: Funion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003219
+    m_Localized: Pimenta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003218
+    m_Localized: Cenoura
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003217
+    m_Localized: Batata
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003216
+    m_Localized: "Min\xE9rio de Copium"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003215
+    m_Localized: "Min\xE9rio de Idle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003214
+    m_Localized: "Min\xE9rio de Lirium"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003213
+    m_Localized: "Min\xE9rio de Vastium"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003212
+    m_Localized: "Min\xE9rio de Dlog"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003211
+    m_Localized: "Min\xE9rio de Erif"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003210
+    m_Localized: "Min\xE9rio de Eznorb"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003209
+    m_Localized: "Min\xE9rio de Nori"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003208
+    m_Localized: "Ba\xFA de Vastium"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003207
+    m_Localized: "Ba\xFA de Nori"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003206
+    m_Localized: "Ba\xFA de Erif"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003205
+    m_Localized: "Ba\xFA de Dlog"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003204
+    m_Localized: "Ba\xFA de Idle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003203
+    m_Localized: "Ba\xFA de Eznorb"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003202
+    m_Localized: "Ba\xFA de Copium"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003201
+    m_Localized: "Ba\xFA de Lirium"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003200
+    m_Localized: Sir Splashford III
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003199
+    m_Localized: Niblet, o Audaz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003198
+    m_Localized: Flipzoid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003197
+    m_Localized: Wigglelittle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003196
+    m_Localized: Bloopicus Maximus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003195
+    m_Localized: "Comil\xE3o de lama"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003194
+    m_Localized: Flippy Floppy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003193
+    m_Localized: Snapjaw Jr.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003192
+    m_Localized: XP extra de Pesca
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003191
+    m_Localized: Eco de Corte de Madeira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003190
+    m_Localized: Recursos extras de Corte de Madeira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003189
+    m_Localized: "Tumulto na degusta\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003188
+    m_Localized: Recursos extras de Cultivo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003187
+    m_Localized: Eco de Cultivo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003186
+    m_Localized: XP extra de Saque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003185
+    m_Localized: XP extra de Corte de Madeira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003184
+    m_Localized: "Eco de Minera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003183
+    m_Localized: "Recursos extras de Minera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003182
+    m_Localized: XP extra de Combate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003181
+    m_Localized: Recursos extras de Saque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003180
+    m_Localized: Eco de Saque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003179
+    m_Localized: Eco de Combate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003178
+    m_Localized: Movimento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003177
+    m_Localized: "Regenera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003176
+    m_Localized: Vida
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003175
+    m_Localized: "Dano cr\xEDtico"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003174
+    m_Localized: Dano
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003173
+    m_Localized: "XP extra de Minera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003172
+    m_Localized: Eco de Pesca
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003171
+    m_Localized: Recursos extras de Pesca
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003170
+    m_Localized: XP extra de Cultivo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003169
+    m_Localized: Corte de Madeira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003168
+    m_Localized: Pesca
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003167
+    m_Localized: "Minera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003166
+    m_Localized: Cultivo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003165
+    m_Localized: Combate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003164
+    m_Localized: Saque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003163
+    m_Localized: Minigosma verde
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003162
+    m_Localized: Minigosma vermelha
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003161
+    m_Localized: Minigosma azul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003160
+    m_Localized: Minigosma rosa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003159
+    m_Localized: Minigosma amarela
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003158
+    m_Localized: Gosma amarela
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003157
+    m_Localized: Gosma verde
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003156
+    m_Localized: Gosma azul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003155
+    m_Localized: Gosma rosa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003154
+    m_Localized: Gosma vermelha
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003153
+    m_Localized: Gosma azul grande
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003152
+    m_Localized: Gosma verde grande
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003151
+    m_Localized: Gosma rosa grande
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003150
+    m_Localized: Gosma vermelha grande
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003149
+    m_Localized: Gosma amarela grande
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003148
+    m_Localized: Porco
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003147
+    m_Localized: Frango
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003146
+    m_Localized: Ovelha
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003145
+    m_Localized: Vaca
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003144
+    m_Localized: Esqueleto espadachim
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003143
+    m_Localized: Esqueleto mago
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003142
+    m_Localized: Esqueleto arqueiro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003141
+    m_Localized: 'Abates: {0}
+
+      Dano causado: {1}
+
+      Mortes: {2}
+
+      Dano recebido: {3}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003140
+    m_Localized: "Passos dados: {0}\nExpedi\xE7\xE3o mais longa: {1}\nTarefas conclu\xEDdas: {2}\nRecursos coletados: {3}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003139
+    m_Localized: "Passos dados: {0}\nMais abates: {1}\nTarefas conclu\xEDdas: {2}\nRecursos coletados: {3}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003138
+    m_Localized: +{0:0}% Recursos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003137
+    m_Localized: Recuo agendado +{0:0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003136
+    m_Localized: "Voc\xEA morreu..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003135
+    m_Localized: "Voc\xEA foi ceifado..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003134
+    m_Localized: Agendado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003133
+    m_Localized: Voltar ao morrer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003132
+    m_Localized: "Voltar \xE0 cidade"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003131
+    m_Localized: Agendar recuo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003130
+    m_Localized: Recuando...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003129
+    m_Localized: Nv. {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003128
+    m_Localized: '{0} Nv. {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003127
+    m_Localized: "Recuou com {0} abates e {1:0}% de b\xF4nus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003126
+    m_Localized: "Dist\xE2ncia de Ceifa: {0}<sprite=9>{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003125
+    m_Localized: Morreu {0} vezes, ceifado por Carl {1} vezes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003124
+    m_Localized: "Voc\xEA viajou por {0}, dando um total de {1} passos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003123
+    m_Localized: Habilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003122
+    m_Localized: <size=8>{0} {1}<sprite=194>{2}</size>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003121
+    m_Localized: <size=8>{0} desbloqueado!</size>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003120
+    m_Localized: '{0} Nv. {1}<sprite=194>{2}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003119
+    m_Localized: "N\xEDvel {0}<sprite=194>{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003118
+    m_Localized: "O arquivo {0} est\xE1 temporariamente indispon\xEDvel ou n\xE3o p\xF4de ser aplicado ao jogo em execu\xE7\xE3o. O salvamento autom\xE1tico est\xE1 desativado, e os registros dos estados salvos existentes foram preservados. Tente novamente ap\xF3s fechar ferramentas de sincroniza\xE7\xE3o ou backup que possam estar usando os arquivos.\n\n{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003117
+    m_Localized: "O arquivo {0} tem um conflito confirmado de integridade ou de autoridade da nuvem. Tentar novamente \xE9 a primeira a\xE7\xE3o mais segura, e todos os estados salvos existentes permanecem preservados. Se voc\xEA escolher explicitamente come\xE7ar de novo, ser\xE1 criada uma nova linhagem na nuvem sem apagar os arquivos antigos.\n\n{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003116
+    m_Localized: "O arquivo {0} foi gravado por uma vers\xE3o mais recente do jogo. Ele n\xE3o foi alterado. Instale a vers\xE3o mais recente e tente novamente, ou examine a pasta de saves. Come\xE7ar de novo est\xE1 desativado para proteger esse progresso.\n\n{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003115
+    m_Localized: Abrir pasta de saves
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003114
+    m_Localized: "Manter arquivos antigos e come\xE7ar de novo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003113
+    m_Localized: Tentar novamente
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003112
+    m_Localized: "Save temporariamente indispon\xEDvel"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003111
+    m_Localized: "Recupera\xE7\xE3o do save necess\xE1ria"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003110
+    m_Localized: "Save de vers\xE3o mais recente"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003109
+    m_Localized: 'Falha ao colar: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003108
+    m_Localized: 'Falha ao copiar: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003107
+    m_Localized: "Exce\xE7\xE3o na importa\xE7\xE3o: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003106
+    m_Localized: 'Falha ao importar: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003105
+    m_Localized: 'Falha ao exportar: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003104
+    m_Localized: "Texto de exporta\xE7\xE3o copiado"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003103
+    m_Localized: "Importado com seguran\xE7a para o disco; reinicie o jogo ou use Tentar novamente para terminar de carreg\xE1-lo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003102
+    m_Localized: Nada para importar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003101
+    m_Localized: "Exporta\xE7\xE3o de resgate copiada da mem\xF3ria; o salvamento em disco falhou"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003100
+    m_Localized: "Exportado para a \xE1rea de transfer\xEAncia"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003099
+    m_Localized: 'Tempo de jogo: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003098
+    m_Localized: "Criado na vers\xE3o: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003097
+    m_Localized: Arquivo {0} | {1:0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003096
+    m_Localized: Arquivo {0} | {1:0}% - Ativo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003095
+    m_Localized: "\xDAltima sess\xE3o: {0} \u2022 h\xE1 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003094
+    m_Localized: "\xDAltimo save: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003093
+    m_Localized: "Arquivo {0} - Recupera\xE7\xE3o necess\xE1ria"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003092
+    m_Localized: Desconhecido
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003091
+    m_Localized: "\xDAltima sess\xE3o: Nunca"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003090
+    m_Localized: "\xDAltimo save: Nunca"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003089
+    m_Localized: "Tempo de jogo: Indispon\xEDvel"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003088
+    m_Localized: 'Tempo de jogo: Nenhum'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003087
+    m_Localized: "Dano causado \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003086
+    m_Localized: "Dano recebido \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003085
+    m_Localized: "Itens obtidos \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003084
+    m_Localized: 'FPS: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003083
+    m_Localized: 'FPS: VSync'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003082
+    m_Localized: Desligado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003081
+    m_Localized: Ligado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003080
+    m_Localized: Carregar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003079
+    m_Localized: Excluir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003078
+    m_Localized: Salvar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003077
+    m_Localized: Limpar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003076
+    m_Localized: Executar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003075
+    m_Localized: Fechar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003074
+    m_Localized: Console
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003073
+    m_Localized: Carregando...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003072
+    m_Localized: "Encontre-me na cidade. Tenho algo especial para dar a voc\xEA e preciso de ajuda para juntar umas toras."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003071
+    m_Localized: Mas preciso da madeira perfeita para minha casa...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003070
+    m_Localized: "Vim procurar umas \xE1rvores para derrubar. "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003069
+    m_Localized: "Nyeh heh heh, aventureiro. Sou a bruxa que vai ensinar voc\xEA a cuidar do solo. O qu\xEA, achou que eu ia fazer po\xE7\xF5es? Saia daqui com esses estere\xF3tipos. E traga cinco rabanetes bem crescidos. Como prova, definitivamente n\xE3o para minha geleia de rabanete."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003068
+    m_Localized: "Vou voltar para minhas minas. Encontre-me l\xE1 se quiser ver MIN\xC9RIO de verdade!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003067
+    m_Localized: ELE ESQUECEU DE DIZER QUE ERA ESSA PORCARIA!!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003066
+    m_Localized: "Hmpf... quando Barkley disse que havia min\xE9rio por aqui..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003065
+    m_Localized: Eva quer quantos rabanetes!?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003064
+    m_Localized: Sua ajuda para lidar com eles seria muito bem-vinda...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003063
+    m_Localized: Mas parece que as gosmas vieram mais longe que de costume.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003062
+    m_Localized: Viemos procurar sementes novas.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003061
+    m_Localized: "Prazer em conhecer voc\xEA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003060
+    m_Localized: "Aqui est\xE1 uma espada que fiz! Vou voltar \xE0 cidade."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003059
+    m_Localized: 'Acho que tenho mais jeito para criar equipamentos do que para lutar com esses caras. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003058
+    m_Localized: "Olha voc\xEA a\xED, irm\xE3o! "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003057
+    m_Localized: "\xC9 necess\xE1rio n\xEDvel {0} dos g\xEAmeos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003056
+    m_Localized: "Esta a\xE7\xE3o dos Campos est\xE1 indispon\xEDvel ({0})."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003055
+    m_Localized: Canteiro {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003054
+    m_Localized: Lote de pomar {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003053
+    m_Localized: '{0:N0} {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003052
+    m_Localized: Sementes de {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003051
+    m_Localized: "Fonte de coleta ainda inacess\xEDvel."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003050
+    m_Localized: Faltam fontes de coleta.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003049
+    m_Localized: "Conclua a miss\xE3o de constru\xE7\xE3o anterior."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003048
+    m_Localized: "Constru\xE7\xE3o desconhecida."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003047
+    m_Localized: Prepare os canteiros antes de plantar.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003046
+    m_Localized: "J\xE1 h\xE1 uma planta crescendo neste canteiro."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003045
+    m_Localized: Primeiro encontre um pacote de sementes de rabanete numa aventura.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003044
+    m_Localized: "Nenhum canteiro est\xE1 pronto para colher."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003043
+    m_Localized: "Volte \xE0 cidade para cuidar dos canteiros."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003042
+    m_Localized: "Junte os materiais de constru\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003041
+    m_Localized: Pronto para construir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003040
+    m_Localized: "Constru\xEDdo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003039
+    m_Localized: "Conhe\xE7a Flora e Tillman numa aventura"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003038
+    m_Localized: "Ou\xE7a a introdu\xE7\xE3o de Flora e Tillman"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003037
+    m_Localized: "Conclu\xEDdo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003036
+    m_Localized: "Conhe\xE7a Flora e Tillman"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003035
+    m_Localized: Entregar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003034
+    m_Localized: Focar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003033
+    m_Localized: 'Repetir: desligado'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003032
+    m_Localized: 'Repetir: ligado'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003031
+    m_Localized: Regar uma vez
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003030
+    m_Localized: Regado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003029
+    m_Localized: Selecionar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003028
+    m_Localized: Focar nos Campos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003027
+    m_Localized: Plantar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003026
+    m_Localized: Colher os prontos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003025
+    m_Localized: "{0} \xB7 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003024
+    m_Localized: "{0} \xB7 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003023
+    m_Localized: "{0} \xB7 G\xEAmeos {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003022
+    m_Localized: " \u2192 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003021
+    m_Localized: " \xB7 Selecione um canteiro vazio"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003020
+    m_Localized: "{0} \xB7 Exige Cultivo {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003019
+    m_Localized: "{0} \xB7 Cultivo {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003018
+    m_Localized: "Rendimento \xD7{0:0.00} \xB7 Tempo de crescimento \xD7{1:0.0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003017
+    m_Localized: '{0} / {1} XP'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003016
+    m_Localized: "{0} \xB7 Flora e Tillman \xB7 N\xEDvel {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003015
+    m_Localized: "G\u00eameos no n\u00edvel 20: colhe e replanta usando 9 pacotes de sementes do mesmo tipo ou 1 muda do mesmo tipo. Para quando os insumos acabam."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003014
+    m_Localized: "Volte \xE0 cidade para cuidar dos Campos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003013
+    m_Localized: Pronto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003012
+    m_Localized: Vazio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003011
+    m_Localized: "Bloqueado \xB7 requer constru\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003010
+    m_Localized: "Conclu\xEDdo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003009
+    m_Localized: "N\xE3o descoberto"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003008
+    m_Localized: Descubra primeiro esta semente ou muda.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003007
+    m_Localized: "Constru\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003006
+    m_Localized: Selecione sementes e um canteiro vazio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003005
+    m_Localized: Lotes de pomar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003004
+    m_Localized: "Campos \xB7 Flora e Tillman"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003003
+    m_Localized: "{0} de XP dos g\xEAmeos por colheita. Cresce enquanto voc\xEA joga."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003002
+    m_Localized: Campos na cidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003001
+    m_Localized: Canteiros
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000003000
+    m_Localized: Sementes e mudas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000001000
+    m_Localized: Campos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002000
+    m_Localized: "\xC1udio"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002001
+    m_Localized: Salva automaticamente o arquivo ativo a cada minuto. Trocar de arquivo salva seu progresso atual.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002002
+    m_Localized: "Voc\xEA pode alternar a conjura\xE7\xE3o autom\xE1tica clicando nos bot\xF5es dos espa\xE7os de poderes desbloqueados, fora do modo de atribui\xE7\xE3o. N\xE3o \xE9 poss\xEDvel atribuir poderes durante uma expedi\xE7\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002003
+    m_Localized: "Copiar para a \xE1rea de transfer\xEAncia"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002004
+    m_Localized: "Cr\xE9ditos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002005
+    m_Localized: Desenvolvedor principal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002006
+    m_Localized: Matthew Rushworth
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002007
+    m_Localized: "M\xFAsica e efeitos sonoros"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002008
+    m_Localized: 'Technishift '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002009
+    m_Localized: Efeitos sonoros
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002010
+    m_Localized: dqssq
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002011
+    m_Localized: Artista principal | Veja seu Itch.io!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002012
+    m_Localized: Kenmi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002013
+    m_Localized: 'Latimer Cross
+
+      Patrick Kennedy
+
+      solocommand'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002014
+    m_Localized: Um agradecimento especial aos meus apoiadores no Patreon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002015
+    m_Localized: "Campe\xF5es do desenvolvimento\nMantendo minha motiva\xE7\xE3o a cada dia de desenvolvimento!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002016
+    m_Localized: "MatHeadGetz | Torcendo com entusiasmo das arquibancadas!\nDragonmaster100 | Horas e horas de testes.\nQuackers | Grasnando quando necess\xE1rio.\nGLUTTONY | Incentivando meu corte de madeira."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002017
+    m_Localized: E obrigado a...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002018
+    m_Localized: Tela
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002019
+    m_Localized: Itens obtidos | 1.55s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002020
+    m_Localized: Dano do Caleb | 1.55s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002021
+    m_Localized: Exportar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002022
+    m_Localized: "Exportar espa\xE7o ativo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002023
+    m_Localized: Textos flutuantes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002024
+    m_Localized: Texto flutuante
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002025
+    m_Localized: Abrir local dos saves
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002026
+    m_Localized: 'FPS: 60'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002027
+    m_Localized: Tela cheia
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002028
+    m_Localized: Importar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002029
+    m_Localized: Importar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002030
+    m_Localized: "Importar para o espa\xE7o ativo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002031
+    m_Localized: Digite o texto...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002032
+    m_Localized: "Sei que este jogo \xE9 um pouco confuso no come\xE7o. Enquanto um tutorial completo est\xE1 sendo preparado, esta mensagem serve como uma orienta\xE7\xE3o r\xE1pida provis\xF3ria.\n\nAntes de tudo, este \xE9 um jogo idle: o progresso acontece automaticamente e em segundo plano enquanto voc\xEA faz outras coisas!\n\nVoc\xEA encontra informa\xE7\xF5es sobre os sistemas clicando no bot\xE3o Biblioteca no topo.\n\nAs miss\xF5es s\xE3o seu ponto de partida e ajudam a orientar seu progresso. \n\nSeu her\xF3i se desloca sozinho e conclui tarefas durante as expedi\xE7\xF5es.\n\nEspero que se divirta! Se ficar perdido, pode sempre falar comigo no Discord!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002033
+    m_Localized: Clique para fechar isto para sempre!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002034
+    m_Localized: Boas-vindas a Echoes of Vasteria
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002035
+    m_Localized: Planos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002036
+    m_Localized: "Miss\xF5es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002037
+    m_Localized: 'Tarefas
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002038
+    m_Localized: "N\xEDveis de itens"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002039
+    m_Localized: "Notas de atualiza\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002040
+    m_Localized: Forja
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002041
+    m_Localized: "Caldeir\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002042
+    m_Localized: Poderes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002043
+    m_Localized: 'Combate
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002044
+    m_Localized: Ceifa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002045
+    m_Localized: Ecos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002046
+    m_Localized: Recuo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002047
+    m_Localized: Carregar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002048
+    m_Localized: Carregar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002049
+    m_Localized: Carregar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002050
+    m_Localized: "Ingl\xEAs (en)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002051
+    m_Localized: Russo (ru)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002052
+    m_Localized: Geral
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002053
+    m_Localized: Fechar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002054
+    m_Localized: Conhecer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002055
+    m_Localized: "Pr\xF3ximo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002056
+    m_Localized: "M\xFAsica"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002057
+    m_Localized: Silenciar fora de foco
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002058
+    m_Localized: Aventura
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002059
+    m_Localized: Fixar automaticamente
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002060
+    m_Localized: Poderes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002061
+    m_Localized: "Caldeir\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002062
+    m_Localized: "Cr\xE9ditos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002063
+    m_Localized: Forja
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002064
+    m_Localized: Central
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002065
+    m_Localized: Terras de Cultivo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002066
+    m_Localized: Bosque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002067
+    m_Localized: Minas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002068
+    m_Localized: Rio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002069
+    m_Localized: Assombrado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002070
+    m_Localized: "Op\xE7\xF5es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002071
+    m_Localized: "Miss\xF5es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002072
+    m_Localized: Habilidades
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002073
+    m_Localized: Moradores
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002074
+    m_Localized: Biblioteca
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002075
+    m_Localized: "Colar da \xE1rea de transfer\xEAncia"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002076
+    m_Localized: Dano dos inimigos | 1.55s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002077
+    m_Localized: "Prefer\xEAncias"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002078
+    m_Localized: "Voc\xEA pode fixar objetivos tocando em qualquer parte do nome, da descri\xE7\xE3o ou da recompensa."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002079
+    m_Localized: "N\xE3o!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002080
+    m_Localized: Sair?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002081
+    m_Localized: Salvar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002082
+    m_Localized: Salvar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002083
+    m_Localized: Salvar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002084
+    m_Localized: Sobrescrever / excluir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002085
+    m_Localized: Arquivos de save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002086
+    m_Localized: Arquivos de save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002087
+    m_Localized: "Configura\xE7\xF5es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002088
+    m_Localized: Efeitos sonoros
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002089
+    m_Localized: Total de aumentos de habilidades
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002090
+    m_Localized: "\xDAltimo save: 13s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002091
+    m_Localized: 'Tempo de jogo: 12h 32m 16s'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002092
+    m_Localized: Arquivo 1 | 38.4%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002093
+    m_Localized: "\xDAltimo save: 13s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002094
+    m_Localized: 'Tempo de jogo: 12h 32m 16s'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002095
+    m_Localized: Arquivo 1 | 38.4%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002096
+    m_Localized: "\xDAltimo save: 13s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002097
+    m_Localized: 'Tempo de jogo: 12h 32m 16s'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002098
+    m_Localized: Arquivo 1 | 38.4%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002099
+    m_Localized: "A tradu\xE7\xE3o est\xE1 em desenvolvimento. Se decidir us\xE1-la, lembre-se de que parte do texto pode aparecer incorretamente, e muita coisa ainda estar\xE1 em ingl\xEAs"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002100
+    m_Localized: Vsync
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002101
+    m_Localized: "Largura m\xE1xima da interface"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000002102
+    m_Localized: Em janela
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004000
+    m_Localized: "Estat\xEDsticas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004001
+    m_Localized: Fechar janela
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004002
+    m_Localized: "Pacote de sementes: Rabanete"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004003
+    m_Localized: "Pacote de sementes: Milho"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004004
+    m_Localized: "Pacote de sementes: Trigo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004005
+    m_Localized: "Pacote de sementes: Watermelone"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004006
+    m_Localized: "Pacote de sementes: Cenoura"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004007
+    m_Localized: "Pacote de sementes: Batata"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004008
+    m_Localized: "Pacote de sementes: Tomate"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004009
+    m_Localized: "Pacote de sementes: Alface"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004010
+    m_Localized: "Pacote de sementes: Pepino"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004011
+    m_Localized: "Pacote de sementes: Alho-poró"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004012
+    m_Localized: "Pacote de sementes: Pastinaca"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004013
+    m_Localized: "Pacote de sementes: Pimenta"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004014
+    m_Localized: "Pacote de sementes: Chillie"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004015
+    m_Localized: "Pacote de sementes: Pumking"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004016
+    m_Localized: "Pacote de sementes: Morango"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004017
+    m_Localized: "Pacote de sementes: Funion"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004018
+    m_Localized: "Pacote de sementes: Nabo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004019
+    m_Localized: "Voc\u00ea precisa de 9 pacotes de sementes do mesmo tipo para semear um canteiro."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004020
+    m_Localized: "Primeiro, encontre uma muda adequada em uma aventura."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004021
+    m_Localized: "Requer {0} pacotes de sementes do mesmo tipo por canteiro."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004022
+    m_Localized: "Requer {0} muda do mesmo tipo por terreno."
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+using TimelessEchoes.UI.Toolkit;
+using System.Globalization;
 using System.Linq;
 using UnityEngine;
 using TimelessEchoes.Hero;
@@ -42,19 +43,22 @@ namespace TimelessEchoes.Skills
             if (hasSpecificSkills)
             {
                 if (configInstance.capableSkills.Count == 1)
-                    skillText = configInstance.capableSkills[0]?.skillName;
+                {
+                    var skill = configInstance.capableSkills[0];
+                    skillText = skill != null ? ToolkitLocalization.Text("skill." + skill.name, skill.skillName) : null;
+                }
                 else
-                    skillText = fallbackSkillLabel;
+                    skillText = ToolkitLocalization.Text("milestone-effect." + name + ".fallbackSkillLabel", fallbackSkillLabel);
             }
             else
             {
-                skillText = fallbackSkillLabel;
+                skillText = ToolkitLocalization.Text("milestone-effect." + name + ".fallbackSkillLabel", fallbackSkillLabel);
             }
 
             if (string.IsNullOrWhiteSpace(skillText) && !string.IsNullOrWhiteSpace(skillName))
                 skillText = skillName;
             if (string.IsNullOrWhiteSpace(skillText))
-                skillText = "various";
+                skillText = ToolkitLocalization.Text("milestone.various", "various");
 
             var echoStat = BaseStatService.GetStat("Echo Lifetime");
             float bonus = echoStat != null ? BaseStatService.GetTotalValue(echoStat) : 0f;
@@ -62,16 +66,15 @@ namespace TimelessEchoes.Skills
             float totalDuration = echoDuration + bonus;
             string percent = (Mathf.Max(0f, magnitude) * 100f).ToString("0.#", CultureInfo.InvariantCulture);
             int count = Mathf.Max(1, echoCount);
-            string echoLabel = count == 1 ? "an Echo" : $"{count} Echoes";
-
-            string actionPhrase = configInstance?.echoType switch
-            {
-                EchoType.Combat => "assist in combat",
-                EchoType.TaskOnly => $"perform {skillText} tasks",
-                _ => $"perform {skillText} tasks"
-            };
-
-            return $"Provides a {percent}% chance to summon {echoLabel} that {actionPhrase} for {totalDuration:0.#} seconds.";
+            // Whole sentences preserve grammar and allow translated argument ordering.
+            bool combat = configInstance?.echoType == EchoType.Combat;
+            if (combat)
+                return count == 1
+                    ? ToolkitLocalization.Text("milestone.echo.combat-one", "Provides a {0}% chance to summon an Echo that assist in combat for {1:0.#} seconds.", percent, totalDuration)
+                    : ToolkitLocalization.Text("milestone.echo.combat-many", "Provides a {0}% chance to summon {1} Echoes that assist in combat for {2:0.#} seconds.", percent, count, totalDuration);
+            return count == 1
+                ? ToolkitLocalization.Text("milestone.echo.task-one", "Provides a {0}% chance to summon an Echo that perform {1} tasks for {2:0.#} seconds.", percent, skillText, totalDuration)
+                : ToolkitLocalization.Text("milestone.echo.task-many", "Provides a {0}% chance to summon {1} Echoes that perform {2} tasks for {3:0.#} seconds.", percent, count, skillText, totalDuration);
         }
     }
 }

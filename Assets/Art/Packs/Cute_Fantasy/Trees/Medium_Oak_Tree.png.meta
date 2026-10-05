@@ -4,13 +4,13 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 7848072432883906843
-    second: Medium_Oak_Tree_0
+    second: Medium_Oak_Tree_Stump
   - first:
       213: 6013379132409528037
-    second: Medium_Oak_Tree_1
+    second: Medium_Oak_Tree_Standing_GroundShadow
   - first:
       213: -5533796882511167049
-    second: Medium_Oak_Tree_2
+    second: Medium_Oak_Tree_Standing_NoGroundShadow
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -145,7 +145,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Medium_Oak_Tree_0
+      name: Medium_Oak_Tree_Stump
       rect:
         serializedVersion: 2
         x: 0
@@ -167,7 +167,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Medium_Oak_Tree_1
+      name: Medium_Oak_Tree_Standing_GroundShadow
       rect:
         serializedVersion: 2
         x: 32
@@ -189,7 +189,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Medium_Oak_Tree_2
+      name: Medium_Oak_Tree_Standing_NoGroundShadow
       rect:
         serializedVersion: 2
         x: 64
@@ -226,9 +226,9 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":48.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.15000000596046449},"autoSlicingMethod":0,"spriteAlignment":9,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Medium_Oak_Tree_0: 7848072432883906843
-      Medium_Oak_Tree_1: 6013379132409528037
-      Medium_Oak_Tree_2: -5533796882511167049
+      Medium_Oak_Tree_Stump: 7848072432883906843
+      Medium_Oak_Tree_Standing_GroundShadow: 6013379132409528037
+      Medium_Oak_Tree_Standing_NoGroundShadow: -5533796882511167049
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

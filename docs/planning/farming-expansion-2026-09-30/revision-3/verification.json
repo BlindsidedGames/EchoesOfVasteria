@@ -1,0 +1,200 @@
+{
+  "branch": "fix/editor-startup-terrain-catalogue",
+  "head": "b3cedc38b2ba75490aa0970346b246cff591d0f4",
+  "baselineSourcePaths": 38,
+  "sourceChanges": [],
+  "mainSha256": "8f912645ea9216c7f25a833da730c44524aaea0dab7ba4cd76a9c0e1ac0d9d54",
+  "mainDirty": false,
+  "playing": false,
+  "actualPlayerFiles": 77,
+  "playerChanges": [],
+  "verifiedBackups": 93,
+  "backupProblems": [],
+  "archivedVersion1Files": 63,
+  "archiveChanges": [],
+  "originalPreviewChanges": [],
+  "revisedPreviewScenes": [
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV3/A0-existing.unity",
+      "bytes": 11063103,
+      "sha256": "e74cc5feed41fd5fa813b9be483f21120e4ff1c577ee09cdddebdff1d405cdb5",
+      "scriptGuids": [
+        "073797afb82c5a1438f328866b10b3f0",
+        "a79441f348de89743a2939f4d699eac1"
+      ]
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV3/A1-first-beds.unity",
+      "bytes": 11241762,
+      "sha256": "9268404e4f0d20cb64cb68c70f7f3078859d73e9450559b8e0879a36000f8eb2",
+      "scriptGuids": [
+        "073797afb82c5a1438f328866b10b3f0",
+        "a79441f348de89743a2939f4d699eac1"
+      ]
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV3/A2-stump-reclamation.unity",
+      "bytes": 11428800,
+      "sha256": "94dd9616367645704105db95bdb6cb6fc9ac062673bae33c4e438738ba8edd90",
+      "scriptGuids": [
+        "a79441f348de89743a2939f4d699eac1",
+        "073797afb82c5a1438f328866b10b3f0"
+      ]
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV3/A2b-southeast-work.unity",
+      "bytes": 11428807,
+      "sha256": "acd49de822c0cf3e2d342a68e420b526b46ca7de72c6ed537848c6cfc9a29e45",
+      "scriptGuids": [
+        "a79441f348de89743a2939f4d699eac1",
+        "073797afb82c5a1438f328866b10b3f0"
+      ]
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV3/A3-southeast-clearing.unity",
+      "bytes": 11602106,
+      "sha256": "8d2909b27e9c2a712d46ed38b8dcf021700ca3df4c45651274d281452fabb76a",
+      "scriptGuids": [
+        "073797afb82c5a1438f328866b10b3f0",
+        "a79441f348de89743a2939f4d699eac1"
+      ]
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV3/B3-terraced-rows.unity",
+      "bytes": 11728302,
+      "sha256": "b8fe4104c11f002aa80f77b340f8c6a43435bca79e427873e55553ac93d14e72",
+      "scriptGuids": [
+        "073797afb82c5a1438f328866b10b3f0",
+        "a79441f348de89743a2939f4d699eac1"
+      ]
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV3/C3-grove-courtyard.unity",
+      "bytes": 11647705,
+      "sha256": "76c1b3ae472ac0d9c1ad6b9f5b171f5071771d8414bfa11172bac7f4670d7eb3",
+      "scriptGuids": [
+        "a79441f348de89743a2939f4d699eac1",
+        "073797afb82c5a1438f328866b10b3f0"
+      ]
+    }
+  ],
+  "gameplayMonoBehavioursInRevisedPreviews": 0,
+  "normalBuildSettings": "%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!1045 &1\nEditorBuildSettings:\n  m_ObjectHideFlags: 0\n  serializedVersion: 2\n  m_Scenes:\n  - enabled: 1\n    path: Assets/Scenes/Loading.unity\n    guid: c77eff40f1538f3478d850cfc801bcfd\n  - enabled: 1\n    path: Assets/Scenes/Main.unity\n    guid: 8c9cfa26abfee488c85f1582747f6a02\n  m_configObjects:\n    com.unity.addressableassets: {fileID: 11400000, guid: a2cf4a331b8e9d44c8d768eed1476525, type: 2}\n    com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}\n    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}\n    com.unity.localization.settings: {fileID: 11400000, guid: 1a861559c8288554286aeccac27b0943, type: 2}\n",
+  "rawRevisedRenders": 49,
+  "passingStaticGateChecks": 14,
+  "runtimeNavigationTested": false,
+  "cohortIds": 94,
+  "unicodeIdDecoded": true,
+  "brokenLinks": [],
+  "liveGeneratorPresent": false,
+  "libraryVersions": [
+    {
+      "file_name": "farm-progression.png",
+      "library_file_id": "libfile_4290e227795c819183f5826bb552bcd6",
+      "file_id": "file_00000000229c81fd8bef4859d2c3aa53",
+      "current_version_number": 2
+    },
+    {
+      "file_name": "farm-town-context-annotated.png",
+      "library_file_id": "libfile_55dc1bf70d2c8191913b34d67fd4d5b0",
+      "file_id": "file_00000000bba081fd990bb3bde3e49dc4",
+      "current_version_number": 2
+    },
+    {
+      "file_name": "farm-layout-alternatives.png",
+      "library_file_id": "libfile_59daf4a6afe48191836dc4db2fcba97c",
+      "file_id": "file_000000008a7c81fd99e451c654b041b8",
+      "current_version_number": 2
+    },
+    {
+      "file_name": "farm-normal-scale.png",
+      "library_file_id": "libfile_9ff4f1694a5c8191aa0bea167966eb1a",
+      "file_id": "file_000000006f4481fd994512600e83130c",
+      "current_version_number": 2
+    },
+    {
+      "file_name": "farm-clearing-close-comparison.png",
+      "library_file_id": "libfile_60fa8b9963948191a90a1ca509811167",
+      "file_id": "file_000000001e4c81f7871042d01c326721",
+      "current_version_number": 2
+    }
+  ],
+  "farmingImplementation": false,
+  "committedOrPushed": false,
+  "revision": 3,
+  "archivedRevision2Files": 94,
+  "revision2ArchiveChanges": [],
+  "revision2SceneChanges": [],
+  "fencePieces": {
+    "corners": 56,
+    "gates": 14
+  },
+  "fencePiecesByScene": [
+    {
+      "scene": "A2-stump-reclamation.unity",
+      "explicitCorners": 8,
+      "actualOpenGates": 2
+    },
+    {
+      "scene": "B3-terraced-rows.unity",
+      "explicitCorners": 12,
+      "actualOpenGates": 3
+    },
+    {
+      "scene": "A2b-southeast-work.unity",
+      "explicitCorners": 8,
+      "actualOpenGates": 2
+    },
+    {
+      "scene": "C3-grove-courtyard.unity",
+      "explicitCorners": 12,
+      "actualOpenGates": 3
+    },
+    {
+      "scene": "A3-southeast-clearing.unity",
+      "explicitCorners": 12,
+      "actualOpenGates": 3
+    },
+    {
+      "scene": "A1-first-beds.unity",
+      "explicitCorners": 4,
+      "actualOpenGates": 1
+    },
+    {
+      "scene": "A0-existing.unity",
+      "explicitCorners": 0,
+      "actualOpenGates": 0
+    }
+  ],
+  "focusedContractChecks": {
+    "noCompensationDecision": true,
+    "plantDropSource": true,
+    "tokensWithdrawn": true,
+    "substitutionRisk": true,
+    "rewardAdapterEvidence": true,
+    "latePlayerUnlockProvisional": true,
+    "noGuaranteedWait": true,
+    "noInventedStockCap": true,
+    "dutyCycle": true,
+    "noBackpayAllowance": true,
+    "storedDecisionOpen": true,
+    "platformChoiceOpen": true,
+    "atomicHarvest": true,
+    "ownershipReceiptSettlement": true,
+    "cohortOnBothSides": true,
+    "cameraList": true
+  },
+  "visualReviewCompleted": true,
+  "visualReviewLimitation": "Edit-mode renders; no runtime navigation or farm implementation",
+  "editorCoordination": {
+    "owner": "farm-preview-revision-3",
+    "editorReserved": false,
+    "sourceThread": "01a0ef9f-ad6d-77e4-8ebb-421824e98034",
+    "migrationThread": "01a0f260-8ce0-7307-942a-971a561f003e",
+    "purpose": "Preview worker removed; final capture complete; Main clean Edit mode",
+    "existingEvidence": "/Users/matthewrushworth/Projects/Echoes Mac Verification/2026-09-30-cleanup",
+    "disposablePlayer": "/Users/matthewrushworth/Projects/Echoes Mac Verification/2026-09-30-cleanup/EOVOfflineVerification.app",
+    "harnessSource": "/Users/matthewrushworth/Projects/Echoes Mac Verification/2026-09-30-cleanup/MacCleanupSmoke.cs.txt",
+    "harnessReports": "/tmp/eov-mac-cleanup-20260930/"
+  }
+}

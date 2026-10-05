@@ -11,9 +11,6 @@ namespace Blindsided.SaveData.Migrations
     /// </summary>
     internal sealed class Migration_CauldronOverflowRedistribution : ISaveMigration
     {
-        private const int ResourceCardMaximum = 500;
-        private const int BuffCardMaximum = 300;
-
         private static readonly string[] CanonicalInfinityIds =
         {
             "INF:AttackRate",
@@ -35,6 +32,23 @@ namespace Blindsided.SaveData.Migrations
             if (data == null)
                 return;
 
+            // Never use today's mutable assets, or guessed historical defaults, to rewrite an
+            // older economy. A missing/unverified producer profile preserves the original cards.
+            if (!LegacyCauldronProfile.TryResolve(data, out var profile))
+            {
+                if (data.CauldronCardCounts?.Any(pair => pair.Value > 0 &&
+                    (pair.Key?.StartsWith("RES:", StringComparison.Ordinal) == true ||
+                     pair.Key?.StartsWith("BUFF:", StringComparison.Ordinal) == true)) == true)
+                {
+                    data.AppliedMigrationIds ??= new HashSet<string>();
+                    data.AppliedMigrationIds.Add(LegacyCauldronProfile.DeferredReceipt);
+                }
+                return;
+            }
+
+            data.AppliedMigrationIds ??= new HashSet<string>();
+            data.AppliedMigrationIds.Add(LegacyCauldronProfile.Steam143Receipt);
+
             data.CauldronCardCounts ??= new Dictionary<string, int>();
             var counts = data.CauldronCardCounts;
             var cappedCards = new List<CappedCard>();
@@ -42,7 +56,7 @@ namespace Blindsided.SaveData.Migrations
 
             foreach (var id in counts.Keys.OrderBy(id => id, StringComparer.Ordinal).ToList())
             {
-                if (!TryGetMaximum(id, out var maximum) || counts[id] <= maximum)
+                if (!TryGetMaximum(id, profile, out var maximum) || counts[id] <= maximum)
                     continue;
 
                 var excess = counts[id] - maximum;
@@ -54,7 +68,7 @@ namespace Blindsided.SaveData.Migrations
             if (overflow == 0)
                 return;
 
-            overflow = FillExistingCardCapacity(counts, overflow);
+            overflow = FillExistingCardCapacity(counts, profile, overflow);
             overflow = DistributeToInfinityCards(counts, overflow);
             overflow = RestoreUndistributedCards(counts, cappedCards, overflow);
 
@@ -62,13 +76,14 @@ namespace Blindsided.SaveData.Migrations
                 throw new InvalidOperationException("Cauldron overflow migration could not preserve every card.");
         }
 
-        private static long FillExistingCardCapacity(Dictionary<string, int> counts, long overflow)
+        private static long FillExistingCardCapacity(
+            Dictionary<string, int> counts, LegacyCauldronProfile profile, long overflow)
         {
             foreach (var id in counts.Keys.OrderBy(id => id, StringComparer.Ordinal).ToList())
             {
                 if (overflow == 0)
                     break;
-                if (!TryGetMaximum(id, out var maximum))
+                if (!TryGetMaximum(id, profile, out var maximum))
                     continue;
 
                 var current = counts[id];
@@ -146,17 +161,17 @@ namespace Blindsided.SaveData.Migrations
             return overflow;
         }
 
-        private static bool TryGetMaximum(string id, out int maximum)
+        private static bool TryGetMaximum(string id, LegacyCauldronProfile profile, out int maximum)
         {
             if (id != null && id.StartsWith("RES:", StringComparison.Ordinal))
             {
-                maximum = ResourceCardMaximum;
+                maximum = profile.ResourceCardMaximum;
                 return true;
             }
 
             if (id != null && id.StartsWith("BUFF:", StringComparison.Ordinal))
             {
-                maximum = BuffCardMaximum;
+                maximum = profile.BuffCardMaximum;
                 return true;
             }
 

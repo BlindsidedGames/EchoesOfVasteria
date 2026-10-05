@@ -1,0 +1,573 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0864746a343366419ecfa5cd68c8973, type: 3}
+  m_Name: Navigation
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.UI.Toolkit.ToolkitNavigationDefinition
+  entries:
+  - id: options
+    group: 0
+    action: 0
+    window: 11
+    map: {fileID: 0}
+    label:
+      key: navigation.options
+      bold: 1
+      smallCaps: 1
+      fallback: Options
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: -7232974252708538585, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 13, y: 13}
+    iconSliced: 0
+    width: 22
+    fontSize: 7
+    visibility: []
+  - id: stats
+    group: 0
+    action: 0
+    window: 5
+    map: {fileID: 0}
+    label:
+      key: 
+      bold: 0
+      smallCaps: 0
+      fallback: 
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -4499085541222887650, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 22
+    fontSize: 8
+    visibility: []
+  - id: adventure
+    group: 0
+    action: 1
+    window: 0
+    map: {fileID: 0}
+    label:
+      key: navigation.adventure
+      bold: 1
+      smallCaps: 0
+      fallback: Adventure
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 61.28
+    fontSize: 8
+    visibility: []
+  - id: hub
+    group: 0
+    action: 2
+    window: 0
+    map: {fileID: 0}
+    label:
+      key: navigation.hub
+      bold: 1
+      smallCaps: 0
+      fallback: Hub
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 31.61
+    fontSize: 8
+    visibility: []
+  - id: townsfolk
+    group: 0
+    action: 3
+    window: 0
+    map: {fileID: 0}
+    label:
+      key: navigation.townsfolk
+      bold: 1
+      smallCaps: 0
+      fallback: Townsfolk
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 59.68
+    fontSize: 8
+    visibility:
+    - condition: 0
+      quest: {fileID: 11400000, guid: c09209e764b12664d970cbd53a3f25a5, type: 2}
+      npcId: 
+  - id: quests
+    group: 0
+    action: 0
+    window: 2
+    map: {fileID: 0}
+    label:
+      key: navigation.quests
+      bold: 1
+      smallCaps: 0
+      fallback: Quests
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 45
+    fontSize: 8
+    visibility: []
+  - id: wiki
+    group: 0
+    action: 0
+    window: 7
+    map: {fileID: 0}
+    label:
+      key: navigation.wiki
+      bold: 1
+      smallCaps: 0
+      fallback: Library
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 46.25
+    fontSize: 8
+    visibility: []
+  - id: close
+    group: 0
+    action: 5
+    window: 0
+    map: {fileID: 0}
+    label:
+      key: navigation.close
+      bold: 1
+      smallCaps: 1
+      fallback: Credits
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: 0}
+    icon: {fileID: 369038022, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    shadow: {fileID: 0}
+    iconSize: {x: 18, y: 18.000004}
+    iconSliced: 1
+    width: 22
+    fontSize: 2.35
+    visibility: []
+  - id: farm
+    group: 2
+    action: 0
+    window: 12
+    map: {fileID: 0}
+    label:
+      key: farm.display-name
+      bold: 1
+      smallCaps: 0
+      fallback: Fields
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 80
+    fontSize: 8
+    visibility:
+    - condition: 3
+      quest: {fileID: 0}
+      npcId: Farmers1
+  - id: skills
+    group: 2
+    action: 0
+    window: 6
+    map: {fileID: 0}
+    label:
+      key: navigation.skills
+      bold: 1
+      smallCaps: 0
+      fallback: Skills
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 80
+    fontSize: 8
+    visibility: []
+  - id: buffs
+    group: 2
+    action: 0
+    window: 1
+    map: {fileID: 0}
+    label:
+      key: navigation.buffs
+      bold: 1
+      smallCaps: 0
+      fallback: Buffs
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 80
+    fontSize: 8
+    visibility:
+    - condition: 0
+      quest: {fileID: 11400000, guid: 18cb43a77b364b24fb75a31ff790efc5, type: 2}
+      npcId: 
+    - condition: 0
+      quest: {fileID: 11400000, guid: 18cb43a77b364b24fb75a31ff790efc5, type: 2}
+      npcId: 
+  - id: forge
+    group: 3
+    action: 0
+    window: 9
+    map: {fileID: 0}
+    label:
+      key: navigation.forge
+      bold: 1
+      smallCaps: 0
+      fallback: Forge
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 60.4
+    fontSize: 8
+    visibility:
+    - condition: 0
+      quest: {fileID: 11400000, guid: c09209e764b12664d970cbd53a3f25a5, type: 2}
+      npcId: 
+    - condition: 0
+      quest: {fileID: 11400000, guid: c09209e764b12664d970cbd53a3f25a5, type: 2}
+      npcId: 
+  - id: cauldron
+    group: 3
+    action: 0
+    window: 8
+    map: {fileID: 0}
+    label:
+      key: navigation.cauldron
+      bold: 1
+      smallCaps: 0
+      fallback: Cauldron
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 60.4
+    fontSize: 8
+    visibility:
+    - condition: 0
+      quest: {fileID: 11400000, guid: c09209e764b12664d970cbd53a3f25a5, type: 2}
+      npcId: 
+    - condition: 0
+      quest: {fileID: 11400000, guid: 9ff6011875dbd3e4d91801288f50ebc0, type: 2}
+      npcId: 
+  - id: map-0
+    group: 1
+    action: 4
+    window: 0
+    map: {fileID: 11400000, guid: f55e1d93d6f548440b91047ab11572be, type: 2}
+    label:
+      key: navigation.map-0
+      bold: 1
+      smallCaps: 0
+      fallback: Farmlands
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 61.28
+    fontSize: 8
+    visibility:
+    - condition: 0
+      quest: {fileID: 11400000, guid: de222d7a217d39841a2a727a9a68563e, type: 2}
+      npcId: 
+  - id: map-1
+    group: 1
+    action: 4
+    window: 0
+    map: {fileID: 11400000, guid: 70ed6e565be72ad4cb97fbf161957534, type: 2}
+    label:
+      key: navigation.map-1
+      bold: 1
+      smallCaps: 0
+      fallback: Woods
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 61.28
+    fontSize: 8
+    visibility:
+    - condition: 0
+      quest: {fileID: 11400000, guid: c058038d0557e31478313cc9f9131098, type: 2}
+      npcId: 
+  - id: map-2
+    group: 1
+    action: 4
+    window: 0
+    map: {fileID: 11400000, guid: 6c2ad25e840f46a44b1a7ceb4ba7280a, type: 2}
+    label:
+      key: navigation.map-2
+      bold: 1
+      smallCaps: 0
+      fallback: Mines
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 61.28
+    fontSize: 8
+    visibility:
+    - condition: 0
+      quest: {fileID: 11400000, guid: 8a18857e90fcac348ba107a6d4b45789, type: 2}
+      npcId: 
+  - id: map-3
+    group: 1
+    action: 4
+    window: 0
+    map: {fileID: 11400000, guid: a0abc9be431dbc64d867ea8e6099b6f5, type: 2}
+    label:
+      key: navigation.map-3
+      bold: 1
+      smallCaps: 0
+      fallback: River
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 61.28
+    fontSize: 8
+    visibility:
+    - condition: 0
+      quest: {fileID: 11400000, guid: 918ef9c4bf0607e479041a3d39b3f3b7, type: 2}
+      npcId: 
+  - id: map-4
+    group: 1
+    action: 4
+    window: 0
+    map: {fileID: 11400000, guid: 1bea16f9e7eb61c43bcb22c706dae6dc, type: 2}
+    label:
+      key: navigation.map-4
+      bold: 1
+      smallCaps: 0
+      fallback: Spooky
+      localized:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 61.28
+    fontSize: 8
+    visibility:
+    - condition: 0
+      quest: {fileID: 11400000, guid: 1146a0d8f3daaf04fb64f91860e4e2ea, type: 2}
+      npcId: 
+  forgeAttention: {fileID: 21300000, guid: 52ace75bf0b7f894d97b20a21000e1c8, type: 3}
+  cauldronAttention: {fileID: 21300000, guid: 4cb6611cce92c664a91354038f2be24e, type: 3}
+  questAttention: {fileID: 3947923570558630869, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+  echoFrame: {fileID: 1030688936884539648, guid: 51bd82d473befb0479be7d5b9a324629, type: 3}
+  echoInset: {fileID: -6793677539430908002, guid: 089bad9c98843f944b65aa347848f4eb, type: 3}
+  autoPinFrame: {fileID: 239788920320451221, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  toggleOn: {fileID: 9208044968218441874, guid: f429786718350477cb960cfcb3452aab, type: 3}
+  toggleOff: {fileID: 7182660371469165703, guid: f429786718350477cb960cfcb3452aab, type: 3}
+  discord: {fileID: 21300000, guid: 55e3fc85ccc41d44a82391dd15ced50f, type: 3}
+  progressTrack: {fileID: 9035060615272221303, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+  progressFill: {fileID: -5961661648687546396, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
+  progressHero: {fileID: -4925942937979303863, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+  progressReaper: {fileID: -4962761325604482230, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  progressTextColor: {r: 0.9176471, g: 0.8313726, b: 0.6666667, a: 1}
+  discordUrl: https://discord.gg/DykjPFgYCR
+  autoPinLabel:
+    key: navigation.auto-pin
+    bold: 1
+    smallCaps: 1
+    fallback: Auto-Pin
+    localized:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+  balanceColor: {r: 0.9176471, g: 0.8313726, b: 0.6666667, a: 1}
+  references:
+    version: 2
+    RefIds: []

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Blindsided.SaveData.StaticReferences;
@@ -21,11 +22,13 @@ namespace TimelessEchoes.UI.Toolkit
         private Button primary, secondary;
         private Action primaryAction, secondaryAction;
         private bool interactable;
+        private readonly List<ToolkitTextBinding> bindings = new();
         public bool IsVisible => root != null;
 
         public void Show(string title, string body, string primaryText, string secondaryText,
             Action onPrimary, Action onSecondary, bool enabled = true)
         {
+            ClearBindings();
             if (root == null) Create();
             titleLabel.text = "<b><smallcaps>" + title + "</smallcaps></b>";
             bodyLabel.text = body;
@@ -35,6 +38,26 @@ namespace TimelessEchoes.UI.Toolkit
             secondaryAction = onSecondary;
             SetInteractable(enabled);
             ApplyLayout();
+        }
+
+        // Authored messages can bind standard LocalizedStrings; diagnostic callers
+        // retain the literal-string overload and their own message ownership.
+        public void ShowLocalized(ToolkitBookDefinition.Text title, ToolkitBookDefinition.Text body,
+            ToolkitBookDefinition.Text primaryText, ToolkitBookDefinition.Text secondaryText,
+            Action onPrimary, Action onSecondary, bool enabled = true)
+        {
+            Show(title?.fallback, body?.fallback, primaryText?.fallback, secondaryText?.fallback,
+                onPrimary, onSecondary, enabled);
+            bindings.Add(new ToolkitTextBinding(titleLabel, title));
+            bindings.Add(new ToolkitTextBinding(bodyLabel, body));
+            bindings.Add(new ToolkitTextBinding(primary, primaryText));
+            bindings.Add(new ToolkitTextBinding(secondary, secondaryText));
+        }
+
+        private void ClearBindings()
+        {
+            foreach (var binding in bindings) binding.Dispose();
+            bindings.Clear();
         }
 
         private void Create()
@@ -95,6 +118,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         public void Hide()
         {
+            ClearBindings();
             if (primary != null) primary.clicked -= InvokePrimary;
             if (secondary != null) secondary.clicked -= InvokeSecondary;
             primaryAction = secondaryAction = null;

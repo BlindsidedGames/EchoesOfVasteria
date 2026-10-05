@@ -137,12 +137,12 @@ namespace TimelessEchoes.UI.Toolkit
             var title = summaryTitle = Text(summaryScroll, "", 7); title.AddToClassList("skill-summary-title");
 
             totals = ToolkitGameplay.E(summaryScroll, "skill-summary-lines"); totals.name = "skill-totals";
-            var allButton = ToolkitGameplay.B(summaryScroll, "All bonuses", () =>
+            var allButton = ToolkitGameplay.B(summaryScroll, ToolkitLocalization.Text("skills.all-bonuses", "All bonuses"), () =>
             {
                 var expanded = allTotals.style.display != DisplayStyle.None;
                 allTotals.style.display = expanded ? DisplayStyle.None : DisplayStyle.Flex;
                 summaryScroll.Q<Button>("all-bonuses").EnableInClassList("active", !expanded);
-            }, "skill-all-bonuses"); allButton.name = "all-bonuses";
+            }, "skill-all-bonuses"); allButton.name = "all-bonuses"; ToolkitLocalization.Bind(allButton, "skills.all-bonuses", "All bonuses");
             allTotals = ToolkitGameplay.E(summaryScroll, "skill-summary-lines"); allTotals.style.display = DisplayStyle.None;
 
             foreach (var label in new VisualElement[] { slots, active, title, totals }) label.style.marginBottom = 4;
@@ -155,6 +155,7 @@ namespace TimelessEchoes.UI.Toolkit
 
             controller.OnMilestoneDataChanged += Changed; controller.OnActiveSlotsChanged += ActiveChanged;
 
+            ToolkitLocalization.Changed += Changed;
             ShowLevelTextChanged += Changed; Blindsided.EventHandler.OnLoadData += Changed;
 
             Refresh(); Layout(); return true;
@@ -233,7 +234,7 @@ namespace TimelessEchoes.UI.Toolkit
 
             var required = skill.xpForFirstLevel * Mathf.Pow(value, skill.xpLevelMultiplier);
 
-            level.text = $"<b><smallcaps>{skill.skillName} | Lvl {value}</smallcaps></b>"; xp.text = $"<b><smallcaps>{current:N0} / {required:N0}</smallcaps></b>"; xpFill.style.width = Length.Percent(required > 0 ? Mathf.Clamp01(current / required) * 100 : 0);
+            level.text = ToolkitLocalization.Text("skills.level-heading", "<b><smallcaps>{0} | Lvl {1}</smallcaps></b>", ToolkitLocalization.Text("skill." + skill.name, skill.skillName), value); xp.text = $"<b><smallcaps>{current:N0} / {required:N0}</smallcaps></b>"; xpFill.style.width = Length.Percent(required > 0 ? Mathf.Clamp01(current / required) * 100 : 0);
 
         }
 
@@ -249,7 +250,7 @@ namespace TimelessEchoes.UI.Toolkit
 
                 var selectorLevel = controller.GetProgress(definition.skills[i])?.Level ?? 1;
 
-                selectorLevels[i].text = ShowLevelText ? $"<b>Lvl: {selectorLevel}</b>" : "";
+                selectorLevels[i].text = ShowLevelText ? ToolkitLocalization.Text("skills.selector-level", "<b>Lvl: {0}</b>", selectorLevel) : "";
 
                 selectorLevels[i].style.fontSize = 6;
 
@@ -259,13 +260,13 @@ namespace TimelessEchoes.UI.Toolkit
 
             RefreshExperience(); BuildMilestones();
 
-            slots.text = controller.TotalActiveSlots > 0 ? $"<b><smallcaps>Active Slots: {controller.ActiveSlotsUsed}({controller.TotalActiveSlots})</smallcaps></b>" : "";
+            slots.text = controller.TotalActiveSlots > 0 ? ToolkitLocalization.Text("skills.active-slots", "<b><smallcaps>Active Slots: {0}({1})</smallcaps></b>", controller.ActiveSlotsUsed, controller.TotalActiveSlots) : "";
 
             active.Clear();
             foreach (var item in controller.EnumerateActiveMilestones().Where(i => i.Definition != null))
                 AddSummaryLine(active, item.Skill != null && item.Skill != Current ? $"{item.Definition.DisplayName} ({item.Skill.skillName})" : item.Definition.DisplayName, MilestoneIcon(item.Definition, item.Skill));
 
-            summaryTitle.text = $"<b>{Current.skillName} bonuses</b>";
+            summaryTitle.text = ToolkitLocalization.Text("skills.bonuses-heading", "<b>{0} bonuses</b>", ToolkitLocalization.Text("skill." + Current.name, Current.skillName));
             var bonusRows = new List<SkillTotalsPresentation.BonusLine>();
             SkillTotalsPresentation.BuildForSkill(controller, Current, bonusRows);
             BuildSummary(totals, bonusRows);
@@ -335,15 +336,15 @@ namespace TimelessEchoes.UI.Toolkit
                     row.Add(body);
                     var heading = new VisualElement(); heading.AddToClassList("skill-entry-heading"); body.Add(heading);
                     var name = Text(heading, title, 7); name.AddToClassList("skill-entry-name");
-                    var nextText = unlocked ? (next > 0 ? $"Improves at level {next}" : "") : $"Unlocks at level {milestone.UnlockLevel}";
+                    var nextText = unlocked ? (next > 0 ? ToolkitLocalization.Text("skills.improves-level", "Improves at level {0}", next) : "") : ToolkitLocalization.Text("skills.unlocks-level", "Unlocks at level {0}", milestone.UnlockLevel);
                     Text(heading, nextText, 7).AddToClassList("skill-entry-next");
                     var displayTier = unlocked ? tier : 0; if (milestone.TierCount > 0) displayTier = Mathf.Clamp(displayTier, 0, milestone.TierCount - 1);
 
                     var passive = Compact(milestone.GetPassiveDescriptionForTier(displayTier, skill.skillName)); var hasSlots = controller.TotalActiveSlots > 0;
 
-                    Text(body, string.IsNullOrEmpty(passive) ? "" : hasSlots && milestone.HasActiveEffect ? "Passive: " + passive : passive, 5);
+                    Text(body, string.IsNullOrEmpty(passive) ? "" : hasSlots && milestone.HasActiveEffect ? ToolkitLocalization.Text("skills.passive", "Passive: {0}", passive) : passive, 5);
 
-                    if (unlocked && milestone.HasActiveEffect && hasSlots) { var description = Compact(milestone.GetActiveDescriptionForTier(displayTier, skill.skillName)); Text(body, string.IsNullOrEmpty(description) ? "" : "Active: " + description, 5); }
+                    if (unlocked && milestone.HasActiveEffect && hasSlots) { var description = Compact(milestone.GetActiveDescriptionForTier(displayTier, skill.skillName)); Text(body, string.IsNullOrEmpty(description) ? "" : ToolkitLocalization.Text("skills.active", "Active: {0}", description), 5); }
 
                     var right = new VisualElement(); right.AddToClassList("eov-milestone-right"); row.Add(right);
 
@@ -361,7 +362,7 @@ namespace TimelessEchoes.UI.Toolkit
 
                     }
 
-                    var setLabel = Text(right, milestone.Set != MilestoneSet.None ? "Set: " + (set != null ? set.DisplayName : milestone.Set.ToString()) : "", 5); setLabel.style.unityTextAlign = TextAnchor.UpperRight; setLabel.style.minHeight = 5.82f;
+                    var setLabel = Text(right, milestone.Set != MilestoneSet.None ? ToolkitLocalization.Text("skills.set", "Set: {0}", set != null ? set.DisplayName : milestone.Set.ToString()) : "", 5); setLabel.style.unityTextAlign = TextAnchor.UpperRight; setLabel.style.minHeight = 5.82f;
 
                 }
 
@@ -375,10 +376,10 @@ namespace TimelessEchoes.UI.Toolkit
 
                     {
 
-                        AddEntryIcon(row, unlock.useOverrideIcon ? unlock.overrideIcon : unlock.task.taskIcon);
+                        AddEntryIcon(row, unlock.useOverrideIcon ? unlock.overrideIcon : unlock.task.taskIcon, fitFrame: unlock.useOverrideIcon);
                     }
 
-                    row.Add(body); Text(body, unlocked ? $"{unlock.task.taskName} | <size=80%>Unlocked at level {unlock.requiredLevel}</size>" : $"??? | <size=80%>Unlocks at level {unlock.requiredLevel}</size>", 6);
+                    row.Add(body); Text(body, unlocked ? ToolkitLocalization.Text("skills.task-unlocked", "{0} | <size=80%>Unlocked at level {1}</size>", ToolkitLocalization.Text("task." + unlock.task.name, unlock.task.taskName), unlock.requiredLevel) : ToolkitLocalization.Text("skills.task-locked", "??? | <size=80%>Unlocks at level {0}</size>", unlock.requiredLevel), 6);
 
                     Text(body, unlocked && !string.IsNullOrEmpty(unlock.description) ? unlock.description : "", 5);
 
@@ -454,7 +455,7 @@ namespace TimelessEchoes.UI.Toolkit
             var effect = match.Groups[1].Value.Replace("experience gained", "XP").Replace("resource drops", "resources");
             return $"+{match.Groups[2].Value} {effect}";
         }
-        private static void AddEntryIcon(VisualElement row, Sprite sprite)
+        private static void AddEntryIcon(VisualElement row, Sprite sprite, bool fitFrame = false)
         {
             var frame = ToolkitGameplay.E(row, "skill-entry-icon-frame");
             var crop = ToolkitGameplay.E(frame, "skill-entry-icon-crop");
@@ -462,11 +463,12 @@ namespace TimelessEchoes.UI.Toolkit
             var image = new Image { sprite = sprite, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
             image.style.flexShrink = 0;
             // Match the original masked task view: a common reference PPU, never
-            // independently resize each sprite to fit the frame.
+            // independently resize ordinary task art. Authored overrides (tree thumbnails)
+            // fit the frame so the whole tree remains recognizable.
             if (sprite)
             {
-                image.style.width = sprite.rect.width * 16 / sprite.pixelsPerUnit;
-                image.style.height = sprite.rect.height * 16 / sprite.pixelsPerUnit;
+                image.style.width = fitFrame ? 16 : sprite.rect.width * 16 / sprite.pixelsPerUnit;
+                image.style.height = fitFrame ? 16 : sprite.rect.height * 16 / sprite.pixelsPerUnit;
             }
             crop.Add(image);
         }
@@ -488,6 +490,7 @@ namespace TimelessEchoes.UI.Toolkit
 
             if (controller) { controller.OnExperienceGained -= Experience; controller.OnLevelUp -= LevelUp; controller.OnMilestoneDataChanged -= Changed; controller.OnActiveSlotsChanged -= ActiveChanged; }
 
+            ToolkitLocalization.Changed -= Changed;
             ShowLevelTextChanged -= Changed; Blindsided.EventHandler.OnLoadData -= Changed;
 
             titleBinding?.Dispose(); titleBinding = null; root?.RemoveFromHierarchy(); root = null; selectorLevels.Clear(); selections.Clear(); highlights.Clear();

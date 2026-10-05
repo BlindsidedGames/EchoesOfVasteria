@@ -56,7 +56,8 @@ namespace Pathfinding.ECS {
 		void DrawGizmos (ref SystemState systemState) {
 			var entityQueryGizmos = SystemAPI.QueryBuilder()
 									.WithAll<LocalTransform, AgentCylinderShape, MovementSettings, AgentMovementPlane>()
-									.WithAll<ManagedState, MovementState, ResolvedMovement>()
+									.WithAllRW<AgentManagedRef>()
+									.WithAll<MovementState, ResolvedMovement>()
 									.WithAll<SimulateMovement>().Build();
 
 			if (entityQueryGizmos.IsEmptyIgnoreFilter) return;
@@ -69,12 +70,11 @@ namespace Pathfinding.ECS {
 
 			var job1 = new JobDrawFollowerGizmos {
 				draw = draw,
-				entityManagerHandle = jobRepairPathScheduler.entityManagerHandle,
 				LocalTransformTypeHandleRO = jobRepairPathScheduler.LocalTransformTypeHandleRO,
 				AgentCylinderShapeHandleRO = jobRepairPathScheduler.AgentCylinderShapeTypeHandleRO,
 				MovementSettingsHandleRO = jobRepairPathScheduler.MovementSettingsTypeHandleRO,
 				AgentMovementPlaneHandleRO = jobRepairPathScheduler.AgentMovementPlaneTypeHandleRO,
-				ManagedStateHandleRW = jobRepairPathScheduler.ManagedStateTypeHandleRW,
+				AgentManagedRefHandleRW = jobRepairPathScheduler.AgentManagedRefTypeHandleRW,
 				MovementStateHandleRO = MovementStateTypeHandleRO,
 				ResolvedMovementHandleRO = ResolvedMovementHandleRO,
 			}.ScheduleParallel(entityQueryGizmos, systemState.Dependency);

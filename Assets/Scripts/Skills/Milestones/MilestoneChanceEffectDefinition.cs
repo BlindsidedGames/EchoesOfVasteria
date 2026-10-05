@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using System;
 using System.Globalization;
 using UnityEngine;
@@ -23,8 +24,8 @@ namespace TimelessEchoes.Skills
         {
             var percent = Mathf.Max(0f, magnitude) * 100f;
             var formattedPercent = percent.ToString(percentageFormat, CultureInfo.InvariantCulture);
-            var resolvedSkillName = string.IsNullOrWhiteSpace(skillName) ? "this skill" : skillName;
-            return string.Format(descriptionTemplate, formattedPercent, resolvedSkillName);
+            var resolvedSkillName = string.IsNullOrWhiteSpace(skillName) ? ToolkitLocalization.Text("milestone.skill-fallback", "this skill") : skillName;
+            return ToolkitLocalization.Text("milestone-effect." + name + ".descriptionTemplate", descriptionTemplate, formattedPercent, resolvedSkillName);
         }
     }
 }

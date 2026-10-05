@@ -46,9 +46,9 @@ namespace TimelessEchoes.UI.Toolkit
             var signature = session.Slot + ":" + (pending != null) + ":" + (equipped != null) + ":" + pq + ":" + eq + string.Join(";", p.Concat(e).Select(a => a.stat.name + ":" + a.value));
             if (signature == comparisonSignature) return;
             comparisonSignature = signature; comparisonRows.Clear();
-            Metric(comparisonRows, session.Slot, null, "Pending", "Equipped").AddToClassList("forge-metric-header");
+            Metric(comparisonRows, session.Slot, null, ToolkitLocalization.Text("forge.pending", "Pending"), ToolkitLocalization.Text("forge.equipped", "Equipped")).AddToClassList("forge-metric-header");
             StatIconLookup.TryGetIcon(StatIconLookup.StatKey.Quality, out var quality);
-            Metric(comparisonRows, "Quality", quality, pending == null ? "—" : pq.ToString("0.#")+"%", equipped == null ? "—" : eq.ToString("0.#")+"%", pending == null ? 0 : Math.Sign(pq-eq));
+            Metric(comparisonRows, ToolkitLocalization.Text("forge.quality", "Quality"), quality, pending == null ? "—" : pq.ToString("0.#")+"%", equipped == null ? "—" : eq.ToString("0.#")+"%", pending == null ? 0 : Math.Sign(pq-eq));
             var defs = p.Concat(e).Select(a=>a.stat).GroupBy(s=>s.heroMapping).Select(g=>g.First()).ToList();
             defs.Sort((a,b)=>StatSortOrder.Compare(a.heroMapping,b.heroMapping));
             foreach(var def in defs)
@@ -57,7 +57,7 @@ namespace TimelessEchoes.UI.Toolkit
                 StatIconLookup.TryGetIcon(def.heroMapping,out var icon);
                 Metric(comparisonRows,def.GetName(),icon,pending == null ? "—" : Amount(pa,def.isPercent),equipped == null ? "—" : Amount(ea,def.isPercent),pending == null ? 0 : Math.Sign(pa-ea));
             }
-            if(pending==null) Label(comparisonRows,"Craft an item to compare it with your equipment.",ToolkitControls.TextRole.Caption).AddToClassList("forge-empty-result");
+            if(pending==null) Label(comparisonRows,ToolkitLocalization.Text("forge.compare-hint", "Craft an item to compare it with your equipment."),ToolkitControls.TextRole.Caption).AddToClassList("forge-empty-result");
         }
         private void RefreshEquipmentTotals()
         {
@@ -67,11 +67,12 @@ namespace TimelessEchoes.UI.Toolkit
             var item=equipment.GetEquipped(session.Slot);float selectedQuality=item==null?0:UpgradeEvaluator.ComputeQualityPercent(crafting,item,session.Slot);
             var sig=session.Slot+":"+quality+":"+selectedQuality+string.Join(";",all.Concat(selected).Select(a=>a.stat.name+":"+a.value));
             if(sig==equipmentSignature)return;equipmentSignature=sig;equipmentRows.Clear();
-            Metric(equipmentRows,"Stat",null,"Total",session.Slot).AddToClassList("forge-metric-header");
-            StatIconLookup.TryGetIcon(StatIconLookup.StatKey.Quality,out var q);Metric(equipmentRows,"Quality",q,quality.ToString("0.#")+"%",selectedQuality.ToString("0.#")+"%");
+            Metric(equipmentRows,ToolkitLocalization.Text("forge.stat", "Stat"),null,ToolkitLocalization.Text("forge.total", "Total"),session.Slot).AddToClassList("forge-metric-header");
+            StatIconLookup.TryGetIcon(StatIconLookup.StatKey.Quality,out var q);Metric(equipmentRows,ToolkitLocalization.Text("forge.quality", "Quality"),q,quality.ToString("0.#")+"%",selectedQuality.ToString("0.#")+"%");
             var defs=all.Select(a=>a.stat).GroupBy(s=>s.heroMapping).Select(g=>g.First()).ToList();defs.Sort((a,b)=>StatSortOrder.Compare(a.heroMapping,b.heroMapping));
             foreach(var def in defs){StatIconLookup.TryGetIcon(def.heroMapping,out var icon);Metric(equipmentRows,def.GetName(),icon,Amount(all.Where(a=>a.stat.heroMapping==def.heroMapping).Sum(a=>a.value),def.isPercent),Amount(selected.Where(a=>a.stat.heroMapping==def.heroMapping).Sum(a=>a.value),def.isPercent));}
         }
+        private static string HistoryTitle(string key) => ToolkitLocalization.Text("forge.stats.section-" + key.ToLowerInvariant().Replace(" ", "-"), key);
         // Preserve the legacy presenter's complete metrics and calculations. Only its
         // section/row presentation changes; values are not recomputed or discarded.
         private void RefreshHistory(string text)
@@ -83,9 +84,11 @@ namespace TimelessEchoes.UI.Toolkit
                 var key=sections[i];
                 if(!historySections.TryGetValue(key,out var section))
                 {
-                    var title=key=="Totals"?"Crafting history":key=="Autocraft"?"Automation":key=="Quality"?"Best rolls":key;
+                    var title=key=="Totals"?ToolkitLocalization.Text("forge.crafting-history", "Crafting history"):key=="Autocraft"?ToolkitLocalization.Text("forge.automation", "Automation"):key=="Quality"?ToolkitLocalization.Text("forge.best-rolls", "Best rolls"):HistoryTitle(key);
                     section=new ToolkitDisclosure(title,theme,key=="Totals");section.AddToClassList("forge-history-section");historySections.Add(key,section);historyHost.Add(section);
                 }
+                var headerTitle=key=="Totals"?ToolkitLocalization.Text("forge.crafting-history", "Crafting history"):key=="Autocraft"?ToolkitLocalization.Text("forge.automation", "Automation"):key=="Quality"?ToolkitLocalization.Text("forge.best-rolls", "Best rolls"):HistoryTitle(key);
+                section.Q<Label>().text = "<b><smallcaps>" + headerTitle + "</smallcaps></b>";
                 section.Content.Clear();
                 var content=Regex.Replace(sections[i+1],@"</?(?:size|b|mspace)(?:=[^>]*)?>","");
                 foreach(var line in content.Split('\n'))

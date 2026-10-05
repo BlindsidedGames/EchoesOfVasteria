@@ -24,20 +24,44 @@ namespace TimelessEchoes.Upgrades
             // New indices for the alternating sheet (known icons at even slots).
             idToIndex = new Dictionary<int, int>(65)
             {
-                { 1, 64 }, { 2, 58 }, { 3, 66 }, { 4, 56 }, { 5, 60 }, { 6, 62 }, { 7, 12 }, { 8, 18 },
+                { 1, 64 }, { 2, 236 }, { 3, 66 }, { 4, 56 }, { 5, 60 }, { 6, 62 }, { 7, 12 }, { 8, 18 },
                 { 9, 0 }, { 10, 36 }, { 11, 24 }, { 12, 6 }, { 13, 30 }, { 14, 42 }, { 15, 14 }, { 16, 20 },
                 { 17, 2 }, { 18, 38 }, { 19, 26 }, { 20, 8 }, { 21, 32 }, { 22, 44 }, { 23, 16 }, { 24, 22 },
                 { 25, 4 }, { 26, 40 }, { 27, 28 }, { 28, 10 }, { 29, 34 }, { 30, 46 }, { 31, 86 }, { 32, 80 },
                 { 33, 76 }, { 34, 78 }, { 35, 82 }, { 36, 74 }, { 37, 72 }, { 38, 84 }, { 39, 126 }, { 40, 144 },
                 { 41, 120 }, { 42, 134 }, { 43, 150 }, { 44, 138 }, { 45, 132 }, { 46, 136 }, { 47, 152 }, { 48, 142 },
                 { 49, 146 }, { 50, 118 }, { 51, 128 }, { 52, 148 }, { 53, 130 }, { 54, 140 }, { 55, 124 }, { 56, 122 },
-                { 57, 54 }, { 58, 172 }, { 59, 174 }, { 60, 176 }, { 61, 178 }, { 62, 180 }, { 63, 182 }, { 64, 184 },
-                { 65, 186 }, { 66, 92 }, { 67, 106 }, { 68, 110 }, { 69, 114 }, { 70, 96 }
+                { 57, 238 }, { 58, 172 }, { 59, 174 }, { 60, 176 }, { 61, 178 }, { 62, 180 }, { 63, 182 }, { 64, 184 },
+                { 65, 186 }, { 66, 92 }, { 67, 106 }, { 68, 110 }, { 69, 114 }, { 70, 96 },
+                { 71, 240 }, { 72, 242 }, { 73, 244 }, { 74, 246 }, { 75, 248 }, { 76, 250 },
+                { 77, 252 }, { 78, 254 }, { 79, 256 }, { 80, 258 }, { 81, 260 }, { 82, 262 }, { 83, 264 }, { 84, 266 }
             };
 
             // With the alternating layout, each unknown sprite is adjacent: +1 from its known index.
             idToUnknownIndex = new Dictionary<int, int>(idToIndex.Count);
             foreach (var pair in idToIndex) idToUnknownIndex[pair.Key] = pair.Value + 1;
+
+            // Authored seed packs already occupy named slots in both TMP and TextCore.
+            // Reuse their drop variants and shared unknown pack; these slots do not alternate.
+            idToIndex[85] = 226; // Radish Seed Pack
+            idToIndex[86] = 216; // Corn Seed Pack
+            idToIndex[87] = 234; // Wheat Seed Pack
+            idToIndex[88] = 233; // Watermelone Seed Pack
+            idToIndex[89] = 215; // Carrot Seed Pack
+            idToIndex[90] = 224; // Spud Seed Pack
+            idToIndex[91] = 232; // Tomato Seed Pack
+            idToIndex[92] = 214; // Lettuce Seed Pack
+            idToIndex[93] = 217; // Cucumber Seed Pack
+            idToIndex[94] = 221; // Leek Seed Pack
+            idToIndex[95] = 222; // Parsnip Seed Pack
+            idToIndex[96] = 213; // Pepper Seed Pack
+            idToIndex[97] = 227; // Chillie Seed Pack
+            idToIndex[98] = 225; // Pumking Seed Pack
+            idToIndex[99] = 228; // Strawberry Seed Pack
+            idToIndex[100] = 230; // Funion Seed Pack
+            idToIndex[101] = 226; // Turnip Seed Pack
+            for (var id = 85; id <= 101; id++) idToUnknownIndex[id] = 235;
+
         }
 
 

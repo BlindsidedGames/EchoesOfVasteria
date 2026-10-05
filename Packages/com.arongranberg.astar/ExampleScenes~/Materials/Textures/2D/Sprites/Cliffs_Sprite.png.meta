@@ -1,9 +1,12 @@
 fileFormatVersion: 2
 guid: 3b7e9cf701a156145b10038f1d62c2ec
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -1845063836289678221
+    second: Cliffs_Sprite_0
   externalObjects: {}
-  serializedVersion: 12
+  serializedVersion: 13
   mipmaps:
     mipMapMode: 0
     enableMipMap: 1
@@ -108,7 +111,28 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Cliffs_Sprite_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1668
+        height: 609
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 374c80a67340566e0800000000000000
+      internalID: -1845063836289678221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -119,7 +143,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Cliffs_Sprite_0: -1845063836289678221
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
@@ -129,6 +154,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 87744
   packageName: A* Pathfinding Project Pro
-  packageVersion: 5.4.6
+  packageVersion: 5.4.7
   assetPath: Packages/com.arongranberg.astar/ExampleScenes~/Materials/Textures/2D/Sprites/Cliffs_Sprite.png
-  uploadId: 851410
+  uploadId: 984522

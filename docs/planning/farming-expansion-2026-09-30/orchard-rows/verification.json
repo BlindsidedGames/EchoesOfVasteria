@@ -1,0 +1,49 @@
+{
+  "stage": "orchard-orderly-rows",
+  "mainDirty": false,
+  "mainSha256": "8f912645ea9216c7f25a833da730c44524aaea0dab7ba4cd76a9c0e1ac0d9d54",
+  "playing": false,
+  "branch": "fix/editor-startup-terrain-catalogue",
+  "head": "b3cedc38b2ba75490aa0970346b246cff591d0f4",
+  "protectedCleanupPaths": 38,
+  "protectedSourceChanges": [],
+  "preservedSeedAndPriorOrchardPaths": 11,
+  "assetChanges": [],
+  "actualPlayerFilesPreserved": 77,
+  "verifiedBackups": 93,
+  "approvedV4FiguresPreserved": 5,
+  "seedLibraryImageBytesPreserved": 3,
+  "cropRenderersPreserved": 60,
+  "cropBedsRetained": 6,
+  "existingPathTilesPreserved": 150,
+  "newSoilTiles": 16,
+  "newTrees": 4,
+  "newPathCells": 0,
+  "standingTreeRemoval": 0,
+  "visibleMatureRowClearance": 0.625,
+  "matureCanopyToExistingFenceClearance": 0.4375,
+  "clearAccessWidth": 1.5,
+  "pathValidation": "Static tile bounds and existing-scenery bounds; runtime navigation/colliders not tested",
+  "renderLogs": [],
+  "MainLightGuardsRestored": true,
+  "previewScenes": [
+    "Assets/Editor/FarmingOrchardRowsPreview/F-orderly-rows.unity",
+    "Assets/Editor/FarmingOrchardRowsPreview/F-all-mature-clearance.unity"
+  ],
+  "temporaryHelperRemoved": true,
+  "visualsReviewed": [
+    "rows-mixed-close",
+    "rows-all-mature-close",
+    "farm-optional-orchard"
+  ],
+  "priorVersionsRetained": true,
+  "brokenMarkdownLinks": [],
+  "rawHtml": [],
+  "library": {
+    "library_file_id": "libfile_555f413a50c881919dc35beb045aa5c4",
+    "file_id": "file_00000000e56481faae5f992b7a8a50b3",
+    "version": 2
+  },
+  "farmingOrOrchardImplementation": false,
+  "commitPush": false
+}

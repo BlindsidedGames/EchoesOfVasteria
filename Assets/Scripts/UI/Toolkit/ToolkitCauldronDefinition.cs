@@ -8,13 +8,8 @@ namespace TimelessEchoes.UI.Toolkit
     public sealed class ToolkitCauldronDefinition : ScriptableObject
     {
         public CauldronConfig config;
-        public Sprite frame, inset, darkInset, slot, selectionGreen, selectionWhite;
-        public Sprite button, plus, arrowGreen, arrowRed, xpTrack, xpFill, hover, collectionFill;
-        public Sprite[] tierBackgrounds, tierBorders;
         public SpriteAnimation portrait, pot;
-        public string mixingHelp, rewardHelp;
-        public bool showTaste, showStop;
-        public Color xpColor, countColor, collectionFillColor, collectionCountColor, disabledColor;
+        public string rewardHelp;
 
         [Serializable]
         public sealed class SpriteAnimation

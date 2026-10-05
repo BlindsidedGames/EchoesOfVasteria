@@ -1,0 +1,28 @@
+from pathlib import Path
+import re,json,shutil
+p=Path.cwd();e=p.parent/'Echoes Farming Planning Evidence/2026-09-30/depth-sorting-correction-2026-10-01';records=[]
+def parts(s):return re.split(r'(?m)(?=^--- !u!\d+ &)',s)
+def replace_field(o,n,field):
+ pattern=r'(?m)^  '+field+r': .*\n';a=re.findall(pattern,n);assert len(a)==1,(field,a);return re.sub(pattern,lambda m:a[0],o)
+for f in list((p/'Assets/Editor/FarmingPreviewsV4').glob('*.unity'))+list((p/'Assets/Editor/FarmingOrchardRowsPreview').glob('*.unity'))+list((p/'Assets/Editor/FarmingOrchardCapacityPreview').glob('*.unity')):
+ rel=str(f.relative_to(p));base=e/'baseline'/rel
+ if not base.exists():base=e/'baseline'/rel.replace('-mixed-up','-one-tile-up')
+ old={x.split('\n',1)[0]:x for x in parts(base.read_text())};np=parts(f.read_text());assert old.keys()<=set(x.split('\n',1)[0] for x in np)
+ names={re.search(r'&(-?\d+)',k).group(1):re.search(r'\n  m_Name: (.*)\n',v).group(1) for k,v in old.items() if '\nGameObject:\n' in v};result=[];modified=[]
+ for n in np:
+  key=n.split('\n',1)[0]
+  if key not in old:result.append(n);continue
+  o=old[key];out=o
+  go=re.search(r'm_GameObject: \{fileID: (\d+)\}',o);name=names.get(go.group(1),'') if go else ''
+  if '\nSceneRoots:\n' in o:out=n
+  elif '\nTransform:\n' in o and name.startswith('OPTIONAL Orchard Capacity'):
+   pattern=r'(?ms)^  m_Children:\n.*?(?=^  m_Father:)';a=re.findall(pattern,n);assert len(a)==1;out=re.sub(pattern,lambda m:a[0],o)
+  elif '\nTransform:\n' in o and (name.startswith('Orchard soil') or name.startswith('Orchard tree')):
+   out=replace_field(o,n,'m_LocalPosition')
+   if name.startswith('Orchard tree'):out=replace_field(out,n,'m_Father')
+  elif '\nSpriteRenderer:\n' in o and name.startswith('Orchard tree'):
+   for field in ['m_SortingOrder','m_SpriteSortPoint','m_Sprite']:out=replace_field(out,n,field)
+  if out!=o:modified.append({'component':key,'object':name})
+  result.append(out)
+ archive=e/'before-serialization-narrowing'/rel;archive.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(f,archive);f.write_text(''.join(result));records.append({'scene':rel,'existingModifiedComponents':modified,'newComponents':len(np)-len(old),'allOtherComponentsByteExact':True})
+(e/'narrow-serialized-proof.json').write_text(json.dumps(records,indent=2));print([(x['scene'].split('/')[-1],len(x['existingModifiedComponents']),x['newComponents']) for x in records])

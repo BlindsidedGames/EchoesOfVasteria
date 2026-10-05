@@ -1,0 +1,78 @@
+{
+  "status": "passed",
+  "source": "/Users/matthewrushworth/Projects/Echoes of Vasteria",
+  "run_root": "/private/tmp/eov-ae-retirement-tests-v4",
+  "unity_version": "6000.6.0f1",
+  "disposable_identity": {
+    "companyName": "EchoesTests",
+    "productName": "EOVTests_1021a33014a1e47a"
+  },
+  "suites": [
+    {
+      "platform": "EditMode",
+      "command": [
+        "/usr/bin/sandbox-exec",
+        "-f",
+        "/private/tmp/eov-ae-retirement-tests-v4/sandbox.sb",
+        "/Applications/Unity/Hub/Editor/6000.6.0f1/Unity.app/Contents/MacOS/Unity",
+        "-batchmode",
+        "-nographics",
+        "-forgetProjectPath",
+        "-refreshImportMode",
+        "InProcess",
+        "-projectPath",
+        "/private/tmp/eov-ae-retirement-tests-v4/project",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testResults",
+        "/private/tmp/eov-ae-retirement-tests-v4/EditModeDiscoveryFinal.xml",
+        "-assemblyNames",
+        "EditMode.Tests",
+        "-logFile",
+        "/private/tmp/eov-ae-retirement-tests-v4/EditModeDiscoveryFinal.log"
+      ],
+      "status": "passed",
+      "process_exit": 0,
+      "passed": 185,
+      "failed": 0,
+      "skipped": 0,
+      "failures": [],
+      "elapsed_seconds": 17.742
+    },
+    {
+      "platform": "PlayMode",
+      "command": [
+        "/usr/bin/sandbox-exec",
+        "-f",
+        "/private/tmp/eov-ae-retirement-tests-v4/sandbox.sb",
+        "/Applications/Unity/Hub/Editor/6000.6.0f1/Unity.app/Contents/MacOS/Unity",
+        "-batchmode",
+        "-nographics",
+        "-forgetProjectPath",
+        "-refreshImportMode",
+        "InProcess",
+        "-projectPath",
+        "/private/tmp/eov-ae-retirement-tests-v4/project",
+        "-runTests",
+        "-testPlatform",
+        "PlayMode",
+        "-testResults",
+        "/private/tmp/eov-ae-retirement-tests-v4/PlayModeDiscoveryFinal.xml",
+        "-assemblyNames",
+        "Tests",
+        "-logFile",
+        "/private/tmp/eov-ae-retirement-tests-v4/PlayModeDiscoveryFinal.log"
+      ],
+      "status": "passed",
+      "process_exit": 0,
+      "passed": 56,
+      "failed": 0,
+      "skipped": 0,
+      "failures": [],
+      "elapsed_seconds": 88.556
+    }
+  ],
+  "input_updates": "discovery-input-updates.json",
+  "initial_inputs": "inputs.json"
+}

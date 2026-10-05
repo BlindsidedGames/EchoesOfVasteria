@@ -23,8 +23,10 @@ namespace Pathfinding.ECS {
 	public partial struct AIMoveSystem : ISystem {
 		EntityQuery entityQueryWithGravity;
 		EntityQuery entityQueryMovementOverride;
+		MovementOverrideRunner movementOverrideRunner;
 
 		public void OnCreate (ref SystemState state) {
+			movementOverrideRunner = new MovementOverrideRunner(ref state);
 			entityQueryWithGravity = state.GetEntityQuery(
 				ComponentType.ReadWrite<LocalTransform>(),
 				ComponentType.ReadOnly<AgentCylinderShape>(),
@@ -48,7 +50,7 @@ namespace Pathfinding.ECS {
 				);
 
 			entityQueryMovementOverride = state.GetEntityQuery(
-				ComponentType.ReadWrite<ManagedMovementOverrideBeforeMovement>(),
+				ComponentType.ReadOnly<AgentHasBeforeMovementOverride>(),
 
 				ComponentType.ReadWrite<LocalTransform>(),
 				ComponentType.ReadWrite<AgentCylinderShape>(),
@@ -56,7 +58,7 @@ namespace Pathfinding.ECS {
 				ComponentType.ReadWrite<DestinationPoint>(),
 				ComponentType.ReadWrite<MovementState>(),
 				ComponentType.ReadWrite<MovementStatistics>(),
-				ComponentType.ReadWrite<ManagedState>(),
+				ComponentType.ReadWrite<AgentManagedRef>(),
 				ComponentType.ReadWrite<MovementSettings>(),
 				ComponentType.ReadWrite<ResolvedMovement>(),
 				ComponentType.ReadWrite<MovementControl>(),
@@ -120,15 +122,14 @@ namespace Pathfinding.ECS {
 		}
 
 		void RunMovementOverrideBeforeMovement (ref SystemState systemState, float dt) {
+			PendingMovementOverrideChanges.Apply();
 			if (!entityQueryMovementOverride.IsEmptyIgnoreFilter) {
 				MarkerMovementOverride.Begin();
 				// The movement overrides always run on the main thread.
 				// This adds a sync point, but only if people actually add a movement override (which is rare).
 				systemState.CompleteDependency();
-				new JobManagedMovementOverrideBeforeMovement {
-					dt = dt,
-					// TODO: Add unit test to make sure it fires/not fires when it should
-				}.Run(entityQueryMovementOverride);
+				// TODO: Add unit test to make sure it fires/not fires when it should
+				movementOverrideRunner.Run(ref systemState, entityQueryMovementOverride, MovementOverrideRunner.Phase.BeforeMovement, dt);
 				MarkerMovementOverride.End();
 			}
 		}

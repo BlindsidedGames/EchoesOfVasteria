@@ -1,0 +1,12 @@
+{
+  "errors": [],
+  "compilerWarnings": [
+    "Assets/Editor/StyleLab/VasteriaStyleLab.cs(59,4): warning UDR0004: Non-static method subscribed to static event in CaptureView is not deregistered. Deregister it in OnDisable.",
+    "Assets/Editor/StyleLab/VasteriaStyleLab.cs(59,55): warning UDR0004: Non-static method subscribed to static event in CaptureView is not deregistered. Deregister it in OnDisable.",
+    "Assets/Editor/StyleLab/VasteriaStyleLab.cs(59,91): warning UDR0004: Non-static method subscribed to static event in CaptureView is not deregistered. Deregister it in OnDisable.",
+    "Assets/Editor/Validation/GatheringBuffValidation.cs(20,16): warning UDR0001: No method with RuntimeInitializeOnLoadMethod attribute",
+    "Assets/Editor/Validation/ToolkitNativeCutover.cs(31,118): warning CS0184: The given expression is never of the provided ('SlicedFilledImage') type",
+    "Assets/Tests/PlayMode/Tests/SaveSystemStressPlayModeTests.cs(47,33): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'."
+  ],
+  "refreshCompleted": true
+}

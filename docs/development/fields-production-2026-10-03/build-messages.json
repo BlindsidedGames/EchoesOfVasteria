@@ -1,0 +1,159 @@
+{
+    "messages": [
+        {
+            "step": "Preprocess Player",
+            "type": "Log",
+            "message": "1 URP assets included in build\n- UniversalRP - Assets/Settings/UniversalRP.asset\n\t - Renderer2D - Assets/Settings/Renderer2D.asset - UnityEngine.Rendering.Universal.Renderer2DData\n"
+        },
+        {
+            "step": "Preprocess Player",
+            "type": "Log",
+            "message": "[TestRunBuilder] Creating new file 'Assets/Resources/PerformanceTestRunInfo.json' (4031 bytes)"
+        },
+        {
+            "step": "Preprocess Player",
+            "type": "Log",
+            "message": "[TestRunBuilder] Creating new file 'Assets/Resources/PerformanceTestRunSettings.json' (23 bytes)"
+        },
+        {
+            "step": "Preprocess Player",
+            "type": "Warning",
+            "message": "[ServicesCore]: To use Unity's dashboard services, you need to link your Unity project to a project ID. To do this, go to Project Settings to select your organization, select your project and then link a project ID. You also need to make sure your organization has access to the required products. Visit https://dashboard.unity3d.com to sign up."
+        },
+        {
+            "step": "Preprocess Player",
+            "type": "Warning",
+            "message": "iOS App Info has not been configured. Please add and configure `iOS App Info` metadata to the Localization Settings in order to correctly support Localization on iOS."
+        },
+        {
+            "step": "Preprocess Player",
+            "type": "Warning",
+            "message": "Pipeline: No RuntimePipelineConfig asset found (Project Settings > Pipeline > Runtime). Pipeline will be disabled in Player builds."
+        },
+        {
+            "step": "Compile scripts",
+            "type": "Warning",
+            "message": "Assets/Scripts/Steamworks.NET/SteamManager.cs(97,3): warning CS0162: Unreachable code detected"
+        },
+        {
+            "step": "Compile scripts",
+            "type": "Warning",
+            "message": "Assets/Scripts/Blindsided/UGS/UgsLeaderboardsReporter.cs(42,13): warning CS0162: Unreachable code detected"
+        },
+        {
+            "step": "Compile scripts",
+            "type": "Warning",
+            "message": "Assets/Scripts/Blindsided/UGS/UgsLeaderboardsReporter.cs(118,13): warning CS0162: Unreachable code detected"
+        },
+        {
+            "step": "Compile scripts",
+            "type": "Warning",
+            "message": "Assets/Scripts/Blindsided/UGS/UgsInitializer.cs(21,13): warning CS0162: Unreachable code detected"
+        },
+        {
+            "step": "Compile scripts",
+            "type": "Warning",
+            "message": "Assets/Scripts/Blindsided/UGS/SilentAuthBootstrap.cs(13,13): warning CS0162: Unreachable code detected"
+        },
+        {
+            "step": "Compile scripts",
+            "type": "Warning",
+            "message": "Assets/Scripts/Blindsided/Oracle.cs(43,22): warning CS0414: The field 'Oracle._isQuitting' is assigned but its value is never used"
+        },
+        {
+            "step": "Compile scripts",
+            "type": "Warning",
+            "message": "Assets/Scripts/UI/UITicker.cs(61,39): warning CS0414: The field 'UITicker.enableProfiling' is assigned but its value is never used"
+        },
+        {
+            "step": "Compile scripts",
+            "type": "Warning",
+            "message": "/Blindsided/UGS/SilentAuthBootstrap.cs(13,13): warning CS0162: Unreachable code detected"
+        },
+        {
+            "step": "Compile scripts",
+            "type": "Warning",
+            "message": "Assets/Scripts/Blindsided/Oracle.cs(43,22): warning CS0414: The field 'Oracle._isQuitting' is assigned but its value is never used"
+        },
+        {
+            "step": "Compile scripts",
+            "type": "Warning",
+            "message": "Assets/Scripts/UI/UITicker.cs(61,39): warning CS0414: The field 'UITicker.enableProfiling' is assigned but its value is never used"
+        },
+        {
+            "step": "Prepare splash screen",
+            "type": "Log",
+            "message": "Including Unity Splash Screen logo because 'Show Unity Logo' is enabled."
+        },
+        {
+            "step": "Building scene Assets/Scenes/Main.unity",
+            "type": "Warning",
+            "message": "Creating missing RectTransform component for HorizontalLayoutGroup in Buttons."
+        },
+        {
+            "step": "Building scene Assets/Scenes/Main.unity",
+            "type": "Warning",
+            "message": "Creating missing RectTransform component for Image in ScrollViews."
+        },
+        {
+            "step": "Building scene Assets/Scenes/Main.unity",
+            "type": "Warning",
+            "message": "Creating missing RectTransform component for TextMeshProUGUI in Text (TMP)."
+        },
+        {
+            "step": "Building scene Assets/Scenes/Main.unity",
+            "type": "Warning",
+            "message": "Creating missing RectTransform component for Image in Close_Button."
+        },
+        {
+            "step": "Building scene Assets/Scenes/Main.unity",
+            "type": "Warning",
+            "message": "Creating missing RectTransform component for Image in Image."
+        },
+        {
+            "step": "Building scene Assets/Scenes/Main.unity",
+            "type": "Warning",
+            "message": "Creating missing RectTransform component for TextMeshProUGUI in Text (TMP)."
+        },
+        {
+            "step": "Building scene Assets/Scenes/Main.unity",
+            "type": "Error",
+            "message": "Problem detected while opening the Scene file: 'Assets/Scenes/Main.unity'.\nCheck the following logs for more details."
+        },
+        {
+            "step": "Building scene Assets/Scenes/Main.unity",
+            "type": "Error",
+            "message": "Transform component could not be found on game object 'Buttons'. Adding one."
+        },
+        {
+            "step": "Building scene Assets/Scenes/Main.unity",
+            "type": "Error",
+            "message": "Transform component could not be found on game object 'ScrollViews'. Adding one."
+        },
+        {
+            "step": "Building scene Assets/Scenes/Main.unity",
+            "type": "Error",
+            "message": "Transform component could not be found on game object 'Text (TMP)'. Adding one."
+        },
+        {
+            "step": "Building scene Assets/Scenes/Main.unity",
+            "type": "Error",
+            "message": "Transform component could not be found on game object 'Close_Button'. Adding one."
+        },
+        {
+            "step": "Building scene Assets/Scenes/Main.unity",
+            "type": "Error",
+            "message": "Transform component could not be found on game object 'Image'. Adding one."
+        },
+        {
+            "step": "Building scene Assets/Scenes/Main.unity",
+            "type": "Error",
+            "message": "Transform component could not be found on game object 'Text (TMP)'. Adding one."
+        },
+        {
+            "step": "Postprocess built player",
+            "type": "Warning",
+            "message": "Access token is empty. Native symbols will not be uploaded for this build. Please make sure you are signed in to the Unity Cloud."
+        }
+    ]
+}
