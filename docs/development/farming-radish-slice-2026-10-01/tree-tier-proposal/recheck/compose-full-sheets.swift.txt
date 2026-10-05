@@ -1,0 +1,28 @@
+import AppKit
+import Foundation
+let root="/Users/matthewrushworth/Projects/Echoes of Vasteria/", out="/tmp/eov-tree-art-recheck/"
+try! FileManager.default.createDirectory(atPath:out,withIntermediateDirectories:true)
+func canvas(_ file:String,_ paths:[String],_ scale:Int,_ width:Int=1500){
+ let heights=paths.map{p -> Int in let i=NSImage(contentsOfFile:root+p)!;return Int(i.size.height)*scale+80};let height=heights.reduce(0,+)+70
+ let b=NSBitmapImageRep(bitmapDataPlanes:nil,pixelsWide:width,pixelsHigh:height,bitsPerSample:8,samplesPerPixel:4,hasAlpha:true,isPlanar:false,colorSpaceName:.deviceRGB,bytesPerRow:width*4,bitsPerPixel:32)!
+ NSGraphicsContext.saveGraphicsState();NSGraphicsContext.current=NSGraphicsContext(bitmapImageRep:b);NSGraphicsContext.current!.imageInterpolation = .none
+ NSColor(calibratedRed:0.07,green:0.1,blue:0.11,alpha:1).setFill();NSRect(x:0,y:0,width:width,height:height).fill()
+ var y=height-60
+ for p in paths{
+  (p as NSString).draw(at:NSPoint(x:20,y:y),withAttributes:[.font:NSFont.systemFont(ofSize:18),.foregroundColor:NSColor.white]);let im=NSImage(contentsOfFile:root+p)!;let h=Int(im.size.height)*scale;y-=h+15
+  NSColor(calibratedWhite:0.2,alpha:1).setFill();NSRect(x:20,y:y,width:Int(im.size.width)*scale,height:h).fill();im.draw(in:NSRect(x:20,y:y,width:Int(im.size.width)*scale,height:h),from:.zero,operation:.sourceOver,fraction:1)
+  y-=65
+ }
+ NSGraphicsContext.restoreGraphicsState();try!b.representation(using:.png,properties:[:])!.write(to:URL(fileURLWithPath:out+file))
+}
+canvas("resources-both-full.png",["Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Resources_Icons_NO_Outline.png","Assets/Art/Packs/Cute_Fantasy/Icons/Outline/Resources_Icons_Outline.png"],7,1200)
+canvas("other-icons-full.png",["Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Other_Icons_NO_Outline.png","Assets/Art/Packs/Cute_Fantasy/Icons/Outline/Other_Icons_2_Outline.png"],7,1200)
+canvas("crops-extra-and-saplings.png",["Assets/Art/Packs/Cute_Fantasy/Crops/Crops_2.png","Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png","Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Trees_Fruit_Objects.png"],4,1200)
+canvas("recovered-tools-full.png",["Assets/Art/Packs/Cute_Fantasy_UI/Tools_Icons-Recovered.png"],5,1200)
+
+canvas("outdoor-props.png",["Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor.png","Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Camp_Decor.png","Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Cave_Decorations.png"],4,1600)
+canvas("water-wood.png",["Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Other_Water_Decor/Log_1_Water_Anim.png","Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Other_Water_Decor/Log_2_Water_Anim.png","Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Other_Water_Decor/Log_3_Water_Anim.png","Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Other_Water_Decor/Branch_Water_Anim.png"],4,1800)
+canvas("military-wood.png",["Assets/Art/Packs/Cute_Fantasy_MilitaryCamp/Split_Log_Benches.png","Assets/Art/Packs/Cute_Fantasy_MilitaryCamp/Wood_Spikes.png","Assets/Art/Packs/Cute_Fantasy_MilitaryCamp/Palisade.png"],3,1800)
+canvas("ui-icons.png",["Assets/Art/Packs/Cute_Fantasy_UI/UI_Icons.png"],4,1800)
+canvas("sibling-props.png",["Assets/Art/Packs/Cute_Fantasy_Dungeons/Objects/Dungeon_Objects.png","Assets/Art/Packs/Cute_Fantasy_Dungeons/Objects/Sewer_Water_Decor.png","Assets/Art/Packs/Cute_Fantasy_Volcano/Volcano_Props/Volcano_Plants.png","Assets/Art/Packs/Cute_Fantasy_Christmass/Decorations/Decor.png","Assets/Art/Packs/Cute_Fantasy_Halloween/Decorations/Decorations.png"],3,1800)
+canvas("desert-tree-props.png",["Assets/Art/Packs/Cute_Fantasy_Desert/Props/Water_Sack_On_Stick.png","Assets/Art/Packs/Cute_Fantasy_Desert/Props/Dead_tree.png","Assets/Art/Packs/Cute_Fantasy_Desert/Props/HalfDead_tree.png","Assets/Art/Packs/Cute_Fantasy_Desert/Props/Dead_bush.png","Assets/Art/Packs/Cute_Fantasy_Desert/Props/Acacia_Tree.png"],3,1800)

@@ -1,0 +1,21 @@
+import AppKit
+import Foundation
+let root="/Users/matthewrushworth/Projects/Echoes of Vasteria/",out=root+"docs/development/farming-radish-slice-2026-10-01/tree-tier-proposal/"
+let tasks=try!JSONSerialization.jsonObject(with:Data(contentsOf:URL(fileURLWithPath:out+"tree-task-index.json"))) as! [[String:Any]]
+let b=NSBitmapImageRep(bitmapDataPlanes:nil,pixelsWide:1840,pixelsHigh:1280,bitsPerSample:8,samplesPerPixel:4,hasAlpha:true,isPlanar:false,colorSpaceName:.deviceRGB,bytesPerRow:1840*4,bitsPerPixel:32)!
+NSGraphicsContext.saveGraphicsState();NSGraphicsContext.current=NSGraphicsContext(bitmapImageRep:b);NSGraphicsContext.current!.imageInterpolation = .none;NSColor(calibratedRed:0.08,green:0.12,blue:0.11,alpha:1).setFill();NSRect(x:0,y:0,width:1840,height:1280).fill()
+func text(_ s:String,_ x:Int,_ y:Int,_ n:CGFloat=22){(s as NSString).draw(at:NSPoint(x:x,y:y),withAttributes:[.font:NSFont.systemFont(ofSize:n),.foregroundColor:NSColor.white])}
+func draw(_ p:String,_ r:NSRect,_ x:Int,_ y:Int,_ scale:Int){let im=NSImage(contentsOfFile:root+p)!;im.draw(in:NSRect(x:x,y:y,width:Int(r.width)*scale,height:Int(r.height)*scale),from:r,operation:.sourceOver,fraction:1)}
+func gap(_ s:String,_ x:Int,_ y:Int){NSColor(calibratedWhite:0.45,alpha:1).setStroke();NSBezierPath(rect:NSRect(x:x,y:y,width:126,height:126)).stroke();text("No authored",x+5,y+70,17);text("inventory art",x+5,y+45,17);text(s,x,y-31,19)}
+text("Tree resource proposal | actual art, existing identities and gaps",28,1225,32)
+text("Four world families; currently every tree drops the same Log 57 / Stick 2. Proposed economy grouping: base → Birch → Spruce.",28,1186,22)
+let rows=[("Starter Tree","1","Levels 1 / 6","Keep Log 57 / Stick 2"),("Oak","4","Levels 13 / 18","Keep base resources"),("Birch","7","Levels 31 / 36","New Birch pair proposed"),("Spruce","10","Levels 81 / 86","New Spruce pair proposed")]
+let sheet="Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Resources_Icons_NO_Outline.png"
+for (i,a) in rows.enumerated(){let x=28+i*454;text(a.0,x,1116,29);text(a.2,x,1082);let task=tasks.first{($0["taskID"] as! String)==a.1}!,s=task["taskIcon"] as! [String:Any],r=s["rect"] as! [String:Double];draw(s["path"] as! String,NSRect(x:r["x"]!,y:r["y"]!,width:r["width"]!,height:r["height"]!),x+62,790,4);text("Existing world tree 4×",x,748,20);text(a.3,x,711,21)
+ if i<2 {draw(sheet,NSRect(x:0,y:16,width:16,height:16),x+5,552,7);draw(sheet,NSRect(x:32,y:16,width:16,height:16),x+170,552,7);text("Log (existing)",x,515,19);text("Stick (existing)",x+170,515,19);draw(sheet,NSRect(x:0,y:16,width:16,height:16),x+320,585,1);draw(sheet,NSRect(x:32,y:16,width:16,height:16),x+350,585,1);text("1×",x+326,552,17)} else {gap(i==2 ? "pale birch bark":"dark spruce bark",x+5,552);gap(i==2 ? "pale twig detail":"needle / twig detail",x+170,552);if i==3 {text("Log needs dark bark",x,486,20)}}
+}
+text("Nearby pack icons | actual 16×16 sprites enlarged 7×; visual descriptions do not create resources",28,415,24)
+let candidates=[(24,"Log · used ID 57"),(26,"Leafy stick · used ID 2"),(31,"Plank-like bundle"),(32,"Pinecone"),(33,"Shell / nut"),(25,"Bone · not timber")]
+for (i,a) in candidates.enumerated(){let x=28+i*303,y=216;draw(sheet,NSRect(x:(a.0%6)*16,y:(5-a.0/6)*16,width:16,height:16),x+45,y,7);text(a.1,x,y-34,20);text("sprite _\(a.0)",x,y-65,18);draw(sheet,NSRect(x:(a.0%6)*16,y:(5-a.0/6)*16,width:16,height:16),x+200,y+46,1);text("1×",x+199,y+16,15)}
+text("No replacement art generated. Birch/Spruce gaps await the intended pack source or separate approval to author matching icons.",28,42,22)
+NSGraphicsContext.restoreGraphicsState();try!b.representation(using:.png,properties:[:])!.write(to:URL(fileURLWithPath:out+"tree-resource-proposal.png"))

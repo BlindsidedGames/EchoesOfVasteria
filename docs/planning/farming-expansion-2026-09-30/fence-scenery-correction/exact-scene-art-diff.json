@@ -1,0 +1,777 @@
+[
+  {
+    "scene": "Assets/Editor/FarmingPreviewsV4/A0-existing.unity",
+    "removed": [],
+    "changed": [],
+    "added": []
+  },
+  {
+    "scene": "Assets/Editor/FarmingPreviewsV4/A1-first-beds.unity",
+    "removed": [],
+    "changed": [],
+    "added": []
+  },
+  {
+    "scene": "Assets/Editor/FarmingPreviewsV4/A2-stump-reclamation.unity",
+    "removed": [
+      {
+        "path": "Preview Town - A2-stump-reclamation/Tilemaps/BG_Decor 0",
+        "sprite": "FruitTree_Growth_YoungTree",
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+        "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+        "fileId": 6735665171789789739,
+        "rect": [
+          32.0,
+          0.0,
+          32.0,
+          64.0
+        ],
+        "pivot": [
+          16.0,
+          16.0
+        ],
+        "ppu": 16.0,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -51.5,
+          0.0,
+          1.0,
+          0.0,
+          -4.5,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "order": 0,
+        "layer": "Background",
+        "kind": "Tilemap",
+        "cell": [
+          23.0,
+          -5.0,
+          0.0
+        ],
+        "worldAnchor": [
+          -51.5,
+          -4.5,
+          0.0
+        ],
+        "tile": "Assets/Tilemaps/Tiles/FruitTree_Growth_YoungTree.asset",
+        "tileColor": "RGBA(1.000, 1.000, 1.000, 1.000)"
+      },
+      {
+        "path": "Preview Town - A2-stump-reclamation/Tilemaps/BG_Decor 0",
+        "sprite": "FruitTree_Growth_YoungTree",
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+        "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+        "fileId": 6735665171789789739,
+        "rect": [
+          32.0,
+          0.0,
+          32.0,
+          64.0
+        ],
+        "pivot": [
+          16.0,
+          16.0
+        ],
+        "ppu": 16.0,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -61.5,
+          0.0,
+          1.0,
+          0.0,
+          -12.5,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "order": 0,
+        "layer": "Background",
+        "kind": "Tilemap",
+        "cell": [
+          13.0,
+          -13.0,
+          0.0
+        ],
+        "worldAnchor": [
+          -61.5,
+          -12.5,
+          0.0
+        ],
+        "tile": "Assets/Tilemaps/Tiles/FruitTree_Growth_YoungTree.asset",
+        "tileColor": "RGBA(1.000, 1.000, 1.000, 1.000)"
+      }
+    ],
+    "changed": [],
+    "added": []
+  },
+  {
+    "scene": "Assets/Editor/FarmingPreviewsV4/A2b-southeast-work.unity",
+    "removed": [
+      {
+        "path": "Preview Town - A2b-southeast-work/Tilemaps/BG_Decor 0",
+        "sprite": "FruitTree_Growth_YoungTree",
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+        "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+        "fileId": 6735665171789789739,
+        "rect": [
+          32.0,
+          0.0,
+          32.0,
+          64.0
+        ],
+        "pivot": [
+          16.0,
+          16.0
+        ],
+        "ppu": 16.0,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -51.5,
+          0.0,
+          1.0,
+          0.0,
+          -4.5,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "order": 0,
+        "layer": "Background",
+        "kind": "Tilemap",
+        "cell": [
+          23.0,
+          -5.0,
+          0.0
+        ],
+        "worldAnchor": [
+          -51.5,
+          -4.5,
+          0.0
+        ],
+        "tile": "Assets/Tilemaps/Tiles/FruitTree_Growth_YoungTree.asset",
+        "tileColor": "RGBA(1.000, 1.000, 1.000, 1.000)"
+      },
+      {
+        "path": "Preview Town - A2b-southeast-work/Tilemaps/BG_Decor 0",
+        "sprite": "FruitTree_Growth_YoungTree",
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+        "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+        "fileId": 6735665171789789739,
+        "rect": [
+          32.0,
+          0.0,
+          32.0,
+          64.0
+        ],
+        "pivot": [
+          16.0,
+          16.0
+        ],
+        "ppu": 16.0,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -61.5,
+          0.0,
+          1.0,
+          0.0,
+          -12.5,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "order": 0,
+        "layer": "Background",
+        "kind": "Tilemap",
+        "cell": [
+          13.0,
+          -13.0,
+          0.0
+        ],
+        "worldAnchor": [
+          -61.5,
+          -12.5,
+          0.0
+        ],
+        "tile": "Assets/Tilemaps/Tiles/FruitTree_Growth_YoungTree.asset",
+        "tileColor": "RGBA(1.000, 1.000, 1.000, 1.000)"
+      }
+    ],
+    "changed": [],
+    "added": []
+  },
+  {
+    "scene": "Assets/Editor/FarmingPreviewsV4/A3-southeast-clearing.unity",
+    "removed": [
+      {
+        "path": "Preview Town - A3-southeast-clearing/Tilemaps/BG_Decor 0",
+        "sprite": "FruitTree_Growth_YoungTree",
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+        "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+        "fileId": 6735665171789789739,
+        "rect": [
+          32.0,
+          0.0,
+          32.0,
+          64.0
+        ],
+        "pivot": [
+          16.0,
+          16.0
+        ],
+        "ppu": 16.0,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -61.5,
+          0.0,
+          1.0,
+          0.0,
+          -12.5,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "order": 0,
+        "layer": "Background",
+        "kind": "Tilemap",
+        "cell": [
+          13.0,
+          -13.0,
+          0.0
+        ],
+        "worldAnchor": [
+          -61.5,
+          -12.5,
+          0.0
+        ],
+        "tile": "Assets/Tilemaps/Tiles/FruitTree_Growth_YoungTree.asset",
+        "tileColor": "RGBA(1.000, 1.000, 1.000, 1.000)"
+      },
+      {
+        "path": "Preview Town - A3-southeast-clearing/Tilemaps/BG_Decor 0",
+        "sprite": "FruitTree_Growth_YoungTree",
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+        "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+        "fileId": 6735665171789789739,
+        "rect": [
+          32.0,
+          0.0,
+          32.0,
+          64.0
+        ],
+        "pivot": [
+          16.0,
+          16.0
+        ],
+        "ppu": 16.0,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -51.5,
+          0.0,
+          1.0,
+          0.0,
+          -4.5,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "order": 0,
+        "layer": "Background",
+        "kind": "Tilemap",
+        "cell": [
+          23.0,
+          -5.0,
+          0.0
+        ],
+        "worldAnchor": [
+          -51.5,
+          -4.5,
+          0.0
+        ],
+        "tile": "Assets/Tilemaps/Tiles/FruitTree_Growth_YoungTree.asset",
+        "tileColor": "RGBA(1.000, 1.000, 1.000, 1.000)"
+      }
+    ],
+    "changed": [],
+    "added": []
+  },
+  {
+    "scene": "Assets/Editor/FarmingPreviewsV4/B3-terraced-rows.unity",
+    "removed": [
+      {
+        "path": "Preview Town - B3-terraced-rows/Tilemaps/BG_Decor 0",
+        "sprite": "FruitTree_Growth_YoungTree",
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+        "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+        "fileId": 6735665171789789739,
+        "rect": [
+          32.0,
+          0.0,
+          32.0,
+          64.0
+        ],
+        "pivot": [
+          16.0,
+          16.0
+        ],
+        "ppu": 16.0,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -61.5,
+          0.0,
+          1.0,
+          0.0,
+          -12.5,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "order": 0,
+        "layer": "Background",
+        "kind": "Tilemap",
+        "cell": [
+          13.0,
+          -13.0,
+          0.0
+        ],
+        "worldAnchor": [
+          -61.5,
+          -12.5,
+          0.0
+        ],
+        "tile": "Assets/Tilemaps/Tiles/FruitTree_Growth_YoungTree.asset",
+        "tileColor": "RGBA(1.000, 1.000, 1.000, 1.000)"
+      },
+      {
+        "path": "Preview Town - B3-terraced-rows/Tilemaps/BG_Decor 0",
+        "sprite": "FruitTree_Growth_YoungTree",
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+        "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+        "fileId": 6735665171789789739,
+        "rect": [
+          32.0,
+          0.0,
+          32.0,
+          64.0
+        ],
+        "pivot": [
+          16.0,
+          16.0
+        ],
+        "ppu": 16.0,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -51.5,
+          0.0,
+          1.0,
+          0.0,
+          -4.5,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "order": 0,
+        "layer": "Background",
+        "kind": "Tilemap",
+        "cell": [
+          23.0,
+          -5.0,
+          0.0
+        ],
+        "worldAnchor": [
+          -51.5,
+          -4.5,
+          0.0
+        ],
+        "tile": "Assets/Tilemaps/Tiles/FruitTree_Growth_YoungTree.asset",
+        "tileColor": "RGBA(1.000, 1.000, 1.000, 1.000)"
+      }
+    ],
+    "changed": [],
+    "added": []
+  },
+  {
+    "scene": "Assets/Editor/FarmingPreviewsV4/C3-grove-courtyard.unity",
+    "removed": [
+      {
+        "path": "Preview Town - C3-grove-courtyard/Tilemaps/BG_Decor 0",
+        "sprite": "FruitTree_Growth_YoungTree",
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+        "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+        "fileId": 6735665171789789739,
+        "rect": [
+          32.0,
+          0.0,
+          32.0,
+          64.0
+        ],
+        "pivot": [
+          16.0,
+          16.0
+        ],
+        "ppu": 16.0,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -51.5,
+          0.0,
+          1.0,
+          0.0,
+          -4.5,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "order": 0,
+        "layer": "Background",
+        "kind": "Tilemap",
+        "cell": [
+          23.0,
+          -5.0,
+          0.0
+        ],
+        "worldAnchor": [
+          -51.5,
+          -4.5,
+          0.0
+        ],
+        "tile": "Assets/Tilemaps/Tiles/FruitTree_Growth_YoungTree.asset",
+        "tileColor": "RGBA(1.000, 1.000, 1.000, 1.000)"
+      },
+      {
+        "path": "Preview Town - C3-grove-courtyard/Tilemaps/BG_Decor 0",
+        "sprite": "FruitTree_Growth_YoungTree",
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+        "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+        "fileId": 6735665171789789739,
+        "rect": [
+          32.0,
+          0.0,
+          32.0,
+          64.0
+        ],
+        "pivot": [
+          16.0,
+          16.0
+        ],
+        "ppu": 16.0,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -61.5,
+          0.0,
+          1.0,
+          0.0,
+          -12.5,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "order": 0,
+        "layer": "Background",
+        "kind": "Tilemap",
+        "cell": [
+          13.0,
+          -13.0,
+          0.0
+        ],
+        "worldAnchor": [
+          -61.5,
+          -12.5,
+          0.0
+        ],
+        "tile": "Assets/Tilemaps/Tiles/FruitTree_Growth_YoungTree.asset",
+        "tileColor": "RGBA(1.000, 1.000, 1.000, 1.000)"
+      }
+    ],
+    "changed": [],
+    "added": []
+  },
+  {
+    "scene": "Assets/Editor/FarmingOrchardRowsPreview/F-orderly-rows.unity",
+    "removed": [
+      {
+        "path": "Preview Town - A3-southeast-clearing/Tilemaps/BG_Decor 0",
+        "sprite": "FruitTree_Growth_YoungTree",
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+        "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+        "fileId": 6735665171789789739,
+        "rect": [
+          32.0,
+          0.0,
+          32.0,
+          64.0
+        ],
+        "pivot": [
+          16.0,
+          16.0
+        ],
+        "ppu": 16.0,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -61.5,
+          0.0,
+          1.0,
+          0.0,
+          -12.5,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "order": 0,
+        "layer": "Background",
+        "kind": "Tilemap",
+        "cell": [
+          13.0,
+          -13.0,
+          0.0
+        ],
+        "worldAnchor": [
+          -61.5,
+          -12.5,
+          0.0
+        ],
+        "tile": "Assets/Tilemaps/Tiles/FruitTree_Growth_YoungTree.asset",
+        "tileColor": "RGBA(1.000, 1.000, 1.000, 1.000)"
+      },
+      {
+        "path": "Preview Town - A3-southeast-clearing/Tilemaps/BG_Decor 0",
+        "sprite": "FruitTree_Growth_YoungTree",
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+        "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+        "fileId": 6735665171789789739,
+        "rect": [
+          32.0,
+          0.0,
+          32.0,
+          64.0
+        ],
+        "pivot": [
+          16.0,
+          16.0
+        ],
+        "ppu": 16.0,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -51.5,
+          0.0,
+          1.0,
+          0.0,
+          -4.5,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "order": 0,
+        "layer": "Background",
+        "kind": "Tilemap",
+        "cell": [
+          23.0,
+          -5.0,
+          0.0
+        ],
+        "worldAnchor": [
+          -51.5,
+          -4.5,
+          0.0
+        ],
+        "tile": "Assets/Tilemaps/Tiles/FruitTree_Growth_YoungTree.asset",
+        "tileColor": "RGBA(1.000, 1.000, 1.000, 1.000)"
+      }
+    ],
+    "changed": [],
+    "added": []
+  },
+  {
+    "scene": "Assets/Editor/FarmingOrchardRowsPreview/F-all-mature-clearance.unity",
+    "removed": [
+      {
+        "path": "Preview Town - A3-southeast-clearing/Tilemaps/BG_Decor 0",
+        "sprite": "FruitTree_Growth_YoungTree",
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+        "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+        "fileId": 6735665171789789739,
+        "rect": [
+          32.0,
+          0.0,
+          32.0,
+          64.0
+        ],
+        "pivot": [
+          16.0,
+          16.0
+        ],
+        "ppu": 16.0,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -61.5,
+          0.0,
+          1.0,
+          0.0,
+          -12.5,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "order": 0,
+        "layer": "Background",
+        "kind": "Tilemap",
+        "cell": [
+          13.0,
+          -13.0,
+          0.0
+        ],
+        "worldAnchor": [
+          -61.5,
+          -12.5,
+          0.0
+        ],
+        "tile": "Assets/Tilemaps/Tiles/FruitTree_Growth_YoungTree.asset",
+        "tileColor": "RGBA(1.000, 1.000, 1.000, 1.000)"
+      },
+      {
+        "path": "Preview Town - A3-southeast-clearing/Tilemaps/BG_Decor 0",
+        "sprite": "FruitTree_Growth_YoungTree",
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+        "guid": "fb2d20a85bb1e404abf5ec5eef672073",
+        "fileId": 6735665171789789739,
+        "rect": [
+          32.0,
+          0.0,
+          32.0,
+          64.0
+        ],
+        "pivot": [
+          16.0,
+          16.0
+        ],
+        "ppu": 16.0,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -51.5,
+          0.0,
+          1.0,
+          0.0,
+          -4.5,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "order": 0,
+        "layer": "Background",
+        "kind": "Tilemap",
+        "cell": [
+          23.0,
+          -5.0,
+          0.0
+        ],
+        "worldAnchor": [
+          -51.5,
+          -4.5,
+          0.0
+        ],
+        "tile": "Assets/Tilemaps/Tiles/FruitTree_Growth_YoungTree.asset",
+        "tileColor": "RGBA(1.000, 1.000, 1.000, 1.000)"
+      }
+    ],
+    "changed": [],
+    "added": []
+  }
+]

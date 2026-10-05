@@ -1,0 +1,335 @@
+{
+  "utc": "2026-10-01T07:38:01.773563+00:00",
+  "source": [
+    {
+      "file": "Assets/Scripts/Tasks/ContinuousTask.cs",
+      "sha256": "bc960f378172e486740df2000493975a2936dea2d150557bde1871035182f006",
+      "anchors": [
+        {
+          "pattern": "GenerateDrops",
+          "lines": [
+            61,
+            94
+          ]
+        },
+        {
+          "pattern": "NotifyCompleted",
+          "lines": [
+            63,
+            96
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Assets/Scripts/Tasks/BaseTask.cs",
+      "sha256": "14e80f09c01d28cc86c436bcc7c6a4173f4fbd78ce78b87a3b8a14ebcc793b6e",
+      "anchors": [
+        {
+          "pattern": "protected void NotifyCompleted",
+          "lines": [
+            117
+          ]
+        },
+        {
+          "pattern": "completionNotified",
+          "lines": [
+            31,
+            119,
+            121
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Assets/Scripts/Tasks/ResourceGeneratingTask.cs",
+      "sha256": "96cb09b3a17fb8fd6a813b1aeea6134b8669d52f730554ec2eb7a0a9c4919cc2",
+      "anchors": [
+        {
+          "pattern": "protected void GenerateDrops",
+          "lines": [
+            21
+          ]
+        },
+        {
+          "pattern": "DropResolver.RollDrops",
+          "lines": [
+            42
+          ]
+        },
+        {
+          "pattern": "resourceManager.Add",
+          "lines": [
+            65
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Assets/Scripts/Upgrades/DropResolver.cs",
+      "sha256": "b2cac98549c9c205ebe3a484d8e5f87b1e90c99b4a414205c5574f6fff05ae40",
+      "anchors": [
+        {
+          "pattern": "public static List<DropResult> RollDrops",
+          "lines": [
+            35
+          ]
+        },
+        {
+          "pattern": "_scratchAvailable.RemoveAt",
+          "lines": [
+            94,
+            105
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Assets/Scripts/Tasks/TaskData.cs",
+      "sha256": "34bbc76ff3fb1f36e17b4b6cff3c97dc53745afcad2600876c47dfba78050787",
+      "anchors": [
+        {
+          "pattern": "public float GetEffectiveMinX",
+          "lines": [
+            86
+          ]
+        },
+        {
+          "pattern": "public float GetEffectiveMaxX",
+          "lines": [
+            91
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Assets/Scripts/Tasks/TaskWeightService.cs",
+      "sha256": "4fa1de8443a36023b015ee882e3353e991f1a8c941c74043ffdbb11e83a4f6b1",
+      "anchors": [
+        {
+          "pattern": "public static float GetEffectiveWeight",
+          "lines": [
+            27
+          ]
+        },
+        {
+          "pattern": "public static bool IsTaskUnlocked",
+          "lines": [
+            55
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Assets/Scripts/Upgrades/ResourceManager.cs",
+      "sha256": "341636193a32428c7b2ef59a08ef0391c3b79db8b2fcbbb779bcac7d06e7d679",
+      "anchors": [
+        {
+          "pattern": "public void Add",
+          "lines": [
+            153
+          ]
+        },
+        {
+          "pattern": "public bool Spend",
+          "lines": [
+            188
+          ]
+        },
+        {
+          "pattern": "private void LoadState",
+          "lines": [
+            273
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Assets/Scripts/Blindsided/Oracle.cs",
+      "sha256": "d77ce36e839727c5885cd57bb4a62a69c9335331be1c3f5c293aff69c903e39b",
+      "anchors": [
+        {
+          "pattern": "public bool CanBeginSaveMutation",
+          "lines": [
+            97
+          ]
+        },
+        {
+          "pattern": "private bool TryPrepareSnapshot",
+          "lines": [
+            580
+          ]
+        },
+        {
+          "pattern": "private bool SaveNowBlocking",
+          "lines": [
+            624
+          ]
+        },
+        {
+          "pattern": "private void CompleteActiveSaveBlocking",
+          "lines": [
+            647
+          ]
+        },
+        {
+          "pattern": "private void PublishLoadedData",
+          "lines": [
+            1395
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Assets/Scripts/Blindsided/SaveData/SaveManager.cs",
+      "sha256": "c9bb3a9c0c1ff768f2f6863ccb9f600f947874fe5e30b5d15bb4d64e4f6c4494",
+      "anchors": [
+        {
+          "pattern": "private Task<SaveWriteResult> CaptureAndWriteAsync",
+          "lines": [
+            219
+          ]
+        },
+        {
+          "pattern": "payload = SerializationUtility.SerializeValue",
+          "lines": [
+            260
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Assets/Scripts/Blindsided/SaveData/GameData.cs",
+      "sha256": "fcd7d8df4693b33eaccb46489e1880ac894bbf525bd07d19d51186762805ed76",
+      "anchors": [
+        {
+          "pattern": "UpgradeLevels",
+          "lines": [
+            21
+          ]
+        },
+        {
+          "pattern": "PreviouslySerializedAs",
+          "lines": [
+            222
+          ]
+        },
+        {
+          "pattern": "MilestoneRecords",
+          "lines": [
+            223,
+            227,
+            228,
+            233,
+            234
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Assets/Scripts/Quests/QuestManager.cs",
+      "sha256": "8a7f61d64e6d301911b93f9a9407183e5fd15cfc3ea2146441b7c0243e7498ff",
+      "anchors": [
+        {
+          "pattern": "private void CompleteQuest",
+          "lines": [
+            521
+          ]
+        },
+        {
+          "pattern": "resourceManager.Spend",
+          "lines": [
+            534
+          ]
+        },
+        {
+          "pattern": "private void AuditQuestCompletionState",
+          "lines": [
+            913
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Assets/Scripts/TownCameraPan.cs",
+      "sha256": "9745671981a73b46e4acd7f44452dd7688830a8edb7dbe953af03c162a5a23bf",
+      "anchors": [
+        {
+          "pattern": "private void ResetGesture",
+          "lines": [
+            43
+          ]
+        },
+        {
+          "pattern": "float minSize",
+          "lines": [
+            78
+          ]
+        },
+        {
+          "pattern": "confiner.InvalidateLensCache",
+          "lines": [
+            132
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Assets/Scripts/UI/TownWindowManager.cs",
+      "sha256": "14cea9b07dce801c98ceb32e6a8c77d98fbe1b7389dda2cde0952aada491ebc8",
+      "anchors": [
+        {
+          "pattern": "private void OpenAlterEchoes",
+          "lines": [
+            450
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Assets/Scripts/UI/Toolkit/ToolkitNavigationScreen.cs",
+      "sha256": "5bfbc18bb1151ea0bf6ed3f39f10d22491883e3bebe9c59f54fe388fc04b5a57",
+      "anchors": [
+        {
+          "pattern": "AlterEchoGenerationManager.Instance",
+          "lines": [
+            244
+          ]
+        }
+      ]
+    }
+  ],
+  "migrationReports": [
+    {
+      "file": "docs/planning/save-migration-feasibility-2026-09-30/README.md",
+      "sha256": "52eadfd95285e1020f5a8c1f02f0772ffc6279aa7a995f5bbc06551a95d0aa13"
+    },
+    {
+      "file": "docs/planning/save-migration-feasibility-2026-09-30/unlock-omission-contract.md",
+      "sha256": "f247ef660d762b3fb4ebce006fb51f45561607ca1e24ee2565a8170ca3127296"
+    },
+    {
+      "file": "docs/planning/save-migration-feasibility-2026-09-30/evidence/buff-slot-history.json",
+      "sha256": "11527481bcba7db573e7a070c5f5e130bed60ad412421f3b3f1093cb4ef6fa70"
+    },
+    {
+      "file": "docs/planning/save-migration-feasibility-2026-09-30/evidence/probe-results.json",
+      "sha256": "54c2ef481c1a43fd6b737cf5d543c0e90a8493644801acd22a2fb07a081620e3"
+    },
+    {
+      "file": "docs/planning/save-migration-feasibility-2026-09-30/evidence/omission-results.json",
+      "sha256": "01e8e52a7f3f249f91ef8a37aaed084e86b301bc435969bd2e8d42c4b1c18201"
+    }
+  ],
+  "scope": "Read-only source/assets/auditor report; authored local farm planning Markdown only",
+  "firstPlayableSlice": "Stage1 original two beds, Radish pack/adventure/plant/elapsed growth/harvest/reload/native list; internally prove one bed first",
+  "requirementsOwner": "current authored definitions, actual skills/XP, meaningful quest/phase receipts, fresh pack acquisition history",
+  "decisionsStillProvisional": [
+    "production seed pool membership/Echo performers",
+    "unclaimed already-stored Echo earnings",
+    "post-retirement Cauldron pools and Infinity pacing",
+    "platform/save-bank rollout",
+    "orchard mechanics and final six/eight capacity"
+  ],
+  "balanceMeasurements": "ordinary runs still unmeasured; no final odds, prices or yields selected"
+}

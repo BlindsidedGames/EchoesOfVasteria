@@ -1,0 +1,33 @@
+from pathlib import Path
+import re,json,shutil
+p=Path.cwd();e=p.parent/'Echoes Farming Planning Evidence/2026-09-30/fence-scenery-correction-2026-10-01';b=json.loads((e/'baseline.json').read_text());records=[]
+for rel in b:
+ if not rel.endswith('.unity') or '/A0-' in rel or '/A1-' in rel or 'SeparatePreview/' in rel:continue
+ old=(e/'baseline'/rel).read_text();new=(p/rel).read_text()
+ def parts(s):return re.split(r'(?m)(?=^--- !u!\d+ &)',s)
+ op=parts(old);np=parts(new);assert len(op)==len(np)
+ result=[];target=0
+ for o,n in zip(op,np):
+  assert o.split('\n',1)[0]==n.split('\n',1)[0]
+  if '\nTilemap:\n' in n:
+   go=re.search(r'm_GameObject: \{fileID: (\d+)\}',n).group(1)
+   name=next((re.search(r'\n  m_Name: (.*)\n',g).group(1) for g in op if g.startswith('--- !u!1 &'+go+'\n')),None)
+   if name=='BG_Decor 0':
+    # Only this tilemap has an authorized change; retain other entire serialized components.
+    oldRates=re.findall(r"(?m)^      m_AnimationSpeed: .*\n",o);newRates=re.findall(r"(?m)^      m_AnimationSpeed: .*\n",n);assert len(oldRates)==len(newRates)
+    rates=iter(oldRates);n=re.sub(r"(?m)^      m_AnimationSpeed: .*\n",lambda m:next(rates),n)
+    expected=o
+    for x,y in [(13,-13),(23,-5)]:
+     pattern=r'(?m)^  - first: \{x: '+str(x)+', y: '+str(y)+r', z: 0\}\n    second:\n(?:      .*\n)+'
+     expected,count=re.subn(pattern,'',expected);assert count==1
+    # Unity updates its internal reference tables for the two removals.
+    strip=lambda s:re.sub(r'(?m)^    m_RefCount: \d+\n','',s)
+    assert strip(expected)==strip(n),(rel,'unexpected BG_Decor change')
+    result.append(n);target+=1
+   else:result.append(o)
+  else:result.append(o)
+ assert target==1
+ archive=e/'unity-save-before-narrowing'/rel;archive.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p/rel,archive)
+ (p/rel).write_text(''.join(result))
+ records.append({'scene':rel,'changedSerializedComponents':1,'component':'BG_Decor 0 Tilemap','removedCells':[[13,-13,0],[23,-5,0]],'otherComponentsByteExact':True,'incidentalAnimationRatesAndTileFlagsRestored':True})
+(e/'narrow-serialized-diff.json').write_text(json.dumps(records,indent=2));print(json.dumps(records,indent=2))

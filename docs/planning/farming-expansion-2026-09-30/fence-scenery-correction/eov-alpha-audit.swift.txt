@@ -1,0 +1,25 @@
+import AppKit
+import Foundation
+let base="/Users/matthewrushworth/Projects/Echoes Farming Planning Evidence/2026-09-30/fence-scenery-correction-2026-10-01/"
+let root="/Users/matthewrushworth/Projects/Echoes of Vasteria/"
+let scenes=try! JSONSerialization.jsonObject(with:Data(contentsOf:URL(fileURLWithPath:base+"scene-art-audit.json"))) as! [[String:Any]]
+var sources:[String:NSBitmapImageRep]=[:]
+var pixels:[String:[[Double]]]=[:]
+for scene in scenes { for art in scene["art"] as! [[String:Any]] {
+ let asset=art["asset"] as! String
+ guard asset.hasSuffix(".png") else {continue}
+ let rect=art["rect"] as! [Double]
+ let key=asset+":"+rect.map{String($0)}.joined(separator:",")
+ if pixels[key] != nil {continue}
+ if sources[asset]==nil { sources[asset]=NSBitmapImageRep(data:try! Data(contentsOf:URL(fileURLWithPath:root+asset)))! }
+ let rep=sources[asset]!
+ var result:[[Double]]=[]
+ for y in 0..<Int(rect[3]) {for x in 0..<Int(rect[2]) {
+  var rgba=[Int](repeating:0,count:4)
+  rep.getPixel(&rgba,atX:Int(rect[0])+x,y:rep.pixelsHigh-1-(Int(rect[1])+y))
+  if rgba[3]>0 {result.append([Double(x),Double(y),Double(rgba[3])])}
+ }}
+ pixels[key]=result
+}}
+try! JSONSerialization.data(withJSONObject:pixels).write(to:URL(fileURLWithPath:base+"source-alpha-pixels.json"))
+print("alpha sprite regions: \(pixels.count)")

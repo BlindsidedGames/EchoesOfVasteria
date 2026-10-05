@@ -1,0 +1,29 @@
+import AppKit
+import Foundation
+let source="/Users/matthewrushworth/Projects/Echoes Farming Planning Evidence/2026-09-30/orchard-capacity-2026-10-01/"
+let output="/Users/matthewrushworth/Projects/Echoes of Vasteria/docs/planning/farming-expansion-2026-09-30/visuals/orchard-capacity/farm-optional-orchard.png"
+func text(_ s:String,_ x:CGFloat,_ y:CGFloat,_ size:CGFloat=24,_ color:NSColor = .white){(s as NSString).draw(at:NSPoint(x:x,y:y),withAttributes:[.font:NSFont.systemFont(ofSize:size,weight:.medium),.foregroundColor:color])}
+func panel(_ file:String,_ title:String,_ sub:String,_ x:CGFloat,_ y:CGFloat){text(title,x,y+937,28);text(sub,x,y+910,22,NSColor(calibratedWhite:0.8,alpha:1));NSImage(contentsOfFile:source+file+".png")!.draw(in:NSRect(x:x,y:y,width:1600,height:900),from:.zero,operation:.sourceOver,fraction:1)}
+let rep=NSBitmapImageRep(bitmapDataPlanes:nil,pixelsWide:3290,pixelsHigh:4410,bitsPerSample:8,samplesPerPixel:4,hasAlpha:true,isPlanar:false,colorSpaceName:.deviceRGB,bytesPerRow:13160,bitsPerPixel:32)!;NSGraphicsContext.saveGraphicsState();NSGraphicsContext.current=NSGraphicsContext(bitmapImageRep:rep);NSGraphicsContext.current!.imageInterpolation = .none;NSColor(calibratedRed:0.08,green:0.11,blue:0.08,alpha:1).setFill();NSRect(x:0,y:0,width:3290,height:4410).fill()
+text("Separate orchard | two rows of three versus four trees",30,4350,40)
+text("Actual Unity previews. All six crop beds, original fields and paths stay in place. Orchard counts are visual options, not approved production.",30,4305,27)
+panel("G6-clear-mature-close","6 TREES | three columns, recommended roomier fit","4-unit column spacing; 2-unit grass aisles. Top row moved up0.375, not a full tile.",30,3280)
+panel("H8-clear-mature-close","8 TREES | four columns, denser fit","3.5-unit spacing; 1.5-unit aisles. Same adjusted row heights and camera.",1660,3280)
+panel("G6-one-tile-up-fence-detail","EXACT +1 TILE | mature canopy crosses the fence","Verified grid step =1 world unit; 0.5625-unit vertical intrusion. Constraint view.",30,2210)
+panel("H8-one-tile-up-fence-detail","EXACT +1 TILE | eight trees have the same conflict","These are deliberately retained failed-fit examples; the fence has not been moved.",1660,2210)
+panel("G6-clear-mature-normal","6 TREES | normal town camera scale","Minimum adjustment: move0.625 south from the exact request; canopy gap0.0625.",30,1140)
+panel("H8-clear-mature-normal","8 TREES | same normal camera scale","No extra tree clearing; one canopy shades an existing ground-grass tuft.",1660,1140)
+panel("G6-clear-mature-town","WIDER TOWN CONTEXT | separate orchard strip","The original farm, mountain relationship, field2 and logging approaches remain intact.",30,70)
+text("What fits, and the remaining choice",1710,920,36)
+text("One native art pixel =0.0625 world units.",1710,845,31)
+text("Both adjusted mature layouts clear the fence.",1710,786,31)
+text("The full one-tile shift does not.",1710,727,31)
+text("Row spacing3.5; mature silhouette gap0.625.",1710,626,31)
+text("Each planting plot remains2×2 world units.",1710,567,31)
+text("6: orchard plots span10×5.5 units.",1710,466,31)
+text("8: orchard plots span12.5×5.5 units.",1710,407,31)
+text("Six gives wider aisles and more edge breathing room.",1710,306,31)
+text("Eight is viable if the denser footprint is preferred.",1710,247,31)
+text("Static art checks only; runtime access is untested.",1710,146,28)
+text("Prior previews preserved. Main/saves unchanged.",1710,91,28)
+NSGraphicsContext.restoreGraphicsState();try!rep.representation(using:.png,properties:[:])!.write(to:URL(fileURLWithPath:output));print("Orchard comparison rendered")

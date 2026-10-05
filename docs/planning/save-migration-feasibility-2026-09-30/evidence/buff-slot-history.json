@@ -1,0 +1,40 @@
+{
+  "currentBaseSlots": 1,
+  "currentMaximumSlots": 5,
+  "introQuest": {
+    "questId": "Mildred",
+    "displayName": "A Fishy Situation",
+    "unlockBuffSlots": 0
+  },
+  "currentChain": [
+    {"questId":"BuffSlot2","displayName":"Mew","prerequisite":"Mildred","unlockBuffSlots":1,"resource":"Muddy Muck Muncher","amount":100},
+    {"questId":"BuffSlot3","displayName":"Seriously?","prerequisite":"BuffSlot2","unlockBuffSlots":1,"resource":"Wigglelittle","amount":300},
+    {"questId":"BuffSlot4","displayName":"Just Keep Eating.","prerequisite":"BuffSlot3","unlockBuffSlots":1,"resource":"Flipzoid","amount":1000},
+    {"questId":"BuffSlot5","displayName":"A lap, and a Feast","prerequisite":"BuffSlot4","unlockBuffSlots":1,"resource":"Bloopicus Maximus","amount":2500}
+  ],
+  "fixture": {
+    "id":"es3-36",
+    "embeddedKey":"Beta5Data",
+    "savedRegularCapacity":2,
+    "savedAutoCapacity":2,
+    "completedRelevantIds":["Mildred","Mildred1","Echo Casting","The 100"],
+    "completedCurrentSlotIds":[],
+    "rawCurrentQuestReconstruction":1,
+    "afterProvenAliasReconstruction":2,
+    "afterRemainingThreeQuests":5,
+    "inputBytesUnchanged":true
+  },
+  "aliasEvidence": {
+    "commit":"d1729403f80d08962a252138bfa1fcabc3dbf5b2",
+    "date":"2025-08-02",
+    "oldQuestId":"Mildred1",
+    "oldDisplayName":"Another Fishy Situation",
+    "newQuestId":"BuffSlot2",
+    "assetGuid":"a04629c010952d741b32db280e62a8eb",
+    "oldAndNewRewardSlots":1,
+    "oldAndImmediateNewResource":"Muddy Muck Muncher",
+    "oldAndImmediateNewAmount":50,
+    "meaning":"Same authored asset/receipt changed IDs; current quantity later changed to 100. Not a reduced maximum."
+  },
+  "limits":"Fixture is backed-up local historical/imported data, not proven untouched mobile release. Alias preserves completion history; do not call CompleteQuest or replay costs/rewards. General reconstruction needs all relevant historical aliases validated. No production edits."
+}

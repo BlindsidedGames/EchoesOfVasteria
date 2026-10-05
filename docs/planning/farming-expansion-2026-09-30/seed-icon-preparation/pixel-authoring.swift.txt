@@ -1,0 +1,49 @@
+import AppKit
+import Foundation
+let root="/Users/matthewrushworth/Projects/Echoes of Vasteria/"
+let out="/Users/matthewrushworth/Projects/Echoes Farming Planning Evidence/2026-09-30/seed-icon-assets-2026-10-01/"
+let shape=try!JSONSerialization.jsonObject(with:Data(contentsOf:URL(fileURLWithPath:out+"../revision-4/seed-packet-shapes.json"))) as! [String:Any]
+let packets=(shape["sprites"] as! [[String:Any]]).sorted{($0["name"] as! String)<($1["name"] as! String)}
+func load(_ p:String)->NSBitmapImageRep{NSBitmapImageRep(data:try!Data(contentsOf:URL(fileURLWithPath:root+p)))!}
+func make(_ w:Int,_ h:Int)->NSBitmapImageRep{let b=NSBitmapImageRep(bitmapDataPlanes:nil,pixelsWide:w,pixelsHigh:h,bitsPerSample:8,samplesPerPixel:4,hasAlpha:true,isPlanar:false,colorSpaceName:.deviceRGB,bytesPerRow:w*4,bitsPerPixel:32)!;memset(b.bitmapData!,0,w*h*4);return b}
+func get(_ b:NSBitmapImageRep,_ x:Int,_ y:Int)->[UInt]{var a=[UInt](repeating:0,count:4);b.getPixel(&a,atX:x,y:b.pixelsHigh-1-y);return a}
+func set(_ b:NSBitmapImageRep,_ x:Int,_ y:Int,_ v:[UInt]){var a=v;b.setPixel(&a,atX:x,y:b.pixelsHigh-1-y)}
+func save(_ b:NSBitmapImageRep,_ path:String){try!b.representation(using:.png,properties:[:])!.write(to:URL(fileURLWithPath:path))}
+let crop=load("Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png"),core=load("Assets/Art/Packs/Cute_Fantasy_UI/Cores.png"), old=load("Assets/Resources/Fonts/FloatingTextIcons.png")
+var coreColors=[[UInt]:Int]();for y in 0..<16{for x in 128..<144{let v=get(core,x,y);if v[3]>0{coreColors[v,default:0]+=1}}}
+let brown=coreColors.max{$0.value<$1.value}!.key
+let inv=make(128,48),extended=make(288,224)
+for y in 0..<192{for x in 0..<288{set(extended,x,y,get(old,x,y))}}
+var info=[[String:Any]]();var originals=[NSBitmapImageRep](),prepared=[NSBitmapImageRep](),drops=[NSBitmapImageRep]()
+let halo:[UInt]=[249,230,207,255]
+let corn=packets.first{($0["name"] as! String)=="Crop_Corn_SeedPacket"}!["rect"] as! [String:Double]
+var haloCoords=Set<Int>()
+for y in 0..<16{for x in 0..<16{if get(crop,Int(corn["x"]!)+x,Int(corn["y"]!)+y)==halo{let exposed=[(-1,0),(1,0),(0,-1),(0,1)].contains{dx,dy in let px=x+dx,py=y+dy;return px<0||px>=16||py<0||py>=16||get(crop,Int(corn["x"]!)+px,Int(corn["y"]!)+py)[3]==0};if exposed{haloCoords.insert(y*16+x)}}}}
+precondition(haloCoords.count>0)
+for (i,p) in packets.enumerated(){let r=p["rect"] as! [String:Double];let name=(p["name"] as! String).replacingOccurrences(of:"Crop_",with:"").replacingOccurrences(of:"_SeedPacket",with:"");let original=make(16,16),icon=make(16,16);var removed=0,solid=0
+ for y in 0..<16{for x in 0..<16{let v=get(crop,Int(r["x"]!)+x,Int(r["y"]!)+y);set(original,x,y,v);if v[3]==0{continue};if haloCoords.contains(y*16+x){precondition(v==halo,"Shared halo differed");removed+=1; // validate every removed pixel lies on the exposed silhouette perimeter
+ let exposed=[(-1,0),(1,0),(0,-1),(0,1)].contains{dx,dy in let px=x+dx,py=y+dy;return px<0||px>=16||py<0||py>=16||get(crop,Int(r["x"]!)+px,Int(r["y"]!)+py)[3]==0};precondition(exposed,"Pale packet interior would be removed")
+ }else{set(icon,x,y,v);solid+=1}}}
+ precondition(removed>0);for y in 0..<16{for x in 0..<16{set(inv,(i%8)*16+x,(2-i/8)*16+y,get(icon,x,y));set(extended,(i%18)*16+x,(13-i/18)*16+y,get(original,x,y))}}
+ originals.append(original);prepared.append(icon);drops.append(original);info.append(["family":name,"sourceName":p["name"]!,"sourceRect":r,"inventoryName":"SeedPack_\(name)","inventoryRect":["x":(i%8)*16,"y":(2-i/8)*16,"width":16,"height":16],"dropIndex":213+i,"dropName":"SeedPack_\(name)","dropRect":["x":(i%18)*16,"y":(13-i/18)*16,"width":16,"height":16],"removedHaloPixels":removed,"retainedMaterialPixels":solid])
+}
+let unknown=make(16,16),dropUnknown=make(16,16)
+for y in 0..<16{for x in 0..<16{if get(prepared[0],x,y)[3]>0{set(unknown,x,y,brown);set(dropUnknown,x,y,brown)}else if get(originals[0],x,y)[3]>0{set(dropUnknown,x,y,halo)}}}
+let i=22;for y in 0..<16{for x in 0..<16{set(inv,(i%8)*16+x,(2-i/8)*16+y,get(unknown,x,y));set(extended,(i%18)*16+x,(13-i/18)*16+y,get(dropUnknown,x,y))}}
+info.append(["family":"Unknown","inventoryName":"SeedPack_Unknown","inventoryRect":["x":96,"y":0,"width":16,"height":16],"dropIndex":235,"dropName":"SeedPack_Unknown","dropRect":["x":64,"y":192,"width":16,"height":16],"colorRGBA":brown,"sourceConvention":"Cores_8 predominant opaque brown; common packet contour without crop detail"])
+try!FileManager.default.createDirectory(atPath:root+"Assets/Art/Derived/SeedPacks",withIntermediateDirectories:true)
+save(inv,root+"Assets/Art/Derived/SeedPacks/SeedPackInventory.png");save(extended,root+"Assets/Resources/Fonts/FloatingTextIcons.png");save(unknown,out+"shared-unknown-native.png");save(dropUnknown,out+"shared-unknown-drop-native.png")
+let manifest:[String:Any]=["icons":info,"inventoryDimensions":[128,48],"extendedAtlasDimensions":[288,224],"oldAtlasDimensions":[288,192],"oldAtlasBottomRegionRGBAUnchanged":true,"haloRGBA":halo,"unknownRGBA":brown,"sourceUnchanged":true,"normalizedCanvas":[16,16],"inventoryHaloRemoved":true,"commonHaloCoordinates":haloCoords.sorted(),"interiorSameColorPreserved":true,"dropHaloRetained":true,"notGameplayResourceMapping":true]
+try!JSONSerialization.data(withJSONObject:manifest,options:.prettyPrinted).write(to:URL(fileURLWithPath:out+"asset-manifest.json"))
+// Nearest-neighbour pixel evidence; includes native-size rows on a pixel grid.
+func text(_ v:String,_ x:CGFloat,_ y:CGFloat,_ size:CGFloat=20){(v as NSString).draw(at:NSPoint(x:x,y:y),withAttributes:[.font:NSFont.systemFont(ofSize:size),.foregroundColor:NSColor.white])}
+func draw(_ b:NSBitmapImageRep,_ x:CGFloat,_ y:CGFloat,_ scale:Int){let im=NSImage(size:NSSize(width:16,height:16));im.addRepresentation(b);im.draw(in:NSRect(x:x,y:y,width:CGFloat(16*scale),height:CGFloat(16*scale)),from:.zero,operation:.sourceOver,fraction:1)}
+func canvas(_ name:String,_ w:Int,_ h:Int,_ body:()->Void){let b=make(w,h);NSGraphicsContext.saveGraphicsState();NSGraphicsContext.current=NSGraphicsContext(bitmapImageRep:b);NSGraphicsContext.current!.imageInterpolation = .none;NSColor(calibratedRed:0.10,green:0.13,blue:0.11,alpha:1).setFill();NSRect(x:0,y:0,width:w,height:h).fill();body();NSGraphicsContext.restoreGraphicsState();save(b,out+name+".png")}
+canvas("seed-pack-before-after",1680,1510){
+ text("Seed packs | source / inventory / drop",28,1460,34);text("Same existing pixel art. Pale outer halo removed only for inventory; packet paper and black contour retained.",28,1424,21)
+ for (i,_) in packets.enumerated(){let col=i%4,row=i/4,x=CGFloat(24+col*418),y=CGFloat(1196-row*195);text((info[i]["family"] as! String),x,y+139,19);draw(originals[i],x,y,6);draw(prepared[i],x+112,y,6);draw(drops[i],x+224,y,6);text("source",x,y-26,16);text("inventory",x+112,y-26,16);text("drop",x+224,y-26,16);draw(prepared[i],x+340,y+35,1);text("1×",x+337,y,13)}
+ let x:CGFloat=862,y:CGFloat=210;text("One shared unknown",x,y+145,23);draw(unknown,x,y,6);draw(dropUnknown,x+120,y,6);text("inventory",x,y-26,16);text("outlined drop",x+120,y-26,16);draw(unknown,x+263,y+40,1);text("1×",x+260,y,13)
+ text("22 source families prepared, not 22 approved recipes. Inventory canvases16×16 at PPU16; source sprites unchanged.",28,32,20)
+}
+canvas("seed-pack-drop-examples",1200,550){text("Drop glyph examples | append-only atlas",24,496,29);text("Existing resource/stat/skill glyphs0–212 remain fixed; new packet glyphs213–235.",24,453,20);for (j,i) in [3,13,19,22].enumerated(){let x=CGFloat(28+j*294);text(info[i]["family"] as! String,x,372,22);draw(i==22 ? dropUnknown:drops[i],x+30,190,10);draw(i==22 ? unknown:prepared[i],x+98,112,2);text("world/drop 10×",x,152,17);text("inventory 2×",x,76,17)};text("Pixel placement evidence. Actual TMP and UI rendering is verified separately in Unity.",24,26,20)}
+print("Prepared22 borderless icons +1shared unknown; outlined drop atlas now288×224. Brown",brown)

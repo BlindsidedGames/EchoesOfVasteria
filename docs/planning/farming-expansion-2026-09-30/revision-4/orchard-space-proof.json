@@ -1,0 +1,57 @@
+{
+  "conceptual": true,
+  "approvedExpansionScope": false,
+  "replacesFinalTwoCropBeds": true,
+  "additionalClearing": 0,
+  "enclosure": [
+    -63,
+    -29,
+    -53,
+    -23
+  ],
+  "trees": [
+    {
+      "name": "OPTIONAL orchard - existing sapling world sprite",
+      "sprite": "FruitTree_Growth_SmallSapling",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Fruit_Tree_Stages.png",
+      "position": [
+        -60.0,
+        -27.0,
+        0.0
+      ],
+      "boundsMin": [
+        -61.0,
+        -28.0,
+        -0.1
+      ],
+      "boundsMax": [
+        -59.0,
+        -24.0,
+        0.1
+      ]
+    },
+    {
+      "name": "OPTIONAL orchard - existing fruiting apple world sprite",
+      "sprite": "Apple_Tree_Fruiting_WholeTree",
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Apple_Tree.png",
+      "position": [
+        -56.0,
+        -27.0,
+        0.0
+      ],
+      "boundsMin": [
+        -57.0157623,
+        -28.06488,
+        -0.1
+      ],
+      "boundsMax": [
+        -55.0157623,
+        -24.06488,
+        0.1
+      ]
+    }
+  ],
+  "mainScene": "Assets/Scenes/Main.unity",
+  "mainDirty": false,
+  "playing": false
+}

@@ -1,0 +1,87 @@
+{
+  "utc": "2026-10-01T07:40:52.681861+00:00",
+  "stage": "farm-implementation-readiness-planning",
+  "branch": "fix/editor-startup-terrain-catalogue",
+  "head": "b3cedc38b2ba75490aa0970346b246cff591d0f4",
+  "protectedCheckoutFileCount": 5392,
+  "protectedCheckoutChanges": [],
+  "protectedCleanupSourceCount": 38,
+  "cleanupSourceChanges": [],
+  "mainFileSha256": "8f912645ea9216c7f25a833da730c44524aaea0dab7ba4cd76a9c0e1ac0d9d54",
+  "sourceAndAssetsAndPreviewScenesUnchanged": true,
+  "migrationAuditorDeliverableHashesUnchanged": true,
+  "currentLibraryFigures": [
+    {
+      "name": "farm-progression.png",
+      "library_file_id": "libfile_4290e227795c819183f5826bb552bcd6",
+      "version": 5,
+      "sha256": "a524aff0dcf957f2713f8eec30d32fd65cb8fb488e5bcff9ebf11e9385406a65"
+    },
+    {
+      "name": "farm-town-context-annotated.png",
+      "library_file_id": "libfile_55dc1bf70d2c8191913b34d67fd4d5b0",
+      "version": 5,
+      "sha256": "c3710766e7aa0df6bf40fbbd0f6942bd473cec9caf4d61a975a151b82bd89dc8"
+    },
+    {
+      "name": "farm-layout-alternatives.png",
+      "library_file_id": "libfile_59daf4a6afe48191836dc4db2fcba97c",
+      "version": 5,
+      "sha256": "0bb642203c8219fbaf33e6a70e09e05c818657afe67468ab4a664c523a16be7b"
+    },
+    {
+      "name": "farm-normal-scale.png",
+      "library_file_id": "libfile_9ff4f1694a5c8191aa0bea167966eb1a",
+      "version": 5,
+      "sha256": "4cd9c2ed66202f3d5dea27e44a739e0cc08f1345984796123d87f1fe0a6ee160"
+    },
+    {
+      "name": "farm-clearing-close-comparison.png",
+      "library_file_id": "libfile_60fa8b9963948191a90a1ca509811167",
+      "version": 5,
+      "sha256": "f40d9b8c8246dca67749232e8f23ee4ba1447c474491ccc857c4597beada0190"
+    },
+    {
+      "name": "farm-optional-orchard.png",
+      "library_file_id": "libfile_555f413a50c881919dc35beb045aa5c4",
+      "version": 5,
+      "sha256": "f285d98a57b8bd9e1d9668149d2c7a58d96262d9833dc5adbec7a62971256234"
+    },
+    {
+      "name": "farm-fence-scenery-before-after.png",
+      "library_file_id": "libfile_4e57971a1ab48191a4a2eb7fe8d47cb5",
+      "version": 1,
+      "sha256": "2a2a9e37b628995e8fbac93255ce9cc04f667aa5183c483a55848415c3d34e30"
+    }
+  ],
+  "seedLibraryImagesUnchanged": true,
+  "newDocs": [
+    "implementation-sequence.md",
+    "implementation-evidence.json",
+    "implementation-readiness.json"
+  ],
+  "updatedDocs": [
+    "README.md",
+    "engineering.md",
+    "proposed-contracts.md",
+    "validation-and-rollout.md",
+    "gameplay-and-economy.md"
+  ],
+  "brokenMarkdownLinks": [],
+  "rawHtml": [],
+  "gitDiffCheckPassed": true,
+  "firstPlayableMilestone": "Original two-bed Radish loop with committed fresh pack discovery, native list, bounded online/offline growth, exactly-once harvest and reload",
+  "migrationAlias": "Completed Mildred1 -> BuffSlot2 receipt; no CompleteQuest/cost/reward replay; two in verified fixture and five still attainable",
+  "newBalancingChosen": false,
+  "orchardCapacityChosen": false,
+  "productionGameplayCodeWritten": false,
+  "unityOrPlayerLaunched": false,
+  "saveFilesReadOrWrittenThisTurn": false,
+  "commitPushRelease": false,
+  "limitations": [
+    "Source/code and prior report inspection; no new runtime/device verification",
+    "Rates/costs/yields remain provisional until ordinary-run measurements",
+    "Native mobile upgrade artifacts/fixtures still required",
+    "Unclaimed stored earnings and future Cauldron/Infinity policy require review before cutover"
+  ]
+}

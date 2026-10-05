@@ -1,0 +1,41 @@
+from pathlib import Path
+import json,re,hashlib,subprocess,shutil
+p=Path.cwd();root=p.parent/'Echoes Farming Planning Evidence/2026-09-30';e=root/'orchard-capacity-2026-10-01';d=p/'docs/planning/farming-expansion-2026-09-30';sha=lambda f:hashlib.sha256(f.read_bytes()).hexdigest()
+base=json.loads((e/'baseline.json').read_text());changes=[n for n,h in base.items() if not (p/n).is_file() or sha(p/n)!=h];assert not changes,changes
+source=json.loads((root/'source-baseline.json').read_text());sourceChanges=[n for n,h in source.items() if (sha(p/n) if (p/n).is_file() else None)!=h];assert not sourceChanges,sourceChanges
+backup=json.loads((root/'player-backup-manifest.json').read_text());actual={n:v for n,v in backup.items() if '/Unity/' not in n};assert all(Path(n).is_file() and sha(Path(n))==v['sha256'] for n,v in actual.items());assert all(Path(v['backup']).is_file() and sha(Path(v['backup']))==v['sha256'] for v in backup.values())
+figs=['farm-progression','farm-town-context-annotated','farm-layout-alternatives','farm-normal-scale','farm-clearing-close-comparison','farm-fence-scenery-before-after'];assert all(sha(d/'visuals'/f'{n}.png')==sha(e/'prior-documents/visuals'/f'{n}.png') for n in figs)
+icons=['seed-pack-before-after','unity-inventory','unity-drops'];assert all(sha(d/'visuals/seed-icon-preparation'/f'{n}.png')==sha(e/'prior-documents/visuals/seed-icon-preparation'/f'{n}.png') for n in icons)
+part=lambda s:re.split(r'(?m)(?=^--- !u!\d+ &)',s);old={x.split('\n',1)[0]:x for x in part((p/'Assets/Editor/FarmingPreviewsV4/A3-southeast-clearing.unity').read_text())};scenes=[]
+allowed=set(re.findall(r'm_Script: \{fileID: 11500000, guid: (\w+)',(p/'Assets/Editor/FarmingPreviewsV4/A3-southeast-clearing.unity').read_text()))
+for f in (p/'Assets/Editor/FarmingOrchardCapacityPreview').glob('*.unity'):
+ text=f.read_text();new={x.split('\n',1)[0]:x for x in part(text)};assert old.keys()<=new.keys()
+ for k,x in old.items():
+  if '\nSceneRoots:\n' not in x:assert x==new[k],(f,k)
+  else:
+   refs=lambda a:re.findall(r'fileID: (\d+)',a);assert refs(new[k])[:-1]==refs(x) and len(refs(new[k]))==len(refs(x))+1
+ assert set(re.findall(r'm_Script: \{fileID: 11500000, guid: (\w+)',text))==allowed
+ count=6 if f.name.startswith('G6') else 8;assert text.count('m_Name: Orchard tree row')==count;assert text.count('m_Name: Orchard soil row')==count*4;assert 'FarmingOrchardCapacityPreview' not in (p/'ProjectSettings/EditorBuildSettings.asset').read_text();scenes.append(str(f.relative_to(p)))
+assert len(scenes)==6 and len(allowed)==2
+geom=json.loads((e/'geometry-proof.json').read_text());clear=[g for g in geom if '-clear-' in g['scene']];assert len(clear)==4
+for g in clear:
+ assert g['matureCanopyFenceGap']==.0625 and g['matureRowGap']==.625 and g['cropRenderersPreserved']==60 and g['originalArtUnchanged']
+ assert all(not x['isFence'] and x['sprite'].startswith('Grass_DecorTufts_') for x in g['matureTreeExistingArtIntersections'])
+ assert all(not x['pathOverlaps'] and not x['existingSceneryInSoilFootprint'] for x in g['plantingFootprints']) and not g['entranceCorridor']['blockers'] and g['entranceCorridor']['loggingPathAccess']
+exact=[g for g in geom if '-one-tile-' in g['scene']];assert len(exact)==2 and all(g['matureCanopyFenceGap']==-.5625 for g in exact)
+assert all(g['tileStepWorld']==[0.,1.,0.] for g in geom)
+guards=json.loads((e/'main-guards.json').read_text());assert not guards['mainDirtyAfterRestore'] and all(x['before']==x['after'] for x in guards['guards']);assert json.loads((e/'render-logs.json').read_text())==[];assert not (p/'Assets/Editor/OrchardCapacityPreview.cs').exists() and not (p/'Assets/Editor/OrchardCapacityPreview.cs.meta').exists();assert not json.loads(Path('/tmp/eov-unity-coordination.json').read_text())['editorReserved']
+lib=json.loads((d/'orchard-capacity/library-delivery.json').read_text());assert lib['status']=='succeeded' and lib['current_version_number']==4 and lib['library_file_id']=='libfile_555f413a50c881919dc35beb045aa5c4';assert sha(d/'visuals/farm-optional-orchard.png')==sha(d/'visuals/orchard-capacity/farm-optional-orchard.png')
+ledger=json.loads((d/'library-delivery.json').read_text());ledger['additionalResults']=[lib if x.get('library_file_id')==lib['library_file_id'] else x for x in ledger['additionalResults']];ledger['orchardCapacityDelivery']=lib;(d/'library-delivery.json').write_text(json.dumps(ledger,indent=2));shutil.copy2(d/'orchard-capacity/library-delivery.json',e/'library-delivery.json')
+links=[];html=[]
+for f in d.rglob('*.md'):
+ text=f.read_text()
+ if re.search(r'<!--|</?(?:html|div|style|span|table)\b',text):html.append(str(f))
+ for link in re.findall(r'!?\[[^\]]*\]\(([^)]+)\)',text):
+  if '://' in link or link.startswith('#'):continue
+  target=f.parent/link.split('#')[0]
+  if not target.exists() and target.resolve()!=(d/'orchard-capacity/verification.json').resolve():links.append({'file':str(f),'link':link})
+assert not links and not html,(links,html)
+report={'stage':'orchard-six-eight-capacity-comparison','branch':subprocess.check_output(['git','branch','--show-current'],text=True).strip(),'head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'mainSha256':sha(p/'Assets/Scenes/Main.unity'),'mainDirty':False,'playing':False,'protectedOriginalAssetPaths':len(base),'originalAssetChanges':changes,'protectedCleanupSourcePaths':len(source),'cleanupSourceChanges':sourceChanges,'actualPlayerFilesPreserved':len(actual),'verifiedBackupsPreserved':len(backup),'priorPreviewScenesAndGuidsPreserved':True,'seedAssetsAndAtlasReferencesPreserved':True,'cropLibraryFiguresAndFenceComparisonPreserved':6,'seedLibraryImagesPreserved':3,'newPreviewScenes':sorted(scenes),'originalSceneComponentsByteExact':True,'newRootOnlyAddsOrchardTreesAndSoil':True,'sixCropBedsAnd60CropRenderersPreserved':True,'all150PathTilesPreserved':True,'actualTileStepUp':1,'exactOneTileMatureIntrusion':.5625,'minimalSouthCorrectionFromRequest':.625,'actualNetMoveUpFromPrior':.375,'clearMatureCanopyFenceGap':.0625,'rowSpacing':3.5,'matureRowGap':.625,'sixTreePlotEnvelope':[10,5.5],'eightTreePlotEnvelope':[12.5,5.5],'sixTreeAisleWidth':2,'eightTreeAisleWidth':1.5,'adjustedFenceBuildingStandingTreeIntersections':0,'eightMatureGroundGrassOcclusions':1,'additionalSceneryRemoval':0,'successfulRenderWarningsOrErrors':[],'renderMode':'Unity Metal Editor','matchedCloseExactConstraintMixedNormalTownViewsVisuallyInspected':True,'currentLibraryImageVisuallyInspected':True,'lightAndCullingGuardsRestored':True,'temporaryHelperRemoved':True,'editorReleased':True,'priorDocumentsAndLibraryVersionPreserved':True,'brokenMarkdownLinks':links,'rawHtml':html,'library':{'library_file_id':lib['library_file_id'],'file_id':lib['file_id'],'version':lib['current_version_number']},'provisionalPreference':'Six trees for wider aisles and smaller footprint; eight viable denser option','limits':['One native pixel is a narrow static-art margin, not a runtime walking guarantee','Exact-shift scenes are deliberately failed fits, not accepted endpoints','Orchard economy, capacity and final row heights remain unapproved; no implementation or runtime navigation test'],'gameplayOrMigrationImplemented':False,'commitPushRelease':False}
+assert report['mainSha256']=='8f912645ea9216c7f25a833da730c44524aaea0dab7ba4cd76a9c0e1ac0d9d54'
+(e/'verification.json').write_text(json.dumps(report,indent=2));(d/'orchard-capacity/verification.json').write_text(json.dumps(report,indent=2));print(json.dumps({k:report[k] for k in ['stage','protectedOriginalAssetPaths','originalAssetChanges','actualPlayerFilesPreserved','verifiedBackupsPreserved','newPreviewScenes','adjustedFenceBuildingStandingTreeIntersections','library']},indent=2))

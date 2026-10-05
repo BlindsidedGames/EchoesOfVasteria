@@ -1,0 +1,2299 @@
+{
+  "$schema": "https://jerboa.dev/schemas/fx-composition/editable/v1/document.schema.json",
+  "formatVersion": 1,
+  "dimensions": {
+    "width": 1280,
+    "height": 720
+  },
+  "duration": 3,
+  "composition": {
+    "id": "main",
+    "layers": [
+      {
+        "id": 49,
+        "name": "Bed 4",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            1080,
+            392
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Bed 4",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            140,
+            42
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 48,
+        "name": "Bed 4 button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            1072,
+            392
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            156,
+            42
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 47,
+        "name": "Bed 3",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            912,
+            392
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Bed 3",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            140,
+            42
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 46,
+        "name": "Bed 3 button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            904,
+            392
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            156,
+            42
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 45,
+        "name": "Bed 2",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            1080,
+            338
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Bed 2",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            140,
+            42
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 44,
+        "name": "Bed 2 button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            1072,
+            338
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            156,
+            42
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 43,
+        "name": "Bed 1",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            912,
+            338
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Bed 1",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            140,
+            42
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 42,
+        "name": "Bed 1 button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            904,
+            338
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            156,
+            42
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 41,
+        "name": "Garden",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            912,
+            276
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Garden",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.18823529411764706,
+            0.12941176470588237,
+            0.14901960784313725,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            308,
+            42
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 40,
+        "name": "Garden button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            904,
+            276
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            324,
+            42
+          ],
+          "fillColor": [
+            0.9372549019607843,
+            0.7254901960784313,
+            0.5176470588235295,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 39,
+        "name": "Focus",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            904,
+            228
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Focus",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 20,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "left",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            324,
+            28
+          ],
+          "verticalAlign": "center",
+          "leading": 24.4
+        }
+      },
+      {
+        "id": 38,
+        "name": "4",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            377,
+            503
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "4",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 18,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            24,
+            26
+          ],
+          "verticalAlign": "center",
+          "leading": 21.96
+        }
+      },
+      {
+        "id": 37,
+        "name": "World bed 4",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            377,
+            503
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            24,
+            26
+          ],
+          "fillColor": [
+            0.1607843137254902,
+            0.1411764705882353,
+            0.14901960784313725,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 36,
+        "name": "3",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            257,
+            503
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "3",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 18,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            24,
+            26
+          ],
+          "verticalAlign": "center",
+          "leading": 21.96
+        }
+      },
+      {
+        "id": 35,
+        "name": "World bed 3",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            257,
+            503
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            24,
+            26
+          ],
+          "fillColor": [
+            0.1607843137254902,
+            0.1411764705882353,
+            0.14901960784313725,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 34,
+        "name": "2",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            356,
+            304
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "2",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 18,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            24,
+            26
+          ],
+          "verticalAlign": "center",
+          "leading": 21.96
+        }
+      },
+      {
+        "id": 33,
+        "name": "World bed 2",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            356,
+            304
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            24,
+            26
+          ],
+          "fillColor": [
+            0.1607843137254902,
+            0.1411764705882353,
+            0.14901960784313725,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 32,
+        "name": "1",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            278,
+            304
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "1",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 18,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            24,
+            26
+          ],
+          "verticalAlign": "center",
+          "leading": 21.96
+        }
+      },
+      {
+        "id": 31,
+        "name": "World bed 1",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            278,
+            304
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            24,
+            26
+          ],
+          "fillColor": [
+            0.1607843137254902,
+            0.1411764705882353,
+            0.14901960784313725,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 30,
+        "name": "garden-town-workspace",
+        "type": "Image",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            48,
+            221
+          ],
+          "scale": [
+            100.0,
+            100.0
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "source": {
+          "assetId": "garden-town-workspace-d2e049b23fa8",
+          "fit": "contain"
+        }
+      },
+      {
+        "id": 29,
+        "name": "Town",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            356,
+            170
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Town",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.18823529411764706,
+            0.12941176470588237,
+            0.14901960784313725,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            104,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 28,
+        "name": "Town button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            348,
+            170
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            120,
+            38
+          ],
+          "fillColor": [
+            0.9372549019607843,
+            0.7254901960784313,
+            0.5176470588235295,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 27,
+        "name": "Progression",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            184,
+            170
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Progression",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            148,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 26,
+        "name": "Progression button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            176,
+            170
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            164,
+            38
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 25,
+        "name": "Beds",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            56,
+            170
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Beds",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            104,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 24,
+        "name": "Beds button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            48,
+            170
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            120,
+            38
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 23,
+        "name": "Workspace header divider",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            48,
+            154
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            1180,
+            1
+          ],
+          "fillColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ]
+        }
+      },
+      {
+        "id": 22,
+        "name": "Orchard \u00b7 Locked",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            1052,
+            102
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Orchard \u00b7 Locked",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.7843137254901961,
+            0.6823529411764706,
+            0.6313725490196078,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            168,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 21,
+        "name": "Locked Orchard switch",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            1044,
+            102
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            184,
+            38
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 20,
+        "name": "Garden",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            884,
+            102
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Garden",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.18823529411764706,
+            0.12941176470588237,
+            0.14901960784313725,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            144,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 19,
+        "name": "Garden button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            876,
+            102
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            160,
+            38
+          ],
+          "fillColor": [
+            0.9372549019607843,
+            0.7254901960784313,
+            0.5176470588235295,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 18,
+        "name": "Flora & Tillman",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            136,
+            102
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Flora & Tillman",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 20,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "left",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            480,
+            36
+          ],
+          "verticalAlign": "center",
+          "leading": 24.4
+        }
+      },
+      {
+        "id": 17,
+        "name": "Tillman",
+        "type": "Image",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            85,
+            103
+          ],
+          "scale": [
+            94.11764705882352,
+            86.36363636363636
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "source": {
+          "assetId": "Tillman-bac73bc92192",
+          "fit": "contain"
+        }
+      },
+      {
+        "id": 16,
+        "name": "Flora",
+        "type": "Image",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            49,
+            103
+          ],
+          "scale": [
+            94.11764705882352,
+            86.36363636363636
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "source": {
+          "assetId": "Flora-69a68b4ce6f1",
+          "fit": "contain"
+        }
+      },
+      {
+        "id": 15,
+        "name": "Panel",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            28,
+            82
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            1224,
+            610
+          ],
+          "fillColor": [
+            0.1607843137254902,
+            0.1411764705882353,
+            0.14901960784313725,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 14,
+        "name": "\u00d7",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            1220,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "\u00d7",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 24,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            24,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 29.28
+        }
+      },
+      {
+        "id": 13,
+        "name": "\u00d7 button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            1212,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            40,
+            38
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 12,
+        "name": "Library",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            420,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Library",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            70,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 11,
+        "name": "Library button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            412,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            86,
+            38
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 10,
+        "name": "Quests",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            330,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Quests",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            66,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 9,
+        "name": "Quests button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            322,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            82,
+            38
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 8,
+        "name": "Townsfolk",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            212,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Townsfolk",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.18823529411764706,
+            0.12941176470588237,
+            0.14901960784313725,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            94,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 7,
+        "name": "Townsfolk button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            204,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            110,
+            38
+          ],
+          "fillColor": [
+            0.9372549019607843,
+            0.7254901960784313,
+            0.5176470588235295,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 6,
+        "name": "Hub",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            148,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Hub",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            40,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 5,
+        "name": "Hub button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            140,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            56,
+            38
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 4,
+        "name": "Adventure",
+        "type": "Text",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            36,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "sourceText": {
+          "text": "Adventure",
+          "fontFamily": "Liberation Sans",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "fillColor": [
+            0.9607843137254902,
+            0.8941176470588236,
+            0.8392156862745098,
+            1
+          ],
+          "strokeWidth": 0,
+          "justification": "center",
+          "boxText": true,
+          "boxPosition": [
+            0,
+            0
+          ],
+          "boxSize": [
+            88,
+            38
+          ],
+          "verticalAlign": "center",
+          "leading": 19.52
+        }
+      },
+      {
+        "id": 3,
+        "name": "Adventure button",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            28,
+            32
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            104,
+            38
+          ],
+          "fillColor": [
+            0.23529411764705882,
+            0.18823529411764706,
+            0.19607843137254902,
+            1
+          ],
+          "strokeColor": [
+            0.4549019607843137,
+            0.3176470588235294,
+            0.2901960784313726,
+            1
+          ],
+          "strokeEnabled": true,
+          "strokeWidth": 1
+        }
+      },
+      {
+        "id": 2,
+        "name": "Dim town backdrop",
+        "type": "Rect",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            0,
+            0
+          ],
+          "scale": [
+            100,
+            100
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "rect": {
+          "size": [
+            1280,
+            720
+          ],
+          "fillColor": [
+            0.09803921568627451,
+            0.07058823529411765,
+            0.0784313725490196,
+            0.72
+          ]
+        }
+      },
+      {
+        "id": 1,
+        "name": "town",
+        "type": "Image",
+        "blendMode": "normal",
+        "activeRange": {
+          "start": 0,
+          "duration": 3000
+        },
+        "transform": {
+          "anchorPoint": [
+            0,
+            0
+          ],
+          "position": [
+            0,
+            0
+          ],
+          "scale": [
+            100.0,
+            100.0
+          ],
+          "rotation": 0,
+          "opacity": 100
+        },
+        "source": {
+          "assetId": "town-98f0a56201a7",
+          "fit": "contain"
+        }
+      }
+    ],
+    "name": "Garden-Town-desktop"
+  }
+}

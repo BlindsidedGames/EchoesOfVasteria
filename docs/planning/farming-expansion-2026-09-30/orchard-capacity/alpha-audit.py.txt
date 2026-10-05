@@ -1,0 +1,39 @@
+from pathlib import Path
+import json,numpy as np
+base=Path('/Users/matthewrushworth/Projects/Echoes Farming Planning Evidence/2026-09-30/orchard-capacity-2026-10-01');scenes=json.loads((base/'scene-art-audit.json').read_text());alpha=json.loads((base.parent/'fence-scenery-correction-2026-10-01/source-alpha-pixels.json').read_text())
+def geo(a):
+ key=a['asset']+':'+','.join(str(float(x)) for x in a['rect'])
+ if key not in alpha:return None
+ px=np.array(alpha[key],dtype=float)
+ if not len(px):return None
+ xy=(px[:,:2]-np.array(a['pivot']))/a['ppu'];m=np.array(a['matrix']).reshape(4,4);u=1/a['ppu'];corners=np.stack([xy,xy+[u,0],xy+[0,u],xy+[u,u]],axis=1);w=corners@m[:2,:2].T+m[:2,3];lo=w.min(axis=1);hi=w.max(axis=1);return lo,hi,lo.min(axis=0),hi.max(axis=0)
+def overlap(g,h):
+ if g is None or h is None or np.any(g[3]<=h[2]+1e-6) or np.any(h[3]<=g[2]+1e-6):return 0
+ return int(np.any(np.all((g[1][:,None,:]>h[0][None,:,:]+1e-6)&(h[1][None,:,:]>g[0][:,None,:]+1e-6),axis=2),axis=1).sum())
+results=[]
+for sc in scenes:
+ arts=sc['art'];gs=[geo(x) for x in arts];new=[i for i,a in enumerate(arts) if a['path'].startswith('OPTIONAL Orchard Capacity')];trees=[i for i in new if '/Orchard tree ' in arts[i]['path']];soil=[i for i in new if '/Orchard soil ' in arts[i]['path']];fences=[i for i,a in enumerate(arts) if 'Fence_Big' in a['asset'] and a['path'].startswith('CONCEPT Farm')];paths=[i for i,a in enumerate(arts) if a['kind']=='Tilemap' and '-2 Old Path' in a['path']];old=[i for i,a in enumerate(arts) if i not in new and (a['kind']=='SpriteRenderer' or ('Decor' in a['path'] and a['kind']=='Tilemap'))]
+ problems=[]
+ for i in trees:
+  for j in old:
+   count=overlap(gs[i],gs[j])
+   if count:problems.append({'newTree':arts[i]['path'],'existingArt':arts[j]['path'],'sprite':arts[j]['sprite'],'overlapTreePixels':count,'isFence':j in fences})
+ plots=[]
+ for a in sc['anchors']:
+  anchor=np.array(a['anchor']);lo=anchor-1;hi=anchor+1
+  def rectHits(g):return g is not None and bool(np.all(g[3]>lo+1e-6) and np.all(hi>g[2]+1e-6))
+  po=[arts[j]['path']+str(arts[j].get('cell')) for j in paths if rectHits(gs[j])]
+  so=[{'path':arts[j]['path'],'sprite':arts[j]['sprite']} for j in old if rectHits(gs[j]) and j not in fences]
+  plots.append({'anchor':a['anchor'],'pathOverlaps':po,'existingSceneryInSoilFootprint':so})
+ # Same full-tile path geometry, soil spacing and an entrance linked to the logging path.
+ xs=sorted(set(a['anchor'][0] for a in sc['anchors']));centre=(xs[0]+xs[1])/2;width=xs[1]-xs[0]-2;corridorLo=np.array([centre-width/2,-20]);corridorHi=np.array([centre+width/2,sc['topY']+1]);blockers=[]
+ for j in old+trees:
+  g=gs[j]
+  if g is not None and np.all(g[3]>corridorLo+1e-6) and np.all(corridorHi>g[2]+1e-6):blockers.append(arts[j]['path'])
+ access=[arts[j]['worldAnchor'] for j in paths if gs[j] is not None and np.all(gs[j][3]>corridorLo+1e-6) and np.all(corridorHi>gs[j][2]+1e-6)]
+ r={'scene':sc['scene'],'treeCount':sc['treeCount'],'topAnchorY':sc['topY'],'tileStepWorld':sc['actualGridStepUp'],'upwardOffsetFromPrevious':sc['topY']+14.5,'matureCanopyFenceGap':-11.5-(sc['topY']+2.5625),'matureRowGap':.625,'soilColumnGap':width,'matureColumnGap':sc['columnSpacing']-1.6875,'soilRowGap':1.5,'matureTreeExistingArtIntersections':problems,'plantingFootprints':plots,'entranceCorridor':{'centreX':centre,'width':width,'min':corridorLo.tolist(),'max':corridorHi.tolist(),'blockers':blockers,'loggingPathAccess':access},'cropRenderersPreserved':sc['cropRendererCount'],'originalArtUnchanged':sc['allOriginalArtUnchanged']}
+ results.append(r);print(Path(sc['scene']).stem,'trees',len(trees),'gap',r['matureCanopyFenceGap'],'intersections',len(problems),'soilScenery',sum(len(x['existingSceneryInSoilFootprint']) for x in plots),'soilPath',sum(len(x['pathOverlaps']) for x in plots),'aisle',width,'blockers',len(blockers),'pathAccess',len(access))
+ if '-clear-' in sc['scene']:assert all(not x['isFence'] and x['sprite'].startswith('Grass_DecorTufts_') for x in problems) and all(not x['pathOverlaps'] and not x['existingSceneryInSoilFootprint'] for x in plots) and not blockers and access
+ else:assert problems and any(x['isFence'] for x in problems)
+ assert sc['cropRendererCount']==60 and sc['actualGridStepUp']==[0.0,1.0,0.0] and sc['allOriginalArtUnchanged']
+(base/'geometry-proof.json').write_text(json.dumps(results,indent=2))

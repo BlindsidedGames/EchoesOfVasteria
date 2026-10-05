@@ -1,0 +1,111 @@
+{
+  "snapshotSha256": "665afd3be9871fd47a781e597060718a3d17c169ab9bd2cec88d3c6cd9e91d66",
+  "fixtureProvenance": "Backed-up local real save, schema 1 header/payload version 1.4.3, dated 2026-07-20. Not proven to be an untouched mobile save or originally written by the installed Steam build.",
+  "releasedAssemblySha256": "0914e1caf0ba9041976729a65da2118f1a62610ceede1f59346be5f1f08d339d",
+  "productionModelSha256": "fcd7d8df4693b33eaccb46489e1880ac894bbf525bd07d19d51186762805ed76",
+  "stockCauldronMigrationSourceSha256": "5af7a2f608a60fab9e4db01d0b8b22d85e36068435d2a06a3f5f4fdf23d49041",
+  "typedMilestones": {
+    "expectedTotal": 23,
+    "currentSourceDecodedTotal": 0,
+    "retainedFieldRoundtripExactSkills": {
+      "Combat": true,
+      "Mining": true,
+      "Woodcutting": true,
+      "Fishing": true,
+      "Farming": true,
+      "Looting": true
+    },
+    "originalFieldEqualityAfterRetainedFieldRoundtrip": {
+      "Resources": true,
+      "EquipmentBySlot": true,
+      "Quests": true,
+      "SkillData": true,
+      "Disciples": true,
+      "UpgradeLevels": true,
+      "TaskRecords": true,
+      "EnemyKills": true,
+      "ResourceStats": true,
+      "Forge": true,
+      "General": true,
+      "MapStats": true,
+      "CompletedNpcTasks": true
+    }
+  },
+  "stockMigration": {
+    "schema": 3,
+    "cardSums": {
+      "RES:": {
+        "before": 610000,
+        "after": 30500
+      },
+      "BUFF:": {
+        "before": 30000,
+        "after": 3000
+      },
+      "INF:": {
+        "before": 1371876,
+        "after": 1978376
+      }
+    },
+    "totalCards": 2011876,
+    "affectedResourceCardKeys": 61,
+    "affectedBuffCardKeys": 10
+  },
+  "releasedProfileCorrection": {
+    "cardSums": {
+      "RES:": 610000,
+      "BUFF:": 30000,
+      "INF:": 1371876
+    },
+    "resourceCardsExact": true,
+    "infinityCardsExact": true,
+    "buffCardsExactAfterExplicitSlipstreamRename": true
+  },
+  "readerCases": {
+    "primary": "Success; integrity unverified (legacy)",
+    "truncatedPrimaryWithValidRotation": "Recovered; integrity unverified",
+    "onlyTruncatedPrimary": "Corrupt; no data",
+    "futureHeaderSchema999": "UnsupportedNewer; no data"
+  },
+  "migrationRunnerAssertions": {
+    "success": true,
+    "repeatChanged": false,
+    "sourceUnchanged": true,
+    "injectedFailureRejected": true,
+    "injectedFailureReturnedSameSourceObject": true,
+    "injectedFailureSourceGraphUnchanged": true
+  },
+  "nonEditorOnly": true,
+  "originalSavesWritten": false,
+  "combinedCorrections": {
+    "migrationSuccess": true,
+    "exactSkillFieldsAfterSchema3Migration": true,
+    "resourceEntriesExact": true,
+    "equipmentExact": true,
+    "discipleArchiveExact": true,
+    "exactSkillFieldsAfterMigrationSaveReload": true
+  },
+  "checkoutHeadAtAudit": "b3cedc38b2ba75490aa0970346b246cff591d0f4",
+  "productionSourceHashes": {
+    "Assets/Scripts/Blindsided/SaveData/GameData.cs": "fcd7d8df4693b33eaccb46489e1880ac894bbf525bd07d19d51186762805ed76",
+    "Assets/Scripts/Blindsided/SaveData/SaveManager.cs": "c9bb3a9c0c1ff768f2f6863ccb9f600f947874fe5e30b5d15bb4d64e4f6c4494",
+    "Assets/Scripts/Blindsided/SaveData/Migrations/SaveMigrationRunner.cs": "73bf496e42dcedce48f1a814e7a9f4449fcf4b441c5783c33989340fd5c170ee",
+    "Assets/Resources/Cauldron/CauldronConfig.asset": "ffa0511d54d1e4b58331673de43c17417e132f0815fd0cb7aac9f350b6a21bec"
+  },
+  "backupHashVerifiedUnchangedAfterProbes": true,
+  "unityFormerlySerializedAsCorrection": {
+    "scope": "Isolated source copy; one attribute changed to UnityEngine.Serialization.FormerlySerializedAs, plus verified Cauldron-profile correction",
+    "exactOriginalSkillFieldsAfterSchema3MigrationSaveReload": {
+      "Combat": true,
+      "Mining": true,
+      "Woodcutting": true,
+      "Fishing": true,
+      "Farming": true,
+      "Looting": true
+    },
+    "typedRecordTotal": 23,
+    "resourcesExact": true,
+    "equipmentExact": true,
+    "discipleArchiveExact": true
+  }
+}

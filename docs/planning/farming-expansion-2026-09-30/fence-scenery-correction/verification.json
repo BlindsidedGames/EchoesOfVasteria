@@ -1,0 +1,144 @@
+{
+  "stage": "complete-fence-scenery-correction",
+  "branch": "fix/editor-startup-terrain-catalogue",
+  "head": "b3cedc38b2ba75490aa0970346b246cff591d0f4",
+  "mainSha256": "8f912645ea9216c7f25a833da730c44524aaea0dab7ba4cd76a9c0e1ac0d9d54",
+  "mainDirty": false,
+  "playing": false,
+  "protectedSourcePaths": 38,
+  "protectedSourceChanges": [],
+  "onlyChangedPreviewScenes": [
+    {
+      "scene": "Assets/Editor/FarmingOrchardRowsPreview/F-all-mature-clearance.unity",
+      "onlyChangedComponent": "BG_Decor 0 Tilemap",
+      "removedCells": 2,
+      "internalReferenceCountChanges": 4,
+      "allOtherComponentsExact": true
+    },
+    {
+      "scene": "Assets/Editor/FarmingOrchardRowsPreview/F-orderly-rows.unity",
+      "onlyChangedComponent": "BG_Decor 0 Tilemap",
+      "removedCells": 2,
+      "internalReferenceCountChanges": 4,
+      "allOtherComponentsExact": true
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV4/A2-stump-reclamation.unity",
+      "onlyChangedComponent": "BG_Decor 0 Tilemap",
+      "removedCells": 2,
+      "internalReferenceCountChanges": 4,
+      "allOtherComponentsExact": true
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV4/A2b-southeast-work.unity",
+      "onlyChangedComponent": "BG_Decor 0 Tilemap",
+      "removedCells": 2,
+      "internalReferenceCountChanges": 4,
+      "allOtherComponentsExact": true
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV4/A3-southeast-clearing.unity",
+      "onlyChangedComponent": "BG_Decor 0 Tilemap",
+      "removedCells": 2,
+      "internalReferenceCountChanges": 4,
+      "allOtherComponentsExact": true
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV4/B3-terraced-rows.unity",
+      "onlyChangedComponent": "BG_Decor 0 Tilemap",
+      "removedCells": 2,
+      "internalReferenceCountChanges": 4,
+      "allOtherComponentsExact": true
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV4/C3-grove-courtyard.unity",
+      "onlyChangedComponent": "BG_Decor 0 Tilemap",
+      "removedCells": 2,
+      "internalReferenceCountChanges": 4,
+      "allOtherComponentsExact": true
+    }
+  ],
+  "A0A1AndAllPreviewGuidsPreserved": true,
+  "seedAssetsAndAtlasBytesPreserved": true,
+  "seedSourceAndAtlasReferencesVerified": 23,
+  "old213GlyphEntriesRemainPreviouslyVerifiedAndHashPreserved": true,
+  "seedActualUnityRendersVisuallyReviewed": [
+    "seed-pack-before-after",
+    "unity-inventory",
+    "unity-drops"
+  ],
+  "nineScenesAudited": true,
+  "newVegetationFenceIntersections": 0,
+  "intentionalFirstFarmActorBuildingIntersections": 3,
+  "originalScenerySortingPreserved": true,
+  "orchardNewTreesAndSoilPreserved": true,
+  "matureCanopyFenceGap": 0.4375,
+  "matureRowGap": 0.625,
+  "field2ClearingCounts": {
+    "oldStumpRenderers": 23,
+    "additionalYoungTreeTileCells": 2
+  },
+  "SEAClearingStandingRendererCount": 20,
+  "SEALocalStandingRendererTotal": 28,
+  "actualPlayerFilesPreserved": 77,
+  "verifiedBackupsPreserved": 93,
+  "temporaryMainLightAndCullingGuardsRestored": true,
+  "temporaryEditorWorkerRemoved": true,
+  "editorReleasedForOtherTask": true,
+  "previousDocumentsScenesAndImagesArchived": true,
+  "currentFiguresInspected": 7,
+  "normalCameraAllStagesAndAlternativesReviewed": true,
+  "brokenMarkdownLinks": [],
+  "rawHTML": [],
+  "library": [
+    {
+      "name": "farm-progression.png",
+      "library_file_id": "libfile_4290e227795c819183f5826bb552bcd6",
+      "file_id": "file_00000000c7dc81fa90d9ff58df06dc64",
+      "version": 4
+    },
+    {
+      "name": "farm-town-context-annotated.png",
+      "library_file_id": "libfile_55dc1bf70d2c8191913b34d67fd4d5b0",
+      "file_id": "file_000000009318820baf687ff2855264e6",
+      "version": 4
+    },
+    {
+      "name": "farm-layout-alternatives.png",
+      "library_file_id": "libfile_59daf4a6afe48191836dc4db2fcba97c",
+      "file_id": "file_00000000c95081fa8707da5ad51df1e4",
+      "version": 4
+    },
+    {
+      "name": "farm-normal-scale.png",
+      "library_file_id": "libfile_9ff4f1694a5c8191aa0bea167966eb1a",
+      "file_id": "file_00000000cadc81fa870142680b0241a8",
+      "version": 4
+    },
+    {
+      "name": "farm-clearing-close-comparison.png",
+      "library_file_id": "libfile_60fa8b9963948191a90a1ca509811167",
+      "file_id": "file_00000000d99481f7be97c30ce80ade15",
+      "version": 4
+    },
+    {
+      "name": "farm-optional-orchard.png",
+      "library_file_id": "libfile_555f413a50c881919dc35beb045aa5c4",
+      "file_id": "file_00000000f84081fabe098d9ec04d2b75",
+      "version": 3
+    },
+    {
+      "name": "farm-fence-scenery-before-after.png",
+      "library_file_id": "libfile_4e57971a1ab48191a4a2eb7fe8d47cb5",
+      "file_id": "file_0000000059d4823097eb52a8e2ca8aec",
+      "version": 0
+    }
+  ],
+  "limits": [
+    "Static preview art/sorting audit and Metal Editor renders; no runtime collision/navigation check",
+    "Seed pack atlas/UI/TMP art prepared; no live pack resource/drop pool/discovery gameplay or mobile/Player render validation in this task",
+    "Older renderer-only orchard clearance claim is superseded by full Tilemap audit"
+  ],
+  "productionGameplayOrMigrationImplemented": false,
+  "commitPushRelease": false
+}

@@ -1,0 +1,45 @@
+from pathlib import Path
+import json,re,hashlib,subprocess
+p=Path.cwd();root=p.parent/'Echoes Farming Planning Evidence/2026-09-30';e=root/'fence-scenery-correction-2026-10-01';d=p/'docs/planning/farming-expansion-2026-09-30';sha=lambda f:hashlib.sha256(f.read_bytes()).hexdigest()
+source=json.loads((root/'source-baseline.json').read_text());sourceChanges=[n for n,h in source.items() if (sha(p/n) if (p/n).is_file() else None)!=h];assert not sourceChanges,sourceChanges
+base=json.loads((e/'baseline.json').read_text());allowed={x['scene'] for x in json.loads((e/'narrow-serialized-diff.json').read_text())};changes=[n for n,h in base.items() if (sha(p/n) if (p/n).is_file() else None)!=h];assert set(changes)==allowed,(changes,allowed)
+# Serialized scene components: only the two-cell BG_Decor change may differ.
+components=[]
+for rel in sorted(allowed):
+ old=(e/'baseline'/rel).read_text();new=(p/rel).read_text();op=re.split(r'(?m)(?=^--- !u!\d+ &)',old);np=re.split(r'(?m)(?=^--- !u!\d+ &)',new);assert len(op)==len(np);diff=[(o,n) for o,n in zip(op,np) if o!=n];assert len(diff)==1
+ o,n=diff[0];assert '\nTilemap:\n' in n
+ expected=o
+ for x,y in [(13,-13),(23,-5)]:
+  expected,count=re.subn(r'(?m)^  - first: \{x: '+str(x)+', y: '+str(y)+r', z: 0\}\n    second:\n(?:      .*\n)+','',expected);assert count==1
+ strip=lambda s:re.sub(r'(?m)^    m_RefCount: \d+\n','',s)
+ assert strip(expected)==strip(n)
+ refs=lambda s:list(map(int,re.findall(r'(?m)^    m_RefCount: (\d+)\n',s)))
+ refChanges=[(a,b) for a,b in zip(refs(o),refs(n)) if a!=b];assert len(refChanges)==4 and all(a-b==2 for a,b in refChanges)
+ components.append({'scene':rel,'onlyChangedComponent':'BG_Decor 0 Tilemap','removedCells':2,'internalReferenceCountChanges':4,'allOtherComponentsExact':True})
+backup=json.loads((root/'player-backup-manifest.json').read_text());actual={n:v for n,v in backup.items() if '/Unity/' not in n};assert all(Path(n).is_file() and sha(Path(n))==v['sha256'] for n,v in actual.items());assert all(Path(v['backup']).is_file() and sha(Path(v['backup']))==v['sha256'] for v in backup.values())
+seed=['seed-pack-before-after','unity-inventory','unity-drops'];assert all(sha(d/'visuals/seed-icon-preparation'/f'{n}.png')==sha(e/'prior-documents/visuals/seed-icon-preparation'/f'{n}.png') for n in seed)
+for n in base:
+ if not n.endswith('.unity') or n not in allowed: assert sha(p/n)==base[n]
+sc=json.loads((e/'scene-art-audit-after.json').read_text());assert len(sc)==9
+issues=json.loads((e/'opaque-intersection-after.json').read_text());assert all(len(x['opaqueIntersections'])==(0 if '/A0-' in x['scene'] else 3) for x in issues);assert all(all(a['sprite'] in ['Flora_Farmer_0','Tillman_Farmer_0','Windmill_0'] for a in x['opaqueIntersections']) for x in issues)
+guards=json.loads((e/'main-guards.json').read_text());assert not guards['mainDirtyAfterRestore'] and all(g['before']==g['after'] for g in guards['guards']);assert not (p/'Assets/Editor/FenceSceneryReview.cs').exists() and not (p/'Assets/Editor/FenceSceneryReview.cs.meta').exists();assert not json.loads(Path('/tmp/eov-unity-coordination.json').read_text())['editorReserved']
+manifest=json.loads((d/'seed-icon-preparation/asset-manifest.json').read_text());assert len(manifest['icons'])==23
+for icon in manifest['icons']:
+ for f in ['Assets/Resources/Fonts/FloatingTextIcons.asset','Assets/UI/Toolkit/InlineSprites.asset']:assert 'm_Name: '+icon['dropName']+'\n' in (p/f).read_text()
+ assert '    name: '+icon['inventoryName']+'\n' in (p/'Assets/Art/Derived/SeedPacks/SeedPackInventory.png.meta').read_text()
+links=[];html=[]
+for f in d.rglob('*.md'):
+ text=f.read_text()
+ if re.search(r'<!--|</?(?:html|div|style|span|table)\b',text):html.append(str(f))
+ for link in re.findall(r'!?\[[^\]]*\]\(([^)]+)\)',text):
+  if '://' in link or link.startswith('#'):continue
+  target=f.parent/link.split('#')[0]
+  if not target.exists() and target.resolve()!=(d/'fence-scenery-correction/verification.json').resolve():links.append({'file':str(f),'link':link})
+assert not links and not html,(links,html)
+lib=json.loads((e/'library-delivery.json').read_text());assert all(x['status']=='succeeded' and x['current_version_number']==4 for x in lib['results']);assert lib['orchard']['current_version_number']==3 and lib['comparison']['current_version_number']==0
+for x in lib['results']+[lib['orchard'],lib['comparison']]:
+ local=Path(x['original_local_path']);assert local.is_file();assert sha(local)==sha(d/'visuals/fence-scenery-correction'/local.name)
+log=(p/'Logs/Editor.log').read_text();latest=log[log.rfind('Asset Pipeline Refresh (id='):];assert 'error CS' not in latest
+report={'stage':'complete-fence-scenery-correction','branch':subprocess.check_output(['git','branch','--show-current'],text=True).strip(),'head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'mainSha256':sha(p/'Assets/Scenes/Main.unity'),'mainDirty':False,'playing':False,'protectedSourcePaths':len(source),'protectedSourceChanges':sourceChanges,'onlyChangedPreviewScenes':components,'A0A1AndAllPreviewGuidsPreserved':True,'seedAssetsAndAtlasBytesPreserved':True,'seedSourceAndAtlasReferencesVerified':23,'old213GlyphEntriesRemainPreviouslyVerifiedAndHashPreserved':True,'seedActualUnityRendersVisuallyReviewed':seed,'nineScenesAudited':True,'newVegetationFenceIntersections':0,'intentionalFirstFarmActorBuildingIntersections':3,'originalScenerySortingPreserved':True,'orchardNewTreesAndSoilPreserved':True,'matureCanopyFenceGap':.4375,'matureRowGap':.625,'field2ClearingCounts':{'oldStumpRenderers':23,'additionalYoungTreeTileCells':2},'SEAClearingStandingRendererCount':20,'SEALocalStandingRendererTotal':28,'actualPlayerFilesPreserved':len(actual),'verifiedBackupsPreserved':len(backup),'temporaryMainLightAndCullingGuardsRestored':True,'temporaryEditorWorkerRemoved':True,'editorReleasedForOtherTask':True,'previousDocumentsScenesAndImagesArchived':True,'currentFiguresInspected':7,'normalCameraAllStagesAndAlternativesReviewed':True,'brokenMarkdownLinks':links,'rawHTML':html,'library':[{'name':x['file_name'],'library_file_id':x['library_file_id'],'file_id':x['file_id'],'version':x['current_version_number']} for x in lib['results']+[lib['orchard'],lib['comparison']]],'limits':['Static preview art/sorting audit and Metal Editor renders; no runtime collision/navigation check','Seed pack atlas/UI/TMP art prepared; no live pack resource/drop pool/discovery gameplay or mobile/Player render validation in this task','Older renderer-only orchard clearance claim is superseded by full Tilemap audit'],'productionGameplayOrMigrationImplemented':False,'commitPushRelease':False}
+assert report['mainSha256']=='8f912645ea9216c7f25a833da730c44524aaea0dab7ba4cd76a9c0e1ac0d9d54'
+(e/'verification.json').write_text(json.dumps(report,indent=2));(d/'fence-scenery-correction/verification.json').write_text(json.dumps(report,indent=2));print(json.dumps({k:report[k] for k in ['stage','protectedSourcePaths','protectedSourceChanges','actualPlayerFilesPreserved','verifiedBackupsPreserved','newVegetationFenceIntersections','mainDirty','seedSourceAndAtlasReferencesVerified','brokenMarkdownLinks','library']},indent=2))

@@ -1,0 +1,427 @@
+[
+  {
+    "scene": "Assets/Editor/FarmingOrchardCapacityPreview/G6-one-tile-up.unity",
+    "treeCount": 6,
+    "rowsY": [
+      -13.5,
+      -17
+    ],
+    "fullUpwardShift": 1,
+    "columnAnchors": [
+      -60.0,
+      -56.0,
+      -52.0
+    ],
+    "columnSpacing": 4.0,
+    "plotEnvelope": [
+      10.0,
+      5.5
+    ],
+    "aisleWidth": 2.0,
+    "plantingPlots": [
+      {
+        "anchor": [
+          -59.99999811875,
+          -13.50000036875
+        ],
+        "soilBoundsMin": [
+          -60.99999811875,
+          -14.50000036875
+        ],
+        "soilBoundsMax": [
+          -58.99999811875,
+          -12.50000036875
+        ],
+        "pathOverlap": [],
+        "restoredTreeBaseShadowOverlap": [],
+        "otherArtBoundingIntersections": []
+      },
+      {
+        "anchor": [
+          -55.99999811875,
+          -13.50000036875
+        ],
+        "soilBoundsMin": [
+          -56.99999811875,
+          -14.50000036875
+        ],
+        "soilBoundsMax": [
+          -54.99999811875,
+          -12.50000036875
+        ],
+        "pathOverlap": [],
+        "restoredTreeBaseShadowOverlap": [],
+        "otherArtBoundingIntersections": []
+      },
+      {
+        "anchor": [
+          -51.99999811875,
+          -13.50000036875
+        ],
+        "soilBoundsMin": [
+          -52.99999811875,
+          -14.50000036875
+        ],
+        "soilBoundsMax": [
+          -50.99999811875,
+          -12.50000036875
+        ],
+        "pathOverlap": [],
+        "restoredTreeBaseShadowOverlap": [],
+        "otherArtBoundingIntersections": []
+      },
+      {
+        "anchor": [
+          -59.99999811875,
+          -17.00000036875
+        ],
+        "soilBoundsMin": [
+          -60.99999811875,
+          -18.00000036875
+        ],
+        "soilBoundsMax": [
+          -58.99999811875,
+          -16.00000036875
+        ],
+        "pathOverlap": [],
+        "restoredTreeBaseShadowOverlap": [],
+        "otherArtBoundingIntersections": []
+      },
+      {
+        "anchor": [
+          -55.99999811875,
+          -17.00000036875
+        ],
+        "soilBoundsMin": [
+          -56.99999811875,
+          -18.00000036875
+        ],
+        "soilBoundsMax": [
+          -54.99999811875,
+          -16.00000036875
+        ],
+        "pathOverlap": [],
+        "restoredTreeBaseShadowOverlap": [],
+        "otherArtBoundingIntersections": []
+      },
+      {
+        "anchor": [
+          -51.99999811875,
+          -17.00000036875
+        ],
+        "soilBoundsMin": [
+          -52.99999811875,
+          -18.00000036875
+        ],
+        "soilBoundsMax": [
+          -50.99999811875,
+          -16.00000036875
+        ],
+        "pathOverlap": [],
+        "restoredTreeBaseShadowOverlap": [],
+        "otherArtBoundingIntersections": []
+      }
+    ],
+    "entryGrassCorridor": {
+      "min": [
+        -59,
+        -21
+      ],
+      "max": [
+        -58.0,
+        -12.5
+      ],
+      "width": 1,
+      "blockers": [],
+      "loggingPathAnchor": [
+        -58.5,
+        -21.5,
+        0.0
+      ]
+    },
+    "restoredTrees": [
+      {
+        "anchor": [
+          -61.5,
+          -12.5
+        ],
+        "baseShadowBounds": [
+          [
+            -61.9375,
+            -12.8125
+          ],
+          [
+            -61.0625,
+            -12.1875
+          ]
+        ]
+      },
+      {
+        "anchor": [
+          -51.5,
+          -4.5
+        ],
+        "baseShadowBounds": [
+          [
+            -51.9375,
+            -4.8125
+          ],
+          [
+            -51.0625,
+            -4.1875
+          ]
+        ]
+      }
+    ],
+    "collidersInPreview": [
+      {
+        "path": "Preview Town - A3-southeast-clearing/Town Camera Land Bounds",
+        "type": "BoxCollider2D",
+        "enabled": true,
+        "trigger": true,
+        "min": [
+          -138.5,
+          -53.5,
+          0.0
+        ],
+        "max": [
+          -11.5,
+          53.5,
+          0.0
+        ]
+      }
+    ],
+    "runtimeNavigationValidated": false,
+    "canopyFenceCrossing": "allowed, verified by render depth; never counted as a ground blocker"
+  },
+  {
+    "scene": "Assets/Editor/FarmingOrchardCapacityPreview/H8-one-tile-up.unity",
+    "treeCount": 8,
+    "rowsY": [
+      -13.5,
+      -17
+    ],
+    "fullUpwardShift": 1,
+    "columnAnchors": [
+      -60.0,
+      -57.0,
+      -54.0,
+      -51.0
+    ],
+    "columnSpacing": 3.0,
+    "plotEnvelope": [
+      11.0,
+      5.5
+    ],
+    "aisleWidth": 1.0,
+    "plantingPlots": [
+      {
+        "anchor": [
+          -59.99999811875,
+          -13.50000036875
+        ],
+        "soilBoundsMin": [
+          -60.99999811875,
+          -14.50000036875
+        ],
+        "soilBoundsMax": [
+          -58.99999811875,
+          -12.50000036875
+        ],
+        "pathOverlap": [],
+        "restoredTreeBaseShadowOverlap": [],
+        "otherArtBoundingIntersections": []
+      },
+      {
+        "anchor": [
+          -56.99999811875,
+          -13.50000036875
+        ],
+        "soilBoundsMin": [
+          -57.99999811875,
+          -14.50000036875
+        ],
+        "soilBoundsMax": [
+          -55.99999811875,
+          -12.50000036875
+        ],
+        "pathOverlap": [],
+        "restoredTreeBaseShadowOverlap": [],
+        "otherArtBoundingIntersections": []
+      },
+      {
+        "anchor": [
+          -53.99999811875,
+          -13.50000036875
+        ],
+        "soilBoundsMin": [
+          -54.99999811875,
+          -14.50000036875
+        ],
+        "soilBoundsMax": [
+          -52.99999811875,
+          -12.50000036875
+        ],
+        "pathOverlap": [],
+        "restoredTreeBaseShadowOverlap": [],
+        "otherArtBoundingIntersections": []
+      },
+      {
+        "anchor": [
+          -50.99999811875,
+          -13.50000036875
+        ],
+        "soilBoundsMin": [
+          -51.99999811875,
+          -14.50000036875
+        ],
+        "soilBoundsMax": [
+          -49.99999811875,
+          -12.50000036875
+        ],
+        "pathOverlap": [],
+        "restoredTreeBaseShadowOverlap": [],
+        "otherArtBoundingIntersections": []
+      },
+      {
+        "anchor": [
+          -59.99999811875,
+          -17.00000036875
+        ],
+        "soilBoundsMin": [
+          -60.99999811875,
+          -18.00000036875
+        ],
+        "soilBoundsMax": [
+          -58.99999811875,
+          -16.00000036875
+        ],
+        "pathOverlap": [],
+        "restoredTreeBaseShadowOverlap": [],
+        "otherArtBoundingIntersections": []
+      },
+      {
+        "anchor": [
+          -56.99999811875,
+          -17.00000036875
+        ],
+        "soilBoundsMin": [
+          -57.99999811875,
+          -18.00000036875
+        ],
+        "soilBoundsMax": [
+          -55.99999811875,
+          -16.00000036875
+        ],
+        "pathOverlap": [],
+        "restoredTreeBaseShadowOverlap": [],
+        "otherArtBoundingIntersections": []
+      },
+      {
+        "anchor": [
+          -53.99999811875,
+          -17.00000036875
+        ],
+        "soilBoundsMin": [
+          -54.99999811875,
+          -18.00000036875
+        ],
+        "soilBoundsMax": [
+          -52.99999811875,
+          -16.00000036875
+        ],
+        "pathOverlap": [],
+        "restoredTreeBaseShadowOverlap": [],
+        "otherArtBoundingIntersections": []
+      },
+      {
+        "anchor": [
+          -50.99999811875,
+          -17.00000036875
+        ],
+        "soilBoundsMin": [
+          -51.99999811875,
+          -18.00000036875
+        ],
+        "soilBoundsMax": [
+          -49.99999811875,
+          -16.00000036875
+        ],
+        "pathOverlap": [],
+        "restoredTreeBaseShadowOverlap": [],
+        "otherArtBoundingIntersections": []
+      }
+    ],
+    "entryGrassCorridor": {
+      "min": [
+        -59,
+        -21
+      ],
+      "max": [
+        -58.0,
+        -12.5
+      ],
+      "width": 1,
+      "blockers": [],
+      "loggingPathAnchor": [
+        -58.5,
+        -21.5,
+        0.0
+      ]
+    },
+    "restoredTrees": [
+      {
+        "anchor": [
+          -61.5,
+          -12.5
+        ],
+        "baseShadowBounds": [
+          [
+            -61.9375,
+            -12.8125
+          ],
+          [
+            -61.0625,
+            -12.1875
+          ]
+        ]
+      },
+      {
+        "anchor": [
+          -51.5,
+          -4.5
+        ],
+        "baseShadowBounds": [
+          [
+            -51.9375,
+            -4.8125
+          ],
+          [
+            -51.0625,
+            -4.1875
+          ]
+        ]
+      }
+    ],
+    "collidersInPreview": [
+      {
+        "path": "Preview Town - A3-southeast-clearing/Town Camera Land Bounds",
+        "type": "BoxCollider2D",
+        "enabled": true,
+        "trigger": true,
+        "min": [
+          -138.5,
+          -53.5,
+          0.0
+        ],
+        "max": [
+          -11.5,
+          53.5,
+          0.0
+        ]
+      }
+    ],
+    "runtimeNavigationValidated": false,
+    "canopyFenceCrossing": "allowed, verified by render depth; never counted as a ground blocker"
+  }
+]

@@ -1,0 +1,38 @@
+import json,numpy as np
+from pathlib import Path
+base=Path('/Users/matthewrushworth/Projects/Echoes Farming Planning Evidence/2026-09-30/fence-scenery-correction-2026-10-01')
+scenes=json.loads((base/'scene-art-audit-after.json').read_text()); alpha=json.loads((base/'source-alpha-pixels.json').read_text())
+def geometry(a):
+ key=a['asset']+':'+','.join(str(float(x)) for x in a['rect'])
+ if key not in alpha:return None
+ px=np.array(alpha[key],dtype=float)
+ if not len(px):return None
+ pivot=np.array(a['pivot']);ppu=a['ppu'];m=np.array(a['matrix']).reshape(4,4)
+ xy=(px[:,:2]-pivot)/ppu
+ corners=np.stack([xy,xy+[1/ppu,0],xy+[0,1/ppu],xy+[1/ppu,1/ppu]],axis=1)
+ world=corners @ m[:2,:2].T+m[:2,3]
+ lo=world.min(axis=1);hi=world.max(axis=1)
+ return lo,hi,lo.min(axis=0),hi.max(axis=0),px[:,2]
+results=[]
+for sc in scenes:
+ arts=sc['art'];gg={i:geometry(a) for i,a in enumerate(arts)}
+ fences=[i for i,a in enumerate(arts) if a['path'].startswith('CONCEPT Farm') and 'Fence' in a['asset']]
+ issues=[]
+ for i,a in enumerate(arts):
+  if a['path'].startswith('CONCEPT Farm') or 'Orchard-specific soil' in a['path'] or 'Optional orderly orchard' in a['path']:continue
+  if '/Tilemaps/FG_Decor' in a['path'] or '/Tilemaps/BG_Decor' in a['path'] or a['kind']=='SpriteRenderer': pass
+  else:continue
+  g=gg[i]
+  if g is None:continue
+  overlaps=[]
+  for f in fences:
+   h=gg[f]
+   if h is None or np.any(g[3]<=h[2]) or np.any(h[3]<=g[2]):continue
+   hit=np.all((g[1][:,None,:]>h[0][None,:,:]+1e-6)&(h[1][None,:,:]>g[0][:,None,:]+1e-6),axis=2)
+   count=int(np.any(hit,axis=1).sum())
+   if count:overlaps.append({'fence':arts[f]['path'],'anchor':[arts[f]['matrix'][3],arts[f]['matrix'][7]],'sceneryPixelsTouching':count})
+  if overlaps: issues.append({'path':a['path'],'sprite':a['sprite'],'asset':a['asset'],'kind':a['kind'],'cell':a.get('cell'),'anchor':[a['matrix'][3],a['matrix'][7]],'visibleBounds':[g[2].tolist(),g[3].tolist()],'order':a['order'],'layer':a['layer'],'overlaps':overlaps})
+ results.append({'scene':sc['scene'],'fencePieces':len(fences),'opaqueIntersections':issues})
+ print(sc['scene'].split('/')[-1],len(fences),'fences',len(issues),'scenery intersections')
+ for x in issues:print(' ',x['sprite'],x['anchor'],x.get('cell'),len(x['overlaps']),sum(o['sceneryPixelsTouching'] for o in x['overlaps']))
+(base/'opaque-intersection-after.json').write_text(json.dumps(results,indent=2))

@@ -1,0 +1,750 @@
+[
+  {
+    "taskAsset": "Assets/Resources/Tasks/Farming/Carrot.asset",
+    "resource": "Carrot",
+    "resourceAsset": "Assets/Resources/Resource Items/Carrot.asset",
+    "resourceIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png",
+      "fileID": "14814732487599125",
+      "sprite": "Food_Icons_NO_Outline_34"
+    },
+    "taskIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "fileID": "4727212774405997460",
+      "sprite": "Crop_Carrot_MaturePlant"
+    },
+    "level": 23,
+    "taskPrefab": "Assets/Prefabs/Tasks/Farming/Farming_Carrot.prefab",
+    "growthSprites": [
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "3225213848598672445",
+        "sprite": "Crop_Carrot_EarlySprout"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "5507455356034643388",
+        "sprite": "Crop_Carrot_YoungPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "4150229347420907923",
+        "sprite": "Crop_Carrot_DevelopedPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "4727212774405997460",
+        "sprite": "Crop_Carrot_MaturePlant"
+      }
+    ],
+    "authoredTaskXP": 15,
+    "dropRange": [
+      "1",
+      "5"
+    ]
+  },
+  {
+    "taskAsset": "Assets/Resources/Tasks/Farming/Chillie.asset",
+    "resource": "Chillie",
+    "resourceAsset": "Assets/Resources/Resource Items/Chillie.asset",
+    "resourceIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png",
+      "fileID": "-1650050627666740925",
+      "sprite": "Food_Icons_NO_Outline_52"
+    },
+    "taskIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "fileID": "-9046296309055213395",
+      "sprite": "Crop_RedPepper_MaturePlant"
+    },
+    "level": 68,
+    "taskPrefab": "Assets/Prefabs/Tasks/Farming/Farming_Chillie.prefab",
+    "growthSprites": [
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-7777105805926593153",
+        "sprite": "Crop_RedPepper_EarlySprout"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "7780584609490285511",
+        "sprite": "Crop_RedPepper_YoungPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-3667834562317142703",
+        "sprite": "Crop_RedPepper_DevelopedPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-9046296309055213395",
+        "sprite": "Crop_RedPepper_MaturePlant"
+      }
+    ],
+    "authoredTaskXP": 42,
+    "dropRange": [
+      "1",
+      "5"
+    ]
+  },
+  {
+    "taskAsset": "Assets/Resources/Tasks/Farming/Corn.asset",
+    "resource": "Corn",
+    "resourceAsset": "Assets/Resources/Resource Items/Corn.asset",
+    "resourceIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png",
+      "fileID": "5583618719537258820",
+      "sprite": "Food_Icons_NO_Outline_56"
+    },
+    "taskIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "fileID": "-1010118597598872900",
+      "sprite": "Crop_Corn_MaturePlant"
+    },
+    "level": 7,
+    "taskPrefab": "Assets/Prefabs/Tasks/Farming/Farming_Corn.prefab",
+    "growthSprites": [
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-7264623449321555839",
+        "sprite": "Crop_Corn_EarlySprout"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-8212930081969480023",
+        "sprite": "Crop_Corn_YoungPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-3911487379921220410",
+        "sprite": "Crop_Corn_DevelopedPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-1010118597598872900",
+        "sprite": "Crop_Corn_MaturePlant"
+      }
+    ],
+    "authoredTaskXP": 6,
+    "dropRange": [
+      "1",
+      "5"
+    ]
+  },
+  {
+    "taskAsset": "Assets/Resources/Tasks/Farming/Cucumber.asset",
+    "resource": "Cucumber",
+    "resourceAsset": "Assets/Resources/Resource Items/Cucumber.asset",
+    "resourceIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png",
+      "fileID": "6613182122031215269",
+      "sprite": "Food_Icons_NO_Outline_50"
+    },
+    "taskIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "fileID": "-7998690685759499793",
+      "sprite": "Crop_Cucumber_MaturePlant"
+    },
+    "level": 45,
+    "taskPrefab": "Assets/Prefabs/Tasks/Farming/Farming_Cucumber.prefab",
+    "growthSprites": [
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "7064467092071143883",
+        "sprite": "Crop_Cucumber_YoungPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-2673831232468371044",
+        "sprite": "Crop_Cucumber_DevelopedPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-7998690685759499793",
+        "sprite": "Crop_Cucumber_MaturePlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "6610592383885769403",
+        "sprite": "Crop_Cucumber_EarlySprout"
+      }
+    ],
+    "authoredTaskXP": 27,
+    "dropRange": [
+      "1",
+      "5"
+    ]
+  },
+  {
+    "taskAsset": "Assets/Resources/Tasks/Farming/Funion.asset",
+    "resource": "Funion",
+    "resourceAsset": "Assets/Resources/Resource Items/Funion.asset",
+    "resourceIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png",
+      "fileID": "-7833648304982372205",
+      "sprite": "Food_Icons_NO_Outline_70"
+    },
+    "taskIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "fileID": "-3967237929857205426",
+      "sprite": "Crop_TanBulb_A_MaturePlant"
+    },
+    "level": 84,
+    "taskPrefab": "Assets/Prefabs/Tasks/Farming/Farming_Funion.prefab",
+    "growthSprites": [
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "2166644136731427129",
+        "sprite": "Crop_TanBulb_A_EarlySprout"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-1368242011544380887",
+        "sprite": "Crop_TanBulb_A_YoungPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-9004892251159916311",
+        "sprite": "Crop_TanBulb_A_DevelopedPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-3967237929857205426",
+        "sprite": "Crop_TanBulb_A_MaturePlant"
+      }
+    ],
+    "authoredTaskXP": 49,
+    "dropRange": [
+      "1",
+      "5"
+    ]
+  },
+  {
+    "taskAsset": "Assets/Resources/Tasks/Farming/Leek.asset",
+    "resource": "Leek",
+    "resourceAsset": "Assets/Resources/Resource Items/Leek.asset",
+    "resourceIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png",
+      "fileID": "6337598514820839959",
+      "sprite": "Food_Icons_NO_Outline_76"
+    },
+    "taskIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "fileID": "-4179824020582981186",
+      "sprite": "Crop_Leek_MaturePlant"
+    },
+    "level": 52,
+    "taskPrefab": "Assets/Prefabs/Tasks/Farming/Farming_Leek.prefab",
+    "growthSprites": [
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "5074320991204899774",
+        "sprite": "Crop_Leek_EarlySprout"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-1896591569020917584",
+        "sprite": "Crop_Leek_YoungPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-4087323518823875634",
+        "sprite": "Crop_Leek_DevelopedPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-4179824020582981186",
+        "sprite": "Crop_Leek_MaturePlant"
+      }
+    ],
+    "authoredTaskXP": 30,
+    "dropRange": [
+      "1",
+      "5"
+    ]
+  },
+  {
+    "taskAsset": "Assets/Resources/Tasks/Farming/Lettuce.asset",
+    "resource": "Lettuce",
+    "resourceAsset": "Assets/Resources/Resource Items/Lettuce.asset",
+    "resourceIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png",
+      "fileID": "-115147603797454879",
+      "sprite": "Food_Icons_NO_Outline_42"
+    },
+    "taskIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "fileID": "2799499457651537543",
+      "sprite": "Crop_Cabbage_MaturePlant"
+    },
+    "level": 40,
+    "taskPrefab": "Assets/Prefabs/Tasks/Farming/Farming_Lettuce.prefab",
+    "growthSprites": [
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "7449849197881009115",
+        "sprite": "Crop_Cabbage_EarlySprout"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-1453761271293660484",
+        "sprite": "Crop_Cabbage_YoungPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "8003362964857521715",
+        "sprite": "Crop_Cabbage_DevelopedPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "2799499457651537543",
+        "sprite": "Crop_Cabbage_MaturePlant"
+      }
+    ],
+    "authoredTaskXP": 24,
+    "dropRange": [
+      "1",
+      "5"
+    ]
+  },
+  {
+    "taskAsset": "Assets/Resources/Tasks/Farming/Parsnip.asset",
+    "resource": "Parsnip",
+    "resourceAsset": "Assets/Resources/Resource Items/Parsnip.asset",
+    "resourceIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png",
+      "fileID": "7902081903842676876",
+      "sprite": "Food_Icons_NO_Outline_58"
+    },
+    "taskIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "fileID": "1524892664962734932",
+      "sprite": "Crop_PaleRoot_MaturePlant"
+    },
+    "level": 57,
+    "taskPrefab": "Assets/Prefabs/Tasks/Farming/Farming_Parsnip.prefab",
+    "growthSprites": [
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "7113927244362079390",
+        "sprite": "Crop_PaleRoot_EarlySprout"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-8963637610061471851",
+        "sprite": "Crop_PaleRoot_YoungPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-8124274317607321232",
+        "sprite": "Crop_PaleRoot_DevelopedPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "1524892664962734932",
+        "sprite": "Crop_PaleRoot_MaturePlant"
+      }
+    ],
+    "authoredTaskXP": 34,
+    "dropRange": [
+      "1",
+      "5"
+    ]
+  },
+  {
+    "taskAsset": "Assets/Resources/Tasks/Farming/Pepper.asset",
+    "resource": "Pepper",
+    "resourceAsset": "Assets/Resources/Resource Items/Pepper.asset",
+    "resourceIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png",
+      "fileID": "-3143227412493426285",
+      "sprite": "Food_Icons_NO_Outline_28"
+    },
+    "taskIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "fileID": "-7950665004155765343",
+      "sprite": "Crop_Beet_MaturePlant"
+    },
+    "level": 62,
+    "taskPrefab": "Assets/Prefabs/Tasks/Farming/Farming_Pepper.prefab",
+    "growthSprites": [
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "7476822244457568348",
+        "sprite": "Crop_Beet_EarlySprout"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "1663202593893667963",
+        "sprite": "Crop_Beet_YoungPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-5560092192333691669",
+        "sprite": "Crop_Beet_DevelopedPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-7950665004155765343",
+        "sprite": "Crop_Beet_MaturePlant"
+      }
+    ],
+    "authoredTaskXP": 38,
+    "dropRange": [
+      "1",
+      "5"
+    ]
+  },
+  {
+    "taskAsset": "Assets/Resources/Tasks/Farming/Pumking.asset",
+    "resource": "Pumking",
+    "resourceAsset": "Assets/Resources/Resource Items/Pumking.asset",
+    "resourceIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png",
+      "fileID": "-4664155993329955983",
+      "sprite": "Food_Icons_NO_Outline_48"
+    },
+    "taskIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "fileID": "-2584793599262434737",
+      "sprite": "Crop_Pumpkin_MaturePlant"
+    },
+    "level": 74,
+    "taskPrefab": "Assets/Prefabs/Tasks/Farming/Farming_Pumking.prefab",
+    "growthSprites": [
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "568712722439862651",
+        "sprite": "Crop_Pumpkin_EarlySprout"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-9177457062998269095",
+        "sprite": "Crop_Pumpkin_YoungPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "92264684534740810",
+        "sprite": "Crop_Pumpkin_DevelopedPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-2584793599262434737",
+        "sprite": "Crop_Pumpkin_MaturePlant"
+      }
+    ],
+    "authoredTaskXP": 45,
+    "dropRange": [
+      "1",
+      "5"
+    ]
+  },
+  {
+    "taskAsset": "Assets/Resources/Tasks/Farming/Radish.asset",
+    "resource": "Radish",
+    "resourceAsset": "Assets/Resources/Resource Items/Radish.asset",
+    "resourceIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png",
+      "fileID": "511531087981754570",
+      "sprite": "Food_Icons_NO_Outline_60"
+    },
+    "taskIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "fileID": "-1319403273844478748",
+      "sprite": "Crop_Eggplant_MaturePlant"
+    },
+    "level": 1,
+    "taskPrefab": "Assets/Prefabs/Tasks/Farming/Farming_Radish.prefab",
+    "growthSprites": [
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-3087722540913972952",
+        "sprite": "Crop_Eggplant_EarlySprout"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "354162863218615001",
+        "sprite": "Crop_Eggplant_YoungPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-8800576670314286437",
+        "sprite": "Crop_Eggplant_DevelopedPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-1319403273844478748",
+        "sprite": "Crop_Eggplant_MaturePlant"
+      }
+    ],
+    "authoredTaskXP": 3,
+    "dropRange": [
+      "1",
+      "5"
+    ]
+  },
+  {
+    "taskAsset": "Assets/Resources/Tasks/Farming/Spud.asset",
+    "resource": "Spud",
+    "resourceAsset": "Assets/Resources/Resource Items/Spud.asset",
+    "resourceIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png",
+      "fileID": "-2487385577181270452",
+      "sprite": "Food_Icons_NO_Outline_74"
+    },
+    "taskIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "fileID": "166006926289291715",
+      "sprite": "Crop_Potato_MaturePlant"
+    },
+    "level": 29,
+    "taskPrefab": "Assets/Prefabs/Tasks/Farming/Farming_Spud.prefab",
+    "growthSprites": [
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-7015276441256703656",
+        "sprite": "Crop_Potato_EarlySprout"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-5545492575456576821",
+        "sprite": "Crop_Potato_YoungPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "4422337733266787571",
+        "sprite": "Crop_Potato_DevelopedPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "166006926289291715",
+        "sprite": "Crop_Potato_MaturePlant"
+      }
+    ],
+    "authoredTaskXP": 18,
+    "dropRange": [
+      "1",
+      "5"
+    ]
+  },
+  {
+    "taskAsset": "Assets/Resources/Tasks/Farming/Strawberry.asset",
+    "resource": "Strawberry",
+    "resourceAsset": "Assets/Resources/Resource Items/Strawberry.asset",
+    "resourceIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png",
+      "fileID": "7108729223609627989",
+      "sprite": "Food_Icons_NO_Outline_78"
+    },
+    "taskIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "fileID": "-8228112601785353111",
+      "sprite": "Crop_Strawberry_MaturePlant"
+    },
+    "level": 79,
+    "taskPrefab": "Assets/Prefabs/Tasks/Farming/Farming_Strawberry.prefab",
+    "growthSprites": [
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "7733726326453383831",
+        "sprite": "Crop_Strawberry_EarlySprout"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "7550892748726295396",
+        "sprite": "Crop_Strawberry_YoungPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-3242253921355452507",
+        "sprite": "Crop_Strawberry_DevelopedPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-8228112601785353111",
+        "sprite": "Crop_Strawberry_MaturePlant"
+      }
+    ],
+    "authoredTaskXP": 47,
+    "dropRange": [
+      "1",
+      "5"
+    ]
+  },
+  {
+    "taskAsset": "Assets/Resources/Tasks/Farming/Tomato.asset",
+    "resource": "Tomato",
+    "resourceAsset": "Assets/Resources/Resource Items/Tomato.asset",
+    "resourceIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png",
+      "fileID": "-637808969065192156",
+      "sprite": "Food_Icons_NO_Outline_32"
+    },
+    "taskIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "fileID": "8954413170907878631",
+      "sprite": "Crop_Tomato_MaturePlant"
+    },
+    "level": 35,
+    "taskPrefab": "Assets/Prefabs/Tasks/Farming/Farming_Tomato.prefab",
+    "growthSprites": [
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-5774877164156790999",
+        "sprite": "Crop_Tomato_EarlySprout"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "1640555460866966840",
+        "sprite": "Crop_Tomato_YoungPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "2683288208970150335",
+        "sprite": "Crop_Tomato_DevelopedPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "8954413170907878631",
+        "sprite": "Crop_Tomato_MaturePlant"
+      }
+    ],
+    "authoredTaskXP": 21,
+    "dropRange": [
+      "1",
+      "5"
+    ]
+  },
+  {
+    "taskAsset": "Assets/Resources/Tasks/Farming/Turnip.asset",
+    "resource": "Turnip",
+    "resourceAsset": "Assets/Resources/Resource Items/Turnip.asset",
+    "resourceIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png",
+      "fileID": "3132635935396016296",
+      "sprite": "Food_Icons_NO_Outline_66"
+    },
+    "taskIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "fileID": "4227562727828232050",
+      "sprite": "Crop_Radish_MaturePlant"
+    },
+    "level": 90,
+    "taskPrefab": "Assets/Prefabs/Tasks/Farming/Farming_Turnip.prefab",
+    "growthSprites": [
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "9118292104019925386",
+        "sprite": "Crop_Radish_EarlySprout"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "2737622864529235156",
+        "sprite": "Crop_Radish_YoungPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "9006110008903433327",
+        "sprite": "Crop_Radish_DevelopedPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "4227562727828232050",
+        "sprite": "Crop_Radish_MaturePlant"
+      }
+    ],
+    "authoredTaskXP": 50,
+    "dropRange": [
+      "1",
+      "5"
+    ]
+  },
+  {
+    "taskAsset": "Assets/Resources/Tasks/Farming/Wartermelone.asset",
+    "resource": "Watermelone",
+    "resourceAsset": "Assets/Resources/Resource Items/Watermelone.asset",
+    "resourceIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png",
+      "fileID": "7860516806514409981",
+      "sprite": "Food_Icons_NO_Outline_26"
+    },
+    "taskIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "fileID": "9057977493438303337",
+      "sprite": "Crop_Watermelon_MaturePlant"
+    },
+    "level": 18,
+    "taskPrefab": "Assets/Prefabs/Tasks/Farming/Farming_Wartermelone.prefab",
+    "growthSprites": [
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-2663035583714953732",
+        "sprite": "Crop_Watermelon_EarlySprout"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "1926556741188489488",
+        "sprite": "Crop_Watermelon_YoungPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "706502502933305996",
+        "sprite": "Crop_Watermelon_DevelopedPlant"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "9057977493438303337",
+        "sprite": "Crop_Watermelon_MaturePlant"
+      }
+    ],
+    "authoredTaskXP": 12,
+    "dropRange": [
+      "1",
+      "5"
+    ]
+  },
+  {
+    "taskAsset": "Assets/Resources/Tasks/Farming/Wheat.asset",
+    "resource": "Wheat",
+    "resourceAsset": "Assets/Resources/Resource Items/Wheat.asset",
+    "resourceIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png",
+      "fileID": "2024126210608116181",
+      "sprite": "Food_Icons_NO_Outline_24"
+    },
+    "taskIcon": {
+      "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+      "fileID": "-1041579510",
+      "sprite": "Crop_Wheat_GoldenStalks"
+    },
+    "level": 13,
+    "taskPrefab": "Assets/Prefabs/Tasks/Farming/Farming_Wheat.prefab",
+    "growthSprites": [
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "1542044054",
+        "sprite": "Crop_Wheat_EarlySprouts"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "704103268",
+        "sprite": "Crop_Wheat_GreenStalks"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "1725182957",
+        "sprite": "Crop_Wheat_GreenStalks_YellowTips"
+      },
+      {
+        "asset": "Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png",
+        "fileID": "-1041579510",
+        "sprite": "Crop_Wheat_GoldenStalks"
+      }
+    ],
+    "authoredTaskXP": 9,
+    "dropRange": [
+      "1",
+      "5"
+    ]
+  }
+]

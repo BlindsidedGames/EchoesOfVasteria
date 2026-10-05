@@ -1,0 +1,72 @@
+{
+  "baseMain": "d8490d085548a7d9c2637d6406464a0eddc5e200",
+  "originalHead": "0dc126eb4bb2af4a7a7f451e6e09882e3cf03c13",
+  "recoveryBranch": "recovery/echoes-pre-reconcile-20261005",
+  "activePR": 1151,
+  "vendorCommit": "357ac0053",
+  "productCommit": "914e36fd7",
+  "superseded": [
+    {
+      "scope": "18 Sirenix pure line-ending changes",
+      "evidence": "vendor-line-ending-only.json",
+      "recovery": "baseline-working.diff and baseline source snapshot"
+    },
+    {
+      "scope": "fix/pages-archived-website branch",
+      "reason": "Workflow and validator bytes already match main; retain branch/history"
+    }
+  ],
+  "referenceOnly": [
+    "Assets/Editor/Farming*Preview* scenes",
+    "docs/planning farming visual revisions and source evidence"
+  ],
+  "excluded": [
+    "Assets/Localization/SheetsServiceProvider.asset",
+    "Assets/Localization/SheetsServiceProvider.asset.meta",
+    "ignored output/private restore paths",
+    "player saves and preferences"
+  ],
+  "historicalRefs": "remote-ref-inventory.json; 1146 cached refs preserved; only one open PR",
+  "sourceManifest": "release-source-manifest.json",
+  "sourceHash": "acc5851218d4814a7782e845e34655ef6f05d05f20583113a87cb9399a1f1233",
+  "tests": "qa-final summaries/XML are authoritative; failed/superseded attempts retained",
+  "independentReview": "Completed read-only review; save-codec assertions strengthened; effective Sirenix platform inclusion audit required during builds",
+  "verification": {
+    "EditMode": {
+      "status": "passed",
+      "process_exit": 0,
+      "passed": 257,
+      "failed": 0,
+      "skipped": 0,
+      "failures": [],
+      "elapsedSeconds": 37.42164866696112
+    },
+    "PlayMode": {
+      "status": "passed",
+      "process_exit": 0,
+      "passed": 67,
+      "failed": 0,
+      "skipped": 0,
+      "failures": [],
+      "elapsedSeconds": 120.35116808395833
+    },
+    "Localization": {
+      "status": "passed",
+      "process_exit": 0,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "failures": [],
+      "elapsedSeconds": 28.3303959579207
+    }
+  },
+  "localeValidation": {
+    "fr": 0,
+    "de": 0,
+    "es-419": 0,
+    "pt-BR": 0,
+    "zh-CN": 0,
+    "ru": 0,
+    "ja": 0
+  }
+}

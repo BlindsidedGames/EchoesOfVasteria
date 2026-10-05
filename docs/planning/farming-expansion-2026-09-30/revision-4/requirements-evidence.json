@@ -1,0 +1,146 @@
+{
+  "decision": "Every player follows current game-defined unlock requirements. No grandfathered crop access or redundant per-save crop unlock flags. Retain actual skills/XP; discard obsolete unlock data and purchased old stat upgrades without starter gear conversion. Meaningful quest progress is not blanket-deleted.",
+  "canonicalExistingGate": "TaskWeightService.IsTaskUnlocked compares SkillController progress level against TaskData.requiredSkillLevel using TaskData.associatedSkill.",
+  "cropRequirementAudit": [
+    {
+      "task": "Assets/Resources/Tasks/Farming/Carrot.asset",
+      "resource": "Carrot",
+      "taskGuid": "70617213aa5b4282810c56d8c6fef1dc",
+      "requiredSkillLevel": 23,
+      "ResourceUnlockConfigLevel": 23,
+      "sha256": "ce284b05dede60edbf215de365d91d43f0c55984199d0db8f9fedd0fe2568f77"
+    },
+    {
+      "task": "Assets/Resources/Tasks/Farming/Chillie.asset",
+      "resource": "Chillie",
+      "taskGuid": "057a73ef4be1461a8f37f4a18cc9ccd7",
+      "requiredSkillLevel": 68,
+      "ResourceUnlockConfigLevel": 68,
+      "sha256": "dc47ea021e161d0fcc5d8f5695163919777f0dfeaa0aaac69387c118a6f1668d"
+    },
+    {
+      "task": "Assets/Resources/Tasks/Farming/Corn.asset",
+      "resource": "Corn",
+      "taskGuid": "4706c98248fceba4d999590b3af7c998",
+      "requiredSkillLevel": 7,
+      "ResourceUnlockConfigLevel": 7,
+      "sha256": "c509a8c38e131c70a6a34c013eaa3b273b2a6fae59ffeb381e71abbab5c3d1ff"
+    },
+    {
+      "task": "Assets/Resources/Tasks/Farming/Cucumber.asset",
+      "resource": "Cucumber",
+      "taskGuid": "e14a18a28eab47f3b4a1ba4fc35feecc",
+      "requiredSkillLevel": 45,
+      "ResourceUnlockConfigLevel": 45,
+      "sha256": "64ba76f53473c52f0313a37abfcee50ca95483f39972033f744b711e783b80f0"
+    },
+    {
+      "task": "Assets/Resources/Tasks/Farming/Funion.asset",
+      "resource": "Funion",
+      "taskGuid": "32c67278a4d449d1a3b9537021e12b94",
+      "requiredSkillLevel": 84,
+      "ResourceUnlockConfigLevel": 84,
+      "sha256": "0a611f75af26e57116df6b4f603bbf088067e2763ef3878fffcd3a9806a0de24"
+    },
+    {
+      "task": "Assets/Resources/Tasks/Farming/Leek.asset",
+      "resource": "Leek",
+      "taskGuid": "9f12af72c3d64cb7992be2c5a55e724d",
+      "requiredSkillLevel": 52,
+      "ResourceUnlockConfigLevel": 52,
+      "sha256": "61527154fe2b281a9a24e2cb1f7d90df2ade2dadfe2644330b6d15977cbe162c"
+    },
+    {
+      "task": "Assets/Resources/Tasks/Farming/Lettuce.asset",
+      "resource": "Lettuce",
+      "taskGuid": "e0a30f5655974fccaf00c303a1ec8ab8",
+      "requiredSkillLevel": 40,
+      "ResourceUnlockConfigLevel": 40,
+      "sha256": "91ef990e095d19486db2a1d72035dc1b48d555c7fa4f60db51e41794346902de"
+    },
+    {
+      "task": "Assets/Resources/Tasks/Farming/Parsnip.asset",
+      "resource": "Parsnip",
+      "taskGuid": "b7927331582c41ad858f05059f361a0a",
+      "requiredSkillLevel": 57,
+      "ResourceUnlockConfigLevel": 57,
+      "sha256": "f1ab96adfe857717131b17952d6d658fb63801c3422454c9a40cce47bc016b24"
+    },
+    {
+      "task": "Assets/Resources/Tasks/Farming/Pepper.asset",
+      "resource": "Pepper",
+      "taskGuid": "62658544c0614a5490f65bb405af7397",
+      "requiredSkillLevel": 62,
+      "ResourceUnlockConfigLevel": 62,
+      "sha256": "a6b64bcd26fd5b3c3855d9a2d6c1ccaabcbedf3532d186f73dab2e6f7eed5eb0"
+    },
+    {
+      "task": "Assets/Resources/Tasks/Farming/Pumking.asset",
+      "resource": "Pumking",
+      "taskGuid": "9bf4f670cbb2443baabc2867f46fe800",
+      "requiredSkillLevel": 74,
+      "ResourceUnlockConfigLevel": 74,
+      "sha256": "4132a6a472a305fed9a4298f2c356a006ecd185bfe1c050c37e61f9f36f3f2ad"
+    },
+    {
+      "task": "Assets/Resources/Tasks/Farming/Radish.asset",
+      "resource": "Radish",
+      "taskGuid": "42f81ca90b736cd4bb035112a8b22ad3",
+      "requiredSkillLevel": 1,
+      "ResourceUnlockConfigLevel": 1,
+      "sha256": "e95fce5ddfbb9108473bc58a338db927d50175c835962c50303a4478448a3ccf"
+    },
+    {
+      "task": "Assets/Resources/Tasks/Farming/Spud.asset",
+      "resource": "Spud",
+      "taskGuid": "7ce5ada54f204022860133895160fdb0",
+      "requiredSkillLevel": 29,
+      "ResourceUnlockConfigLevel": 29,
+      "sha256": "3f32748da7d391c81246e42c1f8d24abc87f49c1cb83aa27b789c8a5c41531fa"
+    },
+    {
+      "task": "Assets/Resources/Tasks/Farming/Strawberry.asset",
+      "resource": "Strawberry",
+      "taskGuid": "d32ac8f14ec6412b970968c95d6630b5",
+      "requiredSkillLevel": 79,
+      "ResourceUnlockConfigLevel": 79,
+      "sha256": "c5f22c47751203151230f040968ab48304b0b1100b2d238c5a2faae482632cc4"
+    },
+    {
+      "task": "Assets/Resources/Tasks/Farming/Tomato.asset",
+      "resource": "Tomato",
+      "taskGuid": "86a9b7060b024768a521ceb023a7830d",
+      "requiredSkillLevel": 35,
+      "ResourceUnlockConfigLevel": 35,
+      "sha256": "6a7371d61cec087b5e2679ce8ad15d532ab2aaa8f9b23aae8783df40b76d6885"
+    },
+    {
+      "task": "Assets/Resources/Tasks/Farming/Turnip.asset",
+      "resource": "Turnip",
+      "taskGuid": "46bf1183fb9d4166b85a3b5bf3286e94",
+      "requiredSkillLevel": 90,
+      "ResourceUnlockConfigLevel": 90,
+      "sha256": "9a02c2414ac1d9321dfc0a5f784bebeb598bb75a37b99049b65b7c2d513cdf44"
+    },
+    {
+      "task": "Assets/Resources/Tasks/Farming/Wartermelone.asset",
+      "resource": "Watermelone",
+      "taskGuid": "616f97cc056149dc86d1db52889c9a51",
+      "requiredSkillLevel": 18,
+      "ResourceUnlockConfigLevel": 18,
+      "sha256": "ba98aaecb7aaca06fd9a98f0c2eecba469d707900de4928cc28385c2d8736489"
+    },
+    {
+      "task": "Assets/Resources/Tasks/Farming/Wheat.asset",
+      "resource": "Wheat",
+      "taskGuid": "42ee84897ea94fe9a7f5c79dd7fac12d",
+      "requiredSkillLevel": 13,
+      "ResourceUnlockConfigLevel": 13,
+      "sha256": "2f7911c13cbadd3007b72052bdf1e7c343f561e2ab8f5fffe584eae05a74050a"
+    }
+  ],
+  "all17TaskAndUILevelRequirementsMatch": true,
+  "farmProposal": "Recipe references canonical plant TaskData, authored quest requirements and independent new pack discovery. CanPlant and CanView are computed; no saved RecipeUnlocked/CropUnlocked/PlotUnlocked flags.",
+  "buildProposal": "Meaningful quest/phase/payment history persists; plot availability is derived from new game-authored requirements. No automatic legacy Fence1/2/3 -> farm-stage grants. Existing quest progress only satisfies a new requirement where its definition explicitly names that criterion, equally for everyone.",
+  "exactMigrationFields": "Owned by separate released-format audit; no source/save change performed."
+}

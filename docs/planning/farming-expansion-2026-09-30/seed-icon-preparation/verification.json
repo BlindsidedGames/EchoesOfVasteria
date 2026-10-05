@@ -1,0 +1,146 @@
+{
+  "stage": "seed-icon-preparation-and-separate-orchard",
+  "branch": "fix/editor-startup-terrain-catalogue",
+  "head": "b3cedc38b2ba75490aa0970346b246cff591d0f4",
+  "protectedSourcePaths": 38,
+  "sourceChanges": [],
+  "actualPlayerFiles": 77,
+  "playerChanges": [],
+  "verifiedBackups": 93,
+  "backupProblems": [],
+  "mainSha256": "8f912645ea9216c7f25a833da730c44524aaea0dab7ba4cd76a9c0e1ac0d9d54",
+  "mainDirty": false,
+  "playing": false,
+  "approvedV4FiguresUnchanged": [
+    {
+      "name": "farm-progression.png",
+      "sha256": "6330f995f19554f83541d33dd17d0b40bc16c4b511da283418edf0d2596cd97e"
+    },
+    {
+      "name": "farm-town-context-annotated.png",
+      "sha256": "3da8af2023a0455c5f980ca5c71c207fd0a3dbde6c806c4dbe99d14ec9cfdc6d"
+    },
+    {
+      "name": "farm-layout-alternatives.png",
+      "sha256": "0bb642203c8219fbaf33e6a70e09e05c818657afe67468ab4a664c523a16be7b"
+    },
+    {
+      "name": "farm-normal-scale.png",
+      "sha256": "1bbdd8f1759d51419cf5ca9d68baabfd0b5573dc17b7678beab1db0887b1cbc3"
+    },
+    {
+      "name": "farm-clearing-close-comparison.png",
+      "sha256": "eb962ef4194a316301911ff3acf55e08b1409885978cbe714941b0bea355d661"
+    }
+  ],
+  "existingPreviewFilesUnchanged": [
+    "Assets/Editor/FarmingPreviewsV4/A2-stump-reclamation.unity",
+    "Assets/Editor/FarmingPreviewsV4/B3-terraced-rows.unity.meta",
+    "Assets/Editor/FarmingPreviewsV4/B3-terraced-rows.unity",
+    "Assets/Editor/FarmingPreviewsV4/A2b-southeast-work.unity",
+    "Assets/Editor/FarmingPreviewsV4/C3-grove-courtyard.unity",
+    "Assets/Editor/FarmingPreviewsV4/A1-first-beds.unity.meta",
+    "Assets/Editor/FarmingPreviewsV4/A0-existing.unity.meta",
+    "Assets/Editor/FarmingPreviewsV4/A2b-southeast-work.unity.meta",
+    "Assets/Editor/FarmingPreviewsV4/A2-stump-reclamation.unity.meta",
+    "Assets/Editor/FarmingPreviewsV4/A3-southeast-clearing.unity.meta",
+    "Assets/Editor/FarmingPreviewsV4/C3-grove-courtyard.unity.meta",
+    "Assets/Editor/FarmingPreviewsV4/A3-southeast-clearing.unity",
+    "Assets/Editor/FarmingPreviewsV4/A1-first-beds.unity",
+    "Assets/Editor/FarmingPreviewsV4/A0-existing.unity",
+    "Assets/Editor/FarmingOrchardOptionPreview/D-optional-orchard.unity.meta",
+    "Assets/Editor/FarmingOrchardOptionPreview/D-optional-orchard.unity"
+  ],
+  "oldSpriteDefinitionsExact": 213,
+  "oldAtlasRGBARegionChanges": 0,
+  "oldAtlasPixelComparison": 55296,
+  "textAssets": [
+    {
+      "asset": "Assets/Resources/Fonts/FloatingTextIcons.asset",
+      "oldCharacterAndGlyphEntriesUnchanged": 213,
+      "newEntries": 23,
+      "materialAndHeaderUnchanged": true
+    },
+    {
+      "asset": "Assets/UI/Toolkit/InlineSprites.asset",
+      "oldCharacterAndGlyphEntriesUnchanged": 213,
+      "newEntries": 23,
+      "materialAndHeaderUnchanged": true
+    }
+  ],
+  "unchangedSerializedConsumers": 18,
+  "sourceConsumersAudited": 27,
+  "newInventorySprites": 23,
+  "newTextGlyphs": 23,
+  "pixels": {
+    "allDropPixelsEqualNormalizedSource": true,
+    "interiorPalePixelsPreservedAcrossKnownPackets": 3,
+    "opaqueOrTransparentOnly": true,
+    "unknownColorRGBA": [
+      145,
+      83,
+      59,
+      255
+    ],
+    "haloPixelsRemovedPerIcon": 40,
+    "oldRegionRGBAChanges": 0,
+    "newIconPixelsCompared": 5888,
+    "inventoryDistinctAlphaMasks": 1,
+    "oldAtlasRegionPixelsCompared": 55296,
+    "sharedUnknownMatchesEveryInventorySilhouette": true,
+    "originalAtlasPixelPositionsRetained": true
+  },
+  "successfulValidationLogs": [],
+  "TMPNamedGlyphVertices": 23,
+  "nativeImageControlsReviewed": 23,
+  "nativeTextCoreNamedGlyphsVisuallyReviewed": 3,
+  "oldRepresentativeTMPGlyphsReviewed": [
+    56,
+    192,
+    198,
+    207,
+    211
+  ],
+  "MetalEditModeRendering": true,
+  "runtimePlayerMobileDiscoveryNotTested": true,
+  "separateOrchardCropBedsRetained": 6,
+  "orchardCropSpritesPreserved": 60,
+  "orchardAdditionalStandingTreeRemoval": 0,
+  "orchardPreviewScripts": [
+    "a79441f348de89743a2939f4d699eac1",
+    "073797afb82c5a1438f328866b10b3f0"
+  ],
+  "lightGuardsRestored": true,
+  "temporaryHelperAndAliasRemoved": true,
+  "brokenMarkdownLinks": [],
+  "rawHtmlClutter": [],
+  "focusedDiffCheckPassed": true,
+  "libraryFiles": [
+    {
+      "library_file_id": "libfile_7dcc8a97d1188191bc53ffe9f6f3aa81",
+      "file_id": "file_00000000bf1481fa8b3478ab1fec3ae9",
+      "version": 1,
+      "file_name": "seed-pack-before-after.png"
+    },
+    {
+      "library_file_id": "libfile_84d50dd664b88191a9f064e5e645ea0d",
+      "file_id": "file_00000000071881faba78e31d8dac5445",
+      "version": 0,
+      "file_name": "unity-inventory.png"
+    },
+    {
+      "library_file_id": "libfile_49b174e4a17c819197f43cbfee585cb6",
+      "file_id": "file_000000004fd8820bad5c111e387d3396",
+      "version": 0,
+      "file_name": "unity-drops.png"
+    },
+    {
+      "library_file_id": "libfile_555f413a50c881919dc35beb045aa5c4",
+      "file_id": "file_0000000078c8820bb0fb98b6a6f209ce",
+      "version": 1,
+      "file_name": "farm-optional-orchard.png"
+    }
+  ],
+  "productionFarmingOrOrchardImplemented": false,
+  "committedOrPushed": false
+}

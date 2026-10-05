@@ -1,0 +1,529 @@
+--- revision2/README.md
++++ revision3/README.md
+@@ -4,40 +4,40 @@
+ 
+ ## The player experience
+ 
+-Start with two Radish packs and two beds in the existing farmers' footprint. Radish is level1; Corn is level7. Plant one crop batch per bed, watch it grow through existing art while adventuring or offline, then harvest once. Ready crops wait safely. No automatic harvest/replant, crop death, daily watering or repeatable farm XP.
++The user has decided **no Alter Echo compensation** and **seed packs in plant drop pools**, including progression for advanced players. Recommended tutorial: two one-time Radish packs and two beds in the existing farmers' footprint; this starter grant still needs review. Radish is level 1; Corn is level 7. Plant one finite batch per bed, grow through existing art while adventuring or offline, then harvest once. Ready crops wait safely. No automatic harvest/replant, crop death, daily watering or repeatable farm XP.
+ 
+ Barkley first helps prepare the current plots, then reclaim the already felled stump field, then cut and prepare a southeast woodland edge. Capacity grows2→4→6. The tree-to-stump work phase sits inside the third quest and persists after its material hand-in; it is not a fourth capacity unlock. Use Log, Stick and modest Stone. Quests already provide material hand-ins, prerequisites and staged objects, so a Construction skill and playable planks would add currencies/UI/migration without improving this bounded loop. Animals remain a future expansion.
+ 
+-All17 existing crops can use the shared recipe system, retaining current Farming levels and discovery gates. A pack buys a whole three-by-three visual bed, not nine separate plants. Guaranteed packs follow the player's preferred eligible recipe. Completed primary-hero adventure gathering earns progress; death/abandonment keep completed work but give no ending bonus. Proposed guarantee: thirty credited work units plus a delivery token available every five active adventure minutes. Storage caps at twice bed capacity, with only one pending entitlement even below the cap; work remainders and token refill persist across returns/reload without surplus banking. The guarantee is conditional on completed work, not a measured ordinary wait. Farm harvest never earns seeds.
++All17 existing crops can share one recipe system. Recommend the first pack unlocks its farm recipe at the existing Farming level and duplicates sustain planting, giving late-game players a new collection even if adventure discoveries are complete. This unlock interpretation needs approval. A pack pays for a whole three-by-three visual bed, not nine plants. The old work-counter/guaranteed-token proposal is withdrawn. Random plant drops have no maximum guaranteed wait; a zero-seed player can still adventure and gather Radish until a usable pack drops. Prefer a bonus seed sub-pool so seeds do not replace the plant's existing crop reward; direct shared-pool substitution is an explicit alternative. Farm harvest never rolls seeds.
+ 
+ Quick versus longer recipes should trade return frequency against seed efficiency and specific quest needs, with crop yields normalized against stew value. Proposed30-minute/2-hour scenarios and1/4/12 packs/hour compare2/4/6/8 beds explicitly. They assume continuous active play and prompt harvest; they are not measured ordinary play. With one adventure hour then three town/offline hours, four packs per active hour become one per elapsed hour, limiting a baseline10-unit batch to10units per elapsed hour before extra idle time. At high quick seed income, six and eight both cap at120 baseline units/hour; eight still increases unattended reserves and long-growth output. Six is preferred for town composition and manageable scope, rather than a claimed economic optimum.
+ 
+ ## What the town and code establish
+ 
+-The current fence spans roughly X−64..−54/Y−1..10; the windmill/NPC approach can stay clear. A second field fits the old stumps. The compact final enclosure fits X−63..−53/Y−29..−23 with surrounding forest boundaries intact, but cuts20of28 local southeast standing renderers—a substantial local change. The eight-bed and courtyard alternatives each cut31 renderers in a wider area. Revised previews use matching brown path edge/corner art, real gates and cultivated-soil perimeters; Main is untouched.
++The current fence spans roughly X−64..−54/Y−1..10; the windmill/NPC approach can stay clear. A second field fits the old stumps. The compact final enclosure fits X−63..−53/Y−29..−23 with surrounding forest boundaries intact, but cuts 20 of 28 local southeast standing renderers—a substantial local change. The eight-bed and courtyard alternatives each cut31 renderers in a wider area. Revised previews use matching brown path edge/corner art, proper corner/end pieces, actual open gate art and cultivated-soil perimeters; Main is untouched.
+ 
+ The crop inventory resolves17 icons and68 growth references. It also exposes actual mapping problems: Radish uses eggplant, Pepper beet, Lettuce cabbage, Turnip radish; Cucumber's growth array ends at a sprout. Recipe art needs explicit mapping, preserving serialized resource keys and unrelated adventure prefabs.
+ 
+ ## Retire the whole old economy coherently
+ 
+-Alter Echoes cover61 resources, including44 non-crops. Preserve stored balances as one-time claims and archive original records. Recommended prototype: resource-specific finite non-crop compensation capped by measured ordinary-return equivalents; crop-card bonuses up to25%; known quest bonuses totaling20%; collection bonus up to5%; farm-specific cap50%, then inventory-tier bonus once. Actual Main tier bonuses can reach+150%, so even these caps require balance testing.
++Alter Echoes cover61 resources, including 44 non-crops. No old card/quest/collection investment becomes farm bonuses, seeds, resources or a transition allowance. Existing inventory and unrelated achievements should remain if migration is chosen. **Unclaimed stored earnings need one explicit ruling**: forfeiture under “no compensation,” or collection before cutover; no payout or deletion is assumed here. Remove generation-only cards from every Cauldron pool and review resulting odds/Infinity timing together. Existing inventory-tier bonuses alone reach+150%; yield/stew validation remains necessary.
+ 
+-Replace future quest/collection rewards, filter all Cauldron pools and approve Infinity entry timing together. Preserve original Fence distance rewards and grant migrated2/4/6-bed ownership from exact Fence1/2/3 completions without repayment or fabricated new quest history. A late Fence grant bypasses unpaid new requirements and refunds exact committed costs of an unfinished new clearing phase once; completed new stages retain their legitimate costs/history. Original completion uses an explicit94-ID cohort on both numerator and denominator; new expansion progress is separate. Recommend no reconstructed old offline accrual because historical rates are unavailable; preserve recorded balances and consider one finite transition allowance.
++Proposed preservation of paid Fence1/2/3 construction maps to2/4/6-bed ownership with original distance/history intact, no fabricated quest completion. A late ownership grant bypasses unpaid new requirements and settles exact committed unfinished-phase material receipts once. This is construction carryover, not Echo compensation, and remains provisional pending the released-save audit and platform migration choice. Original quest completion uses the same explicit94-ID cohort on both sides; expansion progress stays separate.
+ 
+-## A small set of decisions
++## Decisions for the next review
+ 
+-| Review choice | Recommended default | Main alternative |
++| Choice | Recommended direction | Main trade-off |
+ | --- | --- | --- |
+-| Layout and scope | A: six beds, three quests, existing wood materials | Four is smaller; eight increases clearing, reserves and management; courtyard retains one tree but clears more overall. |
+-| Pacing and crop choice | Adventure guarantee, preferred eligible packs, quick/long recipes, no passive XP | Merchant fallback or stronger yields need separate sink/stew validation. |
+-| Earned investment and Cauldron | Bounded conversion contract above; preserve earned Infinity, gate new entry on active progression and final stage | Ongoing non-crop adventure perks substantially broaden balance work. |
+-| Offline transition | Recorded claims plus optional finite allowance; ordinary local-clock growth | Estimated old backpay cannot be exact; stronger clock policing penalizes offline use or needs additional evidence. |
++| Layout and scope | A: six beds, three quests, existing Log/Stick/Stone; defer planks | Four is smaller; eight raises reserves/clearing; courtyard retains one tree but clears more overall. |
++| Seed drop/progression | Bonus plant seed sub-pool, matching crop packs, first-pack recipe unlock; review tutorial grant | Shared pool can reduce crop supply. Random odds do not guarantee a pack; no pity/tokens approved. |
++| Retirement and Cauldron | No compensation; retire all generation cards; review future quest text and Infinity entry | Unclaimed StoredResources ruling and final normalized odds are still needed. |
++| Platform/save transition | Await released-format audit; preserve historical data where migration is feasible | Mobile migration/reset and Steam legacy fallback are under consideration, not chosen. |
+ 
+-Approve these directions for a prototype; approve measured prices, recipe yields, compensation tables and pool odds before release. Local clock manipulation can accelerate paid stored packs; seed caps/adventure supply bound it, but this plan does not claim offline anti-cheat.
++Recipe durations/yields, drop weights and material prices are provisional scenario inputs, not approvals. Local clock manipulation can accelerate all held seed packs; finite stock and adventure-only drops constrain supply but do not provide offline anti-cheat.
+ 
+ ## Engineering and review path
+ 
+-Extend Oracle's existing save coordinator with a short economic command barrier and narrow typed publication into the same live tree. One atomic Harvest Ready snapshot records payouts, empty plots and claim identities; a crash after commit reloads that final state without replay. Coalesce autosaves and queue whole economic operations; first-release farm commands are town-only. Use a pure model, idempotent schema migration, one complete bed, readable native bed list plus TownCameraPan focus, staged town content, all17 verified recipes, then recovery/platform/economy gates. Each is a small reviewable slice; migration and balance dominate uncertainty.
++Extend Oracle's existing save coordinator with a short economic command barrier and narrow typed publication into the same live tree. One atomic Harvest Ready snapshot records payouts, empty plots and claim identities; a crash after commit reloads that final state without replay. Coalesce autosaves and queue whole economic operations; first-release farm commands are town-only. Use a pure model, idempotent schema migration, one complete bed, readable native bed list plus TownCameraPan focus, staged town content, all 17 art-verified recipes, then recovery/platform/economy gates. Each is a small reviewable slice; migration and balance dominate uncertainty.
+ 
+ - [Concrete proposed contracts, scenarios, mapping and acceptance tests](proposed-contracts.md)
+ - [Gameplay and existing economy evidence](gameplay-and-economy.md)
+--- revision2/proposed-contracts.md
++++ revision3/proposed-contracts.md
+@@ -2,23 +2,21 @@
+ 
+ These are recommended prototype defaults, not implemented gameplay or measured final balance. They close the design gaps sufficiently to review a first implementation. The remaining choices are grouped in the executive overview; measurements can change prices and yields without changing the bounded loop.
+ 
+-## Seeds: an achievable start and a useful guarantee
++## Seeds: plant drop pools, with unlocks still to decide
+ 
+-Give two Radish packs once at first farm initialization, before ordinary seed earning, with a durable Farm.IntroSeedsGranted identity independent of construction hand-ins. Migrated stage owners receive it too, even when all new build quests are skipped. Radish is Farming level1; Corn is level7. The tutorial explicitly grants Radish recipe access even without previous discovery. Use an approved Radish art mapping, rather than blindly copying the current eggplant-looking Radish prefab. Other recipes require their existing level and first discovery. One pack pays for one bed/batch.
++**User decisions:** seed packs will be added to plant drop pools; Alter Echo retirement provides no compensation. The previous all-gathering work counter, guaranteed selected pack, pending entitlement, five-minute token refill and twice-capacity storage proposal are superseded. There is no approved guarantee, pity timer or seed inventory cap.
+ 
+-Let the player select a preferred eligible recipe. Guaranteed packs use that choice, with Radish as a fallback. Exclude locked/unknown recipes from guarantees. Existing packs remain crop-specific; changing preference does not change previously earned packs.
++Recommended first-release design for review: a crop-specific pack pays for one finite bed/batch. The first pack of a crop unlocks its farm recipe, subject to that crop's existing Farming level; subsequent packs sustain planting. This gives advanced players a new farm-recipe collection even when their adventure crop discoveries/levels are already complete. It is a recommendation, not an approved interpretation of “unlocking things.” If unlock means new varieties, bed capacity or seed tiers instead, that requires a different progression table and verified art; do not invent those additions.
+ 
+-Proposed acquisition contract:
++Actual `TaskData.resourceDrops` use `ResourceDrop` entries pointing to Resource assets. `DropResolver.RollDrops` performs one weighted guaranteed selection, removes that entry, then considers sequential additional slots, stopping at the first failed chance. Radish currently has one crop entry and no additional slots. Adding a seed entry to that same list therefore competes with Radish for its guaranteed slot; merely appending an extra-slot chance does not guarantee the crop because the first slot can still pick seeds. [DropResolver](../../../Assets/Scripts/Upgrades/DropResolver.cs), [Radish TaskData](../../../Assets/Resources/Tasks/Farming/Radish.asset).
+ 
+-- Credit completed primary-hero gathering tasks on verified adventures: farming, logging, mining, fishing and looting. No credit for town tasks, Echo performers, inventory additions, quests, farm harvest or incomplete tasks.
+-- Each credited completion contributes `clamp(authored task duration, 2, 12)` work units. Thirty units create a pack entitlement. This is an authored activity budget, not elapsed waiting/interruptions. There is at most **one pending entitlement at any inventory level**, including below the pack cap. When a completion crosses thirty units, retain its remainder below thirty; while an entitlement is pending, pause additional work credit and retain that remainder. Do not bank further completions or a second entitlement. Mark paused completion events as processed with zero work so they cannot be replayed later as banked credit. Resume credit after delivery if inventory has space.
+-- Delivery also needs a token: one initially at first farm initialization, refilling after five unpaused, unscaled active adventure minutes, with a one-token buffer. Persist token readiness and accumulated refill seconds per slot. Returns, death, abandonment and reload neither reset progress nor issue another initial token. Town, pause and offline time do not refill it. A ready token stores no surplus refill time; consumption starts the next refill from zero. Refill can continue during active adventures while work credit is paused, but holds only one token. Waiting cannot create an entitlement; rapid repeated small tasks cannot bypass the delivery limit.
+-- Completed work survives death and abandonment. Neither run ending grants extra progress. Capture originating hero/run/spawn identity before task claims are cleared; deduplicate durable completion identities. Immediate abandonment adds nothing, while a player learning difficult content keeps completed work.
+-- Normal seed storage caps at twice unlocked bed capacity: four/eight/twelve/sixteen packs for two/four/six/eight beds. At the cap, pause work credit visibly and preserve any existing sub-thirty remainder and single pending entitlement; full storage cannot create new work credit. No hidden backlog, automatic sale, crop exchange or loss of already earned packs. When space and a token are available, atomically deliver the pending pack and consume its entitlement/token; returning or reloading may fulfill an already earned delivery but earns nothing extra.
++Recommend a separately rolled seed sub-pool attached to the existing adventure plant reward definition, after the unchanged crop roll. That keeps plant drops as the acquisition source without accidentally reducing existing quest crop supply. A literal shared weighted pool is an alternative if the user wants seeds to substitute for crops; measure the resulting crop-loss percentage explicitly. Either choice needs new authored seed entries and a typed reward adapter. `ResourceGeneratingTask.GenerateDrops` multiplies every normal drop by skill milestones, global/resource bonuses, buffs and resonance before `ResourceManager.Add`; that Add can then apply resource-tier yield. [Reward seam](../../../Assets/Scripts/Tasks/ResourceGeneratingTask.cs). Reusing ordinary Resource grants unaltered would expose seeds to resource-tier bonuses, BestPerMinute, stew, Alter Echo eligibility and generic inventory UI. Prefer a separate integer seed balance keyed by stable recipe ID with a seed-aware drop result. An ordinary Resource representation is viable only with explicit opt-outs and tested routing; no Seed Resource assets exist today.
+ 
+-With an eligible recipe and inventory space, the guarantee is conditional on completing at most thirty credited work units, followed by at most five additional active adventure minutes for a token if needed. Already retained work/token progress reduces that requirement. It is not a measured ordinary wait, a wall-time guarantee, or a claim that every five-minute run contains enough tasks. UI shows work, pending entitlement, token refill and the reason credit is paused. From zero packs: continue any of the eligible gathering activities, earn the selected recipe's pack, return and plant. The farm may temporarily wait; the rest of the game still functions. No claim that seed shortage softlocks the entire game is justified.
++Proposed eligible source is completed adventure FarmingTask plant rewards. Logging, mining, fishing, quests, town plants and farm harvest do not generate these drops. Whether Echo performers also roll seeds remains a decision; recommend primary hero only initially, with attribution captured before TaskController clears the claim. Death/abandonment retain seed rewards already committed from completed tasks, without an ending bonus. Incomplete tasks yield no seeds. Duplicate task callbacks cannot reroll or re-award. Persist the rolled result/reward identity with balance changes; interruption must preserve the ordinary reward contract and never replay a random draw after a committed grant.
+ 
+-`TaskController.RemoveTaskAt` already removes a completion once and has TaskData, but clears the actor claim before registration. Capture attribution first and add a stable adventure ID plus task spawn/lease ID. The parameterless `GameplayStatTracker.OnTaskCompletedEvent`, Unity instance IDs and TaskData IDs alone are insufficient. Persist committed seed rewards/progress/identities together; pruning must not allow replay. Evidence: [TaskController](../../../Assets/Scripts/Tasks/TaskController.cs), [GameplayStatTracker](../../../Assets/Scripts/Stats/GameplayStatTracker.cs).
++Recommended bootstrap is two one-time Radish packs at first farm introduction, separately from plant drops and independent of construction hand-ins. Radish is level 1; Corn is level 7. This tutorial grant and waived Radish first-discovery condition are still proposals, not approved seed compensation. If no starter grant is wanted, show an achievable zero-seed route: complete level 1 adventure Radish plants until a usable pack drops, return and plant. The rest of the game continues while the farm waits. A random pool with nonzero useful probability has no finite guaranteed wait. Do not promise “at most five minutes” or an ordinary-return guarantee. For independent per-completion useful probability p, no useful pack after n completions has probability (1-p)^n; at illustrative p=0.05, 59 completions give about95% acquisition and 90 about99%, not a guarantee or measured run duration.
++
++Decisions needed before content authoring: bonus sub-pool versus substitution; per-plant matching packs versus an eligible global crop pool; first-pack recipe unlock versus another progression target; drop weights/amounts and any starter grant; primary hero versus Echo eligibility; and whether a measured shortage warrants an explicitly approved fallback. Recommend matching crop packs for predictable targeting, first-pack farm recipe unlock, ordinary existing level gates, no automatic sale/exchange or arbitrary stock cap. Preserve surplus packs as finite stock; duplicate packs remain useful through consumption. A seed pack for a higher locked crop can be retained and labelled with its level requirement if such drops are approved, never silently lost. No pity/guarantee/token schema should be implemented from this superseded version.
+ 
+ ## Capacity, durations and crop choice
+ 
+@@ -46,7 +44,7 @@
+ | 6 | 30 / 90 / 90 | 180 |
+ | 8 | 30 / 120 / 120 | 240 |
+ 
+-These are normalized resource/stew-value comparisons, not literal quantities of every crop. At six beds/high seed income quick output120 beats long90, while scarce seeds favor long30 versus quick10. At eight beds/high income they tie120; quick does not strictly dominate there. Specific quest demand and return frequency still matter. Keep first-discovery/level gates and give no repeatable farm XP. Measure actual tier bonuses and farm stew income before approving the yield table.
++These are normalized resource/stew-value comparisons, not literal quantities of every crop. At six beds/high seed income quick output120 beats long 90, while scarce seeds favor long 30 versus quick 10. At eight beds/high income they tie 120; quick does not strictly dominate there. Specific quest demand and return frequency still matter. Keep the reviewed recipe/level unlock contract explicit and give no repeatable farm XP. Measure actual tier bonuses and farm stew income before approving the yield table.
+ 
+ ### Duty cycle: adventure income versus elapsed growth
+ 
+@@ -54,33 +52,29 @@
+ 
+ Example using unmeasured scenario inputs: one active adventure hour followed by three town/offline hours, repeating, gives `f = 0.25`. At four useful packs per adventure hour, only four packs arrive per four-hour cycle: one per elapsed hour. With six beds, a baseline 10-unit yield and either 30-minute or 2-hour growth, the seed-limited bound is 10 units per elapsed hour, or 40 units per cycle, compared with the tables' continuous 40 quick/30 long units per hour. Planting those four packs on return and harvesting at the next visit can realize that cycle after startup; unattended plants produce once, then wait. The candidate long recipe with three times the value instead gives 120 normalized value per cycle, or 30 per elapsed hour. These remain scenario calculations, not observed player output.
+ 
+-## One retirement contract for the whole economy
++## One retirement contract: no compensation
+ 
+-Retire all61 eligible Alter Echo resources, including44 non-crops. Preserve all legacy records and recorded finite stored balances. Do not leave ores/wood generating indefinitely behind an unchanged old window.
++**Approved direction: no Alter Echo compensation.** Retire recurring generation across all 61 currently eligible resources, including 44 non-crops. Do not convert old cards, DisciplePercent, quest percentages or collection generation investment into seeds, farm yield/speed, finite resource payouts or a transition allowance. The old 25%/20%/5% benefits and 50% farm cap are withdrawn. Archive original records for compatibility/audit; archive is not a reward.
+ 
+-| Earned/progression area | Recommended bounded prototype | Alternative and trade-off |
++| Area | Proposed treatment consistent with no compensation | Decision or alternative |
+ | --- | --- | --- |
+-| Stored balances | One-time claim ledger preserving keys and amounts | Automatic deposit is simpler but conceals transition value and inventory effects. |
+-| Outstanding offline accrual | No reconstructed final generation; one reviewed transition allowance if needed | A capped estimate can soften the change but cannot recreate unknown historical rates. |
+-| Non-crop cards | Resource-specific finite compensation, proportional to earned tier plus partial tier, capped at eight ordinary-return equivalents per resource | Continuing adventure perks preserve ongoing utility but expand every gathering/balance system; generic seeds misprice resource identity. |
+-| Crop cards | Up to25% yield for that crop recipe; preserve counts and map old tier progress monotonically | Speed bonuses are harder to present and can increase active output disproportionately. |
+-| Known retired quest rewards | Finishing Touches becomes10% farm yield; Tracking Twins and A Matter of Health become5% each | Seed/build credits are bounded but have less lasting recognition. |
+-| Collection rewards | Up to5% farm yield, retaining an earned legacy floor; attainable active farming collection can reach the same cap | Keeping retired collection requirements would make future completion impossible. |
+-| Total farm-specific modifiers | Additive cap50%; inventory-tier bonus applied once afterward | Higher caps retain more investment but recreate effortless output and stew inflation. |
+-| Future Cauldron pools | Remove non-crop RES cards in ordinary/grouped/lowest-count pools; preserve existing active farming/buff/nothing weights initially and zero empty groups | Blind redistribution changes odds. Measure post-filter normalization and total tasting effort before retuning. |
+-| Infinity | Retain earned Infinity stats; proposed new-entry gate requires exhausted active crop/buff progression and farm stage3 | Keeping only the current exhausted-pool rule makes entry earlier after removing44 resource types; an extra gate changes progression and needs approval. |
++| Existing ResourceInventory | Retain already-owned resources and unrelated progression | Platform/save migration still depends on the separate released-format audit. |
++| Old crop/non-crop RES cards | Stop generation effects; retain historical counts if migrating | No compensating farm bonus or payout. |
++| DisciplePercent, completed Echo quest/collection bonuses | Retain history only, no converted benefit | Localized descriptions must explain retirement. |
++| Unclaimed StoredResources | No payout assumed and no deletion performed by this plan | Clarify whether no compensation also forfeits unclaimed earnings, or allows collection of already-earned stock before cutover. A one-time claim is not approved. |
++| Outstanding old offline accrual | Recommend no reconstructed settlement or transition allowance | Historical rates are unavailable; no backpay can be claimed exact. |
++| Future named quests/collection sections | Keep material/XP/distance rewards; remove obsolete generation descriptions | Recommend no replacement bonus initially. If the quests become unrewarding, author new forward-looking rewards separately, without retroactive compensation. |
++| Future Cauldron pools | Remove all generation-only RES cards from ordinary/grouped/lowest-count pools | Keeping17 crop cards requires an approved new purpose; this update currently has none. Retain active buff/nothing weights before measured normalization. |
++| Infinity | Preserve already-earned stats if saves migrate; prevent accidental earlier entry caused by empty retired pools | Proposed forward-looking gate on exhausted remaining active progression plus farm stage3 needs review; retaining only current exhausted-pool gating is simpler but likely earlier. |
++| Farm payout | Authored recipe yield, existing inventory-tier modifier once | No Echo conversion modifier. At actual Main +150% tier,10 base units become25, not37.5. |
+ 
+-“Eight returns” requires an authored compensation table from measured ordinary earnings, not an unbounded player's historical best rate. For each resource, define the reference return value and maximum earned card progress in the versioned table; clamp the ratio to0..1 and multiply by eight reference returns. No table is populated with invented rates in this plan. Raw equal amounts of cores and sticks are inappropriate. The crop-card tier fraction uses its authored old card requirements, not a flat card-count fraction.
++Fresh-player validation must cover existing wood/fence, ore/core, crafting and upgrade sinks without passive non-crop production or transitional payouts. Keep existing prices initially; prototype first-bed construction at10Log+20Stick for measurement only. Later prices require measured competing sinks. No claim that retirement is economically safe is established by a rendered farm. Broad sink repricing remains separate reviewed balance work.
+ 
+-The actual Main resource-tier multiplier reaches+150%, exceeding the C# default+30%. At the proposed maximum farm modifier, an illustrative10-unit batch could therefore pay `10 × 1.5 × 2.5 = 37.5`; ResourceManager preserves double amounts and does not round; retain exact double payout and use a consistent display policy without changing the grant. This is a material balance exposure, not a minor cosmetic bonus. The displayed payout and durable grant must use the same single calculation.
+-
+-Avoid duplicate quest conversion: archive DisciplePercent, but derive the named quest entitlements from their exact saved completion IDs and card entitlements from card records. Do not also pay their aggregate scalar. Subtract the documented base0.01 and known completed quest contributions before identifying any unexplained scalar residual; the baseline is not earned compensation. Preserve those residuals in the ledger for the approved transition policy, rather than silently deleting or double-paying them. Future completions of the same quest IDs grant the same bounded entitlement once. Old non-farm rewards remain intact. Freeze old collection history; define an explicit active farming collection membership, with the greater of its progress-derived benefit and the earned legacy floor, capped5% rather than adding both.
+-
+-Fresh-player validation must cover wood/fence, ore/core, crafting and existing upgrade sinks without transition compensation. Upgraded-player compensation can hide an unhealthy fresh economy. Keep existing prices initially; prototype first-bed construction at10Log+20Stick, targeting a few productive early returns. Later prices need measured competing sinks. Any necessary broad sink repricing is a separate reviewed balance change.
++Do not implement a crop-card replacement merely to keep Cauldron counts unchanged. Pool normalization and Infinity entry are one forward economy decision: removing61 resource-card candidates changes tasting effort and probabilities, and empty grouped/lowest-count buckets need explicit handling. Inventory→stew conversion remains points/100, so even finite crop output affects this economy. Measure fresh and advanced tasting effort and crop/stew share before freezing those settings.
+ 
+ ## Exact old-save mapping and completion cohorts
+ 
+-Proposed migration uses schema4 and an idempotent migration ledger. Saved IDs are exactly `Fence1`, `Fence2`, `Fence3`; they award+50/+100/+150 adventure distance and no Echo percentage. Their prerequisites are Unlock Corn; Unlock Wheat+Fence1; and Fence2 respectively.
++Farm schema/version and an idempotent migration ledger remain proposals pending the separate released-save audit. Mobile migration versus a reset/legacy option and Steam legacy-branch fallback are not decided. Saved IDs are exactly `Fence1`, `Fence2`, `Fence3`; they award+50/+100/+150 adventure distance and no Echo percentage. Their prerequisites are Unlock Corn; Unlock Wheat+Fence1; and Fence2 respectively.
+ 
+ | Saved history | New farm ownership | Preserve |
+ | --- | --- | --- |
+@@ -90,8 +84,8 @@
+ | Fence3 completed | Stages1–3, six beds | Same; no new construction repayment |
+ | Higher Fence complete with missing lower history | Highest stage grant, with source ID recorded | Original inconsistent records unchanged; do not fabricate old completions |
+ | Legacy Fence in progress/ready, incomplete | No speculative stage/payment refund | Costs debit on hand-in, so progress alone proves no prior payment |
+-| House chain complete or partial | No implied farm-stage payment | House presentation/history; Finishing Touches yield entitlement separately |
+-| Unknown quest/resource/card/recipe keys | Archived intact; unresolved rewards remain claimable only when mapped | No deletion, speculative conversion or completion credit |
++| House chain complete or partial | No implied farm-stage payment | House presentation/history; no Echo reward conversion |
++| Unknown quest/resource/card/recipe keys | Archived intact if migration is chosen; no invented payouts | No deletion, speculative conversion or completion credit |
+ 
+ Use separate `Farm.Stage1/2/3` ownership, not fake Completed records for new quests. Future old Fence hand-ins preserve their distance reward and act as an idempotent alternate stage-grant source. If the new build chain already granted that stage, the old quest describes reinforcement work and gives its existing distance benefit; it does not pay a second farm unlock. Retiring those old quests instead would require replacement distance progression and historical-cohort policy, so it is not the recommended first slice.
+ 
+@@ -107,13 +101,13 @@
+ 
+ Preserve already recorded original completion/upload times as historical achievements. Do not reset them merely because added quests or an earlier build's differing manifest fail today's count. If a historical build has a different original cohort, retain its recorded milestone and explicitly map that version; do not treat extra saved keys as generic completion points. Current AuditQuestCompletionState mixes current authored totals with every completed saved key and resets timing fields when false, so filtering both sides and preserving historical milestones is required.
+ 
+-Recommended legacy offline settlement preserves every StoredResources value, even if saved after an announced cutoff, and adds no reconstructed accumulation. Timestamps/progress do not store the historical generation rate. A finite transition allowance is compensation, not falsely exact backpay; any optional estimated settlement needs its own versioned capped formula and clear explanation. Offline older builds cannot be forced to stop accruing remotely. Original card counts, TotalCollected and scalar remain archived for audit.
++Recommended old offline policy adds no reconstructed accumulation and no transition allowance. Keep source StoredResources values in archived data while the unclaimed-earnings decision remains open; retaining a record is not granting its value. Original card counts, TotalCollected and scalar remain evidence, without compensation. Fence ownership carryover is a proposed preservation of paid construction, not an Echo payout; it still needs validation against the released format and the selected platform migration policy.
+ 
+ ## Proposed transaction owner and failure semantics
+ 
+ Extend Oracle's existing active-save/coalescing coordinator. FarmService owns pure growth/command validation; it never starts a parallel writer. SaveManager already synchronously captures immutable bytes and rejects stale heads. That protects writes, not mutable gameplay contributors.
+ 
+-Admit planting, harvesting, build and legacy-claim commands on the main thread with operation ID, slot/tree identity, expected batch IDs and typed field deltas. Enter a short economic barrier and wait for Oracle's prior write. Coalesce autosaves. Capture existing contributors, clone the complete tree, aggregate/validate costs and apply the command to the candidate. Commit through Oracle's save lane. After confirmed authority success, patch only affected farm/inventory/quest fields and their ResourceManager caches into the same live tree; emit one notification after the full delta. Never replace the whole live tree during an asynchronous runtime command.
++Admit planting, harvesting, build and any explicitly approved legacy-claim commands on the main thread with operation ID, slot/tree identity, expected batch IDs and typed field deltas. Enter a short economic barrier and wait for Oracle's prior write. Coalesce autosaves. Capture existing contributors, clone the complete tree, aggregate/validate costs and apply the command to the candidate. Commit through Oracle's save lane. After confirmed authority success, patch only affected farm/inventory/quest fields and their ResourceManager caches into the same live tree; emit one notification after the full delta. Never replace the whole live tree during an asynchronous runtime command.
+ 
+ Use an in-memory coordinator journal for operation ID, expected ownership, touched fields, prior/proposed values and pending state. Store final claim/batch identities and final state inside the successful snapshot; no second sidecar durability protocol. Failed writes leave the candidate unapplied. Ambiguous authority results enter existing recovery; a generation file merely existing is insufficient proof of success. A publication failure after a confirmed commit requires reload recovery, not reversal of the durable payout.
+ 
+@@ -125,7 +119,7 @@
+ 
+ Running growth uses monotonic unscaled elapsed time, ignoring wall jumps. Load/resume has one reconciliation owner: validate saved UTC, apply elapsed only to batches planted at the saved boundary, clamp to remaining duration, discard surplus and persist reconciled progress/baseline once. Foreground callbacks cannot consume the same interval twice. New plantings baseline at the reconciled current time and inherit no old absence. Backward/invalid clocks give zero offline progress and rebase; online growth continues without crop loss.
+ 
+-Repeated artificial forward advances across successive paid batches can accelerate stored packs. Finite batches alone do not prevent that. Recommended proportionate local/offline policy accepts this limitation: no server requirement or crop confiscation, and no false anti-cheat promise. With six beds and the normal twelve-pack inventory cap, repeated jumps can accelerate at most the held twelve packs plus at most one retained entitlement, hence thirteen future batches before new adventure-earned packs are needed, plus batches already planted. Each still debits a pack and pays once; no seed credit, replant or leftover offline time is produced. Any migrated surplus must be kept separately and explicitly bounded by its approved transition allowance.
++Repeated artificial forward advances across successive paid batches can accelerate stored packs. Finite batches alone do not prevent that. Recommended proportionate local/offline policy accepts this limitation: no server requirement or crop confiscation, and no false anti-cheat promise. The bound is the actual finite held seed stock plus already planted batches; there is no approved twelve-pack cap or pending guaranteed entitlement. With100 held packs, deliberate repeated jumps could accelerate 100 paid future batches. They still debit a pack and pay once. This is a material limitation, not a claim that six beds prevent manipulation. Farm harvest does not roll seed drops, grant planting credit, auto-replant or carry unused offline elapsed time into a new batch. New supply requires actual eligible adventure plant rewards.
+ 
+ If stronger clock policing is desired, consider a separately reviewed suspicious-clock mode based on verified cross-session monotonic evidence. A local wall-clock-only cap would also penalize legitimate repeated offline visits, so it is not the default. Tests must cover rollback, rebasing, repeated advances and process restarts on Mac/Windows; authentication is outside this update.
+ 
+@@ -133,15 +127,15 @@
+ 
+ | Area | Required observable result |
+ | --- | --- |
+-| Useful pack | With eligible recipe/storage space, thirty credited units and one delivery token grant exactly one usable selected pack; no more than five additional active minutes to the next token after the work is completed. No measured ordinary wait is implied. |
+-| Seed persistence | Pending entitlement stays0..1 even below the pack cap; work remainder stays below30 with no credit banked while pending/full. Token/refill survive return, death, abandonment and reload; town/offline time and ready-token surplus add zero refill. Delivery consumes entitlement/token and grants one pack atomically. |
+-| Death/abandonment | Completed attributed work retained once; unfinished/duplicate/Echo/town/harvest/quest events add zero. |
++| Useful pack | Forced eligible plant-pool seed outcome grants one correctly typed usable pack; locked/excluded candidates follow authored rules. Zero-seed route works from level 1 Radish; any starter grant occurs once only if approved. Random acquisition has no finite wait guarantee. |
++| Seed persistence | Each completed reward roll/grant is persisted once; surplus/unknown packs survive return, death, abandonment and reload. No entitlement/work/token records are introduced. Measure useful pack distributions against approved percentiles before release. |
++| Death/abandonment | Completed committed seed rewards retained once; unfinished/duplicate/town/farm-harvest/quest events add zero. Echo eligibility follows the reviewed source contract. |
+ | Growth | Equal valid elapsed intervals online and offline yield equal progress within one simulation tick; month-away test leaves one ready payout per originally planted bed, no extra batch. |
+ | Clock manipulation | Active wall jumps add zero; repeated resume events add one interval; rollback loses no crop; subsequent plantings receive no surplus time and still consume packs. |
+ | Exactly once | Failure before/after every capture/write/authority/publication boundary produces either original state or one durable seed debit/payout/unlock, never both duplication and loss. |
+ | Harvest Ready | Six ready resolved batches produce one committed aggregate payout and six empty beds; one unresolved batch produces zero changes; newly ready batches are excluded from the captured set. |
+ | Concurrency | Autosave-before-command, pending quest/mix/craft, queued adventure reward/run-end and slot transitions and focus-loss/pause/quit/Editor-stop between successful commit and publication preserve ownership, full economic operations and legitimate unrelated progress. |
+-| Migration | Every Fence completion combination, partial chain, missing lower record, earned Echo quest/card, unknown key and repeated/interrupted migration retains exact original data and pays approved entitlements once. |
++| Migration | Every Fence completion combination, partial chain, missing lower record, earned Echo quest/card, unknown key and repeated/interrupted migration retains approved historical data without compensation; no unapproved StoredResources payout occurs. |
+ | Overlapping build routes | Legacy grant during unpaid, paid-work, committing or completed new stages charges no bypassed requirement; unfinished committed receipts refund exact raw costs once; completed stages retain costs/history. Ownership advances without fabricated new quest completion. |
+ | Cohorts | Unknown completed keys and three new quests cannot inflate/reset original94-member completion or historical uploads; migrated stage grants do not fabricate hand-ins. |
+ | Economy | Measure fresh/early/mid/advanced ordinary return distributions, useful pack rates, farm crop/stew share, construction competing sinks, every filtered pool's odds and Infinity effort against approved targets. |
+--- revision2/gameplay-and-economy.md
++++ revision3/gameplay-and-economy.md
+@@ -32,15 +32,13 @@
+ 
+ Evidence: [TaskWeightService](../../../Assets/Scripts/Tasks/TaskWeightService.cs), [ResourceUnlockConfig](../../../Assets/Resources/ResourceUnlockConfig.asset), [FarmingTask](../../../Assets/Scripts/Tasks/FarmingTask.cs), authored assets under `Assets/Resources/Tasks` and `Assets/Prefabs/Tasks/Farming`.
+ 
+-Use Farming level plus first discovery to offer a farm recipe. This keeps late crops meaningful and prevents free high-level access from a random pack. Existing players retain their established discovery and skill history. Teach two early recipes first, then expose all verified crops through the same complete system rather than adding 17 separate management mechanics.
++Recommended new farm progression: first pack plus the existing Farming level unlocks a recipe; review whether to retain adventure first-discovery as an additional gate. This keeps late crops meaningful and prevents free high-level access from a random pack. Existing players retain their established discovery and skill history. Teach two early recipes first, then expose all verified crops through the same complete system rather than adding 17 separate management mechanics.
+ 
+ ## Seed packs
+ 
+-Seed-packet art exists; Seed Resource assets and a seed gameplay economy do not. Introduce a separate, versioned seed balance keyed by crop recipe, rather than disguising packs as existing crops. Reuse verified packet sprites where their artwork matches the resource; preserve tooltip names for ambiguous art.
++Seed-packet art exists; seed gameplay assets/balances do not. The approved source is plant drop pools. The former all-gathering work guarantee/token mechanism is withdrawn. [The seed contract](proposed-contracts.md) explains the actual weighted-without-replacement resolver, why direct insertion can replace crop drops, recommended bonus sub-pool routing, surplus handling, task attribution and zero-seed access.
+ 
+-Recommended acquisition is the explicit contract in [proposed-contracts.md](proposed-contracts.md): two starter Radish packs, preferred eligible recipe, thirty authored work units from attributed primary-hero adventure completions, and one delivery token per five active minutes. Death and abandonment retain completed work without an ending bonus. Store at most twice unlocked bed capacity, with at most one pending entitlement even below that cap. Preserve sub-thirty work remainders while pending/full, but bank no additional work. Persist the single token and active-only refill across return, death, abandonment and reload, with no surplus refill or new initial token. The useful guarantee needs both work and a token; waiting or farm harvesting alone generates nothing.
+-
+-No unlimited crop-to-seed exchange or automatic replanting is proposed. First discovery is waived for tutorial Radish only; later recipes retain level/discovery gates. Actual completion identity and actor attribution need a new event seam before TaskController clears the claim. Packs for unknown recipes are preserved by migration but excluded from new guarantees.
++Recommend crop-specific integer packs, one pack per batch, first-pack farm recipe unlock and later packs for planting. Existing levels remain; matching-crop versus eligible-global drop selection and first-discovery requirements need review. The two-pack Radish tutorial grant is proposed rather than approved. No new farming variants/art or automatic crop-to-seed exchange are assumed. There is no approved pity timer, useful-pack wait guarantee, work entitlement, token refill or storage cap.
+ 
+ ## Barkley's build stages
+ 
+@@ -56,33 +54,21 @@
+ 
+ Logs and sticks already provide distinct sinks. Planks would add a resource, conversion UI, recipes, costs, sorting and migration; show Barkley sawing as construction presentation and defer a playable plank economy. A Construction skill is unnecessary for the proposed three-stage loop.
+ 
+-## Retiring Alter Echoes without erasing earned value
++## Retiring Alter Echoes with no compensation
+ 
+-The current manager permits 61 resources: 69 authored resources minus eight ingots flagged DisableAlterEcho. Its rate is BestPerMinute × DisciplePercent × Cauldron multiplier. Base DisciplePercent is 1%; quests, collection sections and cards increase it. Authored Cauldron resource bonuses can reach +400%, or five times generation. Online and offline storage are uncapped. [Manager](../../../Assets/Scripts/NpcGeneration/AlterEchoGenerationManager.cs), [Generator](../../../Assets/Scripts/NpcGeneration/AlterEchoGenerator.cs), [Cauldron config](../../../Assets/Resources/Cauldron/CauldronConfig.asset).
++The current manager permits61 resources:69 authored resources minus eight DisableAlterEcho ingots. Rate is BestPerMinute × DisciplePercent × Cauldron multiplier. Base DisciplePercent1%; authored cards reach+400%; online/offline storage is uncapped. [Manager](../../../Assets/Scripts/NpcGeneration/AlterEchoGenerationManager.cs), [Generator](../../../Assets/Scripts/NpcGeneration/AlterEchoGenerator.cs), [Cauldron config](../../../Assets/Resources/Cauldron/CauldronConfig.asset).
+ 
+-Target full retirement, with these explicit conversions:
++User chose no compensation. Remove recurring production across crop and non-crop categories, without converting old cards, disciple scalar, quest or collection generation rewards to farm yield, seeds or resource payouts. Archive records if migrating; preserve ordinary owned inventory/history. The treatment of unclaimed StoredResources requires an explicit decision and must not be disguised as an approved compensation claim. No reconstructed offline accrual or transition allowance is recommended.
+ 
+-| Earned value | Proposed treatment | Constraint |
+-| --- | --- | --- |
+-| Stored resources | One-time claim ledger | Preserve every key, including currently unknown content. |
+-| Crop RES cards | Capped benefits to finite planted batches | Keep counts; define yield-before-tier versus final payout. |
+-| Non-crop RES cards | Finite resource-specific compensation | Review relative values; remove retired cards from all future roll pools. |
+-| Quest Echo rewards | Known quest-ID yield entitlements totaling20% | Completed quests need no repayment. |
+-| Collection generation bonuses | Up to5%, using earned floor or active farming progression | Preserve collection completion history without double addition. |
+-
+-The bounded prototype caps and conversion formula are specified in [proposed-contracts.md](proposed-contracts.md); the resource-specific compensation table and final recipe yields still require ordinary-return measurements. A generic seed refund is easier but loses resource identity. Converting non-crop cards into adventure perks preserves ongoing usefulness but expands balance scope across gathering, combat, mining and fishing. Recommend finite compensation for this first expansion.
+-
+-Recommend preserving every recorded balance and granting no reconstructed final offline accrual; historical rates are absent. An optional finite transition allowance is compensation, not exact backpay. A communicated cutoff cannot stop an offline older build. Never continue recurring legacy production under a renamed farm tab.
+-
+-Future hand-ins of existing Eva/Barkley quests also need an equivalent approved farm reward: QuestManager still awards disciplePercentReward today. Preserve their IDs, completion and non-farm rewards, but replace the retired reward semantics and localized descriptions. A conversion/reward ledger must distinguish an already-migrated completion from a new hand-in so neither loses value or pays twice. Define the same continuing bounded benefit for future collection-section completions; retaining historical collection progress alone does not resolve their future reward.
++All generation-only RES cards, including 17 crops, need removal from ordinary/grouped/lowest-count pools unless a new forward-looking purpose is separately approved. Future Eva/Barkley hand-ins and collection descriptions must stop promising retired generation. Recommend preserving unrelated rewards without retroactive conversion; review whether their remaining rewards suffice. Pool normalization and Infinity entry must be tested together. [Retirement decision matrix](proposed-contracts.md) keeps those choices separate from the approved no-compensation direction.
+ 
+ ## Balance measurement before prices
+ 
+-Measure ordinary fresh, early-farm, midgame and advanced adventures, including abandoned runs. Record materials per productive return, crop consumption by quests, seed progress, pack use, farm output and Cauldron stew conversion. Resource asset debug totals are not pacing telemetry.
++Measure ordinary fresh, early-farm, midgame and advanced adventures, including abandoned runs. Record materials per productive return, crop consumption by quests, seed drop distributions, pack use, farm output and Cauldron stew conversion. Resource asset debug totals are not pacing telemetry.
+ 
+ Tune introductory construction to a few productive returns; later stages should feel earned without displacing core upgrades. Use authored finite yields, rather than historical BestPerMinute. At fixed capacity, absent-player output is bounded by the batches already planted. Active output is bounded by capacity, growth duration and adventure seed income. Test all three limits rather than one idealized player.
+ 
+-Measure median and low-percentile materials per return, worst-case seed guarantee delay, pack surplus/shortage against bed capacity, farm share of quest payments/stew and compensation relative to ordinary earnings. Test fresh-player wood/fence, ore/core and crafting sinks after non-crop retirement: upgrade compensation can hide an unhealthy new-player economy. Removing non-crop RES cards also redistributes Cauldron probabilities and can accelerate Infinity, whose eligibility depends on exhausted ordinary pools. Approve intended tasting effort and Infinity timing, not just whether retired cards disappear.
++Measure median and low-percentile materials per return, low-percentile useful-pack acquisition and random drought tails, pack surplus/shortage against bed capacity, farm share of quest payments/stew without assuming any transitional compensation. Test fresh-player wood/fence, ore/core and crafting sinks after non-crop retirement: advanced owned inventories can hide an unhealthy new-player economy. Removing all generation-only RES cards also redistributes Cauldron probabilities and can accelerate Infinity, whose eligibility depends on exhausted ordinary pools. Approve intended tasting effort and Infinity timing, not just whether retired cards disappear.
+ 
+ Extra crops also generate stew: CauldronManager converts inventory value into stew using points / 100. Farm output therefore affects card progression even without granting adventure XP. Keep harvest out of BestPerMinute, gathering statistics, seed acquisition and tier rolls unless separately approved. ResourceManager.Add still applies existing resource-tier yield bonuses with tracking flags disabled; specify this once and display the same payout the transaction grants.
+ 
+--- revision2/engineering.md
++++ revision3/engineering.md
+@@ -2,26 +2,28 @@
+ 
+ ## Actual integration map
+ 
++Plant seed routing must branch at `ResourceGeneratingTask.GenerateDrops`, before ordinary skill/buff/resonance multiplication and ResourceManager.Add. TaskController completion callbacks are useful for reward identity/attribution, not a replacement all-gathering guarantee. New seed drop pools and integer balances need typed adapters; no gameplay code is changed by this plan.
++
+ | Owner | Current entry or data flow | Required change |
+ | --- | --- | --- |
+-| [GameplayStatTracker](../../../Assets/Scripts/Stats/GameplayStatTracker.cs) | Run resources and duration update BestPerMinute on return/abandonment | Keep farm harvest out of adventure statistics; attach seed progress to explicitly eligible activity. |
++| [GameplayStatTracker](../../../Assets/Scripts/Stats/GameplayStatTracker.cs) | Run resources and duration update BestPerMinute on return/abandonment | Keep farm harvest out of adventure statistics; route typed seed drops only from reviewed adventure plant rewards. |
+ | [AlterEchoGenerationManager](../../../Assets/Scripts/NpcGeneration/AlterEchoGenerationManager.cs) | Rebuilds earned-resource generators; ticks them with unscaled delta; applies offline time | Freeze retired generators through explicit system state, then remove recurring production after migration. |
+-| [AlterEchoGenerator](../../../Assets/Scripts/NpcGeneration/AlterEchoGenerator.cs) | Binds a DiscipleGenerationRecord; collects stored resources; guards ownership across slot changes | Retain the ownership pattern for asynchronous farm transactions and legacy claims. |
++| [AlterEchoGenerator](../../../Assets/Scripts/NpcGeneration/AlterEchoGenerator.cs) | Binds a DiscipleGenerationRecord; collects stored resources; guards ownership across slot changes | Retain the ownership pattern for asynchronous farm transactions and any approved legacy claims. |
+ | [AlterEchoCropGrowth](../../../Assets/Scripts/NpcGeneration/AlterEchoCropGrowth.cs) | Repeating Progress/Interval selects growth sprite | Replace with a plot-state presenter; mature state must remain stable. |
+-| [TownWindowManager](../../../Assets/Scripts/UI/TownWindowManager.cs) | Opens native Toolkit Alter Echoes and optional inventory | Route to farm screen and expose a separate one-time legacy-earnings section. |
+-| [ToolkitNavigationScreen](../../../Assets/Scripts/UI/Toolkit/ToolkitNavigationScreen.cs) | Hub badge sums pending generator balances | Show ready beds with a separate claim indicator; do not sum seed/crop quantities into one meaningless badge. |
++| [TownWindowManager](../../../Assets/Scripts/UI/TownWindowManager.cs) | Opens native Toolkit Alter Echoes and optional inventory | Route to farm screen and add any legacy-earnings section only if explicitly approved. |
++| [ToolkitNavigationScreen](../../../Assets/Scripts/UI/Toolkit/ToolkitNavigationScreen.cs) | Hub badge sums pending generator balances | Show ready beds; a legacy claim indicator is conditional on approval; do not sum seed/crop quantities into one meaningless badge. |
+ | [ResourceManager](../../../Assets/Scripts/Upgrades/ResourceManager.cs) | Add applies resource-tier bonus even with statistics/tier-roll flags off | Define pre-bonus or final harvest yield once; ensure preview and actual payout match. |
+ | [QuestManager](../../../Assets/Scripts/Quests/QuestManager.cs) | Completes resource hand-ins, emits QuestHandin, captures contributors | Aggregate all costs and check every spend; define durable completion semantics for new farm commands. |
+ | [QuestObjectStateController](../../../Assets/Scripts/Quests/QuestObjectStateController.cs) | Before/during/after quest object sets | Reuse for clearing/build presentation, using new stable quest IDs and farm stage ownership. |
+ | [CardPoolManager](../../../Assets/Scripts/Upgrades/Cauldron/CardPoolManager.cs) | Resource card eligibility uses DisableAlterEcho | Introduce explicit retired/farm card eligibility; cover grouped, ordinary and lowest-count pools. |
+-| [CauldronManager](../../../Assets/Scripts/Upgrades/CauldronManager.cs) | Resource cards modify generation; inventory can become stew | Convert old investment explicitly and validate stew acceleration. |
++| [CauldronManager](../../../Assets/Scripts/Upgrades/CauldronManager.cs) | Resource cards modify generation; inventory can become stew | Retire generation investment without compensation; validate stew acceleration. |
+ | [GameData](../../../Assets/Scripts/Blindsided/SaveData/GameData.cs) | Schema3, Disciples, AppliedMigrationIds, quest/card records | Add separate versioned farm records while retaining old data. |
+ | [SaveMigrationRunner](../../../Assets/Scripts/Blindsided/SaveData/Migrations/SaveMigrationRunner.cs) / [Oracle](../../../Assets/Scripts/Blindsided/Oracle.cs) | Detached Odin clone; commit migrated candidate before publishing | Perform conversion here, not in a repeated OnLoadData reward callback. |
+ | [SaveManager](../../../Assets/Scripts/Blindsided/SaveData/SaveManager.cs) | Snapshot generations, valid heads, slot authority and conflicts | Preserve refusal of conflicting valid branches; no blind plot merge. |
+ 
+ ```mermaid
+ flowchart LR
+-    A[Eligible adventure activity] --> S[Seed progress and pack balance]
++    A[Eligible adventure plant drops] --> S[Seed pack balance and recipe access]
+     S --> P[Owned-slot planting transaction]
+     P --> G[Growing batch]
+     T[Elapsed time online or offline] --> G
+@@ -38,7 +40,7 @@
+ 
+ ## Proposed records and model
+ 
+-Use stable authored `plotId` and `recipeId`, independent of scene hierarchy names. Suggested farm record: data version, plot dictionary, seed balances, one pending entitlement, sub-thirty work remainder, token readiness/active refill seconds, build stage IDs, stage-payment receipts and settlement identities, conversion/claim ledger and expansion counters. Each plot stores unlocked state, recipe, planted batch identity, bounded growth progress, timestamp baseline, batch yield definition and ready state. Freeze recipe version/yield at planting, or define a deliberate upgrade policy; patching a recipe must not silently change an already paid batch.
++Use stable authored `plotId` and `recipeId`, independent of scene hierarchy names. Suggested farm record: data version, plot dictionary, seed balances, durable rolled-reward identities, build stage IDs, stage-payment receipts and settlement identities, retirement/source archive and any approved claim ledger and expansion counters. Each plot stores unlocked state, recipe, planted batch identity, bounded growth progress, timestamp baseline, batch yield definition and ready state. Freeze recipe version/yield at planting, or define a deliberate upgrade policy; patching a recipe must not silently change an already paid batch.
+ 
+ State machine: Locked → Empty → Growing → Ready → Empty. Commands reject invalid transitions. Unknown recipe or resource IDs remain preserved and visibly unavailable rather than deleting value. Visual plant count is decoration; the transaction unit is the batch.
+ 
+@@ -50,7 +52,7 @@
+ 
+ Elapsed time is clamped to the remaining batch duration. A month away therefore yields at most the batches planted before leaving. Ready crops stop accruing. Do not borrow GameData.OfflineTimeCap assuming it applies: the current Alter Echo offline routine is uncapped and does not use that field. Large elapsed gaps must remain constant-time rather than iterating harvest cycles.
+ 
+-Running growth uses monotonic elapsed time; resume reconciles once and discards surplus. Repeated artificial offline advances across successive seeded batches can still accelerate held packs. Recommend accepting this local/offline limitation, with adventure-only supply and bounded normal seed storage, rather than claiming finite batches prevent it. [Clock policy and rollback/rebase tests](proposed-contracts.md) describe exact handling; no authentication or server-time service is proposed.
++Running growth uses monotonic elapsed time; resume reconciles once and discards surplus. Repeated artificial offline advances across successive seeded batches can still accelerate held packs. Recommend accepting this local/offline limitation, with adventure-only supply and finite held seed stock, without an approved stock cap, rather than claiming finite batches prevent it. [Clock policy and rollback/rebase tests](proposed-contracts.md) describe exact handling; no authentication or server-time service is proposed.
+ 
+ ## Transactions and save ownership
+ 
+@@ -66,15 +68,13 @@
+ 
+ ## Migration
+ 
+-Propose schema4 plus one stable migration ID. Use SaveMigrationRunner's detached clone and Oracle's commit-before-publication path. Preserve legacy Disciples records, StoredResources, TotalCollected, timestamps, unknown keys, card counts and quest history. Freeze production using explicit retired-system state rather than changing every Resource.DisableAlterEcho: that flag also controls tier upgrades, crafted labels, card pools and inventory presentation.
++Farm schema/version selection and per-platform migration remain provisional pending the independent last-deployed-format audit. Mobile migration versus reset/legacy choices and Steam legacy branch fallback are being considered, not approved. If migrating, use SaveMigrationRunner's detached clone and Oracle's commit-before-publication path; preserve source records/unknown keys for audit and use explicit retired state rather than changing every DisableAlterEcho flag, which also controls tier upgrades, cards and inventory presentation.
+ 
+-Create one-time legacy claims and finite compensation from a reviewed conversion table. Retain source records and claimed/conversion identities for audit. Reopening or interrupting migration cannot award them twice. No routine reward runs from OnLoadData. Every slot receives the one-time introductory two-pack grant at first farm initialization, independently of construction hand-ins; upgraded players additionally receive only mapped earned value and already-earned stage access.
+-
+-Always preserve existing StoredResources, even if captured after the chosen retirement cutoff. A cutoff applies only to any approved final offline settlement; it cannot reconstruct or claw back previously earned stock. Old records do not capture the generation rate used over the elapsed period, so exact accrual to a historical cutoff is not recoverable from timestamp/progress alone. Approve a bounded settlement formula or no additional offline settlement, and communicate it explicitly.
++No finite compensation table or old investment→farm bonus conversion should be authored. No recurring OnLoadData reward. Existing ResourceInventory remains owned; unclaimed StoredResources require the explicit ruling in the retirement matrix. Archive their source values while that ruling is open, without payout or deletion. Historical generation rates are unavailable, so no reconstructed accrual or transition allowance is proposed. An introductory Radish grant is a separate optional tutorial contract, not assumed compensation.
+ 
+ Use the exact Fence1/2/3 completion mapping in [proposed-contracts.md](proposed-contracts.md): highest completed fence grants2/4/6-bed stage ownership, preserving distance/history without fabricated new quest completions or refunds for unpaid partial chains. A later Fence ownership grant supersedes an outstanding new stage without new completion records; refund exact committed costs of unfinished phase receipts once, charge no bypassed objective, and retain completed-stage costs/history. Serialize and revalidate the grant/payment ordering as specified in the contracts. New quests currently change the count used by AuditQuestCompletionState and can clear old final completion/upload timing. Use the explicit94-ID original manifest on both numerator and denominator, and a separate three-ID expansion cohort. Unknown completed keys never count; already recorded historical completion/upload milestones remain preserved.
+ 
+-Older builds reject newer schema saves. Rollback requires verified pre-upgrade backups, not opening schema4 in the old build. Include migration fixtures with legacy Assembly-CSharp names because the cleanup introduced a named runtime assembly.
++Current schema guards reject saves above their supported version; deployed-build behavior must be verified by the separate audit. Rollback requires verified pre-upgrade backups, not opening a proposed newer farm schema in the old build. Include migration fixtures with legacy Assembly-CSharp names because the cleanup introduced a named runtime assembly.
+ 
+ ## Online services and conflict handling
+ 
+@@ -84,7 +84,7 @@
+ 
+ Use the native Toolkit screen patterns, localization tables and inventory companion. A bed card shows crop name/icon, state text, progress or remaining time, cost/yield and one clear action. Disabled actions explain the missing pack, level or save readiness. Ready state needs text and shape/icon cues in addition to color. Provide keyboard focus order, confirmable planting choices, Harvest Ready and a list alternative to small world clicks. Avoid modal confirmation for every routine harvest; require clear review before spending rare packs or removing a planted batch.
+ 
+-Show seed guarantee progress, build quest requirements and legacy claim status separately. World crops should have modest hit areas with accessible screen entry points. Reuse town art scale and readable tooltips; avoid required animation or propose a reduced-motion preference if needed. No existing reduced-motion setting was established by this audit. Validate long localized labels, number formatting, 1024-width screens, high-DPI Mac, ultrawide layouts and keyboard navigation. Screen-reader behavior requires an actual platform test; do not claim accessibility from a visual mockup alone.
++Show crop-specific seed balances/drop source, recipe lock reason and build requirements. No guarantee/token UI; legacy claim status only if approved. World crops should have modest hit areas with accessible screen entry points. Reuse town art scale and readable tooltips; avoid required animation or propose a reduced-motion preference if needed. No existing reduced-motion setting was established by this audit. Validate long localized labels, number formatting, 1024-width screens, high-DPI Mac, ultrawide layouts and keyboard navigation. Screen-reader behavior requires an actual platform test; do not claim accessibility from a visual mockup alone.
+ 
+ ## Farm focus through the existing camera
+ 
+--- revision2/assets-and-geometry.md
++++ revision3/assets-and-geometry.md
+@@ -4,7 +4,7 @@
+ 
+ The current clean Main scene was inventoried through Unity in Edit mode. [scene-geometry.json](scene-geometry.json) preserves the relevant camera, tilemap, farm renderer and woodland coordinates. The complete private inventory is retained in `/Users/matthewrushworth/Projects/Echoes Farming Planning Evidence/2026-09-30/scene-inventory.json`. The crop and soil sprite sheets were viewed directly; prototype renders instantiate their actual imported sprite subassets.
+ 
+-[crop-asset-inventory.json](crop-asset-inventory.json) traces all17 Farming TaskData assets to their resource drops, actual resource-icon asset/fileID, task icon, prefab and four growth-sprite references. It also records authored adventure-task XP and drop ranges, which are current task data rather than proposed town yields. All68 growth references and17 icon asset paths resolve; the audit does not claim every art/name pairing is semantically correct. Only the sprites used in the previews and the viewed sheets received direct visual review.
++[crop-asset-inventory.json](crop-asset-inventory.json) traces all 17 Farming TaskData assets to their resource drops, actual resource-icon asset/fileID, task icon, prefab and four growth-sprite references. It also records authored adventure-task XP and drop ranges, which are current task data rather than proposed town yields. All68 growth references and17 icon asset paths resolve; the audit does not claim every art/name pairing is semantically correct. Only the sprites used in the previews and the viewed sheets received direct visual review.
+ 
+ The town camera is at world (-75, 0, -10), rotation (0, 0, 0), orthographic size18. The town tilemaps use one-world-unit cells. East is increasing X/right; south is decreasing Y/down. The displayed normal-scale north and south views use size18 at (-67, 0) and (-61, -23); an additional retained overview uses (-61, -11). Wider context uses size32 at (-70, -10). These views are not an unchanged default framing: the far southern expansion needs a camera pan or a farm focus action.
+ 
+@@ -19,7 +19,7 @@
+ | Barkley's area | Tree and staged house west of the stump field | Preserve its approach and logging identity. |
+ | Logging trail terminus | Existing path/log piles east of the lower clearing | Keep it legible; new farm track should connect without consuming the logging area. |
+ 
+-The preview manifest records every removed sprite object and position per alternative. Trees are removed only in the duplicate scene. A changes20of28 local southeast standing renderers; the preserved surrounding town-wide woodland does not make this a small local change. B and C each change31 in a wider area. Clearance must include canopy bounds and fence/path approaches, not just a tree's pivot; these concepts need final collision/path review before production.
++The preview manifest records every removed sprite object and position per alternative. Trees are removed only in the duplicate scene. A changes 20 of 28 local southeast standing renderers; the preserved surrounding town-wide woodland does not make this a small local change. B and C each change31 in a wider area. Clearance must include canopy bounds and fence/path approaches, not just a tree's pivot; these concepts need final collision/path review before production.
+ 
+ ## Reusable art with evidence
+ 
+@@ -28,7 +28,7 @@
+ | Crop growth sheets | `Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png` and Crops_2.png; imported named sprite subassets; FarmingTask prefab growth arrays | Reuse matching crop stages, keeping recipe-to-art mapping explicit. |
+ | Seed packets and marker signs | Crop Tile assets resolve actual sprite fileIDs into Crops.png; packet/sign artwork visible on sheet | Use as pack icons/signs after resource/art audit. Art alone is not a gameplay seed item. |
+ | Soil and wet soil | FarmLand_Tile.png/FarmLand_Wet_Tile.png; existing farming prefab renderers | Use coherent beds and occasional watered presentation, without imposing a watering chore. |
+-| Wooden fences/gate | Fence_Big.png named rail sprites and actual farmers' Phase1/2/3 objects; gate animation asset | Reuse one-unit rails; provide visible openings and distinct build stages. |
++| Wooden fences/gate | Fence_Big.png named rail sprites and actual farmers' Phase1/2/3 objects; gate animation asset | Use the verified corner/end/gate assembly guide; do not tile straight rails through corners or treat empty gaps as gate art. |
+ | Dirt path tiles | Active thin brown town path uses Farmland_WetOverlay join/corner variants; alternate town path uses GrassDirtJagged | Revision2 edits the duplicate active path using audited cardinal/diagonal masks, removing the mismatched bright-green dirt fill overlay. Production must match whichever of the seven path presentations is active. |
+ | Scarecrow, hay, benches | Farm decor prefabs resolve existing sheet sprites; scarecrow already in the fence group | Optional modest dressing, not new currencies or mechanics. |
+ | Barkley | Barkley_Lumberjack.png and actual meeting prefab/quest folder | Build quest presenter; verify actual animation frames before any work animation promise. |
+@@ -47,8 +47,14 @@
+ 
+ ## Remaining production art work
+ 
+-Approve resource-to-art mappings for all17 crops; build a small atlas/contact sheet from actual imported subassets; confirm packet visibility at high DPI and small UI sizes; validate the selected soil/path variants for every active path presentation; test fence occlusion and tree canopy clearances. Revision2 uses actual DryTanBorder soil perimeter/corner variants and matching WetOverlay path joins. Gate tile connectivity and open fence apertures pass preview checks; gameplay navigation, collisions, all seven path presentations and animation remain production validation.
++Approve resource-to-art mappings for all 17 crops; build a small atlas/contact sheet from actual imported subassets; confirm packet visibility at high DPI and small UI sizes; validate the selected soil/path variants for every active path presentation; test fence occlusion and tree canopy clearances. Revision2 uses actual DryTanBorder soil perimeter/corner variants and matching WetOverlay path joins. Gate tile connectivity and open fence apertures pass preview checks; gameplay navigation, collisions, all seven path presentations and animation remain production validation.
+ 
+ ## Revision2 terrain evidence
+ 
+ The original sheet pixels were viewed directly. FarmLand_Tile has tan-edged brown soil variants; FarmLand_Wet_Tile is the current town track's darker transparent overlay. Existing Main path-cell inspection identifies those actual Tile names, rather than inferring use from filenames. Revision2 selects all cardinal joins and diagonal absent-corner masks from these audited assets, clears only preview enclosure dressing, and uses true south/north fence openings. The compact field's beds move one cell south for mature-crop entrance clearance. The raw path audit and per-scene gate proofs are retained in the private revision2 evidence directory and linked from visuals.md.
++
++## Revision3 fence assembly evidence
++
++Fence_Big.png has16 imported named sprites, while horizontal gate art has10 frames and vertical gate art5. The atlas and Main placements establish the needed roles; [fence assembly guide](revision-3/fence-assembly.md) records exact asset GUID/localID, spacing, corner variants and frame-specific gate offsets. Names correctly describe E/W rail arms but do not by themselves encode vertical post continuation or a safe assembled corner. Add an assembly recipe supplement rather than renaming already referenced assets.
++
++Revision3 changes14 preview enclosures across six conceptual built/work scenes:56 explicit corner pieces and14 actual open gate assemblies. Nonintersecting rectangles need no T/X junction. Gate end posts are integral, so adjacent rails join without extra duplicate posts. Stage0 remains an unchanged authored reference. Final enlarged views and normal-camera images are visually reviewed; counts are supporting evidence rather than the acceptance result.
+--- revision2/visuals.md
++++ revision3/visuals.md
+@@ -1,12 +1,12 @@
+ # Revised staged farm previews
+ 
+-These are actual Unity Edit-mode renders of isolated town duplicates using existing imported assets. Main is preserved. Gameplay scripts are removed from duplicates; no production, progression or save selection runs. Current figures are revision2. The earlier peach-path version remains archived with hashes, original scenes, all28 renders and documents for review comparison.
++These are actual Unity Edit-mode renders of isolated town duplicates using existing imported assets. Main is preserved. Gameplay scripts are removed from duplicates; no production, progression or save selection runs. Current figures are revision3. Revision2 scenes, images and documents remain archived with hashes. The earlier peach-path version remains archived with hashes, original scenes, all28 renders and documents for review comparison.
+ 
+ ## Progression and cultivated plots
+ 
+ ![Five revised farm stages](visuals/farm-progression.png)
+ 
+-Matched north close views show the authored footprint, first two cultivated beds and reclaimed stump field. Matched south close views show the work phase and completed compact field. One three-by-three bed represents a finite paid batch, not nine independent plots. Corn, Carrot, Tomato and Pumpkin illustrate verified art, not tutorial eligibility; proposed starter Radish is level1 and requires an approved art mapping.
++Matched north close views show the authored footprint, first two cultivated beds and reclaimed stump field. Matched south close views show the work phase and completed compact field. One three-by-three bed represents a finite paid batch, not nine independent plots. Corn, Carrot, Tomato and Pumpkin illustrate verified art, not tutorial eligibility; proposed starter Radish is level 1 and requires an approved art mapping.
+ 
+ Stage2b is an intermediate work phase **inside the third build quest**: material hand-in durably records marked/felled state, selected trees become stumps, and the player sees construction underway during the next adventure. A further bounded quest objective/return completes stump clearance, fences and soil, unlocking the final two beds. Persist the work phase so load/reload cannot instantly skip or repeat it; allow completion on the next meaningful return without a real-time attendance deadline. It is not a fourth quest or extra productive stage. Imported tree/stump art already supports this presentation; no cutting animation is promised without an animation audit.
+ 
+@@ -21,7 +21,7 @@
+ | Compact southeast | North gate centered(−58,−23) | Existing logging lane atY−22, one-cell track |
+ | Stacked/courtyard southeast | North gate centered(−57,−23) | Same lane with the branch aligned to the wider field |
+ 
+-All14 gate checks across the six built/work preview scenes pass tile-route flood connectivity and fence-aperture checks. [Revision2 evidence](revision-2/terrain-and-gate-evidence.json) retains the actual Main path-cell audit and per-scene proof. These are static visual connectivity checks, not gameplay pathfinding/collider validation. Production must match whichever of the seven town-path presentations is active, verify walking/hit clearance and include actual UI.
++All14 static route checks across the six built/work preview scenes pass tile-route flood connectivity and fence-aperture checks. [Revision3 verification](revision-3/verification.json) records current route checks; [revision2 evidence](revision-2/terrain-and-gate-evidence.json) retains the original Main path-cell audit. These are static visual connectivity checks, not gameplay pathfinding/collider validation. Production must match whichever of the seven town-path presentations is active, verify walking/hit clearance and include actual UI.
+ 
+ ## Larger matched alternatives
+ 
+@@ -29,17 +29,17 @@
+ 
+ All three south close views use the same1600×900 camera at(−58,−27), orthographic size9. Each comparison panel retains the full render width, stacked for readable inspection rather than squeezing three town-wide shots side by side. Open an individual view for the largest practical comparison:
+ 
+-- [A: compact six-bed layout](visuals/revision-2/A3-southeast-clearing-south-close.png)
+-- [B: stacked eight-bed layout](visuals/revision-2/B3-terraced-rows-south-close.png)
+-- [C: six-bed courtyard around a retained tree](visuals/revision-2/C3-grove-courtyard-south-close.png)
++- [A: compact six-bed layout](visuals/revision-3/A3-southeast-clearing-south-close.png)
++- [B: stacked eight-bed layout](visuals/revision-3/B3-terraced-rows-south-close.png)
++- [C: six-bed courtyard around a retained tree](visuals/revision-3/C3-grove-courtyard-south-close.png)
+ 
+ | Alternative | Footprint and clearing | Trade-off |
+ | --- | --- | --- |
+-| A: compact | Final two beds insideX−63..−53/Y−29..−23; cuts20of28 local southeast standing renderers | Recommended smaller endpoint; substantial local clearing with readable surrounding woodland boundary. |
+-| B: stacked rows | Final four beds insideX−63..−51/Y−33..−23; cuts31 in the larger area | Eight total beds, more reserve capacity and clearing; flat ground, not raised terraces. |
+-| C: courtyard | Final two beds insideX−65..−50/Y−33..−23; cuts31, retaining one interior tree | Six total beds; stronger garden character but more clearing and footprint than A. |
++| A: compact | Final two beds insideX−63..−53/Y−29..−23; cuts 20 of 28 local southeast standing renderers | Recommended smaller endpoint; substantial local clearing with readable surrounding woodland boundary. |
++| B: stacked rows | Final four beds insideX−63..−51/Y−33..−23; cuts 31 in the larger area | Eight total beds, more reserve capacity and clearing; flat ground, not raised terraces. |
++| C: courtyard | Final two beds insideX−65..−50/Y−33..−23; cuts 31, retaining one interior tree | Six total beds; stronger garden character but more clearing and footprint than A. |
+ 
+-Each also reclaims23 old stump renderer objects farther north. Renderer counts are visual objects, not authored resource payouts. “Most woodland retained” globally does not make A's20of28 local changes minor. Surrounding canopy boundaries and the logging area remain legible; no Main tree was removed.
++Each also reclaims 23 old stump renderer objects farther north. Renderer counts are visual objects, not authored resource payouts. “Most woodland retained” globally does not make A's 20 of 28 local changes minor. Surrounding canopy boundaries and the logging area remain legible; no Main tree was removed.
+ 
+ ![Matched enlarged before, cut and finished southeast views](visuals/farm-clearing-close-comparison.png)
+ 
+@@ -55,11 +55,21 @@
+ 
+ ## Recoverable sources and version trace
+ 
+-- Current isolated scenes: `Assets/Editor/FarmingPreviewsV2`, seven distinct scene assets outside Loading/Main build settings.
++- Current isolated scenes: `Assets/Editor/FarmingPreviewsV3`, seven distinct scene assets outside Loading/Main build settings.
+ - Original scenes remain at `Assets/Editor/FarmingPreviews`; their bytes are unchanged.
+ - Original evidence archive: `/Users/matthewrushworth/Projects/Echoes Farming Planning Evidence/2026-09-30/revision-1-archive/`,63files with hash manifest.
+-- Current raw42camera renders and path audit: `/Users/matthewrushworth/Projects/Echoes Farming Planning Evidence/2026-09-30/revision-2/`.
+-- [Revision2 generator text](revision-2/preview-generator.cs.txt), [figure source](visuals/revision-2/compose-figures.swift), [clearing manifest](revision-2/preview-manifest.json) and [revision notes](revision-2/README.md) preserve reproducibility without a live Editor worker.
++- Revision2 raw42camera renders and path audit: `/Users/matthewrushworth/Projects/Echoes Farming Planning Evidence/2026-09-30/revision-2/`.
++- [Revision2 generator text](revision-2/preview-generator.cs.txt), [figure source](visuals/revision-3/compose-figures.swift), [clearing manifest](revision-2/preview-manifest.json) and [revision notes](revision-2/README.md) preserve reproducibility without a live Editor worker.
+ - [Library delivery](library-delivery.json) records the five image identities. Current images replace the same Library files, retaining original versions. Local originals remain in the archive.
+ 
+ Independent read-only review identified the original path/gate defect and a remaining stump/fence overlap in B. Revision2 removes that overlap using renderer bounds and shifts mature entrance crops south; final review and preservation checks are recorded in revision2 evidence.
++
++## Fence correction, revision3
++
++![Matched enlarged fence construction before and after](visuals/farm-fence-before-after.png)
++
++The previous generator repeated EW straight rails at all corners and omitted gate sprites. Revision3 uses Main's authored upper E/W corner variants, lower terminated E/W corner variants and vertical post runs. The gate artwork includes end posts and outward-swinging leaves; north frames need+0.5Y and south frames−0.5Y to join the rails. Each enclosure has one connected gate; unused southern holes in fields2/3 are closed. No rectangles intersect, so no T/X junction is needed. Outer corners have no outward protruding horizontal rail. Main's existing fence remains the reference and is untouched.
++
++A focused [fence assembly guide](revision-3/fence-assembly.md) supplements the terrain catalogue: horizontal semantic names alone do not describe post continuation, corner placement or gate pivots. No asset renaming, reslicing or production fence code was changed. Four corners per enclosure and real gate end assemblies were checked in enlarged and normal rendered views, not only by counts. Windmill art partly occludes the first southwest corner; its fence piece is assembled correctly and the existing approach remains visible. Runtime colliders/hit areas remain implementation validation.
++
++Seven new isolated scenes and49 raw renders are retained in the private revision3 evidence directory. [Generator](revision-3/preview-generator.cs.txt), [manifest](revision-3/preview-manifest.json), [review and preservation evidence](revision-3/README.md) and [figure source](visuals/revision-3/compose-figures.swift) preserve reproduction. Revision2 remains unchanged at `Assets/Editor/FarmingPreviewsV2` and in the private `revision-2-archive`. All five existing Library identities receive the corrected figures; the extra before/after close-up remains a linked local review figure.
+--- revision2/validation-and-rollout.md
++++ revision3/validation-and-rollout.md
+@@ -5,11 +5,11 @@
+ | Slice | Concrete deliverable and acceptance | Rough scope |
+ | --- | --- | --- |
+ | 1. Contracts and pure model | Recipe/plot IDs, bounded growth, seed balances, valid transitions; no scene changes | Small, roughly one focused implementation/review cycle. |
+-| 2. Migration and compatibility | Detached schema upgrade, frozen generation, durable legacy claim ledger; approved conversion table | Medium to large; highest uncertainty and deserving a separate review. |
+-| 3. One complete bed | Adventure seed progress → plant → grow → harvest → save/reload, with exact displayed costs/yields | Medium; first end-to-end milestone. |
+-| 4. Native farm screen | Keyboard/list/world entry, localized states, pack progress, ready badge, claim section | Medium; reuse native Toolkit conventions. |
++| 2. Migration and compatibility | Detached schema upgrade, frozen generation, retirement without compensation; approved platform/source mapping | Medium to large; highest uncertainty and deserving a separate review. |
++| 3. One complete bed | Adventure plant seed drop → plant → grow → harvest → save/reload, with exact displayed costs/yields | Medium; first end-to-end milestone. |
++| 4. Native farm screen | Keyboard/list/world entry, localized states, pack balances/source, ready badge, conditional approved claim section | Medium; reuse native Toolkit conventions. |
+ | 5. Barkley and town stages | New quest IDs, safe aggregate material costs, three permanent visual stages and paths | Medium; production scene authoring follows approved preview. |
+-| 6. Crop/content expansion | Verified recipes and art for all17 crops, existing gates, card pool changes and measured balance | Medium to large; content review and economy tuning dominate. |
++| 6. Crop/content expansion | Verified recipes and art for all 17 crops, existing gates, card pool changes and measured balance | Medium to large; content review and economy tuning dominate. |
+ | 7. Recovery and platform gate | Migration fixtures, interruptions/conflicts, Mac Metal and Windows builds, offline tests | Medium; cannot be reduced to a happy-path smoke test. |
+ 
+ These are relative scope estimates, not dates or delivery promises. A complete expansion spans several implementation/review cycles; migration and balance can take as much effort as the visible farm. Adding planks, a Construction skill, animals or ongoing non-crop perks would add separate slices. Review each contract/diff before the next slice. No implementation or publication is authorized by this plan.
+@@ -22,9 +22,9 @@
+ - Aggregate material costs are verified before any debit. Insufficient materials, failed writes and interrupted commits retain recoverable state.
+ - Slot changes and delayed callbacks cannot move seeds, crops, claims or unlocks into another slot.
+ - Unknown resource/recipe IDs remain recoverable; legacy stored balances, card counts, completed quests and collection history have explicit outcomes.
+-- Harvest does not increase BestPerMinute, adventure gathering totals, tier rolls or seed acquisition progress. Resource-tier yield is applied once.
++- Harvest does not increase BestPerMinute, adventure gathering totals, tier rolls or seed drop acquisition. Resource-tier yield is applied once.
+ - Harvest does not grant repeatable Farming XP; concurrent adventure rewards, quest hand-ins and autosave during commits retain all legitimate mutations.
+-- Retired generation stops across all categories. Every ordinary/grouped/lowest-count card pool handles retired non-crop cards consistently.
++- Retired generation stops across all categories. Every ordinary/grouped/lowest-count card pool handles all retired generation cards consistently.
+ - Cauldron roll distributions, tasting effort and Infinity timing meet the approved post-retirement design.
+ - Fresh, midgame and advanced saves can reach the final farm without relying on resources removed by retirement. Existing players never repay completed construction.
+ - New expansion quests preserve approved original-completion/leaderboard semantics.
+@@ -34,9 +34,9 @@
+ 
+ ## Measurement and rollout
+ 
+-First validate one bed and migration fixtures, then the complete build chain on disposable fresh/mid/advanced copies. Collect ordinary-run material and seed pacing; compare farm crop output with quest consumption and Cauldron stew. Adjust recipes and seed guarantees together. Test realistic return frequencies and long absence rather than only maximum-capacity users.
++First validate one bed and migration fixtures, then the complete build chain on disposable fresh/mid/advanced copies. Collect ordinary-run material and seed pacing; compare farm crop output with quest consumption and Cauldron stew. Adjust recipes and plant-drop odds together. Test realistic return frequencies and long absence rather than only maximum-capacity users.
+ 
+-Use development/beta builds with a versioned feature flag and preserved pre-upgrade backups. Keep migration/conversion summaries available locally even if feedback fails. Roll back code only alongside the compatible pre-upgrade data copy; older builds reject newer schema snapshots. Broaden rollout after recovery/platform gates and compensation review, not after an attractive render. No release, merge or push occurred during this planning task.
++Use development/beta builds with a versioned feature flag and preserved pre-upgrade backups. Keep migration/retirement summaries available locally even if feedback fails. Roll back code only alongside the compatible pre-upgrade data copy; older builds reject newer schema snapshots. Broaden rollout after recovery/platform gates and no-compensation and unclaimed-earnings policy review, not after an attractive render. No release, merge or push occurred during this planning task.
+ 
+ ## Existing cleanup baseline
+ 
+@@ -65,12 +65,10 @@
+ 
+ The current cleanup files, Main scene/settings and93 local player files/preferences were copied to a separate private evidence directory and SHA-256 verified before prototyping. No Play session or save selection was needed for these Edit-mode visuals. Preview scenes are separate, stripped of gameplay MonoBehaviours and excluded from normal build settings. The temporary generator is retained as a text source for reproduction; its live Editor script is removed after capture. Final verification compares the original cleanup bytes and protected player hashes.
+ 
+-Final preservation verification: all38 original source-baseline paths match, including Main and the existing cleanup; all77 actual save/preferences files are unchanged; all93 backed-up files verify. Unity rotated four archived Editor Analytics cache files during the session; their backups remain intact. Main is open in clean Edit mode, the live generator is absent, and the original seven preview scenes remain unchanged and seven separate revision2 scenes plus planning documentation are new. Five Library images were confirmed saved.
++Final preservation verification: all38 original source-baseline paths match, including Main and the existing cleanup; all77 actual save/preferences files are unchanged; all93 backed-up files verify. Unity rotated four archived Editor Analytics cache files during the session; their backups remain intact. Main is open in clean Edit mode, the live generator is absent, and original/revision2 preview scenes remain unchanged. Seven separate revision3 scenes plus updated planning documentation are new. Five Library images were confirmed replaced at version2.
+ 
+-## Strengthened revision2 gates
++## Current revision3 review gates
+ 
+-[Concrete measurable acceptance contracts](proposed-contracts.md) add selected eligible pack guarantees, attributed work/death/abandonment cases, exact payout/debit fault boundaries, atomic Harvest Ready, autosave/economic-command/run-end ordering, all Fence history combinations, matched online/offline progress, month-away single-harvest limits, clock rollback/rebasing/successive advances, no harvest-to-seed/adventure recursion, both-side cohort membership and TownCameraPan focus plus a keyboard bed list.
++The approved no-compensation and plant-drop directions replace earlier compensation and work/token recommendations. [Current measurable contracts](proposed-contracts.md) cover seed reward routing/deduplication, no crop-loss surprises, no harvest→seed recursion, clock limits without an invented stock cap, transaction failure boundaries, ownership overlap and cohort preservation. Random pack acquisition is measured by useful-pack percentiles, never described as a guaranteed wait.
+ 
+-Revision2 changes preview scenes and planning only. Unity compiled the temporary generator and rendered42isolated views; static gate routes/apertures were checked. Prior Mac Player/test results are retained as the cleanup baseline, not rerun or misrepresented as validation of unimplemented farm gameplay. The live generator is removed after capture and incidental Editor font/project files are restored exactly.
+-
+-Final documentation clarifications add below-cap pending-entitlement limits, preserved work/token remainders and active-only refill, legacy/new-build overlap settlement, and continuous-active versus elapsed-hour duty-cycle calculations. Focused checks cover these invariants, exact-once raw-cost refunds and unchanged verified image versions. The authored Radish calculation is an expected isolated-task rate, not a ceiling or ordinary-return measurement.
++Revision2 documentation/images remain archived for comparison. Revision3 changes isolated preview fences and planning only; it does not validate unimplemented gameplay. Separate migration investigation owns its report. Main and player saves remain preserved. Final revision3 preservation and render/Library evidence are linked from [revision3](revision-3/README.md).

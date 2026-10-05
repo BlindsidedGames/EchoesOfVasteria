@@ -1,0 +1,15 @@
+import AppKit
+import Foundation
+let root="/Users/matthewrushworth/Projects/Echoes of Vasteria/",out="/Users/matthewrushworth/Projects/Echoes Farming Planning Evidence/2026-09-30/seed-icon-assets-2026-10-01/"
+func load(_ p:String)->NSBitmapImageRep{NSBitmapImageRep(data:try!Data(contentsOf:URL(fileURLWithPath:p)))!}
+func get(_ b:NSBitmapImageRep,_ x:Int,_ y:Int)->[UInt]{var a=[UInt](repeating:0,count:4);b.getPixel(&a,atX:x,y:b.pixelsHigh-1-y);return a}
+let old=load(out+"baseline/Assets/Resources/Fonts/FloatingTextIcons.png"),new=load(root+"Assets/Resources/Fonts/FloatingTextIcons.png"),source=load(root+"Assets/Art/Packs/Cute_Fantasy/Crops/Crops.png"),inventory=load(root+"Assets/Art/Derived/SeedPacks/SeedPackInventory.png")
+var oldDiff=0;for y in 0..<192{for x in 0..<288{if get(old,x,y) != get(new,x,y){oldDiff+=1}}};precondition(oldDiff==0)
+let m=try!JSONSerialization.jsonObject(with:Data(contentsOf:URL(fileURLWithPath:out+"asset-manifest.json"))) as! [String:Any];let mask=Set(m["commonHaloCoordinates"] as! [Int]);let icons=m["icons"] as! [[String:Any]];var checked=0,alphaMasks=Set<String>(),unknownMask="",interiorPale=0
+for i in icons{let r=i["inventoryRect"] as! [String:Int],d=i["dropRect"] as! [String:Int];var alpha=""
+ for y in 0..<16{for x in 0..<16{let ip=get(inventory,r["x"]!+x,r["y"]!+y),dp=get(new,d["x"]!+x,d["y"]!+y);alpha+=ip[3]>0 ? "1":"0";if let s=i["sourceRect"] as? [String:Double]{let sp=get(source,Int(s["x"]!)+x,Int(s["y"]!)+y);precondition(dp==sp,"Drop differs from source");let expected=mask.contains(y*16+x) ? [UInt](repeating:0,count:4):sp;precondition(ip==expected,"Interior changed");if sp==[249,230,207,255] && !mask.contains(y*16+x){interiorPale+=1}}else{let brown=m["unknownRGBA"] as! [UInt];precondition(ip[3]==0||ip==brown);if ip[3]>0{precondition(dp==brown)};if mask.contains(y*16+x){precondition(dp==[249,230,207,255])}};precondition(ip[3]==0||ip[3]==255);checked+=1}}
+ if (i["family"] as! String)=="Unknown"{unknownMask=alpha}else{alphaMasks.insert(alpha)}
+}
+precondition(alphaMasks.count==1&&alphaMasks.first==unknownMask)
+let report:[String:Any]=["oldAtlasRegionPixelsCompared":288*192,"oldRegionRGBAChanges":oldDiff,"newIconPixelsCompared":checked,"inventoryDistinctAlphaMasks":alphaMasks.count,"sharedUnknownMatchesEveryInventorySilhouette":true,"haloPixelsRemovedPerIcon":mask.count,"interiorPalePixelsPreservedAcrossKnownPackets":interiorPale,"opaqueOrTransparentOnly":true,"allDropPixelsEqualNormalizedSource":true,"unknownColorRGBA":m["unknownRGBA"]!,"originalAtlasPixelPositionsRetained":true]
+try!JSONSerialization.data(withJSONObject:report,options:.prettyPrinted).write(to:URL(fileURLWithPath:out+"pixel-verification.json"));print(report)

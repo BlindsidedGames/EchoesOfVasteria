@@ -1,0 +1,792 @@
+{
+  "inventoryHaloRemoved": true,
+  "inventoryDimensions": [
+    128,
+    48
+  ],
+  "dropHaloRetained": true,
+  "icons": [
+    {
+      "dropIndex": 213,
+      "sourceRect": {
+        "y": 352,
+        "height": 32,
+        "width": 16,
+        "x": 16
+      },
+      "inventoryRect": {
+        "x": 0,
+        "width": 16,
+        "height": 16,
+        "y": 32
+      },
+      "dropName": "SeedPack_Beet",
+      "removedHaloPixels": 40,
+      "retainedMaterialPixels": 122,
+      "inventoryName": "SeedPack_Beet",
+      "dropRect": {
+        "width": 16,
+        "x": 0,
+        "height": 16,
+        "y": 208
+      },
+      "family": "Beet",
+      "sourceName": "Crop_Beet_SeedPacket",
+      "dropSpriteId": "61dfc1f6c35e7bffe1304e56f497315f",
+      "dropFileId": 440785550441834431,
+      "inventorySpriteId": "445c66c1f8b5738575245a9608e54a97",
+      "inventoryFileId": 307870317232740152
+    },
+    {
+      "retainedMaterialPixels": 122,
+      "inventoryRect": {
+        "height": 16,
+        "y": 32,
+        "width": 16,
+        "x": 16
+      },
+      "dropName": "SeedPack_Cabbage",
+      "sourceName": "Crop_Cabbage_SeedPacket",
+      "inventoryName": "SeedPack_Cabbage",
+      "dropRect": {
+        "width": 16,
+        "x": 16,
+        "y": 208,
+        "height": 16
+      },
+      "removedHaloPixels": 40,
+      "sourceRect": {
+        "y": 448,
+        "width": 16,
+        "x": 16,
+        "height": 32
+      },
+      "family": "Cabbage",
+      "dropIndex": 214,
+      "dropSpriteId": "b7dc97d5b10e6da8e5750bbbe443e528",
+      "dropFileId": 828039446741968602,
+      "inventorySpriteId": "661eb373d2fc6ad57a11fbfbd8473f5f",
+      "inventoryFileId": 459907259450771117
+    },
+    {
+      "sourceName": "Crop_Carrot_SeedPacket",
+      "dropName": "SeedPack_Carrot",
+      "inventoryRect": {
+        "x": 32,
+        "width": 16,
+        "y": 32,
+        "height": 16
+      },
+      "dropRect": {
+        "width": 16,
+        "y": 208,
+        "height": 16,
+        "x": 32
+      },
+      "family": "Carrot",
+      "removedHaloPixels": 40,
+      "inventoryName": "SeedPack_Carrot",
+      "sourceRect": {
+        "width": 16,
+        "y": 608,
+        "height": 32,
+        "x": 16
+      },
+      "dropIndex": 215,
+      "retainedMaterialPixels": 122,
+      "dropSpriteId": "fe69d8ee215636c165fb4f3581b71afc",
+      "dropFileId": 1145776392216339308,
+      "inventorySpriteId": "fb5837b993a88ac6d7dc23d4ace7bc2d",
+      "inventoryFileId": 1131955448228513964
+    },
+    {
+      "sourceRect": {
+        "width": 16,
+        "x": 16,
+        "y": 544,
+        "height": 32
+      },
+      "removedHaloPixels": 40,
+      "family": "Corn",
+      "dropIndex": 216,
+      "dropName": "SeedPack_Corn",
+      "retainedMaterialPixels": 122,
+      "inventoryRect": {
+        "x": 48,
+        "width": 16,
+        "height": 16,
+        "y": 32
+      },
+      "inventoryName": "SeedPack_Corn",
+      "sourceName": "Crop_Corn_SeedPacket",
+      "dropRect": {
+        "width": 16,
+        "height": 16,
+        "x": 48,
+        "y": 208
+      },
+      "dropSpriteId": "7a27160ab7c98dc9571a94daa52c5200",
+      "dropFileId": 550126764500490460,
+      "inventorySpriteId": "c77ae4fafc207441473be50a8bb14e90",
+      "inventoryFileId": 898378307958081348
+    },
+    {
+      "removedHaloPixels": 40,
+      "dropRect": {
+        "x": 64,
+        "width": 16,
+        "height": 16,
+        "y": 208
+      },
+      "sourceName": "Crop_Cucumber_SeedPacket",
+      "family": "Cucumber",
+      "inventoryName": "SeedPack_Cucumber",
+      "inventoryRect": {
+        "height": 16,
+        "y": 32,
+        "width": 16,
+        "x": 64
+      },
+      "dropName": "SeedPack_Cucumber",
+      "dropIndex": 217,
+      "retainedMaterialPixels": 122,
+      "sourceRect": {
+        "width": 16,
+        "x": 16,
+        "height": 32,
+        "y": 416
+      },
+      "dropSpriteId": "db81b9c93e2a9de02702059294f596d4",
+      "dropFileId": 988570477517777374,
+      "inventorySpriteId": "99a2fc891fe827172fe2d8e685cedf9f",
+      "inventoryFileId": 691918031244132977
+    },
+    {
+      "dropRect": {
+        "x": 80,
+        "width": 16,
+        "y": 208,
+        "height": 16
+      },
+      "retainedMaterialPixels": 122,
+      "removedHaloPixels": 40,
+      "inventoryRect": {
+        "x": 80,
+        "y": 32,
+        "width": 16,
+        "height": 16
+      },
+      "dropIndex": 218,
+      "sourceRect": {
+        "width": 16,
+        "x": 16,
+        "height": 32,
+        "y": 288
+      },
+      "dropName": "SeedPack_DarkTealOvalFruit",
+      "inventoryName": "SeedPack_DarkTealOvalFruit",
+      "family": "DarkTealOvalFruit",
+      "sourceName": "Crop_DarkTealOvalFruit_SeedPacket",
+      "dropSpriteId": "2ec76decb33108fc702474aff2d5e63f",
+      "dropFileId": 210673981843509391,
+      "inventorySpriteId": "7fde7ea652d0dac1af035fc4a062f989",
+      "inventoryFileId": 575871321279106476
+    },
+    {
+      "removedHaloPixels": 40,
+      "sourceName": "Crop_Eggplant_SeedPacket",
+      "dropRect": {
+        "y": 208,
+        "height": 16,
+        "width": 16,
+        "x": 96
+      },
+      "inventoryName": "SeedPack_Eggplant",
+      "sourceRect": {
+        "x": 16,
+        "y": 576,
+        "height": 32,
+        "width": 16
+      },
+      "dropIndex": 219,
+      "inventoryRect": {
+        "y": 32,
+        "width": 16,
+        "height": 16,
+        "x": 96
+      },
+      "dropName": "SeedPack_Eggplant",
+      "family": "Eggplant",
+      "retainedMaterialPixels": 122,
+      "dropSpriteId": "560be59b262aa9009abf8da6d02b0e0a",
+      "dropFileId": 387518860408040080,
+      "inventorySpriteId": "2c045c4017d495c460fc7bef7689dc01",
+      "inventoryFileId": 198235091745196380
+    },
+    {
+      "inventoryName": "SeedPack_Grapes",
+      "sourceName": "Crop_Grapes_SeedPacket",
+      "dropRect": {
+        "width": 16,
+        "height": 16,
+        "x": 112,
+        "y": 208
+      },
+      "removedHaloPixels": 40,
+      "inventoryRect": {
+        "height": 16,
+        "width": 16,
+        "x": 112,
+        "y": 32
+      },
+      "dropIndex": 220,
+      "retainedMaterialPixels": 122,
+      "sourceRect": {
+        "x": 16,
+        "height": 32,
+        "width": 16,
+        "y": 0
+      },
+      "family": "Grapes",
+      "dropName": "SeedPack_Grapes",
+      "dropSpriteId": "fea397fde8db1f2d276c4a764bb33925",
+      "dropFileId": 1146792276476670450,
+      "inventorySpriteId": "62ff436f6edeac9f758ba795da9a514b",
+      "inventoryFileId": 445843405041167049
+    },
+    {
+      "dropName": "SeedPack_Leek",
+      "inventoryName": "SeedPack_Leek",
+      "inventoryRect": {
+        "y": 16,
+        "width": 16,
+        "height": 16,
+        "x": 0
+      },
+      "family": "Leek",
+      "sourceRect": {
+        "y": 32,
+        "width": 16,
+        "x": 16,
+        "height": 32
+      },
+      "dropRect": {
+        "y": 208,
+        "width": 16,
+        "height": 16,
+        "x": 128
+      },
+      "dropIndex": 221,
+      "removedHaloPixels": 40,
+      "retainedMaterialPixels": 122,
+      "sourceName": "Crop_Leek_SeedPacket",
+      "dropSpriteId": "343af5bba7f8030a4fdeb38d74d51aff",
+      "dropFileId": 235224414059200560,
+      "inventorySpriteId": "4382865c792960952c3a3a9b449bcbb6",
+      "inventoryFileId": 304037392452589065
+    },
+    {
+      "inventoryName": "SeedPack_PaleRoot",
+      "inventoryRect": {
+        "y": 16,
+        "height": 16,
+        "width": 16,
+        "x": 16
+      },
+      "dropIndex": 222,
+      "dropName": "SeedPack_PaleRoot",
+      "retainedMaterialPixels": 122,
+      "family": "PaleRoot",
+      "sourceRect": {
+        "y": 480,
+        "x": 16,
+        "width": 16,
+        "height": 32
+      },
+      "dropRect": {
+        "y": 208,
+        "width": 16,
+        "height": 16,
+        "x": 144
+      },
+      "sourceName": "Crop_PaleRoot_SeedPacket",
+      "removedHaloPixels": 40,
+      "dropSpriteId": "3d16a683b5370bf25f489efe4058980d",
+      "dropFileId": 275118048150778047,
+      "inventorySpriteId": "56b4c0c200445e1eb890d6538b1ae189",
+      "inventoryFileId": 390489407658149345
+    },
+    {
+      "dropRect": {
+        "width": 16,
+        "y": 208,
+        "height": 16,
+        "x": 160
+      },
+      "dropIndex": 223,
+      "family": "Pineapple",
+      "retainedMaterialPixels": 122,
+      "removedHaloPixels": 40,
+      "sourceName": "Crop_Pineapple_SeedPacket",
+      "sourceRect": {
+        "x": 16,
+        "y": 320,
+        "height": 32,
+        "width": 16
+      },
+      "inventoryName": "SeedPack_Pineapple",
+      "inventoryRect": {
+        "x": 32,
+        "y": 16,
+        "width": 16,
+        "height": 16
+      },
+      "dropName": "SeedPack_Pineapple",
+      "dropSpriteId": "98cec2bd0299757b156675ba8d67a263",
+      "dropFileId": 688184516000978775,
+      "inventorySpriteId": "15476fca1056b2948c2b58ed04437b5d",
+      "inventoryFileId": 95832319486946089
+    },
+    {
+      "inventoryRect": {
+        "y": 16,
+        "height": 16,
+        "x": 48,
+        "width": 16
+      },
+      "sourceName": "Crop_Potato_SeedPacket",
+      "dropRect": {
+        "height": 16,
+        "width": 16,
+        "x": 176,
+        "y": 208
+      },
+      "removedHaloPixels": 40,
+      "dropIndex": 224,
+      "dropName": "SeedPack_Potato",
+      "family": "Potato",
+      "retainedMaterialPixels": 122,
+      "sourceRect": {
+        "x": 16,
+        "width": 16,
+        "y": 160,
+        "height": 32
+      },
+      "inventoryName": "SeedPack_Potato",
+      "dropSpriteId": "2cd7e740cb9773616bbe1423f0285fb4",
+      "dropFileId": 201956595196327734,
+      "inventorySpriteId": "814c195f8034b9b81b2c58782c7c3bac",
+      "inventoryFileId": 582303101692890011
+    },
+    {
+      "sourceName": "Crop_Pumpkin_SeedPacket",
+      "dropIndex": 225,
+      "family": "Pumpkin",
+      "removedHaloPixels": 40,
+      "retainedMaterialPixels": 122,
+      "inventoryRect": {
+        "x": 64,
+        "height": 16,
+        "width": 16,
+        "y": 16
+      },
+      "dropName": "SeedPack_Pumpkin",
+      "sourceRect": {
+        "y": 512,
+        "x": 16,
+        "width": 16,
+        "height": 32
+      },
+      "inventoryName": "SeedPack_Pumpkin",
+      "dropRect": {
+        "x": 192,
+        "width": 16,
+        "height": 16,
+        "y": 208
+      },
+      "dropSpriteId": "64ad508a086de0388aa81eb5775d2349",
+      "dropFileId": 453408945533804035,
+      "inventorySpriteId": "f832447c6a8751cc515dbe8e35f3c6f2",
+      "inventoryFileId": 1117777023212221724
+    },
+    {
+      "family": "Radish",
+      "sourceName": "Crop_Radish_SeedPacket",
+      "dropName": "SeedPack_Radish",
+      "removedHaloPixels": 40,
+      "inventoryName": "SeedPack_Radish",
+      "dropIndex": 226,
+      "retainedMaterialPixels": 122,
+      "inventoryRect": {
+        "x": 80,
+        "y": 16,
+        "height": 16,
+        "width": 16
+      },
+      "sourceRect": {
+        "x": 16,
+        "width": 16,
+        "y": 96,
+        "height": 32
+      },
+      "dropRect": {
+        "height": 16,
+        "y": 208,
+        "x": 208,
+        "width": 16
+      },
+      "dropSpriteId": "6850513062b1c620f9b3ed0c8ff31feb",
+      "dropFileId": 469787315396090978,
+      "inventorySpriteId": "a8b15ebbe24658637469c3b04c761231",
+      "inventoryFileId": 759725064393614726
+    },
+    {
+      "inventoryRect": {
+        "y": 16,
+        "width": 16,
+        "height": 16,
+        "x": 96
+      },
+      "retainedMaterialPixels": 122,
+      "removedHaloPixels": 40,
+      "sourceName": "Crop_RedPepper_SeedPacket",
+      "dropIndex": 227,
+      "family": "RedPepper",
+      "inventoryName": "SeedPack_RedPepper",
+      "dropName": "SeedPack_RedPepper",
+      "dropRect": {
+        "x": 224,
+        "y": 208,
+        "width": 16,
+        "height": 16
+      },
+      "sourceRect": {
+        "x": 16,
+        "height": 32,
+        "y": 384,
+        "width": 16
+      },
+      "dropSpriteId": "e3cbe4ae85a0931d3559aaf3794f70c8",
+      "dropFileId": 1025904044068702513,
+      "inventorySpriteId": "037c6e9088f6ea6052e0d989c4802936",
+      "inventoryFileId": 15699827892383398
+    },
+    {
+      "dropRect": {
+        "x": 240,
+        "width": 16,
+        "height": 16,
+        "y": 208
+      },
+      "family": "Strawberry",
+      "inventoryRect": {
+        "height": 16,
+        "width": 16,
+        "y": 16,
+        "x": 112
+      },
+      "inventoryName": "SeedPack_Strawberry",
+      "dropName": "SeedPack_Strawberry",
+      "removedHaloPixels": 40,
+      "retainedMaterialPixels": 122,
+      "sourceName": "Crop_Strawberry_SeedPacket",
+      "sourceRect": {
+        "height": 32,
+        "y": 128,
+        "width": 16,
+        "x": 16
+      },
+      "dropIndex": 228,
+      "dropSpriteId": "1f0e070c9f674be12760b43e9477fe77",
+      "dropFileId": 139858363477816510,
+      "inventorySpriteId": "613b16aa1d557cf87c72fd24a74f922b",
+      "inventoryFileId": 437888660324833231
+    },
+    {
+      "retainedMaterialPixels": 122,
+      "inventoryName": "SeedPack_Sunflower",
+      "dropRect": {
+        "width": 16,
+        "height": 16,
+        "y": 208,
+        "x": 256
+      },
+      "family": "Sunflower",
+      "sourceName": "Crop_Sunflower_SeedPacket",
+      "dropIndex": 229,
+      "inventoryRect": {
+        "x": 0,
+        "y": 0,
+        "width": 16,
+        "height": 16
+      },
+      "sourceRect": {
+        "y": 224,
+        "x": 16,
+        "height": 32,
+        "width": 16
+      },
+      "dropName": "SeedPack_Sunflower",
+      "removedHaloPixels": 40,
+      "dropSpriteId": "3d8bd360021577c41b3418c1ff046025",
+      "dropFileId": 277179416711354236,
+      "inventorySpriteId": "36afe8b537b70203af393a3fbab33152",
+      "inventoryFileId": 246289003999621152
+    },
+    {
+      "inventoryRect": {
+        "x": 16,
+        "width": 16,
+        "height": 16,
+        "y": 0
+      },
+      "dropIndex": 230,
+      "family": "TanBulb_A",
+      "inventoryName": "SeedPack_TanBulb_A",
+      "dropRect": {
+        "y": 208,
+        "width": 16,
+        "height": 16,
+        "x": 272
+      },
+      "removedHaloPixels": 40,
+      "sourceName": "Crop_TanBulb_A_SeedPacket",
+      "dropName": "SeedPack_TanBulb_A",
+      "retainedMaterialPixels": 122,
+      "sourceRect": {
+        "x": 16,
+        "width": 16,
+        "height": 32,
+        "y": 192
+      },
+      "dropSpriteId": "a975aacf6195c56f7bd0dc05e23913e1",
+      "dropFileId": 763178360772320342,
+      "inventorySpriteId": "b4e6316dfc06b2b443ebf205f03afb31",
+      "inventoryFileId": 814697532494998315
+    },
+    {
+      "inventoryRect": {
+        "height": 16,
+        "width": 16,
+        "x": 32,
+        "y": 0
+      },
+      "dropIndex": 231,
+      "removedHaloPixels": 40,
+      "inventoryName": "SeedPack_TanBulb_B",
+      "family": "TanBulb_B",
+      "dropRect": {
+        "width": 16,
+        "height": 16,
+        "y": 192,
+        "x": 0
+      },
+      "dropName": "SeedPack_TanBulb_B",
+      "retainedMaterialPixels": 122,
+      "sourceName": "Crop_TanBulb_B_SeedPacket",
+      "sourceRect": {
+        "y": 64,
+        "height": 32,
+        "width": 16,
+        "x": 16
+      },
+      "dropSpriteId": "da6b6978b3d32aac0ee1055883c6de69",
+      "dropFileId": 983674330619392682,
+      "inventorySpriteId": "3363616626b2ff5b45b18309c0928e0c",
+      "inventoryFileId": 231431900624531445
+    },
+    {
+      "sourceName": "Crop_Tomato_SeedPacket",
+      "inventoryName": "SeedPack_Tomato",
+      "dropIndex": 232,
+      "dropRect": {
+        "x": 16,
+        "y": 192,
+        "width": 16,
+        "height": 16
+      },
+      "family": "Tomato",
+      "dropName": "SeedPack_Tomato",
+      "removedHaloPixels": 40,
+      "retainedMaterialPixels": 122,
+      "inventoryRect": {
+        "height": 16,
+        "x": 48,
+        "y": 0,
+        "width": 16
+      },
+      "sourceRect": {
+        "y": 640,
+        "x": 16,
+        "width": 16,
+        "height": 32
+      },
+      "dropSpriteId": "e1618dcc36b4bfb5b4e06f0aa578186a",
+      "dropFileId": 1015026102469086203,
+      "inventorySpriteId": "a6202814c52f88407937e0fd4b03f2bc",
+      "inventoryFileId": 748163242451466372
+    },
+    {
+      "inventoryName": "SeedPack_Watermelon",
+      "dropRect": {
+        "x": 32,
+        "height": 16,
+        "y": 192,
+        "width": 16
+      },
+      "sourceRect": {
+        "y": 256,
+        "width": 16,
+        "height": 32,
+        "x": 16
+      },
+      "removedHaloPixels": 40,
+      "retainedMaterialPixels": 122,
+      "dropName": "SeedPack_Watermelon",
+      "family": "Watermelon",
+      "dropIndex": 233,
+      "sourceName": "Crop_Watermelon_SeedPacket",
+      "inventoryRect": {
+        "x": 64,
+        "y": 0,
+        "width": 16,
+        "height": 16
+      },
+      "dropSpriteId": "1c34eede03d13b76d2806f253a5102cc",
+      "dropFileId": 127031998072820663,
+      "inventorySpriteId": "78c59d431ee54cc43722d2435f736a30",
+      "inventoryFileId": 543908422910629068
+    },
+    {
+      "removedHaloPixels": 40,
+      "retainedMaterialPixels": 122,
+      "family": "Wheat",
+      "sourceRect": {
+        "width": 16,
+        "height": 16,
+        "x": 16,
+        "y": 672
+      },
+      "inventoryRect": {
+        "x": 80,
+        "y": 0,
+        "height": 16,
+        "width": 16
+      },
+      "dropIndex": 234,
+      "sourceName": "Crop_Wheat_SeedPacket",
+      "inventoryName": "SeedPack_Wheat",
+      "dropName": "SeedPack_Wheat",
+      "dropRect": {
+        "width": 16,
+        "x": 48,
+        "y": 192,
+        "height": 16
+      },
+      "dropSpriteId": "6df1fd6aff7953d0ff83bef8c01869e2",
+      "dropFileId": 495149490969744701,
+      "inventorySpriteId": "2c0ae610895a5668fae8ad57ca1435bd",
+      "inventoryFileId": 198350115383387494
+    },
+    {
+      "sourceConvention": "Cores_8 predominant opaque brown; common packet contour without crop detail",
+      "dropIndex": 235,
+      "dropRect": {
+        "x": 64,
+        "y": 192,
+        "width": 16,
+        "height": 16
+      },
+      "inventoryName": "SeedPack_Unknown",
+      "dropName": "SeedPack_Unknown",
+      "inventoryRect": {
+        "x": 96,
+        "width": 16,
+        "height": 16,
+        "y": 0
+      },
+      "colorRGBA": [
+        145,
+        83,
+        59,
+        255
+      ],
+      "family": "Unknown",
+      "dropSpriteId": "587225836a1d5403c4011f0c5883ffd2",
+      "dropFileId": 398324854314620224,
+      "inventorySpriteId": "379d6d5e1ce835caadb63e27614c1129",
+      "inventoryFileId": 250467468400558940
+    }
+  ],
+  "haloRGBA": [
+    249,
+    230,
+    207,
+    255
+  ],
+  "unknownRGBA": [
+    145,
+    83,
+    59,
+    255
+  ],
+  "oldAtlasDimensions": [
+    288,
+    192
+  ],
+  "extendedAtlasDimensions": [
+    288,
+    224
+  ],
+  "oldAtlasBottomRegionRGBAUnchanged": true,
+  "sourceUnchanged": true,
+  "commonHaloCoordinates": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    20,
+    27,
+    35,
+    44,
+    50,
+    61,
+    66,
+    77,
+    82,
+    93,
+    98,
+    109,
+    114,
+    125,
+    130,
+    141,
+    146,
+    157,
+    162,
+    173,
+    178,
+    189,
+    194,
+    205,
+    211,
+    220,
+    228,
+    229,
+    230,
+    231,
+    232,
+    233,
+    234,
+    235
+  ],
+  "notGameplayResourceMapping": true,
+  "normalizedCanvas": [
+    16,
+    16
+  ],
+  "interiorSameColorPreserved": true,
+  "inventoryTextureGuid": "7bac5cbb13a44452b84e002f5ab62650"
+}

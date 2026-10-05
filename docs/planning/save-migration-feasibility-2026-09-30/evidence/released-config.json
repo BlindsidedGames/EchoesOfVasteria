@@ -1,0 +1,28 @@
+{
+  "artifact": "Steam public build 20851856 Mac",
+  "assetFile": "resources.assets",
+  "thresholdOffset": 13786904,
+  "configNameOffset": 13786880,
+  "resourceThresholds": [
+    1,
+    25,
+    75,
+    200,
+    750,
+    1500,
+    3500,
+    10000
+  ],
+  "buffThresholds": [
+    1,
+    5,
+    25,
+    75,
+    200,
+    750,
+    1500,
+    3000
+  ],
+  "method": "Exact length-prefixed serialized arrays immediately follow CauldronConfig object name, rollsPerSecond=10f and stewPerRoll=1f. Read-only binary inspection, no game launch.",
+  "assetFileSha256": "86d4304cf93c5181b7c69f5ef7fefafceb5ad79fcaaafd4e964b65b5ee9338bd"
+}

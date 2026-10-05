@@ -1,0 +1,279 @@
+{
+  "revision": 4,
+  "branch": "fix/editor-startup-terrain-catalogue",
+  "head": "b3cedc38b2ba75490aa0970346b246cff591d0f4",
+  "baselineSourcePaths": 38,
+  "sourceChanges": [],
+  "mainSha256": "8f912645ea9216c7f25a833da730c44524aaea0dab7ba4cd76a9c0e1ac0d9d54",
+  "mainDirty": false,
+  "playing": false,
+  "actualPlayerFiles": 77,
+  "playerChanges": [],
+  "verifiedBackups": 93,
+  "backupProblems": [],
+  "archives": [
+    {
+      "archive": "revision-1-archive",
+      "files": 63,
+      "changedArchiveFiles": [],
+      "changedOriginalScenes": []
+    },
+    {
+      "archive": "revision-2-archive",
+      "files": 94,
+      "changedArchiveFiles": [],
+      "changedOriginalScenes": []
+    },
+    {
+      "archive": "revision-3-archive",
+      "files": 125,
+      "changedArchiveFiles": [],
+      "changedOriginalScenes": []
+    }
+  ],
+  "scenes": [
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV4/A0-existing.unity",
+      "sha256": "d9e1dd45766f11fc5c35c7ec04c744bf733e1a08bd1d8f847027986b3c136832",
+      "scriptGuids": [
+        "073797afb82c5a1438f328866b10b3f0",
+        "a79441f348de89743a2939f4d699eac1"
+      ],
+      "corners": 0,
+      "actualOpenGates": 0,
+      "optional": false
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV4/A1-first-beds.unity",
+      "sha256": "ec5e77ef18ed701143c72141e3035f5521faed62caa46a2d0516240ba52f526e",
+      "scriptGuids": [
+        "073797afb82c5a1438f328866b10b3f0",
+        "a79441f348de89743a2939f4d699eac1"
+      ],
+      "corners": 4,
+      "actualOpenGates": 1,
+      "optional": false
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV4/A2-stump-reclamation.unity",
+      "sha256": "9a43a3c28db7ade48489d118f22fc72a43c49a03e27929aaaa7c2702eea50123",
+      "scriptGuids": [
+        "073797afb82c5a1438f328866b10b3f0",
+        "a79441f348de89743a2939f4d699eac1"
+      ],
+      "corners": 8,
+      "actualOpenGates": 2,
+      "optional": false
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV4/A2b-southeast-work.unity",
+      "sha256": "cb08b1de3428f052c40e5416a46549ace7176203ae3a82b145a3d6f6f5aa685f",
+      "scriptGuids": [
+        "073797afb82c5a1438f328866b10b3f0",
+        "a79441f348de89743a2939f4d699eac1"
+      ],
+      "corners": 8,
+      "actualOpenGates": 2,
+      "optional": false
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV4/A3-southeast-clearing.unity",
+      "sha256": "652b167323f203991547a8cdc3dd954e592e471f973e14390fcc05d215959fd1",
+      "scriptGuids": [
+        "a79441f348de89743a2939f4d699eac1",
+        "073797afb82c5a1438f328866b10b3f0"
+      ],
+      "corners": 12,
+      "actualOpenGates": 3,
+      "optional": false
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV4/B3-terraced-rows.unity",
+      "sha256": "69ab5aa03747a3562168eb92b5b538414a497611c42af9d4f9e115433fef6f67",
+      "scriptGuids": [
+        "a79441f348de89743a2939f4d699eac1",
+        "073797afb82c5a1438f328866b10b3f0"
+      ],
+      "corners": 12,
+      "actualOpenGates": 3,
+      "optional": false
+    },
+    {
+      "scene": "Assets/Editor/FarmingPreviewsV4/C3-grove-courtyard.unity",
+      "sha256": "855f83e9c737e77fd0ebe83e9e0ce77535a122f86e6df47c7bde40600d3eb60d",
+      "scriptGuids": [
+        "a79441f348de89743a2939f4d699eac1",
+        "073797afb82c5a1438f328866b10b3f0"
+      ],
+      "corners": 12,
+      "actualOpenGates": 3,
+      "optional": false
+    },
+    {
+      "scene": "Assets/Editor/FarmingOrchardOptionPreview/D-optional-orchard.unity",
+      "sha256": "ff1ff3a5a106f2ac5b4e7702a30804a4a5dc4fab77601b443bfb3844f05d73d2",
+      "scriptGuids": [
+        "a79441f348de89743a2939f4d699eac1",
+        "073797afb82c5a1438f328866b10b3f0"
+      ],
+      "corners": 12,
+      "actualOpenGates": 3,
+      "optional": true
+    }
+  ],
+  "fencePieces": {
+    "corners": 56,
+    "gates": 14
+  },
+  "passingStaticGates": 14,
+  "passingDualColumnRoutes": 28,
+  "runtimeNavigationTested": false,
+  "rawCropRenders": 49,
+  "rawOptionalOrchardRenders": 3,
+  "originalApproachGeometryUnchanged": true,
+  "existingLaneJoinRetiled": [
+    {
+      "world": [
+        -61.0,
+        -3.0,
+        0.0
+      ],
+      "from": "Farmland_WetOverlay_SoilJoin_NW_AbsentCorners_NE_SE_SW_Variant17",
+      "to": "Farmland_WetOverlay_SoilJoin_NEW_AbsentCorners_NE_SE_SW_Variant36"
+    }
+  ],
+  "originalActorPosesUnchanged": true,
+  "mountainFootShadowClearance": 3.5,
+  "mountainFrontFaceClearance": 4.5,
+  "lightGuardsRestored": true,
+  "cohortIds": 94,
+  "focusedContractChecks": {
+    "noCompensation": true,
+    "plantDropSource": true,
+    "freshAllPlayers": true,
+    "noLegacyPackGrant": true,
+    "starterWithdrawn": true,
+    "zeroBalanceKnown": true,
+    "noWorkTokens": true,
+    "noWaitGuarantee": true,
+    "substitutionRisk": true,
+    "rewardAdapter": true,
+    "dutyCycle": true,
+    "rateLabel": true,
+    "noInventedStockCap": true,
+    "noBackpay": true,
+    "storedDecisionOpen": true,
+    "platformChoiceOpen": true,
+    "atomicHarvest": true,
+    "ownershipReceipt": true,
+    "cohortBothSides": true,
+    "cameraList": true,
+    "freshMigrationFixture": true,
+    "unknownUI": true,
+    "orchardOptional": true,
+    "noGrandfatheredCropAccess": true,
+    "noRedundantUnlockFlags": true,
+    "discardPurchasedOldStats": true,
+    "noStarterGearConversion": true,
+    "meaningfulQuestPreserved": true,
+    "noAutomaticFenceStageGrant": true,
+    "canonicalRequirementAudit": true,
+    "discoveryDerivedFromEarnedHistory": true
+  },
+  "brokenMarkdownLinks": [],
+  "rawHtmlClutter": [],
+  "liveGeneratorPresent": false,
+  "editorCoordination": {
+    "owner": null,
+    "editorReserved": false,
+    "sourceThread": "01a0ef9f-ad6d-77e4-8ebb-421824e98034",
+    "migrationThread": "01a0f260-8ce0-7307-942a-971a561f003e",
+    "purpose": "V4 preview captures complete; Main clean Edit mode; helper removed; no migration report edited",
+    "existingEvidence": "/Users/matthewrushworth/Projects/Echoes Mac Verification/2026-09-30-cleanup",
+    "disposablePlayer": "/Users/matthewrushworth/Projects/Echoes Mac Verification/2026-09-30-cleanup/EOVOfflineVerification.app",
+    "harnessSource": "/Users/matthewrushworth/Projects/Echoes Mac Verification/2026-09-30-cleanup/MacCleanupSmoke.cs.txt",
+    "harnessReports": "/tmp/eov-mac-cleanup-20260930/"
+  },
+  "libraryFiles": [
+    {
+      "file_name": "farm-progression.png",
+      "library_file_id": "libfile_4290e227795c819183f5826bb552bcd6",
+      "file_id": "file_00000000651c81fa9cce3263a74908c5",
+      "version": 3
+    },
+    {
+      "file_name": "farm-town-context-annotated.png",
+      "library_file_id": "libfile_55dc1bf70d2c8191913b34d67fd4d5b0",
+      "file_id": "file_000000008f9c81fa9b0884d06ba4ad3c",
+      "version": 3
+    },
+    {
+      "file_name": "farm-layout-alternatives.png",
+      "library_file_id": "libfile_59daf4a6afe48191836dc4db2fcba97c",
+      "file_id": "file_000000008fa081fabb57e5b825f74878",
+      "version": 3
+    },
+    {
+      "file_name": "farm-normal-scale.png",
+      "library_file_id": "libfile_9ff4f1694a5c8191aa0bea167966eb1a",
+      "file_id": "file_00000000745c81fa90b0e2af05c5715f",
+      "version": 3
+    },
+    {
+      "file_name": "farm-clearing-close-comparison.png",
+      "library_file_id": "libfile_60fa8b9963948191a90a1ca509811167",
+      "file_id": "file_00000000da20820bada7a8879c006613",
+      "version": 3
+    },
+    {
+      "file_name": "farm-optional-orchard.png",
+      "library_file_id": "libfile_555f413a50c881919dc35beb045aa5c4",
+      "file_id": "file_000000000fc081faab256aea9044de99",
+      "version": 0
+    },
+    {
+      "file_name": "seed-packet-art-audit.png",
+      "library_file_id": "libfile_7dcc8a97d1188191bc53ffe9f6f3aa81",
+      "file_id": "file_00000000f20481fa8d9589df768e04f6",
+      "version": 0
+    }
+  ],
+  "figureSourceCopies": [
+    {
+      "image": "farm-progression",
+      "retainedSourceSameBytes": true
+    },
+    {
+      "image": "farm-town-context-annotated",
+      "retainedSourceSameBytes": true
+    },
+    {
+      "image": "farm-layout-alternatives",
+      "retainedSourceSameBytes": true
+    },
+    {
+      "image": "farm-normal-scale",
+      "retainedSourceSameBytes": true
+    },
+    {
+      "image": "farm-clearing-close-comparison",
+      "retainedSourceSameBytes": true
+    },
+    {
+      "image": "farm-layout-before-after",
+      "retainedSourceSameBytes": true
+    },
+    {
+      "image": "farm-dual-path-before-after",
+      "retainedSourceSameBytes": true
+    },
+    {
+      "image": "farm-optional-orchard",
+      "retainedSourceSameBytes": true
+    }
+  ],
+  "visualReviewCompleted": true,
+  "visualReviewLimitation": "Unity Metal Edit-mode captures and static tile/sprite geometry. No farm/orchard gameplay implemented or runtime navigation/UI coverage.",
+  "farmingOrOrchardImplementation": false,
+  "committedOrPushed": false
+}
