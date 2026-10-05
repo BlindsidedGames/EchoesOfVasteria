@@ -75,7 +75,7 @@ namespace Tests.EditMode
                 Assert.IsTrue(recipe.stages.All(sprite => sprite != null), recipe.id + " needs four imported growth sprites.");
                 Assert.IsNotNull(recipe.packIcon, recipe.id); Assert.IsNotNull(recipe.unknownIcon, recipe.id);
                 if (recipe.orchard) Assert.IsNotNull(recipe.paidInput, recipe.id + " needs a matching sapling.");
-                else { Assert.IsNull(recipe.paidInput); StringAssert.StartsWith("seed.", recipe.seedId); }
+                else { Assert.IsNotNull(recipe.paidInput); Assert.AreEqual(FarmCommands.SeedResourceName(recipe.seedId), recipe.paidInput.name); Assert.AreEqual(recipe.packIcon, recipe.paidInput.icon); Assert.AreEqual(recipe.unknownIcon, recipe.paidInput.UnknownIcon); }
             }
             Assert.AreEqual(10, content.Recipe("recipe.apple.v1").source.requiredSkillLevel);
             Assert.AreEqual(27, content.Recipe("recipe.pear.v1").source.requiredSkillLevel);

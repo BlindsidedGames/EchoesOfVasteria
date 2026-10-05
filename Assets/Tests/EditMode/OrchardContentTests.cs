@@ -35,6 +35,13 @@ namespace Tests.EditMode
             Assert.IsTrue(task.taskPrefab.GetComponentsInChildren<ToolkitWorldAnchor>(true).All(x=>x.task==task.taskPrefab),"Native progress anchors must reference the new harvest task.");
             Assert.IsInstanceOf<FruitHarvestTask>(task.taskPrefab);Assert.IsNotInstanceOf<WoodcuttingTask>(task.taskPrefab);
             Assert.AreEqual(1,task.associatedSkill.resourceUnlocks.Count(x=>x.task==task&&x.requiredLevel==level));
+            var unlock = task.associatedSkill.resourceUnlocks.Single(x => x.task == task);
+            Assert.IsTrue(unlock.useOverrideIcon, "Orchard unlocks must display a tree thumbnail, not harvested fruit.");
+            Assert.NotNull(unlock.overrideIcon);
+            Assert.AreNotSame(fruit.icon, unlock.overrideIcon);
+            Assert.IsTrue(task.taskPrefab.GetComponentsInChildren<SpriteRenderer>(true).Any(r => r.sprite == unlock.overrideIcon),
+                "Skill tree thumbnail must reference the actual orchard task's tree art.");
+            Assert.AreSame(unlock.overrideIcon, task.taskIcon, "Every orchard task display must identify the tree; harvested resources retain fruit art.");
             foreach(var resource in new[]{fruit,seed})
             {
                 Assert.IsNotNull(resource.icon);Assert.IsNotNull(resource.UnknownIcon);

@@ -38,19 +38,19 @@ namespace Tests.EditMode
         }
 
         [Test]
-        public void EligibleHitCreditsOnceAndDiscoverySurvivesQuantityZeroAndReload()
+        public void EligibleHitProposesOneCanonicalPackAndReceiptSurvivesPlantAndReload()
         {
             var source = Prepared();
             var hit = FarmCommands.RecordRadishAdventureCompletion(source, "return", Start, true, true);
             Assert.IsEmpty(source.Seeds);
-            Assert.AreEqual(1, hit.Candidate.Seeds[FarmCommands.RadishSeedId].Quantity);
-            Assert.AreEqual(1, hit.Candidate.Seeds[FarmCommands.RadishSeedId].LifetimeAcquired);
+            Assert.IsEmpty(hit.Candidate.Seeds, "Canonical credit/spend must not mutate the legacy ledger.");
+            Assert.AreEqual(1, hit.ResourceDeltas["Radish Seed Pack"]);
             Assert.AreEqual(FarmCommandStatus.AlreadyApplied,
                 FarmCommands.RecordRadishAdventureCompletion(hit.Candidate, "return", Start, true, true).Status);
             var planted = FarmCommands.Plant(hit.Candidate, FarmCommands.WestBedId, "plant", Start, tuning).Candidate;
             var loaded = RoundTrip(planted);
-            Assert.AreEqual(0, loaded.Seeds[FarmCommands.RadishSeedId].Quantity);
-            Assert.IsTrue(loaded.Seeds[FarmCommands.RadishSeedId].IsDiscovered);
+            Assert.IsEmpty(loaded.Seeds, "Canonical credit/spend must not mutate the legacy ledger.");
+            Assert.IsEmpty(loaded.Seeds);
             Assert.AreEqual(FarmCommandStatus.AlreadyApplied,
                 FarmCommands.Plant(loaded, FarmCommands.WestBedId, "plant", Start, tuning).Status);
         }
@@ -70,15 +70,15 @@ namespace Tests.EditMode
         }
 
         [Test]
-        public void PlantingRequiresPaidBedsAndOneSeedAndCannotDebitTwice()
+        public void PlantingRequiresPaidBedsAndProposesOneCanonicalDebitOnce()
         {
             var locked = Credit(new FarmState { FormatVersion = 1 }, "return");
             Assert.AreEqual("BedLocked", FarmCommands.Plant(locked, FarmCommands.WestBedId, "plant", Start, tuning).Reason);
-            Assert.AreEqual(1, locked.Seeds[FarmCommands.RadishSeedId].Quantity);
-            Assert.AreEqual("NoRadishSeeds", FarmCommands.Plant(Prepared(), FarmCommands.WestBedId, "plant", Start, tuning).Reason);
+            Assert.IsEmpty(locked.Seeds, "Canonical credit/spend must not mutate the legacy ledger.");
+            Assert.AreEqual(-1, FarmCommands.Plant(Prepared(), FarmCommands.WestBedId, "plant", Start, tuning).ResourceDeltas["Radish Seed Pack"], "The durable transaction validates inventory.");
             var planted = Planted();
             Assert.AreEqual("BedOccupied", FarmCommands.Plant(planted, FarmCommands.WestBedId, "new-plant", Start, tuning).Reason);
-            Assert.AreEqual(0, planted.Seeds[FarmCommands.RadishSeedId].Quantity);
+            Assert.IsEmpty(planted.Seeds, "Canonical credit/spend must not mutate the legacy ledger.");
         }
 
         [Test]
@@ -103,8 +103,7 @@ namespace Tests.EditMode
             Assert.AreEqual("NoReadyBeds", FarmCommands.HarvestReady(month.Candidate, "another-harvest", Start.AddMonths(2)).Reason);
             Assert.AreEqual(FarmCommandStatus.AlreadyApplied,
                 FarmCommands.HarvestReady(RoundTrip(month.Candidate), "harvest-month", Start.AddMonths(2)).Status);
-            Assert.AreEqual(2, month.Candidate.Seeds[FarmCommands.RadishSeedId].LifetimeAcquired);
-            Assert.AreEqual(0, month.Candidate.Seeds[FarmCommands.RadishSeedId].Quantity);
+            Assert.IsEmpty(month.Candidate.Seeds, "Canonical credit/spend must not mutate the legacy ledger.");
         }
 
         [Test]
@@ -148,13 +147,13 @@ namespace Tests.EditMode
             var credit = FarmCommands.RecordRadishAdventureCompletion(persisted, "return", Start, true, true);
             Assert.IsEmpty(persisted.Seeds);
             Assert.AreEqual(1, FarmCommands.RecordRadishAdventureCompletion(persisted, "return", Start, true, true)
-                .Candidate.Seeds[FarmCommands.RadishSeedId].Quantity);
+                .ResourceDeltas["Radish Seed Pack"]);
             persisted = RoundTrip(credit.Candidate);
             var plant = FarmCommands.Plant(persisted, FarmCommands.WestBedId, "plant", Start, tuning);
-            Assert.AreEqual(1, persisted.Seeds[FarmCommands.RadishSeedId].Quantity);
+            Assert.IsEmpty(persisted.Seeds, "Canonical credit/spend must not mutate the legacy ledger.");
             var retry = FarmCommands.Plant(persisted, FarmCommands.WestBedId, "plant", Start, tuning);
             Assert.AreEqual(plant.Candidate.Beds[FarmCommands.WestBedId].BatchId, retry.Candidate.Beds[FarmCommands.WestBedId].BatchId);
-            Assert.AreEqual(0, retry.Candidate.Seeds[FarmCommands.RadishSeedId].Quantity);
+            Assert.IsEmpty(retry.Candidate.Seeds, "Canonical credit/spend must not mutate the legacy ledger.");
         }
 
         [Test]
@@ -180,7 +179,7 @@ namespace Tests.EditMode
             Assert.AreEqual("NoReadyBeds", FarmCommands.HarvestReady(state, "clock-only", future.AddMonths(1)).Reason);
             var second = FarmCommands.HarvestReady(state, "harvest-two", future.AddMonths(1), activeElapsedSeconds: 1800);
             Assert.AreEqual(10, second.ResourceDeltas["Radish"]);
-            Assert.AreEqual(0, second.Candidate.Seeds[FarmCommands.RadishSeedId].Quantity);
+            Assert.IsEmpty(second.Candidate.Seeds, "Canonical credit/spend must not mutate the legacy ledger.");
         }
 
         [Test]

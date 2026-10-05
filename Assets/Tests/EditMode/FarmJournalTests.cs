@@ -53,7 +53,8 @@ namespace Tests.EditMode
                 FarmCommands.RecordRadishAdventureCompletion(loaded, id, Start, true, hit).Status);
             Assert.AreEqual("OperationIdConflict",
                 FarmCommands.RecordRadishAdventureCompletion(loaded, id, Start, true, !hit).Reason);
-            Assert.AreEqual(hit ? 1 : 0, loaded.Seeds.TryGetValue(FarmCommands.RadishSeedId, out var seed) ? seed.Quantity : 0);
+            Assert.AreEqual(hit ? 1 : 0, result.ResourceDeltas.TryGetValue("Radish Seed Pack", out var amount) ? amount : 0);
+            Assert.IsEmpty(loaded.Seeds);
         }
 
         [Test]
@@ -80,7 +81,7 @@ namespace Tests.EditMode
             Assert.AreEqual(3, done.CommittedThroughSequence);
             Assert.IsEmpty(done.CompletedSequences);
             Assert.IsEmpty(done.PendingCredits);
-            Assert.AreEqual(2, done.Seeds[FarmCommands.RadishSeedId].Quantity);
+            Assert.IsEmpty(done.Seeds, "Canonical credit/spend must not mutate the legacy ledger.");
         }
 
         [Test]
@@ -113,7 +114,7 @@ namespace Tests.EditMode
                 Assert.AreEqual("LegacyOperationSealed", FarmCommands.RecordRadishAdventureCompletion(state, id, Start, true, true).Reason);
             state = FarmCommands.RecordRadishAdventureCompletion(state, "hit", Start, true, true).Candidate;
             state = Reload(FarmCommands.RecordRadishAdventureCompletion(state, "miss", Start, true, false).Candidate);
-            Assert.AreEqual(1, state.Seeds[FarmCommands.RadishSeedId].Quantity);
+            Assert.IsEmpty(state.Seeds, "Canonical credit/spend must not mutate the legacy ledger.");
             Assert.AreEqual(1, state.PendingCredits.Count);
             Assert.IsTrue(state.PendingCredits.ContainsKey("opaque-null"));
             Assert.AreEqual("LegacyOperationSealed", FarmCommands.RecordRadishAdventureCompletion(state, "hit", Start, true, true).Reason);
@@ -164,7 +165,7 @@ namespace Tests.EditMode
             Assert.AreEqual("CommittedIntentAcknowledged", acknowledged.Reason);
             Assert.IsTrue(paid.PendingCredits.ContainsKey(id)); // failed cleanup write retains source.
             Assert.IsFalse(acknowledged.Candidate.PendingCredits.ContainsKey(id));
-            Assert.AreEqual(1, acknowledged.Candidate.Seeds[FarmCommands.RadishSeedId].Quantity);
+            Assert.IsEmpty(acknowledged.Candidate.Seeds, "Canonical credit/spend must not mutate the legacy ledger.");
             Assert.AreEqual(FarmCommandStatus.AlreadyApplied,
                 FarmCommands.RecordRadishAdventureCompletion(Reload(acknowledged.Candidate), id, Start, true, true).Status);
         }
@@ -322,7 +323,7 @@ namespace Tests.EditMode
             Assert.IsEmpty(source.Operations);
             Assert.IsEmpty(source.CompletedSequences);
             Assert.IsEmpty(source.PendingCredits);
-            Assert.AreEqual(200, source.Seeds[FarmCommands.RadishSeedId].Quantity);
+            Assert.IsEmpty(source.Seeds, "Canonical credit/spend must not mutate the legacy ledger.");
             Assert.AreEqual("LegacyOperationSealed", FarmCommands.RecordRadishAdventureCompletion(source, "old-1", Start, true, true).Reason);
         }
 

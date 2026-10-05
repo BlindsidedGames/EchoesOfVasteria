@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace TimelessEchoes.Farming
     public sealed class FarmContent : ScriptableObject
     {
         public const string IntroductionId = "Farm.Garden.Introduction.v1";
+        public static int PlantingCost(bool orchard) => orchard ? 1 : 9;
         public string displayNameKey = "farm.display-name";
         public string displayName = "Fields";
         public LocalizedString localizedDisplayName = new("TownUI", "farm.display-name");
@@ -46,13 +48,13 @@ namespace TimelessEchoes.Farming
         }
         public string BuildGate(GameData data, FarmBuild build)
         {
-            if (data?.Farm == null || data.General == null || build == null) return "Unknown construction.";
-            if (!Completed(data, build.previousQuestId)) return "Complete the preceding construction quest.";
-            if (data.Farm.TwinsLevel < build.twinsLevel) return "Twins level " + build.twinsLevel + " required.";
-            if (build.sources == null || build.sources.Count == 0) return "Missing gathering sources.";
+            if (data?.Farm == null || data.General == null || build == null) return ToolkitLocalization.Text("fields.error.unknown-build", "Unknown construction.");
+            if (!Completed(data, build.previousQuestId)) return ToolkitLocalization.Text("fields.error.preceding-build", "Complete the preceding construction quest.");
+            if (data.Farm.TwinsLevel < build.twinsLevel) return ToolkitLocalization.Text("fields.error.twins-level", "Twins level {0} required.", build.twinsLevel);
+            if (build.sources == null || build.sources.Count == 0) return ToolkitLocalization.Text("fields.error.missing-source", "Missing gathering sources.");
             foreach (var source in build.sources)
                 if (!source || !source.associatedSkill || SkillLevel(data, source.associatedSkill.name) < source.requiredSkillLevel ||
-                    data.General.MaxRunDistance < source.GetEffectiveMinX()) return "Gathering source not accessible yet.";
+                    data.General.MaxRunDistance < source.GetEffectiveMinX()) return ToolkitLocalization.Text("fields.error.source-inaccessible", "Gathering source not accessible yet.");
             return null;
         }
         public bool CanPlant(GameData data, FarmRecipe recipe) => recipe != null && recipe.source && recipe.source.associatedSkill &&

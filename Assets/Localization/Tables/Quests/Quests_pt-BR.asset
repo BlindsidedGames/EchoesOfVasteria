@@ -1,0 +1,1321 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Quests_pt-BR
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: pt-BR
+  m_SharedData: {fileID: 11400000, guid: f47e1bc3466d50a44a1f557a2552b815, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 53574254592
+    m_Localized: "Esta aqui \xE9 por nossa conta!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 689627873280
+    m_Localized: "Voc\xEA desperta como de um sonho; palavras suaves se perdem ao longe, levadas pelos ventos do tempo. \n\"Comece esta jornada, v\xE1 at\xE9 o fim e eu libertarei voc\xEA deste reino\" - Orin\n\n<b>Para come\xE7ar, conclua esta miss\xE3o, feche esta janela e clique em \"Come\xE7ar a cultivar\"</b>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 723614318592
+    m_Localized: "Acesso a mais miss\xF5es!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4299472388096
+    m_Localized: "Que bruxa \xE9 essa?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4344246583296
+    m_Localized: "O regador m\xE1gico da Eva!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4318774575104
+    m_Localized: "\"Pegue meu regador m\xE1gico e traga uns rabanetes para minha geleia\" - Eva"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4506201243648
+    m_Localized: "Uma introdu\xE7\xE3o \xE0 Ceifa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4508550053888
+    m_Localized: "\"Carl, o Ceifador, cuidar\xE1 para que voc\xEA n\xE3o se afaste demais da cidade. Conforme voc\xEA ajudar os moradores, ele vai afrouxar a coleira\" - Orin\n\n<b>A dist\xE2ncia de Ceifa \xE9 a dist\xE2ncia m\xE1xima que voc\xEA pode percorrer. Ela pode aumentar por meio de miss\xF5es ou em 1% quando voc\xEA \xE9 ceifado.</b>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4510643011584
+    m_Localized: "Agora voc\xEA pode entrar nas Terras de Cultivo!\nDist\xE2ncia de Ceifa aumentada em 50."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4640641269760
+    m_Localized: "Uma quest\xE3o de sa\xFAde"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4642964914176
+    m_Localized: "\"Junte recursos para mim e eu preparo uma refei\xE7\xE3o revigorante para voc\xEA!\" - Eva\n\n<b>Junte recursos nas aventuras e traga-os para ajudar a cidade.</b>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4644424531968
+    m_Localized: "Avan\xE7a a hist\xF3ria da cidade."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4796379971584
+    m_Localized: Um velho conhecido
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4801358610432
+    m_Localized: "\"Heh, esse sujeito est\xE1 aqui quase h\xE1 tanto tempo quanto eu. Voc\xEA pode encontr\xE1-lo no Bosque; afinal, Barkley nem deveria estar prospectando\" - Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4802210054144
+    m_Localized: "Dist\xE2ncia de Ceifa aumentada em 20."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4904353939456
+    m_Localized: "\"Neste reino, Ivan \xE9 seu irm\xE3o. Ele ajudar\xE1 voc\xEA a melhorar seus atributos, mas voc\xEA precisa juntar os recursos de que ele necessita\" - Orin\n\n<b>Isso desbloqueia um novo menu: a Forja, que fica no menu \"Moradores\".</b>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4905721282560
+    m_Localized: "Forja e uma espada bacana!\nDist\xE2ncia de Ceifa aumentada em 25."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4902881738752
+    m_Localized: Conhecendo Ivan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5136814850048
+    m_Localized: "\"Posso ser velho, mas sei das coisas. Os metais que voc\xEA encontra aqui embaixo v\xE3o deixar voc\xEA ligeiro. Se me ajudar a juntar alguns, compartilho meus segredos com Ivan\" - O Velho Mineiro"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5135506227200
+    m_Localized: Rocha e pedra
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5137989255168
+    m_Localized: "Agora voc\xEA pode entrar nas Minas."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5292075401216
+    m_Localized: "Meu nome \xE9 Gill"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5293610516480
+    m_Localized: "\"Como vai, parceiro? Acabei de voltar da melhor pescaria da minha vida. O qu\xEA? Voc\xEA nunca pescou!? Pegue minha vara reserva e pesque uns Flippy Floppy para Mildred. Eles aparecem em praticamente qualquer lugar!\" - Gill"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5294684258304
+    m_Localized: "Agora voc\xEA pode pescar! "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5493825617920
+    m_Localized: Rumo ao Bosque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5582187020288
+    m_Localized: Uma estrutura mais firme
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5495314595840
+    m_Localized: "\"Pegue meu machado reserva e v\xE1 para o Bosque. Vamos precisar de pelo menos 10 toras para come\xE7ar essa estrutura\" - Barkley"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5496426086400
+    m_Localized: "Avan\xE7a as melhorias da cidade."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5583185264640
+    m_Localized: "\"Muito obrigado, rapaz! Agora \xE9 hora de refor\xE7ar isso aqui. Pode buscar mais algumas toras?\" - Barkley"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5583919267840
+    m_Localized: "Dist\xE2ncia de Ceifa aumentada em 10."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6023255834624
+    m_Localized: Erguendo paredes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6024656732160
+    m_Localized: "\"Uau, voc\xEA ajuda mesmo! Enquanto come\xE7o essas paredes, pode buscar mais toras para o telhado?\" - Barkley"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6025701113856
+    m_Localized: "Dist\xE2ncia de Ceifa aumentada em 10."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6098321293312
+    m_Localized: Colocando o telhado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6099218874368
+    m_Localized: "\"Voc\xEA \xE9 demais. Falta pouco! Vou colocar este telhado e depois come\xE7amos as paredes\" - Barkley "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6100049346560
+    m_Localized: "Dist\xE2ncia de Ceifa aumentada em 25."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6386549669888
+    m_Localized: Toques finais
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6388466466816
+    m_Localized: "\"O Velho Mineiro sugeriu refor\xE7ar minhas paredes com pedra! Que ideia fant\xE1stica! Pode me ajudar uma \xFAltima vez?\" - Barkley"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6390102245376
+    m_Localized: Conclui as melhorias da cidade.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6568989310976
+    m_Localized: Outro presente magicool
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6571346509824
+    m_Localized: "\"Procure Barkley. Ele est\xE1 atr\xE1s da madeira perfeita, e voc\xEA pode encontr\xE1-lo nas Terras de Cultivo\" - Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6572961316864
+    m_Localized: "Agora voc\xEA pode entrar no Bosque!\nDist\xE2ncia de Ceifa aumentada em 25."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6905842253824
+    m_Localized: Gosma na hora certa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6922204233728
+    m_Localized: "\"Expulse as gosmas dos arredores e eu permitirei que voc\xEA viaje mais longe\" - Carl"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6943423217664
+    m_Localized: "Dist\xE2ncia de Ceifa aumentada em 50."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7063816519680
+    m_Localized: Proteja a cidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7083122900992
+    m_Localized: "\"Deixei um artefato com Ivan. Acabe com as gosmas extras ao redor da cidade e tenho certeza de que ele vai entreg\xE1-lo a voc\xEA\" - Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7084691570688
+    m_Localized: "Dados m\xE1gicos - Oferecem vantagens em combate!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7243521474560
+    m_Localized: "Padr\xF5es estranhos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7244716851200
+    m_Localized: "\"Muito obrigado, senhor. Pode cultivar nosso milho sempre que precisar. Espere, o que \xE9 isso!? Nunca vi um rabanete crescer assim! Parece que ele tem uma liga\xE7\xE3o com voc\xEA! Quero ver onde isso vai dar. Traga milho e eu ensino voc\xEA a cultivar trigo\" - Tillman"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7245635403776
+    m_Localized: "2,600 de experi\xEAncia em Cultivo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7520072908800
+    m_Localized: Grande demais para dar conta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7521440251904
+    m_Localized: "<b>Voc\xEA pode ajustar um pouco os pesos das tarefas na aba Tarefas do painel de estat\xEDsticas.</b>\n\"N\xE3o vamos conseguir tantos rabanetes a tempo para Eva... Ah! Voc\xEA est\xE1 com o regador m\xE1gico dela! Se me trouxer 100 rabanetes, pe\xE7o com prazer que Tillman ensine voc\xEA a cultivar milho\" - Flora"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7522576908288
+    m_Localized: "1,400 de experi\xEAncia em Cultivo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7639480549376
+    m_Localized: "<i>Risadinhas</i> \"Obrigada por ajudar com todo aquele trigo que Tillman vem plantando. Quero fazer uma bebida refrescante para a cidade inteira. Vou plantar uns Watermelone; pode cultiv\xE1-los para mim?\" - Flora"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7638297755648
+    m_Localized: Prepare as fileiras
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7640587845632
+    m_Localized: "4,600 de experi\xEAncia em Cultivo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7872075677696
+    m_Localized: Tem quem goste de calor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7873216528384
+    m_Localized: "\u201CVoc\xEA tem ajudado tanto. Pode trazer umas dessas pimentas? Quero mandar uma cesta de presentes para Eva \u2014 ela adora.\u201D \u2014 Flora"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7874336407552
+    m_Localized: "13,600 de experi\xEAncia em Cultivo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7954296619008
+    m_Localized: Fresco como um pepino
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7955139674112
+    m_Localized: "\u201CVamos preparar uma salada para surpreender Eva. Traga tomates e alface, e vemos o que fazer.\u201D \u2014 Flora e Tillman "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7955957563392
+    m_Localized: "9,000 de experi\xEAncia em Cultivo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7955958563392
+    m_Localized: "Uma situa\xE7\xE3o de peixe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7955959563392
+    m_Localized: "\"Parece que Mildred gostou de voc\xEA! Aposto que, se der a ela alguns Flippy Floppy, ela ajudar\xE1 voc\xEA nas viagens com prazer!\" - Eva\n\n<b>Os poderes t\xEAm uma aba pr\xF3pria que fica na Central!</b>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7955960563392
+    m_Localized: "Mildred acompanha voc\xEA e oferece poderes!\nPoderes de Eco de tarefas e combate."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7955966563392
+    m_Localized: "Mais um espa\xE7o de poder."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7955967563392
+    m_Localized: Miau
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7955969563392
+    m_Localized: "Mais um espa\xE7o de poder."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7955976563392
+    m_Localized: "Um trabalho em peda\xE7os"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7955977563392
+    m_Localized: "\"*Resmunga* Esta cidade precisa de um ch\xE3o melhor. V\xE1 buscar uns peda\xE7os de Nori e come\xE7amos a pavimenta\xE7\xE3o\" - O Velho Mineiro"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7955978563392
+    m_Localized: "2,800 de experi\xEAncia em Minera\xE7\xE3o\nDist\xE2ncia de Ceifa aumentada em 25."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7955985563392
+    m_Localized: "Conjura\xE7\xE3o por Ecos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7955986563392
+    m_Localized: "\"Quanto mais voc\xEA usar esses poderes, mais natural minha for\xE7a ser\xE1 para voc\xEA, e ecos do seu passado v\xE3o conjur\xE1-los por voc\xEA\" - Orin\n\n<b>Conjura\xE7\xE3o por Ecos = Conjura\xE7\xE3o autom\xE1tica. Ative segurando o bot\xE3o ou clicando fora do modo de atribui\xE7\xE3o na aba Poderes.</b>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7955987563392
+    m_Localized: "Agora voc\xEA pode ativar a conjura\xE7\xE3o autom\xE1tica do espa\xE7o de poder 1."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956029563392
+    m_Localized: "Mais um espa\xE7o de poder!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956033563392
+    m_Localized: Os 100
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956034563392
+    m_Localized: "\"Cada espa\xE7o exige mais conjura\xE7\xF5es que o anterior para ser desbloqueado. \xC9 a natureza da Conjura\xE7\xE3o por Ecos...\" - Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956035563392
+    m_Localized: "Agora voc\xEA pode ativar a conjura\xE7\xE3o autom\xE1tica do espa\xE7o de poder 2."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956036563392
+    m_Localized: Um colo e um banquete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956038563392
+    m_Localized: "Mais um espa\xE7o de poder!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956039563392
+    m_Localized: "Estrat\xE9gias de Copium"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956040563392
+    m_Localized: "\"O que voc\xEA tem a\xED? Bonito e azul \u2014 Lirium, \xE9? Aposto que posso forjar melhorias de primeira com isso! Pode trazer mais?\" \u2014 Ivan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956041563392
+    m_Localized: "7,200 de experi\xEAncia em Minera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956042563392
+    m_Localized: "Ati\xE7ando as chamas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956043563392
+    m_Localized: "*Ri* \"Ha! Voc\xEA conseguiu mesmo \u2014 quem diria. Traga mais daquele min\xE9rio Dlog e vamos melhorar a forja do Ivan!\" - O Velho Mineiro"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956044563392
+    m_Localized: "4,000 de experi\xEAncia em Minera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956045563392
+    m_Localized: "L\xEDder do anel"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956046563392
+    m_Localized: "\u201COs morangos est\xE3o entre as frutas mais doces que conhecemos. Voc\xEA j\xE1 \xE9 quase um mestre do cultivo, e acho que merece uma recompensa.\u201D \u2014 Flora"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956047563392
+    m_Localized: "16,800 de experi\xEAncia em Cultivo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956048563392
+    m_Localized: A todo vapor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956049563392
+    m_Localized: "\u201CUfaa! Esse neg\xF3cio verde \xE9 potente \u2014 esses vagonetes v\xE3o andar mais r\xE1pido que Eva numa vassoura! Que tal minerar mais Copium para vermos at\xE9 onde conseguimos chegar?\u201D \u2014 O Velho Mineiro"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956050563392
+    m_Localized: "9,200 de experi\xEAncia em Minera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956051563392
+    m_Localized: "Um acordo de alho-por\xF3"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956052563392
+    m_Localized: "\u201CGill prometeu trocar uma planta nova que encontrou nas viagens por alguns pepinos! Pode buscar uns para mim?\u201D \u2014 Tillman"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956053563392
+    m_Localized: "10,400 de experi\xEAncia em Cultivo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956054563392
+    m_Localized: Deixe as folhas comigo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956055563392
+    m_Localized: "\u201CVoc\xEA j\xE1 conhece o processo \u2014 venha comigo enquanto planto estas sementes de tomate, pode ser? Traga seus tomates mais suculentos e eu mostro o segredo para cultivar alface crocante e refrescante.\u201D \u2014 Flora"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956056563392
+    m_Localized: "8,000 de experi\xEAncia em Cultivo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956057563392
+    m_Localized: Alimentando forjas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956058563392
+    m_Localized: "\"Estou come\xE7ando a gostar de voc\xEA, jovem. Agora que a forja aguenta, traga daquele Erif que encontrou \u2014 ele vai fazer a forja arder mais que qualquer coisa deste lado do sol.\" \u2014 O Velho Mineiro"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956059563392
+    m_Localized: "5,400 de experi\xEAncia em Minera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956060563392
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956061563392
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956062563392
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956063563392
+    m_Localized: "O despertar das ra\xEDzes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956064563392
+    m_Localized: "\u201CGill diz que isso se chama alho-por\xF3 \u2014 seja l\xE1 o que for! Enfim, os coelhos est\xE3o com fome; vamos ver se gostam.\u201D \u2014 Tillman"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956065563392
+    m_Localized: "11,400 de experi\xEAncia em Cultivo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956066563392
+    m_Localized: Uma dose de pimenta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956067563392
+    m_Localized: "\u201CAh... definitivamente n\xE3o dev\xEDamos dar alho-por\xF3 aos coelhos. Ainda bem que Eva estava aqui para ajudar. Acho melhor ficarmos com a pastinaca por enquanto \u2014 por favor, por favor, traga um pouco para meus beb\xEAs.\u201D \u2014 Flora"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956068563392
+    m_Localized: "12,400 de experi\xEAncia em Cultivo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956069563392
+    m_Localized: "Boas a\xE7\xF5es de ab\xF3bora"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956070563392
+    m_Localized: "\u201CN\xE3o sei por que o Velho Mineiro gosta disso, mas ele prometeu sementes de Pumking se ajudarmos.\u201D \u2014 Tillman"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956071563392
+    m_Localized: "14,800 de experi\xEAncia em Cultivo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956072563392
+    m_Localized: "A raiz da quest\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956073563392
+    m_Localized: "\"Aquele suco de Watermelone caiu bem \u2014 me lembrou quando eu queria experimentar suco de cenoura. Que tal eu plantar umas sementes e voc\xEA me ajudar a testar? Traga as cenouras e vamos ver no que d\xE1.\" - A raiz da quest\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956074563392
+    m_Localized: "5,800 de experi\xEAncia em Cultivo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956075563392
+    m_Localized: Frutinhas assustadoras
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956076563392
+    m_Localized: "\u201CPumking d\xE1 uma \xF3tima cabe\xE7a de espantalho. Traga alguns e ajudamos voc\xEA a manter as pragas longe.\u201D \u2014 Flora e Tillman"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956077563392
+    m_Localized: "15,800 de experi\xEAncia em Cultivo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956078563392
+    m_Localized: Na rama do jantar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956079563392
+    m_Localized: "<i>Sorri</i> \"Eva est\xE1 aprontando de novo \u2014 deve estar preparando um banquete para querer tantas batatas! Vou plantar umas batatas; pode cultiv\xE1-las para mim?\" - Flora"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956080563392
+    m_Localized: "7,000 de experi\xEAncia em Cultivo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956081563392
+    m_Localized: Funions furiosas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956082563392
+    m_Localized: "\u201CTodo mestre do cultivo precisa saber lidar com o alimento mais diab\xF3lico de todos: Funions! N\xE3o se deixe enganar pelo nome \u2014 essa planta pode testar sua sanidade. Traga algumas e eu ensino voc\xEA a cultivar nabos.\u201D \u2014 Flora"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956083563392
+    m_Localized: "18,000 de experi\xEAncia em Cultivo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956084563392
+    m_Localized: "Ambi\xE7\xE3o sem fundo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956085563392
+    m_Localized: "\u201CPela barba de Orin, esta mina n\xE3o acaba nunca, n\xE3o \xE9? Aposto que esse min\xE9rio Idle que voc\xEA carrega pode ser muito \xFAtil. Vamos ver at\xE9 onde voc\xEA chega \u2014 vou me instalar bem aqui e assistir.\u201D \u2014 O Velho Mineiro"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956086563392
+    m_Localized: "11,200 de experi\xEAncia em Minera\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956087563392
+    m_Localized: "O caminho da \xE1gua"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956088563392
+    m_Localized: "<i>Com uma palha de trigo entre os dentes</i> \"Ent\xE3o... parece que cada colheita aumenta sua liga\xE7\xE3o com estas plantas. Pedi a Barkley uma cerca e vou dar este peda\xE7o de terra a voc\xEA. Vou ensinar voc\xEA a cultivar todas as plantas que conhe\xE7o!\""
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956089563392
+    m_Localized: "3,600 de experi\xEAncia em Cultivo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7955964563392
+    m_Localized: "S\xE9rio?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956027563392
+    m_Localized: Continue comendo.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7957296563392
+    m_Localized: "Voc\xEA disse 1000!?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7957396563392
+    m_Localized: "\"Gosto de criar mundos, mas \xE0s vezes bate uma solid\xE3o\" - Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7957496563392
+    m_Localized: "Agora voc\xEA pode ativar a conjura\xE7\xE3o autom\xE1tica do espa\xE7o de poder 3."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7957596563392
+    m_Localized: "Voc\xEA n\xE3o pode estar falando s\xE9rio..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7957696563392
+    m_Localized: "\"Ao explorar este mundo, pense nas consequ\xEAncias das suas a\xE7\xF5es. Voc\xEA faz crescer a vida de personagens que criei, ajudando a eles enquanto ajuda a si mesmo. N\xE3o se esque\xE7a de voc\xEA ao amar os outros, pois \xE0s vezes voc\xEA s\xF3 tem a si mesmo\" - Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7957796563392
+    m_Localized: "Agora voc\xEA pode ativar a conjura\xE7\xE3o autom\xE1tica do espa\xE7o de poder 4."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 889194730110976
+    m_Localized: "Agora voc\xEA pode ativar a conjura\xE7\xE3o autom\xE1tica do espa\xE7o de poder 5."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 889193538928640
+    m_Localized: "\"Com grandes poderes v\xEAm grandes responsabilidades... Use isso com sabedoria, jovem\" - Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 889191659880448
+    m_Localized: "\xC9 mais de 9000!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7955968563392
+    m_Localized: "Mildred parece estar com fome; talvez voc\xEA devesse aliment\xE1-la."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7955965563392
+    m_Localized: "\xC9 s\xE9rio. Essa gata quer mais comida."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956028563392
+    m_Localized: Mildred ronrona e lambe as patas, depois se senta esperando ansiosamente por mais.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7956037563392
+    m_Localized: Mildred pula no seu colo e bate a pata no saco de peixes. Talvez seja melhor dar tudo a ela.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1575797333049344
+    m_Localized: "Atr\xE1s dos g\xEAmeos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1575867566669824
+    m_Localized: "\"A geleia fez sucesso! Mas agora a cidade inteira quer um pouco. Os g\xEAmeos fornecem tudo de que preciso para o cultivo. Voc\xEA pode encontr\xE1-los nas Terras de Cultivo; fa\xE7a um pedido por mim e eu ensino voc\xEA a ampliar sua liga\xE7\xE3o com os Ecos\" - Eva"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1575905307017216
+    m_Localized: "Avan\xE7a a hist\xF3ria da cidade."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1640742938624000
+    m_Localized: 'Novos poderes:
+
+      Eco | Combate, Eco | Tarefas'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1640699355611136
+    m_Localized: Rumo ao Multiverso
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1640721103077376
+    m_Localized: "\"Voc\xEA certamente j\xE1 notou picos de energia temporal, sombras de si mesmo ajudando voc\xEA. Todos os meus reinos est\xE3o conectados; esses... Ecos do seu passado atravessam para ajudar. Sua persist\xEAncia em ajudar os moradores lhe rendeu o direito de usar parte do meu poder para invocar Ecos quando quiser\" - Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1871405633650688
+    m_Localized: "\"Tillman disse que agora voc\xEA cultiva usando sua ess\xEAncia? *assobia* Incr\xEDvel. N\xE3o conte que fui eu que falei, mas ele quer dar aquele terreno perto do moinho a voc\xEA e me pediu para come\xE7ar uma cerca. Se trouxer alguns gravetos que juntou, come\xE7o com o maior prazer\" - Barkley"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1871406690615296
+    m_Localized: "Dist\xE2ncia de Ceifa aumentada em 50."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1871404551520256
+    m_Localized: Uma cerca para sua horta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1876363284201473
+    m_Localized: "\"Ent\xE3o, o que achou?! Ficou bonito, n\xE9? Mas preciso de mais gravetos para continuar e acabaram as toras para os postes. Pode buscar mais?\" - Barkley"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1876363284201472
+    m_Localized: Sem materiais
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1876363284201474
+    m_Localized: "Dist\xE2ncia de Ceifa aumentada em 100."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1879594387259392
+    m_Localized: "Que belo port\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1879594387259393
+    m_Localized: "\"Mais um pouco e terminamos. Desta vez preciso de gosma tamb\xE9m, para amarrar o port\xE3o\" - Barkley"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1879594387259394
+    m_Localized: "Dist\xE2ncia de Ceifa aumentada em 150."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2561275523907584
+    m_Localized: "Ou\xE7a o chocalho"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2561275549073408
+    m_Localized: "\"Matar esqueletos \xE9 muito divertido. N\xE3o acredita? Experimente, e eu fa\xE7o valer a pena\" - Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2561275549073409
+    m_Localized: "Dist\xE2ncia de Ceifa aumentada em 50."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869056
+    m_Localized: Osso, som e rock
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869058
+    m_Localized: "Dist\xE2ncia de Ceifa aumentada em 50."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869059
+    m_Localized: Fogueira de ossos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869061
+    m_Localized: "Dist\xE2ncia de Ceifa aumentada em 100."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869062
+    m_Localized: Calafrio nos ossos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869064
+    m_Localized: "Dist\xE2ncia de Ceifa aumentada em 100."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869065
+    m_Localized: Um osso a roer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869067
+    m_Localized: "Dist\xE2ncia de Ceifa aumentada em 150."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869068
+    m_Localized: Moendo os ossos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869070
+    m_Localized: "Dist\xE2ncia de Ceifa aumentada em 150."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869071
+    m_Localized: "Al\xE9m dos ossos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869072
+    m_Localized: "\"Bom, quase acabaram meus nomes de esqueleto. Pode terminar este \xFAltimo para mim? Voc\xEA mandou bem chegando at\xE9 aqui. Agrade\xE7o de verdade\" - Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869057
+    m_Localized: '"Chocalhos de esqueletos, esqueletos de chocalhos... Ah, nem sei mais como isso funciona" - Orin'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869060
+    m_Localized: "\"Erif \xE9 quente o bastante para derreter ossos, mas um pouco de magia deve resolver\" - Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869063
+    m_Localized: "\"Ao contr\xE1rio do que dizem, Lirium \xE9 bem quente, mas sua ess\xEAncia arrepia quem toca nele, ent\xE3o todos acham que \xE9 frio\" - Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869066
+    m_Localized: "\"A vida \xE9 dura, jovem, mas voc\xEA \xE9 mais duro. Continue assim!\" - Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869069
+    m_Localized: "\"A essa altura voc\xEA esmaga tudo que toca, certo? Pois daqui para frente fica cada vez mais dif\xEDcil. Prepare-se\" - Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570098317869073
+    m_Localized: "Dist\xE2ncia de Ceifa aumentada em 150."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904135
+    m_Localized: "Novo poder!\u2014Velocidade de movimento: +20%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904138
+    m_Localized: 'Velocidade de movimento: +20%<sprite=194>30%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904141
+    m_Localized: 'Velocidade de movimento: +30%<sprite=194>40%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904144
+    m_Localized: 'Velocidade de movimento: +40%<sprite=194>50%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904147
+    m_Localized: "Novo poder!\u2014Velocidade de tarefas: +25%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904150
+    m_Localized: 'Velocidade de tarefas: +25%<sprite=194>50%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904153
+    m_Localized: 'Velocidade de tarefas: +50%<sprite=194>75%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904156
+    m_Localized: 'Velocidade de tarefas: +75%<sprite=194>100%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904159
+    m_Localized: 'Velocidade de tarefas: +100%<sprite=194>150%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904162
+    m_Localized: 'Velocidade de tarefas: +150%<sprite=194>200%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904165
+    m_Localized: "Novo poder!\u2014Potencializador de combate: Dano +25%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904168
+    m_Localized: 'Potencializador de combate: Dano +25%<sprite=194>50%; +25% de defesa.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904171
+    m_Localized: 'Potencializador de combate: Dano +50%, Defesa +25%<sprite=194>75%, 50%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904174
+    m_Localized: "Desbloqueia o Caldeir\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904177
+    m_Localized: "Desbloqueia Fortuna, Instinto de Colecionador e Resson\xE2ncia dos Ecos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904180
+    m_Localized: Desbloqueia Fortuna.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904183
+    m_Localized: Desbloqueia Instinto de Colecionador.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904186
+    m_Localized: "Desbloqueia Resson\xE2ncia dos Ecos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904189
+    m_Localized: "Novo poder!\u2014Regenera\xE7\xE3o: +40%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904192
+    m_Localized: "Regenera\xE7\xE3o: +40%<sprite=194>80%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904195
+    m_Localized: "Regenera\xE7\xE3o: +80%<sprite=194>120%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904198
+    m_Localized: "Regenera\xE7\xE3o: +120%<sprite=194>150%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904201
+    m_Localized: "Novo poder!\u2014Rolagem cr\xEDtica: Chance cr\xEDtica +10%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904204
+    m_Localized: "Rolagem cr\xEDtica: 10%<sprite=194>15%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904207
+    m_Localized: "Rolagem cr\xEDtica: 15%<sprite=194>20%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904210
+    m_Localized: "Rolagem cr\xEDtica: 20%<sprite=194>25%."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904213
+    m_Localized: "Novo poder!\u2014Multiplicador de recursos: +25% de recursos ao concluir tarefas."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904216
+    m_Localized: 'Multiplicador de recursos: 25%<sprite=194>50%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904219
+    m_Localized: 'Multiplicador de recursos: 50%<sprite=194>70%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904222
+    m_Localized: 'Multiplicador de recursos: 70%<sprite=194>100%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834126098434
+    m_Localized: 'Multiplicador de recursos: 100%<sprite=194>150%.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904132
+    m_Localized: Quantidade de Ecos de tarefas 1<sprite=194>2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834096738304
+    m_Localized: "A prefer\xEAncia de Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904128
+    m_Localized: "\"Orin parece preferir as gosmas rosas. Se reunir bastante poder delas, sua liga\xE7\xE3o com o combate deve aumentar e este poder vai ficar mais forte\" - Eva"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904129
+    m_Localized: Quantidade de Ecos de combate 1<sprite=194>2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904130
+    m_Localized: Poder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904131
+    m_Localized: "\"Sua liga\xE7\xE3o com o reino de Orin \xE9 forte. Parece ficar mais forte quanto mais voc\xEA faz aqui. Que tal concluir algumas tarefas? Sempre preciso de mais rabanetes para minha geleia\" - Eva"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8818639323414528
+    m_Localized: Avassalador
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8818639323414529
+    m_Localized: "\"Com grandes poderes v\xEAm grandes... N\xE3o, estou brincando. Mas melhorar sua liga\xE7\xE3o vai exigir bem mais trabalho do que da \xFAltima vez\" - Eva"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8818639323414530
+    m_Localized: Quantidade de Ecos de tarefas 2<sprite=194>3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904133
+    m_Localized: Continue nadando...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904134
+    m_Localized: "\"\xC0s vezes voc\xEA pode acabar sobre a \xE1gua, mas n\xE3o fique muito tempo. N\xE3o \xE9 seguro, por mais r\xE1pido que voc\xEA ande\" - Gill"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904136
+    m_Localized: Ventos se juntando
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904137
+    m_Localized: "\"Quanto mais longe voc\xEA vai, mais r\xE1pido anda\" - Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904139
+    m_Localized: Foco. Velocidade. Eu sou a velocidade.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904140
+    m_Localized: '"Lembra alguma coisa?" - Orin'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904142
+    m_Localized: "Mais r\xE1pido que o rel\xE2mpago"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904143
+    m_Localized: "Agora voc\xEA \xE9 a pessoa mais r\xE1pida do mundo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904145
+    m_Localized: Velozes e Flora-osos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904146
+    m_Localized: "\u201CSe voc\xEA colher mais r\xE1pido, talvez consigamos comer antes do p\xF4r do sol.\u201D \u2014 Flora"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904148
+    m_Localized: Hora do cultivo turbo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904149
+    m_Localized: "\u201CPlanta-planta, colhe-colhe \u2014 tarefas num clique-clique.\u201D \u2014 Tillman"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904151
+    m_Localized: Protocolo de carinho da Mildred
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904152
+    m_Localized: "\u201CCarinho primeiro. Tarefas depois. N\xE3o sou eu que fa\xE7o as regras\u201D \u2014 Mildred"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904154
+    m_Localized: O vendaval do Velho Mineiro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904155
+    m_Localized: "\u201CFa\xE7a r\xE1pido, fa\xE7a direito \u2014 pisque e j\xE1 est\xE1 na pr\xF3xima\u201D \u2014 O Velho Mineiro"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904157
+    m_Localized: "A rodada rel\xE2mpago do Velho Mineiro"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904158
+    m_Localized: "\u201CCinquenta servi\xE7os no tempo de cinco\u201D \u2014 O Velho Mineiro"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904160
+    m_Localized: A corrida temporal da Eva
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904161
+    m_Localized: "\u201CDobrei o tempo um pouquinho. N\xE3o desperdice\u201D \u2014 Eva"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904163
+    m_Localized: Corrida contra a gosma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904164
+    m_Localized: "\u201CRegra um: se sacode, acabou de se voluntariar\u201D \u2014 O Velho Mineiro"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904166
+    m_Localized: Silencie o chocalho
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904167
+    m_Localized: "\u201COssos devem descansar. Ajude-os a lembrar\u201D \u2014 O Velho Mineiro"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904169
+    m_Localized: Desmontagem arcana
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904170
+    m_Localized: "\u201CMire nas juntas; o resto obedece \xE0 f\xEDsica\u201D \u2014 Eva"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904172
+    m_Localized: "Cal deir\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904173
+    m_Localized: "\"\xC9 assim que se fala, n\xE9?\" - Orin\n\n<b>Este \xE9 outro recurso dos Moradores. Voc\xEA vai ganhar bastante poder aqui.</b>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904175
+    m_Localized: "Um interesse espec\xEDfico"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904176
+    m_Localized: Diga ao mundo o que procura. Talvez ele atenda. - Orin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904178
+    m_Localized: Um pouco a mais
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904179
+    m_Localized: "Dez pequenas vit\xF3rias. Um presente inesperado. - Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904181
+    m_Localized: "As pe\xE7as que faltam"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904182
+    m_Localized: "Voc\xEA contou seus triunfos. Agora conte o que deixou passar. - Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904184
+    m_Localized: Em boa companhia
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904185
+    m_Localized: Seu eco lembra do trabalho. Responda. - Orin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904187
+    m_Localized: "Notas de atualiza\xE7\xE3o autom\xE1tica"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904188
+    m_Localized: "\u201CAprovei sua corre\xE7\xE3o \u2014 carne, compile\u201D \u2014 Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904190
+    m_Localized: Protocolo de crescimento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904191
+    m_Localized: "\u201CAs folhas lembram sua forma; voc\xEA tamb\xE9m \u2014 retome-a\u201D \u2014 Orin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904193
+    m_Localized: Protocolo de fogo baixo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904194
+    m_Localized: "\u201CO poder \xE9 paciente; deixe o fogo baixinho e a mistura decidir\u201D \u2014 Eva"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904196
+    m_Localized: "Confus\xE3o na infus\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904197
+    m_Localized: "\u201CN\xE3o tema o redemoinho; tema a imobilidade\u201D \u2014 Eva"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904199
+    m_Localized: Fio de chama azul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904200
+    m_Localized: "\u201CPulso leve, ponta firme \u2014 cr\xEDticos v\xEAm do controle, n\xE3o da for\xE7a\u201D \u2014 Ivan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904202
+    m_Localized: Sentido do veio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904203
+    m_Localized: "\u201CTudo tem um veio \u2014 corte a favor, depois atravesse\u201D \u2014 Ivan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904205
+    m_Localized: "Mem\xF3ria do fio"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904206
+    m_Localized: "\u201CMantenha o \xE2ngulo em que confia e repita \u2014 precis\xE3o cria sua pr\xF3pria sorte\u201D \u2014 Ivan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904208
+    m_Localized: Um corte certeiro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904209
+    m_Localized: "\u201CUma linha limpa vale mais que cinco tortas\u201D \u2014 Ivan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904211
+    m_Localized: "Rea\xE7\xE3o na cadeia de suprimentos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904212
+    m_Localized: "\u201CMais entra, mais sai \u2014 a alquimia respeita o volume\u201D \u2014 Eva"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904214
+    m_Localized: "Requisi\xE7\xE3o: excesso"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904215
+    m_Localized: "\u201CSim, eu disse tudo \u2014 agrade\xE7a quando multiplicar\u201D \u2014 Eva"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904217
+    m_Localized: Teste de capacidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904218
+    m_Localized: "\u201CVamos descobrir a capacidade ultrapassando-a\u201D \u2014 Eva"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904220
+    m_Localized: Mais gera mais
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834121904221
+    m_Localized: "\u201CProve a regra da abund\xE2ncia \u2014 mais gera mais\u201D \u2014 Eva"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834126098432
+    m_Localized: Capacidade conquistada
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8817834126098433
+    m_Localized: "\u201CN\xE3o encontramos limites; criamos novos pontos de partida\u201D \u2014 Eva"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22109034010525696
+    m_Localized: Assustadoramente bom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22109034035691520
+    m_Localized: "\"Estou decorando meu quintal. Pode trazer Pumking?\" \u2014 Eva"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22109034035691521
+    m_Localized: Desbloqueie o mapa Assombrado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 34882991914631168
+    m_Localized: Pela geleia! - Recontado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 34882991939796992
+    m_Localized: "\"Nyeh heh heh, aventureiro. Sou a bruxa que vai ensinar voc\xEA a cuidar do solo. O qu\xEA, achou que eu ia fazer po\xE7\xF5es? Saia daqui com esses estere\xF3tipos. E traga cinquenta rabanetes bem crescidos. Como prova, definitivamente n\xE3o para minha geleia de rabanete\" \u2014 Definitivamente n\xE3o \xE9 a nossa Eva"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 34882991939796993
+    m_Localized: "1,000 de experi\xEAncia em Cultivo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38005472116490240
+    m_Localized: As viagens de Gilliver
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38005472141656064
+    m_Localized: "\"Um amigo meu disse que viajou pelo mundo e encontrou todo tipo de coisa maluca. N\xE3o tenho tempo para isso, mas nosso rio tem bastante peixe bacana. Traga um mont\xE3o para eu mostrar que n\xE3o perco nada ficando por aqui. Vou fazer valer o esfor\xE7o\" \u2014 Gill"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38005472141656065
+    m_Localized: "15,000 de experi\xEAncia em Pesca"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000000
+    m_Localized: "Campos s\xF3 nossos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000001
+    m_Localized: "Flora e Tillman explicam os Campos. Conclua tarefas da planta correspondente nas aventuras para encontrar pacotes de sementes. Cada colheita paga aumenta a experi\xEAncia compartilhada deles. Regue uma vez para reduzir o tempo de crescimento pela metade. Os Campos crescem somente enquanto o jogo est\xE1 em execu\xE7\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000002
+    m_Localized: "Permite descobrir sementes das plantas correspondentes. Sem sementes, experi\xEAncia ou constru\xE7\xE3o de canteiros gr\xE1tis."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000010
+    m_Localized: Nosso primeiro canteiro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000011
+    m_Localized: "Flora e Tillman: chegue ao n\xEDvel 1 dos g\xEAmeos e traga os materiais para Barkley construir esta expans\xE3o. \xC9 preciso concluir a constru\xE7\xE3o anterior e ter acesso \xE0s fontes de coleta. Uma entrega paga a constru\xE7\xE3o inteira."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000012
+    m_Localized: "Capacidade dos Campos: 1 canteiro e 0 lotes de pomar. Sem outro pagamento ou tempo de constru\xE7\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000020
+    m_Localized: "Espa\xE7o para crescer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000021
+    m_Localized: "Flora e Tillman: chegue ao n\xEDvel 5 dos g\xEAmeos e traga os materiais para Barkley construir esta expans\xE3o. \xC9 preciso concluir a constru\xE7\xE3o anterior e ter acesso \xE0s fontes de coleta. Uma entrega paga a constru\xE7\xE3o inteira."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000022
+    m_Localized: "Capacidade dos Campos: 2 canteiros e 0 lotes de pomar. Sem outro pagamento ou tempo de constru\xE7\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000030
+    m_Localized: Recupere o campo antigo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000031
+    m_Localized: "Flora e Tillman: chegue ao n\xEDvel 35 dos g\xEAmeos e traga os materiais para Barkley construir esta expans\xE3o. \xC9 preciso concluir a constru\xE7\xE3o anterior e ter acesso \xE0s fontes de coleta. Uma entrega paga a constru\xE7\xE3o inteira."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000032
+    m_Localized: "Capacidade dos Campos: 3 canteiros e 0 lotes de pomar. Sem outro pagamento ou tempo de constru\xE7\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000040
+    m_Localized: Uma segunda fileira
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000041
+    m_Localized: "Flora e Tillman: chegue ao n\xEDvel 65 dos g\xEAmeos e traga os materiais para Barkley construir esta expans\xE3o. \xC9 preciso concluir a constru\xE7\xE3o anterior e ter acesso \xE0s fontes de coleta. Uma entrega paga a constru\xE7\xE3o inteira."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000042
+    m_Localized: "Capacidade dos Campos: 4 canteiros e 0 lotes de pomar. Sem outro pagamento ou tempo de constru\xE7\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000050
+    m_Localized: "Al\xE9m do campo antigo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000051
+    m_Localized: "Flora e Tillman: chegue ao n\xEDvel 95 dos g\xEAmeos e traga os materiais para Barkley construir esta expans\xE3o. \xC9 preciso concluir a constru\xE7\xE3o anterior e ter acesso \xE0s fontes de coleta. Uma entrega paga a constru\xE7\xE3o inteira."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000052
+    m_Localized: "Capacidade dos Campos: 5 canteiros e 0 lotes de pomar. Sem outro pagamento ou tempo de constru\xE7\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000060
+    m_Localized: Os Campos completos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000061
+    m_Localized: "Flora e Tillman: chegue ao n\xEDvel 125 dos g\xEAmeos e traga os materiais para Barkley construir esta expans\xE3o. \xC9 preciso concluir a constru\xE7\xE3o anterior e ter acesso \xE0s fontes de coleta. Uma entrega paga a constru\xE7\xE3o inteira."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000062
+    m_Localized: "Capacidade dos Campos: 6 canteiros e 0 lotes de pomar. Sem outro pagamento ou tempo de constru\xE7\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000070
+    m_Localized: "Ra\xEDzes para amanh\xE3"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000071
+    m_Localized: "Flora e Tillman: chegue ao n\xEDvel 150 dos g\xEAmeos e traga os materiais para Barkley construir esta expans\xE3o. \xC9 preciso concluir a constru\xE7\xE3o anterior e ter acesso \xE0s fontes de coleta. Uma entrega paga a constru\xE7\xE3o inteira."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000072
+    m_Localized: "Capacidade dos Campos: 6 canteiros e 2 lotes de pomar. Sem outro pagamento ou tempo de constru\xE7\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000080
+    m_Localized: "Mais duas ra\xEDzes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000081
+    m_Localized: "Flora e Tillman: chegue ao n\xEDvel 185 dos g\xEAmeos e traga os materiais para Barkley construir esta expans\xE3o. \xC9 preciso concluir a constru\xE7\xE3o anterior e ter acesso \xE0s fontes de coleta. Uma entrega paga a constru\xE7\xE3o inteira."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000082
+    m_Localized: "Capacidade dos Campos: 6 canteiros e 4 lotes de pomar. Sem outro pagamento ou tempo de constru\xE7\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000090
+    m_Localized: "A \xFAltima fileira do pomar"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000091
+    m_Localized: "Flora e Tillman: chegue ao n\xEDvel 225 dos g\xEAmeos e traga os materiais para Barkley construir esta expans\xE3o. \xC9 preciso concluir a constru\xE7\xE3o anterior e ter acesso \xE0s fontes de coleta. Uma entrega paga a constru\xE7\xE3o inteira."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000000092
+    m_Localized: "Capacidade dos Campos: 6 canteiros e 6 lotes de pomar. Sem outro pagamento ou tempo de constru\xE7\xE3o."
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

@@ -32,7 +32,7 @@ namespace TimelessEchoes.UI.Toolkit
                 row.rarity = ToolkitGameplay.E(heading, "item-stat-rarity");
                 row.rarity.Add(new ToolkitRarityStar());
                 row.tier = Text(row.rarity, "", 6);
-                Text(heading, "ID: " + resource.resourceID, 6).AddToClassList("item-stat-id");
+                Text(heading, ToolkitLocalization.Text("statistics.resource-id", "ID: {0}", resource.resourceID), 6).AddToClassList("item-stat-id");
                 row.count = Text(text, "", 9); row.count.AddToClassList("item-stat-count");
                 var fields = ToolkitGameplay.E(text, "item-stat-fields");
                 row.totals = Text(fields, "", 4.7f); row.totals.AddToClassList("item-stat-totals");
@@ -40,7 +40,7 @@ namespace TimelessEchoes.UI.Toolkit
                 itemRows.Add(resource, row);
             }
             foreach (ItemStatsPanelUI.SortMode mode in Enum.GetValues(typeof(ItemStatsPanelUI.SortMode)))
-                itemSortButtons.Add(Action(footer, "item-sort-" + mode, mode.ToString(), () => SetItemSort(mode)));
+                itemSortButtons.Add(Action(footer, "item-sort-" + mode, ItemSortLabel(mode), () => SetItemSort(mode)));
             itemContent.RegisterCallback<GeometryChangedEvent>(_ => SizeItems()); SizeItems(); RefreshItems();
         }
         private static VisualElement Column(VisualElement parent)
@@ -57,6 +57,14 @@ namespace TimelessEchoes.UI.Toolkit
             var index = 0;
             foreach (var row in itemContent.Children()) { row.style.width = width; row.style.marginRight = index++ % columns == columns - 1 ? 0 : 8; }
         }
+        private static string ItemSortLabel(ItemStatsPanelUI.SortMode mode) => mode switch
+        {
+            ItemStatsPanelUI.SortMode.Tier => ToolkitLocalization.Text("statistics.sort-tier", "Tier"),
+            ItemStatsPanelUI.SortMode.Collected => ToolkitLocalization.Text("statistics.sort-collected", "Collected"),
+            ItemStatsPanelUI.SortMode.Spent => ToolkitLocalization.Text("statistics.sort-spent", "Spent"),
+            ItemStatsPanelUI.SortMode.Unknown => ToolkitLocalization.Text("statistics.sort-unknown", "Unknown"),
+            _ => ToolkitLocalization.Text("statistics.sort-default", "Default")
+        };
         public void SetItemSort(ItemStatsPanelUI.SortMode mode) { itemSort = mode; if (IsOpen && selectedTab == 5) RefreshItems(); }
         private void RefreshItems()
         {
@@ -65,10 +73,10 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 var resource = ordered[index]; var row = itemRows[resource];
                 if (itemContent.IndexOf(row.root) != index) itemContent.Insert(index, row.root); var data = items.Describe(resource, resourceManager, definition.itemTiers.Length);
-                row.title.text = data.name; row.count.text = data.count + " available";
+                row.title.text = data.name; row.count.text = ToolkitLocalization.Text("statistics.available-count", "{0} available", data.count);
                 row.tier.text = data.tier.ToString();
                 row.rarity.style.display = data.icon && !resource.DisableAlterEcho ? DisplayStyle.Flex : DisplayStyle.None;
-                row.rarity.tooltip = "Resource tier " + data.tier; row.totals.text = data.totals; row.detail.text = data.detail;
+                row.rarity.tooltip = ToolkitLocalization.Text("statistics.resource-tier", "Resource tier {0}", data.tier); row.totals.text = data.totals; row.detail.text = data.detail;
                 row.icon.sprite = data.icon; row.icon.style.display = data.icon ? DisplayStyle.Flex : DisplayStyle.None;
                 if (data.icon) { var size = data.icon.rect.size * (16f / data.icon.pixelsPerUnit); row.icon.style.width = size.x; row.icon.style.height = size.y; }
                 for (var tier = 1; tier <= 8; tier++) row.root.EnableInClassList("tier-" + tier, data.icon && tier == Mathf.Clamp(data.tier, 1, 8));

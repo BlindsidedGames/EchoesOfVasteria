@@ -77,24 +77,24 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var record = tracker ? tracker.GetTaskRecord(task) : null;
             var completed = record?.TotalCompleted ?? 0; var known = completed > 0;
-            var totals = $"Completions: {CalcUtils.FormatNumber(completed, true)}\nTime on Task: {CalcUtils.FormatTime(record?.TimeSpent ?? 0)}\nXP Gained: {CalcUtils.FormatNumber(record?.XpGained ?? 0, true)}";
+            var totals = ToolkitLocalization.Text("statistics.task-totals", "Completions: {0}\nTime on Task: {1}\nXP Gained: {2}", CalcUtils.FormatNumber(completed, true), CalcUtils.FormatTime(record?.TimeSpent ?? 0), CalcUtils.FormatNumber(record?.XpGained ?? 0, true));
             var detail = string.Empty;
             if (known)
             {
                 var weight = TaskWeightService.GetEffectiveWeight(task, worldX); if (inRun && (!config || !categories.ContainsKey(task))) weight = 0;
                 var weightText = CalcUtils.FormatNumber(Mathf.Max(0, weight), true);
-                var distance = $"Min Distance: {CalcUtils.FormatNumber(task.GetEffectiveMinX(), true)}";
-                if (task.enforceMaxDistance) distance += ", Max Distance: " + (float.IsInfinity(task.maxX) ? "Infinity" : CalcUtils.FormatNumber(task.maxX, true));
+                var distance = ToolkitLocalization.Text("statistics.task-min-distance", "Min Distance: {0}", CalcUtils.FormatNumber(task.GetEffectiveMinX(), true));
+                if (task.enforceMaxDistance) distance += ToolkitLocalization.Text("statistics.task-max-distance", ", Max Distance: {0}", float.IsInfinity(task.maxX) ? ToolkitLocalization.Text("common.infinity", "Infinity") : CalcUtils.FormatNumber(task.maxX, true));
                 if (Chance(task, out var chance))
                 {
                     chance = Mathf.Clamp01(float.IsFinite(chance) ? chance : 0);
                     var next = TaskWeightService.TryGetNextThreshold(task, out var remaining) ? remaining : 0;
-                    var improvement = next > 0 ? $"Next improvement: {CalcUtils.FormatNumber(next, true)} Tasks" : "Next improvement: Maxed";
-                    detail = $"Spawn chance: {chance * 100:0.##}% ({weightText})\n{improvement}\n{distance}";
+                    var improvement = next > 0 ? ToolkitLocalization.Text("statistics.task-improvement", "Next improvement: {0} Tasks", CalcUtils.FormatNumber(next, true)) : ToolkitLocalization.Text("statistics.task-improvement-maxed", "Next improvement: Maxed");
+                    detail = ToolkitLocalization.Text("statistics.task-chance", "Spawn chance: {0:0.##}% ({1})\n{2}\n{3}", chance * 100, weightText, improvement, distance);
                 }
-                else detail = $"Spawn chance: -- ({weightText})\nNext improvement: --\n{distance}";
+                else detail = ToolkitLocalization.Text("statistics.task-no-chance", "Spawn chance: -- ({0})\nNext improvement: --\n{1}", weightText, distance);
             }
-            return (known ? task.taskName : "???", totals, detail, known ? task.taskIcon : null, known, TaskWeightService.IsToggleEnabled(task));
+            return (known ? ToolkitLocalization.Text("task." + task.name, task.taskName) : "???", totals, detail, known ? task.taskIcon : null, known, TaskWeightService.IsToggleEnabled(task));
         }
     }
 }

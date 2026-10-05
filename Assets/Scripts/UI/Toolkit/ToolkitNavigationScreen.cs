@@ -70,8 +70,8 @@ namespace TimelessEchoes.UI.Toolkit
                 button.AddToClassList("button");
                 button.RegisterCallback<PointerDownEvent>(e => { if (e.button == 0) Audio.AudioManager.Instance?.PlayUIButtonClick(); });
                 button.RegisterCallback<NavigationSubmitEvent>(_ => Audio.AudioManager.Instance?.PlayUIButtonClick());
-                if(entry.id=="stats") { button.Add(new ToolkitStatisticsGlyph()); button.tooltip="Statistics"; }
-                else if (entry.action == NavAction.Close) { button.text="×";button.AddToClassList("close-control");button.tooltip="Close window"; }
+                if(entry.id=="stats") { button.Add(new ToolkitStatisticsGlyph()); ToolkitLocalization.BindTooltip(button,"navigation.stats-tooltip","Statistics"); }
+                else if (entry.action == NavAction.Close) { button.text="×";button.AddToClassList("close-control");ToolkitLocalization.BindTooltip(button,"navigation.close-tooltip","Close window"); }
                 else if (entry.action == NavAction.Window && entry.window == TownWindowManager.Window.Farm)
                 {
                     var label = new Label { name = "fields-navigation-label", text = FarmContent.Load()?.DisplayName ?? "Fields", pickingMode = PickingMode.Ignore };
@@ -266,4 +266,3 @@ namespace TimelessEchoes.UI.Toolkit
         private void OnDestroy() { if (panel) Destroy(panel); }
     }
 }
-

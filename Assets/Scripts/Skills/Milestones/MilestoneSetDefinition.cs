@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,10 +17,10 @@ namespace TimelessEchoes.Skills
         [SerializeField] private List<SetBonusEffectEntry> sixPieceEffects = new();
 
         public MilestoneSet Set => set;
-        public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
+        public string DisplayName => ToolkitLocalization.Text("milestone-set." + name + ".name", string.IsNullOrWhiteSpace(displayName) ? name : displayName);
         public Sprite Icon => icon;
-        public string ThreePieceDescription => threePieceDescription;
-        public string SixPieceDescription => sixPieceDescription;
+        public string ThreePieceDescription => ToolkitLocalization.Text("milestone-set." + name + ".three", threePieceDescription);
+        public string SixPieceDescription => ToolkitLocalization.Text("milestone-set." + name + ".six", sixPieceDescription);
         public IReadOnlyList<SetBonusEffectEntry> ThreePieceEffects => threePieceEffects;
         public IReadOnlyList<SetBonusEffectEntry> SixPieceEffects => sixPieceEffects;
 

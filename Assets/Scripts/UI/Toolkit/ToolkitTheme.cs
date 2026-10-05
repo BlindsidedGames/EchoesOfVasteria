@@ -30,7 +30,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             root.AddToClassList("eov-theme");
             if (styles) root.styleSheets.Add(styles);
-            root.style.unityFontDefinition = FontDefinition.FromFont(font);
+            ToolkitLocaleFonts.Bind(root, font);
             root.style.color = textColor;
         }
 

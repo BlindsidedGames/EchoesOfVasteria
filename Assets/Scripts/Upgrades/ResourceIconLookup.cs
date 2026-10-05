@@ -40,6 +40,28 @@ namespace TimelessEchoes.Upgrades
             // With the alternating layout, each unknown sprite is adjacent: +1 from its known index.
             idToUnknownIndex = new Dictionary<int, int>(idToIndex.Count);
             foreach (var pair in idToIndex) idToUnknownIndex[pair.Key] = pair.Value + 1;
+
+            // Authored seed packs already occupy named slots in both TMP and TextCore.
+            // Reuse their drop variants and shared unknown pack; these slots do not alternate.
+            idToIndex[85] = 226; // Radish Seed Pack
+            idToIndex[86] = 216; // Corn Seed Pack
+            idToIndex[87] = 234; // Wheat Seed Pack
+            idToIndex[88] = 233; // Watermelone Seed Pack
+            idToIndex[89] = 215; // Carrot Seed Pack
+            idToIndex[90] = 224; // Spud Seed Pack
+            idToIndex[91] = 232; // Tomato Seed Pack
+            idToIndex[92] = 214; // Lettuce Seed Pack
+            idToIndex[93] = 217; // Cucumber Seed Pack
+            idToIndex[94] = 221; // Leek Seed Pack
+            idToIndex[95] = 222; // Parsnip Seed Pack
+            idToIndex[96] = 213; // Pepper Seed Pack
+            idToIndex[97] = 227; // Chillie Seed Pack
+            idToIndex[98] = 225; // Pumking Seed Pack
+            idToIndex[99] = 228; // Strawberry Seed Pack
+            idToIndex[100] = 230; // Funion Seed Pack
+            idToIndex[101] = 226; // Turnip Seed Pack
+            for (var id = 85; id <= 101; id++) idToUnknownIndex[id] = 235;
+
         }
 
 

@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,27 +15,27 @@ namespace TimelessEchoes.Gear.UI
 	public sealed class ForgeStatisticsPresentation
 	{
 		private Dictionary<string, StatDefSO> idToStat;
-		public string BuildStatsText(GameData.ForgeStats forge)
+		public string BuildStatsText(GameData.ForgeStats forge, bool preserveSectionIds = false)
 		{
 			var sb = new StringBuilder(1024);
 
 			// Title
-			sb.AppendLine("<size=120%><b>Forge Stats</b></size>");
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.title", "<size=120%><b>Forge Stats</b></size>"));
 
 			if (forge == null)
 			{
-				sb.AppendLine("No data yet.");
+				sb.AppendLine(ToolkitLocalization.Text("forge.stats.no-data", "No data yet."));
 				return sb.ToString();
 			}
 
 			// Totals
-			sb.AppendLine("<size=105%><b>Totals</b></size>");
-			sb.AppendLine($"• Total Crafts: {forge.TotalCrafts:N0}");
-			sb.AppendLine($"• Equipped From Craft: {forge.TotalEquippedFromCraft:N0}");
-			sb.AppendLine($"• Total Salvaged: {forge.TotalSalvaged:N0}");
+			sb.AppendLine(SectionTitle("forge.stats.section-totals", "Totals", preserveSectionIds));
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.total-crafts", "• Total Crafts: {0:N0}", forge.TotalCrafts));
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.equipped-from-craft", "• Equipped From Craft: {0:N0}", forge.TotalEquippedFromCraft));
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.total-salvaged", "• Total Salvaged: {0:N0}", forge.TotalSalvaged));
 
 			// Ivan
-			sb.AppendLine("<size=105%><b>Ivan</b></size>");
+			sb.AppendLine(SectionTitle("forge.stats.section-ivan", "Ivan", preserveSectionIds));
 			var svc = CraftingService.Instance;
 			int ivLevel; float ivCurrent; float ivNeeded;
 			if (svc != null)
@@ -46,35 +47,35 @@ namespace TimelessEchoes.Gear.UI
 			{
 				ivLevel = forge.IvanLevelAtCraft; ivCurrent = forge.IvanXpAtCraft; ivNeeded = Mathf.Max(ivCurrent, 1f);
 			}
-			sb.AppendLine($"• Level: {ivLevel:N0}");
-			sb.AppendLine($"• XP: {ivCurrent:N0} / {ivNeeded:N0}");
-			sb.AppendLine($"• Total XP Gained: {forge.IvanXpGainedTotal:N0} (level-ups: {forge.IvanLevelUpsFromCrafts:N0})");
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.level", "• Level: {0:N0}", ivLevel));
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.xp", "• XP: {0:N0} / {1:N0}", ivCurrent, ivNeeded));
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.total-xp-gained-level-ups", "• Total XP Gained: {0:N0} (level-ups: {1:N0})", forge.IvanXpGainedTotal, forge.IvanLevelUpsFromCrafts));
 
 			// Autocraft
-			sb.AppendLine("<size=105%><b>Autocraft</b></size>");
-			sb.AppendLine($"• Sessions: {forge.TotalAutocraftSessions:N0}, Crafts: {forge.AutocraftCrafts:N0}");
-			AppendAll(sb, forge.AutocraftStopReasons, formatKey: k => FormatStopReason(k), prefix: "• Stop Reasons:");
+			sb.AppendLine(SectionTitle("forge.stats.section-autocraft", "Autocraft", preserveSectionIds));
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.sessions-crafts", "• Sessions: {0:N0}, Crafts: {1:N0}", forge.TotalAutocraftSessions, forge.AutocraftCrafts));
+			AppendAll(sb, forge.AutocraftStopReasons, formatKey: k => FormatStopReason(k), prefix: ToolkitLocalization.Text("forge.stats.stop-reasons", "• Stop Reasons:"));
 
 			// Quality (Equipped vs Best Rolled by slot)
-			AppendQualitySection(sb, forge);
+			AppendQualitySection(sb, forge, preserveSectionIds);
 			// Best By Core (Quality)
 			if (forge.BestAbsolutePieceScoreByCore != null && forge.BestAbsolutePieceScoreByCore.Count > 0)
 			{
 				var (_, maxBestCore, _) = ComputeTheoreticalBestStatScoreRange();
-				sb.AppendLine("• Best By Core:");
+				sb.AppendLine(ToolkitLocalization.Text("forge.stats.best-core", "• Best By Core:"));
 				var ordered = OrderCoresByPreferred(forge.BestAbsolutePieceScoreByCore.Keys);
 				foreach (var core in ordered)
 				{
 					forge.BestAbsolutePieceScoreByCore.TryGetValue(core, out var bestAbs);
 					float pct = maxBestCore > 0f ? Mathf.Clamp01(bestAbs / maxBestCore) * 100f : 0f;
-					sb.AppendLine($"  • core {core}: {pct:0.#}%");
+					sb.AppendLine(ToolkitLocalization.Text("forge.stats.core-quality", "  • core {0}: {1:0.#}%", core, pct));
 				}
 			}
 			// Best By Rarity (Quality)
 			if (forge.BestAbsolutePieceScoreByRarity != null && forge.BestAbsolutePieceScoreByRarity.Count > 0)
 			{
 				var (_, maxBestRarity, _) = ComputeTheoreticalBestStatScoreRange();
-				sb.AppendLine("• Best By Rarity:");
+				sb.AppendLine(ToolkitLocalization.Text("forge.stats.best-rarity", "• Best By Rarity:"));
 				foreach (var r in OrderRaritiesByTier(forge.BestAbsolutePieceScoreByRarity.Keys))
 				{
 					forge.BestAbsolutePieceScoreByRarity.TryGetValue(r, out var bestAbs);
@@ -84,37 +85,37 @@ namespace TimelessEchoes.Gear.UI
 			}
 
 			// Salvage
-			sb.AppendLine("<size=105%><b>Salvage</b></size>");
-			sb.AppendLine($"• Items: {forge.SalvageItems:N0}  • Entries: {forge.SalvageEntries:N0}  • Avg/Item: {SafeDiv(forge.SalvageEntries, forge.SalvageItems):N2}");
-			AppendAll(sb, forge.SalvagesByRarity, formatKey: k => $"rarity {k}");
-			AppendAll(sb, forge.SalvagesByCore, formatKey: k => $"core {k}");
-			AppendAll(sb, forge.SalvageYieldPerResource?.ToDictionary(p => p.Key, p => p.Value.sum), formatKey: k => $"gained {k}");
+			sb.AppendLine(SectionTitle("forge.stats.section-salvage", "Salvage", preserveSectionIds));
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.items-entries-avg-item", "• Items: {0:N0}  • Entries: {1:N0}  • Avg/Item: {2:N2}", forge.SalvageItems, forge.SalvageEntries, SafeDiv(forge.SalvageEntries, forge.SalvageItems)));
+			AppendAll(sb, forge.SalvagesByRarity, formatKey: k => ToolkitLocalization.Text("forge.stats.rarity", "rarity {0}", k));
+			AppendAll(sb, forge.SalvagesByCore, formatKey: k => ToolkitLocalization.Text("forge.stats.core", "core {0}", k));
+			AppendAll(sb, forge.SalvageYieldPerResource?.ToDictionary(p => p.Key, p => p.Value.sum), formatKey: k => ToolkitLocalization.Text("forge.stats.gained", "gained {0}", k));
 
 			// Distributions
-			sb.AppendLine("<size=105%><b>Distributions</b></size>");
+			sb.AppendLine(SectionTitle("forge.stats.section-distributions", "Distributions", preserveSectionIds));
 			// Overall (rarity)
-			sb.AppendLine("• Overall:");
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.overall", "• Overall:"));
 			if (forge.CraftsByRarity != null && forge.CraftsByRarity.Count > 0)
 				AppendTopK(sb, forge.CraftsByRarity, forge.CraftsByRarity.Count, formatKey: k => k, total: forge.TotalCrafts);
 			// Per-core rarity distributions
-			sb.AppendLine("• Cores:");
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.cores", "• Cores:"));
 			AppendCoreRarityDistributions(sb, forge);
 
 			// Upgrades
-			sb.AppendLine("<size=105%><b>Upgrades</b></size>");
+			sb.AppendLine(SectionTitle("forge.stats.section-upgrades", "Upgrades", preserveSectionIds));
 			AppendAll(sb, forge.UpgradesBySlot, formatKey: k => k);
-			sb.AppendLine($"• Avg Crafts / Upgrade: {forge.AverageCraftsPerUpgrade:N2}  • Longest Gap: {forge.MaxCraftsBetweenUpgrades:N0}");
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.avg-crafts-upgrade-longest-gap", "• Avg Crafts / Upgrade: {0:N2}  • Longest Gap: {1:N0}", forge.AverageCraftsPerUpgrade, forge.MaxCraftsBetweenUpgrades));
 
 			// Per-Slot Totals (sorted by slot name)
-			sb.AppendLine("<size=105%><b>Per-Slot Totals</b></size>");
+			sb.AppendLine(SectionTitle("forge.stats.section-per-slot-totals", "Per-Slot Totals", preserveSectionIds));
 			AppendCountsByKey(sb, forge.CraftsBySlotTotals, "");
 
 			// Stat Rolls (highlights)
-			sb.AppendLine("<size=105%><b>Stat Rolls</b></size>");
-			AppendStatsInPreferredOrder(sb, forge.CumulativeStatTotalsByStat, formatKey: k => GetIconForStatId(k), prefix: "• Totals:", valueFormat: v => Blindsided.Utilities.CalcUtils.FormatNumber(v, true));
+			sb.AppendLine(SectionTitle("forge.stats.section-stat-rolls", "Stat Rolls", preserveSectionIds));
+			AppendStatsInPreferredOrder(sb, forge.CumulativeStatTotalsByStat, formatKey: k => GetIconForStatId(k), prefix: ToolkitLocalization.Text("forge.stats.totals", "• Totals:"), valueFormat: v => Blindsided.Utilities.CalcUtils.FormatNumber(v, true));
 			if (forge.HighestRollByStat != null && forge.HighestRollByStat.Count > 0)
 			{
-				sb.AppendLine("• Highest:");
+				sb.AppendLine(ToolkitLocalization.Text("forge.stats.highest", "• Highest:"));
 				var entries = new List<(string icon, string cur, string max)>();
 				int maxLen = 0;
 				foreach (var id in OrderStatIdsByPreferred(forge.HighestRollByStat.Keys))
@@ -135,12 +136,12 @@ namespace TimelessEchoes.Gear.UI
 			}
 			// Describe high rolls threshold dynamically from saved settings
 			var topPct = Mathf.Clamp01(1f - forge.HighRollTopPercentThreshold) * 100f;
-			AppendStatsInPreferredOrder(sb, forge.HighRollsByStat, formatKey: k => GetIconForStatId(k), prefix: $"• High Rolls | Times rolled in top {topPct:0.#}% of stat:");
+			AppendStatsInPreferredOrder(sb, forge.HighRollsByStat, formatKey: k => GetIconForStatId(k), prefix: ToolkitLocalization.Text("forge.stats.high-rolls-times-rolled-in-top-of-stat", "• High Rolls | Times rolled in top {0:0.#}% of stat:", topPct));
 
 			// Conversions moved to bottom
-			sb.AppendLine("<size=105%><b>Conversions</b></size>");
-			sb.AppendLine($"• Ingot Conversions: {forge.IngotConversions:N0}");
-			sb.AppendLine($"• Core Conversions: {forge.CoreConversions:N0}");
+			sb.AppendLine(SectionTitle("forge.stats.section-conversions", "Conversions", preserveSectionIds));
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.ingot-conversions", "• Ingot Conversions: {0:N0}", forge.IngotConversions));
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.core-conversions", "• Core Conversions: {0:N0}", forge.CoreConversions));
 			// Totals at top
 			// Guard against null maps in old saves
 			if (forge.CrystalsCraftedByResource == null) forge.CrystalsCraftedByResource = new Dictionary<string, double>();
@@ -149,22 +150,24 @@ namespace TimelessEchoes.Gear.UI
 			double totalCrystals = forge.CrystalsCraftedByResource.Values.Sum();
 			double totalIngots = forge.IngotsCraftedByResource.Values.Sum();
 			double totalCores = forge.CoresCraftedByResource.Values.Sum();
-			sb.AppendLine($"• Total Crystals: {Blindsided.Utilities.CalcUtils.FormatNumber(totalCrystals, true)}");
-			sb.AppendLine($"• Total Ingots: {Blindsided.Utilities.CalcUtils.FormatNumber(totalIngots, true)}");
-			sb.AppendLine($"• Total Cores: {Blindsided.Utilities.CalcUtils.FormatNumber(totalCores, true)}");
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.total-crystals", "• Total Crystals: {0}", Blindsided.Utilities.CalcUtils.FormatNumber(totalCrystals, true)));
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.total-ingots", "• Total Ingots: {0}", Blindsided.Utilities.CalcUtils.FormatNumber(totalIngots, true)));
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.total-cores", "• Total Cores: {0}", Blindsided.Utilities.CalcUtils.FormatNumber(totalCores, true)));
 
-			sb.AppendLine("Created:");
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.created", "Created:"));
 			// Group created resources by core and add a 20% spacer between core groups, mirroring Consumed spacing
 			RenderCreatedByCore(sb, forge.CrystalsCraftedByResource, forge.ChunksCraftedByResource, forge.CoresCraftedByResource);
 			if (forge.ConversionSpentByResource != null && forge.ConversionSpentByResource.Count > 0)
 			{
-				sb.AppendLine("Consumed:");
+				sb.AppendLine(ToolkitLocalization.Text("forge.stats.consumed", "Consumed:"));
 				RenderConversionSpends(sb, forge.ConversionSpentByResource);
 			}
 
 			return sb.ToString();
 		}
 
+        private static string SectionTitle(string key, string english, bool preserveSectionIds)
+        { return "<size=105%><b>" + (preserveSectionIds ? english : ToolkitLocalization.Text(key, english)) + "</b></size>"; }
 		private static double SafeDiv(double num, double den)
 		{
 			return den <= 0 ? 0 : num / den;
@@ -274,9 +277,12 @@ namespace TimelessEchoes.Gear.UI
 			if (string.IsNullOrWhiteSpace(reasonKey)) return reasonKey;
 			switch (reasonKey)
 			{
-				case "OutOfResources": return "Out of Resources";
-				case "MaxIterations": return "Max Iterations";
-				default: return reasonKey; // e.g., "Vastium", "Upgraded", "Cancelled"
+				case "OutOfResources": return ToolkitLocalization.Text("forge.stats.out-of-resources", "Out of Resources");
+				case "MaxIterations": return ToolkitLocalization.Text("forge.stats.max-iterations", "Max Iterations");
+				case "Vastium": return ToolkitLocalization.Text("forge.stats.stop-vastium", "Vastium");
+                case "Upgraded": return ToolkitLocalization.Text("forge.stats.stop-upgraded", "Upgraded");
+                case "Cancelled": return ToolkitLocalization.Text("forge.stats.stop-cancelled", "Cancelled");
+                default: return reasonKey;
 			}
 		}
 
@@ -354,14 +360,14 @@ namespace TimelessEchoes.Gear.UI
 			bool hasStone = dict.TryGetValue("Stone", out var stone);
 			if (hasSlime)
 			{
-				sb.Append($"• Slime: {Blindsided.Utilities.CalcUtils.FormatNumber(slime, true)}");
+				sb.Append(ToolkitLocalization.Text("forge.stats.slime", "• Slime: {0}", Blindsided.Utilities.CalcUtils.FormatNumber(slime, true)));
 				if (hasCoreGroups && !hasStone)
 					sb.Append("<line-height=20%>\n\u200B</line-height>\n");
 				else sb.Append("\n");
 			}
 			if (hasStone)
 			{
-				sb.Append($"• Stone: {Blindsided.Utilities.CalcUtils.FormatNumber(stone, true)}");
+				sb.Append(ToolkitLocalization.Text("forge.stats.stone", "• Stone: {0}", Blindsided.Utilities.CalcUtils.FormatNumber(stone, true)));
 				if (hasCoreGroups)
 					sb.Append("<line-height=20%>\n\u200B</line-height>\n");
 				else sb.Append("\n");
@@ -478,15 +484,15 @@ namespace TimelessEchoes.Gear.UI
 			return (minSum, maxSum, n);
 		}
 
-		private void AppendQualitySection(StringBuilder sb, GameData.ForgeStats forge)
+		private void AppendQualitySection(StringBuilder sb, GameData.ForgeStats forge, bool preserveSectionIds)
 		{
 			var equip = EquipmentController.Instance;
-			sb.AppendLine("<size=105%><b>Quality</b></size>");
+			sb.AppendLine(SectionTitle("forge.stats.section-quality", "Quality", preserveSectionIds));
 			var slots = equip != null && equip.Slots != null && equip.Slots.Count > 0
 				? equip.Slots
 				: new System.Collections.Generic.List<string> { "Weapon", "Helmet", "Chest", "Boots" };
 
-			sb.AppendLine(" Best Rolled:");
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.best-rolled", "• Best Rolled:"));
 			foreach (var slot in slots)
 			{
 				float best = 0f;
@@ -494,7 +500,7 @@ namespace TimelessEchoes.Gear.UI
 					forge.BestAbsolutePieceScoreBySlot.TryGetValue(slot, out best);
 				var maxSlot = UpgradeEvaluator.ComputeTheoreticalMaxForSlot(slot);
 				float pct = maxSlot > 0f ? Mathf.Clamp01(best / maxSlot) * 100f : 0f;
-				sb.AppendLine($"   {slot}: {pct:0.#}%");
+				sb.AppendLine($"  • {slot}: {pct:0.#}%");
 			}
 		}
 
@@ -577,9 +583,9 @@ namespace TimelessEchoes.Gear.UI
 				if (forge.CraftsBySlotTotals != null) forge.CraftsBySlotTotals.TryGetValue(slot, out crafts);
 				if (forge.EquipsBySlot != null) forge.EquipsBySlot.TryGetValue(slot, out equips);
 				if (forge.SalvagesBySlot != null) forge.SalvagesBySlot.TryGetValue(slot, out salvages);
-				sb.AppendLine($"  • {slot} crafts: {crafts:N0}");
-				sb.AppendLine($"  • {slot} equips: {equips:N0}");
-				sb.Append($"  • {slot} salvages: {salvages:N0}");
+				sb.AppendLine(ToolkitLocalization.Text("forge.stats.crafts", "  • {0} crafts: {1:N0}", slot, crafts));
+				sb.AppendLine(ToolkitLocalization.Text("forge.stats.equips", "  • {0} equips: {1:N0}", slot, equips));
+				sb.Append(ToolkitLocalization.Text("forge.stats.salvages", "  • {0} salvages: {1:N0}", slot, salvages));
 				sb.Append("<line-height=20%>\n\u200B</line-height>\n");
 			}
 		}

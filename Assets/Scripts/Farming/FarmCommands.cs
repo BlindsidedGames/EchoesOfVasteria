@@ -81,12 +81,7 @@ namespace TimelessEchoes.Farming
                 return Reject("PendingRollConflict");
             result.Candidate.PendingCredits.Remove(operationId);
             if (!packRolled) return result;
-            if (!result.Candidate.Seeds.TryGetValue(RadishSeedId, out var seed) || seed == null)
-                result.Candidate.Seeds[RadishSeedId] = seed = new FarmSeedState();
-            if (seed.Quantity < 0 || seed.LifetimeAcquired < 0 || seed.Quantity == long.MaxValue || seed.LifetimeAcquired == long.MaxValue)
-                return Reject("InvalidSeedBalance");
-            seed.Quantity++;
-            seed.LifetimeAcquired++;
+            result.ResourceDeltas[SeedResourceName(RadishSeedId)] = 1;
             return result;
         }
 
@@ -100,9 +95,8 @@ namespace TimelessEchoes.Farming
             if (!result.Candidate.Beds.TryGetValue(bedId, out var bed) || bed == null || !bed.Unlocked)
                 return Reject("BedLocked");
             if (bed.IsPlanted) return Reject("BedOccupied");
-            if (!result.Candidate.Seeds.TryGetValue(RadishSeedId, out var seed) || seed == null || seed.Quantity <= 0)
-                return Reject("NoRadishSeeds");
-            seed.Quantity--;
+            // Inventory validation belongs to the durable transaction, including legacy commands.
+            result.ResourceDeltas[SeedResourceName(RadishSeedId)] = -1;
             bed.BatchId = "radish:" + operationId;
             bed.RecipeId = RadishRecipeId;
             bed.DurationSeconds = tuning.RadishGrowthSeconds;

@@ -28,12 +28,12 @@ namespace TimelessEchoes.UI.Toolkit
             footer.style.display = DisplayStyle.None;
             var controls = ToolkitGameplay.E(body, "graph-controls");
             foreach (Metric m in Enum.GetValues(typeof(Metric)))
-            { var choice=m; metrics.Add(Choice(controls, "graph-"+m, m.ToString(),()=>SetMetric(choice))); }
+            { var choice=m; metrics.Add(Choice(controls, "graph-"+m, MetricLabel(m),()=>SetMetric(choice))); }
             var units=ToolkitGameplay.E(controls,"graph-units");
-            totals=Choice(units,"graph-totals","Totals",()=>{perMinute=false;Refresh();});
-            rates=Choice(units,"graph-rates","Per minute",()=>{perMinute=true;Refresh();});
+            totals=Choice(units,"graph-totals",ToolkitLocalization.Text("graph.totals", "Totals"),()=>{perMinute=false;Refresh();});
+            rates=Choice(units,"graph-rates",ToolkitLocalization.Text("graph.per-minute", "Per minute"),()=>{perMinute=true;Refresh();});
             var filters=ToolkitGameplay.E(body,"graph-map-filters");
-            for(int i=-1;i<definition.maps.Length;i++) {var index=i;maps.Add(Choice(filters,"graph-map-"+(i+1),i<0?"All maps":definition.maps[i].label.Trim(),()=>{map=index;selectedRun=-1;Refresh();}));}
+            for(int i=-1;i<definition.maps.Length;i++) {var index=i;maps.Add(Choice(filters,"graph-map-"+(i+1),i<0?ToolkitLocalization.Text("graph.all-maps", "All maps"):ToolkitLocalization.Text("map." + definition.maps[i].config.name, definition.maps[i].label.Trim()),()=>{map=index;selectedRun=-1;Refresh();}));}
             var heading=ToolkitGameplay.E(body,"graph-summary-row");
             summary=Text(heading,"","graph-summary");sample=Text(heading,"","graph-sample");
             var chart=ToolkitGameplay.E(body,"graph-chart");
@@ -44,18 +44,32 @@ namespace TimelessEchoes.UI.Toolkit
             barHost=ToolkitGameplay.E(plot,"graph-bars");
             averageLine=ToolkitGameplay.E(plot,"graph-average");averageLine.pickingMode=PickingMode.Ignore;
             averageLabel=Text(averageLine,"","graph-average-label");
-            empty=Text(plot,"No saved runs for this selection.","graph-empty");
-            var axisLabels=ToolkitGameplay.E(body,"graph-x-labels");first=Text(axisLabels,"","graph-first");Text(axisLabels,"Run number","graph-x-title");last=Text(axisLabels,"","graph-last");
+            empty=Text(plot,ToolkitLocalization.Text("graph.empty", "No saved runs for this selection."),"graph-empty");
+            var axisLabels=ToolkitGameplay.E(body,"graph-x-labels");first=Text(axisLabels,"","graph-first");Text(axisLabels,ToolkitLocalization.Text("graph.run-number", "Run number"),"graph-x-title");last=Text(axisLabels,"","graph-last");
             var legend=ToolkitGameplay.E(body,"graph-legend");
-            Legend(legend,"Retreated",new Color(.72f,.66f,.61f));Legend(legend,"Reaped",new Color(.70f,.54f,.79f));Legend(legend,"Died",new Color(.82f,.40f,.40f));Legend(legend,"Abandoned",new Color(.43f,.42f,.43f));
+            Legend(legend,ToolkitLocalization.Text("run.outcome-retreated", "Retreated"),new Color(.72f,.66f,.61f));Legend(legend,ToolkitLocalization.Text("run.outcome-reaped", "Reaped"),new Color(.70f,.54f,.79f));Legend(legend,ToolkitLocalization.Text("run.outcome-died", "Died"),new Color(.82f,.40f,.40f));Legend(legend,ToolkitLocalization.Text("run.outcome-abandoned", "Abandoned"),new Color(.43f,.42f,.43f));
             var detailHeader=ToolkitGameplay.E(body,"graph-detail-heading");detailTitle=Text(detailHeader,"","graph-detail-title");
-            Text(detailHeader,"Hover to preview · click or tap to select","graph-detail-hint");
+            Text(detailHeader,ToolkitLocalization.Text("graph.interaction-hint", "Hover to preview · click or tap to select"),"graph-detail-hint");
             details=ToolkitGameplay.E(body,"graph-details");
             Refresh();
         }
+        private static string MetricLabel(Metric metric) => metric switch
+        {
+            Metric.Resources => ToolkitLocalization.Text("graph.resources", "Resources"),
+            Metric.Tasks => ToolkitLocalization.Text("graph.tasks", "Tasks"),
+            Metric.Kills => ToolkitLocalization.Text("graph.kills", "Kills"),
+            Metric.Duration => ToolkitLocalization.Text("graph.duration", "Duration"),
+            _ => ToolkitLocalization.Text("graph.distance", "Distance")
+        };
         private static Button Choice(VisualElement parent,string name,string text,Action click){var b=ToolkitGameplay.B(parent,text,click);b.name=name;b.AddToClassList("graph-choice");return b;}
         private static Label Text(VisualElement parent,string text,string classes)=>ToolkitGameplay.L(parent,text,classes);
         private static void Legend(VisualElement parent,string title,Color colour){var item=ToolkitGameplay.E(parent,"graph-legend-item");var swatch=ToolkitGameplay.E(item,"graph-legend-swatch");swatch.style.backgroundColor=colour;Text(item,title,"");}
+        public (Metric metric, int map, int selectedRun, bool perMinute) ViewState => (metric, map, selectedRun, perMinute);
+        public void RestoreViewState((Metric metric, int map, int selectedRun, bool perMinute) state)
+        {
+            metric = state.metric; map = Mathf.Clamp(state.map, -1, definition.maps.Length - 1);
+            selectedRun = state.selectedRun; perMinute = state.perMinute && SupportsRate; Refresh();
+        }
         public void SetMetric(Metric value){metric=value;if(!SupportsRate)perMinute=false;Refresh();}
         private bool SupportsRate=>metric==Metric.Resources||metric==Metric.Tasks||metric==Metric.Kills;
         public static double Value(GameData.RunRecord run,Metric metric,bool rate)
@@ -74,9 +88,9 @@ namespace TimelessEchoes.UI.Toolkit
             for(int i=0;i<metrics.Count;i++)metrics[i].EnableInClassList("active",i==(int)metric);
             for(int i=0;i<maps.Count;i++)maps[i].EnableInClassList("active",i==map+1);
             rates.SetEnabled(SupportsRate); rates.EnableInClassList("active",perMinute);totals.EnableInClassList("active",!perMinute);
-            var suffix=perMinute?" / min":"";
-            summary.text=values.Length==0?"No recent data":"Average "+Format(avg)+suffix+"   ·   "+(metric==Metric.Duration?"Longest ":"Best ")+Format(max)+suffix;
-            sample.text=visible.Count+" of last "+all.Count+" saved runs"+(filtered.Count!=visible.Count?" · "+(filtered.Count-visible.Count)+" without duration omitted":"");
+            var suffix=perMinute?ToolkitLocalization.Text("graph.rate-suffix", " / min"):"";
+            summary.text=values.Length==0?ToolkitLocalization.Text("graph.no-data", "No recent data"):ToolkitLocalization.Text("graph.average-best", "Average {0}{1}   ·   {2} {3}{1}", Format(avg), suffix, metric==Metric.Duration?ToolkitLocalization.Text("graph.longest", "Longest"):ToolkitLocalization.Text("graph.best", "Best"), Format(max));
+            sample.text=ToolkitLocalization.Text("graph.sample", "{0} of last {1} saved runs{2}", visible.Count, all.Count, filtered.Count!=visible.Count?ToolkitLocalization.Text("graph.omitted", " · {0} without duration omitted", filtered.Count-visible.Count):"");
             var ceiling=max>0?NiceCeiling(max):1;
             for(int i=0;i<5;i++)ticks[i].text=Format(ceiling*i/4);
             barHost.Clear();var slots=Math.Max(10,visible.Count);
@@ -90,7 +104,7 @@ namespace TimelessEchoes.UI.Toolkit
                 hit.RegisterCallback<FocusInEvent>(_=>ShowDetails(run));hit.RegisterCallback<FocusOutEvent>(_=>ShowSelected());
                 hit.userData=run.RunNumber;
             }
-            averageLine.style.display=max>0?DisplayStyle.Flex:DisplayStyle.None;averageLine.style.bottom=Length.Percent((float)(avg/ceiling*100));averageLabel.text="Avg "+Format(avg);
+            averageLine.style.display=max>0?DisplayStyle.Flex:DisplayStyle.None;averageLine.style.bottom=Length.Percent((float)(avg/ceiling*100));averageLabel.text=ToolkitLocalization.Text("graph.average-marker", "Avg {0}", Format(avg));
             empty.style.display=visible.Count==0?DisplayStyle.Flex:DisplayStyle.None;
             first.text=visible.Count>0?"#"+visible[0].RunNumber:"";last.text=visible.Count>1?"#"+visible[visible.Count-1].RunNumber:"";
             if(!visible.Any(r=>r.RunNumber==selectedRun))selectedRun=visible.Count>0?visible[visible.Count-1].RunNumber:-1;
@@ -99,15 +113,15 @@ namespace TimelessEchoes.UI.Toolkit
         private static double NiceCeiling(double maximum){var power=Math.Pow(10,Math.Floor(Math.Log10(maximum)));return Math.Ceiling(maximum/power)*power;}
         private void StyleSelection(){foreach(var bar in barHost.Children())bar.EnableInClassList("selected",(int)bar.userData==selectedRun);}
         private void ShowSelected()=>ShowDetails(visible.FirstOrDefault(r=>r.RunNumber==selectedRun));
-        private static string Outcome(GameData.RunRecord run)=>run.Abandoned?"Abandoned":run.Reaped?"Reaped":run.Died?"Died":"Retreated";
+        private static string Outcome(GameData.RunRecord run)=>run.Abandoned?ToolkitLocalization.Text("run.outcome-abandoned", "Abandoned"):run.Reaped?ToolkitLocalization.Text("run.outcome-reaped", "Reaped"):run.Died?ToolkitLocalization.Text("run.outcome-died", "Died"):ToolkitLocalization.Text("run.outcome-retreated", "Retreated");
         private void ShowDetails(GameData.RunRecord run)
         {
-            details.Clear();if(run==null){detailTitle.text="Run details";Text(details,"Select a map with saved runs to inspect its history.","graph-detail-hint");return;}
+            details.Clear();if(run==null){detailTitle.text=ToolkitLocalization.Text("graph.details", "Run details");Text(details,ToolkitLocalization.Text("graph.select-map", "Select a map with saved runs to inspect its history."),"graph-detail-hint");return;}
             var mapName=definition.maps.FirstOrDefault(m=>m.config&&m.config.name==run.MapType).label;
-            detailTitle.text="Run #"+run.RunNumber+" · "+(string.IsNullOrWhiteSpace(mapName)?run.MapType:mapName.Trim())+" · "+Outcome(run);
-            Detail("Duration",CalcUtils.FormatTime(run.Duration));Detail("Distance",ItemStatisticsPresentation.Number(run.Distance));Detail("Tasks",ItemStatisticsPresentation.Number(run.TasksCompleted));
-            Detail("Resources",ItemStatisticsPresentation.Number(run.ResourcesCollected));Detail("Bonus resources",ItemStatisticsPresentation.Number(run.BonusResourcesCollected));Detail("Kills",ItemStatisticsPresentation.Number(run.EnemiesKilled));
-            Detail("Damage dealt",ItemStatisticsPresentation.Number(run.DamageDealtAsDouble));Detail("Damage taken",ItemStatisticsPresentation.Number(run.DamageTakenAsDouble));
+            detailTitle.text=ToolkitLocalization.Text("graph.detail-title", "Run #{0} · {1} · {2}", run.RunNumber, ToolkitLocalization.Text("map." + run.MapType, string.IsNullOrWhiteSpace(mapName)?run.MapType:mapName.Trim()), Outcome(run));
+            Detail(ToolkitLocalization.Text("graph.duration", "Duration"),CalcUtils.FormatTime(run.Duration));Detail(ToolkitLocalization.Text("graph.distance", "Distance"),ItemStatisticsPresentation.Number(run.Distance));Detail(ToolkitLocalization.Text("graph.tasks", "Tasks"),ItemStatisticsPresentation.Number(run.TasksCompleted));
+            Detail(ToolkitLocalization.Text("graph.resources", "Resources"),ItemStatisticsPresentation.Number(run.ResourcesCollected));Detail(ToolkitLocalization.Text("graph.bonus-resources", "Bonus resources"),ItemStatisticsPresentation.Number(run.BonusResourcesCollected));Detail(ToolkitLocalization.Text("graph.kills", "Kills"),ItemStatisticsPresentation.Number(run.EnemiesKilled));
+            Detail(ToolkitLocalization.Text("graph.damage-dealt", "Damage dealt"),ItemStatisticsPresentation.Number(run.DamageDealtAsDouble));Detail(ToolkitLocalization.Text("graph.damage-taken", "Damage taken"),ItemStatisticsPresentation.Number(run.DamageTakenAsDouble));
         }
         private void Detail(string title,string value){var pair=ToolkitGameplay.E(details,"graph-detail-pair");Text(pair,title,"graph-detail-key");Text(pair,value,"graph-detail-value");}
     }

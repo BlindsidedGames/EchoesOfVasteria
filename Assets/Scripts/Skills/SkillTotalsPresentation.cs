@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -60,10 +61,10 @@ namespace TimelessEchoes.Skills
                 {
                     skillLabel = skill.name;
                     if (string.IsNullOrWhiteSpace(skillLabel))
-                        skillLabel = "Skill";
+                        skillLabel = ToolkitLocalization.Text("skills.unnamed", "Skill");
                 }
 
-                taskSpeedEntries.Add((skillLabel, Describe($"+{bonusPercent:0.#}% {skillLabel} Task Speed (From {skillLabel} lvl)", "speed", skill)));
+                taskSpeedEntries.Add((skillLabel, Describe(ToolkitLocalization.Text("skills.bonus-task-speed", "+{0:0.#}% {1} Task Speed (From {1} lvl)", bonusPercent, skillLabel), "speed", skill)));
             }
 
             taskSpeedEntries.Sort((left, right) => string.Compare(left.SkillName ?? string.Empty, right.SkillName ?? string.Empty, System.StringComparison.OrdinalIgnoreCase));
@@ -82,11 +83,11 @@ namespace TimelessEchoes.Skills
 
             var resourceLines = new List<string>();
             if (globalResourceBonus > 0f)
-                resourceLines.Add(Describe($"{globalResourceBonus * 100f:0.#}% Bonus Resources (All Tasks)", "resources"));
+                resourceLines.Add(Describe(ToolkitLocalization.Text("skills.bonus-resources-all", "{0:0.#}% Bonus Resources (All Tasks)", globalResourceBonus * 100f), "resources"));
 
             var experienceLines = new List<string>();
             if (globalExperienceBonus > 0f)
-                experienceLines.Add(Describe($"{globalExperienceBonus * 100f:0.#}% Bonus Experience (All Skills)", "xp"));
+                experienceLines.Add(Describe(ToolkitLocalization.Text("skills.bonus-xp-all", "{0:0.#}% Bonus Experience (All Skills)", globalExperienceBonus * 100f), "xp"));
 
             var perSkillResourceEntries = new List<(string SkillName, string Line)>();
             var perSkillExperienceEntries = new List<(string SkillName, string Line)>();
@@ -102,29 +103,29 @@ namespace TimelessEchoes.Skills
                 string skillName = ResolveSkillName(pair.Key);
 
                 if (summary.InstantTaskChance > 0f)
-                    procEntries.Add((0, skillName, Describe($"{summary.InstantTaskChance * 100f:0.#}% Chance to Instantly Complete Tasks", "speed", pair.Key)));
+                    procEntries.Add((0, skillName, Describe(ToolkitLocalization.Text("skills.instant-task-chance", "{0:0.#}% Chance to Instantly Complete Tasks", summary.InstantTaskChance * 100f), "speed", pair.Key)));
 
                 if (summary.InstantKillChance > 0f)
-                    procEntries.Add((1, skillName, Describe($"{summary.InstantKillChance * 100f:0.#}% Chance to Instantly Kill", "damage", pair.Key)));
+                    procEntries.Add((1, skillName, Describe(ToolkitLocalization.Text("skills.instant-kill-chance", "{0:0.#}% Chance to Instantly Kill", summary.InstantKillChance * 100f), "damage", pair.Key)));
 
                 if (summary.DoubleResourceChance > 0f)
-                    procEntries.Add((2, skillName, Describe($"{summary.DoubleResourceChance * 100f:0.#}% Chance to Double Resources", "resources", pair.Key)));
+                    procEntries.Add((2, skillName, Describe(ToolkitLocalization.Text("skills.double-resource-chance", "{0:0.#}% Chance to Double Resources", summary.DoubleResourceChance * 100f), "resources", pair.Key)));
 
                 if (summary.DoubleXpChance > 0f)
-                    procEntries.Add((3, skillName, Describe($"{summary.DoubleXpChance * 100f:0.#}% Chance to Double XP", "xp", pair.Key)));
+                    procEntries.Add((3, skillName, Describe(ToolkitLocalization.Text("skills.double-xp-chance", "{0:0.#}% Chance to Double XP", summary.DoubleXpChance * 100f), "xp", pair.Key)));
 
                 if (summary.ResourceBonusPercent > 0f)
                 {
                     float totalPercent = summary.ResourceBonusPercent + globalResourceBonus;
-                    string skillLabel = !string.IsNullOrWhiteSpace(skillName) ? skillName : "Associated Skill";
-                    perSkillResourceEntries.Add((skillLabel, Describe($"{totalPercent * 100f:0.#}% Bonus Resources ({skillLabel})", "resources", pair.Key)));
+                    string skillLabel = !string.IsNullOrWhiteSpace(skillName) ? skillName : ToolkitLocalization.Text("skills.associated-skill", "Associated Skill");
+                    perSkillResourceEntries.Add((skillLabel, Describe(ToolkitLocalization.Text("skills.bonus-resources", "{0:0.#}% Bonus Resources ({1})", totalPercent * 100f, skillLabel), "resources", pair.Key)));
                 }
 
                 if (summary.ExperienceBonusPercent > 0f)
                 {
                     float totalPercent = summary.ExperienceBonusPercent + globalExperienceBonus;
-                    string skillLabel = !string.IsNullOrWhiteSpace(skillName) ? skillName : "Associated Skill";
-                    perSkillExperienceEntries.Add((skillLabel, Describe($"{totalPercent * 100f:0.#}% Bonus Experience ({skillLabel})", "xp", pair.Key)));
+                    string skillLabel = !string.IsNullOrWhiteSpace(skillName) ? skillName : ToolkitLocalization.Text("skills.associated-skill", "Associated Skill");
+                    perSkillExperienceEntries.Add((skillLabel, Describe(ToolkitLocalization.Text("skills.bonus-xp", "{0:0.#}% Bonus Experience ({1})", totalPercent * 100f, skillLabel), "xp", pair.Key)));
                 }
 
                 foreach (var entry in summary.SpawnEchoes)
@@ -207,13 +208,13 @@ namespace TimelessEchoes.Skills
         private static string ResolveStatDisplayName(BaseStat stat)
         {
             if (stat == null)
-                return "Stat";
+                return ToolkitLocalization.Text("skills.unnamed-stat", "Stat");
 
             var def = stat.AssociatedStat;
             if (def != null && !string.IsNullOrWhiteSpace(def.displayName))
-                return def.displayName;
+                return ToolkitLocalization.Text("stat." + def.name, def.displayName);
 
-            return !string.IsNullOrWhiteSpace(stat.name) ? stat.name : "Stat";
+            return !string.IsNullOrWhiteSpace(stat.name) ? ToolkitLocalization.Name(stat, "stat") : ToolkitLocalization.Text("skills.unnamed-stat", "Stat");
         }
 
         private static string GetIconTagFor(BaseStat stat)
@@ -252,9 +253,9 @@ namespace TimelessEchoes.Skills
                 return string.Empty;
 
             if (!string.IsNullOrWhiteSpace(skill.skillName))
-                return skill.skillName;
+                return ToolkitLocalization.Text("skill." + skill.name, skill.skillName);
 
-            return !string.IsNullOrWhiteSpace(skill.name) ? skill.name : string.Empty;
+            return !string.IsNullOrWhiteSpace(skill.name) ? ToolkitLocalization.Name(skill, "skill") : string.Empty;
         }
 
         private static string BuildEchoSpawnLine(SpawnEchoEntry entry, Skill sourceSkill)
@@ -264,14 +265,14 @@ namespace TimelessEchoes.Skills
 
             int count = entry.Count > 0 ? entry.Count : 1;
             string target = GetEchoSpawnTargetLabel(entry, sourceSkill);
-            string noun = count == 1 ? "Echo" : "Echoes";
-            string descriptor = string.IsNullOrEmpty(target) ? noun : $"{target} {noun}";
-            string subject = count > 1 ? $"{count} {descriptor}" : FormatSingleEchoDescriptor(descriptor);
+            string noun = count == 1 ? ToolkitLocalization.Text("skills.echo-singular", "Echo") : ToolkitLocalization.Text("skills.echo-plural", "Echoes");
+            string descriptor = string.IsNullOrEmpty(target) ? noun : ToolkitLocalization.Text("skills.echo-descriptor", "{0} {1}", target, noun);
+            string subject = count > 1 ? ToolkitLocalization.Text("skills.echo-count", "{0} {1}", count, descriptor) : FormatSingleEchoDescriptor(descriptor);
 
             string triggerSkill = GetEchoSpawnTriggerSkillLabel(entry, sourceSkill);
-            string triggerSuffix = string.IsNullOrEmpty(triggerSkill) ? string.Empty : $" when {triggerSkill}";
+            string triggerSuffix = string.IsNullOrEmpty(triggerSkill) ? string.Empty : ToolkitLocalization.Text("skills.echo-trigger", " when {0}", triggerSkill);
 
-            return $"{entry.Chance * 100f:0.#}% Chance to spawn {subject}{triggerSuffix}";
+            return ToolkitLocalization.Text("skills.echo-spawn-chance", "{0:0.#}% Chance to spawn {1}{2}", entry.Chance * 100f, subject, triggerSuffix);
         }
 
         private static string GetEchoSpawnTriggerSkillLabel(SpawnEchoEntry entry, Skill sourceSkill)
@@ -283,7 +284,7 @@ namespace TimelessEchoes.Skills
                 var names = new List<string>();
                 foreach (var skill in config.capableSkills)
                 {
-                    var name = NormalizeTriggerLabel(ResolveSkillName(skill));
+                    var name = NormalizeTriggerLabel(skill);
                     if (!string.IsNullOrWhiteSpace(name) && !names.Contains(name))
                         names.Add(name);
                 }
@@ -295,17 +296,18 @@ namespace TimelessEchoes.Skills
                     return string.Join("/", names);
             }
 
-            var fallback = NormalizeTriggerLabel(ResolveSkillName(sourceSkill));
+            var fallback = NormalizeTriggerLabel(sourceSkill);
             return !string.IsNullOrEmpty(fallback) ? fallback : string.Empty;
         }
 
-        private static string NormalizeTriggerLabel(string label)
+        private static string NormalizeTriggerLabel(Skill skill)
         {
+            var label = ResolveSkillName(skill);
             if (string.IsNullOrWhiteSpace(label))
                 return string.Empty;
 
-            if (string.Equals(label, "Combat", System.StringComparison.OrdinalIgnoreCase))
-                return "Killing";
+            if (skill && string.Equals(skill.skillName, "Combat", System.StringComparison.OrdinalIgnoreCase))
+                return ToolkitLocalization.Text("skills.echo-killing", "Killing");
 
             return label;
         }
@@ -313,16 +315,16 @@ namespace TimelessEchoes.Skills
         private static string FormatSingleEchoDescriptor(string descriptor)
         {
             if (string.IsNullOrWhiteSpace(descriptor))
-                return "an Echo";
+                return ToolkitLocalization.Text("skills.echo-default", "an Echo");
 
             string trimmed = descriptor.Trim();
             if (trimmed.Length == 0)
-                return "an Echo";
+                return ToolkitLocalization.Text("skills.echo-default", "an Echo");
 
             char first = char.ToLowerInvariant(trimmed[0]);
             bool useAn = first == 'a' || first == 'e' || first == 'i' || first == 'o' || first == 'u';
             string article = useAn ? "an" : "a";
-            return $"{article} {trimmed}";
+            return useAn ? ToolkitLocalization.Text("skills.echo-article-an", "an {0}", trimmed) : ToolkitLocalization.Text("skills.echo-article-a", "a {0}", trimmed);
         }
 
         private static string GetEchoSpawnTargetLabel(SpawnEchoEntry entry, Skill sourceSkill)
@@ -342,7 +344,7 @@ namespace TimelessEchoes.Skills
                 if (names.Count == 1)
                     return names[0];
                 if (names.Count > 1)
-                    return "Selective";
+                    return ToolkitLocalization.Text("skills.echo-selective", "Selective");
             }
 
             if (entry.UseAssociatedSkillFallback)
@@ -357,13 +359,13 @@ namespace TimelessEchoes.Skills
                 switch (config.echoType)
                 {
                     case TimelessEchoes.Hero.EchoType.Combat:
-                        return "Combat";
+                        return ToolkitLocalization.Text("skills.echo-combat", "Combat");
                     case TimelessEchoes.Hero.EchoType.TaskOnly:
-                        return "Task";
+                        return ToolkitLocalization.Text("skills.echo-task", "Task");
                     case TimelessEchoes.Hero.EchoType.All:
                         return string.Empty;
                     case TimelessEchoes.Hero.EchoType.Selective:
-                        return "Selective";
+                        return ToolkitLocalization.Text("skills.echo-selective", "Selective");
                 }
             }
 

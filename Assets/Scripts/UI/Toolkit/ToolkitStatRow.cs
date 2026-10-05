@@ -74,8 +74,13 @@ namespace TimelessEchoes.UI.Toolkit
         public void SetEntryIcon(Sprite sprite, bool known, bool boosted = false)
         {
             Icon.sprite = sprite;
-            Icon.style.width = sprite ? sprite.rect.width * 16 / sprite.pixelsPerUnit : 0;
-            Icon.style.height = sprite ? sprite.rect.height * 16 / sprite.pixelsPerUnit : 0;
+            var size = sprite ? sprite.rect.size * (16f / sprite.pixelsPerUnit) : Vector2.zero;
+            // Task art may be taller than resource art (for example an orchard tree).
+            // Keep its full silhouette inside the task thumbnail's 32px frame.
+            if (taskStyle && Mathf.Max(size.x, size.y) > 32f)
+                size *= 32f / Mathf.Max(size.x, size.y);
+            Icon.style.width = size.x;
+            Icon.style.height = size.y;
             Root.EnableInClassList("known", known);
             Root.EnableInClassList("boosted", known && boosted);
         }

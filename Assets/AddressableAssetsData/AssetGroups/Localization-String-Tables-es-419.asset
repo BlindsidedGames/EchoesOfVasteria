@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Localization-String-Tables-es-419
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Localization-String-Tables-es-419
+  m_GUID: e3b0bd32707fe4a539809dc19da6f272
+  m_SerializeEntries: []
+  m_ReadOnly: 1
+  m_Settings: {fileID: 11400000, guid: 28b1847c10109ba4fbdcda4cdd81fd8c, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 598076b8992bf4dbaaa8a46605dafb8f, type: 2}
+    - {fileID: 11400000, guid: 68d379c5a57f748d2bf4be7a4b9c1d18, type: 2}
+    - {fileID: 11400000, guid: 3021a610544c1438d95ced613fdfb85a, type: 2}
+    m_SchemaDisplayOrder:
+    - Localization-String-Tables-es-419_BundledAssetGroupSchema
+    - Localization-String-Tables-es-419_ContentUpdateGroupSchema
+    - Localization-String-Tables-es-419_LocalizationGroupSchema
+  m_IncludeInBuild: 1
+  m_IncludeInBuildMigrated: 1

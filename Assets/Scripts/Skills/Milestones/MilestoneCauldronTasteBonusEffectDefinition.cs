@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using System.Globalization;
 using UnityEngine;
 
@@ -33,7 +34,7 @@ namespace TimelessEchoes.Skills
             string extraFormatted = bonus.ToString(extraValueFormat, CultureInfo.InvariantCulture);
             string multiplierFormatted = multiplier.ToString(multiplierFormat, CultureInfo.InvariantCulture);
 
-            return string.Format(descriptionTemplate, extraFormatted, multiplierFormatted);
+            return ToolkitLocalization.Text("milestone-effect." + name + ".descriptionTemplate", descriptionTemplate, extraFormatted, multiplierFormatted);
         }
     }
 }

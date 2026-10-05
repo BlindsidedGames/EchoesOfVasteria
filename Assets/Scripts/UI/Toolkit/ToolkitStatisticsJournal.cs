@@ -31,7 +31,7 @@ namespace TimelessEchoes.UI.Toolkit
                 var button = ToolkitGameplay.B(selectors, "", () => SelectJournalMap(index));
                 button.name = "journal-map-" + (i + 1); button.AddToClassList("journal-selector");
                 JournalArt(button, i < 0 ? definition.portrait : definition.maps[i].icon);
-                Text(button, i < 0 ? "Overall" : definition.maps[i].label.Trim(), 7);
+                Text(button, i < 0 ? ToolkitLocalization.Text("statistics.overall", "Overall") : ToolkitLocalization.Text("map." + definition.maps[i].config.name, definition.maps[i].label.Trim()), 7);
                 if (i == definition.maps.Length - 1) button.AddToClassList("journal-selector-last");
                 journalSelectors.Add(button);
             }
@@ -49,9 +49,9 @@ namespace TimelessEchoes.UI.Toolkit
             mainScroll.parent.AddToClassList("journal-main");
             var main = mainScroll.contentContainer;
             var side = ToolkitGameplay.E(columns, "journal-side");
-            Text(side, "Recent runs", 8).AddToClassList("journal-section-title");
+            Text(side, ToolkitLocalization.Text("journal.recent-runs", "Recent runs"), 8).AddToClassList("journal-section-title");
             journalRecent = ToolkitControls.RecessedScroll(side, "journal-run-scroll", theme, definition.inset).contentContainer;
-            Text(main, "Lifetime", 8).AddToClassList("journal-section-title");
+            Text(main, ToolkitLocalization.Text("journal.lifetime", "Lifetime"), 8).AddToClassList("journal-section-title");
             AddSummary(main, index < 0 ? (ToolkitStatisticsDefinition.MapEntry?)null : definition.maps[index]);
             var summary = main.Q(className: "eov-stat-summary");
             summary.AddToClassList("journal-lifetime");
@@ -79,9 +79,9 @@ namespace TimelessEchoes.UI.Toolkit
                     d.button.EnableInClassList("known", discovered);
                     d.button.Q<Image>().style.display = discovered ? DisplayStyle.Flex : DisplayStyle.None;
                     d.button.Q<Label>().text = discovered ? "" : "?";
-                    d.button.tooltip = discovered ? (d.resource ? d.resource.name : d.enemy.enemyName) : "Undiscovered";
+                    d.button.tooltip = discovered ? (d.resource ? ToolkitLocalization.Name(d.resource) : ToolkitLocalization.Text("enemy." + d.enemy.name, d.enemy.enemyName)) : ToolkitLocalization.Text("common.undiscovered", "Undiscovered");
                 }
-                if (journalDiscoveryCount != null) journalDiscoveryCount.text = known + " / " + journalDiscoveries.Count + " discovered";
+                if (journalDiscoveryCount != null) journalDiscoveryCount.text = ToolkitLocalization.Text("journal.discovery-count", "{0} / {1} discovered", known, journalDiscoveries.Count);
             }
         }
         private void BuildJournalRecent()
@@ -89,10 +89,10 @@ namespace TimelessEchoes.UI.Toolkit
             journalRecent.Clear();
             var key = journalMap < 0 ? null : definition.maps[journalMap].config.name;
             var runs = tracker.RecentRuns.Where(r => key == null || r.MapType == key).ToList();
-            Text(journalRecent, runs.Count + " of the last " + tracker.RecentRuns.Count + " saved runs", 6).AddToClassList("journal-note");
+            Text(journalRecent, ToolkitLocalization.Text("journal.recent-count", "{0} of the last {1} saved runs", runs.Count, tracker.RecentRuns.Count), 6).AddToClassList("journal-note");
             if (runs.Count == 0)
             {
-                Text(journalRecent, "No recent runs here yet. Your lifetime records are still shown.", 7).AddToClassList("journal-empty");
+                Text(journalRecent, ToolkitLocalization.Text("journal.no-runs", "No recent runs here yet. Your lifetime records are still shown."), 7).AddToClassList("journal-empty");
                 return;
             }
             foreach (var run in runs.AsEnumerable().Reverse())
@@ -101,8 +101,8 @@ namespace TimelessEchoes.UI.Toolkit
                 button.AddToClassList("journal-run"); button.userData = run;
                 Text(button, "#" + run.RunNumber, 7).AddToClassList("journal-run-number");
                 Text(button, CalcUtils.FormatTime(run.Duration), 7).AddToClassList("journal-run-duration");
-                Text(button, ItemStatisticsPresentation.Number(run.ResourcesCollected) + " resources", 7).AddToClassList("journal-run-rewards");
-                Text(button, run.Abandoned ? "Abandoned" : run.Reaped ? "Reaped" : run.Died ? "Died" : "Retreated", 6).AddToClassList("journal-run-outcome");
+                Text(button, ToolkitLocalization.Text("journal.run-resources", "{0} resources", ItemStatisticsPresentation.Number(run.ResourcesCollected)), 7).AddToClassList("journal-run-rewards");
+                Text(button, run.Abandoned ? ToolkitLocalization.Text("run.outcome-abandoned", "Abandoned") : run.Reaped ? ToolkitLocalization.Text("run.outcome-reaped", "Reaped") : run.Died ? ToolkitLocalization.Text("run.outcome-died", "Died") : ToolkitLocalization.Text("run.outcome-retreated", "Retreated"), 6).AddToClassList("journal-run-outcome");
             }
         }
         private void ShowJournalRun(GameData.RunRecord run)
@@ -127,8 +127,8 @@ namespace TimelessEchoes.UI.Toolkit
             journalDiscoveryCount = null;
             if (journalMap < 0)
             {
-                Text(journalCollection, "Explore a map", 8).AddToClassList("journal-section-title");
-                Text(journalCollection, "Choose a map to browse its resources and enemies alongside your records.", 7).AddToClassList("journal-note");
+                Text(journalCollection, ToolkitLocalization.Text("journal.explore-map", "Explore a map"), 8).AddToClassList("journal-section-title");
+                Text(journalCollection, ToolkitLocalization.Text("journal.choose-map", "Choose a map to browse its resources and enemies alongside your records."), 7).AddToClassList("journal-note");
                 return;
             }
             var settings = definition.maps[journalMap].config.taskGeneratorSettings;
@@ -140,17 +140,17 @@ namespace TimelessEchoes.UI.Toolkit
             var enemies = settings.enemies == null ? new List<EnemyData>() : settings.enemies.Where(e => e && e.weight > 0).Distinct().OrderBy(e => e.displayOrder).ToList();
             foreach (var enemy in enemies) Drops(enemy.resourceDrops);
             var heading = ToolkitGameplay.E(journalCollection, "journal-collection-heading");
-            Text(heading, "Found here", 8).AddToClassList("journal-section-title");
+            Text(heading, ToolkitLocalization.Text("journal.found-here", "Found here"), 8).AddToClassList("journal-section-title");
             journalDiscoveryCount = Text(heading, "", 6); journalDiscoveryCount.AddToClassList("journal-note");
-            journalDiscoveryCount.tooltip = "Discoveries are shared across all maps. These are configured drop pools; availability depends on progression.";
+            journalDiscoveryCount.tooltip = ToolkitLocalization.Text("journal.discoveries-help", "Discoveries are shared across all maps. These are configured drop pools; availability depends on progression.");
             var groups = ToolkitGameplay.E(journalCollection, "journal-collection-groups");
             var foes = ToolkitGameplay.E(groups, "journal-foes");
-            Text(foes, "Enemies", 7).AddToClassList("journal-collection-label");
+            Text(foes, ToolkitLocalization.Text("journal.enemies", "Enemies"), 7).AddToClassList("journal-collection-label");
             var enemyGrid = ToolkitGameplay.E(foes, "journal-discoveries");
             foreach (var enemy in enemies) AddDiscovery(enemyGrid, null, enemy, enemy.icon);
             LimitDiscoveryPreview(foes, enemyGrid);
             var loot = ToolkitGameplay.E(groups, "journal-loot");
-            Text(loot, "Resources", 7).AddToClassList("journal-collection-label");
+            Text(loot, ToolkitLocalization.Text("journal.resources", "Resources"), 7).AddToClassList("journal-collection-label");
             var resourceGrid = ToolkitGameplay.E(loot, "journal-discoveries");
             foreach (var resource in resources.OrderByDescending(r => r.totalReceived > 0).ThenBy(r => r.resourceID)) AddDiscovery(resourceGrid, resource, null, resource.icon);
             LimitDiscoveryPreview(loot, resourceGrid);
@@ -164,7 +164,7 @@ namespace TimelessEchoes.UI.Toolkit
             void Apply()
             {
                 for (int i = previewCount; i < grid.childCount; i++) grid[i].style.display = expanded ? DisplayStyle.Flex : DisplayStyle.None;
-                toggle.text = expanded ? "Show fewer" : "Show all " + grid.childCount;
+                toggle.text = expanded ? ToolkitLocalization.Text("journal.show-fewer", "Show fewer") : ToolkitLocalization.Text("journal.show-all", "Show all {0}", grid.childCount);
             }
             toggle = ToolkitGameplay.B(parent, "", () => { expanded = !expanded; Apply(); });
             toggle.AddToClassList("journal-show-all"); Apply();

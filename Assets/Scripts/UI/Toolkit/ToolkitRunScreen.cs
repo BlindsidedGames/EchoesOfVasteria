@@ -56,21 +56,22 @@ namespace TimelessEchoes.UI.Toolkit
             var portrait=ToolkitGameplay.B(columns,"",()=>TownWindowManager.Instance?.OpenWindow(TownWindowManager.Window.Skills),"hero-portrait-frame");ToolkitGameplay.Icon(portrait,definition.portrait,32);
             var vitals=E(columns,"hero-vitals");var top=E(vitals,"row hero-vital-row");defenseValue=Stat(top,StatIconLookup.StatKey.Defense);healthValue=Stat(top,StatIconLookup.StatKey.Health);bar=ToolkitGameplay.Bar(vitals,"health");var below=E(vitals,"row hero-vital-row hero-below");regenValue=Stat(below,StatIconLookup.StatKey.Regen);movementValue=Stat(below,StatIconLookup.StatKey.MoveSpeed);
             returnControls = new VisualElement(); returnControls.AddToClassList("eov-run-return"); root.Add(returnControls);
-            retreat = Button(returnControls, "run-return", "Return To Town", () => GameManager.Instance?.RequestRetreat());
-            returnOnDeath = Button(returnControls, "run-return-on-death", "Return On Death", () => GameManager.Instance?.RequestReturnOnDeath());
-            breakdown = Button(root, "run-breakdown", "Run Breakdown", ShowBreakdown); breakdown.AddToClassList("eov-run-breakdown");
+            retreat = Button(returnControls, "run-return", ToolkitLocalization.Text("run.return-town-title", "Return To Town"), () => GameManager.Instance?.RequestRetreat());
+            returnOnDeath = Button(returnControls, "run-return-on-death", ToolkitLocalization.Text("run.return-on-death-title", "Return On Death"), () => GameManager.Instance?.RequestReturnOnDeath());
+            breakdown = Button(root, "run-breakdown", ToolkitLocalization.Text("run.breakdown-title", "Run Breakdown"), ShowBreakdown); breakdown.AddToClassList("eov-run-breakdown");
             death = Panel(root, "eov-run-death"); deathTitle = Text(death, "", ToolkitControls.TextRole.Heading);
-            Button(death, "run-restart", "Restart", () => GameManager.Instance?.RequestRestartAfterDeath());
-            Button(death, "run-death-return", "Return To Town", () => GameManager.Instance?.RequestReturnAfterDeath());
-            Button(death, "run-death-summary", "View Summary", ShowBreakdown); deathFill = Progress(death, definition.healthTrack, definition.healthFill);
+            LocalizedButton(death, "run-restart", "run.restart", "Restart", () => GameManager.Instance?.RequestRestartAfterDeath());
+            LocalizedButton(death, "run-death-return", "run.return-town-title", ToolkitLocalization.Text("run.return-town-title", "Return To Town"), () => GameManager.Instance?.RequestReturnAfterDeath());
+            LocalizedButton(death, "run-death-summary", "run.view-summary", "View Summary", ShowBreakdown); deathFill = Progress(death, definition.healthTrack, definition.healthFill);
             overlay = new VisualElement(); overlay.AddToClassList("eov-run-overlay"); root.Add(overlay);
             overlay.RegisterCallback<PointerDownEvent>(e => { if (e.target == overlay) HideDetails(); });
-            detail=Panel(overlay,"breakdown-sheet");var head=E(detail,"row breakdown-header");L(head,"Base rate (return bonus)","small muted breakdown-rate");detailTitle=L(head,"Run breakdown","heading breakdown-title");runTime=L(head,"","strong breakdown-time");detailSummary=L(detail,"","small");detailSummary.style.display=DisplayStyle.None;
+            detail=Panel(overlay,"breakdown-sheet");var head=E(detail,"row breakdown-header");LocalizedLabel(head, "run.base-return-rate", "Base rate (return bonus)","small muted breakdown-rate");detailTitle=L(head,ToolkitLocalization.Text("run.breakdown-heading", "Run breakdown"),"heading breakdown-title");runTime=L(head,"","strong breakdown-time");detailSummary=L(detail,"","small");detailSummary.style.display=DisplayStyle.None;
             detailRows=ToolkitGameplay.Scroll(detail,"run-ledger");detailRows.contentContainer.AddToClassList("run-ledger-grid");var footer=E(detail,"row breakdown-footer");runRatesLeft=L(footer,"","small");runRatesRight=L(footer,"","small");runRatesRight.style.unityTextAlign=TextAnchor.MiddleRight;HideDetails();
             tooltip = Panel(root, "eov-run-tooltip", definition.tooltipFrame); tooltipText = Text(tooltip, ""); SetVisible(tooltip, false);
+            ToolkitLocalization.Changed += LocalizationChanged;
             Blindsided.EventHandler.OnRunStarted += RunStarted;
             jokes = FindAnyObjectByType<DadJokeManager>(FindObjectsInactive.Include);
-            joke = Button(root, "town-joke", "Dad-O-Cado", ShowJoke); joke.AddToClassList("eov-town-joke");
+            joke = LocalizedButton(root, "town-joke", "run.dad-o-cado", "Dad-O-Cado", ShowJoke); joke.AddToClassList("eov-town-joke");
             jokeBubble = E(root, "town-joke-bubble"); jokeBubble.name = "town-joke-bubble";
             var bubbleArt = E(jokeBubble, "town-joke-art");
             bubbleArt.pickingMode = PickingMode.Ignore;
@@ -88,12 +89,29 @@ namespace TimelessEchoes.UI.Toolkit
             DismissJoke();
             AttachServices(); Refresh();
         }
+        private static Label LocalizedLabel(VisualElement parent, string key, string english, string classes = "")
+        { var label = L(parent, "", classes); ToolkitLocalization.Bind(label, key, english); return label; }
+        private Button LocalizedButton(VisualElement parent, string name, string key, string english, Action action)
+        { var button = Button(parent, name, "", action); ToolkitLocalization.Bind(button, key, english); return button; }
+        private void LocalizationChanged()
+        {
+            nextRefresh = 0;
+            foreach (var pair in resourceRows) pair.Value.tooltip = ToolkitLocalization.Name(pair.Key);
+            RefreshTooltip();
+            if (showingBreakdown) { detailTitle.text = ToolkitLocalization.Text("run.breakdown-title", "Run Breakdown"); RefreshBreakdown(); }
+            else if (detailSummary != null && detailSummary.style.display.value == DisplayStyle.Flex)
+            {
+                detailTitle.text = ToolkitLocalization.Text("run.summary-title", "Run Summary"); runRatesLeft.text = ToolkitLocalization.Text("run.close-hint", "Tap outside to close");
+                var summaryOwner = FindAnyObjectByType<RunResourceTrackerUI>(FindObjectsInactive.Include);
+                if (summaryOwner) detailSummary.text = summaryOwner.BuildSummaryText();
+            }
+        }
         private void AttachServices()
         {
             if (!resources && ResourceManager.Instance) { resources = ResourceManager.Instance; resources.OnResourceAdded += ResourceAdded; }
             if (!tracker && GameplayStatTracker.Instance) { tracker = GameplayStatTracker.Instance; tracker.OnRunEnded += RunEnded; }
         }
-        private Label Stat(VisualElement parent, StatIconLookup.StatKey key){var row=E(parent,"row hero-stat");StatIconLookup.TryGetIcon(key,out var icon);ToolkitGameplay.Icon(row,icon,9);row.tooltip=key.ToString();return L(row,"","small strong");}
+        private Label Stat(VisualElement parent, StatIconLookup.StatKey key){var row=E(parent,"row hero-stat");StatIconLookup.TryGetIcon(key,out var icon);ToolkitGameplay.Icon(row,icon,9);ToolkitLocalization.BindTooltip(row,"run.stat-" + key.ToString().ToLowerInvariant(), key.ToString());return L(row,"","small strong");}
         private VisualElement Panel(VisualElement parent, string style, Sprite sprite = null)
         { var element = new VisualElement(); element.AddToClassList(style); element.AddToClassList("surface"); parent.Add(element); return element; }
         private Label Text(VisualElement parent, string text, ToolkitControls.TextRole role = ToolkitControls.TextRole.Body)
@@ -167,10 +185,10 @@ namespace TimelessEchoes.UI.Toolkit
             float reduction=(1-Mathf.Clamp01(Combat.ApplyDefense(1,snap.defense)))*100;
             defenseValue.text=$"{reduction:0.#}%";healthValue.text=$"{Mathf.FloorToInt(health?health.CurrentHealth:0)}/{Mathf.FloorToInt(health?health.MaxHealth:0)}";regenValue.text=$"{snap.healthRegenPerSecond:0.###}/s";movementValue.text=$"{snap.movementSpeed/3*100:0.#}%";
             bar.style.width = Length.Percent(health && health.MaxHealth > 0 ? Mathf.Clamp01(health.CurrentHealth / health.MaxHealth) * 100 : 0);
-            retreat.text = gm.RetreatQueued ? "Retreating..." : "Return to Town"; retreat.SetEnabled(!gm.HeroIsDead);
-            returnOnDeath.text = gm.ReturnOnDeathQueued ? "Queued" : "Return on Death"; returnOnDeath.SetEnabled(!gm.HeroIsDead);
-            breakdown.text = $"Run breakdown\n<size=75%>+{(tracker ? tracker.CurrentRunKills : 0) * gm.BonusPercentPerKill:0}% Resources</size>";
-            deathTitle.text = gm.RunEndedByReaper ? "You were reaped..." : "You have Died..."; deathFill.style.width = Length.Percent(gm.DeathPromptProgress * 100);
+            retreat.text = gm.RetreatQueued ? ToolkitLocalization.Text("run.retreating", "Retreating...") : ToolkitLocalization.Text("run.return-town", "Return To Town"); retreat.SetEnabled(!gm.HeroIsDead);
+            returnOnDeath.text = gm.ReturnOnDeathQueued ? ToolkitLocalization.Text("run.queued", "Queued") : ToolkitLocalization.Text("run.return-on-death", "Return On Death"); returnOnDeath.SetEnabled(!gm.HeroIsDead);
+            breakdown.text = ToolkitLocalization.Text("run.breakdown-bonus", "Run breakdown\n<size=75%>+{0:0}% Resources</size>", (tracker ? tracker.CurrentRunKills : 0) * gm.BonusPercentPerKill);
+            deathTitle.text = gm.RunEndedByReaper ? ToolkitLocalization.Text("run.reaped-prompt", "You were reaped...") : ToolkitLocalization.Text("run.died-prompt", "You have Died..."); deathFill.style.width = Length.Percent(gm.DeathPromptProgress * 100);
             RefreshBuffs(health && health.CurrentHealth > 0 && health.gameObject.activeInHierarchy);
             if (showingBreakdown) RefreshBreakdown();
         }
@@ -182,13 +200,13 @@ namespace TimelessEchoes.UI.Toolkit
                 var row = slots[i]; var recipe = manager.GetAssigned(i); row.icon.sprite = recipe ? recipe.buffIcon : null;
                 SetVisible(row.auto, manager.IsSlotAutoCasting(i)); ((ToolkitBorderProgress)row.fill).Value=0; row.text.text = "";
                 bool unlocked = i < manager.UnlockedSlots; row.button.SetEnabled(unlocked && recipe); row.icon.tintColor = Color.white;
-                if (!unlocked) { row.text.text = "Locked"; continue; } if (!recipe) continue;
+                if (!unlocked) { row.text.text = ToolkitLocalization.Text("common.locked", "Locked"); continue; } if (!recipe) continue;
                 float remain = manager.GetRemaining(recipe), cooldown = manager.GetCooldownRemaining(recipe);
-                if (!alive) { row.text.text = "Dead"; row.icon.tintColor = Color.gray; continue; }
+                if (!alive) { row.text.text = ToolkitLocalization.Text("run.dead", "Dead"); row.icon.tintColor = Color.gray; continue; }
                 if (recipe.durationType == BuffDurationType.DistancePercent && tracker)
                 {
                     float end = Mathf.Max(1, tracker.LongestRun) * recipe.GetDuration();
-                    if (tracker.CurrentRunDistance >= end) { row.text.text = "Too Far"; row.icon.tintColor = Color.gray; continue; }
+                    if (tracker.CurrentRunDistance >= end) { row.text.text = ToolkitLocalization.Text("run.too-far", "Too Far"); row.icon.tintColor = Color.gray; continue; }
                     if (remain > 0) { row.text.text = Mathf.FloorToInt(tracker.CurrentRunDistance / end * 100) + "%"; ((ToolkitBorderProgress)row.fill).Value=Mathf.Clamp01(1 - tracker.CurrentRunDistance / end); continue; }
                 }
                 if (remain > 0) { row.text.text = CalcUtils.FormatTime(remain, remain < 10, shortForm: true); ((ToolkitBorderProgress)row.fill).Value=Mathf.Clamp01(remain / recipe.GetDuration()); }
@@ -212,29 +230,30 @@ namespace TimelessEchoes.UI.Toolkit
             SetVisible(jokeBubble, true);
         }
         private void DismissJoke() { jokeClosesAt = 0; SetVisible(jokeBubble, false); }
-        public void ShowBreakdown() { detail.Q(className: "breakdown-rate").style.display=DisplayStyle.Flex; showingBreakdown = true; detailTitle.text = "Run Breakdown"; SetVisible(overlay, true); RefreshBreakdown(); }
+        public void ShowBreakdown() { detail.Q(className: "breakdown-rate").style.display=DisplayStyle.Flex; showingBreakdown = true; detailTitle.text = ToolkitLocalization.Text("run.breakdown-title", "Run Breakdown"); SetVisible(overlay, true); RefreshBreakdown(); }
         private void RefreshBreakdown()
         {
             double elapsed = tracker && tracker.RunInProgress ? Time.time - runStartedAt : elapsedAtEnd; double seconds = Math.Max(.0001, elapsed);
-            runTime.text=CalcUtils.FormatTime((float)elapsed);runRatesLeft.text=$"Tap outside to close\nDistance / min: {(tracker?tracker.CurrentRunDistance:0)*60/seconds:N0}";runRatesRight.text=$"Damage / s: {(tracker?tracker.CurrentRunDamageDealt:0)/seconds:N0}\nKills / min: {(tracker?tracker.CurrentRunKills:0)*60/seconds:N0}";
+            runTime.text=CalcUtils.FormatTime((float)elapsed);runRatesLeft.text=ToolkitLocalization.Text("run.distance-rate", "Tap outside to close\nDistance / min: {0:N0}", (tracker?tracker.CurrentRunDistance:0)*60/seconds);runRatesRight.text=ToolkitLocalization.Text("run.combat-rates", "Damage / s: {0:N0}\nKills / min: {1:N0}", (tracker?tracker.CurrentRunDamageDealt:0)/seconds, (tracker?tracker.CurrentRunKills:0)*60/seconds);
             double bonus = (tracker ? tracker.CurrentRunKills : 0) * (GameManager.Instance ? GameManager.Instance.BonusPercentPerKill : 0) * .01;
-            foreach (var pair in runResources.OrderBy(x => x.Key.resourceID)) SetResourceRow(pair.Key, $"Earned: {CalcUtils.FormatNumber(pair.Value,true)} ({CalcUtils.FormatNumber(pair.Value*(1+bonus),true)})\nPer minute: {CalcUtils.FormatNumber(pair.Value*60/seconds,true)} ({CalcUtils.FormatNumber(pair.Value*(1+bonus)*60/seconds,true)})");
+            foreach (var pair in runResources.OrderBy(x => x.Key.resourceID)) SetResourceRow(pair.Key, ToolkitLocalization.Text("run.resource-rates", "Earned: {0} ({1})\nPer minute: {2} ({3})", CalcUtils.FormatNumber(pair.Value,true), CalcUtils.FormatNumber(pair.Value*(1+bonus),true), CalcUtils.FormatNumber(pair.Value*60/seconds,true), CalcUtils.FormatNumber(pair.Value*(1+bonus)*60/seconds,true)));
         }
         public void ShowSummary(string summary, IReadOnlyDictionary<Resource, double> amounts, IReadOnlyDictionary<Resource, double> bonus)
         {
-            HideDetails(); showingBreakdown = false; detailTitle.text = "Run Summary";runRatesLeft.text="Tap outside to close"; detailSummary.style.display=DisplayStyle.Flex;detailSummary.text = summary;
+            HideDetails(); showingBreakdown = false; detailTitle.text = ToolkitLocalization.Text("run.summary-title", "Run Summary");runRatesLeft.text=ToolkitLocalization.Text("run.close-hint", "Tap outside to close"); detailSummary.style.display=DisplayStyle.Flex;detailSummary.text = summary;
             foreach (var pair in amounts.OrderBy(x => x.Key.resourceID)) { bonus.TryGetValue(pair.Key, out var extra); SetResourceRow(pair.Key, CalcUtils.FormatNumber(pair.Value - extra, true) + (extra >= 1 ? $" (+{CalcUtils.FormatNumber(extra, true)})" : "")); }
             SetVisible(overlay, true);
         }
         private void SetResourceRow(Resource resource, string value)
         {
-            if (!resourceRows.TryGetValue(resource, out var row)) { row = E(detailRows,"row ledger-entry");row.tooltip=resource.name;ToolkitGameplay.Icon(row,resource.icon,18);L(row,"","small").name="amount"; resourceRows.Add(resource, row); }
+            if (!resourceRows.TryGetValue(resource, out var row)) { row = E(detailRows,"row ledger-entry");row.tooltip=ToolkitLocalization.Name(resource);ToolkitGameplay.Icon(row,resource.icon,18);L(row,"","small").name="amount"; resourceRows.Add(resource, row); }
             row.Q<Label>("amount").text = value;
         }
         public void HideDetails() { DismissJoke(); if(detail!=null)detail.Q(className: "breakdown-rate").style.display=DisplayStyle.None; showingBreakdown = false; if(detailSummary!=null)detailSummary.style.display=DisplayStyle.None;if(runTime!=null)runTime.text="";if(runRatesLeft!=null)runRatesLeft.text="";if(runRatesRight!=null)runRatesRight.text="";SetVisible(overlay, false); detailRows?.Clear(); resourceRows.Clear(); }
         private static void SetVisible(VisualElement element, bool value) { if (element != null) element.style.display = value ? DisplayStyle.Flex : DisplayStyle.None; }
         private void OnDisable()
         {
+            ToolkitLocalization.Changed -= LocalizationChanged;
             Blindsided.EventHandler.OnRunStarted -= RunStarted;
             if (resources) resources.OnResourceAdded -= ResourceAdded;
             if (tracker) tracker.OnRunEnded -= RunEnded;

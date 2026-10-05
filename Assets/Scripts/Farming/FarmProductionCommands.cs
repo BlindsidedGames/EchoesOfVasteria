@@ -11,6 +11,12 @@ namespace TimelessEchoes.Farming
         public static readonly string[] OrchardBeds = Enumerable.Range(1, 6).Select(i => "farm.orchard." + i).ToArray();
         public static readonly string[] CropNames = { "radish", "corn", "wheat", "watermelone", "carrot", "spud", "tomato", "lettuce", "cucumber", "leek", "parsnip", "pepper", "chillie", "pumking", "strawberry", "funion", "turnip" };
         public static bool KnownSeed(string id) => id != null && CropNames.Any(n => id == "seed." + n);
+        public static string SeedResourceName(string id)
+        {
+            if (!KnownSeed(id)) throw new ArgumentException("Unknown seed", nameof(id));
+            var crop = id.Substring(5);
+            return char.ToUpperInvariant(crop[0]) + crop.Substring(1) + " Seed Pack";
+        }
         public static bool KnownRecipe(string id) => id != null && CropNames.Concat(new[] { "apple", "pear", "peach", "cherry" }).Any(n => id == "recipe." + n + ".v1");
         public static bool KnownBuild(string id) => id == FarmContent.IntroductionId ||
             Enumerable.Range(1, 6).Any(i => id == "Farm.Garden.Build" + i.ToString("D2") + ".v1") ||
@@ -73,18 +79,13 @@ namespace TimelessEchoes.Farming
             if (bed.IsPlanted) return "BedOccupied";
             if (!content.CanPlant(owner, recipe) || recipe.orchard != OrchardBeds.Contains(id) || !recipe.output) return "RecipeLocked";
             if (!Finite(content.baseDurationSeconds) || content.baseDurationSeconds <= 0 || !Finite(content.baseYield) || content.baseYield <= 0 || content.harvestXp <= 0) return "InvalidRecipeTuning";
-            if (recipe.paidInput)
-            {
-                owner.Resources.TryGetValue(recipe.paidInput.name, out var input);
-                result.ResourceDeltas.TryGetValue(recipe.paidInput.name, out var staged);
-                if (input == null || !Finite(input.Amount) || input.Amount + staged < 1) return "NoMatchingSapling";
-                result.ResourceDeltas[recipe.paidInput.name] = staged - 1;
-            }
-            else
-            {
-                if (string.IsNullOrEmpty(recipe.seedId) || !state.Seeds.TryGetValue(recipe.seedId, out var seed) || seed == null || seed.Quantity <= 0) return "NoMatchingSeeds";
-                seed.Quantity--;
-            }
+            if (!recipe.paidInput || !recipe.orchard && recipe.paidInput.name != SeedResourceName(recipe.seedId)) return "MissingPaidInput";
+            owner.Resources.TryGetValue(recipe.paidInput.name, out var input);
+            result.ResourceDeltas.TryGetValue(recipe.paidInput.name, out var staged);
+            var cost = FarmContent.PlantingCost(recipe.orchard);
+            if (input == null || !Finite(input.Amount) || input.Amount + staged < cost)
+                return recipe.orchard ? "NoMatchingSapling" : "NoMatchingSeeds";
+            result.ResourceDeltas[recipe.paidInput.name] = staged - cost;
             if (!FarmJournal.TrySequence(state, operationId, out var sequence, out _)) return "InvalidPlantReceipt";
             bed.PlantSequence = sequence;
             bed.BatchId = "fields:" + operationId + ":" + id;
@@ -198,9 +199,8 @@ namespace TimelessEchoes.Farming
             if (!state.PendingCredits.TryGetValue(operationId, out var pending) || pending == null || pending.SeedId != seedId || pending.Rolled != rolled) return Reject("PendingRollConflict");
             result.Candidate.PendingCredits.Remove(operationId);
             if (!rolled) return result;
-            if (!result.Candidate.Seeds.TryGetValue(seedId, out var seed) || seed == null) result.Candidate.Seeds[seedId] = seed = new FarmSeedState();
-            if (seed.Quantity < 0 || seed.LifetimeAcquired < 0 || seed.Quantity == long.MaxValue || seed.LifetimeAcquired == long.MaxValue) return Reject("InvalidSeedBalance");
-            seed.Quantity++; seed.LifetimeAcquired++; return result;
+            result.ResourceDeltas[SeedResourceName(seedId)] = 1;
+            return result;
         }
     }
 }

@@ -107,8 +107,8 @@ namespace Tests.EditMode
             Assert.AreEqual(19, candidate.ResourceStats["Radish"].TotalSpent);
             Assert.AreEqual(44, candidate.General.TasksCompleted);
             Assert.AreEqual(900, candidate.General.TotalResourcesGathered);
-            Assert.AreEqual(2, candidate.Farm.Seeds[FarmCommands.RadishSeedId].LifetimeAcquired);
-            Assert.AreEqual(0, candidate.Farm.Seeds[FarmCommands.RadishSeedId].Quantity);
+            Assert.AreEqual(2, candidate.ResourceStats["Radish Seed Pack"].TotalReceived);
+            Assert.AreEqual(0, candidate.Resources["Radish Seed Pack"].Amount);
             AssertPreservedProgress(candidate);
         }
 
@@ -122,7 +122,7 @@ namespace Tests.EditMode
             Assert.AreEqual(3, paid.Resources["Radish"].Tier);
             Assert.AreEqual(17, paid.SkillData["Farming"].Level);
             Assert.AreEqual(900, paid.General.TotalResourcesGathered);
-            Assert.AreEqual(2, paid.Farm.Seeds[FarmCommands.RadishSeedId].LifetimeAcquired);
+            Assert.AreEqual(2, paid.ResourceStats["Radish Seed Pack"].TotalReceived);
             var write = SaveManager.Instance.SaveDetailedAsync(paid, "Save1").GetAwaiter().GetResult();
             Assert.IsTrue(write.Succeeded, write.Error);
             var loaded = SaveManager.Instance.LoadDetailedAsync("Save1").GetAwaiter().GetResult();
@@ -142,7 +142,7 @@ namespace Tests.EditMode
             source.DuckHelmetSanitized = true;
             var loaded = SerializationUtility.DeserializeValue<GameData>(CurrentSaveCodec.Serialize(source), DataFormat.Binary);
             Assert.AreEqual(1, loaded.Farm.Operations["plant-east"].BatchIds.Count);
-            Assert.AreEqual(2, loaded.Farm.Seeds[FarmCommands.RadishSeedId].LifetimeAcquired);
+            Assert.AreEqual(2, loaded.ResourceStats["Radish Seed Pack"].TotalReceived);
             Assert.AreEqual(source.Farm.Beds[FarmCommands.WestBedId].BatchId, loaded.Farm.Beds[FarmCommands.WestBedId].BatchId);
             Assert.IsTrue(loaded.UpgradeLevels == null || loaded.UpgradeLevels.Count == 0);
             Assert.IsFalse(loaded.StatUpgradesMigratedToGear);
@@ -166,7 +166,7 @@ namespace Tests.EditMode
             Assert.IsTrue(success.Succeeded, success.Error);
             var loaded = SaveManager.Instance.LoadDetailedAsync("Save1").GetAwaiter().GetResult();
             Assert.IsTrue(loaded.Succeeded, loaded.Diagnostic);
-            Assert.AreEqual(1, loaded.Data.Farm.Seeds[FarmCommands.RadishSeedId].Quantity);
+            Assert.AreEqual(1, loaded.Data.Resources["Radish Seed Pack"].Amount);
             Assert.AreEqual(FarmCommandStatus.AlreadyApplied,
                 FarmCommands.RecordRadishAdventureCompletion(loaded.Data.Farm, "return", Start, true, true).Status);
         }
@@ -200,8 +200,8 @@ namespace Tests.EditMode
 
             var credited = CommitAndReload(reloaded, FarmCommands.RecordRadishAdventureCompletion(
                 reloaded.Farm, "return", Start.AddMinutes(1), true, intent.Rolled));
-            Assert.AreEqual(1, credited.Farm.Seeds[FarmCommands.RadishSeedId].Quantity);
-            Assert.AreEqual(1, credited.Farm.Seeds[FarmCommands.RadishSeedId].LifetimeAcquired);
+            Assert.AreEqual(1, credited.Resources["Radish Seed Pack"].Amount);
+            Assert.AreEqual(1, credited.ResourceStats["Radish Seed Pack"].TotalReceived);
             Assert.IsFalse(credited.Farm.PendingCredits.ContainsKey("return"));
             Assert.IsTrue(credited.Farm.PendingCredits.ContainsKey("other-miss"));
             Assert.AreEqual(FarmCommandStatus.AlreadyApplied,
@@ -236,7 +236,7 @@ namespace Tests.EditMode
             state = CommitAndReload(state, FarmCommands.RecordRadishAdventureCompletion(state.Farm, "return-two", Start, true, true));
             state = CommitAndReload(state, FarmCommands.Plant(state.Farm, FarmCommands.WestBedId, "plant-west", Start, tuning));
             state = CommitAndReload(state, FarmCommands.Plant(state.Farm, FarmCommands.EastBedId, "plant-east", Start, tuning));
-            Assert.AreEqual(0, state.Farm.Seeds[FarmCommands.RadishSeedId].Quantity);
+            Assert.AreEqual(0, state.Resources["Radish Seed Pack"].Amount);
             Assert.AreEqual(FarmCommandStatus.AlreadyApplied,
                 FarmCommands.Plant(state.Farm, FarmCommands.WestBedId, "plant-west", Start, tuning).Status);
             Assert.AreEqual("NoReadyBeds", FarmCommands.HarvestReady(state.Farm, "clock-only", Start.AddMonths(1)).Reason);
@@ -274,7 +274,7 @@ namespace Tests.EditMode
             Assert.AreEqual(2, done.Farm.CommittedThroughSequence);
             Assert.IsEmpty(done.Farm.PendingCredits);
             Assert.IsEmpty(done.Farm.CompletedSequences);
-            Assert.AreEqual(1, done.Farm.Seeds[FarmCommands.RadishSeedId].Quantity);
+            Assert.AreEqual(1, done.Resources["Radish Seed Pack"].Amount);
             Assert.AreEqual(FarmCommandStatus.AlreadyApplied,
                 FarmCommands.RecordRadishAdventureCompletion(done.Farm, first, Start, true, true).Status);
             Assert.AreEqual("OperationIdConflict",

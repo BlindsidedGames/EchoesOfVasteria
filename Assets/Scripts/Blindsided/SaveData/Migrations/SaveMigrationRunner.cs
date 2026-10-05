@@ -249,6 +249,7 @@ namespace Blindsided.SaveData.Migrations
             Register(new Migration_SchemaV4CurrentCollections());
             Register(new Migration_SchemaV5AlterEchoRetirement());
             Register(new Migration_SchemaV6Fields());
+            Register(new Migration_SchemaV7SeedResources());
         }
     }
 

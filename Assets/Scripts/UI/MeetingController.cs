@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -18,7 +19,9 @@ namespace TimelessEchoes.UI
         [SerializeField] private TMP_Text dialogueText;
 
         private List<string> lines;
+        private IReadOnlyList<string> lineKeys;
         private int index;
+        private bool started;
         private Action onFinished;
 
         private void Awake()
@@ -27,6 +30,14 @@ namespace TimelessEchoes.UI
                 meetButton.onClick.AddListener(StartConversation);
             if (dialogueObject != null)
                 dialogueObject.SetActive(false);
+        }
+
+        private void OnEnable() => ToolkitLocalization.Changed += RefreshLocale;
+        private void OnDisable() => ToolkitLocalization.Changed -= RefreshLocale;
+        private void RefreshLocale()
+        {
+            if (started) ShowLine();
+            else if (meetButtonText != null) meetButtonText.text = ToolkitLocalization.Text("meeting.meet", "Meet");
         }
 
         private void OnDestroy()
@@ -41,13 +52,14 @@ namespace TimelessEchoes.UI
         /// <summary>
         /// Initialize the UI with dialogue lines and NPC portrait.
         /// </summary>
-        public void Init(Sprite portrait, List<string> dialogue, Action finished)
+        public void Init(Sprite portrait, List<string> dialogue, Action finished, IReadOnlyList<string> localizedLineKeys = null)
         {
             npcImage.sprite = portrait;
             lines = dialogue;
+            lineKeys = localizedLineKeys;
             onFinished = finished;
             if (meetButtonText != null)
-                meetButtonText.text = "Meet";
+                meetButtonText.text = ToolkitLocalization.Text("meeting.meet", "Meet");
         }
 
         private void StartConversation()
@@ -58,6 +70,7 @@ namespace TimelessEchoes.UI
                 meetButton.onClick.AddListener(Advance);
             }
 
+            started = true;
             index = 0;
             if (dialogueObject != null)
                 dialogueObject.SetActive(true);
@@ -68,14 +81,15 @@ namespace TimelessEchoes.UI
         private void ShowLine()
         {
             if (dialogueText != null && lines != null && index < lines.Count)
-                dialogueText.text = lines[index];
+                dialogueText.text = lineKeys != null && index < lineKeys.Count && !string.IsNullOrEmpty(lineKeys[index])
+                    ? ToolkitLocalization.Text(lineKeys[index], lines[index]) : lines[index];
 
             if (meetButtonText != null)
             {
                 if (index >= lines.Count - 1)
-                    meetButtonText.text = "Close";
+                    meetButtonText.text = ToolkitLocalization.Text("meeting.close", "Close");
                 else
-                    meetButtonText.text = "Next";
+                    meetButtonText.text = ToolkitLocalization.Text("meeting.next", "Next");
             }
         }
 

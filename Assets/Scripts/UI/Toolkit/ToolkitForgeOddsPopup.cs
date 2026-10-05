@@ -13,7 +13,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             oddsPinned=oddsHovered=popupHovered=false;oddsLabels.Clear();
             oddsPopup=new VisualElement{name="forge-odds-popup"};oddsPopup.AddToClassList("forge-odds-popup");root.Add(oddsPopup);
-            Label(oddsPopup,"Rarity odds",ToolkitControls.TextRole.Heading);
+            LocalizedLabel(oddsPopup, "forge.rarity-odds", "Rarity odds",ToolkitControls.TextRole.Heading);
             oddsRows=new VisualElement();oddsPopup.Add(oddsRows);oddsPopup.style.display=DisplayStyle.None;
             odds.focusable=true;odds.tabIndex=0;
             odds.RegisterCallback<PointerEnterEvent>(e=>{if(e.pointerType!="mouse")return;oddsHovered=true;ShowOddsPopup();});
@@ -42,7 +42,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             while(oddsLabels.Count<weights.Count){var row=new VisualElement();row.AddToClassList("forge-odds-row");oddsRows.Add(row);var swatch=new VisualElement();swatch.AddToClassList("forge-odds-swatch");row.Add(swatch);var name=Label(row,"");name.AddToClassList("forge-odds-name");var value=Label(row,"");value.AddToClassList("forge-odds-value");oddsLabels.Add((swatch,name,value));}
             float total=0;foreach(var entry in weights)total+=Mathf.Max(0,entry.w);
-            for(int i=0;i<oddsLabels.Count;i++){var labels=oddsLabels[i];labels.name.parent.style.display=i<weights.Count?DisplayStyle.Flex:DisplayStyle.None;if(i>=weights.Count)continue;var entry=weights[i];labels.swatch.style.backgroundColor=entry.r?entry.r.color:Color.white;labels.name.text=entry.r?entry.r.GetName():"Unknown";labels.value.text=(total>0?Mathf.Max(0,entry.w)/total*100:0).ToString("0.000")+"%";}
+            for(int i=0;i<oddsLabels.Count;i++){var labels=oddsLabels[i];labels.name.parent.style.display=i<weights.Count?DisplayStyle.Flex:DisplayStyle.None;if(i>=weights.Count)continue;var entry=weights[i];labels.swatch.style.backgroundColor=entry.r?entry.r.color:Color.white;labels.name.text=entry.r?entry.r.GetName():ToolkitLocalization.Text("common.unknown", "Unknown");labels.value.text=(total>0?Mathf.Max(0,entry.w)/total*100:0).ToString("0.000")+"%";}
         }
     }
 }

@@ -427,10 +427,7 @@ namespace TimelessEchoes.UI
 
         private void ShowNativeQuests(bool withInventory)
         {
-            
-            SetResourceInventoryVisible(withInventory);
-            toolkitQuests.CompanionWidth = withInventory ? 178 : 0;
-            toolkitQuests.Show();
+            toolkitQuests.Show(withInventory ? toolkitResources : null);
         }
 
         private void OpenCredits()
@@ -550,6 +547,7 @@ namespace TimelessEchoes.UI
 
         public bool TryHighlightNativeResource(Upgrades.Resource resource, bool scrollToSlot)
         {
+            if (toolkitQuests != null && toolkitQuests.TryHighlightResource(resource, scrollToSlot)) return true;
             if (toolkitResources == null || !toolkitResources.IsConfigured) return false;
             SetResourceInventoryVisible(true);
             toolkitResources.HighlightResource(resource, scrollToSlot);
@@ -561,7 +559,8 @@ namespace TimelessEchoes.UI
         {
             if (toolkitResources == null || !toolkitResources.IsOpen || toolkitResources.ManualLayout) return;
             var area = Toolkit.ToolkitWindowLayout.SafeArea;
-            toolkitResources.Bounds = new Rect(area.xMax - 190, area.y + 44, 178, Mathf.Max(0,area.height - 56));
+            var width = Mathf.Min(640, Mathf.Max(0, area.width - 24));
+            toolkitResources.Bounds = new Rect(area.center.x - width / 2, area.y + 44, width, Mathf.Max(0,area.height - 56));
         }
 
         private void ToggleForgeInfo()
@@ -793,4 +792,3 @@ namespace TimelessEchoes.UI
         }
     }
 }
-

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8c46105a822e04290ca4001c548df8, type: 3}
+  m_Name: Lettuce Seed Pack
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.Upgrades.Resource
+  foodEligibility: 2
+  resourceID: 92
+  icon: {fileID: 459907259450771117, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+  UnknownIcon: {fileID: 250467468400558940, guid: 7bac5cbb13a44452b84e002f5ab62650, type: 3}
+  baseValue: 0
+  valueMultiplier: 1
+  DisableAlterEcho: 1
+  cauldronCategory: 1
+  totalReceived: 0
+  totalSpent: 0

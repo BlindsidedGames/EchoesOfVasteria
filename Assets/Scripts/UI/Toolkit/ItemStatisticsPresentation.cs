@@ -48,16 +48,16 @@ namespace TimelessEchoes.UI.Toolkit
             var earned = resource.totalReceived > 0;
             var amount = manager ? manager.GetAmount(resource) : 0;
             var tier = earned && manager ? manager.GetTier(resource) : 1;
-            var name = earned ? resource.name : "???";
-            var totals = $"Collected: {Number(resource.totalReceived)}\nSpent: {Number(resource.totalSpent)}";
+            var name = earned ? ToolkitLocalization.Name(resource) : "???";
+            var totals = ToolkitLocalization.Text("statistics.item-totals", "Collected: {0}\nSpent: {1}", Number(resource.totalReceived), Number(resource.totalSpent));
             double best = 0;
             if (oracle != null && oracle.saveData.Resources != null && oracle.saveData.Resources.TryGetValue(resource.name, out var record)) best = record.BestPerMinute;
-            var power = resource.DisableAlterEcho ? "N/A" : Number(best);
-            var detail = $"Best gathered/min: {power}";
+            var power = resource.DisableAlterEcho ? ToolkitLocalization.Text("common.not-applicable", "N/A") : Number(best);
+            var detail = ToolkitLocalization.Text("statistics.item-best-rate", "Best gathered/min: {0}", power);
             if (earned)
             {
-                if (resource.DisableAlterEcho) detail = "Crafted\n" + detail;
-                else if (tier > 1) detail = $"Tier Bonus: {(manager ? manager.GetTierBonusPercent(tier) : 0):0.#}%\n" + detail;
+                if (resource.DisableAlterEcho) detail = ToolkitLocalization.Text("statistics.item-crafted", "Crafted\n{0}", detail);
+                else if (tier > 1) detail = ToolkitLocalization.Text("statistics.item-tier-bonus", "Tier Bonus: {0:0.#}%\n{1}", manager ? manager.GetTierBonusPercent(tier) : 0, detail);
             }
             if (resource.DisableAlterEcho && earned && tierCount > 0) tier = tierCount;
             return (name, totals, detail, tier, earned ? resource.icon : null, Number(amount));

@@ -40,7 +40,7 @@ namespace TimelessEchoes.UI.Toolkit
                 enemyDistance = ToolkitControls.Slider("enemy-distance", 0, tracker.MaxRunDistance, _ => RefreshEnemies(), definition.sliderTrack, definition.sliderFill, definition.sliderHandle);
                 ToolkitGameplay.StyleSlider(enemyDistance);ToolkitControls.SetSliderValue(enemyDistance, tracker.MaxRunDistance); distanceControls.Add(enemyDistance);
                 foreach (EnemyStatsPanelUI.SortMode mode in Enum.GetValues(typeof(EnemyStatsPanelUI.SortMode)))
-                    statSortButtons.Add(Action(footer, "enemy-sort-" + mode, mode switch { EnemyStatsPanelUI.SortMode.AttackRate => "Attack Rate", EnemyStatsPanelUI.SortMode.MoveSpeed => "Movement", _ => mode.ToString() }, () => SetEnemySort(mode)));
+                    statSortButtons.Add(Action(footer, "enemy-sort-" + mode, EnemySortLabel(mode), () => SetEnemySort(mode)));
             }
             else
             {
@@ -52,9 +52,26 @@ namespace TimelessEchoes.UI.Toolkit
                     taskRows.Add(data, row); statContent.Add(row.Root);
                 }
                 foreach (TaskStatsPanelUI.SortMode mode in Enum.GetValues(typeof(TaskStatsPanelUI.SortMode)))
-                    statSortButtons.Add(Action(footer, "task-sort-" + mode, mode == TaskStatsPanelUI.SortMode.TaskTime ? "Task Time" : mode.ToString(), () => SetTaskSort(mode)));
+                    statSortButtons.Add(Action(footer, "task-sort-" + mode, TaskSortLabel(mode), () => SetTaskSort(mode)));
             }
         }
+        private static string EnemySortLabel(EnemyStatsPanelUI.SortMode mode) => mode switch
+        {
+            EnemyStatsPanelUI.SortMode.Damage => ToolkitLocalization.Text("statistics.sort-damage", "Damage"),
+            EnemyStatsPanelUI.SortMode.Health => ToolkitLocalization.Text("statistics.sort-health", "Health"),
+            EnemyStatsPanelUI.SortMode.Defense => ToolkitLocalization.Text("statistics.sort-defense", "Defense"),
+            EnemyStatsPanelUI.SortMode.AttackRate => ToolkitLocalization.Text("statistics.sort-attackrate", "Attack Rate"),
+            EnemyStatsPanelUI.SortMode.MoveSpeed => ToolkitLocalization.Text("statistics.sort-movespeed", "Movement"),
+            EnemyStatsPanelUI.SortMode.Vision => ToolkitLocalization.Text("statistics.sort-vision", "Vision"),
+            _ => ToolkitLocalization.Text("statistics.sort-default", "Default")
+        };
+        private static string TaskSortLabel(TaskStatsPanelUI.SortMode mode) => mode switch
+        {
+            TaskStatsPanelUI.SortMode.Completions => ToolkitLocalization.Text("statistics.sort-completions", "Completions"),
+            TaskStatsPanelUI.SortMode.TaskTime => ToolkitLocalization.Text("statistics.sort-tasktime", "Task Time"),
+            TaskStatsPanelUI.SortMode.Unknown => ToolkitLocalization.Text("statistics.sort-unknown", "Unknown"),
+            _ => ToolkitLocalization.Text("statistics.sort-default", "Default")
+        };
         public void SetTaskSort(TaskStatsPanelUI.SortMode mode) { taskSort = mode; if (IsOpen && selectedTab == 4) RefreshTasks(); }
         public void SetEnemySort(EnemyStatsPanelUI.SortMode mode) { enemySort = mode; if (IsOpen && selectedTab == 3) RefreshEnemies(); }
         private void RefreshTasks()
@@ -69,14 +86,14 @@ namespace TimelessEchoes.UI.Toolkit
                 row.Title.text = data.title; row.Fields[0].text = data.totals; row.Fields[1].text = data.detail; row.SetEntryIcon(data.icon, data.toggleVisible, data.toggle);
                 row.Toggle.style.display = data.toggleVisible ? DisplayStyle.Flex : DisplayStyle.None;
                 ToolkitGameplay.SetToggle(row.ToggleIcon,data.toggle);
-                row.Toggle.tooltip = data.toggle ? "Spawn boost enabled. Click to remove the task weight bonus." : "Boost this task's spawn weight. Completion milestones increase the bonus.";
+                row.Toggle.tooltip = data.toggle ? ToolkitLocalization.Text("statistics.task-boost-enabled", "Spawn boost enabled. Click to remove the task weight bonus.") : ToolkitLocalization.Text("statistics.task-boost-hint", "Boost this task's spawn weight. Completion milestones increase the bonus.");
             }
             for (var i = 0; i < statSortButtons.Count; i++) StyleSelection(statSortButtons[i], i == (int)taskSort);
         }
         private void RefreshEnemies()
         {
             var distance = enemyDistance?.value ?? tracker.MaxRunDistance;
-            if (enemyDistanceLabel != null) enemyDistanceLabel.text = $"Preview distance: {distance:N0}";
+            if (enemyDistanceLabel != null) enemyDistanceLabel.text = ToolkitLocalization.Text("statistics.preview-distance", "Preview distance: {0:N0}", distance);
             var ordered = enemyPresentation.Ordered(enemySort, killTracker);
             for (var index = 0; index < ordered.Count; index++)
             {

@@ -8,7 +8,7 @@ namespace TimelessEchoes.UI.Toolkit
     /// <summary>Native encounter presentation. Rewards remain owned by TalkToNpcTask.</summary>
     public sealed class ToolkitMeetingView : IDisposable
     {
-        private readonly IReadOnlyList<string> lines;
+        private readonly IReadOnlyList<string> lines, lineKeys;
         private readonly Action finished;
         private readonly Label dialogue;
         private readonly VisualElement dialogueFrame;
@@ -20,9 +20,10 @@ namespace TimelessEchoes.UI.Toolkit
         public Button AdvanceButton { get; }
 
         public ToolkitMeetingView(ToolkitTheme theme, VisualTreeAsset template, Sprite portrait,
-            ToolkitMeetingDefinition definition, IReadOnlyList<string> lines, Action finished)
+            ToolkitMeetingDefinition definition, IReadOnlyList<string> lines, Action finished, IReadOnlyList<string> localizedLineKeys = null)
         {
             this.lines = lines ?? Array.Empty<string>();
+            lineKeys = localizedLineKeys ?? Array.Empty<string>();
             this.finished = finished;
             Root = template.CloneTree();
             Root.AddToClassList("eov-meeting");
@@ -55,6 +56,7 @@ namespace TimelessEchoes.UI.Toolkit
             next = new ToolkitTextBinding(nextLabel, definition.next);
             close = new ToolkitTextBinding(closeLabel, definition.close);
             AdvanceButton.clicked += Advance;
+            ToolkitLocalization.Changed += Refresh;
             Refresh();
         }
 
@@ -77,7 +79,8 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var started = index >= 0;
             dialogueFrame.style.display = started ? DisplayStyle.Flex : DisplayStyle.None;
-            dialogue.text = started && index < lines.Count ? "<b><smallcaps>" + lines[index] + "</smallcaps></b>" : string.Empty;
+            dialogue.text = started && index < lines.Count ? "<b><smallcaps>" + (index < lineKeys.Count && !string.IsNullOrEmpty(lineKeys[index])
+                ? ToolkitLocalization.Text(lineKeys[index], lines[index]) : lines[index]) + "</smallcaps></b>" : string.Empty;
             meetLabel.style.display = !started ? DisplayStyle.Flex : DisplayStyle.None;
             nextLabel.style.display = started && index < lines.Count - 1 ? DisplayStyle.Flex : DisplayStyle.None;
             closeLabel.style.display = started && index >= lines.Count - 1 ? DisplayStyle.Flex : DisplayStyle.None;
@@ -88,6 +91,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (disposed) return;
             disposed = true;
             AdvanceButton.clicked -= Advance;
+            ToolkitLocalization.Changed -= Refresh;
             meet.Dispose(); next.Dispose(); close.Dispose();
             Root.RemoveFromHierarchy();
         }

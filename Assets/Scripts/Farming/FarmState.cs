@@ -8,6 +8,8 @@ namespace TimelessEchoes.Farming
     {
         public int FormatVersion = 2;
         public int ProductionRevision;
+        public int SeedResourceRevision;
+        public HashSet<string> MigratedSeedIds = new HashSet<string>();
         public int TwinsLevel = 1;
         public long TwinsXp;
         public int GardenCapacity;
@@ -32,6 +34,8 @@ namespace TimelessEchoes.Farming
             var copy = new FarmState
             {
                 FormatVersion = FormatVersion,
+                SeedResourceRevision = SeedResourceRevision,
+                MigratedSeedIds = MigratedSeedIds == null ? new HashSet<string>() : new HashSet<string>(MigratedSeedIds),
                 ProductionRevision = ProductionRevision, TwinsLevel = TwinsLevel, TwinsXp = TwinsXp,
                 GardenCapacity = GardenCapacity, OrchardCapacity = OrchardCapacity,
                 JournalLineage = JournalLineage,

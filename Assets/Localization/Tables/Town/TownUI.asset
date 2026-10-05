@@ -15,8 +15,99 @@ MonoBehaviour:
   m_SharedTableData: {fileID: 11400000, guid: 79e2dd3ef4efaf5459ce0f738238ca3e, type: 2}
   m_Tables:
   - {fileID: 11400000, guid: e588c3f30e48de949a70bdde60854425, type: 2}
-  m_Extensions: []
+  - {fileID: 11400000, guid: 7cf90e9ab8da540788830bf5268256f7, type: 2}
+  - {fileID: 11400000, guid: 78dd8501a3d544a448f304f3dc3c4818, type: 2}
+  - {fileID: 11400000, guid: 9a051e913a68a435ea58cbe1fdc6b82a, type: 2}
+  - {fileID: 11400000, guid: 60c6e847ce90647389bfd028308db015, type: 2}
+  - {fileID: 11400000, guid: 50cc9cb449bf545b5bae096379ac0243, type: 2}
+  - {fileID: 11400000, guid: 40ed7eccdf5c34cf889893dc46bdc611, type: 2}
+  - {fileID: 11400000, guid: 05ac69aca0f3b4adf9769ccb0db6b0cb, type: 2}
+  m_Extensions:
+  - rid: 734948348087239144
   m_Group: String Table
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 734948348087239144
+      type: {class: GoogleSheetsExtension, ns: UnityEditor.Localization.Plugins.Google, asm: Unity.Localization.Editor}
+      data:
+        m_Collection: {fileID: 11400000}
+        m_SheetsServiceProvider: {fileID: 11400000, guid: 85532a2f471db3045a9e72e90e8d10a7, type: 2}
+        m_SpreadsheetId: 1OVkC28D9Mb7R6WX-FZuJ0q1dsyqF7WdozTQFKOoMTLg
+        m_SheetId: 1914820999
+        m_Columns:
+        - rid: 734948348087239145
+        - rid: 734948348087239146
+        - rid: 734948348087239147
+        - rid: 734948348087239148
+        - rid: 734948348087239149
+        - rid: 734948348087239150
+        - rid: 734948348087239151
+        - rid: 734948348087239152
+        - rid: 734948348087239153
+        - rid: 734948348087239154
+        m_RemoveMissingPulledKeys: 0
+    - rid: 734948348087239145
+      type: {class: KeyColumn, ns: UnityEditor.Localization.Plugins.Google.Columns, asm: Unity.Localization.Editor}
+      data:
+        m_Column: A
+    - rid: 734948348087239146
+      type: {class: KeyCommentColumn, ns: UnityEditor.Localization.Plugins.Google.Columns, asm: Unity.Localization.Editor}
+      data:
+        m_Column: B
+    - rid: 734948348087239147
+      type: {class: LocaleColumn, ns: UnityEditor.Localization.Plugins.Google.Columns, asm: Unity.Localization.Editor}
+      data:
+        m_Column: C
+        m_LocaleIdentifier:
+          m_Code: en
+        m_IncludeComments: 0
+    - rid: 734948348087239148
+      type: {class: LocaleColumn, ns: UnityEditor.Localization.Plugins.Google.Columns, asm: Unity.Localization.Editor}
+      data:
+        m_Column: D
+        m_LocaleIdentifier:
+          m_Code: ru
+        m_IncludeComments: 0
+    - rid: 734948348087239149
+      type: {class: LocaleColumn, ns: UnityEditor.Localization.Plugins.Google.Columns, asm: Unity.Localization.Editor}
+      data:
+        m_Column: E
+        m_LocaleIdentifier:
+          m_Code: fr
+        m_IncludeComments: 0
+    - rid: 734948348087239150
+      type: {class: LocaleColumn, ns: UnityEditor.Localization.Plugins.Google.Columns, asm: Unity.Localization.Editor}
+      data:
+        m_Column: F
+        m_LocaleIdentifier:
+          m_Code: de
+        m_IncludeComments: 0
+    - rid: 734948348087239151
+      type: {class: LocaleColumn, ns: UnityEditor.Localization.Plugins.Google.Columns, asm: Unity.Localization.Editor}
+      data:
+        m_Column: G
+        m_LocaleIdentifier:
+          m_Code: es-419
+        m_IncludeComments: 0
+    - rid: 734948348087239152
+      type: {class: LocaleColumn, ns: UnityEditor.Localization.Plugins.Google.Columns, asm: Unity.Localization.Editor}
+      data:
+        m_Column: H
+        m_LocaleIdentifier:
+          m_Code: pt-BR
+        m_IncludeComments: 0
+    - rid: 734948348087239153
+      type: {class: LocaleColumn, ns: UnityEditor.Localization.Plugins.Google.Columns, asm: Unity.Localization.Editor}
+      data:
+        m_Column: I
+        m_LocaleIdentifier:
+          m_Code: zh-CN
+        m_IncludeComments: 0
+    - rid: 734948348087239154
+      type: {class: LocaleColumn, ns: UnityEditor.Localization.Plugins.Google.Columns, asm: Unity.Localization.Editor}
+      data:
+        m_Column: J
+        m_LocaleIdentifier:
+          m_Code: ja
+        m_IncludeComments: 0

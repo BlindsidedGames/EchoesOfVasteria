@@ -49,6 +49,7 @@ public class SteamLanguageLocaleSelector : IStartupLocaleSelector
         { "russian", "ru" },
         { "schinese", "zh-CN" },
         { "spanish", "es" },
+        { "latam", "es-419" },
         { "swedish", "sv" },
         { "tchinese", "zh-TW" },
         { "thai", "th" },

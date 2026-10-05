@@ -48,6 +48,7 @@ namespace TimelessEchoes.UI.Toolkit
             instruction=Label("",6.7f);instruction.style.unityFontStyleAndWeight=FontStyle.Normal;instruction.style.letterSpacing=.134f;instructions.Add(instruction);
             scroll=ToolkitControls.RecessedScroll(root,"buff-recipes",theme,definition.inset);scroll.parent.AddToClassList("buff-list-frame");scroll.contentContainer.AddToClassList("buff-list-content");scroll.contentViewport.RegisterCallback<GeometryChangedEvent>(_=>SizeRows());
             inRun=GameplayStatTracker.Instance?.RunInProgress==true;
+            ToolkitLocalization.Changed+=LocalizationChanged;
             Blindsided.EventHandler.OnLoadData+=Loaded;Blindsided.EventHandler.OnQuestHandin+=QuestChanged;Blindsided.EventHandler.OnRunStarted+=RunStarted;Blindsided.EventHandler.OnRunEnded+=RunEnded;
             BuildRows();Layout();Refresh();return true;
         }
@@ -61,7 +62,7 @@ namespace TimelessEchoes.UI.Toolkit
         private static void SetIcon(Image image,Sprite sprite){image.sprite=sprite;image.style.width=sprite?sprite.rect.width*16/sprite.pixelsPerUnit:0;image.style.height=sprite?sprite.rect.height*16/sprite.pixelsPerUnit:0;image.style.flexShrink=0;}
         private void BuildRows()
         {
-            scroll.Clear();rows.Clear();var manager=BuffManager.Instance;if(!manager)return;
+            var offset=scroll.scrollOffset;scroll.Clear();rows.Clear();var manager=BuffManager.Instance;if(!manager)return;
             foreach(var recipe in manager.Recipes)
             {
                 if(!recipe||(recipe.requiredQuest&&(QuestManager.Instance==null||!QuestManager.Instance.IsQuestCompleted(recipe.requiredQuest))))continue;
@@ -74,17 +75,39 @@ namespace TimelessEchoes.UI.Toolkit
                 var timing=Label("",7);timing.AddToClassList("buff-entry-timing");row.Add(timing);
                 rows.Add((recipe,row,assign,effects,timing));
             }
-            SizeRows();
+            SizeRows();scroll.scrollOffset=offset;
         }
         private void SizeRows(){if(scroll==null)return;var width=scroll.contentViewport.contentRect.width;if(width<=0)return;var columns=width>=560?2:1;var size=Mathf.Floor((width-(columns-1)*12-1)/columns);for(int i=0;i<rows.Count;i++){rows[i].root.style.width=size;rows[i].root.style.marginRight=i%columns==columns-1?0:12;}}
         private void AssignSlot(int index){var manager=BuffManager.Instance;if(!manager)return;if(!inRun&&selected&&manager.IsSlotUnlocked(index))manager.AssignBuff(index,selected);else manager.ToggleSlotAutoCast(index);selected=null;Refresh();}
         private void Refresh()
         {
             var manager=BuffManager.Instance;if(!manager||!IsOpen)return;
-            instruction.text=inRun?"Assignments are locked during runs. Select an equipped slot to toggle autocast.":selected?"Choose a slot for "+selected.GetDisplayName()+". Select Cancel to finish without assigning.":"Select a buff to assign it. Select an equipped slot to toggle autocast.";
-            for(int i=0;i<5;i++){var recipe=manager.GetAssigned(i);icons[i].sprite=recipe?recipe.buffIcon:null;var unlocked=manager.IsSlotUnlocked(i);slots[i].SetEnabled(selected?unlocked:manager.IsAutoSlotUnlocked(i)&&recipe);slots[i].EnableInClassList("awaiting-assignment",selected&&unlocked);slots[i].EnableInClassList("buff-slot-auto",manager.IsSlotAutoCasting(i));autoIcons[i].style.display=manager.IsSlotAutoCasting(i)?DisplayStyle.Flex:DisplayStyle.None;locked[i].text=!unlocked?"Locked":"";slots[i].tooltip=!unlocked?"Slot locked":recipe?recipe.GetDisplayName()+(manager.IsAutoSlotUnlocked(i)?" · Autocast "+(manager.IsSlotAutoCasting(i)?"on":"off"):" · Autocast locked"):"Empty slot";}
-            foreach(var row in rows){int assigned=-1;for(int i=0;i<5;i++)if(manager.GetAssigned(i)==row.recipe){assigned=i;break;}row.root.EnableInClassList("buff-equipped",assigned>=0);row.root.EnableInClassList("buff-choosing",row.recipe==selected);row.assign.text=row.recipe==selected?"Cancel":assigned>=0?"Slot "+(assigned+1):"Assign";row.assign.SetEnabled(!inRun);var lines=row.recipe.GetDescriptionLines();row.effects.text=string.Join("\n",lines.Where(s=>!s.StartsWith("Duration:")&&!s.StartsWith("Distance:")));row.timing.text=row.recipe.durationType==BuffDurationType.DistancePercent?"Distance "+Mathf.CeilToInt(row.recipe.GetDuration()*100)+"%":"Duration "+CalcUtils.FormatTime(row.recipe.GetDuration(),shortForm:true)+"   ·   Cooldown "+CalcUtils.FormatTime(row.recipe.GetCooldown(),shortForm:true);}
+            instruction.text=inRun?ToolkitLocalization.Text("buffs.instructions-running", "Assignments are locked during runs. Select an equipped slot to toggle autocast."):selected?ToolkitLocalization.Text("buffs.instructions-select-slot", "Choose a slot for {0}. Select Cancel to finish without assigning.", selected.GetDisplayName()):ToolkitLocalization.Text("buffs.instructions-select-buff", "Select a buff to assign it. Select an equipped slot to toggle autocast.");
+            for(int i=0;i<5;i++)
+            {
+                var recipe=manager.GetAssigned(i);icons[i].sprite=recipe?recipe.buffIcon:null;
+                var unlocked=manager.IsSlotUnlocked(i);
+                slots[i].SetEnabled(selected?unlocked:manager.IsAutoSlotUnlocked(i)&&recipe);
+                slots[i].EnableInClassList("awaiting-assignment",selected&&unlocked);
+                slots[i].EnableInClassList("buff-slot-auto",manager.IsSlotAutoCasting(i));
+                autoIcons[i].style.display=manager.IsSlotAutoCasting(i)?DisplayStyle.Flex:DisplayStyle.None;
+                locked[i].text=!unlocked?ToolkitLocalization.Text("common.locked", "Locked"):"";
+                slots[i].tooltip=!unlocked?ToolkitLocalization.Text("buffs.slot-locked", "Slot locked"):recipe?
+                    manager.IsAutoSlotUnlocked(i)?manager.IsSlotAutoCasting(i)?ToolkitLocalization.Text("buffs.slot-autocast-on", "{0} · Autocast on", recipe.GetDisplayName()):ToolkitLocalization.Text("buffs.slot-autocast-off", "{0} · Autocast off", recipe.GetDisplayName()):ToolkitLocalization.Text("buffs.slot-autocast-locked", "{0} · Autocast locked", recipe.GetDisplayName()):ToolkitLocalization.Text("buffs.slot-empty", "Empty slot");
+            }
+            foreach(var row in rows)
+            {
+                int assigned=-1;for(int i=0;i<5;i++)if(manager.GetAssigned(i)==row.recipe){assigned=i;break;}
+                row.root.EnableInClassList("buff-equipped",assigned>=0);
+                row.root.EnableInClassList("buff-choosing",row.recipe==selected);
+                row.assign.text=row.recipe==selected?ToolkitLocalization.Text("common.cancel", "Cancel"):assigned>=0?ToolkitLocalization.Text("buffs.assigned-slot", "Slot {0}", assigned+1):ToolkitLocalization.Text("buffs.assign", "Assign");
+                row.assign.SetEnabled(!inRun);
+                // Timing is identified structurally, never by an English text prefix.
+                row.effects.text=string.Join("\n",row.recipe.GetDescriptionLines(includeTiming:false));
+                row.timing.text=row.recipe.durationType==BuffDurationType.DistancePercent?ToolkitLocalization.Text("buffs.timing-distance", "Distance {0}%", Mathf.CeilToInt(row.recipe.GetDuration()*100)):ToolkitLocalization.Text("buffs.timing-duration", "Duration {0}   ·   Cooldown {1}", CalcUtils.FormatTime(row.recipe.GetDuration(),shortForm:true), CalcUtils.FormatTime(row.recipe.GetCooldown(),shortForm:true));
+            }
         }
+        private void LocalizationChanged(){rebuild=true;nextRefresh=0;}
         private void Loaded(){selected=null;rebuild=true;}
         private void QuestChanged(string _)=>rebuild=true;
         private void RunStarted(){inRun=true;selected=null;Refresh();}
@@ -92,7 +115,7 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly ToolkitWindowLayout windowLayout=new();
         private void Layout(){var area=ToolkitWindowLayout.SafeArea;var width=Mathf.Min(744,area.width-24);windowLayout.Apply(root,new Rect(area.center.x-width/2,area.y+44,width,Mathf.Max(0,area.height-56)));}
         private void Update(){if(!IsOpen)return;Layout();if(rebuild){rebuild=false;BuildRows();Refresh();}if(Time.unscaledTime>=nextRefresh){nextRefresh=Time.unscaledTime+.25f;Refresh();}}
-        public void Hide(){Blindsided.EventHandler.OnLoadData-=Loaded;Blindsided.EventHandler.OnQuestHandin-=QuestChanged;Blindsided.EventHandler.OnRunStarted-=RunStarted;Blindsided.EventHandler.OnRunEnded-=RunEnded;root?.RemoveFromHierarchy();root=null;scroll=null;selected=null;rows.Clear();}
+        public void Hide(){ToolkitLocalization.Changed-=LocalizationChanged;Blindsided.EventHandler.OnLoadData-=Loaded;Blindsided.EventHandler.OnQuestHandin-=QuestChanged;Blindsided.EventHandler.OnRunStarted-=RunStarted;Blindsided.EventHandler.OnRunEnded-=RunEnded;root?.RemoveFromHierarchy();root=null;scroll=null;selected=null;rows.Clear();}
         private void OnDisable()=>Hide();
         private void OnDestroy(){Hide();if(panel)Destroy(panel);}
     }

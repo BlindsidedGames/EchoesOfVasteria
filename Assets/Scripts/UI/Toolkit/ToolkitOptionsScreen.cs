@@ -70,6 +70,7 @@ namespace TimelessEchoes.UI.Toolkit
             UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocaleChanged += RefreshLanguage;
             RefreshLanguage(UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocale);
             if (dialogs) dialogs.Imported += RefreshSlots;
+            ToolkitLocalization.Changed += RefreshLocalizedValues;
             RefreshSlots(); RefreshValues(); Layout(); return true;
         }
 
@@ -101,7 +102,15 @@ namespace TimelessEchoes.UI.Toolkit
         private Label Text(VisualElement parent, string id, float size = 8)
         {
             var label = new Label { name = id, pickingMode = PickingMode.Ignore }; label.AddToClassList("eov-options-label");
-            label.style.fontSize = Mathf.Max(7,size); parent.Add(label); bindings.Add(new ToolkitTextBinding(label, definition.Text(id))); labels[id] = label; return label;
+            label.style.fontSize = Mathf.Max(7,size); parent.Add(label);
+            // Computed labels own their localized templates; an asynchronous definition
+            // callback must not overwrite slot state, FPS or duration arguments.
+            var computed = id.StartsWith("slot-") || id.StartsWith("save-") && id.EndsWith("-label")
+                || id.StartsWith("load-") && id.EndsWith("-label") || id == "fps-label"
+                || id == "drops-label" || id == "player-damage-label" || id == "enemy-damage-label"
+                || id == "language-label";
+            if (!computed) bindings.Add(new ToolkitTextBinding(label, definition.Text(id)));
+            labels[id] = label; return label;
         }
         private Button ActionButton(VisualElement parent, string id, Action action, float height = 16, bool text = true)
         {
@@ -218,8 +227,9 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (locale == null || !labels.TryGetValue("language-label",out var label)) return;
             var text=definition.Text("locale-"+locale.Identifier.Code+"-label");
-            label.text=text.fallback.StartsWith("locale-")?locale.LocaleName:text.fallback;
+            label.text=text.fallback.StartsWith("locale-")?locale.LocaleName:ToolkitLocalization.Text(text.key,text.fallback);
         }
+        private void RefreshLocalizedValues() { if (IsOpen) { RefreshLanguage(UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocale); RefreshSlotLabels(); RefreshValues(); } }
         private void RefreshLoadedData() { RefreshSlots(); if (IsOpen) RefreshValues(); }
         private void RefreshSlots() { for (var i = 0; i < 3; i++) slots[i].Refresh(i); RefreshSlotLabels(); }
         private void RefreshSlotLabels()
@@ -230,12 +240,12 @@ namespace TimelessEchoes.UI.Toolkit
                 slots[i].Update(i); labels["slot-" + i + "-title"].text = "<b><smallcaps>" + slots[i].Title + "</smallcaps></b>";
                 labels["slot-" + i + "-playtime"].text = slots[i].Playtime;
                 labels["slot-" + i + "-date"].text = slots[i].LastPlayed;
-                labels["save-" + i + "-label"].text = "<b><smallcaps>Save</smallcaps></b>";
-                labels["load-" + i + "-label"].text = "<b><smallcaps>" + (safety[i] ? "Delete" : "Load") + "</smallcaps></b>";
+                labels["save-" + i + "-label"].text = "<b><smallcaps>" + ToolkitLocalization.Text("options.save", "Save") + "</smallcaps></b>";
+                labels["load-" + i + "-label"].text = "<b><smallcaps>" + (safety[i] ? ToolkitLocalization.Text("options.delete", "Delete") : ToolkitLocalization.Text("options.load", "Load")) + "</smallcaps></b>";
                 buttons["save-" + i].SetEnabled(CanSave(i)); buttons["load-" + i].SetEnabled(CanLoad(i)); SetToggle("safety-" + i, safety[i]);
             }
         }
-        private void SetToggle(string id, bool on) { ToolkitGameplay.SetToggle(buttons[id],on,!buttons[id].ClassListContains("settings-labelled-toggle"));buttons[id].tooltip=on?"On":"Off"; }
+        private void SetToggle(string id, bool on) { ToolkitGameplay.SetToggle(buttons[id],on,!buttons[id].ClassListContains("settings-labelled-toggle"));buttons[id].tooltip=on?ToolkitLocalization.Text("common.on", "On"):ToolkitLocalization.Text("common.off", "Off"); }
         private void SetSlider(string id, float value) { sliders[id].SetValueWithoutNotify(value); sliders[id].Q("value-fill").style.width = Length.Percent(value * 100); }
         private void RefreshValues()
         {
@@ -243,14 +253,14 @@ namespace TimelessEchoes.UI.Toolkit
             SetSlider("drops", DropFloatingTextDuration / 10); SetSlider("player-damage", PlayerDamageTextDuration / 2); SetSlider("enemy-damage", EnemyDamageTextDuration / 2);
             SetToggle("mute", MuteWhenUnfocused); SetToggle("vsync", VSyncEnabled); SetToggle("drops-toggle", ItemDropFloatingText);
             SetToggle("player-damage-toggle", PlayerFloatingDamage); SetToggle("enemy-damage-toggle", EnemyFloatingDamage);
-            buttons["fps"].SetEnabled(!VSyncEnabled); labels["fps-label"].text = "<b><smallcaps>" + (VSyncEnabled ? "FPS: VSync" : $"FPS: {TargetFps}") + "</smallcaps></b>";
+            buttons["fps"].SetEnabled(!VSyncEnabled); labels["fps-label"].text = "<b><smallcaps>" + (VSyncEnabled ? ToolkitLocalization.Text("options.fps-vsync", "FPS: VSync") : ToolkitLocalization.Text("options.fps", "FPS: {0}", TargetFps)) + "</smallcaps></b>";
             RefreshDurations();
         }
         private void RefreshDurations()
         {
-            labels["drops-label"].text = "Drops · " + CalcUtils.FormatTime(DropFloatingTextDuration, true, shortForm: true);
-            labels["player-damage-label"].text = "Incoming damage · " + CalcUtils.FormatTime(PlayerDamageTextDuration, true, shortForm: true);
-            labels["enemy-damage-label"].text = "Outgoing damage · " + CalcUtils.FormatTime(EnemyDamageTextDuration, true, shortForm: true);
+            labels["drops-label"].text = ToolkitLocalization.Text("options.drops-duration", "Drops \u00b7 {0}", CalcUtils.FormatTime(DropFloatingTextDuration, true, shortForm: true));
+            labels["player-damage-label"].text = ToolkitLocalization.Text("options.incoming-duration", "Incoming damage \u00b7 {0}", CalcUtils.FormatTime(PlayerDamageTextDuration, true, shortForm: true));
+            labels["enemy-damage-label"].text = ToolkitLocalization.Text("options.outgoing-duration", "Outgoing damage \u00b7 {0}", CalcUtils.FormatTime(EnemyDamageTextDuration, true, shortForm: true));
         }
         private void Layout()
         {
@@ -261,6 +271,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void Update() { if (!IsOpen) return; Layout(); if (Time.unscaledTime >= nextRefresh) { nextRefresh = Time.unscaledTime + 1; RefreshSlotLabels(); } }
         public void Hide()
         {
+            ToolkitLocalization.Changed -= RefreshLocalizedValues;
             Blindsided.EventHandler.OnLoadData -= RefreshLoadedData;
             UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocaleChanged -= RefreshLanguage;
             if (dialogs) dialogs.Imported -= RefreshSlots;

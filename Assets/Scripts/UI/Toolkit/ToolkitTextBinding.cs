@@ -22,6 +22,10 @@ namespace TimelessEchoes.UI.Toolkit
             target.enableRichText = true;
             Refresh(fallback);
             localized = text?.localized;
+            // Semantic keys in the authored Toolkit definitions belong to the existing
+            // TownUI collection. Preserve explicit table references (for example Wiki).
+            if ((localized == null || localized.IsEmpty) && !string.IsNullOrEmpty(text?.key))
+                localized = new LocalizedString("TownUI", text.key);
             if (localized != null && !localized.IsEmpty) localized.StringChanged += Refresh;
         }
 

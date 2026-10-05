@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -89,7 +90,7 @@ namespace TimelessEchoes.Buffs
 
         public string GetDisplayName()
         {
-            return string.IsNullOrEmpty(title) ? name : title;
+            return ToolkitLocalization.Text("buff." + name, string.IsNullOrEmpty(title) ? name : title);
         }
 
         public int GetCurrentLevel()
@@ -269,11 +270,11 @@ namespace TimelessEchoes.Buffs
 
         // Removed GetExtraDistance; extra distance percent duration is no longer supported
 
-        public List<string> GetDescriptionLines()
+        public List<string> GetDescriptionLines(bool includeTiming = true)
         {
             var lines = new List<string>();
             if (!string.IsNullOrEmpty(description))
-                lines.Add(description);
+                lines.Add(ToolkitLocalization.Text("buff." + name + ".description", description));
 
             var effectStrings = new List<string>();
             foreach (var eff in GetAggregatedEffects())
@@ -293,13 +294,13 @@ namespace TimelessEchoes.Buffs
 
             var echoCount = GetEchoCount();
             if (echoCount > 0)
-                lines.Add($"Echoes: {echoCount}");
+                lines.Add(ToolkitLocalization.Text("buffs.echo-count", "Echoes: {0}", echoCount));
+            if (!includeTiming) return lines;
             if (durationType == BuffDurationType.DistancePercent)
-                lines.Add($"Distance: {Mathf.CeilToInt(GetDuration() * 100f)}%");
+                lines.Add(ToolkitLocalization.Text("buffs.description-distance", "Distance: {0}%", Mathf.CeilToInt(GetDuration() * 100f)));
             else
                 lines.Add(
-                    $"Duration: {CalcUtils.FormatTime(GetDuration(), shortForm: true)}, " +
-                    $"Cooldown: {CalcUtils.FormatTime(GetCooldown(), shortForm: true)}");
+                    ToolkitLocalization.Text("buffs.description-duration", "Duration: {0}, Cooldown: {1}", CalcUtils.FormatTime(GetDuration(), shortForm: true), CalcUtils.FormatTime(GetCooldown(), shortForm: true)));
             return lines;
         }
 
@@ -307,25 +308,25 @@ namespace TimelessEchoes.Buffs
         {
             return eff.type switch
             {
-                BuffEffectType.MoveSpeedPercent => $"Move Speed +{eff.value}%",
-                BuffEffectType.DamagePercent => $"Damage +{eff.value}%",
-                BuffEffectType.DefensePercent => $"Defense +{eff.value}%",
-                BuffEffectType.AttackSpeedPercent => $"Attack Speed +{eff.value}%",
-                BuffEffectType.TaskSpeedPercent => $"Task Speed +{eff.value}%",
-                BuffEffectType.HealthRegenPercent => $"Health Regen +{eff.value}%",
-                BuffEffectType.MaxDistancePercent => $"Max Reap Distance +{eff.value}%",
-                BuffEffectType.MaxDistanceIncrease => $"Max Reap Distance +{Mathf.CeilToInt(eff.value)}",
-                BuffEffectType.InstantTasks => "Tasks complete instantly",
+                BuffEffectType.MoveSpeedPercent => ToolkitLocalization.Text("buffs.effect-move-speed-percent", "Move Speed +{0}%", eff.value),
+                BuffEffectType.DamagePercent => ToolkitLocalization.Text("buffs.effect-damage-percent", "Damage +{0}%", eff.value),
+                BuffEffectType.DefensePercent => ToolkitLocalization.Text("buffs.effect-defense-percent", "Defense +{0}%", eff.value),
+                BuffEffectType.AttackSpeedPercent => ToolkitLocalization.Text("buffs.effect-attack-speed-percent", "Attack Speed +{0}%", eff.value),
+                BuffEffectType.TaskSpeedPercent => ToolkitLocalization.Text("buffs.effect-task-speed-percent", "Task Speed +{0}%", eff.value),
+                BuffEffectType.HealthRegenPercent => ToolkitLocalization.Text("buffs.effect-health-regen-percent", "Health Regen +{0}%", eff.value),
+                BuffEffectType.MaxDistancePercent => ToolkitLocalization.Text("buffs.effect-max-distance-percent", "Max Reap Distance +{0}%", eff.value),
+                BuffEffectType.MaxDistanceIncrease => ToolkitLocalization.Text("buffs.effect-max-distance-increase", "Max Reap Distance +{0}", Mathf.CeilToInt(eff.value)),
+                BuffEffectType.InstantTasks => ToolkitLocalization.Text("buffs.effect-instant-tasks", "Tasks complete instantly"),
                 // ResourceMultiplier represents percent gain: use +X% text
-                BuffEffectType.ResourceMultiplier => $"Resource Gains +{eff.value}%",
-                BuffEffectType.ExperienceBonusFraction => $"{eff.value * 100f:0.#}% Bonus Experience",
-                BuffEffectType.CritChancePercent => $"Crit Chance +{eff.value}%",
-                BuffEffectType.CritDamagePercent => $"Crit Damage +{eff.value}%",
-                BuffEffectType.ProspectorWeightPercent => $"Target Spawn Weight +{Mathf.Min(200f, eff.value):0.#}%",
-                BuffEffectType.CollectorWeightPercent => $"Unfamiliar Task Weight up to +{Mathf.Min(200f, eff.value):0.#}%",
-                BuffEffectType.WindfallRewardPercent => $"Resource Bonus +{Mathf.Min(100f, eff.value):0.#}% every 10 tasks",
-                BuffEffectType.EchoResonanceRewardPercent => $"Echo Follow-up Resources +{Mathf.Min(100f, eff.value):0.#}% (10s)",
-                BuffEffectType.TimeScalePercent => $"Game Speed +{eff.value}",
+                BuffEffectType.ResourceMultiplier => ToolkitLocalization.Text("buffs.effect-resource-multiplier", "Resource Gains +{0}%", eff.value),
+                BuffEffectType.ExperienceBonusFraction => ToolkitLocalization.Text("buffs.effect-experience-bonus-fraction", "{0:0.#}% Bonus Experience", eff.value * 100f),
+                BuffEffectType.CritChancePercent => ToolkitLocalization.Text("buffs.effect-crit-chance-percent", "Crit Chance +{0}%", eff.value),
+                BuffEffectType.CritDamagePercent => ToolkitLocalization.Text("buffs.effect-crit-damage-percent", "Crit Damage +{0}%", eff.value),
+                BuffEffectType.ProspectorWeightPercent => ToolkitLocalization.Text("buffs.effect-prospector-weight-percent", "Target Spawn Weight +{0:0.#}%", Mathf.Min(200f, eff.value)),
+                BuffEffectType.CollectorWeightPercent => ToolkitLocalization.Text("buffs.effect-collector-weight-percent", "Unfamiliar Task Weight up to +{0:0.#}%", Mathf.Min(200f, eff.value)),
+                BuffEffectType.WindfallRewardPercent => ToolkitLocalization.Text("buffs.effect-windfall-reward-percent", "Resource Bonus +{0:0.#}% every 10 tasks", Mathf.Min(100f, eff.value)),
+                BuffEffectType.EchoResonanceRewardPercent => ToolkitLocalization.Text("buffs.effect-echo-resonance-reward-percent", "Echo Follow-up Resources +{0:0.#}% (10s)", Mathf.Min(100f, eff.value)),
+                BuffEffectType.TimeScalePercent => ToolkitLocalization.Text("buffs.effect-time-scale-percent", "Game Speed +{0}", eff.value),
                 BuffEffectType.DistanceDurationPercent => string.Empty,
                 _ => string.Empty
             };

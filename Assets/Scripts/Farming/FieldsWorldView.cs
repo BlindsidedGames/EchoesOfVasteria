@@ -85,7 +85,7 @@ namespace TimelessEchoes.Farming
                 for (int i=0;i<enclosures.Count;i++) enclosures[i].SetActive(capacity >= i*2+1);
             }
             // Quest visibility can reactivate legacy farmer decorations; hide only their renderers.
-            if (capacity > 0) HideLegacyFarmArt();
+            HideLegacyFarmArt(); // Legacy planted art is never a valid Fields state, including an unbuilt fresh slot.
             for (int i=0;i<plots.Count;i++)
             {
                 var plot = plots[i]; plot.root.SetActive(plot.orchard ? i-6<trees : i<capacity);

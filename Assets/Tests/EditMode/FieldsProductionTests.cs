@@ -21,7 +21,7 @@ namespace Tests.EditMode
             Assert.IsTrue(FarmTransaction.TryPrepare(data, proposal, out var candidate, out var error), error);
             return CurrentSaveCodec.Clone(candidate);
         }
-        private GameData Garden(int seeds = 1, int level = 1)
+        private GameData Garden(int seeds = 9, int level = 1)
         {
             var data = Fresh();
             data.CompletedNpcTasks.Add("Farmers1");
@@ -33,7 +33,7 @@ namespace Tests.EditMode
             foreach (var cost in build.costs) data.Resources[cost.resource.name] = new GameData.ResourceEntry { Amount = cost.amount + 100, Earned = true };
             data = Commit(data, FarmCommands.BuildFields(data, build.questId, Op(data, "build:" + build.questId), Now, content));
             data.Farm.TwinsLevel = level;
-            data.Farm.Seeds["seed.radish"] = new FarmSeedState { Quantity = seeds, LifetimeAcquired = seeds };
+            data.Resources[FarmCommands.SeedResourceName("seed.radish")] = new GameData.ResourceEntry { Amount = seeds, Earned = true, Tier = 1 };
             return data;
         }
         private GameData Plant(GameData data, string bed = FarmCommands.WestBedId) => Commit(data,
@@ -92,9 +92,9 @@ namespace Tests.EditMode
         }
         [Test] public void PlantFreezesTwinsYieldAndDurationAndConsumesOnlyMatchingOwnedSeed()
         {
-            var data = Garden(2, 30); var original = data;
+            var data = Garden(18, 30); var original = data;
             data = Plant(data); var bed = data.Farm.Beds[FarmCommands.WestBedId];
-            Assert.AreEqual(1, data.Farm.Seeds["seed.radish"].Quantity); Assert.AreEqual(2, original.Farm.Seeds["seed.radish"].Quantity);
+            Assert.AreEqual(9, data.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount); Assert.AreEqual(18, original.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount);
             Assert.AreEqual(content.baseDurationSeconds * .8, bed.DurationSeconds);
             Assert.AreEqual(content.baseYield * 1.29, bed.FrozenYield, .000001);
             data.Farm.TwinsLevel = 60;
@@ -102,6 +102,64 @@ namespace Tests.EditMode
             var result = Harvest(data);
             Assert.AreEqual(content.baseYield * 1.29, result.Resources["Radish"].Amount, .000001);
             Assert.AreEqual(0, original.Farm.TwinsXp);
+        }
+        // Cost admission and exactly-once publication belong to the production command,
+        // not a copied UI predicate. The rendered pointer test owns its distinct lifecycle risk.
+        [TestCase(0)] [TestCase(8)] [TestCase(9)] [TestCase(18)]
+        public void CropSowingRequiresNineMatchingPacksAtomicallyAndReplayNeverDebitsAgain(int packs)
+        {
+            var data = Garden(packs);
+            var seed = FarmCommands.SeedResourceName("seed.radish");
+            var token = Op(data, FarmCommands.PlantFingerprint(FarmCommands.WestBedId, Radish));
+            var proposal = FarmCommands.PlantRecipe(data, FarmCommands.WestBedId, Radish, token, Now, content);
+            Assert.AreEqual(packs, data.Resources[seed].Amount);
+            Assert.False(data.Farm.Beds[FarmCommands.WestBedId].IsPlanted);
+            if (packs < 9)
+            {
+                Assert.False(proposal.Accepted); Assert.AreEqual("NoMatchingSeeds", proposal.Reason);
+                Assert.IsEmpty(proposal.ResourceDeltas); return;
+            }
+            Assert.True(proposal.Accepted, proposal.Reason);
+            // Recheck balances when publishing a proposal, even after admission succeeded.
+            data.Resources[seed].Amount = 8;
+            Assert.False(FarmTransaction.TryPrepare(data, proposal, out _, out _));
+            Assert.False(data.Farm.Beds[FarmCommands.WestBedId].IsPlanted);
+            data.Resources[seed].Amount = packs;
+            data = Commit(data, proposal);
+            Assert.AreEqual(packs - 9, data.Resources[seed].Amount);
+            Assert.AreEqual(FarmCommandStatus.AlreadyApplied, FarmCommands.PlantRecipe(data,
+                FarmCommands.WestBedId, Radish, token, Now, content).Status);
+            Assert.False(FarmCommands.PlantRecipe(data, FarmCommands.WestBedId, Radish,
+                Op(data, FarmCommands.PlantFingerprint(FarmCommands.WestBedId, Radish)), Now, content).Accepted);
+            Assert.AreEqual(packs - 9, data.Resources[seed].Amount);
+        }
+        [Test]
+        public void ExistingGrowingBatchAndPendingCreditSurviveMigrationThenRepeatPaysNine()
+        {
+            var data = Plant(Garden(18, 20));
+            // Model a batch that was already paid under the old cost. Loading must
+            // preserve that contract rather than debit the extra eight packs.
+            data.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount = 8;
+            FarmCommands.TickFields(data.Farm, 123);
+            var old = data.Farm.Beds[FarmCommands.WestBedId];
+            var batch = old.BatchId; var yield = old.FrozenYield; var duration = old.DurationSeconds;
+            var pending = FarmJournal.StageSeed(data.Farm, "seed.radish", true, Now);
+            var migrated = Blindsided.SaveData.Migrations.SaveMigrationRunner.TryMigrate(CurrentSaveCodec.Clone(data), "9999.0.0");
+            Assert.True(migrated.Succeeded, migrated.Error); data = migrated.Data;
+            var bed = data.Farm.Beds[FarmCommands.WestBedId];
+            Assert.AreEqual(batch, bed.BatchId); Assert.AreEqual(yield, bed.FrozenYield);
+            Assert.AreEqual(duration, bed.DurationSeconds); Assert.AreEqual(123, bed.ElapsedSeconds);
+            Assert.AreEqual(8, data.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount);
+            data = Commit(data, FarmCommands.CreditSeed(data.Farm, pending, Now, "seed.radish", true));
+            Assert.AreEqual(9, data.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount);
+            data = Commit(data, FarmCommands.SetRepeat(data.Farm, FarmCommands.WestBedId, true,
+                Op(data, "repeat:" + FarmCommands.WestBedId + ":1"), Now));
+            FarmCommands.TickFields(data.Farm, duration);
+            data = Harvest(data, true);
+            Assert.True(data.Farm.Beds[FarmCommands.WestBedId].IsPlanted);
+            Assert.AreEqual(0, data.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount);
+            Assert.AreEqual(0, data.Farm.Beds[FarmCommands.WestBedId].ElapsedSeconds);
+            Assert.AreEqual(yield, data.Resources["Radish"].Amount, .000001);
         }
         [TestCase(300d, false)] [TestCase(1200d, true)]
         public void WaterIsOncePerBatchPreservesElapsedAndLateWaterIsImmediatelyReady(double elapsed, bool ready)
@@ -124,9 +182,9 @@ namespace Tests.EditMode
             Assert.AreEqual(2, harvested.Farm.TwinsLevel); Assert.AreEqual(5, harvested.Farm.TwinsXp);
             Assert.AreEqual(1, harvested.SkillData["Farming"].Level); Assert.AreEqual(12.5f, harvested.SkillData["Farming"].CurrentXP);
         }
-        [Test] public void RepeatHarvestUsesStableBedOrderOnePaidInputAndNoTimeOrWaterCarry()
+        [Test] public void RepeatHarvestUsesStableBedOrderNinePacksAndNoTimeOrWaterCarry()
         {
-            var data = Garden(3, 20);
+            var data = Garden(27, 20);
             var second = content.builds[1];
             foreach (var cost in second.costs) data.Resources[cost.resource.name].Amount += cost.amount;
             data = Commit(data, FarmCommands.BuildFields(data, second.questId, Op(data, "build:" + second.questId), Now, content));
@@ -139,7 +197,7 @@ namespace Tests.EditMode
             var west = data.Farm.Beds[FarmCommands.WestBedId]; var east = data.Farm.Beds[FarmCommands.EastBedId];
             Assert.IsTrue(west.IsPlanted); Assert.IsFalse(east.IsPlanted); Assert.IsFalse(east.Repeat);
             Assert.AreEqual(0, west.ElapsedSeconds); Assert.IsFalse(west.Watered);
-            Assert.AreEqual(0, data.Farm.Seeds["seed.radish"].Quantity);
+            Assert.AreEqual(0, data.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount);
             Assert.AreEqual(23.8, data.Resources["Radish"].Amount, .000001);
         }
         [Test] public void RepeatRequiresTwinsTwentyAndDoesNotSpendOnEnable()
@@ -148,7 +206,7 @@ namespace Tests.EditMode
             Assert.IsFalse(FarmCommands.SetRepeat(data.Farm, bed, true, Op(data, "repeat:" + bed + ":1"), Now).Accepted);
             data.Farm.TwinsLevel++;
             data = Commit(data, FarmCommands.SetRepeat(data.Farm, bed, true, Op(data, "repeat:" + bed + ":1"), Now));
-            Assert.AreEqual(1, data.Farm.Seeds["seed.radish"].Quantity); Assert.IsFalse(data.Farm.Beds[bed].IsPlanted);
+            Assert.AreEqual(1, data.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount); Assert.IsFalse(data.Farm.Beds[bed].IsPlanted);
         }
         [Test] public void PendingSeedSelectionSurvivesRetryCannotChangeRollAndCreditsOnce()
         {
@@ -159,22 +217,22 @@ namespace Tests.EditMode
             var proposal = FarmCommands.CreditSeed(data.Farm, id, Now, "seed.radish", true);
             Assert.IsEmpty(data.Farm.Seeds); Assert.IsTrue(data.Farm.PendingCredits.ContainsKey(id));
             data = Commit(data, proposal);
-            Assert.AreEqual(1, data.Farm.Seeds["seed.radish"].Quantity); Assert.IsEmpty(data.Farm.PendingCredits);
+            Assert.AreEqual(1, data.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount); Assert.IsEmpty(data.Farm.PendingCredits);
             Assert.AreEqual(FarmCommandStatus.AlreadyApplied, FarmCommands.CreditSeed(data.Farm, id, Now, "seed.radish", true).Status);
         }
         [Test] public void CropHeroGateAndMatchingSeedAreBothRequiredEvenAtHighTwinsLevel()
         {
-            var data = Garden(1, 225); var recipe = content.recipes.First(r => !r.orchard && r.source.requiredSkillLevel > 1);
-            data.Farm.Seeds[recipe.seedId] = new FarmSeedState { Quantity = 1, LifetimeAcquired = 1 };
+            var data = Garden(9, 225); var recipe = content.recipes.First(r => !r.orchard && r.source.requiredSkillLevel > 1);
+            data.Resources[FarmCommands.SeedResourceName(recipe.seedId)] = new GameData.ResourceEntry { Amount = 9, Earned = true, Tier = 1 };
             var id = Op(data, FarmCommands.PlantFingerprint(FarmCommands.WestBedId, recipe.id));
             Assert.IsFalse(FarmCommands.PlantRecipe(data, FarmCommands.WestBedId, recipe.id, id, Now, content).Accepted);
             data.SkillData[recipe.source.associatedSkill.name] = new GameData.SkillProgress { Level = recipe.source.requiredSkillLevel };
-            data.Farm.Seeds[recipe.seedId].Quantity = 0;
+            data.Resources[FarmCommands.SeedResourceName(recipe.seedId)].Amount = 0;
             Assert.IsFalse(FarmCommands.PlantRecipe(data, FarmCommands.WestBedId, recipe.id, id, Now, content).Accepted);
-            data.Farm.Seeds[recipe.seedId].Quantity = 1;
+            data.Resources[FarmCommands.SeedResourceName(recipe.seedId)].Amount = 9;
             data = Commit(data, FarmCommands.PlantRecipe(data, FarmCommands.WestBedId, recipe.id, id, Now, content));
-            Assert.AreEqual(1, data.Farm.Seeds["seed.radish"].Quantity);
-            Assert.AreEqual(0, data.Farm.Seeds[recipe.seedId].Quantity);
+            Assert.AreEqual(9, data.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount);
+            Assert.AreEqual(0, data.Resources[FarmCommands.SeedResourceName(recipe.seedId)].Amount);
         }
         [Test] public void OrchardSaplingDebitAndFiniteHarvestAreOneDurableContract()
         {
@@ -213,8 +271,8 @@ namespace Tests.EditMode
             Assert.IsTrue(acknowledgement.Accepted); Assert.IsEmpty(acknowledgement.ResourceDeltas);
             Assert.IsTrue(data.Farm.PendingCredits.ContainsKey(id), "Acknowledgement must publish only after persistence.");
             data = Commit(data, acknowledgement);
-            Assert.IsEmpty(data.Farm.PendingCredits); Assert.AreEqual(1, data.Farm.Seeds["seed.radish"].Quantity);
-            Assert.AreEqual(1, data.Farm.Seeds["seed.radish"].LifetimeAcquired);
+            Assert.IsEmpty(data.Farm.PendingCredits); Assert.AreEqual(1, data.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount);
+            Assert.AreEqual(1, data.ResourceStats["Radish Seed Pack"].TotalReceived);
             Assert.AreEqual(FarmCommandStatus.AlreadyApplied, FarmCommands.CreditSeed(data.Farm, id, Now, "seed.radish", true).Status);
         }
         [TestCase(1)] [TestCase(2)]

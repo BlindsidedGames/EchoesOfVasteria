@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using System;
 using System.Globalization;
 using TimelessEchoes.Upgrades;
@@ -27,11 +28,11 @@ namespace TimelessEchoes.Skills
 
         public override string GetDescription(float magnitude, string skillName, bool isActive)
         {
-            var statName = baseStat != null ? baseStat.name : "stat";
+            var statName = baseStat != null ? ToolkitLocalization.Name(baseStat, "stat") : ToolkitLocalization.Text("milestone.stat-fallback", "stat");
             string formatted = percentBonus
                 ? (magnitude * 100f).ToString(amountFormat, CultureInfo.InvariantCulture) + "%"
                 : magnitude.ToString(amountFormat, CultureInfo.InvariantCulture);
-            return string.Format(descriptionTemplate, formatted, statName);
+            return ToolkitLocalization.Text("milestone-effect." + name + ".descriptionTemplate", descriptionTemplate, formatted, statName);
         }
     }
 }

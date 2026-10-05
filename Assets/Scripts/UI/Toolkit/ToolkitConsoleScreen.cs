@@ -22,7 +22,8 @@ namespace TimelessEchoes.UI.Toolkit
         private PanelSettings settings;
         private VisualElement root;
         private ScrollView scroll;
-        private Label output, suggestions;
+        private Label output, suggestions, title;
+        private Button close, submit, clear;
         private TextField input;
         private readonly Queue<string> logs = new();
         private readonly List<string> history = new();
@@ -51,8 +52,8 @@ namespace TimelessEchoes.UI.Toolkit
             root = new VisualElement(); root.style.position = Position.Absolute; root.style.paddingTop = root.style.paddingBottom = root.style.paddingLeft = root.style.paddingRight = 4;
             theme.Apply(root);ToolkitGameplay.Apply(root,theme); root.AddToClassList("surface");root.AddToClassList("compact-overlay"); document.rootVisualElement.Add(root);
             var header = new VisualElement(); header.style.flexDirection = FlexDirection.Row; root.Add(header);
-            var title = ToolkitControls.Text("Console", ToolkitControls.TextRole.Heading); title.style.flexGrow = 1; header.Add(title);
-            var close = ToolkitControls.Button("console-close", Hide, theme.button); close.text = "Close"; ToolkitControls.SetTextRole(close, ToolkitControls.TextRole.Body); close.style.minWidth = 32; header.Add(close);
+            title = ToolkitControls.Text(ToolkitLocalization.Text("console.title", "Console"), ToolkitControls.TextRole.Heading); title.style.flexGrow = 1; header.Add(title);
+            close = ToolkitControls.Button("console-close", Hide, theme.button); close.text = ToolkitLocalization.Text("console.close", "Close"); ToolkitControls.SetTextRole(close, ToolkitControls.TextRole.Body); close.style.minWidth = 32; header.Add(close);
             scroll = ToolkitControls.RecessedScroll(root, "console-log", theme);
             output = ToolkitControls.Text(""); output.enableRichText = false; output.style.color=StyleKeyword.Null; output.style.whiteSpace = WhiteSpace.Normal; scroll.Add(output);
             suggestions = ToolkitControls.Text(""); root.Add(suggestions);
@@ -67,9 +68,18 @@ namespace TimelessEchoes.UI.Toolkit
                 else return;
                 e.StopPropagation();
             }, TrickleDown.TrickleDown);
-            var submit = ToolkitControls.Button("console-submit", Submit, theme.button); submit.text = "Run"; ToolkitControls.SetTextRole(submit, ToolkitControls.TextRole.Body); submit.style.minWidth = 32; entry.Add(submit);
-            var clear = ToolkitControls.Button("console-clear", () => { logs.Clear(); dirty = true; }, theme.button); clear.text = "Clear"; ToolkitControls.SetTextRole(clear, ToolkitControls.TextRole.Body); clear.style.minWidth = 32; entry.Add(clear);
+            submit = ToolkitControls.Button("console-submit", Submit, theme.button); submit.text = ToolkitLocalization.Text("console.run", "Run"); ToolkitControls.SetTextRole(submit, ToolkitControls.TextRole.Body); submit.style.minWidth = 32; entry.Add(submit);
+            clear = ToolkitControls.Button("console-clear", () => { logs.Clear(); dirty = true; }, theme.button); clear.text = ToolkitLocalization.Text("console.clear", "Clear"); ToolkitControls.SetTextRole(clear, ToolkitControls.TextRole.Body); clear.style.minWidth = 32; entry.Add(clear);
+            ToolkitLocalization.Changed += RefreshText;
             historyIndex = history.Count; dirty = true; input.schedule.Execute(() => input?.Focus());
+        }
+        private void RefreshText()
+        {
+            if (!IsActive) return;
+            title.text = ToolkitLocalization.Text("console.title", "Console");
+            close.text = ToolkitLocalization.Text("console.close", "Close");
+            submit.text = ToolkitLocalization.Text("console.run", "Run");
+            clear.text = ToolkitLocalization.Text("console.clear", "Clear");
         }
         private void Recall(int step) { historyIndex = Mathf.Clamp(historyIndex + step, 0, history.Count); input.value = historyIndex < history.Count ? history[historyIndex] : ""; }
         private void Submit() { var command = input.value; input.value = ""; Execute(command); input.Focus(); }
@@ -87,7 +97,7 @@ namespace TimelessEchoes.UI.Toolkit
             } catch (TargetInvocationException e) { LogToConsole(e.InnerException?.Message ?? e.Message); }
             catch (Exception e) { LogToConsole(e.Message); }
         }
-        public void Hide() { root?.RemoveFromHierarchy(); root = null; input = null; if (settings) Destroy(settings); settings = null; }
+        public void Hide() { ToolkitLocalization.Changed -= RefreshText; root?.RemoveFromHierarchy(); root = null; input = null; if (settings) Destroy(settings); settings = null; }
         private void Update()
         {
             if (Keyboard.current?.backquoteKey.wasPressedThisFrame == true) Toggle();

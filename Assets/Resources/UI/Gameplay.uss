@@ -985,3 +985,81 @@
 .gameplay .eov-options-input-frame {flex-shrink:1;}
 
 .gameplay.settings-page .settings-tabs .active .eov-options-label {color:var(--on-accent);}
+
+/* Standalone Hub inventory uses the same canonical resource grid as Forge. */
+.gameplay.quests-reviewed .quests-columns { flex-direction: row; flex-grow: 1; min-height: 0; }
+.gameplay.quests-reviewed .quests-content { flex-grow: 1; flex-basis: 0; min-width: 0; min-height: 0; }
+.gameplay.quests-reviewed .quests-inventory { width: 178px; flex-shrink: 1; min-width: 72px; min-height: 0; margin-left: 4px; border-left-width: .5px; border-left-color: var(--line); padding-left: 4px; }
+.gameplay.quests-reviewed .quests-embedded-inventory { padding: 0; border-width: 0; background-color: transparent; }
+.gameplay.quests-reviewed .quests-embedded-inventory .eov-resource-frame { padding: 0; }
+.gameplay.quests-reviewed .quests-embedded-inventory .eov-resource-grid { align-self: center; }
+.gameplay.inventory-standalone { padding: 10px; }
+.inventory-standalone .eov-resource-title { height: 28px; flex-direction: row; align-items: center; }
+.inventory-standalone .eov-resource-name { height: 16px; font-size: 8px; margin-left: 12px; margin-right: 8px; -unity-text-align: middle-right; }
+.inventory-standalone .eov-resource-title .button { width: 24px; min-width: 24px; }
+.inventory-standalone .eov-resource-slot { width: 40px; height: 44px; }
+.inventory-standalone .eov-resource-slot-background { left: 6px; top: 3px; width: 28px; height: 28px; }
+.inventory-standalone .eov-resource-icon { left: 2px; top: 2px; width: 24px; height: 24px; }
+.inventory-standalone .eov-resource-selection { width: 30px; height: 30px; }
+.inventory-standalone .eov-resource-count { left: 1px; top: 33px; width: 38px; height: 9px; font-size: 6.5px; }
+
+/* Use the existing whole-slot frame so selection cannot offset the icon or count. */
+.quests-embedded-inventory .eov-resource-slot,
+.inventory-standalone .eov-resource-slot { border-bottom-width: .5px; border-bottom-color: var(--button-edge); }
+.quests-embedded-inventory .eov-resource-quality,
+.inventory-standalone .eov-resource-quality { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background-color: var(--tier-colour); }
+.quests-embedded-inventory .eov-resource-selection,
+.inventory-standalone .eov-resource-selection { opacity: 0; }
+.quests-embedded-inventory .eov-resource-slot.resource-selected,
+.inventory-standalone .eov-resource-slot.resource-selected { border-color: var(--accent); border-bottom-width: .5px; }
+
+/* Fields: stable grids, readable state, and a consistent rhythm. */
+.gameplay.fields-ui .fields-rates {margin-bottom:3px;}
+.gameplay.fields-ui .fields-seed-grid {align-content:flex-start;}
+.gameplay.fields-ui .fields-seed-card {width:64px;min-width:0;height:74px;margin-right:4px;margin-bottom:4px;padding:5px 3px;flex-direction:column;align-items:center;border-width:1px;border-color:var(--line);}
+.gameplay.fields-ui .fields-seed-card .icon {margin-bottom:3px;}
+.gameplay.fields-ui .fields-seed-caption {width:100%;height:24px;font-size:8px;-unity-text-align:middle-center;}
+.gameplay.fields-ui .fields-seed-count {width:100%;font-size:9px;-unity-text-align:middle-center;}
+.gameplay.fields-ui .fields-seed-card.primary Label {color:var(--on-accent);}
+.gameplay.fields-ui .fields-undiscovered {background-color:var(--field);}
+.gameplay.fields-ui .fields-undiscovered Label {color:var(--muted);}
+.gameplay.fields-ui .fields-plot {width:30%;min-width:0;flex-grow:1;margin-right:4px;margin-bottom:4px;height:88px;padding:2px 3px;flex-direction:column;align-items:center;border-width:1px;border-color:var(--line);}
+.gameplay.fields-ui .fields-plot-title {width:100%;height:12px;font-size:8px;-unity-text-align:middle-center;margin-bottom:2px;}
+.gameplay.fields-ui .fields-plot-art {margin-bottom:2px;}
+.gameplay.fields-ui .fields-plot-status {width:100%;height:23px;font-size:8px;-unity-font-style:normal;-unity-text-align:middle-center;}
+.gameplay.fields-ui .fields-plot .track {height:3px;margin:2px 0 0 0;}
+.gameplay.fields-ui .fields-plot.selected {border-color:var(--accent);background-color:var(--selected);}
+.gameplay.fields-ui .fields-plot:disabled {opacity:1;}
+.gameplay.fields-ui .fields-locked {background-color:var(--field);}
+.gameplay.fields-ui .fields-locked .fields-plot-art {opacity:.35;}
+.gameplay.fields-ui .fields-locked Label {color:var(--muted);}
+.gameplay.fields-ui .fields-ready .fields-plot-status {color:#a5dc99;}
+.gameplay.fields-ui .fields-ready .fill {background-color:#a5dc99;}
+.gameplay.fields-ui .fields-action-area {background-color:var(--field);border-width:.5px;border-color:var(--line);padding:4px;margin-top:4px;}
+.gameplay.fields-ui .fields-selection-strip {margin-bottom:5px;}
+.gameplay.fields-ui .fields-selection {font-size:9px;-unity-font-style:bold;margin-right:6px;}
+.gameplay.fields-ui .fields-selection-detail {font-size:8px;}
+.gameplay.fields-ui .fields-actions > .button {min-width:62px;min-height:24px;margin-right:4px;margin-bottom:3px;padding:4px 6px;}
+.gameplay.fields-ui .fields-harvest-help {font-size:8px;margin-top:2px;}
+.gameplay.fields-ui #fields-construction-foldout {margin:6px 0 0 0;}
+.gameplay.fields-ui .fields-build-row {padding:5px 0;border-bottom-width:.5px;border-bottom-color:var(--line);}
+
+.gameplay.fields-ui .fields-row-end {margin-right:0;}
+.gameplay.fields-ui .fields-actions > .button:disabled {opacity:1;background-color:var(--control);color:var(--muted);}
+
+.gameplay.fields-ui {padding:8px;}
+
+.gameplay.fields-ui .unity-foldout__toggle {min-height:18px;}
+
+.gameplay.fields-ui.fields-compact .quests-heading {margin-bottom:4px;}
+.gameplay.fields-ui.fields-compact .fields-rates {margin-bottom:1px;}
+.gameplay.fields-ui.fields-compact .fields-plot {height:76px;}
+.gameplay.fields-ui.fields-compact .fields-plot-title {margin-bottom:1px;}
+.gameplay.fields-ui.fields-compact .fields-plot-art {margin-bottom:1px;}
+.gameplay.fields-ui.fields-compact .fields-plot .track {height:2px;margin-top:1px;}
+.gameplay.fields-ui.fields-compact .fields-action-area {margin-top:2px;padding:3px;}
+.gameplay.fields-ui.fields-compact .fields-selection-strip {margin-bottom:3px;}
+.gameplay.fields-ui.fields-compact #fields-construction-foldout {margin-top:4px;}
+
+.gameplay.fields-ui .fields-seed-card.primary {background-color:var(--accent);border-color:var(--accent);}
+.gameplay.fields-ui .fields-seed-card.primary Label {color:var(--on-accent);}

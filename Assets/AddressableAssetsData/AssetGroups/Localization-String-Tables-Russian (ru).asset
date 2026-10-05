@@ -15,6 +15,13 @@ MonoBehaviour:
   m_GroupName: Localization-String-Tables-Russian (ru)
   m_GUID: 30821c462d35faf49b351168d19a5f04
   m_SerializeEntries:
+  - m_GUID: 50cc9cb449bf545b5bae096379ac0243
+    m_Address: TownUI_ru
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ru
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d4b3147957f24084691677b430da93c0
     m_Address: Wiki_ru
     m_ReadOnly: 1
@@ -35,3 +42,6 @@ MonoBehaviour:
     m_Schemas:
     - {fileID: 11400000, guid: e0e16d384e62f6f40b75c7b863c969a0, type: 2}
     - {fileID: 11400000, guid: 11220876780245d4b8175f4962ca6b96, type: 2}
+    m_SchemaDisplayOrder: []
+  m_IncludeInBuild: 1
+  m_IncludeInBuildMigrated: 1

@@ -18,7 +18,7 @@ namespace TimelessEchoes.UI.Toolkit
         private PanelSettings panel;
         private ToolkitMeetingView view;
         private Sprite portrait;
-        private IReadOnlyList<string> lines;
+        private IReadOnlyList<string> lines, lineKeys;
         private Action finished;
         private bool initialized, completed;
         private Rect lastArea;
@@ -27,10 +27,11 @@ namespace TimelessEchoes.UI.Toolkit
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => Visible.Clear();
 
-        public void Init(Sprite npcPortrait, IReadOnlyList<string> dialogue, Action onFinished)
+        public void Init(Sprite npcPortrait, IReadOnlyList<string> dialogue, Action onFinished, IReadOnlyList<string> localizedLineKeys = null)
         {
             portrait = npcPortrait;
             lines = dialogue;
+            lineKeys = localizedLineKeys;
             finished = onFinished;
             initialized = true;
             if (isActiveAndEnabled) Show();
@@ -50,7 +51,7 @@ namespace TimelessEchoes.UI.Toolkit
             var document = GetComponent<UIDocument>();
             document.panelSettings = panel;
             document.rootVisualElement.pickingMode = PickingMode.Ignore;
-            view ??= new ToolkitMeetingView(theme, template, portrait, definition, lines, Finish);
+            view ??= new ToolkitMeetingView(theme, template, portrait, definition, lines, Finish, lineKeys);
             document.rootVisualElement.Add(view.Root);
             if (!Visible.Contains(this)) Visible.Add(this);
             lastIndex = -1;

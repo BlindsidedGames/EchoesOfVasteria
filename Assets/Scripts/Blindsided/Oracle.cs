@@ -8,6 +8,7 @@ using Blindsided.SaveData.Migrations;
 using System.Linq;
 using Blindsided.Utilities;
 using TimelessEchoes.Gear;
+using TimelessEchoes.UI.Toolkit;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using TimelessEchoes.Stats;
@@ -51,6 +52,7 @@ namespace Blindsided
         private GameObject _recoveryCanvas;
         [SerializeField] private TimelessEchoes.UI.Toolkit.ToolkitDialogScreen recoveryViewPrefab;
         private TimelessEchoes.UI.Toolkit.ToolkitDialogScreen _nativeRecoveryView;
+        private TMP_Text _localizedRecoveryTitle;
         private bool _recoveryActionInProgress;
         private const int MaxLoadAttempts = 3;
         private const float LoadRetryDelaySeconds = 0.35f;
@@ -343,6 +345,7 @@ namespace Blindsided
 
         private void OnDestroy()
         {
+            ToolkitLocalization.Changed -= RefreshRecoveryLanguage;
             if (oracle != this)
                 return;
 
@@ -357,6 +360,7 @@ namespace Blindsided
 
         private void OnDisable()
         {
+            ToolkitLocalization.Changed -= RefreshRecoveryLanguage;
             if (oracle != this)
                 return;
 
@@ -934,12 +938,19 @@ namespace Blindsided
             ShowRecoveryUi();
         }
 
+        private void RefreshRecoveryLanguage()
+        {
+            if (_recoveryRequired && isActiveAndEnabled) ShowRecoveryUi();
+        }
+
         private void ShowRecoveryUi()
         {
+            ToolkitLocalization.Changed -= RefreshRecoveryLanguage;
+            ToolkitLocalization.Changed += RefreshRecoveryLanguage;
             var canStartFresh = CanOfferFreshRecovery(_recoveryStatus);
             var unsupportedNewer = _recoveryStatus == SaveLoadStatus.UnsupportedNewer;
-            var titleText = unsupportedNewer ? "Save From Newer Version" :
-                canStartFresh ? "Save Recovery Required" : "Save Temporarily Unavailable";
+            var titleText = unsupportedNewer ? ToolkitLocalization.Text("save.recovery.newer-title", "Save From Newer Version") :
+                canStartFresh ? ToolkitLocalization.Text("save.recovery.required-title", "Save Recovery Required") : ToolkitLocalization.Text("save.recovery.unavailable-title", "Save Temporarily Unavailable");
             var bodyText = GetRecoveryBody(canStartFresh, unsupportedNewer);
             if (recoveryViewPrefab != null)
             {
@@ -947,8 +958,8 @@ namespace Blindsided
                     _nativeRecoveryView = Instantiate(recoveryViewPrefab, transform);
                 _recoveryCanvas ??= transform.Find("Canvas")?.gameObject;
                 if (_recoveryCanvas != null) _recoveryCanvas.SetActive(false);
-                _nativeRecoveryView.Show(titleText, bodyText, "Retry",
-                    canStartFresh ? "Keep Old Files & Start Fresh" : "Open Save Folder",
+                _nativeRecoveryView.Show(titleText, bodyText, ToolkitLocalization.Text("save.recovery.retry", "Retry"),
+                    canStartFresh ? ToolkitLocalization.Text("save.recovery.fresh", "Keep Old Files & Start Fresh") : ToolkitLocalization.Text("save.recovery.folder", "Open Save Folder"),
                     BeginRecoveryRetry, canStartFresh ? BeginFreshRecovery : OpenSaveFolder,
                     !_recoveryActionInProgress);
                 return;
@@ -962,7 +973,7 @@ namespace Blindsided
             }
 
             var texts = _recoveryCanvas.GetComponentsInChildren<TMP_Text>(includeInactive: true);
-            var title = texts.FirstOrDefault(text =>
+            var title = _localizedRecoveryTitle != null ? _localizedRecoveryTitle : texts.FirstOrDefault(text =>
                 text != null && text.text != null &&
                 (text.text.Contains("Potential Regression") ||
                  text.text.Contains("Save Recovery Required") ||
@@ -974,7 +985,10 @@ namespace Blindsided
                 .FirstOrDefault();
 
             if (title != null)
+            {
+                _localizedRecoveryTitle = title;
                 title.text = titleText;
+            }
 
             if (body != null)
                 body.text = bodyText;
@@ -992,7 +1006,7 @@ namespace Blindsided
             if (primaryButton != null)
             {
                 var label = primaryButton.GetComponentInChildren<TMP_Text>(includeInactive: true);
-                if (label != null) label.text = "Retry";
+                if (label != null) label.text = ToolkitLocalization.Text("save.recovery.retry", "Retry");
                 primaryButton.onClick.RemoveAllListeners();
                 primaryButton.onClick.AddListener(BeginRecoveryRetry);
             }
@@ -1001,7 +1015,7 @@ namespace Blindsided
             {
                 var label = secondaryButton.GetComponentInChildren<TMP_Text>(includeInactive: true);
                 if (label != null)
-                    label.text = canStartFresh ? "Keep Old Files & Start Fresh" : "Open Save Folder";
+                    label.text = canStartFresh ? ToolkitLocalization.Text("save.recovery.fresh", "Keep Old Files & Start Fresh") : ToolkitLocalization.Text("save.recovery.folder", "Open Save Folder");
                 secondaryButton.onClick.RemoveAllListeners();
                 if (canStartFresh)
                     secondaryButton.onClick.AddListener(BeginFreshRecovery);
@@ -1015,6 +1029,7 @@ namespace Blindsided
 
         private void HideRecoveryUi()
         {
+            ToolkitLocalization.Changed -= RefreshRecoveryLanguage;
             if (_nativeRecoveryView != null) _nativeRecoveryView.Hide();
             if (_recoveryCanvas != null)
                 _recoveryCanvas.SetActive(false);
@@ -1023,17 +1038,10 @@ namespace Blindsided
         private string GetRecoveryBody(bool canStartFresh, bool unsupportedNewer)
         {
             if (unsupportedNewer)
-                return $"File {CurrentSlot + 1} was written by a newer game version. It has not been " +
-                    "changed. Install the newer version, then Retry, or inspect the save folder. " +
-                    "Starting fresh is disabled to protect that progress.\n\n" + _recoveryDiagnostic;
+                return ToolkitLocalization.Text("save.recovery.newer-body", "File {0} was written by a newer game version. It has not been changed. Install the newer version, then Retry, or inspect the save folder. Starting fresh is disabled to protect that progress.\n\n{1}", CurrentSlot + 1, _recoveryDiagnostic);
             if (canStartFresh)
-                return $"File {CurrentSlot + 1} has a confirmed integrity or cloud-authority conflict. " +
-                    "Retry is the safest first action and every existing snapshot remains preserved. If you " +
-                    "explicitly start fresh, a new cloud lineage is created without deleting the old files.\n\n" +
-                    _recoveryDiagnostic;
-            return $"File {CurrentSlot + 1} is temporarily unavailable or could not be applied to the " +
-                "running game. Autosave is disabled and existing snapshot evidence remains preserved. Retry " +
-                "after closing any sync or backup tool that may be using the files.\n\n" + _recoveryDiagnostic;
+                return ToolkitLocalization.Text("save.recovery.conflict-body", "File {0} has a confirmed integrity or cloud-authority conflict. Retry is the safest first action and every existing snapshot remains preserved. If you explicitly start fresh, a new cloud lineage is created without deleting the old files.\n\n{1}", CurrentSlot + 1, _recoveryDiagnostic);
+            return ToolkitLocalization.Text("save.recovery.unavailable-body", "File {0} is temporarily unavailable or could not be applied to the running game. Autosave is disabled and existing snapshot evidence remains preserved. Retry after closing any sync or backup tool that may be using the files.\n\n{1}", CurrentSlot + 1, _recoveryDiagnostic);
         }
 
         private static bool CanOfferFreshRecovery(SaveLoadStatus status)

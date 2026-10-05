@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,7 +25,7 @@ namespace TimelessEchoes.Skills
         [SerializeField, ShowIf(nameof(tierMode), MilestoneTierMode.Infinite)] private MilestoneInfiniteTier infiniteTier = new();
 
         public string Id => string.IsNullOrEmpty(milestoneId) ? name : milestoneId;
-        public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
+        public string DisplayName => ToolkitLocalization.Text("milestone." + Id + ".name", string.IsNullOrWhiteSpace(displayName) ? name : displayName);
         public MilestoneSet Set => set;
         public Sprite SetIcon => setIcon;
         public bool CanActivate => canActivate && activeEffect != null;

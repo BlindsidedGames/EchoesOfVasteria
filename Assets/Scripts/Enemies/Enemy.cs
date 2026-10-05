@@ -1,3 +1,4 @@
+using TimelessEchoes.UI.Toolkit;
 using System;
 using System.Collections.Generic;
 using Pathfinding;
@@ -157,6 +158,7 @@ namespace TimelessEchoes.Enemies
 
         private void OnEnable()
         {
+            ToolkitLocalization.Changed += RefreshLocalizedTitle;
             EnemyActivator.Instance?.Register(this);
             OnEngage += HandleAllyEngaged;
 
@@ -180,6 +182,7 @@ namespace TimelessEchoes.Enemies
 
         private void OnDisable()
         {
+            ToolkitLocalization.Changed -= RefreshLocalizedTitle;
             EnemyActivator.Instance?.Unregister(this);
             OnEngage -= HandleAllyEngaged;
 
@@ -762,6 +765,19 @@ namespace TimelessEchoes.Enemies
                 setter.target = allyTarget;
         }
 
+        private string chosenDisplayName;
+        private void RefreshLocalizedTitle()
+        {
+            // Presentation refresh must not reroll the random supporter name or rename scene identity.
+            var displayName = chosenDisplayName;
+            if (!string.IsNullOrEmpty(displayName) && stats != null && displayName == stats.enemyName)
+                displayName = ToolkitLocalization.Text("enemy." + stats.name, displayName);
+            DisplayTitle = !string.IsNullOrEmpty(displayName)
+                ? ToolkitLocalization.Text("enemy.name-level", "{0} Lvl {1}" , displayName, level)
+                : ToolkitLocalization.Text("enemy.level", "Lvl {0}" , level);
+            if (levelText != null && levelText.enabled) levelText.text = DisplayTitle;
+        }
+
         private void UpdateDisplayNameAndLevelUI()
         {
             var displayName = stats != null ? stats.enemyName : null;
@@ -769,14 +785,8 @@ namespace TimelessEchoes.Enemies
             if (!string.IsNullOrEmpty(displayName))
                 gameObject.name = displayName;
 
-            DisplayTitle = !string.IsNullOrEmpty(displayName) ? $"{displayName} Lvl {level}" : $"Lvl {level}";
-            if (levelText != null && levelText.enabled)
-            {
-                if (!string.IsNullOrEmpty(displayName))
-                    levelText.text = $"{displayName} Lvl {level}";
-                else
-                    levelText.text = $"Lvl {level}";
-            }
+            chosenDisplayName = displayName;
+            RefreshLocalizedTitle();
         }
 
     }
