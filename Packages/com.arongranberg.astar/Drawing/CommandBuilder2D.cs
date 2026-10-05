@@ -1,3 +1,5 @@
+// Compiled out when ALINE is excluded from standalone builds. Replaced by CommandBuilderStub.cs.
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Collections;
@@ -495,3 +497,4 @@ namespace Pathfinding.Drawing {
 		}
 	}
 }
+#endif

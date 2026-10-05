@@ -2357,8 +2357,8 @@ namespace Pathfinding {
 			RecalculateConnectionsInRegion(new IntRect(x, z, x, z));
 		}
 
-		public override void OnDrawGizmos (DrawingData gizmos, bool drawNodes, RedrawScope redrawScope, bool renderInGame) {
-			using (var helper = GraphGizmoHelper.GetSingleFrameGizmoHelper(gizmos, active, redrawScope, renderInGame)) {
+		public override void OnDrawGizmos (bool drawNodes, RedrawScope redrawScope, bool renderInGame) {
+			using (var helper = GraphGizmoHelper.GetSingleFrameGizmoHelper(active, redrawScope, renderInGame)) {
 				// The width and depth fields might not be up to date, so recalculate
 				// them from the #unclampedSize field
 				int w, d;
@@ -2401,9 +2401,9 @@ namespace Pathfinding {
 					}
 					Profiler.EndSample();
 
-					if (!gizmos.Draw(hasher, redrawScope)) {
+					if (!DrawingManager.TryDrawHasher(hasher, redrawScope)) {
 						Profiler.BeginSample("Rebuild Retained Gizmo Chunk");
-						using (var helper = GraphGizmoHelper.GetGizmoHelper(gizmos, active, hasher, redrawScope, renderInGame)) {
+						using (var helper = GraphGizmoHelper.GetGizmoHelper(active, hasher, redrawScope, renderInGame)) {
 							if (showNodeConnections) {
 								if (helper.showSearchTree) helper.builder.PushLineWidth(2);
 								for (int i = 0; i < allNodesCount; i++) {
@@ -2422,7 +2422,7 @@ namespace Pathfinding {
 			}
 			ArrayPool<GridNodeBase>.Release(ref allNodes);
 
-			if (active.showUnwalkableNodes) DrawUnwalkableNodes(gizmos, nodeSize * 0.3f, redrawScope, renderInGame);
+			if (active.showUnwalkableNodes) DrawUnwalkableNodes(nodeSize * 0.3f, redrawScope, renderInGame);
 		}
 
 		/// <summary>
@@ -3344,7 +3344,7 @@ namespace Pathfinding {
 
 		/// <summary>
 		/// Returns if there is an obstacle between the two nodes on the graph.
-		/// Like <see cref="Linecast(GridNodeBase,Vector2,GridNodeBase,Vector2,GridHitInfo,TraversalConstraint,List<GraphNode>,bool)"/> but takes normalized points as fixed precision points normalized between 0 and FixedPrecisionScale instead of between 0 and 1.
+		/// Like <see cref="Linecast(GridNodeBase,Vector2,GridNodeBase,Vector2,out GridHitInfo,ref TraversalConstraint,List<GraphNode>,bool)"/> but takes normalized points as fixed precision points normalized between 0 and FixedPrecisionScale instead of between 0 and 1.
 		/// </summary>
 		public bool Linecast (GridNodeBase fromNode, int2 fixedNormalizedFromPoint, GridNodeBase toNode, int2 fixedNormalizedToPoint, out GridHitInfo hit, ref TraversalConstraint traversalConstraint, List<GraphNode> trace = null, bool continuePastEnd = false, bool allowDiagonals = true) {
 			/*

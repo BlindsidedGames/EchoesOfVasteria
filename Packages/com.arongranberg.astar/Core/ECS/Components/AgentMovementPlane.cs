@@ -19,7 +19,11 @@ namespace Pathfinding.ECS {
 		///
 		/// See: spherical (view in online documentation for working links)
 		/// </summary>
+		// UAC1001: [System.Serializable] here feeds the Entities Inspector's property bag, not Unity's
+		// serializer. [NonSerialized] would silence the analyzer, but also hide the field in that inspector.
+#pragma warning disable UAC1001
 		public NativeMovementPlane value;
+#pragma warning restore UAC1001
 
 		/// <summary>Create a movement plane aligned with the XZ plane of the specified rotation</summary>
 		public AgentMovementPlane (quaternion rotation) {

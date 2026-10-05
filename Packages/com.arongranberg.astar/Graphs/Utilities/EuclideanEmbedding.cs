@@ -87,7 +87,10 @@ namespace Pathfinding.Graphs.Util {
 		public static uint GetHeuristic (UnsafeSpan<uint> costs, uint pivotCount, uint nodeIndex1, uint nodeIndex2) {
 			uint mx = 0;
 			// TODO: Force pivotCount to be a multiple of 4 and use SIMD for performance
-			if (nodeIndex1 < costs.Length && nodeIndex2 < costs.Length) {
+			// Check that both nodes' cost entries fit within the costs array.
+			// This can happen if nodes are added after the euclidean embedding was last calculated.
+			// We need to check that all indices we'll access (nodeIndex*pivotCount through nodeIndex*pivotCount+pivotCount-1) are valid.
+			if (pivotCount > 0 && nodeIndex1*pivotCount + pivotCount <= costs.Length && nodeIndex2*pivotCount + pivotCount <= costs.Length) {
 				for (uint i = 0; i < pivotCount; i++) {
 					var c1 = costs[nodeIndex1*pivotCount+i];
 					var c2 = costs[nodeIndex2*pivotCount+i];

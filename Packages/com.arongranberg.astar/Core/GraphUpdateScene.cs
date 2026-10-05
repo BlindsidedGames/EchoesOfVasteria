@@ -101,7 +101,12 @@ namespace Pathfinding {
 		public bool modifyTag;
 
 		/// <summary>If <see cref="modifyTag"/> is enabled, set all nodes' tags to this value</summary>
+		// UAC1018: The name clash with [FormerlySerializedAs("setTag")] on #setTagCompatibility is
+		// deliberate. Unity matches the real field name first, so old int data lands in the compatibility
+		// field and is migrated from there.
+#pragma warning disable UAC1018
 		public PathfindingTag setTag;
+#pragma warning restore UAC1018
 
 		/// <summary>Emulates behavior from before version 4.0</summary>
 		[HideInInspector]

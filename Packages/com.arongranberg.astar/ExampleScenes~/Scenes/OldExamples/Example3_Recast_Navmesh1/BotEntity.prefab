@@ -61,6 +61,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
@@ -82,9 +84,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &4058646450681529835
 GameObject:
@@ -150,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfe9431ea8ad072f2aecd3041b1524dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 1073741831
+  version: 1073741839
   shape:
     radius: 0.35
     height: 1
@@ -173,16 +177,7 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 4294967295
     isStopped: 0
-  managedState:
-    rvoSettings:
-      agentTimeHorizon: 1
-      obstacleTimeHorizon: 0.2
-      maxNeighbours: 10
-      layer: 1
-      collidesWith: -1
-      priority: 0.5
-      debug: 0
-      locked: 0
+  managedSettings:
     pathfindingSettings:
       graphMask:
         value: -1
@@ -220,9 +215,18 @@ MonoBehaviour:
       - 1
       - 1
       - 1
-      tagEntryCosts: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-    enableLocalAvoidance: 1
-    enableGravity: 1
+      tagEntryCosts: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000u
+  enableLocalAvoidanceBacking: 1
+  enableGravityBacking: 1
+  rvoSettingsBacking:
+    agentTimeHorizon: 1
+    obstacleTimeHorizon: 0.2
+    maxNeighbours: 10
+    layer: 1
+    collidesWith: -1
+    priority: 0.5
+    debug: 0
+    locked: 0
   autoRepathBacking:
     mode: 2
     period: 2
@@ -308,6 +312,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
@@ -329,9 +335,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &1936508073779893737
 BoxCollider:
@@ -362,8 +370,7 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4058646450681529834}
     m_Modifications:
-    - target: {fileID: -7519004450640146648, guid: caeffedc34d9f4161b7694ad0d84bbd3,
-        type: 3}
+    - target: {fileID: -7519004450640146648, guid: caeffedc34d9f4161b7694ad0d84bbd3, type: 3}
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
@@ -491,8 +498,7 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 75b096e6c847f4e22be41113329a0693, type: 2}
-    - target: {fileID: 7621389643486796682, guid: caeffedc34d9f4161b7694ad0d84bbd3,
-        type: 3}
+    - target: {fileID: 7621389643486796682, guid: caeffedc34d9f4161b7694ad0d84bbd3, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 0f239eb41e29343e28970d1c5e9adede, type: 2}
@@ -503,13 +509,11 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: caeffedc34d9f4161b7694ad0d84bbd3, type: 3}
 --- !u!4 &1063989041963613977 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 400014, guid: caeffedc34d9f4161b7694ad0d84bbd3,
-    type: 3}
+  m_CorrespondingSourceObject: {fileID: 400014, guid: caeffedc34d9f4161b7694ad0d84bbd3, type: 3}
   m_PrefabInstance: {fileID: 1063989041963214231}
   m_PrefabAsset: {fileID: 0}
 --- !u!95 &1063989041972695287 stripped
 Animator:
-  m_CorrespondingSourceObject: {fileID: 9500000, guid: caeffedc34d9f4161b7694ad0d84bbd3,
-    type: 3}
+  m_CorrespondingSourceObject: {fileID: 9500000, guid: caeffedc34d9f4161b7694ad0d84bbd3, type: 3}
   m_PrefabInstance: {fileID: 1063989041963214231}
   m_PrefabAsset: {fileID: 0}

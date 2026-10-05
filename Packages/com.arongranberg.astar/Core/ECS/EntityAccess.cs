@@ -95,26 +95,77 @@ namespace Pathfinding.ECS {
 		}
 
 		/// <summary>
-		/// Retrieves a component for a given entity.
-		///
-		/// This is a convenience method to call <see cref="Update"/> on this object and update on the access object, and then retrieve the component data.
-		///
-		/// This method is very fast if the entity is the same as the last call to this method.
-		/// If the entity is different, it will be slower.
+		/// Retrieves an agent's <see cref="ManagedState"/>.
 		///
 		/// Returns: True if the entity exists, and false if it does not.
-		/// Throws: An exception if the entity does not have the given component.
+		/// Throws: System.InvalidOperationException If the entity is a clone whose managed data has not been
+		/// repaired yet. See <see cref="AgentManagedStorage"/>.
 		/// </summary>
 		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-		public bool GetComponentData<A>(World world, Entity entity, ref ManagedEntityAccess<A> access, out A value) where A : class, IComponentData {
+		public bool GetManagedState (World world, Entity entity, ref AgentManagedAccess access, out ManagedState value) {
 			if (Update(world, entity, out var entityManager, out var storage)) {
 				access.Update(entityManager);
-				value = access[storage];
+				value = access.State(entity, storage);
 				return true;
 			} else {
 				value = null;
 				return false;
 			}
+		}
+
+		/// <summary>\copydocref{GetManagedState}</summary>
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+		public bool GetManagedSettings (World world, Entity entity, ref AgentManagedAccess access, out ManagedSettings value) {
+			if (Update(world, entity, out var entityManager, out var storage)) {
+				access.Update(entityManager);
+				value = access.Settings(entity, storage);
+				return true;
+			} else {
+				value = null;
+				return false;
+			}
+		}
+	}
+
+	/// <summary>
+	/// Utility for efficient random access to an agent's managed data from the main thread.
+	///
+	/// Replaces the ManagedEntityAccess that A* used when the agent's managed data lived in class-based
+	/// components. Reads the agent's <see cref="AgentManagedRef"/> out of its chunk and resolves it against
+	/// <see cref="AgentManagedStorage"/>.
+	/// </summary>
+	public struct AgentManagedAccess {
+		EntityAccess<AgentManagedRef> access;
+
+		/// <param name="readOnly">Whether the managed data will only be read. The slot itself is always read-only;
+		/// this only affects which dependencies are completed before access.</param>
+		public AgentManagedAccess(bool readOnly) {
+			access = new EntityAccess<AgentManagedRef>(readOnly);
+		}
+
+		public void Update (EntityManager entityManager) {
+			access.Update(entityManager);
+		}
+
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+		public ManagedState State (Entity entity, EntityStorageInfo storage) {
+			return AgentManagedStorage.GetChecked(access[storage].slot, entity).state;
+		}
+
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+		public ManagedSettings Settings (Entity entity, EntityStorageInfo storage) {
+			return AgentManagedStorage.GetChecked(access[storage].slot, entity).settings;
+		}
+
+		/// <summary>The agent's in-progress off-mesh link traversal, or null if it is not traversing one.</summary>
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+		internal ManagedAgentOffMeshLinkTraversal LinkTraversal (Entity entity, EntityStorageInfo storage) {
+			return AgentManagedStorage.GetChecked(access[storage].slot, entity).linkTraversal;
+		}
+
+		/// <summary>Replaces the agent's settings object.</summary>
+		public void SetSettings (Entity entity, EntityStorageInfo storage, ManagedSettings value) {
+			AgentManagedStorage.SetSettings(access[storage].slot, entity, value);
 		}
 	}
 
@@ -199,49 +250,6 @@ namespace Pathfinding.ECS {
 					var ptr = readOnly ? ((T*)storage.Chunk.GetRequiredComponentDataPtrRO(ref handle) + storage.IndexInChunk) : ((T*)storage.Chunk.GetRequiredComponentDataPtrRW(ref handle) + storage.IndexInChunk);
 					return ref *ptr;
 				}
-			}
-		}
-	}
-
-	/// <summary>
-	/// Utility for efficient random access to managed entity component data from the main thread.
-	///
-	/// Warning: Some checks are not enforced by this API. It is the user's responsibility to ensure that
-	/// this struct does not survive past an ECS system update. If you only use this struct from the main thread
-	/// and only store it locally on the stack, this should not be a problem.
-	/// This struct also does not enforce that you only read to the component data if the readOnly flag is set.
-	/// </summary>
-	public struct ManagedEntityAccess<T> where T : class, IComponentData {
-		EntityManager entityManager;
-		ComponentTypeHandle<T> handle;
-		bool readOnly;
-
-		public ManagedEntityAccess(bool readOnly) {
-			entityManager = default;
-			handle = default;
-			this.readOnly = readOnly;
-		}
-
-		public ManagedEntityAccess(EntityManager entityManager, bool readOnly) : this(readOnly) {
-			Update(entityManager);
-		}
-
-		public void Update (EntityManager entityManager) {
-			if (readOnly) entityManager.CompleteDependencyBeforeRO<T>();
-			else entityManager.CompleteDependencyBeforeRW<T>();
-			handle = entityManager.GetComponentTypeHandle<T>(readOnly);
-			this.entityManager = entityManager;
-		}
-
-		public T this[EntityStorageInfo storage] {
-			[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-			get {
-				return storage.Chunk.GetManagedComponentAccessor<T>(ref handle, entityManager)[storage.IndexInChunk];
-			}
-			[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-			set {
-				var accessor = storage.Chunk.GetManagedComponentAccessor<T>(ref handle, entityManager);
-				accessor[storage.IndexInChunk] = value;
 			}
 		}
 	}

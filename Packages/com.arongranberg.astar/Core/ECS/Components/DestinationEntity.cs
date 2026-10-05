@@ -23,7 +23,11 @@ namespace Pathfinding.ECS {
 		/// See: <see cref="AIDestinationSetter"/>
 		/// See: <see cref="IAstarAI.destination"/>
 		/// </summary>
+		// UAC1001: [System.Serializable] here feeds the Entities Inspector's property bag, not Unity's
+		// serializer. [NonSerialized] would silence the analyzer, but also hide the field in that inspector.
+#pragma warning disable UAC1001
 		public Entity destination;
+#pragma warning restore UAC1001
 
 		/// <summary>
 		/// If true, the agent will try to align itself with the rotation of the <see cref="destination"/> entity.

@@ -367,6 +367,7 @@ namespace Pathfinding {
 		}
 
 		/// <summary>Abstract turn constructor.</summary>
+		[System.Serializable]
 		public abstract class TurnConstructor {
 			/// <summary>
 			/// Constant bias to add to the path lengths.

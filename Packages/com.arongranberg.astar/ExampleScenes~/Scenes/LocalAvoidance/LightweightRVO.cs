@@ -181,7 +181,10 @@ namespace Pathfinding.Examples {
 		public void Update () {
 			var world = World.DefaultGameObjectInjectionWorld;
 			var system = world.GetOrCreateSystem<LightweightRVOControlSystem>();
-			world.Unmanaged.GetUnsafeSystemRef<LightweightRVOControlSystem>(system).debug = debug;
+			ref var controlSystem = ref world.Unmanaged.GetUnsafeSystemRef<LightweightRVOControlSystem>(system);
+			controlSystem.debug = debug;
+			controlSystem.refreshDebugFlags |= refreshDebugFlags;
+			refreshDebugFlags = false;
 		}
 
 		private float uniformDistance (float radius) {
@@ -223,9 +226,13 @@ namespace Pathfinding.Examples {
 			return entity;
 		}
 
+		/// <summary>Set when new agents have been created, since they start with <see cref="AgentDebugFlags.Nothing"/></summary>
+		bool refreshDebugFlags = true;
+
 		/// <summary>Create a number of agents in circle and restart simulation</summary>
 		public void CreateAgents (int num) {
 			this.agentCount = num;
+			refreshDebugFlags = true;
 			var world = World.DefaultGameObjectInjectionWorld;
 			var entityManager = world.EntityManager;
 			var archetype = entityManager.CreateArchetype(
@@ -348,8 +355,12 @@ namespace Pathfinding.Examples {
 		public partial struct LightweightRVOControlSystem : ISystem {
 			/// <summary>Determines what kind of debug info the RVO system should render as gizmos</summary>
 			public AgentDebugFlags debug;
+
+			/// <summary>Set by <see cref="LightweightRVO"/> when it creates new agents, which start with <see cref="AgentDebugFlags.Nothing"/></summary>
+			public bool refreshDebugFlags;
 			EntityQuery entityQueryDirection;
 			EntityQuery entityQueryControl;
+			AgentDebugFlags lastDebug;
 
 			public void OnCreate (ref SystemState state) {
 				entityQueryDirection = state.GetEntityQuery(
@@ -362,7 +373,6 @@ namespace Pathfinding.Examples {
 				entityQueryControl = state.GetEntityQuery(
 					ComponentType.ReadOnly<LightweightAgentData>(),
 					ComponentType.ReadOnly<DestinationPoint>(),
-					ComponentType.ReadWrite<RVOAgent>(),
 					ComponentType.ReadWrite<MovementControl>()
 					);
 			}
@@ -375,8 +385,32 @@ namespace Pathfinding.Examples {
 
 				state.Dependency = new JobControlAgents {
 					deltaTime = SystemAPI.Time.DeltaTime,
-					debug = debug,
-				}.Schedule(entityQueryControl, state.Dependency);
+				}.ScheduleParallel(entityQueryControl, state.Dependency);
+
+				// Taking write access to RVOAgent marks the whole chunk as changed, even when the value
+				// written is identical. RVOSystem change-filters its settings copy on RVOAgent, so touching
+				// it every frame would make that copy run for every agent on every frame.
+				if (refreshDebugFlags || debug != lastDebug) {
+					refreshDebugFlags = false;
+					lastDebug = debug;
+					state.Dependency = new JobSetDebugFlags { debug = debug }.Schedule(state.Dependency);
+				}
+			}
+
+			/// <summary>
+			/// Job to pick which debug info the <see cref="RVOSystem"/> renders for each agent.
+			///
+			/// Only scheduled when the flags or the set of agents change. See <see cref="LightweightRVOControlSystem.OnUpdate"/>.
+			/// </summary>
+			[BurstCompile]
+			[WithAll(typeof(LightweightAgentData))]
+			public partial struct JobSetDebugFlags : IJobEntity {
+				public AgentDebugFlags debug;
+
+				public void Execute (ref RVOAgent rvoAgent, [EntityIndexInQuery] int index) {
+					// Show most debug info only for the first agent, to reduce clutter
+					rvoAgent.debug = index == 0 ? debug : (debug & AgentDebugFlags.ReachedState);
+				}
 			}
 
 			/// <summary>
@@ -387,9 +421,8 @@ namespace Pathfinding.Examples {
 			[BurstCompile]
 			public partial struct JobControlAgents : IJobEntity {
 				public float deltaTime;
-				public AgentDebugFlags debug;
 
-				public void Execute (in LightweightAgentData agentData, in DestinationPoint destination, ref RVOAgent rvoAgent, ref MovementControl movementControl, [EntityIndexInQuery] int index) {
+				public void Execute (in LightweightAgentData agentData, in DestinationPoint destination, ref MovementControl movementControl) {
 					movementControl = new MovementControl {
 						// This is the point the agent will try to move towards
 						targetPoint = destination.destination,
@@ -404,13 +437,6 @@ namespace Pathfinding.Examples {
 						rotationSpeed = 0,
 						overrideLocalAvoidance = false,
 					};
-
-					if (index == 0) {
-						// Show most debug info only for the first agent, to reduce clutter
-						rvoAgent.debug = debug;
-					} else {
-						rvoAgent.debug = debug & AgentDebugFlags.ReachedState;
-					}
 				}
 			}
 

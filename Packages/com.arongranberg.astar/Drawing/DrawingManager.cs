@@ -1,3 +1,5 @@
+// Compiled out when ALINE is excluded from standalone builds. See DrawingManagerStub.cs.
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 // TODO: Check HDRP custom pass support, and log a warning if it is disabled
 #pragma warning disable 649 // Field `Drawing.GizmoContext.activeTransform' is never assigned to, and will always have its default value `null'. Not used outside of the unity editor.
 using UnityEngine;
@@ -17,122 +19,6 @@ using UnityEngine.Rendering.HighDefinition;
 #endif
 
 namespace Pathfinding.Drawing {
-	/// <summary>Info about the current selection in the editor</summary>
-	public static class GizmoContext {
-#if UNITY_EDITOR
-		static Transform activeTransform;
-#endif
-
-		static HashSet<Transform> selectedTransforms = new HashSet<Transform>();
-
-		static internal bool drawingGizmos;
-		static internal bool dirty;
-		private static int selectionSizeInternal;
-
-		/// <summary>Number of top-level transforms that are selected</summary>
-		public static int selectionSize {
-			get {
-				Refresh();
-				return selectionSizeInternal;
-			}
-			private set {
-				selectionSizeInternal = value;
-			}
-		}
-
-		internal static void SetDirty () {
-			dirty = true;
-		}
-
-		private static void Refresh () {
-#if UNITY_EDITOR
-			if (!drawingGizmos) throw new System.Exception("Can only be used inside the ALINE library's gizmo drawing functions.");
-			if (dirty) {
-				dirty = false;
-				DrawingManager.MarkerRefreshSelectionCache.Begin();
-				activeTransform = Selection.activeTransform;
-				selectedTransforms.Clear();
-				// Optimization to avoid allocating an empty array when calling Selection.transforms in many cases
-				if (Selection.count > 0) {
-					var topLevel = Selection.transforms;
-					for (int i = 0; i < topLevel.Length; i++) selectedTransforms.Add(topLevel[i]);
-					selectionSize = topLevel.Length;
-				} else {
-					selectionSize = 0;
-				}
-				DrawingManager.MarkerRefreshSelectionCache.End();
-			}
-#endif
-		}
-
-		/// <summary>
-		/// True if the component is selected.
-		/// This is a deep selection: even children of selected transforms are considered to be selected.
-		/// </summary>
-		public static bool InSelection (Component c) {
-			return InSelection(c.transform);
-		}
-
-		/// <summary>
-		/// True if the transform is selected.
-		/// This is a deep selection: even children of selected transforms are considered to be selected.
-		/// </summary>
-		public static bool InSelection (Transform tr) {
-			Refresh();
-			var leaf = tr;
-			while (tr != null) {
-				if (selectedTransforms.Contains(tr)) {
-					selectedTransforms.Add(leaf);
-					return true;
-				}
-				tr = tr.parent;
-			}
-			return false;
-		}
-
-		/// <summary>
-		/// True if the component is shown in the inspector.
-		/// The active selection is the GameObject that is currently visible in the inspector.
-		/// </summary>
-		public static bool InActiveSelection (Component c) {
-			return InActiveSelection(c.transform);
-		}
-
-		/// <summary>
-		/// True if the transform is shown in the inspector.
-		/// The active selection is the GameObject that is currently visible in the inspector.
-		/// </summary>
-		public static bool InActiveSelection (Transform tr) {
-#if UNITY_EDITOR
-			Refresh();
-			return tr.transform == activeTransform;
-#else
-			return false;
-#endif
-		}
-	}
-
-	/// <summary>
-	/// Every object that wants to draw gizmos should implement this interface.
-	/// See: <see cref="Drawing.MonoBehaviourGizmos"/>
-	/// </summary>
-	public interface IDrawGizmos {
-		void DrawGizmos();
-
-		/// <summary>
-		/// True if the drawer still exists and shouldn't be destroyed.
-		/// This is only called for drawers that do not inherit from MonoBehaviour.
-		/// MonoBehaviour drawers are automatically checked.
-		/// </summary>
-		bool Exists => throw new System.NotImplementedException("This method should be overridden in the implementing class, unless it inherits from MonoBehaviour");
-	}
-
-	public enum DetectedRenderPipeline {
-		BuiltInOrCustom,
-		HDRP,
-		URP
-	}
-
 	/// <summary>
 	/// Global script which draws debug items and gizmos.
 	/// If a Draw.* method has been used or if any script inheriting from the <see cref="Drawing.MonoBehaviourGizmos"/> class is in the scene then an instance of this script
@@ -145,6 +31,7 @@ namespace Pathfinding.Drawing {
 	[ExecuteAlways]
 	[AddComponentMenu("")]
 	public class DrawingManager : MonoBehaviour {
+		[System.NonSerialized]
 		public DrawingData gizmos;
 		static List<GizmoDrawerGroup> gizmoDrawers = new List<GizmoDrawerGroup>();
 		static List<(System.Type, IDrawGizmos)> pendingGizmoDrawers = new List<(System.Type, IDrawGizmos)>();
@@ -398,8 +285,12 @@ namespace Pathfinding.Drawing {
 		void OnDisable () {
 			if (!actuallyEnabled) return;
 			actuallyEnabled = false;
-			commandBuffer.Dispose();
-			commandBuffer = null;
+			// May already be null if this component was enabled without OnEnable having run to completion,
+			// e.g. because this GameObject was duplicated by a user in the hierarchy.
+			if (commandBuffer != null) {
+				commandBuffer.Dispose();
+				commandBuffer = null;
+			}
 			Camera.onPostRender -= PostRender;
 #if UNITY_2021_1_OR_NEWER
 			UnityEngine.Rendering.RenderPipelineManager.beginContextRendering -= BeginContextRendering;
@@ -417,6 +308,10 @@ namespace Pathfinding.Drawing {
 				Draw.builder.DiscardAndDisposeInternal();
 				Draw.ingame_builder.DiscardAndDisposeInternal();
 				gizmos.ClearData();
+				// ClearData destroys the instance, it cannot be used again.
+				// OnEnable may run again on this same component, since it is not always destroyed
+				// together with the managed domain, and it must then allocate a fresh instance.
+				gizmos = null;
 			}
 #if MODULE_RENDER_PIPELINES_UNIVERSAL
 			if (renderPassFeature != null) {
@@ -992,3 +887,4 @@ namespace Pathfinding.Drawing {
 		}
 	}
 }
+#endif

@@ -1,7 +1,10 @@
 fileFormatVersion: 2
 guid: fa35a77503f6a45eea6c469775ee446e
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -2242617856569026639
+    second: grid_tile_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -121,7 +124,28 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: grid_tile_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b7514cf0fe90e0e0800000000000000
+      internalID: -2242617856569026639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape:
     - - {x: 64, y: 64}
@@ -136,7 +160,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      grid_tile_0: -2242617856569026639
   mipmapLimitGroupName: 
   pSDRemoveMatte: 1
   userData: 
@@ -146,6 +171,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 87744
   packageName: A* Pathfinding Project Pro
-  packageVersion: 5.4.6
+  packageVersion: 5.4.7
   assetPath: Packages/com.arongranberg.astar/ExampleScenes~/Scenes/OldExamples/Example15_2D/grid_tile.psd
-  uploadId: 851410
+  uploadId: 984522

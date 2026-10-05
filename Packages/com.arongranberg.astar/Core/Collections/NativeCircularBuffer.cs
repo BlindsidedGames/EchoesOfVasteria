@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
@@ -95,14 +96,13 @@ namespace Pathfinding.Collections {
 			length = 0;
 		}
 
-		unsafe public NativeCircularBuffer(CircularBuffer<T> buffer, out ulong gcHandle) : this(buffer.data, buffer.head, buffer.Length, out gcHandle) {}
+		unsafe public NativeCircularBuffer(CircularBuffer<T> buffer, out GCHandle gcHandle) : this(buffer.data, buffer.head, buffer.Length, out gcHandle) {}
 
-		unsafe public NativeCircularBuffer(T[] data, int head, int length, out ulong gcHandle) {
+		unsafe public NativeCircularBuffer(T[] data, int head, int length, out GCHandle gcHandle) {
 			Assert.IsTrue((data.Length & (data.Length - 1)) == 0);
 			Assert.IsTrue(length <= data.Length);
-			unsafe {
-				this.data = (T*)UnsafeUtility.PinGCArrayAndGetDataAddress(data, out gcHandle);
-			}
+			gcHandle = GCHandle.Alloc(data, GCHandleType.Pinned);
+			this.data = (T*)gcHandle.AddrOfPinnedObject();
 			this.capacityMask = data.Length - 1;
 			this.head = head;
 			this.length = length;

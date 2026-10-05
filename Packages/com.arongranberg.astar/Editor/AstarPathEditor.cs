@@ -1015,6 +1015,12 @@ namespace Pathfinding {
 
 			script.showGraphsInStandalonePlayer = EditorGUILayout.Toggle(new GUIContent("Show Graphs in Standalone Player", "If true, graph visualizations will be rendered in standalone builds. Normally they are only visible in the editor."), script.showGraphsInStandalonePlayer);
 
+#if ALINE_EXCLUDED_IN_BUILD
+			if (script.showGraphsInStandalonePlayer) {
+				EditorGUILayout.HelpBox("Graphs will not be rendered in standalone builds because debug drawing in builds has been disabled (ALINE_EXCLUDED_IN_BUILD). Enable it again in the Optimizations tab.", MessageType.Warning);
+			}
+#endif
+
 			alwaysVisibleArea.End();
 		}
 

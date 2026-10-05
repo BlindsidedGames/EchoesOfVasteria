@@ -23,12 +23,13 @@ namespace Pathfinding.ECS {
 		public EntityQuery entityQueryNormal;
 		// Store the queue in a GCHandle to avoid restrictions on ISystem
 		GCHandle graphNodeQueue;
+		NativeList<Int3> scratchVertices;
 
 		public void OnCreate (ref SystemState state) {
 			entityQueryGraph = state.GetEntityQuery(ComponentType.ReadOnly<MovementState>(), ComponentType.ReadWrite<AgentMovementPlane>(), ComponentType.ReadOnly<AgentMovementPlaneSource>());
 			entityQueryGraph.SetSharedComponentFilter(new AgentMovementPlaneSource { value = MovementPlaneSource.Graph });
 			entityQueryNormal = state.GetEntityQuery(
-				ComponentType.ReadWrite<ManagedState>(),
+				ComponentType.ReadWrite<AgentManagedRef>(),
 				ComponentType.ReadOnly<LocalTransform>(),
 				ComponentType.ReadWrite<AgentMovementPlane>(),
 				ComponentType.ReadOnly<AgentCylinderShape>(),
@@ -37,10 +38,12 @@ namespace Pathfinding.ECS {
 			entityQueryNormal.AddSharedComponentFilter(new AgentMovementPlaneSource { value = MovementPlaneSource.NavmeshNormal });
 
 			graphNodeQueue = GCHandle.Alloc(new List<GraphNode>(32));
+			scratchVertices = new NativeList<Int3>(16, Allocator.Persistent);
 		}
 
 		public void OnDestroy (ref SystemState state) {
 			graphNodeQueue.Free();
+			scratchVertices.Dispose();
 		}
 
 		public void OnUpdate (ref SystemState systemState) {
@@ -55,11 +58,10 @@ namespace Pathfinding.ECS {
 			if (!entityQueryNormal.IsEmpty) {
 				Profiler.BeginSample("MovementPlaneSource.NavmeshNormal");
 				systemState.CompleteDependency();
-				var vertices = new NativeList<Int3>(16, Allocator.Temp);
 				new JobMovementPlaneFromNavmeshNormal {
 					dt = AIMovementSystemGroup.TimeScaledRateManager.CheapStepDeltaTime,
-					vertices = vertices,
-					que = (List<GraphNode>)graphNodeQueue.Target,
+					vertices = scratchVertices,
+					que = graphNodeQueue,
 				}.Run(entityQueryNormal);
 				Profiler.EndSample();
 			}
@@ -86,18 +88,20 @@ namespace Pathfinding.ECS {
 			}
 		}
 
+		/// <summary>Samples a smoothed navmesh normal per agent</summary>
 		partial struct JobMovementPlaneFromNavmeshNormal : IJobEntity {
 			public float dt;
 			public NativeList<Int3> vertices;
-			public List<GraphNode> que;
+			/// <summary><see cref="MovementPlaneFromGraphSystem.graphNodeQueue"/>, a List<GraphNode></summary>
+			public GCHandle que;
 
-			public void Execute (ManagedState managedState, in LocalTransform localTransform, ref AgentMovementPlane agentMovementPlane, in AgentCylinderShape shape) {
-				var node = managedState.pathTracer.startNode as TriangleMeshNode;
+			public void Execute (ref AgentManagedRef managedRef, in LocalTransform localTransform, ref AgentMovementPlane agentMovementPlane, in AgentCylinderShape shape) {
+				var node = AgentManagedStorage.entries[managedRef.slot].state.pathTracer.startNode as TriangleMeshNode;
 				if (node != null) {
 					// TODO: Expose this parameter?
 					const float InverseSmoothness = 20f;
 					var radius = math.max(0.01f, shape.radius);
-					SampleSmoothNavmeshNormal(node, que, vertices, localTransform.Position, radius, ref agentMovementPlane, dt * InverseSmoothness);
+					SampleSmoothNavmeshNormal(node, (List<GraphNode>)que.Target, vertices, localTransform.Position, radius, ref agentMovementPlane, dt * InverseSmoothness);
 				}
 			}
 		}

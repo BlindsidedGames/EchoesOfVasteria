@@ -1,3 +1,5 @@
+// Compiled out when ALINE is excluded from standalone builds.
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 #if MODULE_RENDER_PIPELINES_UNIVERSAL
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -12,10 +14,16 @@ namespace Pathfinding.Drawing {
 		/// <summary>Custom Universal Render Pipeline Render Pass for ALINE</summary>
 		public class AlineURPRenderPass : ScriptableRenderPass {
 			/// <summary>This method is called before executing the render pass</summary>
-#if !MODULE_RENDER_PIPELINES_UNIVERSAL_17_0_0_OR_NEWER
+#if !MODULE_RENDER_PIPELINES_UNIVERSAL_17_4_0_OR_NEWER
+#if MODULE_RENDER_PIPELINES_UNIVERSAL_17_0_0_OR_NEWER
+			[System.Obsolete]
+#endif
 			public override void Configure (CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor) {
 			}
 
+#if MODULE_RENDER_PIPELINES_UNIVERSAL_17_0_0_OR_NEWER
+			[System.Obsolete]
+#endif
 			public override void Execute (ScriptableRenderContext context, ref RenderingData renderingData) {
 				DrawingManager.instance.ExecuteCustomRenderPass(context, renderingData.cameraData.camera);
 			}
@@ -93,4 +101,5 @@ namespace Pathfinding.Drawing {
 		}
 	}
 }
+#endif
 #endif

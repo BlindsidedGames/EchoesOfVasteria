@@ -849,8 +849,8 @@ namespace Pathfinding.Graphs.Navmesh {
 				alphamaps.Free(Allocator.TempJob);
 				areaMapping.Free(Allocator.TempJob);
 				areaMappingThresholds.Free(Allocator.TempJob);
-				UnsafeUtility.ReleaseGCObject(gcHandle1);
-				UnsafeUtility.ReleaseGCObject(gcHandle2);
+				gcHandle1.Free();
+				gcHandle2.Free();
 			}
 			return true;
 		}
@@ -1077,7 +1077,7 @@ namespace Pathfinding.Graphs.Navmesh {
 				ref meshes
 				);
 			treeInfos.Free(Allocator.Temp);
-			UnsafeUtility.ReleaseGCObject(gcHandle);
+			gcHandle.Free();
 			Profiler.EndSample();
 		}
 

@@ -862,11 +862,16 @@ namespace Pathfinding.RVO {
 			AllocateAgentSpace();
 
 			// Just to make sure the quadtree is in a valid state
-			quadtree.BuildJob(simulationData.position, simulationData.version, simulationData.desiredSpeed, simulationData.radius, 0, movementPlane).Run();
+			quadtree.BuildJob(simulationData.position, simulationData.version, simulationData.desiredSpeed, simulationData.radius, simulationData.layer, 0, movementPlane).Run();
 		}
 
-		/// <summary>Removes all agents from the simulation</summary>
-		public void ClearAgents () {
+		/// <summary>
+		/// Removes all agents from the simulation.
+		///
+		/// Only valid as part of tearing the simulator down.
+		/// It leaves every <see cref="AgentIndex"/> handed out so far dangling.
+		/// </summary>
+		void ClearAgents () {
 			BlockUntilSimulationStepDone();
 			for (int i = 0; i < agentDestroyCallbacks.Length; i++) agentDestroyCallbacks[i]?.Invoke();
 			numAgents = 0;
@@ -986,7 +991,6 @@ namespace Pathfinding.RVO {
 		/// The agent can be added again later by using AddAgent.
 		///
 		/// See: AddAgent(IAgent)
-		/// See: ClearAgents
 		/// </summary>
 		public void RemoveAgent (IAgent agent) {
 			if (agent == null) throw new System.ArgumentNullException(nameof(agent));
@@ -1127,7 +1131,7 @@ namespace Pathfinding.RVO {
 			var writeLock = rwLock.Write();
 			dependency = JobHandle.CombineDependencies(dependency, writeLock.dependency);
 
-			var quadtreeJob = quadtree.BuildJob(simulationData.position, simulationData.version, outputData.speed, simulationData.radius, numAgents, movementPlane).Schedule(dependency);
+			var quadtreeJob = quadtree.BuildJob(simulationData.position, simulationData.version, outputData.speed, simulationData.radius, simulationData.layer, numAgents, movementPlane).Schedule(dependency);
 
 			var preprocessJob = new JobRVOPreprocess<T> {
 				agentData = simulationData,
@@ -1236,19 +1240,26 @@ namespace Pathfinding.RVO {
 			}
 
 			var reachedJob = new JobDestinationReached<T> {
-				agentData = simulationData,
+				version = simulationData.version,
+				radius = simulationData.radius,
+				height = simulationData.height,
+				position = simulationData.position,
+				movementPlaneData = simulationData.movementPlane,
+				endOfPath = simulationData.endOfPath,
 				temporaryAgentData = temporaryAgentData,
 				output = outputData,
 #if UNITY_EDITOR
+				debugFlags = simulationData.debugFlags,
+				flowFollowingStrength = simulationData.flowFollowingStrength,
 				draw = draw,
 #endif
 				numAgents = numAgents,
 			}.Schedule(rvoJob);
 
-			// Clear some fields that are reset every simulation tick
-			var clearJob = simulationData.collisionNormal.MemSet(float3.zero).Schedule(reachedJob);
-			var clearJob2 = simulationData.manuallyControlled.MemSet(false).Schedule(reachedJob);
-			var clearJob3 = simulationData.hierarchicalNodeIndex.MemSet(-1).Schedule(reachedJob);
+			// Clear some fields that are reset every simulation tick.
+			var clearJob = simulationData.collisionNormal.MemSet(float3.zero).Schedule(rvoJob);
+			var clearJob2 = simulationData.manuallyControlled.MemSet(false).Schedule(rvoJob);
+			var clearJob3 = simulationData.hierarchicalNodeIndex.MemSet(-1).Schedule(rvoJob);
 
 			dependency = JobHandle.CombineDependencies(reachedJob, clearJob, clearJob2);
 			dependency = JobHandle.CombineDependencies(dependency, clearJob3);

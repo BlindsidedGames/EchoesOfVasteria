@@ -443,7 +443,6 @@ namespace Pathfinding.PID {
 			if (desiredRadius <= 0.0001f) return direction0;
 
 			var lengthOrig = length;
-			var lengthInvOrig = 1 / lengthOrig;
 
 			// Pre-process all edges by splitting them up and grouping them by zone.
 			// We have 4 zones that we care about:
@@ -528,12 +527,12 @@ namespace Pathfinding.PID {
 					if (offset.y > 0) rightObstacleDir = MaxAngle(rightObstacleDir, offset, false);
 				}
 
-				// Do some kind of weighted average of the two directions.
-				// Here we map the length of the obstacle directions as 0=>0 and L=>infinity (but we clamp it to a finite but large value).
-				// Basically we want to give more weight to obstacles closer to the agent.
-				var leftInverseWeight = 1 / math.max(0.000001f, lengthOrig - leftObstacleDir.x*leftObstacleDir.x) - lengthInvOrig;
-				var rightInverseWeight = 1 / math.max(0.000001f, lengthOrig - rightObstacleDir.x*rightObstacleDir.x) - lengthInvOrig;
-				var rTot = math.normalizesafe(leftObstacleDir * rightInverseWeight + rightObstacleDir * leftInverseWeight);
+				// Weight each side by how far away the other side's obstacle is, so that the nearer obstacle
+				// dominates the result.
+				var rTot = math.normalizesafe(
+					math.normalizesafe(leftObstacleDir) * math.max(0f, rightObstacleDir.x) +
+					math.normalizesafe(rightObstacleDir) * math.max(0f, leftObstacleDir.x)
+					);
 
 				// Alternative averaging which only takes the sum of the angles
 				// var rTot2 = math.normalizesafe(VectorMath.ComplexMultiply(leftObstacleDir, rightObstacleDir));
@@ -853,8 +852,12 @@ namespace Pathfinding.PID {
 				}
 			}
 
-			var desiredForwardClearanceRadius = settings.desiredWallDistance;
-			desiredForwardClearanceRadius = math.max(0, math.min(desiredForwardClearanceRadius, (controlParams.remainingDistance - desiredForwardClearanceRadius) / DESTINATION_CLEARANCE_FACTOR));
+			// Shrink the clearance near the destination, so a destination lying on the navmesh border stays
+			// reachable.
+			//
+			// This is the fixed point solution to the recursive equation
+			// r = min(desiredWallDistance, (remainingDistance - r)/DESTINATION_CLEARANCE_FACTOR).
+			var desiredForwardClearanceRadius = math.min(settings.desiredWallDistance, controlParams.remainingDistance / (DESTINATION_CLEARANCE_FACTOR + 1));
 			MarkerOptimizeDirection.Begin();
 
 			// In case the next corner is not visible from the agent's current position, then instead move towards the first intersection with an obstacle.

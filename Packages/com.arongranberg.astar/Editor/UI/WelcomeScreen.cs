@@ -10,14 +10,13 @@ using UnityEditor.Scripting.ScriptCompilation;
 
 namespace Pathfinding {
 	internal class WelcomeScreen : UnityEditor.EditorWindow {
-		[SerializeField]
-		private VisualTreeAsset m_VisualTreeAsset = default;
-
 		public bool isImportingSamples;
 		private bool askedAboutQuitting;
 
 		[InitializeOnLoadMethod]
 		public static void TryCreate () {
+			if (Application.isBatchMode) return;
+
 			if (!PathfindingEditorSettings.instance.hasShownWelcomeScreen) {
 				// Wait a bit before showing the window to avoid stuttering
 				// as all the other windows in Unity load.
@@ -51,8 +50,12 @@ namespace Pathfinding {
 		public void CreateGUI () {
 			VisualElement root = rootVisualElement;
 
-			VisualElement labelFromUXML = m_VisualTreeAsset.Instantiate();
-			root.Add(labelFromUXML);
+			var layout = LoadLayout();
+			if (layout == null) {
+				root.Add(new Label("Could not load WelcomeScreen.uxml"));
+				return;
+			}
+			root.Add(layout.Instantiate());
 
 			var sampleButton = root.Query<Button>("importSamples").First();
 			var samplesImportedIndicator = root.Query("samplesImported").First();
@@ -64,6 +67,18 @@ namespace Pathfinding {
 			root.Query<Button>("changelog").First().clicked += OpenChangelog;
 			root.Query<Label>("version").First().text = "Version " + AstarPath.Version.ToString();
 			AnimateLogo(root.Query("logo").First());
+		}
+
+		/// <summary>
+		/// Loads the window layout, wherever the package happens to be installed.
+		///
+		/// Loading it from a [SerializeField] should work, but Unity seems to not reliably set that
+		/// on first import, which is when this window shows up.
+		/// </summary>
+		static VisualTreeAsset LoadLayout () {
+			// The guid from WelcomeScreen.uxml.meta. It ships with the package, so it resolves whether the
+			// package sits under Assets or under Packages, and survives the user moving the folder.
+			return AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(AssetDatabase.GUIDToAssetPath("f270bacb724b66246a7f31e2a8e71fe1"));
 		}
 
 		static string FirstSceneToLoad = "Recast3D";

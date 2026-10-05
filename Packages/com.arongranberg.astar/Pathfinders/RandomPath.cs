@@ -229,6 +229,12 @@ namespace Pathfinding {
 			// This method may be called multiple times without checking if the path is complete yet.
 			if (CompleteState != PathCompleteState.NotCalculated) return;
 
+			// An off-mesh link is represented as two nodes in a separate graph (see LinkGraph).
+			// Those nodes must never be used as the endpoint of a path, since a path is required to
+			// start and end on a regular node. Otherwise the path would end in the middle of the link.
+			// The link nodes can still be traversed, they just cannot be picked as the destination.
+			if (!ctx.pathHandler.IsTemporaryNode(pathNode) && ctx.pathHandler.GetNode(pathNode) is LinkNode) return;
+
 			if (gScore >= searchLength) {
 				if (gScore <= searchLength+spread) {
 					nodesEvaluatedRep++;

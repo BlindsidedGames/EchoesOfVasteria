@@ -8,7 +8,9 @@ namespace Pathfinding.Examples {
 		public int movementPoints = 2;
 		public BlockManager blockManager;
 		public SingleNodeBlocker blocker;
+		[System.NonSerialized]
 		public GraphNode targetNode;
+		[System.NonSerialized]
 		public BlockManager.TraversalProvider traversalProvider;
 
 		void Start () {

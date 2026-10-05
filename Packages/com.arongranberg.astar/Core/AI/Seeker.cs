@@ -139,7 +139,12 @@ namespace Pathfinding {
 		///
 		/// See: multiple-agent-types (view in online documentation for working links)
 		/// </summary>
+		// UAC1018: The name clash with [FormerlySerializedAs("graphMask")] on #graphMaskCompatibility is
+		// deliberate. Unity matches the real field name first, so old int data lands in the compatibility
+		// field and is migrated from there.
+#pragma warning disable UAC1018
 		public GraphMask graphMask = GraphMask.everything;
+#pragma warning restore UAC1018
 
 		/// <summary>
 		/// Custom traversal provider to calculate which nodes are traversable and their penalties.

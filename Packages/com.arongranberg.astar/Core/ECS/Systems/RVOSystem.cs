@@ -35,15 +35,26 @@ namespace Pathfinding.ECS.RVO {
 	[UpdateInGroup(typeof(AIMovementSystemGroup))]
 	public partial struct RVOSystem : ISystem {
 		/// <summary>
+		/// Actual infinity is not handled well by some algorithms, but very large values are ok.
+		/// This should be larger than any reasonable value a user might want to use.
+		/// </summary>
+		const float VERY_LARGE = 100000;
+
+		/// <summary>
 		/// Keeps track of the last simulator that this RVOSystem saw.
 		/// This is a weak GCHandle to allow it to be stored in an ISystem.
 		/// </summary>
 		GCHandle lastSimulator;
-		ComponentLookup<AgentOffMeshLinkTraversal> agentOffMeshLinkTraversalLookup;
+
+		/// <summary>
+		/// Which slice of the agents refreshes its crowd density this simulation step.
+		///
+		/// See: <see cref="JobCopyFromRVOSimulatorToEntities.DensityUpdateInterval"/>
+		/// </summary>
+		uint densityPhase;
 
 		public void OnCreate (ref SystemState state) {
 			lastSimulator = GCHandle.Alloc(null, System.Runtime.InteropServices.GCHandleType.Weak);
-			agentOffMeshLinkTraversalLookup = state.GetComponentLookup<AgentOffMeshLinkTraversal>(true);
 		}
 
 		public void OnDestroy (ref SystemState state) {
@@ -61,6 +72,11 @@ namespace Pathfinding.ECS.RVO {
 			if (simulator == null) return;
 
 			AddAndRemoveAgentsFromSimulation(ref systemState, simulator);
+
+			// This runs on every update, even ones that skip the simulation below,
+			// because its change filter is evaluated against SystemState.LastSystemVersion, which advances on
+			// every update.
+			CopyRVOSettingsToSimulator(ref systemState, simulator);
 
 			// The full movement calculations do not necessarily need to be done every frame if the fps is high
 			if (AIMovementSystemGroup.TimeScaledRateManager.CheapSimulationOnly) {
@@ -82,7 +98,11 @@ namespace Pathfinding.ECS.RVO {
 
 		void RemoveAllAgentsFromSimulation (ref SystemState systemState) {
 			var buffer = new EntityCommandBuffer(Allocator.Temp);
-			var entities = SystemAPI.QueryBuilder().WithAllRW<AgentIndex>().Build().ToEntityArray(systemState.WorldUpdateAllocator);
+			var entities = SystemAPI.QueryBuilder()
+						   .WithAllRW<AgentIndex>()
+						   .WithOptions(EntityQueryOptions.IncludeDisabledEntities)
+						   .Build()
+						   .ToEntityArray(systemState.WorldUpdateAllocator);
 			buffer.RemoveComponent<AgentIndex>(entities);
 			buffer.Playback(systemState.EntityManager);
 			buffer.Dispose();
@@ -136,25 +156,38 @@ namespace Pathfinding.ECS.RVO {
 			}
 		}
 
+		void CopyRVOSettingsToSimulator (ref SystemState systemState, SimulatorBurst simulator) {
+			var writeLock = simulator.LockSimulationDataReadWrite();
+			systemState.Dependency = new JobCopyRVOSettingsToSimulator {
+				agentData = simulator.simulationData,
+			}.ScheduleParallel(JobHandle.CombineDependencies(writeLock.dependency, systemState.Dependency));
+			writeLock.UnlockAfter(systemState.Dependency);
+		}
+
 		void CopyFromEntitiesToRVOSimulator (ref SystemState systemState, SimulatorBurst simulator, float dt) {
-			agentOffMeshLinkTraversalLookup.Update(ref systemState);
 			var writeLock = simulator.LockSimulationDataReadWrite();
 			systemState.Dependency = new JobCopyFromEntitiesToRVOSimulator {
 				agentData = simulator.simulationData,
 				agentOutputData = simulator.outputData,
 				movementPlaneMode = simulator.movementPlane,
-				agentOffMeshLinkTraversalLookup = agentOffMeshLinkTraversalLookup,
 				dt = dt,
 			}.ScheduleParallel(JobHandle.CombineDependencies(writeLock.dependency, systemState.Dependency));
+
+			systemState.Dependency = new JobDisableLocalAvoidanceDuringLinkTraversal {
+				agentDataVersions = simulator.simulationData.version,
+				manuallyControlled = simulator.simulationData.manuallyControlled,
+			}.ScheduleParallel(systemState.Dependency);
 			writeLock.UnlockAfter(systemState.Dependency);
 		}
 
 		void CopyFromRVOSimulatorToEntities (ref SystemState systemState, SimulatorBurst simulator) {
 			var writeLock = simulator.LockSimulationDataReadWrite();
+			densityPhase++;
 			systemState.Dependency = new JobCopyFromRVOSimulatorToEntities {
 				quadtree = simulator.quadtree,
 				agentDataVersions = simulator.simulationData.version,
 				agentOutputData = simulator.outputData,
+				densityPhase = densityPhase,
 			}.ScheduleParallel(JobHandle.CombineDependencies(writeLock.dependency, systemState.Dependency));
 			writeLock.UnlockAfter(systemState.Dependency);
 		}
@@ -166,27 +199,14 @@ namespace Pathfinding.ECS.RVO {
 			[ReadOnly]
 			public SimulatorBurst.AgentOutputData agentOutputData;
 			public MovementPlane movementPlaneMode;
-			[ReadOnly]
-			public ComponentLookup<AgentOffMeshLinkTraversal> agentOffMeshLinkTraversalLookup;
 			public float dt;
 
-			public void Execute (Entity entity, in LocalTransform transform, in AgentCylinderShape shape, in AgentMovementPlane movementPlane, in AgentIndex agentIndex, in RVOAgent controller, in MovementControl target) {
+			public void Execute (in LocalTransform transform, in AgentCylinderShape shape, in AgentMovementPlane movementPlane, in AgentIndex agentIndex, in RVOAgent controller, in MovementControl target) {
 				var scale = math.abs(transform.Scale);
 				if (!agentIndex.TryGetIndex(ref agentData, out var index)) throw new System.InvalidOperationException("RVOAgent has an invalid entity index");
 
-				// Actual infinity is not handled well by some algorithms, but very large values are ok.
-				// This should be larger than any reasonable value a user might want to use.
-				const float VERY_LARGE = 100000;
-
 				// Copy all fields to the rvo simulator, and clamp them to reasonable values
 				agentData.radius[index] = math.clamp(shape.radius * scale, 0.001f, VERY_LARGE);
-				agentData.agentTimeHorizon[index] = math.clamp(controller.agentTimeHorizon, 0, VERY_LARGE);
-				agentData.obstacleTimeHorizon[index] = math.clamp(controller.obstacleTimeHorizon, 0, VERY_LARGE);
-				agentData.locked[index] = controller.locked;
-				agentData.maxNeighbours[index] = math.max(controller.maxNeighbours, 0);
-				agentData.debugFlags[index] = controller.debug;
-				agentData.layer[index] = controller.layer;
-				agentData.collidesWith[index] = controller.collidesWith;
 				agentData.targetPoint[index] = target.targetPoint;
 				agentData.desiredSpeed[index] = math.clamp(target.speed, 0, VERY_LARGE);
 				agentData.maxSpeed[index] = math.clamp(target.maxSpeed, 0, VERY_LARGE);
@@ -198,15 +218,13 @@ namespace Pathfinding.ECS.RVO {
 				// Use the position from the movement script if one is attached
 				// as the movement script's position may not be the same as the transform's position
 				// (in particular if IAstarAI.updatePosition is false).
-				var pos = movementPlane.value.ToPlane(transform.Position, out float elevation);
 				if (movementPlaneMode == MovementPlane.XY) {
 					// In 2D it is assumed the Z coordinate differences of agents is ignored.
 					agentData.height[index] = 1;
-					agentData.position[index] = movementPlane.value.ToWorld(pos, 0);
+					agentData.position[index] = movementPlane.value.ToWorld(movementPlane.value.ToPlane(transform.Position), 0);
 				} else {
-					var center = 0.5f * shape.height;
 					agentData.height[index] = math.clamp(shape.height * scale, 0, VERY_LARGE);
-					agentData.position[index] = movementPlane.value.ToWorld(pos, elevation + (center - 0.5f * shape.height) * scale);
+					agentData.position[index] = transform.Position;
 				}
 
 
@@ -226,12 +244,51 @@ namespace Pathfinding.ECS.RVO {
 				}
 				agentData.priority[index] = prio;
 				agentData.flowFollowingStrength[index] = flow;
+			}
+		}
 
-				if (agentOffMeshLinkTraversalLookup.HasComponent(entity)) {
-					// Agents traversing off-mesh links should not avoid other agents,
-					// but other agents may still avoid them.
-					agentData.manuallyControlled[index] = true;
-				}
+		/// <summary>
+		/// Copies the agent's local avoidance settings to the simulator.
+		///
+		/// The RVOAgent fields change rarely, so we can use a change filter to improve performance.
+		/// We also key on AgentIndex, which changes if the agent is added/removed from the simulation.
+		/// </summary>
+		[BurstCompile]
+		[WithChangeFilter(typeof(RVOAgent), typeof(AgentIndex))]
+		public partial struct JobCopyRVOSettingsToSimulator : IJobEntity {
+			[NativeDisableParallelForRestriction]
+			public SimulatorBurst.AgentData agentData;
+
+			public void Execute (in AgentIndex agentIndex, in RVOAgent controller) {
+				if (!agentIndex.TryGetIndex(ref agentData, out var index)) throw new System.InvalidOperationException("RVOAgent has an invalid entity index");
+
+				agentData.agentTimeHorizon[index] = math.clamp(controller.agentTimeHorizon, 0, VERY_LARGE);
+				agentData.obstacleTimeHorizon[index] = math.clamp(controller.obstacleTimeHorizon, 0, VERY_LARGE);
+				agentData.locked[index] = controller.locked;
+				agentData.maxNeighbours[index] = math.max(controller.maxNeighbours, 0);
+				agentData.debugFlags[index] = controller.debug;
+				agentData.layer[index] = controller.layer;
+				agentData.collidesWith[index] = controller.collidesWith;
+			}
+		}
+
+		/// <summary>
+		/// Stops agents from avoiding others while they traverse an off-mesh link.
+		///
+		/// Other agents may still avoid them.
+		/// </summary>
+		[BurstCompile]
+		[WithAll(typeof(AgentOffMeshLinkTraversal))]
+		public partial struct JobDisableLocalAvoidanceDuringLinkTraversal : IJobEntity {
+			[ReadOnly]
+			public NativeArray<AgentIndex> agentDataVersions;
+			[NativeDisableParallelForRestriction]
+			public NativeArray<bool> manuallyControlled;
+
+			public void Execute (in AgentIndex agentIndex) {
+				if (!agentIndex.TryGetIndex(ref agentDataVersions, out var index)) throw new System.InvalidOperationException("RVOAgent has an invalid entity index");
+
+				manuallyControlled[index] = true;
 			}
 		}
 
@@ -244,24 +301,38 @@ namespace Pathfinding.ECS.RVO {
 			[ReadOnly]
 			public SimulatorBurst.AgentOutputData agentOutputData;
 
+			public uint densityPhase;
+
 			/// <summary>See https://en.wikipedia.org/wiki/Circle_packing</summary>
 			const float MaximumCirclePackingDensity = 0.9069f;
+
+			/// <summary>
+			/// How many simulation steps pass between an agent's crowd density updates.
+			///
+			/// Must be a power of two, since the agents are spread over the steps using a bitmask.
+			/// </summary>
+			const uint DensityUpdateInterval = 4;
 
 			public void Execute (in LocalTransform transform, in AgentCylinderShape shape, in AgentIndex agentIndex, in RVOAgent controller, in MovementControl control, ref ResolvedMovement resolved) {
 				if (!agentIndex.TryGetIndex(ref agentDataVersions, out var index)) return;
 
-				var scale = math.abs(transform.Scale);
-				var r = shape.radius * scale * 3f;
-				var area = quadtree.QueryArea(transform.Position, r);
-
-				// Calculate the agent density in a circle around the agent and compare it to optimal circle packing
-				// This should be between 0 and 1, but if agents are overlapping it can be larger than 1, which is why we clamp it.
-				var density = math.min(1.0f, area / (MaximumCirclePackingDensity * math.PI * r * r));
-
 				resolved.targetPoint = agentOutputData.targetPoint[index];
 				resolved.speed = agentOutputData.speed[index];
-				var rnd = 1.0f; // (agentIndex.Index % 1024) / 1024f;
-				resolved.turningRadiusMultiplier = math.max(1f, math.pow(density * 2.0f, 4.0f) * rnd);
+
+				// Stagger density checks over a few steps, since the data is slow-changing and relatively slow to calculate.
+				// turningRadiusMultiplier starts at 0, and then we force a recalculation immediately.
+				if (resolved.turningRadiusMultiplier < 1f || (((uint)index + densityPhase) & (DensityUpdateInterval - 1)) == 0) {
+					var scale = math.abs(transform.Scale);
+					var r = shape.radius * scale * 3f;
+					var area = quadtree.QueryArea(transform.Position, r);
+
+					// Calculate the agent density in a circle around the agent and compare it to optimal circle packing
+					// This should be between 0 and 1, but if agents are overlapping it can be larger than 1, which is why we clamp it.
+					var density = math.min(1.0f, area / (MaximumCirclePackingDensity * math.PI * r * r));
+
+					var rnd = 1.0f; // (agentIndex.Index % 1024) / 1024f;
+					resolved.turningRadiusMultiplier = math.max(1f, math.pow(density * 2.0f, 4.0f) * rnd);
+				}
 			}
 		}
 	}

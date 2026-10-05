@@ -116,6 +116,15 @@ namespace Pathfinding {
 		public virtual bool showInInspector => true;
 
 		/// <summary>
+		/// True if <see cref="GetNearest"/> can return nodes in this graph.
+		///
+		/// If false, <see cref="GetNearest"/> always returns an empty result, and <see cref="AstarPath.GetNearest"/> will not
+		/// search this graph at all. This is the case for the <see cref="LinkGraph"/>, whose nodes only exist to be
+		/// traversed in the middle of a path, never to start or end one.
+		/// </summary>
+		public virtual bool supportsNearestNodeQueries => true;
+
+		/// <summary>
 		/// World bounding box for the graph.
 		///
 		/// This always contains the whole graph.
@@ -377,6 +386,13 @@ namespace Pathfinding {
 			return GetNearest(position, ref constraint);
 		}
 
+		/// <summary>
+		/// \copydocref{GetNearest(Vector3,NearestNodeConstraint)}
+		///
+		/// Contract for overrides: the constraint is passed by reference only to avoid copying it, and must be
+		/// treated as read-only. <see cref="AstarPath.GetNearest"/> hands the caller's own constraint to this method,
+		/// and reuses it for later queries.
+		/// </summary>
 		public virtual NNInfo GetNearest (Vector3 position, ref NearestNodeConstraint constraint) {
 			// This is a default implementation and it is pretty slow
 			// Graphs usually override this to provide faster and more specialised implementations
@@ -569,7 +585,7 @@ namespace Pathfinding {
 		}
 
 		/// <summary>Draw gizmos for the graph</summary>
-		public virtual void OnDrawGizmos (DrawingData gizmos, bool drawNodes, RedrawScope redrawScope, bool renderInGame) {
+		public virtual void OnDrawGizmos (bool drawNodes, RedrawScope redrawScope, bool renderInGame) {
 			if (!drawNodes) {
 				return;
 			}
@@ -582,18 +598,18 @@ namespace Pathfinding {
 			GetNodes(static (GraphNode node, ref NodeHasher hasher) => hasher.HashNode(node), ref hasher);
 
 			// Update the gizmo mesh if necessary
-			if (!gizmos.Draw(hasher, redrawScope)) {
-				var helper = GraphGizmoHelper.GetGizmoHelper(gizmos, active, hasher, redrawScope, renderInGame);
+			if (!DrawingManager.TryDrawHasher(hasher, redrawScope)) {
+				var helper = GraphGizmoHelper.GetGizmoHelper(active, hasher, redrawScope, renderInGame);
 				if (helper.showSearchTree) helper.builder.PushLineWidth(2);
 				GetNodes(static (GraphNode node, ref GraphGizmoHelper helper) => helper.DrawConnections(node), ref helper);
 				if (helper.showSearchTree) helper.builder.PopLineWidth();
 				helper.Dispose();
 			}
 
-			if (active.showUnwalkableNodes) DrawUnwalkableNodes(gizmos, active.unwalkableNodeDebugSize, redrawScope, renderInGame);
+			if (active.showUnwalkableNodes) DrawUnwalkableNodes(active.unwalkableNodeDebugSize, redrawScope, renderInGame);
 		}
 
-		protected void DrawUnwalkableNodes (DrawingData gizmos, float size, RedrawScope redrawScope, bool renderInGame) {
+		protected void DrawUnwalkableNodes (float size, RedrawScope redrawScope, bool renderInGame) {
 			var hasher = new DrawingData.Hasher();
 			hasher.Add(this);
 
@@ -602,8 +618,8 @@ namespace Pathfinding {
 				if (!node.Walkable) hasher.Add(node.position);
 			}, ref hasher);
 
-			if (!gizmos.Draw(hasher, redrawScope)) {
-				var builder = gizmos.GetBuilder(hasher, default, renderInGame);
+			if (!DrawingManager.TryDrawHasher(hasher, redrawScope)) {
+				var builder = DrawingManager.GetBuilder(hasher, default, renderInGame);
 				using (builder.WithColor(AstarColor.UnwalkableNode)) {
 					var ctx = (builder, size);
 					GetNodes(static (GraphNode node, ref (CommandBuilder, float)ctx) => {

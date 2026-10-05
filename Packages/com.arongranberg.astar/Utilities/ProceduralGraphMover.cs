@@ -78,6 +78,7 @@ namespace Pathfinding {
 		/// This will be set at Start based on <see cref="graphIndex"/>.
 		/// During runtime you may set this to any graph or to null to disable updates.
 		/// </summary>
+		[System.NonSerialized]
 		public NavGraph graph;
 
 		/// <summary>

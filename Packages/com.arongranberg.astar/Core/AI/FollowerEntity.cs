@@ -123,7 +123,6 @@ namespace Pathfinding {
 	/// - <see cref="MovementState"/>
 	/// - <see cref="MovementSettings"/>
 	/// - <see cref="MovementControl"/>
-	/// - <see cref="ManagedSettings"/>
 	/// - <see cref="SearchState"/>
 	/// - <see cref="MovementStatistics"/>
 	/// - <see cref="AgentCylinderShape"/>
@@ -131,7 +130,8 @@ namespace Pathfinding {
 	/// - <see cref="GravityState"/>
 	/// - <see cref="DestinationPoint"/>
 	/// - <see cref="AgentMovementPlane"/>
-	/// - <see cref="ManagedState"/> - actually created during the first frame by <see cref="InitManagedStateSystem"/>
+	/// - <see cref="AgentManagedRef"/> - the agent's handle to its <see cref="ManagedState"/> and <see cref="ManagedSettings"/>, which are not components as they cannot hold managed data. For a baked agent these are created during the first frame by <see cref="InitManagedStateSystem"/>.
+	/// - <see cref="AgentManagedBackupRef"/> - copy of the AgentManagedRef slot, which is what lets a cloned agent find the data to clone.
 	/// - <see cref="ECS.RVO.RVOAgent"/> (if local avoidance is enabled)
 	/// - <see cref="SimulateMovement"/> - tag component (if <see cref="simulateMovement"/> is enabled)
 	/// - <see cref="SimulateMovementRepair"/> - tag component
@@ -286,14 +286,6 @@ namespace Pathfinding {
 			debugFlags = PIDMovement.DebugFlags.Path,
 		};
 
-		#pragma warning disable CS0618 // Type or member is obsolete
-		[SerializeField]
-		ManagedState managedState = new ManagedState {
-			enableLocalAvoidance = false,
-			pathfindingSettings = PathRequestSettings.Default,
-		};
-		#pragma warning restore CS0618 // Type or member is obsolete
-
 		[SerializeField]
 		ManagedSettings managedSettings = new ManagedSettings {
 			pathfindingSettings = PathRequestSettings.Default,
@@ -373,7 +365,7 @@ namespace Pathfinding {
 
 		void OnEnable () {
 			FindComponents();
-			var entity = CreateEntity(tr.position, tr.rotation, tr.localScale.x, ref shape, ref movement, ref autoRepathBacking, managedState, orientationBacking, movementPlaneSourceBacking, syncPosition, syncRotation, enableGravityBacking, enableLocalAvoidanceBacking, rvoSettingsBacking, managedSettings, PhysicsSceneExtensions.GetPhysicsScene(gameObject.scene));
+			var entity = CreateEntity(tr.position, tr.rotation, tr.localScale.x, ref shape, ref movement, ref autoRepathBacking, orientationBacking, movementPlaneSourceBacking, syncPosition, syncRotation, enableGravityBacking, enableLocalAvoidanceBacking, rvoSettingsBacking, managedSettings, PhysicsSceneExtensions.GetPhysicsScene(gameObject.scene));
 			proxy = new FollowerEntityProxy(World.DefaultGameObjectInjectionWorld, entity);
 
 			// Register with the BatchedEvents system
@@ -394,8 +386,20 @@ namespace Pathfinding {
 		/// Creates an entity with the given data.
 		///
 		/// If you don't want to use the FollowerEntity MonoBehaviour, you can use this method to create an equivalent entity directly.
+		///
+		/// Deprecated: The managedState parameter is ignored. The entity always gets a freshly created <see cref="ManagedState"/>. Use the overload without it.
 		/// </summary>
+		[System.Obsolete("The managedState parameter is ignored. Use the overload without it instead")]
 		public static Entity CreateEntity (float3 position, quaternion rotation, float scale, ref AgentCylinderShape shape, ref MovementSettings movement, ref ECS.AutoRepathPolicy autoRepath, ManagedState managedState, OrientationMode orientation, MovementPlaneSource movementPlaneSource, bool updatePosition, bool updateRotation, bool enableGravity, bool enableLocalAvoidance, RVOAgent rvoSettings, ManagedSettings managedSettings, PhysicsScene physicsScene) {
+			return CreateEntity(position, rotation, scale, ref shape, ref movement, ref autoRepath, orientation, movementPlaneSource, updatePosition, updateRotation, enableGravity, enableLocalAvoidance, rvoSettings, managedSettings, physicsScene);
+		}
+
+		/// <summary>
+		/// Creates an entity with the given data.
+		///
+		/// If you don't want to use the FollowerEntity MonoBehaviour, you can use this method to create an equivalent entity directly.
+		/// </summary>
+		public static Entity CreateEntity (float3 position, quaternion rotation, float scale, ref AgentCylinderShape shape, ref MovementSettings movement, ref ECS.AutoRepathPolicy autoRepath, OrientationMode orientation, MovementPlaneSource movementPlaneSource, bool updatePosition, bool updateRotation, bool enableGravity, bool enableLocalAvoidance, RVOAgent rvoSettings, ManagedSettings managedSettings, PhysicsScene physicsScene) {
 			var world = World.DefaultGameObjectInjectionWorld;
 			if (!archetype.Valid || archetypeWorld != world) {
 				if (world == null) throw new Exception("World.DefaultGameObjectInjectionWorld is null. Has the world been destroyed?");
@@ -406,8 +410,8 @@ namespace Pathfinding {
 					typeof(MovementSettings),
 					typeof(ECS.AutoRepathPolicy),
 					typeof(MovementControl),
-					typeof(ManagedState),
-					typeof(ManagedSettings),
+					typeof(AgentManagedRef),
+					typeof(AgentManagedBackupRef),
 					typeof(SearchState),
 					typeof(MovementStatistics),
 					typeof(AgentCylinderShape),
@@ -444,11 +448,13 @@ namespace Pathfinding {
 			autoRepath.Reset();
 			entityManager.SetComponentData(entity, autoRepath);
 			entityManager.SetComponentData(entity, movement);
-			if (!managedState.pathTracer.isCreated) {
-				managedState.pathTracer = new PathTracer(Allocator.Persistent);
-			}
-			entityManager.SetComponentData(entity, managedState);
-			entityManager.SetComponentData(entity, managedSettings);
+			// Allocate the agent's managed data and point both components at the same slot. AgentManagedRef
+			// is what marks the slot as belonging to this entity; AgentManagedBackupRef is what a clone would copy.
+			var managedSlot = AgentManagedStorage.Allocate(entity, new ManagedState {
+				pathTracer = new PathTracer(Allocator.Persistent),
+			}, managedSettings);
+			entityManager.SetComponentData(entity, new AgentManagedRef { slot = managedSlot });
+			entityManager.SetComponentData(entity, new AgentManagedBackupRef { slot = managedSlot });
 			entityManager.SetComponentData(entity, new MovementStatistics {
 				estimatedVelocity = float3.zero,
 				lastPosition = position,
@@ -464,8 +470,8 @@ namespace Pathfinding {
 			if (enableLocalAvoidance) {
 				entityManager.AddComponentData(entity, rvoSettings);
 			}
-			FollowerEntityProxy.ToggleComponent<SyncPositionWithTransform>(world, entity, updatePosition, true);
-			FollowerEntityProxy.ToggleComponent<SyncRotationWithTransform>(world, entity, updateRotation, true);
+			FollowerEntityProxy.ToggleComponent<SyncPositionWithTransform>(world, entity, updatePosition, throwIfMissing: false);
+			FollowerEntityProxy.ToggleComponent<SyncRotationWithTransform>(world, entity, updateRotation, throwIfMissing: false);
 
 			ResolvedMovement resolvedMovement = default;
 			MovementControl movementControl = default;
@@ -509,8 +515,6 @@ namespace Pathfinding {
 			// Note: The entity itself may actually live for another frame to handle cleanup components.
 			// But we want to completely forget about it here.
 			proxy.Destroy();
-			// Make sure the managed state gets disposed, even if no entity exists. If an entity exists, this will be automatically called.
-			managedState.Dispose();
 		}
 
 		/// <summary>\copydoc Pathfinding::IAstarAI::radius</summary>
@@ -700,7 +704,7 @@ namespace Pathfinding {
 			get => managedSettings.onTraverseOffMeshLink;
 			set {
 				// Complete any job dependencies
-				if (proxy.world != null) FollowerEntityProxy.managedSettingsAccessRW.Update(proxy.world.EntityManager);
+				if (proxy.world != null) FollowerEntityProxy.managedAccessRW.Update(proxy.world.EntityManager);
 				managedSettings.onTraverseOffMeshLink = value;
 			}
 		}
@@ -1183,7 +1187,13 @@ namespace Pathfinding {
 		}
 
 		/// <summary>
-		/// \copydocref{ManagedState.enableLocalAvoidance}
+		/// True if local avoidance is enabled for this agent.
+		///
+		/// Enabling this will automatically add a <see cref="Pathfinding.ECS.RVO.RVOAgent"/> component to the entity.
+		///
+		/// See: local-avoidance (view in online documentation for working links)
+		///
+		/// Note: When the agent is used in a subscene, this property has no effect at runtime. Instead, add or remove the <see cref="Pathfinding.ECS.RVO.RVOAgent"/> component.
 		///
 		/// See: <see cref="rvoSettings"/>
 		/// </summary>
@@ -1430,7 +1440,7 @@ namespace Pathfinding {
 		/// Fills buffer with the remaining path.
 		///
 		/// If the agent traverses off-mesh links, the buffer will still contain the whole path. Off-mesh links will be represented by a single line segment.
-		/// You can use the <see cref="GetRemainingPath(List<Vector3>,List<PathPartWithLinkInfo>,bool)"/> overload to get more detailed information about the different parts of the path.
+		/// You can use the <see cref="GetRemainingPath(List<Vector3>,List<PathPartWithLinkInfo>,out bool)"/> overload to get more detailed information about the different parts of the path.
 		///
 		/// Note: The agent will apply a steering behavior on top of this path as it is following it, to make its movement smoother.
 		/// So it may not follow this exact path. For example, things like <see cref="movementSettings.follower.desiredWallDistance;desired wall distance"/> are steering behaviors and will not be reflected in this path.
@@ -1633,16 +1643,7 @@ namespace Pathfinding {
 			// Old migrations that cannot run anymore
 			migrations.AddAndMaybeRunMigration((int)FollowerEntityMigrations.MigrateMovementPlaneSource);
 			migrations.AddAndMaybeRunMigration((int)FollowerEntityMigrations.MigrateAutoRepathPolicy);
-
-			if (migrations.AddAndMaybeRunMigration((int)FollowerEntityMigrations.MigrateManagedSettings)) {
-				#pragma warning disable CS0618 // Type or member is obsolete
-				this.managedSettings.onTraverseOffMeshLink = this.managedState.onTraverseOffMeshLink;
-				this.managedSettings.pathfindingSettings = this.managedState.pathfindingSettings;
-				this.enableGravityBacking = this.managedState.enableGravity;
-				this.enableLocalAvoidanceBacking = this.managedState.enableLocalAvoidance;
-				this.rvoSettingsBacking = this.managedState.rvoSettings;
-				#pragma warning restore CS0618 // Type or member is obsolete
-			}
+			migrations.AddAndMaybeRunMigration((int)FollowerEntityMigrations.MigrateManagedSettings);
 		}
 
 #if UNITY_EDITOR
@@ -1660,11 +1661,10 @@ namespace Pathfinding {
 			proxy.position = transform.position;
 			proxy.autoRepath = autoRepathBacking;
 			FollowerEntityProxy.movementSettingsAccessRW.Update(entityManager);
-			FollowerEntityProxy.managedStateAccessRW.Update(entityManager);
 			FollowerEntityProxy.agentCylinderShapeAccessRW.Update(entityManager);
-			FollowerEntityProxy.managedSettingsAccessRW.Update(entityManager);
+			FollowerEntityProxy.managedAccessRW.Update(entityManager);
 
-			SyncWithEntity(FollowerEntityProxy.managedStateAccessRW[storage], FollowerEntityProxy.managedSettingsAccessRW[storage], ref FollowerEntityProxy.agentCylinderShapeAccessRW[storage], ref FollowerEntityProxy.movementSettingsAccessRW[storage]);
+			SyncWithEntity(FollowerEntityProxy.managedAccessRW.Settings(entity, storage), ref FollowerEntityProxy.agentCylinderShapeAccessRW[storage], ref FollowerEntityProxy.movementSettingsAccessRW[storage]);
 
 			// Structural changes
 			proxy.enableGravity = enableGravityBacking;
@@ -1681,16 +1681,14 @@ namespace Pathfinding {
 		///
 		/// Note: This is an internal method and you should never need to use it yourself.
 		/// </summary>
-		public void SyncWithEntity (ManagedState managedState, ManagedSettings managedSettings, ref AgentCylinderShape shape, ref MovementSettings movementSettings) {
+		public void SyncWithEntity (ManagedSettings managedSettings, ref AgentCylinderShape shape, ref MovementSettings movementSettings) {
 			movementSettings = this.movement;
 			shape = this.shape;
-			// Copy all serialized fields to the managed state object.
-			// This excludes the PathTracer, onTraverseOffMeshLink and pathfindingSettings.traversalProvider, since they are not serialized
+			// Copy all serialized fields to the managed settings object.
+			// This excludes onTraverseOffMeshLink and pathfindingSettings.traversalProvider, since they are not serialized
 			var traversalProvider = managedSettings.pathfindingSettings.traversalProvider;
 			managedSettings.pathfindingSettings = this.managedSettings.pathfindingSettings;
 			managedSettings.pathfindingSettings.traversalProvider = traversalProvider;
-			// Replace this instance of the managed state with the entity component
-			this.managedState = managedState;
 			this.managedSettings = managedSettings;
 			// Note: RVO settings are copied every frame automatically before local avoidance simulations
 		}
@@ -1765,7 +1763,25 @@ namespace Pathfinding {
 				autoRepath.Reset();
 				AddComponent(entity, autoRepath);
 				AddComponent(entity, movement);
-				AddComponentObject(entity, managedSettings);
+				// Baking output is serialized, so the agent cannot be handed a storage slot here.
+				// InitManagedStateSystem builds its ManagedSettings from these at runtime.
+				var bakedPathfindingSettings = managedSettings.pathfindingSettings;
+				AddComponent(entity, new AgentBakedSettings {
+					graphMask = bakedPathfindingSettings.graphMask,
+					traversableTags = bakedPathfindingSettings.traversableTags,
+				});
+				if (bakedPathfindingSettings.tagEntryCosts != null) {
+					var buffer = AddBuffer<AgentBakedTagEntryCost>(entity);
+					for (int i = 0; i < bakedPathfindingSettings.tagEntryCosts.Length; i++) {
+						buffer.Add(new AgentBakedTagEntryCost { value = bakedPathfindingSettings.tagEntryCosts[i] });
+					}
+				}
+				if (bakedPathfindingSettings.tagCostMultipliers != null) {
+					var buffer = AddBuffer<AgentBakedTagCostMultiplier>(entity);
+					for (int i = 0; i < bakedPathfindingSettings.tagCostMultipliers.Length; i++) {
+						buffer.Add(new AgentBakedTagCostMultiplier { value = bakedPathfindingSettings.tagCostMultipliers[i] });
+					}
+				}
 				AddComponent(entity, new MovementStatistics {
 					estimatedVelocity = float3.zero,
 					lastPosition = position,

@@ -36,6 +36,8 @@ namespace Pathfinding {
 
 		public override bool showInInspector => false;
 
+		public override bool supportsNearestNodeQueries => false;
+
 		public override int CountNodes() => nodeCount;
 
 		protected override void DestroyAllNodes () {
@@ -80,11 +82,11 @@ namespace Pathfinding {
 		/// </summary>
 		public override NNInfo GetNearest(Vector3 position, ref NearestNodeConstraint constraint) => default;
 
-		public override void OnDrawGizmos (DrawingData gizmos, bool drawNodes, RedrawScope redrawScope, bool renderInGame) {
+		public override void OnDrawGizmos (bool drawNodes, RedrawScope redrawScope, bool renderInGame) {
 			// We rely on the link components themselves to draw the links
 
 			// TODO
-			base.OnDrawGizmos(gizmos, drawNodes, redrawScope, renderInGame);
+			base.OnDrawGizmos(drawNodes, redrawScope, renderInGame);
 		}
 
 		class LinkGraphUpdatePromise : IGraphUpdatePromise {

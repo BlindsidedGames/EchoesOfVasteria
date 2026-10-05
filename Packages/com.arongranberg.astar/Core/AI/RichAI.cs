@@ -366,12 +366,12 @@ namespace Pathfinding {
 			}
 		}
 
-		/// <summary>\copydocref{IAstarAI.GetRemainingPath(List<Vector3>,bool)}</summary>
+		/// <summary>\copydocref{IAstarAI.GetRemainingPath(List<Vector3>,out bool)}</summary>
 		public void GetRemainingPath (List<Vector3> buffer, out bool stale) {
 			richPath.GetRemainingPath(buffer, null, simulatedPosition, out stale);
 		}
 
-		/// <summary>\copydocref{IAstarAI.GetRemainingPath(List<Vector3>,List<PathPartWithLinkInfo>,bool)}</summary>
+		/// <summary>\copydocref{IAstarAI.GetRemainingPath(List<Vector3>,List<PathPartWithLinkInfo>,out bool)}</summary>
 		public void GetRemainingPath (List<Vector3> buffer, List<PathPartWithLinkInfo> partsBuffer, out bool stale) {
 			richPath.GetRemainingPath(buffer, partsBuffer, simulatedPosition, out stale);
 		}

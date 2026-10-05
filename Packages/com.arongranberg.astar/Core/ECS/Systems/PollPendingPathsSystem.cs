@@ -61,7 +61,9 @@ namespace Pathfinding.ECS {
 
 			// During an off-mesh link traversal, we shouldn't calculate any paths, because it's somewhat undefined where they should start.
 			// Paths are already cancelled when the off-mesh link traversal starts, but just in case it has been started by a user manually in some way, we also cancel them every frame.
-			foreach (var state in SystemAPI.Query<ManagedState>().WithAll<AgentOffMeshLinkTraversal>()) state.CancelCurrentPathRequest();
+			foreach (var managedRef in SystemAPI.Query<RefRW<AgentManagedRef> >().WithAll<AgentOffMeshLinkTraversal>()) {
+				AgentManagedStorage.entries[managedRef.ValueRO.slot].state.CancelCurrentPathRequest();
+			}
 
 			// The JobRepairPath may access graph data, so we need to lock it for reading.
 			// Otherwise a graph update could start while the job was running, which could cause all kinds of problems.

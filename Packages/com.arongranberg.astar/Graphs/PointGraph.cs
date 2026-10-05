@@ -844,12 +844,12 @@ namespace Pathfinding {
 #if UNITY_EDITOR
 		static readonly Color NodeColor = new Color(0.161f, 0.341f, 1f, 0.5f);
 
-		public override void OnDrawGizmos (DrawingData gizmos, bool drawNodes, RedrawScope redrawScope, bool renderInGame) {
-			base.OnDrawGizmos(gizmos, drawNodes, redrawScope, renderInGame);
+		public override void OnDrawGizmos (bool drawNodes, RedrawScope redrawScope, bool renderInGame) {
+			base.OnDrawGizmos(drawNodes, redrawScope, renderInGame);
 
 			if (!drawNodes) return;
 
-			using (var draw = gizmos.GetBuilder(redrawScope, renderInGame)) {
+			using (var draw = DrawingManager.GetBuilder(redrawScope, renderInGame)) {
 				using (draw.WithColor(NodeColor)) {
 					if (this.isScanned) {
 						for (int i = 0; i < nodeCount; i++) {

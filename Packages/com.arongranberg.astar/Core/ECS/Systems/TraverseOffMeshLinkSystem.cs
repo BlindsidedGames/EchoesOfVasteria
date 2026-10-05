@@ -11,16 +11,23 @@ namespace Pathfinding.ECS {
 	[UpdateBefore(typeof(RepairPathSystem))] // Must run before RepairPathSystem to allow the agent to instantly start moving correctly after an agent finishes traversing an off-mesh link.
 	public partial struct TraverseOffMeshLinkSystem : ISystem {
 		EntityQuery entityQueryOffMeshLinkCleanup;
+		EntityQuery entityQueryOffMeshLinkTransition;
+		JobManagedOffMeshLinkTransition offMeshLinkTransitionRunner;
 		public JobRepairPath.Scheduler jobRepairPathScheduler;
 
 		public void OnCreate (ref SystemState state) {
 			jobRepairPathScheduler = new JobRepairPath.Scheduler(ref state);
+			offMeshLinkTransitionRunner = new JobManagedOffMeshLinkTransition(ref state);
+			entityQueryOffMeshLinkTransition = JobManagedOffMeshLinkTransition.GetEntityQuery(ref state);
 
 			entityQueryOffMeshLinkCleanup = state.GetEntityQuery(
-				// ManagedAgentOffMeshLinkTraversal is a cleanup component.
+				// AgentOffMeshLinkTraversalCleanup is a cleanup component.
 				// If it exists, but the AgentOffMeshLinkTraversal does not exist,
 				// then the agent must have been destroyed while traversing the off-mesh link.
-				ComponentType.ReadOnly<ManagedAgentOffMeshLinkTraversal>(),
+				ComponentType.ReadOnly<AgentOffMeshLinkTraversalCleanup>(),
+				// AgentManagedRef is also a cleanup component, so it is still present for a destroyed
+				// agent, and it is what tells us which storage slot holds the traversal state.
+				ComponentType.ReadOnly<AgentManagedRef>(),
 				ComponentType.Exclude<AgentOffMeshLinkTraversal>()
 				);
 		}
@@ -46,10 +53,13 @@ namespace Pathfinding.ECS {
 
 		void StartOffMeshLinkTraversal (ref SystemState systemState, EntityCommandBuffer commandBuffer) {
 			Profiler.BeginSample("Start off-mesh link traversal");
-			foreach (var(state, settings, entity) in SystemAPI.Query<ManagedState, ManagedSettings>().WithAll<ReadyToTraverseOffMeshLink>()
+			foreach (var(managedRef, entity) in SystemAPI.Query<RefRW<AgentManagedRef> >().WithAll<ReadyToTraverseOffMeshLink>()
 					 .WithEntityAccess()
 			         // Do not try to add another off-mesh link component to agents that already have one.
 					 .WithNone<AgentOffMeshLinkTraversal>()) {
+				var slot = managedRef.ValueRO.slot;
+				ref readonly var entry = ref AgentManagedStorage.entries[slot];
+				var state = entry.state;
 				// UnityEngine.Assertions.Assert.IsTrue(movementState.ValueRO.reachedEndOfPart && state.pathTracer.isNextPartValidLink);
 				if (!state.pathTracer.isNextPartValidLink) {
 					// The ReadyToTraverseOffMeshLink component is set at the end of a frame by the RepairPathSystem.
@@ -59,9 +69,10 @@ namespace Pathfinding.ECS {
 				}
 				var linkInfo = NextLinkToTraverse(state);
 				var ctx = new AgentOffMeshLinkTraversalContext(linkInfo.link);
-				// Add the AgentOffMeshLinkTraversal and ManagedAgentOffMeshLinkTraversal components when the agent should start traversing an off-mesh link.
+				// Add the AgentOffMeshLinkTraversal component when the agent should start traversing an off-mesh link.
+				AgentManagedStorage.SetLinkTraversal(slot, entity, new ManagedAgentOffMeshLinkTraversal(ctx, ResolveOffMeshLinkHandler(entry.settings, ctx)));
 				commandBuffer.AddComponent(entity, new AgentOffMeshLinkTraversal(linkInfo));
-				commandBuffer.AddComponent(entity, new ManagedAgentOffMeshLinkTraversal(ctx, ResolveOffMeshLinkHandler(settings, ctx)));
+				commandBuffer.AddComponent(entity, new AgentOffMeshLinkTraversalCleanup());
 				commandBuffer.AddComponent(entity, new AgentOffMeshLinkMovementDisabled());
 				commandBuffer.AddComponent(entity, new AgentOffMeshLinkLocalAvoidanceDisabled());
 			}
@@ -78,22 +89,26 @@ namespace Pathfinding.ECS {
 		}
 
 		void ProcessActiveOffMeshLinkTraversal (ref SystemState systemState) {
+			// Both branches below run on the main thread and so need every dependency completed first. That
+			// sync point, and the command buffer, are worth skipping in the common case where agents are
+			// merely approaching links rather than traversing one.
+			if (entityQueryOffMeshLinkTransition.IsEmptyIgnoreFilter && entityQueryOffMeshLinkCleanup.IsEmptyIgnoreFilter) return;
+
 			var commandBuffer = new EntityCommandBuffer(systemState.WorldUpdateAllocator);
 			systemState.CompleteDependency();
 
-			new JobManagedOffMeshLinkTransition {
-				commandBuffer = commandBuffer,
-				deltaTime = AIMovementSystemGroup.TimeScaledRateManager.CheapStepDeltaTime,
-			}.Run();
+			if (!entityQueryOffMeshLinkTransition.IsEmptyIgnoreFilter) {
+				offMeshLinkTransitionRunner.Run(ref systemState, entityQueryOffMeshLinkTransition, commandBuffer, AIMovementSystemGroup.TimeScaledRateManager.CheapStepDeltaTime);
+			}
 
 			if (!entityQueryOffMeshLinkCleanup.IsEmptyIgnoreFilter) {
-				new JobManagedOffMeshLinkTransitionCleanup().Run(entityQueryOffMeshLinkCleanup);
+				JobManagedOffMeshLinkTransitionCleanup.Run(entityQueryOffMeshLinkCleanup);
 #if MODULE_ENTITIES_1_0_8_OR_NEWER
-				commandBuffer.RemoveComponent<ManagedAgentOffMeshLinkTraversal>(entityQueryOffMeshLinkCleanup, EntityQueryCaptureMode.AtPlayback);
+				commandBuffer.RemoveComponent<AgentOffMeshLinkTraversalCleanup>(entityQueryOffMeshLinkCleanup, EntityQueryCaptureMode.AtPlayback);
 				commandBuffer.RemoveComponent<AgentOffMeshLinkMovementDisabled>(entityQueryOffMeshLinkCleanup, EntityQueryCaptureMode.AtPlayback);
 				commandBuffer.RemoveComponent<AgentOffMeshLinkLocalAvoidanceDisabled>(entityQueryOffMeshLinkCleanup, EntityQueryCaptureMode.AtPlayback);
 #else
-				commandBuffer.RemoveComponent<ManagedAgentOffMeshLinkTraversal>(entityQueryOffMeshLinkCleanup);
+				commandBuffer.RemoveComponent<AgentOffMeshLinkTraversalCleanup>(entityQueryOffMeshLinkCleanup);
 				commandBuffer.RemoveComponent<AgentOffMeshLinkMovementDisabled>(entityQueryOffMeshLinkCleanup);
 				commandBuffer.RemoveComponent<AgentOffMeshLinkLocalAvoidanceDisabled>(entityQueryOffMeshLinkCleanup);
 #endif

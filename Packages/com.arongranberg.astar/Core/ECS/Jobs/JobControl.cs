@@ -86,7 +86,7 @@ namespace Pathfinding.ECS {
 						targetPoint = position,
 						speed = 0,
 						endOfPath = position,
-						maxSpeed = settings.follower.speed,
+						maxSpeed = settingsTemp.speed,
 						overrideLocalAvoidance = false,
 						hierarchicalNodeIndex = state.hierarchicalNodeIndex,
 						targetRotation = resolvedMovement.targetRotation,
@@ -100,9 +100,14 @@ namespace Pathfinding.ECS {
 					controlOutput = new MovementControl {
 						// Keep moving in the same direction as during the last frame, but slow down
 						targetPoint = position + math.normalizesafe(resolvedMovement.targetPoint - position) * 10.0f,
-						speed = settings.follower.Accelerate(resolvedMovement.speed, settings.follower.slowdownTime, -dt),
+						// Decelerate from the speed the agent moved at during the previous simulation step, but never
+						// from more than what the control loop asked for then.
+						// A movement override could increase ResolvedMovement.speed (e.g. one which just multiplies the speed by a factor >1).
+						// If we only used resolvedMovement.speed, using modifiers could lead to the speed never actually decaying,
+						// and the agent slides in a straight line forever.
+						speed = settingsTemp.Accelerate(math.min(controlOutput.speed, resolvedMovement.speed), settingsTemp.slowdownTime, -dt),
 						endOfPath = state.endOfPath,
-						maxSpeed = settings.follower.speed,
+						maxSpeed = settingsTemp.speed,
 						overrideLocalAvoidance = false,
 						hierarchicalNodeIndex = state.hierarchicalNodeIndex,
 						targetRotation = rotation,

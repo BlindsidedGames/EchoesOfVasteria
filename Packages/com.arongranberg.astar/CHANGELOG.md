@@ -1,3 +1,38 @@
+## 5.4.7 (2026-08-29)
+- Breaking changes
+		- Removed the long deprecated ManagedState.autoRepath, ManagedState.rvoSettings, ManagedState.onTraverseOffMeshLink, ManagedState.pathfindingSettings, ManagedState.enableLocalAvoidance and ManagedState.enableGravity fields.
+			Use \reflink{FollowerEntity.autoRepath}, \reflink{FollowerEntity.rvoSettings}, \reflink{ManagedSettings.onTraverseOffMeshLink}, \reflink{ManagedSettings.pathfindingSettings}, \reflink{FollowerEntity.enableLocalAvoidance} and \reflink{FollowerEntity.enableGravity} instead.
+			The \reflink{ManagedState} component is now purely runtime state, and is no longer stored on the \reflink{FollowerEntity} component itself.
+			As a consequence, upgrading directly from a version older than 5.4.2 will no longer migrate those settings to their new homes. Upgrade via 5.4.6 or earlier first, if you need them preserved.
+		- \reflink{ManagedState} and \reflink{ManagedSettings} are no longer ECS components to improve compatibility with the latest Entities package. Instead the managed data lives in a separate store.
+			Only relevant if you were manipulating ECS managed components directly.
+		- \reflink{ManagedAgentOffMeshLinkTraversal} is no longer a component. Agents traversing an off-mesh link are now tagged with \reflink{AgentOffMeshLinkTraversalCleanup}.
+		- When using version 6.6 or newer of the entities package, the \reflink{AIDestinationSetter} component is no longer added to the agent's entity as a managed component, since managed components are deprecated.
+			The entity instead gets an \reflink{AIDestinationSetterRef} component which references it. Nothing changes on older versions of the entities package.
+- UPM packages are now signed with the Unity package signing system for improved security and authenticity verification.
+- Added the ALINE_EXCLUDED_IN_BUILD option to the Optimization tab. It removes debug drawing code from standalone builds, reducing build size, but has negligable impact on performance.
+		Graph visualizations will not be rendered in standalone builds while this is enabled, even if "Show Graphs in Standalone Player" is checked.
+- Slightly improved \reflink{AstarPath.GetNearest} performance whenever the query filters down to 1 graph.
+- Improved local avoidance performance by 20-30% for large agent counts.
+- Improved movement of \reflink{FollowerEntity} in narrow corridors and other cases where it cannot satisfy its \reflink{movementSettings.follower.desiredWallDistance;desired wall distance}.
+- Fixed all compilation and import warnings in Unity 6.6.
+- Fixed a \reflink{FollowerEntity} could throw an exception if its destination was cleared while it was traversing the link.
+- Fixed cloning an agent entity threw a MissingMethodException, and left the ECS world unusable, if the agent had a callback registered using \reflink{ManagedMovementOverrides.AddAfterControlCallback} or \reflink{ManagedMovementOverrides.AddBeforeMovementCallback}.
+- Fixed a \reflink{FollowerEntity} would never stop when \reflink{FollowerEntity.isStopped} was set, if a \reflink{ManagedMovementOverrides.AddBeforeMovementCallback;before movement callback} scaled \reflink{ResolvedMovement.speed} up more than the agent was slowing down.
+- Fixed a scaled \reflink{FollowerEntity} would briefly move with the wrong speed when isStopped was toggled, due to scaling not being taken into account in one place.
+- Fixed a crash which could happen if the \reflink{RVOSimulator} was replaced or disabled while some agent entities were disabled.
+- Fixed the mine bot example model logging "Take/AnimStack 'Take 001' contains animation curves with invalid numbers (NANs)" warnings when imported. The tangent data in two of the model's animation files made Unity's fbx importer produce NaNs when evaluating the curves. The keyframes are now linear, which imports to an identical animation since the files have a keyframe on every frame and Unity resamples the curves at frame times.
+- The \reflink{AdvancedSmooth.TurnConstructor.constantBias} and \reflink{AdvancedSmooth.TurnConstructor.factorBias} fields are now serialized, and thus visible in the inspector. Previously they always reverted to their default values.
+- Fixed nothing being rendered when using the Universal Render Pipeline with Compatibility Mode (Render Graph disabled) enabled, on URP 17.0 to 17.3 (Unity 6.0 to 6.3) (regression in 5.4.6).
+- Fixed \reflink{RaycastModifier} skipping its graph linecasting, and thus simplifying paths straight through obstacles, when the scene contained more than one graph.
+- Fixed some properties on the \reflink{FollowerEntity} were inconsistent in if they are possible to set while the component is disabled.
+- Fixed the "Export to .obj file" button on \reflink{RecastGraph} exporting files with locale-dependent decimal separators (e.g. "," instead of "."), causing corrupted files on some systems.
+- Fixed \reflink{RecastGraph.SnapBoundsToScene} possibly using outdated collider bounding boxes. It now calls Physics.SyncTransforms.
+- Fixed euclidean embedding could in some cases throw an exception after a graph had been updated.
+- Fixed the internal slab allocator using memcpy instead of memmove for overlapping memory regions, and a stale span reference in the hierarchical graph, which could cause crashes particularly on some Chinese Android devices.
+- Fixed gizmo meshes which were still being rendered when the drawing manager was destroyed were never released, leaking a small amount of memory per play mode transition.
+- Fixed \reflink{RandomPath} and \reflink{FleePath} when combined with an off-mesh-link and \reflink{FollowerEntity} or the funnel modifier could cause an exception when processing the path.
+
 ## 5.4.6 (2026-01-22)
 - Added \reflink{FollowerEntity.nextOffMeshLink}, to get information about the next off-mesh link in the agent's path.
 - Fixed some compilation warnings in Unity 6.4.
@@ -495,9 +530,9 @@
 		- Renamed AgentOffMeshLinkTraversalContext.linkInfo to \reflink{AgentOffMeshLinkTraversalContext.link}.
 
 ## 5.0.6 (2024-03-29)
-- Added \reflink{IAstarAI.GetRemainingPath(List<Vector3>,List<PathPartWithLinkInfo>,bool)} to get information about all the parts (including off-mesh links) of the path that the agent is currently following.
+- Added \reflink{IAstarAI.GetRemainingPath(List<Vector3>,List<PathPartWithLinkInfo>,out bool)} to get information about all the parts (including off-mesh links) of the path that the agent is currently following.
 		\shadowimage{generated/scenes/RecastOffMeshLinks/remainingpath.png}
-- Fixed \reflink{FollowerEntity.GetRemainingPath(List<Vector3>,bool)} would only output the path up to the next off-mesh link.
+- Fixed \reflink{FollowerEntity.GetRemainingPath(List<Vector3>,out bool)} would only output the path up to the next off-mesh link.
 - Fixed \reflink{FollowerEntity} could return incorrect values for a few properties (e.g. \reflink{FollowerEntity.hasPath}) after it had been disabled.
 - Fixed \reflink{RandomPath} could in very rare situations cause an exception that crashed the pathfinding threads, due to a race condition.
 - Fixed \reflink{MultiTargetPath} could calculate incorrect paths on grid graphs in some situations.

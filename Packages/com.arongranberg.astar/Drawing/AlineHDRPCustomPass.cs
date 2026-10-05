@@ -1,3 +1,5 @@
+// Compiled out when ALINE is excluded from standalone builds.
+#if !ALINE_EXCLUDED_IN_BUILD || UNITY_EDITOR
 #if MODULE_RENDER_PIPELINES_HIGH_DEFINITION
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
@@ -46,4 +48,5 @@ namespace Pathfinding.Drawing {
 		}
 	}
 }
+#endif
 #endif
