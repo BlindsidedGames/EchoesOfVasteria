@@ -1,0 +1,15 @@
+# Main retired UI scene integrity repair
+
+After beta build 25722356 was verified, the seven reported Main diagnostics were investigated instead of treating automatic Unity repair as harmless. The earlier retirement commit `cb069d4b7` had deleted six RectTransforms while leaving six GameObjects and 20 components. This was malformed scene serialization, not an import/cache artifact.
+
+The repair removes exactly 26 isolated retired UI documents: Buttons (381923094), ScrollViews (394931556), Credits text (632183783), Close_Button (771582852), Image (1076635621) and Alter Echoes text (1937865726), plus their owned components. No other Main document references any removed ID. All 12,076 retained documents and the scene preamble are byte-identical. Adding new root RectTransforms would instead recreate obsolete UI.
+
+Meaningful regression coverage checks that every authored Main/Loading GameObject owns exactly one correctly referenced Transform, and opens Main additively to reject scene errors and automatic Transform/RectTransform repair messages. The test rejects an already-open Main before mutation and closes only its new scene handle, protecting user-owned Editor scenes. Tests run in the disposable offline harness, not the open production Editor.
+
+Baseline results: Loading ownership passed; Main ownership failed for exactly six GameObjects; Main loading failed with exactly seven diagnostics. After cleanup, the three focused cases pass. Final full suites:260 EditMode + 67 PlayMode + 4 localization behavior, all passed with zero failures/skips. Independent read-only review confirmed the exact removed IDs, retained-record equality, test safety and historical work accounting.
+
+A validation-only Mac Mono player build compiled Loading/Main successfully with zero errors and four environment/configuration warnings. This is a separate disposable-identity smoke build, not a new published Steam build. Main input bytes match the repaired checkout. Actual fresh startup, welcome dismissal, Hub Inventory/Quests, quest acknowledgments, Farmlands gathering and Return To Town/run-summary navigation passed in the isolated player; no scene repair messages or script exceptions appeared. Its owned process and save/preference namespaces were cleaned up.
+
+The authoritative published beta receipt remains unchanged at `/tmp/eov-reconcile-release-20261005/release-receipt.json`: Steam App 2940000 beta 25722356, source commit 99ec96da9776ae95529b9b51c059e4ffde818dd0, source hash acc5851218d4814a7782e845e34655ef6f05d05f20583113a87cb9399a1f1233. The repaired source differs in Main plus its added test/metadata and has hash 27717004968ff27a88bcd2bed4a1b1205856bbd0adaa20b3a87d8162ee95c531. Shipping this repair would require fresh Windows/Mac production builds and a new beta upload; neither the earlier depots nor their receipt were modified.
+
+Detailed before/after scene bytes, XML/logs, manifests, PR history and validation-build report are preserved separately in `/tmp/eov-post-release-reconciliation-20261005`. Historical design/development scene copies are retained as references; this patch changes only the shipping Main scene.
