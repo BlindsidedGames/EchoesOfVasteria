@@ -1,0 +1,293 @@
+{
+  "reviewedAtUtc": "2026-10-05T08:08:28.976069+00:00",
+  "mainAtReview": "99ec96da9776ae95529b9b51c059e4ffde818dd0",
+  "liveRemoteHeads": 1145,
+  "cachedRemoteNonAncestorRefs": 22,
+  "patchEquivalentRefs": 7,
+  "separatelyAccountedUITickerRef": "source matches squash 616b95438 (#1149), subsequently superseded by event-driven UI",
+  "reviewedHistoricalUnmatchedRefs": [
+    {
+      "ref": "origin/Reversion",
+      "tip": "494ac8082b85601d24afc5c1561bcf8d33023e98",
+      "unmatchedCommits": [
+        "494ac8082b85601d24afc5c1561bcf8d33023e98 Update AGENTS.md"
+      ],
+      "pr": 1143,
+      "prUrl": "https://github.com/BlindsidedGames/EchoesOfVasteria/pull/1143",
+      "prState": "closed",
+      "mergedAt": "2025-10-22T03:01:42Z",
+      "mergedPRCommitInMain": false,
+      "classification": "merged and superseded documentation",
+      "reason": "Retained tip sanitizes malformed separator characters in the old 117-line AGENTS guide. PR #1143 merged. Current AGENTS was subsequently replaced with explicit Play/unsaved-edit/save protections. Restoring the old guide would resurrect obsolete rules.",
+      "currentEvidence": [
+        "AGENTS.md",
+        "git log -- AGENTS.md"
+      ],
+      "action": "retain history; do not cherry-pick"
+    },
+    {
+      "ref": "origin/codex/change-sprite-icon-behavior-for-cooldowns",
+      "tip": "a77826c8f925a44dbd5f78cab3b19a731ea65f5b",
+      "unmatchedCommits": [
+        "a77826c8f925a44dbd5f78cab3b19a731ea65f5b Adjust buff icon greying to depend on cooldown"
+      ],
+      "pr": 1123,
+      "prUrl": "https://github.com/BlindsidedGames/EchoesOfVasteria/pull/1123",
+      "prState": "closed",
+      "mergedAt": null,
+      "mergedPRCommitInMain": false,
+      "classification": "closed alternative for retired UI",
+      "reason": "Changes old BuffUIManager icons to grey only during cooldown. Owner closed without merge. Current ToolkitRunScreen explicitly greys Dead, Too Far and Cooldown states; ToolkitBuffsScreen is a different presentation. Reopening cooldown-only icon policy is a new product choice, not an unfinished approved fix.",
+      "currentEvidence": [
+        "Assets/Scripts/UI/Toolkit/ToolkitRunScreen.cs:204",
+        "Assets/Scripts/UI/Toolkit/ToolkitBuffsScreen.cs"
+      ],
+      "action": "retain history; do not cherry-pick"
+    },
+    {
+      "ref": "origin/codex/create-mining-task-script-with-progress-bar",
+      "tip": "6df12e6c51fd661b965520a7029583dab618a724",
+      "unmatchedCommits": [
+        "6df12e6c51fd661b965520a7029583dab618a724 Add MiningTask and update hero orientation"
+      ],
+      "pr": 165,
+      "prUrl": "https://github.com/BlindsidedGames/EchoesOfVasteria/pull/165",
+      "prState": "closed",
+      "mergedAt": null,
+      "mergedPRCommitInMain": false,
+      "classification": "fulfilled by replacement implementation",
+      "reason": "Old standalone mining/progress/drop/hero-orientation prototype. Current MiningTask inherits ContinuousTask, which supplies shared timing/progress/drop/animation handling; mining retains depleted rock visuals and pooling support. Old patch would replace the newer lifecycle.",
+      "currentEvidence": [
+        "Assets/Scripts/Tasks/MiningTask.cs",
+        "Assets/Scripts/Tasks/ContinuousTask.cs"
+      ],
+      "action": "retain history; do not cherry-pick"
+    },
+    {
+      "ref": "origin/codex/enable-drag-and-drop-for-requiredquest",
+      "tip": "9ed0442813ef562c015e0ddc7d603419d6569856",
+      "unmatchedCommits": [
+        "9ed0442813ef562c015e0ddc7d603419d6569856 Allow assigning quest data to tasks"
+      ],
+      "pr": 461,
+      "prUrl": "https://github.com/BlindsidedGames/EchoesOfVasteria/pull/461",
+      "prState": "closed",
+      "mergedAt": null,
+      "mergedPRCommitInMain": false,
+      "classification": "closed obsolete schema alternative",
+      "reason": "Converts requiredQuestId strings to QuestData references. Both this and PR #463 were owner-closed without merge. Current TaskData has no quest-id field and gates gathering through skill requirements/TaskWeightService; NPCResourceGenerator was retired. Branch Main scene is reduced to about 112 lines and must never be restored. Quest gating versus skill gating would require a new product requirement to revive.",
+      "currentEvidence": [
+        "Assets/Scripts/Tasks/TaskData.cs",
+        "Assets/Scripts/Tasks/TaskWeightService.cs:55",
+        "git diff --stat main...ref"
+      ],
+      "action": "retain history; do not cherry-pick"
+    },
+    {
+      "ref": "origin/codex/fix-terrainsettings-task-spawning-issue",
+      "tip": "29e7745b281032acee2a17c38be4b7f12277ec22",
+      "unmatchedCommits": [
+        "29e7745b281032acee2a17c38be4b7f12277ec22 Fix task generation on edge-only terrains"
+      ],
+      "pr": 747,
+      "prUrl": "https://github.com/BlindsidedGames/EchoesOfVasteria/pull/747",
+      "prState": "closed",
+      "mergedAt": null,
+      "mergedPRCommitInMain": false,
+      "classification": "fulfilled by newer border-placement model",
+      "reason": "Old local-X correction for edgeOnly/edgeOffset. Current TerrainSettings removed those fields in favor of borderOnly and four side offsets, evaluated through TryGetTerrainSpot/ValidateTerrainRules/IsBorderCell. Old patch references removed settings and cannot apply as written.",
+      "currentEvidence": [
+        "Assets/Scripts/MapGeneration/TerrainSettings.cs:17",
+        "Assets/Scripts/Tasks/ProceduralTaskGenerator.cs:529",
+        "Assets/Scripts/Tasks/ProceduralTaskGenerator.cs:782"
+      ],
+      "action": "retain history; do not cherry-pick"
+    },
+    {
+      "ref": "origin/codex/refactor-task-destruction-handling",
+      "tip": "4412c744eb02c9e1916ed3b822761b101c1fe33c",
+      "unmatchedCommits": [
+        "4412c744eb02c9e1916ed3b822761b101c1fe33c Fix task cleanup flow"
+      ],
+      "pr": 188,
+      "prUrl": "https://github.com/BlindsidedGames/EchoesOfVasteria/pull/188",
+      "prState": "closed",
+      "mergedAt": null,
+      "mergedPRCommitInMain": false,
+      "classification": "fulfilled by newer pooled lifecycle",
+      "reason": "Avoid duplicate self-destruction, centralize removal. Current BaseTask signals TaskCompleted; TaskController removes tracking and pools ordinary tasks while disabling completed gathering components to preserve stump/rock/crop visuals. Blindly restoring old Destroy calls would remove intended visuals and bypass pooling.",
+      "currentEvidence": [
+        "Assets/Scripts/Tasks/BaseTask.cs:125",
+        "Assets/Scripts/Tasks/TaskController.cs:616",
+        "Assets/Scripts/Tasks/MiningTask.cs"
+      ],
+      "action": "retain history; do not cherry-pick"
+    },
+    {
+      "ref": "origin/codex/remove-right-click-deselect-functionality",
+      "tip": "2645665c6e3e8e651f5f525afe3bea895834797b",
+      "unmatchedCommits": [
+        "2645665c6e3e8e651f5f525afe3bea895834797b Store previous skill on selection"
+      ],
+      "pr": 425,
+      "prUrl": "https://github.com/BlindsidedGames/EchoesOfVasteria/pull/425",
+      "prState": "closed",
+      "mergedAt": "2025-07-08T09:23:17Z",
+      "mergedPRCommitInMain": true,
+      "classification": "merged and superseded UI",
+      "reason": "PR #425 selection toggle merged; one subsequent retained-tip adjustment is not an ancestor. Current Skills Toolkit migration removed that previousSelectedIndex/first-skill toggle path and uses present selection lifecycle; reintroducing old behavior is not needed.",
+      "currentEvidence": [
+        "Assets/Scripts/Skills/SkillUIManager.cs",
+        "git log -- Assets/Scripts/Skills/SkillUIManager.cs"
+      ],
+      "action": "retain history; do not cherry-pick"
+    },
+    {
+      "ref": "origin/codex/rename-and-update-references-for-runright.anim",
+      "tip": "e3aac3fa9d452700809e123bb4bd0cfde86c85a8",
+      "unmatchedCommits": [
+        "e3aac3fa9d452700809e123bb4bd0cfde86c85a8 Replace deprecated OverlapCircleNonAlloc"
+      ],
+      "pr": 9,
+      "prUrl": "https://github.com/BlindsidedGames/EchoesOfVasteria/pull/9",
+      "prState": "closed",
+      "mergedAt": "2025-06-11T01:32:01Z",
+      "mergedPRCommitInMain": true,
+      "classification": "merged with obsolete later tip",
+      "reason": "Original RunRight rename PR #9 merged. Unmatched later tip actually edits deprecated OverlapCircleNonAlloc calls in old EnemyAI/HeroAI classes; those classes no longer exist after the hero/enemy refactors. No animation-rename work remains on this tip.",
+      "currentEvidence": [
+        "git show e3aac3fa9",
+        "Assets/Scripts/Hero/HeroBase.cs"
+      ],
+      "action": "retain history; do not cherry-pick"
+    },
+    {
+      "ref": "origin/codex/update-inventory-ui-on-purchase",
+      "tip": "61c6e1c9329f4be9e234501d6680400777aca3b3",
+      "unmatchedCommits": [
+        "61c6e1c9329f4be9e234501d6680400777aca3b3 Update UI selection and inventory refresh"
+      ],
+      "pr": 110,
+      "prUrl": "https://github.com/BlindsidedGames/EchoesOfVasteria/pull/110",
+      "prState": "closed",
+      "mergedAt": null,
+      "mergedPRCommitInMain": false,
+      "classification": "fulfilled by event-driven inventory and replacement UI",
+      "reason": "Old refresh/highlight cleanup changes target ResourceInventoryUI and removed StatUpgradeUIManager. Current manager emits OnInventoryChanged; active ToolkitResourceInventoryScreen subscribes and clears selection on opening/hiding. Legacy inventory also unsubscribes/clears highlights on disable. Old stat upgrade class is absent.",
+      "currentEvidence": [
+        "Assets/Scripts/UI/Toolkit/ToolkitResourceInventoryScreen.cs:110",
+        "Assets/Scripts/Upgrades/ResourceManager.cs:31",
+        "Assets/Scripts/Upgrades/ResourceInventoryUI.cs:84"
+      ],
+      "action": "retain history; do not cherry-pick"
+    },
+    {
+      "ref": "origin/codex/update-run-tracking-and-stat-panel-script",
+      "tip": "1d882a3c03c80ae3c61832692c2e8091f760d65e",
+      "unmatchedCommits": [
+        "1d882a3c03c80ae3c61832692c2e8091f760d65e Revert Main scene to remove stat prefab name change"
+      ],
+      "pr": 329,
+      "prUrl": "https://github.com/BlindsidedGames/EchoesOfVasteria/pull/329",
+      "prState": "closed",
+      "mergedAt": "2025-07-02T23:14:51Z",
+      "mergedPRCommitInMain": true,
+      "classification": "merged with malformed obsolete scene tip",
+      "reason": "Original RunRecord/RunBar stats PR #329 merged. Only unmatched tip appends RecentRunDistances to a Main scene blob that consists of two bare list lines, without Unity scene records. This is obsolete malformed scene data, not a runnable missing feature. Current stat/save implementations retain the run stats; do not resurrect invalid serialization.",
+      "currentEvidence": [
+        "git show 1d882a3c0",
+        "git log -- Assets/Scripts/Stats",
+        "Assets/Scenes/Main.unity"
+      ],
+      "action": "retain history; do not cherry-pick"
+    },
+    {
+      "ref": "origin/copilot/fix-1115",
+      "tip": "d6943931aae6f41bc2f0062e84704eae50d70289",
+      "unmatchedCommits": [
+        "d6943931aae6f41bc2f0062e84704eae50d70289 Create comprehensive .github/copilot-instructions.md with validated build and testing procedures",
+        "d3bb6526f68220752dd92f773c1338c7d73fff32 Initial plan"
+      ],
+      "pr": 1116,
+      "prUrl": "https://github.com/BlindsidedGames/EchoesOfVasteria/pull/1116",
+      "prState": "closed",
+      "mergedAt": null,
+      "mergedPRCommitInMain": false,
+      "classification": "closed stale documentation proposal",
+      "reason": "Owner closed unmerged generated Copilot guide. It pins Unity 6000.1.6f1, old IL2CPP assumptions, stale file counts and long NEVER CANCEL build directions. Current project uses Unity 6000.6.0f1, repository AGENTS and disposable testing tools. Not product work and should not override present instructions.",
+      "currentEvidence": [
+        "ProjectSettings/ProjectVersion.txt",
+        "AGENTS.md",
+        "tools/testing/run.py"
+      ],
+      "action": "retain history; do not cherry-pick"
+    },
+    {
+      "ref": "origin/cursor/analyze-and-suggest-performance-improvements-6131",
+      "tip": "ba724ab78ab5485decdce22bfc1f449fbe6f2c8e",
+      "unmatchedCommits": [
+        "ba724ab78ab5485decdce22bfc1f449fbe6f2c8e Add Steam rich presence configuration variables to HeroController"
+      ],
+      "pr": 1046,
+      "prUrl": "https://github.com/BlindsidedGames/EchoesOfVasteria/pull/1046",
+      "prState": "closed",
+      "mergedAt": "2025-08-09T06:27:53Z",
+      "mergedPRCommitInMain": true,
+      "classification": "merged and fulfilled after HeroBase refactor",
+      "reason": "Original performance PR #1046 merged. Unmatched later tip adds richPresenceUpdateInterval and nextRichPresenceUpdate to HeroController. Current HeroBase owns both fields and the timed RichPresenceManager.UpdateDistance call; adding duplicate fields to the derived controller would not implement new behavior.",
+      "currentEvidence": [
+        "Assets/Scripts/Hero/HeroBase.cs:154",
+        "Assets/Scripts/Hero/HeroBase.cs:247",
+        "Assets/Scripts/Hero/HeroController.cs"
+      ],
+      "action": "retain history; do not cherry-pick"
+    },
+    {
+      "ref": "origin/ksrqcc-codex/enable-drag-and-drop-for-requiredquest",
+      "tip": "e5855c11f20db512138a860e68179625d922b4b5",
+      "unmatchedCommits": [
+        "e5855c11f20db512138a860e68179625d922b4b5 Revert scene quest reference",
+        "d6e6b62aa3a96e7bf2e85c7902a8b8dbabf5c4df Allow assigning quest data to tasks"
+      ],
+      "pr": 463,
+      "prUrl": "https://github.com/BlindsidedGames/EchoesOfVasteria/pull/463",
+      "prState": "closed",
+      "mergedAt": null,
+      "mergedPRCommitInMain": false,
+      "classification": "duplicate closed obsolete schema alternative",
+      "reason": "Same closed QuestData experiment as PR #461 with an extra scene-reference revert. Current skill-gated TaskData supersedes the old schema; branch Main is about111 lines. Retained for history; never merge its obsolete scene.",
+      "currentEvidence": [
+        "Assets/Scripts/Tasks/TaskWeightService.cs:55",
+        "git diff --stat main...ref"
+      ],
+      "action": "retain history; do not cherry-pick"
+    },
+    {
+      "ref": "origin/revert-18-codex/rework-basic-attack-system-for-healing",
+      "tip": "75e2e1f54fcd6a8bcbd17ae41e731ab964b94ab7",
+      "unmatchedCommits": [
+        "75e2e1f54fcd6a8bcbd17ae41e731ab964b94ab7 Revert \"Add ally healing option to basic attacks\""
+      ],
+      "pr": 20,
+      "prUrl": "https://github.com/BlindsidedGames/EchoesOfVasteria/pull/20",
+      "prState": "closed",
+      "mergedAt": null,
+      "mergedPRCommitInMain": false,
+      "classification": "closed obsolete combat experiment",
+      "reason": "Owner closed unmerged revert of early optional ally-healing attacks. BasicAttackTelegraphed no longer exists; present hero/enemy combat and Projectile damage paths are newer implementations. Reviving/removing ally healing through that old combat prototype would be a new design decision, not a missing patch.",
+      "currentEvidence": [
+        "git show 75e2e1f5",
+        "Assets/Scripts/Hero/HeroBase.cs",
+        "Assets/Scripts/Projectile.cs"
+      ],
+      "action": "retain history; do not cherry-pick"
+    }
+  ],
+  "activeApprovedUnfinishedWorkFound": false,
+  "newProductChoicesRequiredToRevive": [
+    "Cooldown-only grey icons vs explicit unavailable-state visuals",
+    "Quest asset gates for random tasks vs existing skill gates",
+    "Restoration of early ally-healing combat prototype"
+  ],
+  "classificationBasis": "Owner-closed PR history plus concrete current-source replacements; closed alternatives are retained, not silently reopened. No branch deletion or merge of experiments."
+}
