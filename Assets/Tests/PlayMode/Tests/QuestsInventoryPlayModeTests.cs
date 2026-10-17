@@ -230,11 +230,13 @@ namespace Tests.PlayMode
 
         private static void AssertInventoryContentBounds(Rect before, Rect after)
         {
-            // Scroll relayout can change floating-point rounding by far less than a pixel.
-            Assert.AreEqual(before.x, after.x, .01f);
-            Assert.AreEqual(before.y, after.y, .01f);
-            Assert.AreEqual(before.width, after.width, .01f);
-            Assert.AreEqual(before.height, after.height, .01f);
+            // UI Toolkit rounds relayout to physical pixels. Allow one screen
+            // pixel at the shared 432-unit reference height, not a visible slot shift.
+            var pixelRoundingTolerance = 432f / Mathf.Max(1, Screen.height) + .001f;
+            Assert.AreEqual(before.x, after.x, pixelRoundingTolerance);
+            Assert.AreEqual(before.y, after.y, pixelRoundingTolerance);
+            Assert.AreEqual(before.width, after.width, pixelRoundingTolerance);
+            Assert.AreEqual(before.height, after.height, pixelRoundingTolerance);
         }
     }
 }

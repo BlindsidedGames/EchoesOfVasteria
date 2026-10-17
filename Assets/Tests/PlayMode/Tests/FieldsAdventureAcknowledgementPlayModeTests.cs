@@ -18,10 +18,10 @@ namespace Tests.PlayMode
 {
     public sealed partial class FieldsProductionPlayModeTests
     {
-        // The noticeboard is available on adventures. A narrative acknowledgement
-        // must unlock actual crop completion, while paid construction stays in town.
+        // The noticeboard is available on adventures, but acknowledgements and
+        // paid construction both wait until the player returns to town.
         [UnityTest]
-        public IEnumerator AdventureOkayDurablyUnlocksActualCropCompletionWithoutOpeningConstruction()
+        public IEnumerator AdventureIntroductionWaitsForTownThenDurablyUnlocksCropCompletion()
         {
             var random = Random.state;
             var gameObject = new GameObject("Isolated adventure location");
@@ -59,7 +59,14 @@ namespace Tests.PlayMode
                 Assert.True(screen.Show());
                 yield return null;
                 var okay = screenObject.GetComponent<UIDocument>().rootVisualElement.Q<Button>("turn-in-" + FarmContent.IntroductionId);
-                Assert.NotNull(okay); Assert.True(okay.enabledInHierarchy);
+                Assert.NotNull(okay); Assert.False(okay.enabledInHierarchy);
+                using (var submit = NavigationSubmitEvent.GetPooled()) okay.SendEvent(submit);
+                Assert.False(FarmContent.Completed(oracle.saveData, FarmContent.IntroductionId));
+                Assert.False(quests.TryTurnInQuest(FarmContent.IntroductionId));
+                typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(game, true);
+                yield return new WaitForSecondsRealtime(.3f);
+                okay = screenObject.GetComponent<UIDocument>().rootVisualElement.Q<Button>("turn-in-" + FarmContent.IntroductionId);
+                Assert.True(okay.enabledInHierarchy);
                 okay.Focus();
                 // Existing transaction-owner barrier: rejected acknowledgement must
                 // keep the quest available so the same UI can retry after contention.
@@ -71,8 +78,9 @@ namespace Tests.PlayMode
                 Assert.True(okay.enabledInHierarchy);
                 using (var submit = NavigationSubmitEvent.GetPooled()) okay.SendEvent(submit);
                 Assert.True(FarmContent.Completed(oracle.saveData, FarmContent.IntroductionId),
-                    "The enabled adventure Okay must acknowledge the introduction.");
+                    "Returning to town must allow the introduction acknowledgement.");
                 Assert.False(quests.TryTurnInQuest(FarmContent.IntroductionId), "Repeated acknowledgement cannot pay or complete twice.");
+                typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(game, false);
                 Assert.False(service.BuildQuest("Farm.Garden.Build01.v1"), "Construction still requires town.");
                 Assert.AreEqual(0, service.State.GardenCapacity);
                 var loaded = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();

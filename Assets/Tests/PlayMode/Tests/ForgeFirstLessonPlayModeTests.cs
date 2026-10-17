@@ -75,7 +75,10 @@ namespace Tests.PlayMode
                 FieldsClick(ui.Q<Button>("gear-Weapon")); yield return new WaitForSecondsRealtime(.2f);
                 Assert.AreEqual(3, ForgeFirstLesson.Stage);
                 FieldsClick(ui.Q<Button>("forge-craft")); yield return new WaitForSecondsRealtime(.2f);
-                Assert.AreEqual(4, ForgeFirstLesson.Stage);
+                var craftButton = ui.Q<Button>("forge-craft");
+                Assert.AreEqual(4, ForgeFirstLesson.Stage,
+                    $"Craft click: ready={session.CanCraft()}, enabled={craftButton.enabledInHierarchy}, " +
+                    $"button={craftButton.worldBound}, viewport={ui.Q<ScrollView>().contentViewport.worldBound}, screen={Screen.width}x{Screen.height}");
                 Assert.IsNull(equipment.GetEquipped("Weapon"), "The player must explicitly equip the tutorial sword.");
                 Assert.AreEqual("Weapon", session.Pending.slot);
                 var pendingRarity = session.Pending.rarity.name;
