@@ -31,6 +31,14 @@ namespace Tests.PlayMode
             var tierResources = AssetDatabase.LoadAssetAtPath<ToolkitResourceInventoryDefinition>("Assets/UI/Toolkit/ResourceInventory.asset")
                 .resources.Where(r => r && r != seed && r != radish && !r.DisableAlterEcho).Take(8).ToArray();
             Assert.AreEqual(8, tierResources.Length);
+            var authored = AssetDatabase.LoadAssetAtPath<ToolkitResourceInventoryDefinition>("Assets/UI/Toolkit/ResourceInventory.asset").resources;
+            var discovered = new HashSet<Resource>(tierResources) { seed, radish };
+            void AssertDiscoveryOrder(VisualElement view)
+            {
+                var cells = view.Q<ToolkitGrid>().Children().OrderBy(e => Mathf.Round(e.worldBound.yMin)).ThenBy(e => e.worldBound.xMin).ToArray();
+                var expected = authored.Where(discovered.Contains).Concat(authored.Where(r => !discovered.Contains(r))).Select(r => "resource-" + r.name);
+                CollectionAssert.AreEqual(expected, cells.Select(e => e.name), "Discovered items lead; both groups retain the authored order.");
+            }
             for (var i = 0; i < tierResources.Length; i++)
                 oracle.saveData.Resources[tierResources[i].name] = new GameData.ResourceEntry { Amount = 50 + i, Earned = true, Tier = i + 1 };
             var resourceOwner = new GameObject("Isolated quests inventory data");
@@ -56,6 +64,10 @@ namespace Tests.PlayMode
                 var host = ui.Q("quests-inventory");
                 Assert.NotNull(host, "Quests must own its inventory inside the Quests layout, rather than open the Hub window beside/behind it.");
                 Assert.IsFalse(hub.IsOpen, "Opening Quests must not open or move the standalone Hub view.");
+                Assert.AreEqual(DisplayStyle.None, host.style.display.value, "The resource pop-out starts collapsed.");
+                FieldsClick(ui.Q<Button>("quests-toggle-inventory"));
+                yield return null; yield return null;
+                Assert.AreEqual(DisplayStyle.Flex, host.style.display.value);
                 var embedded = host.Q("resource-inventory");
                 Assert.NotNull(embedded); Assert.IsNull(embedded.Q<Button>("inventory-close"));
                 var grid = embedded.Q<ToolkitGrid>();
@@ -94,6 +106,13 @@ namespace Tests.PlayMode
                 hub.Bounds = new Rect(64, 44, 640, 376); Assert.IsTrue(hub.Show());
                 yield return null;
                 var hubUi = inventoryObject.GetComponent<UIDocument>().rootVisualElement;
+                AssertDiscoveryOrder(embedded); AssertDiscoveryOrder(hubUi);
+                var newlyFound = authored.Last(r => !discovered.Contains(r)); discovered.Add(newlyFound);
+                resources.Add(newlyFound, 1, trackStats: false, eligibleForTierRoll: false);
+                yield return null; yield return null;
+                AssertDiscoveryOrder(embedded); AssertDiscoveryOrder(hubUi);
+                resources.Spend(newlyFound, resources.GetAmount(newlyFound)); yield return null;
+                AssertDiscoveryOrder(embedded); AssertDiscoveryOrder(hubUi);
                 Assert.AreNotSame(embedded, hubUi.Q("resource-inventory"));
                 Assert.AreSame(host, embedded.parent);
                 resources.Add(seed, 2, trackStats: false, eligibleForTierRoll: false); yield return null;

@@ -24,26 +24,28 @@ MonoBehaviour:
     m_LocalVariables: []
   description:
     m_TableReference:
-      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+      m_TableCollectionName: Quests
     m_TableEntryReference:
-      m_KeyId: 5293610516480
-      m_Key: 
-    m_FallbackState: 0
+      m_KeyId: 0
+      m_Key: Gill.return-to-town.v2.description
+    m_FallbackState: 2
     m_WaitForCompletion: 0
     m_LocalVariables: []
   rewardDescription:
     m_TableReference:
-      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+      m_TableCollectionName: Quests
     m_TableEntryReference:
-      m_KeyId: 5294684258304
-      m_Key: 
-    m_FallbackState: 0
+      m_KeyId: 0
+      m_Key: Gill.return-to-town.v3.reward
+    m_FallbackState: 2
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  npcId: 
+  npcId: Gill1
+  requiresTown: 1
   autoPin: 0
+  useN0ForPinnedNumbers: 0
   requiredQuests:
-  - {fileID: 11400000, guid: 2f2ff992f4de15a4bb5263366f3fe554, type: 2}
+  - {fileID: 11400000, guid: 298f411e97766fb47bf1d61e9e1a5bf8, type: 2}
   requirements:
   - type: 5
     resource: {fileID: 0}
@@ -52,6 +54,17 @@ MonoBehaviour:
     killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
+    buffs: []
+    includeAutoCasts: 1
+    buffCastName:
+    buffCastIcon: {fileID: 0}
+  rewards:
+  - type: 2
+    resource: {fileID: 0}
+    amount: 0
+    skill: {fileID: 0}
+    experience: 0
+    equipment: {fileID: 11400000, guid: 762be621850306d459ea229e7615eeaf, type: 2}
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

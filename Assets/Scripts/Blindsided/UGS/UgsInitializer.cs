@@ -7,7 +7,7 @@ namespace Blindsided.UGS
 {
     /// <summary>
     /// Ensures Unity Gaming Services are initialized and the player is signed in
-    /// before any UGS API is used (Cloud Save, Cloud Code, Leaderboards, etc.).
+    /// before any UGS API is used (Cloud Save, Cloud Code, etc.).
     /// </summary>
     public static class UgsInitializer
     {

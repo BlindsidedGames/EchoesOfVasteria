@@ -496,7 +496,6 @@
 .gameplay .eov-stat-entry {padding:var(--space-control) 0;min-height:40px;height:auto;margin-bottom:var(--space-control);}
 .gameplay .eov-stat-item {height:auto;min-height:48px;padding:var(--space-control) 0;margin-bottom:var(--space-control);}
 .gameplay .eov-stat-entry-field {font-size:7px;}
-.gameplay .eov-rank-row {padding:var(--space-control) 0;min-height:24px;}
 .gameplay .eov-forge-panel {padding:0;margin-bottom:var(--space-section);}
 .gameplay .eov-forge-columns {height:auto;min-height:170px;}
 .gameplay .eov-forge-selections {width:108px;margin-right:var(--space-section);}
@@ -564,7 +563,6 @@
 .gameplay .eov-run-death .button {margin-top:var(--space-tight);}
 
 .gameplay.compact-width .food {width:31%;margin-right:2%;}
-.gameplay .eov-rank-score {white-space:nowrap;}
 
 .gameplay.compact-width .eov-forge-sidebar {width:135px;}
 .gameplay.compact-width .eov-forge-selections {width:95px;}
@@ -729,35 +727,7 @@
 
 .gameplay .journal-show-all {height:18px;min-height:18px;align-self:flex-start;font-size:6.5px;padding:var(--space-tight) var(--space-control);margin-top:var(--space-tight);}
 /* Rank: shared controls, a readable three-column list, and a persistent personal result. */
-.gameplay .rank-controls {flex-direction:row;align-items:center;margin-bottom:var(--space-section);flex-shrink:0;}
-.gameplay .rank-choice {flex-direction:row;}
-.gameplay .rank-scope {margin-left:auto;}
-.gameplay .rank-choice-button {height:22px;font-size:7px;padding:var(--space-control) var(--space-section);margin-right:var(--space-tight);}
-.gameplay .rank-refresh {margin-left:var(--space-section);margin-right:0;}
-.gameplay .rank-status {font-size:7px;color:var(--muted);margin-bottom:var(--space-section);white-space:normal;}
-.gameplay .rank-headings {flex-direction:row;padding:var(--space-control) var(--space-section);margin-bottom:var(--space-tight);flex-shrink:0;}
-.gameplay .rank-headings Label {font-size:6.5px;color:var(--muted);}
-.gameplay .eov-rank-row {height:auto;min-height:26px;flex-direction:row;align-items:center;justify-content:flex-start;padding:var(--space-control) var(--space-section);margin:0;background-color:transparent;border-width:0;border-bottom-width:.5px;border-bottom-color:rgba(239,209,180,.10);flex-shrink:0;}
-.gameplay .eov-rank-row.selected {background-color:rgba(179,138,201,.13);border-left-width:2px;border-left-color:#b38ac9;padding-left:6px;}
-.gameplay .eov-rank-rank {width:40px;flex-shrink:0;font-size:8px;}
-.gameplay .eov-rank-name {flex-direction:row;align-items:baseline;flex-grow:1;flex-basis:0;min-width:0;}
-.gameplay .rank-player-name {font-size:8px;-unity-font-style:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;}
-.gameplay .rank-discriminator {font-size:6px;color:var(--muted);margin-left:var(--space-tight);flex-shrink:0;}
-.gameplay .rank-you {font-size:6px;color:#c8aad8;margin-left:var(--space-control);flex-shrink:0;}
-.gameplay .eov-rank-score {width:96px;flex-shrink:0;font-size:8px;-unity-text-align:middle-right;white-space:nowrap;}
-.gameplay .rank-place-0 .eov-rank-rank {color:#d0a166;}
-.gameplay .rank-place-1 .eov-rank-rank {color:#c4c8d0;}
-.gameplay .rank-place-2 .eov-rank-rank {color:#b98667;}
-.gameplay .rank-player-footer {flex-grow:1;min-width:0;margin-top:var(--space-section);}
-.gameplay .rank-player-footer .eov-rank-row {border-bottom-width:0;}
-.gameplay .rank-footer-note {font-size:7px;color:var(--muted);padding:var(--space-control);}
-.gameplay .rank-entry-detail {font-size:7px;color:var(--muted);white-space:normal;padding:var(--space-control) var(--space-section);}
-.gameplay.narrow .rank-controls {flex-wrap:wrap;}
-.gameplay.narrow .rank-choice-button {font-size:6.5px;padding:var(--space-control);}
 
-.gameplay .rank-headings {margin-right:9px;}
-.gameplay .eov-rank-rank {-unity-text-align:middle-right;padding-right:8px;}
-.gameplay .rank-player-footer {margin-right:9px;}
 .gameplay .graph-controls,.gameplay .graph-map-filters {flex-direction:row;flex-shrink:0;margin-bottom:var(--space-section);}
 .gameplay .graph-choice {height:22px;min-height:22px;font-size:7px;padding:var(--space-control) var(--space-section);margin-right:var(--space-tight);}
 .gameplay .graph-units {flex-direction:row;margin-left:auto;}
@@ -995,7 +965,9 @@
 .gameplay.quests-reviewed .quests-embedded-inventory .eov-resource-grid { align-self: center; }
 .gameplay.inventory-standalone { padding: 10px; }
 .inventory-standalone .eov-resource-title { height: 28px; flex-direction: row; align-items: center; }
-.inventory-standalone .eov-resource-name { height: 16px; font-size: 8px; margin-left: 12px; margin-right: 8px; -unity-text-align: middle-right; }
+.inventory-standalone .inventory-title-labels { flex-grow: 1; min-width: 0; height: 28px; justify-content: center; }
+.inventory-standalone .inventory-title-labels .heading { height: 14px; margin-bottom: 0; padding: 0; }
+.inventory-standalone .eov-resource-name { height: 12px; font-size: 8px; margin: 0; padding: 0; -unity-text-align: middle-left; }
 .inventory-standalone .eov-resource-title .button { width: 24px; min-width: 24px; }
 .inventory-standalone .eov-resource-slot { width: 40px; height: 44px; }
 .inventory-standalone .eov-resource-slot-background { left: 6px; top: 3px; width: 28px; height: 28px; }
@@ -1063,3 +1035,44 @@
 
 .gameplay.fields-ui .fields-seed-card.primary {background-color:var(--accent);border-color:var(--accent);}
 .gameplay.fields-ui .fields-seed-card.primary Label {color:var(--on-accent);}
+
+.gameplay .journal-selector > .journal-art {width:100%;}
+.gameplay .journal-selector.map-locked {opacity:.65;}
+.gameplay .journal-tutorial {padding:4px;margin-bottom:4px;flex-shrink:0;border-bottom-width:.5px;border-bottom-color:var(--line);}
+
+/* Outing summary: clear totals above a named, aligned resource ledger. */
+.gameplay .eov-run-overlay {background-color:transparent;padding-top:32px;padding-bottom:8px;}
+.gameplay .summary-close {position:absolute;right:8px;top:8px;width:22px;min-width:22px;height:22px;padding:0;font-size:14px;}
+.gameplay .summary-sheet {padding:14px;border-width:1px;border-color:var(--panel-edge);}
+.gameplay .summary-sheet .breakdown-header {height:22px;margin-bottom:2px;}
+.gameplay .summary-sheet .breakdown-title {position:relative;left:0;width:auto;margin:0;padding:0;font-size:13px;-unity-text-align:middle-left;}
+.gameplay .summary-overview {flex-shrink:0;}
+.gameplay .summary-subtitle {font-size:7px;margin-bottom:10px;}
+.gameplay .summary-facts {margin-bottom:10px;flex-wrap:wrap;}
+.gameplay .summary-fact {width:25%;padding:6px 8px;background-color:var(--field);border-left-width:.5px;border-left-color:var(--line);}
+.gameplay .summary-fact-label {font-size:6.5px;margin-bottom:2px;white-space:nowrap;}
+.gameplay .summary-fact-value {font-size:12px;}
+.gameplay .summary-distance {align-items:center;min-height:24px;padding:4px 0;margin-bottom:10px;border-bottom-width:.5px;border-bottom-color:var(--line);}
+.gameplay .summary-distance-label {font-size:8px;flex-grow:1;}
+.gameplay .summary-distance-value {font-size:9px;}
+.gameplay .summary-distance-change {font-size:8px;color:var(--accent);margin-left:10px;}
+.gameplay .summary-resource-heading {justify-content:space-between;align-items:center;margin-bottom:5px;flex-shrink:0;}
+.gameplay .summary-resource-heading > .strong {font-size:8px;}
+.gameplay .summary-resource-grid {flex-direction:row;flex-wrap:wrap;}
+.gameplay .summary-resource {width:50%;min-width:0;min-height:24px;padding:4px 8px 4px 0;align-items:center;border-bottom-width:.5px;border-bottom-color:var(--line);flex-shrink:0;}
+.gameplay .summary-resource > .icon {margin-right:6px;flex-shrink:0;}
+.gameplay .summary-resource-text {flex-grow:1;flex-shrink:1;min-width:0;}
+.gameplay .summary-resource-name {font-size:7.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gameplay .summary-resource-total {font-size:9px;min-width:28px;margin-left:8px;-unity-text-align:middle-right;}
+.gameplay .summary-resource-bonus {font-size:6px;color:var(--accent);white-space:normal;}
+.gameplay .summary-empty {font-size:8px;padding:14px 0;}
+.gameplay .summary-narrow .summary-fact {width:50%;}
+.gameplay .summary-narrow .summary-resource {width:100%;}
+.gameplay .summary-narrow .summary-distance {flex-wrap:wrap;}
+.gameplay .summary-narrow .summary-distance-label {width:100%;margin-bottom:3px;}
+
+.gameplay .breakdown-header {margin-right:28px;}
+.gameplay .summary-resource-right {padding-left:8px;}
+.gameplay .summary-return-bonus {font-size:7px;color:var(--accent);margin-bottom:8px;white-space:normal;}
+
+.gameplay .summary-narrow .summary-resource-right {padding-left:0;}

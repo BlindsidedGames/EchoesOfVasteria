@@ -561,13 +561,11 @@ MonoBehaviour:
   meetingPrefab: {fileID: 4473393103591709735, guid: 8ed7138ae18d6d148b1f94dd314d3c1b, type: 3}
   npcSprite: {fileID: -1401021900, guid: 5648631a6e1d4524a8d67bbd3dfb2144, type: 3}
   lines:
-  - 'I came out here looking for some trees to fell. '
-  - But I need the perfect timber for my house...
-  - Meet me back in town, I have something special to give you, and I need you to help me get some logs.
+  - I'm looking for timber to build my house.
+  - Meet me back in town. I've got a spare axe for you, and there's good timber in the Woods.
   lineKeys:
   - npc.Barkley1.line.01
   - npc.Barkley1.line.02
-  - npc.Barkley1.line.03
 --- !u!212 &2843715812355913838
 SpriteRenderer:
   serializedVersion: 3

@@ -272,6 +272,8 @@ namespace TimelessEchoes
         public bool RunEndedByReaper => runEndedByReaper;
         public bool DeathPromptVisible { get; private set; }
         public float DeathPromptProgress { get; private set; }
+        public bool FirstReapReturnPending => heroDead && runEndedByReaper && Blindsided.Oracle.oracle?.saveData?.General.FirstReapTownVisited == false;
+        public bool IvanReturnPending => StaticReferences.CompletedNpcTasks.Contains("Ivan1") && !TimelessEchoes.Quests.QuestUtils.QuestCompleted("Meeting Ivan");
         public void RequestRetreat() => OnReturnToTavernButton();
         public void RequestReturnOnDeath() => QueueReturnOnDeath();
         public void RequestRestartAfterDeath() => OnDeathRunButton();
@@ -763,6 +765,14 @@ namespace TimelessEchoes
 
             if (enableStallAutoRestart)
                 stallMonitorCoroutine = StartCoroutine(MonitorRunStallRoutine());
+
+            if (CurrentGenerationConfig != null && CurrentGenerationConfig.entryIntroduction != null)
+            {
+                if (CurrentMap == null) yield break;
+                yield return CurrentGenerationConfig.entryIntroduction.ShowAndWait(CurrentMap.transform);
+                if (CurrentMap == null) yield break;
+            }
+
         }
 
         private IEnumerator FastForwardStart()
@@ -1004,8 +1014,25 @@ namespace TimelessEchoes
             if (deathTimerImage != null)
                 deathTimerImage.fillAmount = 0f;
 
-            while (t < deathWindowDuration)
+            while (t < deathWindowDuration || StaticReferences.ActiveNpcMeetings.Count > 0 || IvanReturnPending || FirstReapReturnPending)
             {
+                if (StaticReferences.ActiveNpcMeetings.Count > 0)
+                {
+                    yield return null;
+                    continue;
+                }
+                if (returnOnDeathQueued || retreatQueued)
+                {
+                    StartCoroutine(ReturnToTavernRoutine());
+                    yield break;
+                }
+                if (IvanReturnPending || FirstReapReturnPending)
+                {
+                    t = 0; DeathPromptProgress = 0;
+                    if (deathTimerImage != null) deathTimerImage.fillAmount = 0;
+                    yield return null;
+                    continue;
+                }
                 DeathPromptProgress = Mathf.Clamp01(t / deathWindowDuration);
                 if (deathTimerImage != null)
                     deathTimerImage.fillAmount = Mathf.Clamp01(t / deathWindowDuration);
@@ -1130,12 +1157,17 @@ namespace TimelessEchoes
             }
 
             IsInTown = true;
+            if (Blindsided.Oracle.oracle?.saveData != null && runEndedByReaper) Blindsided.Oracle.oracle.saveData.General.FirstReapTownVisited = true;
             tavernUI?.SetActive(true);
             mapUI?.SetActive(false);
             savesObject?.SetActive(true);
             savesHiddenObject?.SetActive(false);
             if (runCalebUI != null)
                 runCalebUI.gameObject.SetActive(false);
+            if (CurrentGenerationConfig && CurrentGenerationConfig.name == "River" && Blindsided.Oracle.oracle?.saveData != null)
+                Blindsided.Oracle.oracle.saveData.General.ReturnedFromRiver = true;
+            if (CurrentGenerationConfig && CurrentGenerationConfig.name == "Farmlands" && Blindsided.Oracle.oracle?.saveData != null)
+                Blindsided.Oracle.oracle.saveData.General.ReturnedFromFarmlands = true;
             runResourceTracker?.ShowWindow();
             resetRunResourceTracker = true;
             npcObjectStateController?.UpdateObjectStates();
@@ -1249,8 +1281,9 @@ namespace TimelessEchoes
                     yield break;
 
                 // Skip while the hero is dead
-                if (heroDead)
+                if (heroDead || (hero != null && hero.IsInNpcConversation) || StaticReferences.ActiveNpcMeetings.Count > 0)
                 {
+                    lastRunDistanceChangeTime = Time.time;
                     yield return new WaitForSeconds(stallCheckIntervalSeconds);
                     continue;
                 }

@@ -68,7 +68,7 @@ namespace TimelessEchoes.Gear.UI
 				{
 					forge.BestAbsolutePieceScoreByCore.TryGetValue(core, out var bestAbs);
 					float pct = maxBestCore > 0f ? Mathf.Clamp01(bestAbs / maxBestCore) * 100f : 0f;
-					sb.AppendLine(ToolkitLocalization.Text("forge.stats.core-quality", "  • core {0}: {1:0.#}%", core, pct));
+					sb.AppendLine(ToolkitLocalization.Text("forge.stats.core-quality", "  • core {0}: {1:0.#}%", TierName(core), pct));
 				}
 			}
 			// Best By Rarity (Quality)
@@ -80,23 +80,23 @@ namespace TimelessEchoes.Gear.UI
 				{
 					forge.BestAbsolutePieceScoreByRarity.TryGetValue(r, out var bestAbs);
 					float pct = maxBestRarity > 0f ? Mathf.Clamp01(bestAbs / maxBestRarity) * 100f : 0f;
-					sb.AppendLine($"  • {r}: {pct:0.#}%");
+					sb.AppendLine($"  • {TierName(r)}: {pct:0.#}%");
 				}
 			}
 
 			// Salvage
 			sb.AppendLine(SectionTitle("forge.stats.section-salvage", "Salvage", preserveSectionIds));
 			sb.AppendLine(ToolkitLocalization.Text("forge.stats.items-entries-avg-item", "• Items: {0:N0}  • Entries: {1:N0}  • Avg/Item: {2:N2}", forge.SalvageItems, forge.SalvageEntries, SafeDiv(forge.SalvageEntries, forge.SalvageItems)));
-			AppendAll(sb, forge.SalvagesByRarity, formatKey: k => ToolkitLocalization.Text("forge.stats.rarity", "rarity {0}", k));
-			AppendAll(sb, forge.SalvagesByCore, formatKey: k => ToolkitLocalization.Text("forge.stats.core", "core {0}", k));
-			AppendAll(sb, forge.SalvageYieldPerResource?.ToDictionary(p => p.Key, p => p.Value.sum), formatKey: k => ToolkitLocalization.Text("forge.stats.gained", "gained {0}", k));
+			AppendAll(sb, forge.SalvagesByRarity, formatKey: k => ToolkitLocalization.Text("forge.stats.rarity", "rarity {0}", TierName(k)));
+			AppendAll(sb, forge.SalvagesByCore, formatKey: k => ToolkitLocalization.Text("forge.stats.core", "core {0}", TierName(k)));
+			AppendAll(sb, forge.SalvageYieldPerResource?.ToDictionary(p => p.Key, p => p.Value.sum), formatKey: k => ToolkitLocalization.Text("forge.stats.gained", "gained {0}", ToolkitLocalization.Text("resource." + k, k)));
 
 			// Distributions
 			sb.AppendLine(SectionTitle("forge.stats.section-distributions", "Distributions", preserveSectionIds));
 			// Overall (rarity)
 			sb.AppendLine(ToolkitLocalization.Text("forge.stats.overall", "• Overall:"));
 			if (forge.CraftsByRarity != null && forge.CraftsByRarity.Count > 0)
-				AppendTopK(sb, forge.CraftsByRarity, forge.CraftsByRarity.Count, formatKey: k => k, total: forge.TotalCrafts);
+				AppendTopK(sb, forge.CraftsByRarity, forge.CraftsByRarity.Count, formatKey: TierName, total: forge.TotalCrafts);
 			// Per-core rarity distributions
 			sb.AppendLine(ToolkitLocalization.Text("forge.stats.cores", "• Cores:"));
 			AppendCoreRarityDistributions(sb, forge);
@@ -297,7 +297,7 @@ namespace TimelessEchoes.Gear.UI
 				int total = 0;
 				if (forge.RarityCountsByCore.TryGetValue(core, out var rarMapTotal) && rarMapTotal != null)
 					foreach (var c in rarMapTotal.Values) total += c;
-				sb.AppendLine($"  • {core}:");
+				sb.AppendLine($"  • {TierName(core)}:");
 				if (forge.RarityCountsByCore.TryGetValue(core, out var rarMap) && rarMap != null && rarMap.Count > 0)
 				{
 					// order rarities by tier order, not by count
@@ -305,11 +305,13 @@ namespace TimelessEchoes.Gear.UI
 					{
 						int value = rarMap.TryGetValue(rar, out var v) ? v : 0;
 						double pct = total > 0 ? 100.0 * value / total : 0.0;
-						sb.AppendLine($"    • {rar}: {value:N0} ({pct:N1}%)");
+						sb.AppendLine($"    • {TierName(rar)}: {value:N0} ({pct:N1}%)");
 					}
 				}
 			}
 		}
+
+		private static string TierName(string key) => ToolkitLocalization.Text("rarity." + key + ".name", key);
 
 		private IEnumerable<string> OrderCoresByPreferred(IEnumerable<string> input)
 		{

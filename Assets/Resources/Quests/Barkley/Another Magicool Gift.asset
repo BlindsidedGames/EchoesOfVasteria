@@ -24,11 +24,11 @@ MonoBehaviour:
     m_LocalVariables: []
   description:
     m_TableReference:
-      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+      m_TableCollectionName: Quests
     m_TableEntryReference:
-      m_KeyId: 6571346509824
-      m_Key: 
-    m_FallbackState: 0
+      m_KeyId: 0
+      m_Key: Barkley.river-meeting.v2.description
+    m_FallbackState: 2
     m_WaitForCompletion: 0
     m_LocalVariables: []
   rewardDescription:
@@ -41,9 +41,12 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   npcId: 
+  requiresTown: 0
   autoPin: 0
+  useN0ForPinnedNumbers: 0
   requiredQuests:
-  - {fileID: 11400000, guid: de222d7a217d39841a2a727a9a68563e, type: 2}
+  - {fileID: 11400000, guid: 918ef9c4bf0607e479041a3d39b3f3b7, type: 2}
+  minimumMaxRunDistanceExclusive: 0
   requirements:
   - type: 6
     resource: {fileID: 0}
@@ -52,6 +55,11 @@ MonoBehaviour:
     killName: 
     killIcon: {fileID: 0}
     meetNpcId: Barkley1
+    buffs: []
+    includeAutoCasts: 1
+    buffCastName:
+    buffCastIcon: {fileID: 0}
+  rewards: []
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 25

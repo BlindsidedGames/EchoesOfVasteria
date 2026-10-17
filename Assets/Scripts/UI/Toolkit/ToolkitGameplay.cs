@@ -39,6 +39,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         public static void StyleScroll(ScrollView scroll)
         {
+            ToolkitDragScroll.Enable(scroll);
             scroll.AddToClassList("gameplay-scroll");
             scroll.verticalScroller.lowButton.style.display=DisplayStyle.None;
             scroll.verticalScroller.highButton.style.display=DisplayStyle.None;
@@ -49,7 +50,7 @@ namespace TimelessEchoes.UI.Toolkit
                 var part=scroll.verticalScroller.slider.Q(name);if(part!=null)part.style.backgroundImage=StyleKeyword.None;
             }
         }
-        public static ScrollView Scroll(VisualElement parent,string name){var s=new ScrollView(ScrollViewMode.Vertical){name=name,horizontalScrollerVisibility=ScrollerVisibility.Hidden,verticalScrollerVisibility=ScrollerVisibility.Hidden};s.AddToClassList("scroll");parent.Add(s);return s;}
+        public static ScrollView Scroll(VisualElement parent,string name){var s=new ScrollView(ScrollViewMode.Vertical){name=name,horizontalScrollerVisibility=ScrollerVisibility.Hidden,verticalScrollerVisibility=ScrollerVisibility.Hidden};s.AddToClassList("scroll");ToolkitDragScroll.Enable(s);parent.Add(s);return s;}
     }
     public sealed class ToolkitCheckMark : VisualElement
     {

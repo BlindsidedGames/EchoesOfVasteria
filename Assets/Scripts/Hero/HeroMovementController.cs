@@ -17,6 +17,7 @@ namespace TimelessEchoes.Hero
         [SerializeField] private float idleWalkStep = 5f;
 
         private AIPath ai;
+        private Seeker seeker;
         private AIDestinationSetter setter;
         private Transform idleWalkTarget;
         private Vector2 lastMoveDir = Vector2.down;
@@ -52,6 +53,7 @@ namespace TimelessEchoes.Hero
         public void Init(bool isEchoActor, float walkStep = 5f)
         {
             ai = GetComponent<AIPath>();
+            seeker = GetComponent<Seeker>();
             setter = GetComponent<AIDestinationSetter>();
             isEcho = isEchoActor;
             idleWalkStep = walkStep;
@@ -98,7 +100,7 @@ namespace TimelessEchoes.Hero
         public void UpdateAnimation(Animator animator, SpriteRenderer sprite, bool fourDirectional,
             Action<Vector2, float> onSecondaryUpdate = null, Action<bool> onSecondaryFlip = null)
         {
-            Vector2 vel = ai != null ? ai.desiredVelocity : Vector2.zero;
+            Vector2 vel = ai != null && ai.simulateMovement ? ai.desiredVelocity : Vector2.zero;
             Vector2 dir = vel;
 
             if (dir.sqrMagnitude < 0.0001f && setter != null && setter.target != null)
@@ -161,10 +163,17 @@ namespace TimelessEchoes.Hero
         {
             if (dest == null || ai == null) return false;
             if (destinationOverride) return true;
-            if (ai.reachedDestination || ai.reachedEndOfPath) return true;
-
             var threshold = ai.endReachedDistance + 0.1f;
-            return Vector2.Distance(transform.position, dest.position) <= threshold;
+            if (Vector2.Distance(transform.position, dest.position) <= threshold) return true;
+
+            // Some task targets are in water or inside an obstacle. The reachable
+            // path endpoint is their interaction spot, but an old path left by a
+            // conversation must never count as arrival at a different task.
+            if (!ai.hasPath || ai.pathPending || !ai.reachedEndOfPath) return false;
+            var path = seeker != null ? seeker.GetCurrentPath() as ABPath : null;
+            return path != null && !path.error &&
+                ((Vector2)(path.originalEndPoint - dest.position)).sqrMagnitude <= 0.0001f;
+
         }
 
         /// <summary>

@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
   m_Name: MetalChest
   m_EditorClassIdentifier: 
-  taskName: Nori Chest
+  taskName: Iron Chest
   taskID: 47
   taskIcon: {fileID: -987686138164254292, guid: 151f0f2575d0eb14f8357b530959f372, type: 3}
   associatedSkill: {fileID: 11400000, guid: 762e694a868a7534ea079da462fc5c73, type: 2}
   xpForCompletion: 5
   minX: 60
+  enforceMinDistance: 0
   maxX: Infinity
   enforceMaxDistance: 0
   requiredSkillLevel: 7
@@ -32,25 +33,21 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7fb50b98a8abd724bb2b115b095a6432, type: 2}
   - {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
   - {fileID: 11400000, guid: 7955e64270b45ec4eb728778a330f28e, type: 2}
+  terrainWeights: []
   resourceDrops:
   - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
     dropRange: {x: 1, y: 3}
     weight: 1000
-    minX: 0
-    maxX: Infinity
     requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: c179c63de4230254383d26a0f2c0715d, type: 2}
     dropRange: {x: 1, y: 2}
     weight: 500
-    minX: 0
-    maxX: Infinity
     requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: 067acda5cc1c56a4d9927390cb7529c8, type: 2}
     dropRange: {x: 1, y: 2}
     weight: 200
-    minX: 50
-    maxX: Infinity
     requiredSkillLevel: 0
+  bonusDrops: []
   additionalLootChances:
   - 1
   - 0.2

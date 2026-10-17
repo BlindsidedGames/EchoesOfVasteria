@@ -41,10 +41,14 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   npcId: 
+  requiresTown: 0
+  acceptanceQuest: 0
+  acceptanceResources: []
   autoPin: 0
   useN0ForPinnedNumbers: 0
   requiredQuests:
-  - {fileID: 11400000, guid: 073c0db0b83221e44a3160de9c840855, type: 2}
+  - {fileID: 11400000, guid: 3d238fa0cb62f87499cb92b19d998368, type: 2}
+  minimumMaxRunDistanceExclusive: 80
   requirements:
   - type: 6
     resource: {fileID: 0}
@@ -53,6 +57,10 @@ MonoBehaviour:
     killName: 
     killIcon: {fileID: 0}
     meetNpcId: Farmers1
+    buffs: []
+    includeAutoCasts: 1
+    buffCastName:
+    buffCastIcon: {fileID: 0}
   rewards: []
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0

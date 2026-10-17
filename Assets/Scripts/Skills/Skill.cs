@@ -10,6 +10,7 @@ namespace TimelessEchoes.Skills
     public class ResourceUnlockEntry
     {
         public TaskData task;
+        public TimelessEchoes.Upgrades.Resource resource;
         public int requiredLevel;
         public bool useOverrideIcon;
         [ShowIf("useOverrideIcon")]
@@ -30,5 +31,14 @@ namespace TimelessEchoes.Skills
 
         [TitleGroup("Resource Unlocks")]
         public List<ResourceUnlockEntry> resourceUnlocks = new();
+
+        public int GetResourceUnlockLevel(TimelessEchoes.Upgrades.Resource resource)
+        {
+            var level = 0;
+            if (!resource || resourceUnlocks == null) return level;
+            foreach (var unlock in resourceUnlocks)
+                if (unlock != null && unlock.resource == resource) level = Mathf.Max(level, unlock.requiredLevel);
+            return level;
+        }
     }
 }

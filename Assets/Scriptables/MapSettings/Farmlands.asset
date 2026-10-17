@@ -42,6 +42,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: bed652063bc146145b2672622708b00c, type: 2}
     woodcutting:
       weight: 0.3
+      requiredQuest: {fileID: 11400000, guid: 023383fb0fcbe3b41b7dca4f9ec81b72, type: 2}
       tasks:
       - {fileID: 11400000, guid: 936d408e4a462034db61d9e94a22a424, type: 2}
       - {fileID: 11400000, guid: be28fd76aeb073b499a5fe6d63225d6b, type: 2}
@@ -53,6 +54,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 30abf53f32318cf418c3f6120c389b1b, type: 2}
     mining:
       weight: 0
+      requiredQuest: {fileID: 0}
       tasks:
       - {fileID: 11400000, guid: fa24818abe1da184aafa062af624ec6c, type: 2}
       - {fileID: 11400000, guid: 668dad8fbc2902843a7e173e243dee9a, type: 2}
@@ -64,6 +66,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 192a1d7580d317a4e9fafc41a46df8df, type: 2}
     farming:
       weight: 1
+      requiredQuest: {fileID: 0}
       tasks:
       - {fileID: 11400000, guid: 70617213aa5b4282810c56d8c6fef1dc, type: 2}
       - {fileID: 11400000, guid: 057a73ef4be1461a8f37f4a18cc9ccd7, type: 2}
@@ -88,6 +91,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 6e48b7bff1eac4c2ead90e55ba5cb8e0, type: 2}
     fishing:
       weight: 0.2
+      requiredQuest: {fileID: 11400000, guid: 918ef9c4bf0607e479041a3d39b3f3b7, type: 2}
       tasks:
       - {fileID: 11400000, guid: c549fee4e4f15594698a6f046c39af11, type: 2}
       - {fileID: 11400000, guid: 05fdfa111cb7016449fc9bdbd752ec6e, type: 2}
@@ -99,6 +103,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 5d5fce42b69a10243ac8ce6796cd25d7, type: 2}
     looting:
       weight: 0.01
+      requiredQuest: {fileID: 0}
       tasks:
       - {fileID: 11400000, guid: b1555f4354b02664ab812f41368de535, type: 2}
       - {fileID: 11400000, guid: 79af76c4f8e5991408e4c1cdeb5a27df, type: 2}
@@ -109,21 +114,26 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 377ea7d0df8bdb34dbd047f58e376e7c, type: 2}
       - {fileID: 11400000, guid: 70c2ebf6cde62bb4ebd4275e6ff6373a, type: 2}
     npcTasks:
-    - prefab: {fileID: 5909428014693970596, guid: 34f3291671019ea4b99d82cc970ce458, type: 3}
-      id: Barkley1
+    - prefab: {fileID: 2531123100031854895, guid: 3e371285512051e448f324c7aee61518, type: 3}
+      id: Gill1
       localX: 40
       spawnTerrains:
       - {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
       spawnOnlyOnce: 1
+      placeAtWaterEdge: 1
+      fishingWaterOffset: {x: 1.46875, y: -1.19375}
     - prefab: {fileID: 5909428014693970596, guid: 3c15d1934c54c974cbf50e0b22f7d91d, type: 3}
       id: Farmers1
       localX: 80
       spawnTerrains:
       - {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
       spawnOnlyOnce: 1
+      placeAtWaterEdge: 0
+      fishingWaterOffset: {x: 1.125, y: -1.35}
     minTaskDistance: 2
   segmentedMapSettings:
     segmentSize: {x: 64, y: 18}
   allowClouds: 1
   heroStartY: 12
   allowMaxDistanceReapGain: 0
+  entryIntroduction: {fileID: 11400000, guid: 098f03185e3a0594296d7fec33148c0d, type: 2}

@@ -28,7 +28,7 @@ namespace TimelessEchoes.Tasks
         private GameObject meetingInstance;
 
         public override Transform Target => chatPoint != null ? chatPoint : transform;
-        public override bool BlocksMovement => false;
+        public override bool BlocksMovement => true;
 
         private void Awake()
         {
@@ -44,11 +44,10 @@ namespace TimelessEchoes.Tasks
 
         public override void OnArrival(HeroBase hero)
         {
-            SpawnMeetingUI();
-            talked = true;
+            if (meetingInstance || talked) return;
             if (!string.IsNullOrEmpty(npcId))
                 StaticReferences.ActiveNpcMeetings.Add(npcId);
-            NotifyCompleted();
+            SpawnMeetingUI();
         }
 
         private void SpawnMeetingUI()
@@ -74,8 +73,24 @@ namespace TimelessEchoes.Tasks
                 StaticReferences.CompletedNpcTasks.Add(npcId);
                 var qm = Object.FindAnyObjectByType<QuestManager>();
                 qm?.OnNpcMet(npcId);
+                TimelessEchoes.NPC.NpcObjectStateController.Instance?.UpdateObjectStates();
             }
+            talked = true;
             GrantCompletionXP();
+            NotifyCompleted();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            CancelMeeting();
+        }
+
+        private void OnDestroy() => CancelMeeting();
+        private void CancelMeeting()
+        {
+            if (!string.IsNullOrEmpty(npcId)) StaticReferences.ActiveNpcMeetings.Remove(npcId);
+            if (meetingInstance) { meetingInstance.SetActive(false); Destroy(meetingInstance); meetingInstance = null; }
         }
 
         public override bool IsComplete()

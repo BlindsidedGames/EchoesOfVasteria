@@ -64,6 +64,13 @@ namespace TimelessEchoes.Gear.UI
                 });
         }
 
+        private static bool CrystalLevelAvailable(CoreSO core)
+        {
+            var controller = TimelessEchoes.Skills.SkillController.Instance;
+            var combat = controller ? controller.CombatSkill : null;
+            return combat && controller.GetLevel(combat) >= combat.GetResourceUnlockLevel(core.crystalResource);
+        }
+
         /// <summary>
         /// Creates a crystal conversion pipeline (chunks + slime -> crystals).
         /// </summary>
@@ -73,7 +80,7 @@ namespace TimelessEchoes.Gear.UI
                 ConversionType.Crystal,
                 canPerform: (rm, core) =>
                 {
-                    if (rm == null || core == null) return false;
+                    if (rm == null || core == null || !CrystalLevelAvailable(core)) return false;
                     if (core.chunkResource == null || slimeResource == null) return false;
                     var haveChunks = rm.GetAmount(core.chunkResource) >= 2;
                     var haveSlime = rm.GetAmount(slimeResource) >= 1;
@@ -81,7 +88,7 @@ namespace TimelessEchoes.Gear.UI
                 },
                 getMaxAmount: (rm, core, desired) =>
                 {
-                    if (rm == null || core == null) return 0;
+                    if (rm == null || core == null || !CrystalLevelAvailable(core)) return 0;
                     double maxByChunks = core.chunkResource != null
                         ? Math.Floor(rm.GetAmount(core.chunkResource) / 2.0)
                         : 0;

@@ -41,18 +41,28 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 628c77d48f420ba4eb9103538adfeae6, type: 2}
     woodcutting:
       weight: 1
+      requiredQuest: {fileID: 0}
+      requiredNpcId:
       tasks: []
     mining:
       weight: 1
+      requiredQuest: {fileID: 0}
+      requiredNpcId:
       tasks: []
     farming:
-      weight: 1
+      weight: 0
+      requiredQuest: {fileID: 0}
+      requiredNpcId:
       tasks: []
     fishing:
       weight: 1
+      requiredQuest: {fileID: 0}
+      requiredNpcId:
       tasks: []
     looting:
       weight: 1
+      requiredQuest: {fileID: 0}
+      requiredNpcId:
       tasks: []
     npcTasks: []
     minTaskDistance: 1.5
@@ -61,3 +71,4 @@ MonoBehaviour:
   allowClouds: 1
   heroStartY: 14
   allowMaxDistanceReapGain: 1
+  entryIntroduction: {fileID: 0}

@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
   m_Name: Dlog Ore
   m_EditorClassIdentifier: 
-  taskName: Dlog Ore
+  taskName: Gold Ore
   taskID: 14
   taskIcon: {fileID: -3476202021705219157, guid: 513dea0f987e3824db48aa939832f2f7, type: 3}
   associatedSkill: {fileID: 11400000, guid: 26be2150ef7e8b143b109ad88581e2ed, type: 2}
   xpForCompletion: 7
   minX: 150
+  enforceMinDistance: 0
   maxX: 1500
   enforceMaxDistance: 0
   requiredSkillLevel: 14
@@ -30,19 +31,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7955e64270b45ec4eb728778a330f28e, type: 2}
   - {fileID: 11400000, guid: 7fb50b98a8abd724bb2b115b095a6432, type: 2}
   - {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
+  terrainWeights: []
   resourceDrops:
   - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
     dropRange: {x: 4, y: 12}
     weight: 1
-    minX: 0
-    maxX: Infinity
     requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: 72499b5ec8c98a143937cc737473baa8, type: 2}
     dropRange: {x: 2, y: 5}
     weight: 0.7
-    minX: 150
-    maxX: Infinity
     requiredSkillLevel: 0
+  bonusDrops: []
   additionalLootChances:
   - 0.5
   resetProgressOnInterrupt: 0

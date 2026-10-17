@@ -71,6 +71,12 @@ namespace TimelessEchoes.UI.Toolkit
             if (!IsConfigured) return false;
 
             controller = SkillController.Instance; if (!controller) return false;
+            var tutorial = Blindsided.Oracle.oracle?.saveData?.General;
+            if (tutorial != null && tutorial.HubTutorialStage == 0)
+            {
+                var first = System.Array.FindIndex(definition.skills, s => s && s.name == tutorial.HubTutorialSkill);
+                if (first >= 0) selected = first;
+            }
 
             if (!settings) { settings = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); settings.sortingOrder = 100; }
 
@@ -305,8 +311,17 @@ namespace TimelessEchoes.UI.Toolkit
 
             var milestones = skill.milestones.Where(m => m != null).Select(m => (level: m.UnlockLevel, milestone: m, unlock: (ResourceUnlockEntry)null));
 
-            var unlocks = (skill.resourceUnlocks ?? new List<ResourceUnlockEntry>()).Where(u => u != null && u.task != null).Select(u => (level: u.requiredLevel, milestone: (MilestoneDefinition)null, unlock: u));
+            var unlocks = (skill.resourceUnlocks ?? new List<ResourceUnlockEntry>()).Where(u => u != null && (u.task != null || u.resource != null)).Select(u => (level: u.requiredLevel, milestone: (MilestoneDefinition)null, unlock: u));
 
+            if (Blindsided.Oracle.oracle?.saveData?.General.HubTutorialStage < 3)
+            {
+                var currentLevel = controller.GetLevel(skill);
+                var next = milestones.Concat(unlocks).Where(i => i.level > currentLevel).OrderBy(i => i.level).FirstOrDefault();
+                var nextName = next.milestone != null ? next.milestone.DisplayName : next.unlock != null ? (next.unlock.resource ? ToolkitLocalization.Name(next.unlock.resource) : ToolkitLocalization.Name(next.unlock.task)) : "";
+                var hint = Text(milestoneList, ToolkitLocalization.Text("skills.first-lesson", "Tasks earn skill XP. Your current bonuses are shown on the left.") +
+                    (next.level > 0 ? "\n" + ToolkitLocalization.Text("skills.next-unlock", "Next: {0} at level {1}.", nextName, next.level) : ""), 8);
+                hint.name = "skills-tutorial-hint"; hint.style.whiteSpace = WhiteSpace.Normal;
+            }
             foreach (var item in milestones.Concat(unlocks).OrderBy(i => i.level))
 
             {
@@ -370,16 +385,16 @@ namespace TimelessEchoes.UI.Toolkit
 
                 {
 
-                    var unlock = item.unlock; var unlocked = currentLevel >= unlock.requiredLevel; row.name = "unlock-" + unlock.task.name; row.EnableInClassList("locked",!unlocked); row.EnableInClassList("unlocked",unlocked);
+                    var unlock = item.unlock; var unlocked = currentLevel >= unlock.requiredLevel; row.name = "unlock-" + (unlock.resource ? unlock.resource.name : unlock.task.name); row.EnableInClassList("locked",!unlocked); row.EnableInClassList("unlocked",unlocked);
 
                     if (unlocked)
 
                     {
 
-                        AddEntryIcon(row, unlock.useOverrideIcon ? unlock.overrideIcon : unlock.task.taskIcon, fitFrame: unlock.useOverrideIcon);
+                        AddEntryIcon(row, unlock.useOverrideIcon ? unlock.overrideIcon : unlock.resource ? unlock.resource.icon : unlock.task.taskIcon, fitFrame: unlock.useOverrideIcon);
                     }
 
-                    row.Add(body); Text(body, unlocked ? ToolkitLocalization.Text("skills.task-unlocked", "{0} | <size=80%>Unlocked at level {1}</size>", ToolkitLocalization.Text("task." + unlock.task.name, unlock.task.taskName), unlock.requiredLevel) : ToolkitLocalization.Text("skills.task-locked", "??? | <size=80%>Unlocks at level {0}</size>", unlock.requiredLevel), 6);
+                    row.Add(body); Text(body, unlocked ? ToolkitLocalization.Text("skills.task-unlocked", "{0} | <size=80%>Unlocked at level {1}</size>", (unlock.resource ? ToolkitLocalization.Name(unlock.resource) : ToolkitLocalization.Name(unlock.task)), unlock.requiredLevel) : ToolkitLocalization.Text("skills.task-locked", "??? | <size=80%>Unlocks at level {0}</size>", unlock.requiredLevel), 6);
 
                     Text(body, unlocked && !string.IsNullOrEmpty(unlock.description) ? unlock.description : "", 5);
 

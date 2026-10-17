@@ -122,6 +122,10 @@ namespace TimelessEchoes.Quests
                         if (target > 0)
                             pct = (float)current / (float)target;
                     }
+                    else if (req.type == QuestData.RequirementType.ForgeLesson)
+                    {
+                        pct = (Blindsided.Oracle.oracle?.saveData?.General.ForgeFirstLessonStage ?? 0) >= 5 ? 1f : 0f;
+                    }
                     else if (req.type == QuestData.RequirementType.Instant)
                     {
                         pct = 1f;

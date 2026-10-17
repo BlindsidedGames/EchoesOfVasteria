@@ -19,6 +19,9 @@ namespace TimelessEchoes.Gear
 			public CoreSO core;
         public List<GearAffix> affixes = new();
 
+        public string GetName() => TimelessEchoes.Quests.QuestEquipmentReward.GetDisplayName(this)
+            ?? (rarity ? rarity.GetName() + " " : "") + slot;
+
         public float GetStatValue(StatDefSO stat)
         {
             if (stat == null) return 0f;

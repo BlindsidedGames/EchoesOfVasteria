@@ -14,7 +14,7 @@ namespace Blindsided.UGS
 
             try
             {
-                // Update the public Player Name used by services like Leaderboards
+                // Update the profile display name
                 await AuthenticationService.Instance.UpdatePlayerNameAsync(desiredName);
 
                 // Also persist to Cloud Save for local/profile reads already wired up

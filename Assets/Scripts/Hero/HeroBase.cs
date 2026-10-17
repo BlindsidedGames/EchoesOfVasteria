@@ -35,7 +35,7 @@ namespace TimelessEchoes.Hero
     /// Exposes computed properties like Damage, AttackRate, MoveSpeed, Defense, and MaxHealthValue
     /// which include permanent upgrades and active buff multipliers.
     /// </summary>
-    public abstract class HeroBase : MonoBehaviour
+    public abstract partial class HeroBase : MonoBehaviour
     {
         public static event System.Action OnMainHeroDiceChanged;
 
@@ -360,6 +360,7 @@ namespace TimelessEchoes.Hero
 
         protected virtual void OnDisable()
         {
+            ClearNpcConversations();
             if (CurrentTask is BaseTask baseTask)
                 baseTask.ReleaseClaim(this);
 
@@ -390,6 +391,7 @@ namespace TimelessEchoes.Hero
 
         protected virtual void OnDestroy()
         {
+            ClearNpcConversations();
             if (CurrentTask is BaseTask baseTask)
                 baseTask.ReleaseClaim(this);
 
@@ -433,6 +435,7 @@ namespace TimelessEchoes.Hero
         /// </summary>
         private void HandleCombat(Transform enemy)
         {
+            RestoreConversationCombatDistance();
             var wasPerformingTask = state == State.PerformingTask;
             state = State.Combat;
 
@@ -521,6 +524,7 @@ namespace TimelessEchoes.Hero
         // Tasks orchestration
         public void SetTask(TimelessEchoes.Tasks.ITask task)
         {
+            if (IsInNpcConversation && task != null && task != CurrentTask) return;
             if (CurrentTask is TimelessEchoes.Tasks.BaseTask oldBase)
                 oldBase.ReleaseClaim(this);
 
@@ -573,12 +577,13 @@ namespace TimelessEchoes.Hero
             var stillInCombat = combatController?.UpdateCombat() ?? false;
 
             // Resolve nearest enemy target via combat controller
-            var isPerformingTask = state == State.PerformingTask;
+            var isPerformingTask = state == State.PerformingTask || IsInNpcConversation;
             var nearest = combatController?.ResolveNearestTarget(isPerformingTask, assistEchoWhileOnTask, assistEchoThreatRadius);
 
             // Try to engage enemy
             if (allowAttacks && nearest != null)
             {
+                RestoreConversationCombatDistance();
                 var engaged = combatController?.TryEngageEnemy(nearest, () =>
                 {
                     if (isPerformingTask && CurrentTask != null)
@@ -597,8 +602,10 @@ namespace TimelessEchoes.Hero
             {
                 combatController?.ExitCombat();
                 state = State.Idle;
-                taskCtrl?.SelectEarliestTask(this);
+                if (!IsInNpcConversation) taskCtrl?.SelectEarliestTask(this);
             }
+
+            if (WaitAtNpcConversation()) return;
 
             if (CurrentTask == null || CurrentTask.IsComplete())
             {
@@ -623,7 +630,11 @@ namespace TimelessEchoes.Hero
             if (setter != null && setter.target != dest)
                 setter.target = dest;
 
-            if (movementController != null && movementController.IsAtDestination(dest))
+            // Once stationary work begins, a repath must not turn it back into travel.
+            // Water targets may remain unreachable and temporarily have no valid path.
+            // Combat, conversations and task replacement leave PerformingTask explicitly.
+            var workingInPlace = state == State.PerformingTask && task.BlocksMovement;
+            if (movementController != null && (workingInPlace || movementController.IsAtDestination(dest)))
             {
                 if (state != State.PerformingTask)
                 {

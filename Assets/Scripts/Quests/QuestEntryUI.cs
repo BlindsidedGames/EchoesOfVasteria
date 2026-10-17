@@ -40,6 +40,7 @@ namespace TimelessEchoes.Quests
         private bool pinnedState;
         private bool rewardHasQuestData;
         private string baseNameText = string.Empty;
+        private string completedActionLabel = "Turn In";
         private readonly List<(QuestRequirementUIReferences ui, QuestData.Requirement req)> requirementRows = new();
 
         public void Setup(QuestData data, Action turnIn, bool showRequirements = true, bool completed = false)
@@ -110,7 +111,8 @@ namespace TimelessEchoes.Quests
                         label = "Okay";
                 }
 
-                turnInText.text = label;
+                completedActionLabel = label;
+                turnInText.text = TimelessEchoes.UI.Toolkit.ToolkitLocalization.Text("quests.incomplete", "Incomplete");
             }
 
             if (pinButton != null && data != null)
@@ -159,6 +161,8 @@ namespace TimelessEchoes.Quests
             pct = Mathf.Clamp01(pct);
             if (turnInButton != null)
                 turnInButton.interactable = pct >= 1f;
+            if (turnInText != null)
+                turnInText.text = pct >= 1f ? completedActionLabel : TimelessEchoes.UI.Toolkit.ToolkitLocalization.Text("quests.incomplete", "Incomplete");
         }
 
         // Legacy signature retained; rows update handled in UpdateGoalText

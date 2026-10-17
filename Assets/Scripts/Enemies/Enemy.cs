@@ -498,7 +498,7 @@ namespace TimelessEchoes.Enemies
             var dropTotals = new Dictionary<Resource, double>();
             var dropOrder = new List<Resource>();
 
-            var results = DropResolver.RollDrops(stats.resourceDrops, stats.additionalLootChances);
+            var results = DropResolver.RollDrops(stats.resourceDrops, stats.additionalLootChances, xpSkill);
             foreach (var res in results)
             {
                 double final = res.count * mult * gainMult * milestoneMult;

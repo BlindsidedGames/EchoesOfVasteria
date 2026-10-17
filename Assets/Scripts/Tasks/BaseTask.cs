@@ -140,7 +140,7 @@ namespace TimelessEchoes.Tasks
             IsExhausted = false;
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             if (autoRemovalScheduled)
             {

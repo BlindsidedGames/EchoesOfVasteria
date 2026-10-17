@@ -417,13 +417,11 @@ MonoBehaviour:
   meetingPrefab: {fileID: 4473393103591709735, guid: 8ed7138ae18d6d148b1f94dd314d3c1b, type: 3}
   npcSprite: {fileID: -6072620987560022285, guid: 8f7f3cf5d6f378d4f956d40f652a4b2e, type: 3}
   lines:
-  - 'Oh there you are bro! '
-  - 'Think I am better fitted to crafting gear than fighting these guys. '
-  - Heres a sword I made! I'm heading back to town.
+  - I'm better at making weapons than fighting with them.
+  - Meet me back in town. I'll bring the materials and teach you to forge your first sword.
   lineKeys:
   - npc.Ivan1.line.01
   - npc.Ivan1.line.02
-  - npc.Ivan1.line.03
 --- !u!212 &5774953209895666516
 SpriteRenderer:
   serializedVersion: 3

@@ -65,8 +65,8 @@ namespace TimelessEchoes.Quests
                         }
                         var fallbackName = req.resource ? req.resource.name : string.Empty;
                         var labelText = string.IsNullOrEmpty(iconTag) ? fallbackName : iconTag;
-                        // If using a sprite tag, do not add an extra space after it
-                        var separator = string.IsNullOrEmpty(iconTag) ? ": " : string.Empty;
+                        // Keep the count clear of the icon, including in native text layout.
+                        var separator = string.IsNullOrEmpty(iconTag) ? ": " : "\u00a0\u00a0";
                         label = $"<size=90%>{labelText}{separator}";
                         // Resource rows include their own separator; do not auto-append an extra space
                         appendSpace = false;
@@ -154,6 +154,12 @@ namespace TimelessEchoes.Quests
                 case QuestData.RequirementType.CauldronMix:
                     current = rec != null ? rec.CauldronMixProgress : 0;
                     label = "<size=80%>Mix Resources:";
+                    appendSpace = true;
+                    break;
+                case QuestData.RequirementType.ForgeLesson:
+                    current = (Blindsided.Oracle.oracle?.saveData?.General.ForgeFirstLessonStage ?? 0) >= 5 ? 1 : 0;
+                    target = 1;
+                    label = "<size=80%>Forge and equip a sword:";
                     appendSpace = true;
                     break;
                 case QuestData.RequirementType.Instant:

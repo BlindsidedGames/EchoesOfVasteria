@@ -20,6 +20,17 @@ namespace TimelessEchoes.Quests
         public LocalizedString description;
         public LocalizedString rewardDescription;
         public string npcId;
+        [Tooltip("This quest must be handed in after returning to town.")]
+        public bool requiresTown;
+        public bool acceptanceQuest;
+        public List<AcceptanceResource> acceptanceResources = new();
+
+        [Serializable]
+        public struct AcceptanceResource
+        {
+            public Resource resource;
+            public int amount;
+        }
         /// <summary>
         ///     Automatically pin this quest when it becomes active.
         /// </summary>
@@ -27,6 +38,8 @@ namespace TimelessEchoes.Quests
         [Tooltip("Pinned quest numbers use N0 locale formatting instead of CalcUtils abbreviations.")]
         public bool useN0ForPinnedNumbers;
         public List<QuestData> requiredQuests = new();
+        [Tooltip("When positive, this quest stays hidden until the saved maximum run distance is strictly greater than this value.")]
+        public float minimumMaxRunDistanceExclusive;
         public List<Requirement> requirements = new();
         public List<Reward> rewards = new();
         public int unlockBuffSlots;
@@ -75,6 +88,9 @@ namespace TimelessEchoes.Quests
 
             [ShowIf("@type == RewardType.SkillExperience")]
             public float experience;
+
+            [ShowIf("@type == RewardType.Equipment")]
+            public QuestEquipmentReward equipment;
         }
 
         public enum RequirementType
@@ -89,13 +105,15 @@ namespace TimelessEchoes.Quests
             CriticalStrike,
             ResourcesGathered,
             TasksCompleted,
-            CauldronMix
+            CauldronMix,
+            ForgeLesson
         }
 
         public enum RewardType
         {
             Resource,
-            SkillExperience
+            SkillExperience,
+            Equipment
         }
     }
 }

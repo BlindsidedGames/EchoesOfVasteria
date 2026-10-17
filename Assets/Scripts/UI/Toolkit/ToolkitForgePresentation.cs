@@ -65,7 +65,11 @@ namespace TimelessEchoes.UI.Toolkit
             coreCost.EnableInClassList("forge-loss", !(bindingSelected?.coreResource) || resources.GetAmount(bindingSelected.coreResource) < 1);
             ingotCost.EnableInClassList("forge-loss", !ingot || resources.GetAmount(ingot) < (core ? core.ingotCost : 0));
             craftArrow.sprite = session.CanCraft() ? definition.arrowValid : definition.arrowInvalid;
-            maxCrafts.text = ToolkitLocalization.Text("forge.crafts-available", "{0:N0} crafts available", session.MaxCrafts); craft.text = session.IsAutoCrafting ? ToolkitLocalization.Text("common.stop", "Stop") : ToolkitLocalization.Text("forge.craft", "Craft"); craft.SetEnabled(session.IsAutoCrafting || session.CanCraft()); autoCraft.SetEnabled(!session.IsAutoCrafting && session.CanCraft()); replace.SetEnabled(session.CanReplace);
+            maxCrafts.text = ToolkitLocalization.Text("forge.crafts-available", "{0:N0} crafts available", session.MaxCrafts); craft.text = session.IsAutoCrafting ? ToolkitLocalization.Text("common.stop", "Stop") : ToolkitLocalization.Text("forge.craft", "Craft"); craft.SetEnabled(session.IsAutoCrafting || session.CanCraft()); autoCraft.SetEnabled(session.AutomationUnlocked && !session.IsAutoCrafting && session.CanCraft()); replace.SetEnabled(session.CanReplace);
+            automationControls.SetEnabled(session.AutomationUnlocked);
+            automationControls.style.visibility = session.AutomationUnlocked ? Visibility.Visible : Visibility.Hidden;
+            automationLock.style.display = session.AutomationUnlocked ? DisplayStyle.None : DisplayStyle.Flex;
+            automationLock.text = ToolkitLocalization.Text("forge.automation-locked", "Automation unlocks at Ivan level {0}.", ForgeSession.AutomationUnlockLevel);
             var pending = session.HasResult ? session.Pending : null;
             RefreshComparison(pending, equipment.GetEquipped(session.Slot));
             resultIcon.sprite = definition.GearSprite(pending, session.Slot); resultTier.text = pending?.rarity ? ToolkitLocalization.Text("inventory.tier", "Tier {0}", Mathf.Clamp(pending.rarity.tierIndex + 1, 1, 8)) : "";
@@ -77,6 +81,7 @@ namespace TimelessEchoes.UI.Toolkit
             foreach (var entry in conversions.Values) entry.root.style.width = Length.Percent(100f / Math.Max(1, visibleConversions));
             foreach (var entry in gearSlots) NativeSize(entry.Value.icon);
             foreach (var entry in coreSlots) NativeSize(entry.icon);
+            RefreshFirstLesson();
             if (!showInventory)
             {
                 RefreshEquipmentTotals();
@@ -107,6 +112,10 @@ namespace TimelessEchoes.UI.Toolkit
             row.firstCount.EnableInClassList("forge-loss", first && resources.GetAmount(first) < costA * shownAmount);
             row.secondCount.EnableInClassList("forge-loss", second && resources.GetAmount(second) < costB * shownAmount);
             var max = session.ConversionMaximum(type); var desired = session.Desired(type); var batches = max <= 0 ? 0 : desired > max ? 1 : Math.Floor(max / desired); row.maximum.text = ToolkitLocalization.Text("forge.batches", "Batches: {0}", CalcUtils.FormatNumber(batches, true));
+            var skills = TimelessEchoes.Skills.SkillController.Instance;
+            if (type == ConversionType.Crystal && core && skills && skills.CombatSkill &&
+                skills.GetLevel(skills.CombatSkill) < skills.CombatSkill.GetResourceUnlockLevel(core.crystalResource))
+                row.maximum.text = ToolkitLocalization.Text("forge.combat-level-required", "Requires Combat level {0}", skills.CombatSkill.GetResourceUnlockLevel(core.crystalResource));
             row.button.SetEnabled(session.CanConvert(type)); row.arrow.sprite = session.CanConvert(type) ? definition.arrowValid : definition.arrowInvalid;
         }
     }

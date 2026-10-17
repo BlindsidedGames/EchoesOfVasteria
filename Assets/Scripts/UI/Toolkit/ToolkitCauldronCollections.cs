@@ -95,7 +95,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var card = new Card { id = id }; cards[id] = card; section.ids.Add(id);
             var button=ToolkitGameplay.B(section.background,"",()=>{if(tooltipId==id)HideTooltip();else ShowTooltip(id);},"card");button.name="card-"+id;card.border=button;card.background=button;ToolkitGameplay.Icon(button,sprite,18);
-            string title=resourceById.TryGetValue(id,out var resource)?resource.name:buffById.TryGetValue(id,out var buff)?buff.GetDisplayName():infinityById.TryGetValue(id,out var infinity)?infinity.DisplayName:id.Substring(4);L(button,title,"small strong card-name");card.count=L(button,"","small muted");var progress=E(button,"row card-progress-row");progress.Add(new ToolkitRarityStar());card.fill=ToolkitGameplay.Bar(progress,"collection-progress");
+            string title=resourceById.TryGetValue(id,out var resource)?ToolkitLocalization.Name(resource):buffById.TryGetValue(id,out var buff)?buff.GetDisplayName():infinityById.TryGetValue(id,out var infinity)?infinity.DisplayName:id.Substring(4);L(button,title,"small strong card-name");card.count=L(button,"","small muted");var progress=E(button,"row card-progress-row");progress.Add(new ToolkitRarityStar());card.fill=ToolkitGameplay.Bar(progress,"collection-progress");
             if(infinityById.ContainsKey(id)){progress.style.display=DisplayStyle.None;card.effect=L(button,"","small strong");}
             button.RegisterCallback<PointerEnterEvent>(e=>{if(e.pointerType=="mouse")ShowTooltip(id);});button.RegisterCallback<PointerLeaveEvent>(e=>{if(e.pointerType=="mouse"&&tooltipId==id)HideTooltip();});button.RegisterCallback<FocusInEvent>(_=>ShowTooltip(id));button.RegisterCallback<FocusOutEvent>(_=>HideTooltip());
         }

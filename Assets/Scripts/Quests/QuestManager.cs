@@ -111,6 +111,7 @@ namespace TimelessEchoes.Quests
                 statTracker.OnDistanceAdded -= OnDistanceAdded;
                 statTracker.OnRunEnded -= OnRunEnded;
                 statTracker.OnTaskCompletedEvent -= OnTaskCompleted;
+                statTracker.OnMaxRunDistanceChanged -= OnMaxRunDistanceChanged;
                 statEventsSubscribed = false;
             }
             var bm = BuffManager.Instance;
@@ -341,6 +342,9 @@ namespace TimelessEchoes.Quests
         {
             if (quest == null)
                 return false;
+            if (quest.minimumMaxRunDistanceExclusive > 0 &&
+                oracle.saveData.General.MaxRunDistance <= quest.minimumMaxRunDistanceExclusive)
+                return false;
             foreach (var req in quest.requiredQuests)
             {
                 if (req == null) continue;
@@ -483,6 +487,10 @@ namespace TimelessEchoes.Quests
                     if (req.amount > 0)
                         pct = (float)(mixed / req.amount);
                 }
+                else if (req.type == QuestData.RequirementType.ForgeLesson)
+                {
+                    pct = (Blindsided.Oracle.oracle?.saveData?.General.ForgeFirstLessonStage ?? 0) >= 5 ? 1f : 0f;
+                }
                 else if (req.type == QuestData.RequirementType.Instant)
                 {
                     pct = 1f;
@@ -524,6 +532,18 @@ namespace TimelessEchoes.Quests
         private bool CompleteQuest(QuestInstance inst)
         {
             if (inst == null) return false;
+            if (!CanTurnInAtCurrentLocation(inst.data)) return false;
+            // Validate every equipment reward before consuming quest resources or completing it.
+            foreach (var reward in inst.data.rewards)
+                if (reward.type == QuestData.RewardType.Equipment &&
+                    (!reward.equipment || !reward.equipment.IsValid ||
+                     TimelessEchoes.Gear.EquipmentController.Instance == null ||
+                     !TimelessEchoes.Gear.EquipmentController.Instance.Slots.Contains(reward.equipment.slot)))
+                    return false;
+            foreach (var reward in inst.data.rewards)
+                if (reward.type == QuestData.RewardType.Equipment &&
+                    !TimelessEchoes.Gear.EquipmentController.Instance.Equip(reward.equipment.CreateItem()))
+                    return false;
             var fieldQuest = inst.data.questId.StartsWith("Farm.Garden.", StringComparison.Ordinal) || inst.data.questId.StartsWith("Farm.Orchard.", StringComparison.Ordinal);
             if (fieldQuest && (TimelessEchoes.Farming.FarmService.Instance == null || !TimelessEchoes.Farming.FarmService.Instance.BuildQuest(inst.data.questId))) return false;
             var id = inst.data.questId;
@@ -865,9 +885,29 @@ namespace TimelessEchoes.Quests
             RefreshNoticeboard();
         }
 
+        public bool CanTurnInAtCurrentLocation(QuestData quest) => quest != null &&
+            (GameManager.Instance == null || GameManager.Instance.IsInTown);
+
+        public bool NeedsAcceptance(QuestData quest) => quest != null && quest.acceptanceQuest &&
+            active.ContainsKey(quest.questId) &&
+            (!Blindsided.Oracle.oracle.saveData.Quests.TryGetValue(quest.questId, out var record) || (!record.Accepted && !record.Completed));
+
         public bool TryTurnInQuest(string questId)
         {
             if (string.IsNullOrEmpty(questId) || !active.TryGetValue(questId, out var inst)) return false;
+            if (NeedsAcceptance(inst.data))
+            {
+                if (!CanTurnInAtCurrentLocation(inst.data) || ResourceManager.Instance == null) return false;
+                if (!Blindsided.Oracle.oracle.saveData.Quests.TryGetValue(questId, out var record))
+                    Blindsided.Oracle.oracle.saveData.Quests[questId] = record = new GameData.QuestRecord();
+                record.Accepted = true;
+                foreach (var grant in inst.data.acceptanceResources)
+                    if (grant.resource != null && grant.amount > 0)
+                        ResourceManager.Instance.Add(grant.resource, grant.amount, trackStats: false);
+                SaveData();
+                RefreshNoticeboard();
+                return true;
+            }
             UpdateProgress(inst);
             if (!inst.ReadyForTurnIn) return false;
             return CompleteQuest(inst);
@@ -1026,7 +1066,15 @@ namespace TimelessEchoes.Quests
             statTracker.OnDistanceAdded += OnDistanceAdded;
             statTracker.OnRunEnded += OnRunEnded;
             statTracker.OnTaskCompletedEvent += OnTaskCompleted;
+            statTracker.OnMaxRunDistanceChanged += OnMaxRunDistanceChanged;
             statEventsSubscribed = true;
+        }
+
+        private void OnMaxRunDistanceChanged(float _)
+        {
+            StartAvailableQuests();
+            UpdateAllProgress();
+            RefreshNoticeboard();
         }
 
         private IEnumerator SubscribeStatTrackerWhenReady()

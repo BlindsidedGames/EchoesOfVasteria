@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6565665571999717129}
   - component: {fileID: 1794543842695346613}
   - component: {fileID: 4711201205588749811}
+  - component: {fileID: 4823564329854449594}
   m_Layer: 0
   m_Name: Intro
   m_TagString: Untagged
@@ -69,7 +70,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.UI.Toolkit.ToolkitIntroScreen
   definition: {fileID: 11400000, guid: c9f53cb29d32e4a46907f180cbf23979, type: 2}
+  showOnFirstLaunch: 0
   theme: {fileID: 11400000, guid: 94df34547d8b76041b7ca2aa8f9e2d48, type: 2}
   template: {fileID: 9197481963319205126, guid: 52f94f582ffac734b80c8ac46ffa592a, type: 3}
   runtimeTheme: {fileID: -4733365628477956816, guid: d3334a705ed77a842b72a4eaba3f92bc, type: 3}
   textSettings: {fileID: 11400000, guid: 4c2f18287547e47448e254e8ea53d231, type: 2}
+--- !u!114 &4823564329854449594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7164057067734804732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a13961ba6a6e2f2448a8e0158e4ae0f1, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.UI.Toolkit.ToolkitOrinIntroduction
+  meetingPrefab: {fileID: 4473393103591709735, guid: 8ed7138ae18d6d148b1f94dd314d3c1b, type: 3}
+  portrait: {fileID: 0}
+  firstQuest: {fileID: 11400000, guid: 298f411e97766fb47bf1d61e9e1a5bf8, type: 2}
+  lines:
+  - Welcome to Vasteria! I'm Orin. Let's get you settled.
+  - The Farmlands are full of ripe crops, ready for you to gather.
+  - Your quests will help you find your feet and meet the people around here. Open the quest window to see your objectives and claim your rewards.
+  lineKeys:
+  - intro.Orin.quest-window.line.01
+  - intro.Orin.quest-window.line.02
+  - intro.Orin.quest-window.line.03
+  evaIntroduction: {fileID: 11400000, guid: c985ab78ebd6132458d470465901ee43, type: 2}
+  hubIntroduction: {fileID: 11400000, guid: 71175c1334cf18144b304d9fbe1c9568, type: 2}

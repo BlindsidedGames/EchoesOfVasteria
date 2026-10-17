@@ -11,10 +11,13 @@ namespace TimelessEchoes.UI.Toolkit
         public ToolkitCauldronDefinition.SpriteAnimation portraitAnimation = new();
         public GearArt[] gear = Array.Empty<GearArt>();
         public Sprite[] coreIcons = Array.Empty<Sprite>();
+        public Sprite tutorialHand;
         public Sprite panel, inset, slot, selector, button, arrowValid, arrowInvalid, xpTrack, xpFill, portrait, migratedHelmet;
         public Sprite toggleOn, toggleOff;
         public Sprite GearSprite(GearItem item, string slotName)
         {
+            var rewardIcon = TimelessEchoes.Quests.QuestEquipmentReward.GetIcon(item);
+            if (rewardIcon) return rewardIcon;
             if (item != null && item.rarity == null && slotName == "Helmet" && migratedHelmet) return migratedHelmet;
             var entry = Array.Find(gear, x => x.slot == slotName);
             if (entry == null) return null;

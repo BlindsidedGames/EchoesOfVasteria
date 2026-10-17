@@ -7,6 +7,7 @@ namespace TimelessEchoes.UI.Toolkit
     public sealed class ToolkitResourceInventoryDefinition : ScriptableObject
     {
         public Resource[] resources;
+        public ToolkitForgeDefinition equipmentArt;
         public Sprite title, inset, selection;
         public Sprite[] tierBorders, tierBackgrounds;
         public bool showTierBorder, showTierBackground;

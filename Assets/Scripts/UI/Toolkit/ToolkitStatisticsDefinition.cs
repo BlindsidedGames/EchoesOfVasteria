@@ -6,11 +6,11 @@ namespace TimelessEchoes.UI.Toolkit
     [CreateAssetMenu(menuName = "Timeless Echoes/UI Toolkit/Statistics")]
     public sealed class ToolkitStatisticsDefinition : ScriptableObject
     {
-        public Sprite selectedButton, playerRow;
+        public Sprite tutorialHand;
         public Sprite toggleOn, toggleOff, progressTrack, progressFill, sliderTrack, sliderFill, sliderHandle;
         public Sprite button, panel, inset, row, iconFrame, portraitFrame, portrait;
         public Sprite graphFrame, graphFill, averageLine, tooltipLeft, tooltipRight;
-        public Color selectedTint, selectedText, averageColor;
+        public Color averageColor;
         public GraphColors distanceColors, resourceColors, killColors;
         public Sprite[] itemTiers = Array.Empty<Sprite>();
         public MapEntry[] maps;
@@ -22,6 +22,9 @@ namespace TimelessEchoes.UI.Toolkit
             public string label;
             public float labelSize;
             public bool killScaling;
+            public ToolkitVisibilityRule[] access;
+            public string lockedHint;
+            public bool IsAccessible => config && ToolkitVisibilityRule.All(access);
         }
     }
 }

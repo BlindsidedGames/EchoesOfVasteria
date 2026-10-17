@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d3f4bc8fb5d6ac48affd6f88060abc7, type: 3}
+  m_Name: Gill's Old Boots
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.Quests.QuestEquipmentReward
+  slot: Boots
+  rarity: {fileID: 11400000, guid: f7417ae215ccd5e468d50a87118a46f7, type: 2}
+  core: {fileID: 11400000, guid: 3760bd2ba2861e748b4159c83554f17d, type: 2}
+  icon: {fileID: -911053159, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+  displayName: Old Boots
+  affixes:
+  - stat: {fileID: 11400000, guid: 549ccbb059dfa464d92b27e541046533, type: 2}
+    value: 10
+  - stat: {fileID: 11400000, guid: 87eb568606f1e074c9f83edacb429af2, type: 2}
+    value: 25
+  - stat: {fileID: 11400000, guid: dc9f095d776ba8640825612f246ed597, type: 2}
+    value: 5
+  - stat: {fileID: 11400000, guid: 99cc36cd6850f124eb699fcb7fd0eaaf, type: 2}
+    value: 1

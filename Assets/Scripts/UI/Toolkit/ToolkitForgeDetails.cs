@@ -85,7 +85,7 @@ namespace TimelessEchoes.UI.Toolkit
                 if(!historySections.TryGetValue(key,out var section))
                 {
                     var title=key=="Totals"?ToolkitLocalization.Text("forge.crafting-history", "Crafting history"):key=="Autocraft"?ToolkitLocalization.Text("forge.automation", "Automation"):key=="Quality"?ToolkitLocalization.Text("forge.best-rolls", "Best rolls"):HistoryTitle(key);
-                    section=new ToolkitDisclosure(title,theme,key=="Totals");section.AddToClassList("forge-history-section");historySections.Add(key,section);historyHost.Add(section);
+                    section=new ToolkitDisclosure(title,theme,false);section.AddToClassList("forge-history-section");historySections.Add(key,section);historyHost.Add(section);
                 }
                 var headerTitle=key=="Totals"?ToolkitLocalization.Text("forge.crafting-history", "Crafting history"):key=="Autocraft"?ToolkitLocalization.Text("forge.automation", "Automation"):key=="Quality"?ToolkitLocalization.Text("forge.best-rolls", "Best rolls"):HistoryTitle(key);
                 section.Q<Label>().text = "<b><smallcaps>" + headerTitle + "</smallcaps></b>";
