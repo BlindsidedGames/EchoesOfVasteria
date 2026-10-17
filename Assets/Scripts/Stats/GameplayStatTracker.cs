@@ -28,6 +28,7 @@ namespace TimelessEchoes.Stats
 
         private readonly List<GameData.RunRecord> recentRuns = new();
         private int nextRunNumber = 1;
+        public int CompletedAdventures => Mathf.Max(0, nextRunNumber - 1);
         private float runStartTime;
         private int currentRunTasks;
         private double currentRunResources;
@@ -318,7 +319,6 @@ namespace TimelessEchoes.Stats
                 map.TasksCompleted++;
 #if !DISABLESTEAMWORKS
             SteamStatsUpdater.Instance?.UpdateStats();
-            SteamLeaderboardsReporter.Instance?.RequestUploadNow();
 #endif
         }
 
@@ -698,7 +698,6 @@ namespace TimelessEchoes.Stats
             CurrentRunSteps = 0f;
 #if !DISABLESTEAMWORKS
             SteamStatsUpdater.Instance?.UpdateStats();
-            SteamLeaderboardsReporter.Instance?.RequestUploadNow();
 #endif
         }
 

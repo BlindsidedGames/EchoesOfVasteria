@@ -500,6 +500,8 @@ namespace TimelessEchoes.Tasks
                 return;
             }
 
+            if (targetHero.IsInNpcConversation) return;
+
             RemoveCompletedTasks();
             bool restrictToVisible = targetHero != null && targetHero.IsEcho;
             for (var i = 0; i < tasks.Count; i++)
@@ -558,6 +560,8 @@ namespace TimelessEchoes.Tasks
                 Log("SelectEarliestTask called but hero is null", TELogCategory.Task, this);
                 return;
             }
+
+            if (targetHero.IsInNpcConversation) return;
 
             RemoveCompletedTasks();
             bool restrictToVisible = targetHero != null && targetHero.IsEcho;

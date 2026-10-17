@@ -61,6 +61,7 @@ namespace TimelessEchoes.Gear.UI
             if (spritesByRarity != null && idx >= 0 && idx < spritesByRarity.Count)
                 sprite = spritesByRarity[idx];
 
+            sprite = TimelessEchoes.Quests.QuestEquipmentReward.GetIcon(item) ?? sprite;
             gearImage.sprite = sprite;
             gearImage.enabled = sprite != null;
 
@@ -79,6 +80,8 @@ namespace TimelessEchoes.Gear.UI
         /// </summary>
         public Sprite GetSpriteForItem(GearItem item)
         {
+            var rewardIcon = TimelessEchoes.Quests.QuestEquipmentReward.GetIcon(item);
+            if (rewardIcon) return rewardIcon;
             if (item == null || item.rarity == null)
                 return null;
             if (spritesByRarity == null || spritesByRarity.Count == 0)

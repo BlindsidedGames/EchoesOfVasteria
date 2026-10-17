@@ -27,6 +27,9 @@ namespace TimelessEchoes.UI.Toolkit
         }
         public Entry[] entries = Array.Empty<Entry>();
         public Sprite forgeAttention, cauldronAttention, questAttention;
+        public Sprite questTutorialHand;
+        public ToolkitNpcIntroduction farmingIntroduction;
+        public ToolkitNpcIntroduction hubIntroduction;
         public Sprite autoPinFrame, toggleOn, toggleOff, discord;
         public Sprite progressTrack, progressFill, progressHero, progressReaper;
         public Color progressTextColor;

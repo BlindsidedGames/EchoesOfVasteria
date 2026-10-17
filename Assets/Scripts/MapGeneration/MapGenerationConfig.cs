@@ -27,6 +27,8 @@ namespace TimelessEchoes.MapGeneration
         // Whether reaping at max distance grants a +1% increase to the max run distance.
         public bool allowMaxDistanceReapGain = true;
 
+        public UI.Toolkit.ToolkitNpcIntroduction entryIntroduction;
+
         [Serializable]
         public class TilemapChunkSettings
         {
@@ -87,6 +89,9 @@ namespace TimelessEchoes.MapGeneration
                 // Terrains where this NPC is allowed to spawn.
                 public List<TerrainSettings> spawnTerrains = new();
                 public bool spawnOnlyOnce = true;
+                [Tooltip("Stand on the lower land edge, with the fishing bobber over water.")]
+                public bool placeAtWaterEdge;
+                public Vector2 fishingWaterOffset = new(1.125f, -1.35f);
             }
         }
 

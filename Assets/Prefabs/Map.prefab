@@ -641,6 +641,7 @@ MonoBehaviour:
     text: 
     fontSize: 0
     sliced: 0
+    sliceReferencePixelsPerUnit: 0
     value: 0
     enabled: 1
   - anchor: {fileID: 7044871825753078803}
@@ -650,24 +651,17 @@ MonoBehaviour:
     text: Carl's Imaginary Line
     fontSize: 7.35
     sliced: 0
+    sliceReferencePixelsPerUnit: 0
     value: 0
     enabled: 1
   - anchor: {fileID: 154405444920066118}
     rowGroup: {fileID: 0}
-    sprite: {fileID: 9035060615272221303, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
-    color: {r: 1, g: 1, b: 1, a: 1}
+    sprite: {fileID: 0}
+    color: {r: 0.9176471, g: 0.8313726, b: 0.6666667, a: 0.8}
     text: 
     fontSize: 0
     sliced: 1
-    value: 0
-    enabled: 1
-  - anchor: {fileID: 521982863613148004}
-    rowGroup: {fileID: 0}
-    sprite: {fileID: 211899360027936053, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
-    color: {r: 1, g: 1, b: 1, a: 0.8}
-    text: 
-    fontSize: 0
-    sliced: 1
+    sliceReferencePixelsPerUnit: 0
     value: 0
     enabled: 1
   health: {fileID: 0}
@@ -1011,7 +1005,7 @@ GameObject:
   - component: {fileID: 1554682368294754734}
   - component: {fileID: 6498750539305779935}
   m_Layer: 6
-  m_Name: Healthbar
+  m_Name: Reap Limit Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1035,7 +1029,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 4}
+  m_SizeDelta: {x: 200, y: 1.25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1554682368294754734
 CanvasRenderer:

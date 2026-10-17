@@ -24,6 +24,8 @@ namespace TimelessEchoes.UI.Toolkit
         private VisualElement root, main, sidebar, xpFill;
         private Label ivan, xp, maxCrafts, resultTier;
         private Button craft, replace, autoCraft;
+        private VisualElement automationControls;
+        private Label automationLock;
         private Image resultIcon, costCore, costIngot, craftArrow, stopIcon, lockIcon;
         private Label coreCost, ingotCost;
         private ToolkitForgeOdds odds;
@@ -62,7 +64,7 @@ namespace TimelessEchoes.UI.Toolkit
             root = new VisualElement { name = "forge" }; root.AddToClassList("eov-forge"); theme.Apply(root);ToolkitGameplay.Apply(root,theme);root.AddToClassList("menu-surface"); document.rootVisualElement.Add(root);
             var mainScroll = new ScrollView(ScrollViewMode.Vertical) { horizontalScrollerVisibility=ScrollerVisibility.Hidden, verticalScrollerVisibility=ScrollerVisibility.Auto }; ToolkitGameplay.StyleScroll(mainScroll); main = mainScroll; main.AddToClassList("eov-forge-main"); root.Add(main);
             sidebar = new VisualElement(); sidebar.AddToClassList("eov-forge-sidebar"); root.Add(sidebar);
-            BuildHeader(); BuildWork(); BuildConversions(); BuildInfo(); BuildOddsPopup();
+            BuildHeader(); BuildWork(); BuildConversions(); BuildInfo(); BuildOddsPopup(); BuildFirstLesson();
             ToolkitLocalization.Changed += LocalizationChanged;
             resources.OnInventoryChanged += MarkDirty; equipment.OnEquipmentChanged += MarkDirty; crafting.OnIvanXpChanged += XpChanged; session.Changed += MarkDirty;
             showInventory = false; statisticsDirty = true; nextRefresh = nextStatsRefresh = 0; Refresh(); Layout();
@@ -105,8 +107,15 @@ namespace TimelessEchoes.UI.Toolkit
             }
             var actions = new VisualElement(); actions.AddToClassList("eov-forge-actions"); columns.Add(actions);
             craft = LocalizedButton(actions, "forge-craft", "forge.craft", "Craft", session.Craft);
-            autoCraft = LocalizedButton(actions, "forge-auto", "forge.craft-until-upgrade", "Craft Until Upgrade", session.StartAutoCrafting);
-            var toggles = Row(actions); toggles.AddToClassList("forge-toggles"); stopIcon = Toggle(toggles, "forge-stop-vastium", "forge.stop-vastium", "Stop for Vastium", () => { StopAutocraftOnVastium = !StopAutocraftOnVastium; MarkDirty(); }); lockIcon = Toggle(toggles, "forge-lock-stats", "forge.stat-matching", "Stat Matching", () => { LockAutocraftStatSet = !LockAutocraftStatSet; MarkDirty(); });
+            var automationArea = new VisualElement { name = "forge-automation-area" }; actions.Add(automationArea);
+            automationControls = new VisualElement(); automationArea.Add(automationControls);
+            autoCraft = LocalizedButton(automationControls, "forge-auto", "forge.craft-until-upgrade", "Craft Until Upgrade", session.StartAutoCrafting);
+            var toggles = Row(automationControls); toggles.AddToClassList("forge-toggles"); stopIcon = Toggle(toggles, "forge-stop-vastium", "forge.stop-vastium", "Stop for Vastium", () => { StopAutocraftOnVastium = !StopAutocraftOnVastium; MarkDirty(); }); lockIcon = Toggle(toggles, "forge-lock-stats", "forge.stat-matching", "Stat Matching", () => { LockAutocraftStatSet = !LockAutocraftStatSet; MarkDirty(); });
+            automationLock = Label(automationArea, ""); automationLock.name = "forge-automation-locked";
+            automationLock.style.position = Position.Absolute;
+            automationLock.style.left = automationLock.style.right = automationLock.style.top = automationLock.style.bottom = 0;
+            automationLock.style.unityTextAlign = TextAnchor.MiddleCenter;
+            automationLock.style.whiteSpace = WhiteSpace.Normal;
             var recipe = Row(actions); recipe.style.alignItems = Align.Center;
             odds = new ToolkitForgeOdds { name = "forge-odds" }; recipe.Add(odds);
             var costs = new VisualElement(); recipe.Add(costs); var first = Row(costs); first.AddToClassList("forge-ingredient"); costCore = ToolkitControls.Icon(null); first.Add(costCore); coreCost = Label(first, "1"); var second = Row(costs); second.AddToClassList("forge-ingredient"); costIngot = ToolkitControls.Icon(null); second.Add(costIngot); ingotCost = Label(second, "");
@@ -116,7 +125,7 @@ namespace TimelessEchoes.UI.Toolkit
             var results = new VisualElement(); results.AddToClassList("forge-comparison-section"); columns.Add(results);
             var heading = Row(results); heading.AddToClassList("forge-comparison-heading");
             var title = LocalizedLabel(heading, "forge.comparison", "Comparison", ToolkitControls.TextRole.Heading); title.style.flexGrow = 1;
-            replace = LocalizedButton(heading, "forge-replace", "forge.replace", "Replace", session.Replace);
+            replace = LocalizedButton(heading, "forge-replace", "forge.equip", "Equip", session.Replace);
             comparisonRows = new VisualElement(); results.Add(comparisonRows);
         }
         private void BuildInfo()
@@ -127,8 +136,9 @@ namespace TimelessEchoes.UI.Toolkit
             inventoryHost = new VisualElement(); inventoryHost.AddToClassList("forge-sidebar-body"); sidebar.Add(inventoryHost);
             infoHost = new VisualElement(); infoHost.AddToClassList("forge-sidebar-body"); sidebar.Add(infoHost);
             var scroll = ToolkitControls.RecessedScroll(infoHost, "forge-info", theme, definition.inset);
-            LocalizedLabel(scroll, "forge.equipment-totals", "Equipment totals", ToolkitControls.TextRole.Heading);
-            equipmentRows = new VisualElement(); scroll.Add(equipmentRows);
+            var totals = new ToolkitDisclosure(ToolkitLocalization.Text("forge.equipment-totals", "Equipment totals"), theme, false);
+            scroll.Add(totals);
+            equipmentRows = new VisualElement(); totals.Content.Add(equipmentRows);
             historyHost = new VisualElement(); scroll.Add(historyHost);
             inventoryHost.style.display = DisplayStyle.None;
             infoTab.AddToClassList("selected");
@@ -149,7 +159,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void MarkDirty() { dirty = true; statisticsDirty = true; }
         private void XpChanged(int _, float __, float ___) => MarkDirty();
         private void AutomationStopped() { FindAnyObjectByType<TaskbarFlasher>()?.FlashNow(); if (!IsOpen) TownWindowManager.ShowForgeAttention(); }
-        private void Update() { if (!IsOpen) return; var frame = definition.portraitAnimation?.At(Time.time); if (frame && ivanPortrait != null) ivanPortrait.sprite = frame; Layout(); if (dirty && Time.unscaledTime >= nextRefresh) Refresh(); RefreshStatistics(); }
+        private void Update() { if (!IsOpen) return; var frame = definition.portraitAnimation?.At(Time.time); if (frame && ivanPortrait != null) ivanPortrait.sprite = frame; Layout(); if (dirty && Time.unscaledTime >= nextRefresh) Refresh(); RefreshStatistics(); PositionFirstLessonHand(); }
         private void Layout()
         {
             var area = ToolkitWindowLayout.SafeArea;

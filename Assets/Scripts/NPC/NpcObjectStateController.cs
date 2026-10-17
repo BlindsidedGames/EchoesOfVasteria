@@ -15,6 +15,8 @@ namespace TimelessEchoes.NPC
         public class Entry
         {
             public string npcId;
+            [Tooltip("An existing completed quest can preserve this NPC's visibility on older saves.")]
+            public TimelessEchoes.Quests.QuestData completedQuestCountsAsMet;
             public List<GameObject> disableUntilMet = new();
             public List<GameObject> enableUntilMet = new();
         }
@@ -57,6 +59,8 @@ namespace TimelessEchoes.NPC
                 if (entry == null) continue;
                 bool met = !string.IsNullOrEmpty(entry.npcId) &&
                            StaticReferences.CompletedNpcTasks.Contains(entry.npcId);
+                met |= entry.completedQuestCountsAsMet != null &&
+                       TimelessEchoes.Quests.QuestUtils.QuestCompleted(entry.completedQuestCountsAsMet);
                 foreach (var obj in entry.disableUntilMet)
                     if (obj != null)
                         obj.SetActive(met);

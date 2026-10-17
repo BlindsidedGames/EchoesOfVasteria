@@ -23,6 +23,7 @@ namespace TimelessEchoes.UI
         private int index;
         private bool started;
         private Action onFinished;
+        private IDisposable conversationWait;
 
         private void Awake()
         {
@@ -32,8 +33,8 @@ namespace TimelessEchoes.UI
                 dialogueObject.SetActive(false);
         }
 
-        private void OnEnable() => ToolkitLocalization.Changed += RefreshLocale;
-        private void OnDisable() => ToolkitLocalization.Changed -= RefreshLocale;
+        private void OnEnable() { ToolkitLocalization.Changed += RefreshLocale; if (lines != null) conversationWait ??= TimelessEchoes.Hero.HeroController.Instance?.BeginNpcConversation(); }
+        private void OnDisable() { ToolkitLocalization.Changed -= RefreshLocale; conversationWait?.Dispose(); conversationWait = null; }
         private void RefreshLocale()
         {
             if (started) ShowLine();
@@ -54,6 +55,7 @@ namespace TimelessEchoes.UI
         /// </summary>
         public void Init(Sprite portrait, List<string> dialogue, Action finished, IReadOnlyList<string> localizedLineKeys = null)
         {
+            conversationWait ??= TimelessEchoes.Hero.HeroController.Instance?.BeginNpcConversation();
             npcImage.sprite = portrait;
             lines = dialogue;
             lineKeys = localizedLineKeys;
@@ -98,6 +100,7 @@ namespace TimelessEchoes.UI
             index++;
             if (lines == null || index >= lines.Count)
             {
+                conversationWait?.Dispose(); conversationWait = null;
                 onFinished?.Invoke();
                 Destroy(gameObject);
             }

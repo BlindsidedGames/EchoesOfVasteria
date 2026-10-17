@@ -10,6 +10,7 @@ namespace TimelessEchoes.UI.Toolkit
     {
         private const string CompletedKey = "TimelessEchoes.IntroScreenCompleted";
         [SerializeField] private ToolkitIntroDefinition definition;
+        [SerializeField] private bool showOnFirstLaunch = true;
         [SerializeField] private ToolkitTheme theme;
         [SerializeField] private VisualTreeAsset template;
         [SerializeField] private ThemeStyleSheet runtimeTheme;
@@ -25,7 +26,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void Start()
         {
-            if (PlayerPrefs.GetInt(CompletedKey, 0) != 1) Show();
+            if (showOnFirstLaunch && PlayerPrefs.GetInt(CompletedKey, 0) != 1) Show();
         }
 
         public void Show()

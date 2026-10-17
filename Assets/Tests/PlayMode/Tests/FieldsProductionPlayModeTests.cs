@@ -27,6 +27,29 @@ namespace Tests.PlayMode
         private FarmContent content;
         private static readonly DateTime Now = new(2026, 10, 3, 0, 0, 0, DateTimeKind.Utc);
 
+#if UNITY_EDITOR
+        private uint previousRenderWidth, previousRenderHeight;
+
+        [UnitySetUp]
+        public IEnumerator UseDesktopRenderingResolution()
+        {
+            // Batch-mode GameView defaults to 640x480 and ignores the player
+            // -screen-width flags. These desktop layout tests need a known viewport.
+            UnityEditor.PlayModeWindow.GetRenderingResolution(out previousRenderWidth, out previousRenderHeight);
+            UnityEditor.PlayModeWindow.SetCustomRenderingResolution(1920, 1080, "Desktop UI tests");
+            yield return null;
+            yield return null;
+        }
+
+        [UnityTearDown]
+        public IEnumerator RestoreRenderingResolution()
+        {
+            if (previousRenderWidth > 0 && previousRenderHeight > 0)
+                UnityEditor.PlayModeWindow.SetCustomRenderingResolution(previousRenderWidth, previousRenderHeight, "Restored test viewport");
+            yield return null;
+        }
+#endif
+
         [SetUp]
         public void SetUp()
         {

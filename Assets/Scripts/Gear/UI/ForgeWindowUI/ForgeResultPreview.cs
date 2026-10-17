@@ -95,7 +95,7 @@ namespace TimelessEchoes.Gear.UI
                 return;
             }
 
-            resultTierText.text = rarity.name;
+            resultTierText.text = rarity.GetName();
             resultTierText.color = rarity.color;
         }
 

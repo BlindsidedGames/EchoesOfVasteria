@@ -670,6 +670,7 @@ MonoBehaviour:
     text: 
     fontSize: 0
     sliced: 1
+    sliceReferencePixelsPerUnit: 10
     value: 0
     enabled: 1
   - anchor: {fileID: 3703855653126181324}
@@ -679,6 +680,7 @@ MonoBehaviour:
     text: 
     fontSize: 0
     sliced: 1
+    sliceReferencePixelsPerUnit: 10
     value: 2
     enabled: 1
   - anchor: {fileID: 8863346858385999685}
@@ -688,6 +690,7 @@ MonoBehaviour:
     text: 
     fontSize: 0
     sliced: 0
+    sliceReferencePixelsPerUnit: 0
     value: 0
     enabled: 1
   - anchor: {fileID: 6789177421435104440}
@@ -697,6 +700,7 @@ MonoBehaviour:
     text: 3
     fontSize: 5
     sliced: 0
+    sliceReferencePixelsPerUnit: 0
     value: 0
     enabled: 1
   health: {fileID: 0}

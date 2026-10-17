@@ -8,6 +8,7 @@ using UnityEngine;
 namespace TimelessEchoes.UI.Toolkit
 {
     // Authored world UI data. No Canvas, Graphic, TMP renderer or runtime hierarchy conversion.
+    [DisallowMultipleComponent]
     public sealed class ToolkitWorldAnchor : MonoBehaviour
     {
         public enum Value { Static, HealthFill, TaskFill, EchoFill, EnemyTitle, EnemyHealth }
@@ -19,6 +20,9 @@ namespace TimelessEchoes.UI.Toolkit
             public string text;
             public float fontSize;
             public bool sliced;
+            // Canvas reference PPU / Image PPU multiplier, captured at authoring time.
+            // Zero preserves the existing presentation of world UI not migrated yet.
+            public float sliceReferencePixelsPerUnit;
             public Value value;
             public bool enabled = true;
         }

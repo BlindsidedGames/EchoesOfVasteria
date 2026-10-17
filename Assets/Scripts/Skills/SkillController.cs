@@ -227,6 +227,8 @@ namespace TimelessEchoes.Skills
                 prog.CurrentXP -= xpNeeded;
                 prog.Level++;
                 leveled = true;
+                if (oracle?.saveData != null && string.IsNullOrEmpty(oracle.saveData.General.HubTutorialSkill))
+                    oracle.saveData.General.HubTutorialSkill = skill.name;
                 OnLevelUp?.Invoke(skill, prog.Level);
                 xpNeeded = GetXpForLevel(skill, prog.Level);
             }

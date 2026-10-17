@@ -93,7 +93,7 @@ namespace TimelessEchoes.Skills
                 .Select(m => (Level: m.UnlockLevel, IsMilestone: true, Milestone: m, Unlock: (ResourceUnlockEntry)null));
 
             var unlockEntries = (skill.resourceUnlocks ?? new List<ResourceUnlockEntry>())
-                .Where(u => u != null && u.task != null)
+                .Where(u => u != null && (u.task != null || u.resource != null))
                 .Select(u => (Level: u.requiredLevel, IsMilestone: false, Milestone: (MilestoneDefinition)null, Unlock: u));
 
             var allEntries = milestoneEntries.Concat(unlockEntries)
@@ -271,7 +271,7 @@ namespace TimelessEchoes.Skills
                 refs.TaskImageObject.SetActive(isUnlocked);
             if (refs.TaskImage != null && isUnlocked)
             {
-                var iconSprite = unlock.useOverrideIcon ? unlock.overrideIcon : unlock.task?.taskIcon;
+                var iconSprite = unlock.useOverrideIcon ? unlock.overrideIcon : unlock.resource ? unlock.resource.icon : unlock.task?.taskIcon;
                 refs.TaskImage.sprite = iconSprite;
                 refs.TaskImage.color = Color.white;
                 if (iconSprite != null)
@@ -279,7 +279,7 @@ namespace TimelessEchoes.Skills
             }
 
             // Title - show "???" when locked (match Tasks panel behavior)
-            string name = isUnlocked ? (unlock.task?.taskName ?? "Resource") : "???";
+            string name = isUnlocked ? (unlock.resource ? TimelessEchoes.UI.Toolkit.ToolkitLocalization.Name(unlock.resource) : unlock.task?.taskName ?? "Resource") : "???";
             refs.NameText?.SetText(isUnlocked
                 ? $"{name} | <size=80%>Unlocked at level {unlock.requiredLevel}</size>"
                 : $"{name} | <size=80%>Unlocks at level {unlock.requiredLevel}</size>");

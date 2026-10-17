@@ -21,10 +21,11 @@ namespace TimelessEchoes.UI.Toolkit
         private Label tooltip;
         private sealed class SummaryRow { public readonly List<(Label name, Label value)> fields = new(); }
         private readonly List<SummaryRow> summaries = new();
-        private readonly List<Button> tabButtons = new();
+        private readonly Dictionary<int, Button> tabButtons = new();
         private GameplayStatTracker tracker;
         private bool dirty, localizationDirty;
-        private ToolkitLeaderboardView leaderboard;
+        private Image boostHand;
+        private bool boostScrolled;
         private int selectedTab;
         public bool IsOpen => root != null;
         public bool IsConfigured => definition && theme && runtimeTheme && textSettings;
@@ -36,11 +37,12 @@ namespace TimelessEchoes.UI.Toolkit
             var document = GetComponent<UIDocument>(); document.panelSettings = settings; document.rootVisualElement.pickingMode = PickingMode.Ignore;
             root = new VisualElement { name = "statistics" }; root.AddToClassList("eov-statistics"); theme.Apply(root);ToolkitGameplay.Apply(root,theme);root.AddToClassList("menu-surface"); document.rootVisualElement.Add(root);
             var tabs = new VisualElement(); tabs.AddToClassList("eov-stat-tabs"); root.Add(tabs);
-            string[] titles = { ToolkitLocalization.Text("statistics.tab-general", "General"), ToolkitLocalization.Text("statistics.tab-rank", "Rank"), ToolkitLocalization.Text("statistics.tab-graphs", "Graphs"), ToolkitLocalization.Text("statistics.tab-enemies", "Enemies"), ToolkitLocalization.Text("statistics.tab-tasks", "Tasks"), ToolkitLocalization.Text("statistics.tab-items", "Items") };
-            for (var i = 0; i < titles.Length; i++)
+            foreach (var index in new[] { 0, 2, 3, 4, 5 })
             {
-                var index = i; var button = Action(tabs, "stats-tab-" + i, titles[i], () => SelectTab(index)); tabButtons.Add(button);
+                var tab = index;
+                tabButtons.Add(tab, Action(tabs, "stats-tab-" + tab, TabTitle(tab), () => SelectTab(tab)));
             }
+            BuildMapTutorial();
             body = new VisualElement { name = "stats-body" }; body.AddToClassList("eov-stat-body"); root.Add(body);
             footer = new VisualElement(); footer.AddToClassList("eov-stat-tabs"); root.Add(footer);
             tooltip = Text(root, "", 6); tooltip.name = "run-tooltip"; tooltip.AddToClassList("eov-stat-tooltip"); tooltip.style.display = DisplayStyle.None;
@@ -55,13 +57,23 @@ namespace TimelessEchoes.UI.Toolkit
         }
         public void SelectTab(int index)
         {
-            if (!IsOpen || (index < 0 || index > 5)) return;
-            leaderboard?.Dispose(); leaderboard = null;
+            if (!IsOpen || !tabButtons.ContainsKey(index)) return;
             runGraph = null; selectedTab = index; distanceControls?.RemoveFromHierarchy(); distanceControls = null; enemyDistance = null; body.Clear(); footer.Clear(); summaries.Clear(); tooltip.style.display = DisplayStyle.None;
-            for (var i = 0; i < tabButtons.Count; i++) StyleSelection(tabButtons[i], i == index);
+            foreach (var pair in tabButtons) StyleSelection(pair.Value, pair.Key == index);
             footer.style.display = index != 0 ? DisplayStyle.Flex : DisplayStyle.None;
-            if (index == 0) BuildGeneral(); else if (index == 1) leaderboard = new ToolkitLeaderboardView(body, footer, theme, definition); else if (index == 2) BuildGraph(); else if (index == 5) BuildItems(); else BuildStatList(index == 3); Refresh();
+            boostScrolled = false;
+            if (index == 0) BuildGeneral(); else if (index == 2) BuildGraph(); else if (index == 5) BuildItems(); else BuildStatList(index == 3); Refresh();
         }
+        private static string TabTitle(int index) => index switch
+        {
+            0 => ToolkitLocalization.Text("statistics.tab-general", "General"),
+            2 => ToolkitLocalization.Text("statistics.tab-graphs", "Graphs"),
+            3 => ToolkitLocalization.Text("statistics.tab-enemies", "Enemies"),
+            4 => ToolkitLocalization.Text("statistics.tab-tasks", "Tasks"),
+            5 => ToolkitLocalization.Text("statistics.tab-items", "Items"),
+            _ => ""
+        };
+
         private void BuildGeneral() => BuildMapJournal();
         private void AddSummary(VisualElement parent, ToolkitStatisticsDefinition.MapEntry? map)
         {
@@ -73,8 +85,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (sprite)
             {
                 var image = new Image { sprite = sprite, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
-                var size = sprite.rect.size * (16f / sprite.pixelsPerUnit);
-                image.style.width = size.x; image.style.height = size.y; image.style.flexShrink = 0; mask.Add(image);
+                image.style.width = image.style.height = Length.Percent(100); image.style.flexShrink = 0; mask.Add(image);
             }
             Text(identity, map.HasValue ? ToolkitLocalization.Text("map." + map.Value.config.name, map.Value.label.Trim()) : ToolkitLocalization.Text("statistics.overall", "Overall"), 8).AddToClassList("general-title");
             var summary = new SummaryRow();
@@ -104,7 +115,11 @@ namespace TimelessEchoes.UI.Toolkit
             }
         }
         private ToolkitRunGraphView runGraph;
-        private void BuildGraph() => runGraph = new ToolkitRunGraphView(body, footer, definition, () => tracker.RecentRuns);
+        private void BuildGraph()
+        {
+            runGraph = new ToolkitRunGraphView(body, footer, definition, () => tracker.RecentRuns);
+            GraphStatisticsGuidance.MarkViewed();
+        }
         public void SetGraphMode(RunStatsPanelUI.GraphMode mode)
         {
             if (IsOpen && selectedTab == 2) runGraph?.SetMetric((ToolkitRunGraphView.Metric)Enum.Parse(typeof(ToolkitRunGraphView.Metric), mode.ToString()));
@@ -112,7 +127,6 @@ namespace TimelessEchoes.UI.Toolkit
         private void Refresh()
         {
             dirty = false;
-            if (selectedTab == 1) return;
             if (selectedTab == 2) { RefreshGraph(); return; }
             if (selectedTab == 5) { RefreshItems(); return; }
             if (selectedTab == 3) { RefreshEnemies(); return; }
@@ -138,10 +152,8 @@ namespace TimelessEchoes.UI.Toolkit
         private void LocalizationChanged() => localizationDirty = true;
         private void RefreshLocalization()
         {
-            string[] titles = { ToolkitLocalization.Text("statistics.tab-general", "General"), ToolkitLocalization.Text("statistics.tab-rank", "Rank"), ToolkitLocalization.Text("statistics.tab-graphs", "Graphs"), ToolkitLocalization.Text("statistics.tab-enemies", "Enemies"), ToolkitLocalization.Text("statistics.tab-tasks", "Tasks"), ToolkitLocalization.Text("statistics.tab-items", "Items") };
-            for (var i = 0; i < tabButtons.Count; i++) tabButtons[i].text = "<b>" + titles[i] + "</b>";
-            if (selectedTab == 1) leaderboard?.Relocalize();
-            else if (selectedTab == 2 && runGraph != null)
+            foreach (var pair in tabButtons) pair.Value.text = "<b>" + TabTitle(pair.Key) + "</b>";
+            if (selectedTab == 2 && runGraph != null)
             {
                 var state = runGraph.ViewState; SelectTab(selectedTab); runGraph?.RestoreViewState(state);
             }
@@ -153,20 +165,20 @@ namespace TimelessEchoes.UI.Toolkit
                 { ToolkitControls.SetSliderValue(enemyDistance, distance.Value); RefreshEnemies(); }
             }
         }
-        private void Changed() { dirty = true; leaderboard?.Refresh(); }
+        private void Changed() { dirty = true; }
         private void RunEnded(bool _) => Changed();
         private void DistanceChanged(float _) { if (selectedTab == 0) dirty = true; }
-        private void Update() { if (!IsOpen) return; Layout(); if (localizationDirty) { localizationDirty = false; RefreshLocalization(); } if (dirty) Refresh(); }
+        private void Update() { if (!IsOpen) return; Layout(); RefreshJournalAccess(); RefreshMapTutorial(); RefreshGraphGuidance(); RefreshBoostGuidance(); if (localizationDirty) { localizationDirty = false; RefreshLocalization(); } if (dirty) Refresh(); }
         private readonly ToolkitWindowLayout windowLayout = new();
         private void Layout() => windowLayout.Centered(root, theme);
         public void Hide()
         {
             ToolkitLocalization.Changed -= LocalizationChanged;
-            leaderboard?.Dispose(); leaderboard = null;
             if (tracker) { tracker.OnRunEnded -= RunEnded; tracker.OnDistanceAdded -= DistanceChanged; tracker.OnTaskCompletedEvent -= TaskCompleted; tracker.OnMaxRunDistanceChanged -= MaximumDistanceChanged; }
             if (resourceManager) { resourceManager.OnInventoryChanged -= InventoryChanged; resourceManager.OnResourceAdded -= ResourceChanged; resourceManager.OnResourceTierUpgraded -= ResourceTierChanged; }
             if (killTracker) killTracker.OnKillRegistered -= KillChanged;
             TimelessEchoes.Tasks.TaskWeightService.ToggleChanged -= TaskToggleChanged; TimelessEchoes.Tasks.TaskWeightService.WeightsChanged -= TaskWeightsChanged;
+            boostHand = null; graphHand = null; boostScrolled = false; mapTutorial = null; mapTutorialText = null; mapTutorialHand = null;
             taskRows.Clear(); enemyRows.Clear(); statSortButtons.Clear(); distanceControls = null; enemyDistance = null;
             itemRows.Clear(); itemSortButtons.Clear(); itemContent = null;
             journalSelectors.Clear(); journalDiscoveries.Clear(); journalContent = journalRecent = journalCollection = null; journalDiscoveryCount = null;

@@ -33,9 +33,14 @@ namespace TimelessEchoes.UI.Toolkit
         private RunProgressPresentation lastProgress;
         private bool hasProgress;
         private Group openGroup;
+        private ToolkitRunScreen runScreen;
         private Button menuAnchor;
         private float nextRefresh;
         private bool hooked;
+        private bool highlightQuestsUntilOpened;
+        private readonly Dictionary<string, VisualElement> tutorialPrompts = new();
+        private string highlightedEntryId;
+        private float questHighlightStartedAt;
         public Group OpenGroup => openGroup;
 
         private void OnEnable()
@@ -93,6 +98,16 @@ namespace TimelessEchoes.UI.Toolkit
                     button.Add(label); bindings.Add(new ToolkitTextBinding(label, entry.label));
                 }
                 row.Add(button);
+                if (entry.id is "quests" or "close" or "adventure" or "map-0" or "map-1" or "map-3" or "stats" or "townsfolk" or "forge" or "hub" or "skills" or "inventory")
+                {
+                    var prompt = new VisualElement { name = entry.id == "quests" ? "quest-tutorial-pointer" : "tutorial-pointer-" + entry.id, pickingMode = PickingMode.Ignore };
+                    prompt.style.position = Position.Absolute;
+                    prompt.style.width = 24; prompt.style.height = 24; prompt.style.display = DisplayStyle.None;
+                    var hand = new Image { sprite = definition.questTutorialHand, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
+                    hand.style.width = 24; hand.style.height = 24; prompt.Add(hand);
+                    tutorialPrompts.Add(entry.id, prompt); root.Add(prompt);
+                    button.RegisterCallback<GeometryChangedEvent>(_ => RefreshTutorialPrompt());
+                }
                 rows.Add(entry, row); buttons.Add(entry, button);
                 if (entry.action == NavAction.TownsfolkMenu)
                 {
@@ -199,14 +214,24 @@ namespace TimelessEchoes.UI.Toolkit
                 windows.CloseRequested += CloseMenu; windows.WindowsChanged += Refresh; hooked = true;
             }
             ApplyLayout();
+            RefreshTutorialPrompt();
             if (Time.unscaledTime < nextRefresh) return;
             nextRefresh = Time.unscaledTime + .1f;
+            Refresh();
+        }
+
+        public void HighlightQuests()
+        {
+            highlightQuestsUntilOpened = true;
+            questHighlightStartedAt = Time.unscaledTime;
             Refresh();
         }
 
         public void Refresh()
         {
             if (root == null) return;
+            if (windows != null && windows.IsWindowOpen(TownWindowManager.Window.Quests))
+                highlightQuestsUntilOpened = false;
             root.EnableInClassList("eov-navigation--window-open", openGroup != Group.Toolbar || (windows != null && windows.HasOpenWindow));
             foreach (var entry in definition.entries)
             {
@@ -220,6 +245,7 @@ namespace TimelessEchoes.UI.Toolkit
                 }
                 buttons[entry].SetEnabled(entry.action != NavAction.Window || windows == null || windows.CanOpenWindow(entry.window));
             }
+            RefreshTutorialPrompt();
             SetVisible(forgeAttention, windows != null && windows.ForgeNeedsAttention);
             SetVisible(cauldronAttention, windows != null && windows.CauldronNeedsAttention);
             SetVisible(questAttention, QuestManager.Instance != null && QuestManager.Instance.HasQuestsReadyForTurnIn());
@@ -239,6 +265,88 @@ namespace TimelessEchoes.UI.Toolkit
             ToolkitGameplay.SetToggle(autoPin,AutoPinActiveQuests);
         }
 
+        private void RefreshTutorialPrompt()
+        {
+            var data = Blindsided.Oracle.oracle?.saveData;
+            var inTown = GameManager.Instance == null || GameManager.Instance.IsInTown;
+            if (data != null && windows != null && windows.IsWindowOpen(TownWindowManager.Window.Forge))
+                data.General.ForgeIntroductionSeen = true;
+            var hubTutorial = inTown && data != null && data.General.InventoryTutorialStage >= 3 && definition.hubIntroduction && definition.hubIntroduction.HasBeenCompleted &&
+                ToolkitVisibilityRule.HasLevelledSkill() && data.General.HubTutorialStage < 3;
+            if (hubTutorial && windows != null)
+            {
+                if (data.General.HubTutorialStage == 0 && windows.IsWindowOpen(TownWindowManager.Window.Skills))
+                    data.General.HubTutorialStage = 1;
+                if (data.General.HubTutorialStage >= 1 && !windows.IsWindowOpen(TownWindowManager.Window.Skills))
+                    data.General.HubTutorialStage = 3;
+                hubTutorial = data.General.HubTutorialStage < 3;
+            }
+            var inventoryTutorial = inTown && data != null && data.General.ReturnedFromFarmlands &&
+                data.General.InventoryTutorialStage > 0 && data.General.InventoryTutorialStage < 3;
+            if (inventoryTutorial && windows != null)
+            {
+                if (data.General.InventoryTutorialStage == 1 && windows.IsWindowOpen(TownWindowManager.Window.Inventory))
+                    data.General.InventoryTutorialStage = 2;
+                if (data.General.InventoryTutorialStage == 2 && !windows.IsWindowOpen(TownWindowManager.Window.Inventory))
+                    data.General.InventoryTutorialStage = 3;
+                inventoryTutorial = data.General.InventoryTutorialStage < 3;
+            }
+            string desired = null;
+            if (!runScreen) runScreen = FindAnyObjectByType<ToolkitRunScreen>();
+            if (ActiveNpcMeetings.Count > 0 || (runScreen && runScreen.HasOpenDetails)) desired = null;
+            else if (highlightQuestsUntilOpened) desired = "quests";
+            else if (hubTutorial)
+                desired = windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Hub ? "skills" : "hub";
+            else if (inventoryTutorial)
+                desired = windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Hub ? "inventory" : "hub";
+            else if (data != null && inTown && data.CompletedNpcTasks.Contains("Gill1") && !QuestUtils.QuestCompleted("The names Gill"))
+                desired = windows != null && windows.IsWindowOpen(TownWindowManager.Window.Quests) ? null : windows != null && windows.HasOpenWindow ? "close" : "quests";
+            else if (data != null && inTown && QuestUtils.QuestCompleted("You get this one for free!") &&
+                     definition.farmingIntroduction && !definition.farmingIntroduction.HasBeenCompleted)
+                desired = windows != null && windows.HasOpenWindow ? "close" : null;
+            else if (data != null && inTown &&
+                     ((data.CompletedNpcTasks.Contains("Ivan1") && !QuestUtils.QuestCompleted("Meeting Ivan")) ||
+                      (QuestUtils.QuestCompleted("Meeting Ivan") && !TimelessEchoes.Gear.ForgeFirstLesson.Accepted && (data.Forge?.TotalCrafts ?? 0) == 0)))
+                desired = windows != null && windows.IsWindowOpen(TownWindowManager.Window.Quests) ? null : "quests";
+            else if (data != null && inTown && MapStatisticsGuidance.Active)
+                desired = data.General.MapStatisticsTutorialStage == 1 ||
+                    (windows != null && windows.HasOpenWindow && !windows.IsWindowOpen(TownWindowManager.Window.Stats)) ?
+                    (windows != null && windows.HasOpenWindow ? "close" : null) :
+                    windows != null && windows.IsWindowOpen(TownWindowManager.Window.Stats) ? null : "stats";
+            else if (data != null && inTown && TimelessEchoes.Gear.ForgeFirstLesson.Active)
+                desired = windows != null && windows.IsWindowOpen(TownWindowManager.Window.Forge) ? null : windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Townsfolk ? "forge" : "townsfolk";
+            else if (data != null && inTown && data.General.TaskBoostTutorialStage == 1)
+                desired = windows != null && windows.IsWindowOpen(TownWindowManager.Window.Stats) ? null :
+                    windows != null && windows.HasOpenWindow ? "close" : "stats";
+            else if (data != null && inTown && GraphStatisticsGuidance.Active)
+                desired = windows != null && windows.IsWindowOpen(TownWindowManager.Window.Stats) ? null :
+                    windows != null && windows.HasOpenWindow ? "close" : "stats";
+            else if (data != null && inTown && QuestUtils.QuestCompleted("You get this one for free!") &&
+                     !data.CompletedNpcTasks.Contains("Reaper1") && !QuestUtils.QuestCompleted("An Intro to Trekking"))
+                desired = openGroup == Group.Adventure ? "map-0" : "adventure";
+            else if (data != null && inTown && QuestUtils.QuestCompleted("The names Gill") && !data.CompletedNpcTasks.Contains("Barkley1"))
+                desired = windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Adventure ? "map-3" : "adventure";
+            else if (data != null && inTown && QuestUtils.QuestCompleted("Another Magicool Gift") && !data.CompletedNpcTasks.Contains("Ivan1"))
+                desired = windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Adventure ? "map-1" : "adventure";
+            if (desired != highlightedEntryId) { highlightedEntryId = desired; questHighlightStartedAt = Time.unscaledTime; }
+            foreach (var pair in tutorialPrompts)
+            {
+                var visible = pair.Key == desired;
+                SetVisible(pair.Value, visible);
+                if (!visible) continue;
+                foreach (var entry in definition.entries)
+                {
+                    if (entry.id != pair.Key) continue;
+                    var phase = Mathf.Repeat(Time.unscaledTime - questHighlightStartedAt, 1.2f) / 1.2f;
+                    var approach = .5f - .5f * Mathf.Cos(phase * Mathf.PI * 2);
+                    var anchor = root.WorldToLocal(new Vector2(buttons[entry].worldBound.center.x, buttons[entry].worldBound.yMax));
+                    pair.Value.style.left = Mathf.Round(anchor.x - 12);
+                    pair.Value.style.top = Mathf.Round(anchor.y - 6 + 8 * (1 - approach));
+                    break;
+                }
+            }
+        }
+
         private static void SetVisible(VisualElement element, bool visible)
         { if (element != null) element.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None; }
 
@@ -249,7 +357,7 @@ namespace TimelessEchoes.UI.Toolkit
             root.style.left = area.x+8;root.style.top=area.y+8;root.style.width=area.width-16;root.style.height=36;
             if (menuAnchor != null)
             {
-                popup.style.left = Mathf.Max(0, Mathf.Min(menuAnchor.worldBound.x - area.x, area.width - popup.layout.width));
+                popup.style.left = Mathf.Max(0, Mathf.Min(root.WorldToLocal(menuAnchor.worldBound.position).x, root.layout.width - popup.layout.width));
                 popup.style.top = 32;
             }
         }
@@ -261,6 +369,7 @@ namespace TimelessEchoes.UI.Toolkit
             foreach (var binding in bindings) binding.Dispose();
             bindings.Clear(); rows.Clear(); buttons.Clear();
             root?.RemoveFromHierarchy(); root = null; popup = null; menuAnchor = null;
+            tutorialPrompts.Clear(); highlightedEntryId = null;
             openGroup = Group.Toolbar;
         }
         private void OnDestroy() { if (panel) Destroy(panel); }

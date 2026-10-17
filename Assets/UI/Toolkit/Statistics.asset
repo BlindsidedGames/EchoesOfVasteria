@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0733fdd54e4f327468c986006d09ef94, type: 3}
   m_Name: Statistics
   m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.UI.Toolkit.ToolkitStatisticsDefinition
-  selectedButton: {fileID: -694003258188327651, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
-  playerRow: {fileID: -1200994790, guid: 51bd82d473befb0479be7d5b9a324629, type: 3}
+  tutorialHand: {fileID: -6133907437499239528, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
   toggleOn: {fileID: 9208044968218441874, guid: f429786718350477cb960cfcb3452aab, type: 3}
   toggleOff: {fileID: 7182660371469165703, guid: f429786718350477cb960cfcb3452aab, type: 3}
   progressTrack: {fileID: 9035060615272221303, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
@@ -33,8 +32,6 @@ MonoBehaviour:
   averageLine: {fileID: 21300000, guid: 77c7049387f6eb44eb2e08b928a4cb07, type: 3}
   tooltipLeft: {fileID: -6474153178337083997, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
   tooltipRight: {fileID: -785442531, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
-  selectedTint: {r: 1, g: 1, b: 1, a: 1}
-  selectedText: {r: 0.9176471, g: 0.8313726, b: 0.6627451, a: 1}
   averageColor: {r: 0.9176471, g: 0.8313726, b: 0.6666667, a: 1}
   distanceColors:
     death: {r: 0.24705884, g: 0.15686275, b: 0.19607845, a: 1}
@@ -69,6 +66,21 @@ MonoBehaviour:
     label: Farmlands
     labelSize: 3.7
     killScaling: 0
+    access:
+    - condition: 0
+      quest: {fileID: 11400000, guid: 298f411e97766fb47bf1d61e9e1a5bf8, type: 2}
+      npcId:
+    lockedHint: You can find more information about this area in town.
+  - config: {fileID: 11400000, guid: a0abc9be431dbc64d867ea8e6099b6f5, type: 2}
+    icon: {fileID: -4548796474974412338, guid: 674345f33219f70418aca2a3db04ecbc, type: 3}
+    label: River
+    labelSize: 5
+    killScaling: 0
+    access:
+    - condition: 0
+      quest: {fileID: 11400000, guid: 918ef9c4bf0607e479041a3d39b3f3b7, type: 2}
+      npcId:
+    lockedHint: You can find more information about this area in the Farmlands.
   - config: {fileID: 11400000, guid: 70ed6e565be72ad4cb97fbf161957534, type: 2}
     icon: {fileID: 621266246945384593, guid: b45d02bebb0bae34490e63de2e1440b9, type: 3}
     label: 'Woods
@@ -76,18 +88,28 @@ MonoBehaviour:
 '
     labelSize: 5
     killScaling: 0
+    access:
+    - condition: 0
+      quest: {fileID: 11400000, guid: c058038d0557e31478313cc9f9131098, type: 2}
+      npcId:
+    lockedHint: You can find more information about this area at the River.
   - config: {fileID: 11400000, guid: 6c2ad25e840f46a44b1a7ceb4ba7280a, type: 2}
     icon: {fileID: -7112000108182893260, guid: 17ab04ce672d2cf4fbe3b9314f205693, type: 3}
     label: Mines
     labelSize: 5
     killScaling: 0
-  - config: {fileID: 11400000, guid: a0abc9be431dbc64d867ea8e6099b6f5, type: 2}
-    icon: {fileID: -4548796474974412338, guid: 674345f33219f70418aca2a3db04ecbc, type: 3}
-    label: River
-    labelSize: 5
-    killScaling: 0
+    access:
+    - condition: 0
+      quest: {fileID: 11400000, guid: 8a18857e90fcac348ba107a6d4b45789, type: 2}
+      npcId:
+    lockedHint: You can find more information about this area in the Woods.
   - config: {fileID: 11400000, guid: 1bea16f9e7eb61c43bcb22c706dae6dc, type: 2}
     icon: {fileID: 2029275289, guid: 3683944cef7e6bd4cae5ecd76295b35f, type: 3}
     label: Spooky
     labelSize: 5
     killScaling: 1
+    access:
+    - condition: 0
+      quest: {fileID: 11400000, guid: 1146a0d8f3daaf04fb64f91860e4e2ea, type: 2}
+      npcId:
+    lockedHint: You can find more information about this area in town.

@@ -40,11 +40,15 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  npcId: 
+  npcId: EvaWateringCanIntroduction
+  requiresTown: 1
+  acceptanceQuest: 0
+  acceptanceResources: []
   autoPin: 0
   useN0ForPinnedNumbers: 1
   requiredQuests:
-  - {fileID: 11400000, guid: 073c0db0b83221e44a3160de9c840855, type: 2}
+  - {fileID: 11400000, guid: 298f411e97766fb47bf1d61e9e1a5bf8, type: 2}
+  minimumMaxRunDistanceExclusive: 0
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: d0108dc3e7727584d9523efdc3d331a0, type: 2}
@@ -63,6 +67,7 @@ MonoBehaviour:
     amount: 0
     skill: {fileID: 11400000, guid: f3b9fce6557e44d4ac8a2a064e3b0b9b, type: 2}
     experience: 1000
+    equipment: {fileID: 0}
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

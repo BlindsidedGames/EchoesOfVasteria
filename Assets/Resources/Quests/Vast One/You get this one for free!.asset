@@ -24,11 +24,11 @@ MonoBehaviour:
     m_LocalVariables: []
   description:
     m_TableReference:
-      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+      m_TableCollectionName: Quests
     m_TableEntryReference:
-      m_KeyId: 689627873280
-      m_Key: 
-    m_FallbackState: 0
+      m_KeyId: 0
+      m_Key: Orin.first-quest.v3.description
+    m_FallbackState: 2
     m_WaitForCompletion: 0
     m_LocalVariables: []
   rewardDescription:
@@ -41,8 +41,11 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   npcId: 
+  requiresTown: 0
   autoPin: 0
+  useN0ForPinnedNumbers: 0
   requiredQuests: []
+  minimumMaxRunDistanceExclusive: 0
   requirements:
   - type: 5
     resource: {fileID: 0}
@@ -51,6 +54,11 @@ MonoBehaviour:
     killName: 
     killIcon: {fileID: 0}
     meetNpcId: 
+    buffs: []
+    includeAutoCasts: 1
+    buffCastName:
+    buffCastIcon: {fileID: 0}
+  rewards: []
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

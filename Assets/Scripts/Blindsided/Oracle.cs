@@ -102,8 +102,6 @@ namespace Blindsided
 
         [TabGroup("SaveData")] [NonSerialized, OdinSerialize] public GameData saveData = new();
 
-        [Header("Seasonal Leaderboard")]
-
         private bool loaded;
         public bool HasLoadedCurrentSlotData => loaded && !_recoveryRequired && HasCurrentSlotData;
         private bool wipeInProgress;
@@ -1636,6 +1634,34 @@ namespace Blindsided
                 return;
 
             saveData.SavedPreferences = new GameData.Preferences();
+        }
+
+        [TabGroup("SaveData", "Buttons")]
+        [Button]
+        public bool ResetCurrentSlotAndReload()
+        {
+            // Replace the active slot atomically before unloading anything. A failed
+            // replacement must leave the current game available to the player.
+            if (!WipeAllData())
+                return false;
+
+            StopAutosaveLoop();
+            _slotTransitionInProgress = true;
+            StartCoroutine(ReloadAfterReset());
+            return true;
+        }
+
+        private IEnumerator ReloadAfterReset()
+        {
+            SuspendActiveSceneRoots();
+            try
+            {
+                yield return LoadMainScene("The reset was committed successfully to disk");
+            }
+            finally
+            {
+                _slotTransitionInProgress = false;
+            }
         }
 
         [TabGroup("SaveData", "Buttons")]

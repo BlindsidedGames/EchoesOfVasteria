@@ -18,6 +18,7 @@ namespace TimelessEchoes.UI.Toolkit
         private bool completed, disposed;
         public VisualElement Root { get; }
         public Button AdvanceButton { get; }
+        public bool AwaitingMeet => index < 0;
 
         public ToolkitMeetingView(ToolkitTheme theme, VisualTreeAsset template, Sprite portrait,
             ToolkitMeetingDefinition definition, IReadOnlyList<string> lines, Action finished, IReadOnlyList<string> localizedLineKeys = null)
@@ -33,6 +34,7 @@ namespace TimelessEchoes.UI.Toolkit
             Root.Q("button-shadow").style.display=DisplayStyle.None;
             var image = Root.Q<Image>("portrait");
             image.sprite = portrait;
+            Root.Q("portrait-frame").style.display = portrait ? DisplayStyle.Flex : DisplayStyle.None;
             image.scaleMode = ScaleMode.ScaleToFit;
             // Character frames include animation padding. Keep the authored pixel scale
             // consistent instead of shrinking a padded 64px frame into a 32px square.
@@ -47,6 +49,7 @@ namespace TimelessEchoes.UI.Toolkit
             
             dialogue = Root.Q<Label>("dialogue");
             AdvanceButton = Root.Q<Button>("advance");
+            if (!portrait) AdvanceButton.style.top = 0;
             AdvanceButton.AddToClassList("button");
             meetLabel = Root.Q<Label>("meet-label");
             nextLabel = Root.Q<Label>("next-label");

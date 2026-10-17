@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
+  m_Name: Ivan's First Lesson
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.Quests.QuestData
+  questId: Ivan's First Lesson
+  questName:
+    m_TableReference:
+      m_TableCollectionName: Quests
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Ivan.lesson.name
+    m_FallbackState: 2
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: Quests
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Ivan.lesson.description
+    m_FallbackState: 2
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  rewardDescription:
+    m_TableReference:
+      m_TableCollectionName: Quests
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Ivan.lesson.reward
+    m_FallbackState: 2
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  npcId: 
+  requiresTown: 1
+  acceptanceQuest: 1
+  acceptanceResources:
+  - resource: {fileID: 11400000, guid: f9dad579683f8b343b6db9ed58886a07, type: 2}
+    amount: 1
+  - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}
+    amount: 1
+  - resource: {fileID: 11400000, guid: c179c63de4230254383d26a0f2c0715d, type: 2}
+    amount: 1
+  autoPin: 0
+  useN0ForPinnedNumbers: 0
+  requiredQuests:
+  - {fileID: 11400000, guid: c09209e764b12664d970cbd53a3f25a5, type: 2}
+  minimumMaxRunDistanceExclusive: 0
+  requirements:
+  - type: 11
+    resource: {fileID: 0}
+    amount: 1
+    enemies: []
+    killName: 
+    killIcon: {fileID: 0}
+    meetNpcId: 
+    buffs: []
+    includeAutoCasts: 1
+    buffCastName: 
+    buffCastIcon: {fileID: 0}
+  rewards: []
+  unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
+  maxDistanceIncrease: 0
+  disciplePercentReward: 0
+  unlocksBuff: 0
+  upgradesBuff: 0
+  references:
+    version: 2
+    RefIds: []

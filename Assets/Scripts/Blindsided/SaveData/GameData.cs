@@ -282,6 +282,7 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker]
         public class QuestRecord
         {
+            public bool Accepted;
             public bool Completed;
             public Dictionary<string, double> KillProgress; // enemy name -> count; may be null until used
             public double DistanceTravelProgress;
@@ -375,6 +376,20 @@ namespace Blindsided.SaveData
             public float AverageRun;
             public int MostKillsSingleRun;
             public float MaxRunDistance = 50f;
+            public bool ForgeIntroductionSeen;
+            public int HubTutorialStage;
+            public string HubTutorialSkill;
+            public bool FirstReapTownVisited;
+            public int TaskBoostTutorialStage;
+            public int MapStatisticsTutorialStage;
+            public bool GraphsViewed;
+            public int GraphsTutorialStage;
+            public bool ReturnedFromRiver;
+            public bool ReturnedFromFarmlands;
+            public int InventoryTutorialStage;
+            public bool RunSummaryIntroductionSeen;
+            public int ForgeFirstLessonStage;
+            public GearItemRecord ForgeFirstLessonItem;
             public int NextRunNumber = 1;
 
             // Effective read-only accessors for migrated values with legacy fallback

@@ -30,12 +30,14 @@ namespace TimelessEchoes.Gear
         public CoreSO Core => selectedCore;
         public string Slot => selectedSlot;
         public GearItem Pending => lastCrafted;
+        public const int AutomationUnlockLevel = 3;
+        public bool AutomationUnlocked => (Oracle.oracle?.saveData?.CraftingMasteryLevel ?? 0) >= AutomationUnlockLevel;
         public bool IsAutoCrafting => isAutoCrafting;
         public bool HasResult => resultVisible && lastCrafted != null;
         public bool CanReplace => HasResult && !isAutoCrafting;
         public void Initialize(ForgeCatalog value)
         {
-            if (initialized) return;
+            if (initialized) { RestoreFirstLesson(); return; }
             catalog = value; crafting = CraftingService.Instance; equipment = EquipmentController.Instance; resources = ResourceManager.Instance;
             if (!catalog || !crafting || !resources || !equipment) throw new InvalidOperationException("Forge services must be ready before opening");
             conversions[ConversionType.Ingot] = ConversionPipelineFactory.CreateIngotPipeline();
@@ -45,6 +47,19 @@ namespace TimelessEchoes.Gear
             initialized = true;
             Blindsided.EventHandler.OnLoadData += Loaded;
             RestoreSelections();
+            RestoreFirstLesson();
+        }
+        private void RestoreFirstLesson()
+        {
+            if (!ForgeFirstLesson.Active) return;
+            selectedCore = catalog.cores[0].core;
+            if (ForgeFirstLesson.Stage >= 3) selectedSlot = "Weapon";
+            conversions[ConversionType.Ingot].DesiredAmount = System.Math.Max(1, selectedCore.ingotCost);
+            if (ForgeFirstLesson.Stage == 4 && lastCrafted == null)
+            {
+                lastCrafted = ForgeFirstLesson.Restore(selectedCore);
+                resultVisible = lastCrafted != null;
+            }
         }
         private void RestoreSelections()
         {
@@ -64,9 +79,15 @@ namespace TimelessEchoes.Gear
             if (autoCraftCoroutine != null) StopCoroutine(autoCraftCoroutine);
             autoCraftCoroutine = null; isAutoCrafting = false; lastCrafted = null; resultVisible = false;
             RestoreSelections();
+            RestoreFirstLesson();
         }
         public void SelectCore(CoreSO value)
         {
+            if (ForgeFirstLesson.Active)
+            {
+                if (value != catalog.cores[0].core || ForgeFirstLesson.Stage != 1) return;
+                ForgeFirstLesson.Advance(2); Save("first-lesson-core");
+            }
             if (catalog.Find(value) == null) return;
             bool changed = value != selectedCore;
             if (changed) StopAutoCrafting();
@@ -77,6 +98,11 @@ namespace TimelessEchoes.Gear
         }
         public void SelectSlot(string value)
         {
+            if (ForgeFirstLesson.Active)
+            {
+                if (value != "Weapon" || ForgeFirstLesson.Stage != 2) return;
+                ForgeFirstLesson.Advance(3); Save("first-lesson-weapon");
+            }
             if (!equipment.Slots.Contains(value)) return;
             if (lastCrafted != null && lastCrafted.slot != value) { SalvageService.Instance?.Salvage(lastCrafted, isAuto: true); lastCrafted = null; resultVisible = false; }
             bool changed = selectedSlot != value;
@@ -88,6 +114,7 @@ namespace TimelessEchoes.Gear
         }
         public bool CanCraft()
         {
+            if (ForgeFirstLesson.Active && ForgeFirstLesson.Stage != 3) return false;
             if (!initialized || !selectedCore) return false;
             var binding = catalog.Find(selectedCore); var ingot = binding?.ingotResource ? binding.ingotResource : selectedCore.requiredIngot;
             return binding?.coreResource && ingot && resources.GetAmount(ingot) >= Math.Max(0, selectedCore.ingotCost) && resources.GetAmount(binding.coreResource) >= 1;
@@ -109,6 +136,11 @@ namespace TimelessEchoes.Gear
             if (lastCrafted != null) { SalvageService.Instance?.Salvage(lastCrafted, isAuto: false); lastCrafted = null; }
             lastCrafted = crafting.Craft(selectedCore, selectedSlot, null, catalog.Find(selectedCore).coreResource);
             if (lastCrafted == null) { Notify(); return; }
+            if (ForgeFirstLesson.Active)
+            {
+                Oracle.oracle.saveData.General.ForgeFirstLessonItem = ForgeFirstLesson.Record(lastCrafted);
+                ForgeFirstLesson.Advance(4); resultVisible = true; Notify(); Save("first-lesson-craft"); return;
+            }
             if (equipment.GetEquipped(lastCrafted.slot) == null)
             {
                 if (!equipment.Equip(lastCrafted)) { resultVisible = true; Notify(); return; }
@@ -122,24 +154,33 @@ namespace TimelessEchoes.Gear
         public void Replace()
         {
             if (!CanReplace || !equipment.Equip(lastCrafted)) return;
+            if (ForgeFirstLesson.Active)
+            {
+                ForgeFirstLesson.Advance(5);
+                Oracle.oracle.saveData.General.ForgeFirstLessonItem = null;
+                Oracle.oracle.saveData.General.ForgeIntroductionSeen = true;
+                TimelessEchoes.Quests.QuestManager.Instance?.TryTurnInQuest(ForgeFirstLesson.QuestId);
+            }
             if (Oracle.oracle?.saveData?.Forge != null) Oracle.oracle.saveData.Forge.TotalEquippedFromCraft++;
-            lastCrafted = null; resultVisible = false; Notify();
+            lastCrafted = null; resultVisible = false; Notify(); Save("equip");
         }
         public static double ClampAmount(double value) => double.IsNaN(value) || double.IsInfinity(value) ? 1 : Math.Max(1, Math.Floor(value));
         public double Desired(ConversionType type) => conversions[type].DesiredAmount;
-        public void SetAmount(ConversionType type, double value) { conversions[type].DesiredAmount = ClampAmount(value); Notify(); }
-        public bool CanConvert(ConversionType type) => !isAutoCrafting && conversions[type].CanPerform(resources, selectedCore);
+        public void SetAmount(ConversionType type, double value) { conversions[type].DesiredAmount = ForgeFirstLesson.Active ? System.Math.Max(1, selectedCore.ingotCost) : ClampAmount(value); Notify(); }
+        public bool CanConvert(ConversionType type) => (!ForgeFirstLesson.Active || (ForgeFirstLesson.Stage == 0 && type == ConversionType.Ingot)) && !isAutoCrafting && conversions[type].CanPerform(resources, selectedCore);
         public double ConversionMaximum(ConversionType type) => conversions[type].GetCalculatedMaxAmount(resources, selectedCore);
         public double ConversionAmount(ConversionType type) => conversions[type].GetMaxAmount(resources, selectedCore, Desired(type));
         public void Convert(ConversionType type)
         {
             if (!CanConvert(type) || !conversions[type].PerformConversion(resources, selectedCore)) return;
+            if (ForgeFirstLesson.Active) ForgeFirstLesson.Advance(1);
             var amount = ClampAmount(Desired(type)); conversions[type].DesiredAmount = amount;
             switch (type) { case ConversionType.Ingot: ForgeIngotCraftAmount = amount; break; case ConversionType.Crystal: ForgeCrystalCraftAmount = amount; break; case ConversionType.Chunk: ForgeChunkCraftAmount = amount; break; case ConversionType.Core: ForgeCoreCraftAmount = amount; break; }
             Notify(); Save("conversion");
         }
         public void StartAutoCrafting()
         {
+            if (ForgeFirstLesson.Active || !AutomationUnlocked) return;
             if (isAutoCrafting) { StopAutoCrafting(); return; }
             if (!CanCraft()) return;
             isAutoCrafting = true;

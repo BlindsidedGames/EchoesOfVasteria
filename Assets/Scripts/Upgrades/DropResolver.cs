@@ -128,7 +128,8 @@ namespace TimelessEchoes.Upgrades
 
         private static bool IsDropUnlocked(ResourceDrop drop, Skill skill)
         {
-            if (drop.requiredSkillLevel <= 0)
+            var requiredLevel = Mathf.Max(drop.requiredSkillLevel, skill ? skill.GetResourceUnlockLevel(drop.resource) : 0);
+            if (requiredLevel <= 0)
                 return true;  // No requirement
 
             if (skill == null)
@@ -139,7 +140,7 @@ namespace TimelessEchoes.Upgrades
                 return false;
 
             int level = controller.GetProgress(skill)?.Level ?? 1;
-            return level >= drop.requiredSkillLevel;
+            return level >= requiredLevel;
         }
     }
 }

@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
   m_Name: Crystal Chest
   m_EditorClassIdentifier: 
-  taskName: Erif Chest
+  taskName: Fire Chest
   taskID: 49
   taskIcon: {fileID: 752469611, guid: 6a1eba8e86be0ce4884405f559395edb, type: 3}
   associatedSkill: {fileID: 11400000, guid: 762e694a868a7534ea079da462fc5c73, type: 2}
   xpForCompletion: 10
   minX: 300
+  enforceMinDistance: 0
   maxX: Infinity
   enforceMaxDistance: 0
   requiredSkillLevel: 22
@@ -32,37 +33,29 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7fb50b98a8abd724bb2b115b095a6432, type: 2}
   - {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
   - {fileID: 11400000, guid: 7955e64270b45ec4eb728778a330f28e, type: 2}
+  terrainWeights: []
   resourceDrops:
   - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
     dropRange: {x: 1, y: 7}
     weight: 1000
-    minX: 0
-    maxX: Infinity
     requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: c179c63de4230254383d26a0f2c0715d, type: 2}
     dropRange: {x: 1, y: 4}
     weight: 500
-    minX: 0
-    maxX: Infinity
     requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: 067acda5cc1c56a4d9927390cb7529c8, type: 2}
     dropRange: {x: 1, y: 4}
     weight: 300
-    minX: 50
-    maxX: Infinity
     requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: 2d94657f9f194bd4e9d9b82d65dcaa94, type: 2}
     dropRange: {x: 1, y: 4}
     weight: 200
-    minX: 150
-    maxX: Infinity
     requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: b6e2a77fe18c74243998ae416085dd35, type: 2}
     dropRange: {x: 1, y: 2}
     weight: 150
-    minX: 250
-    maxX: Infinity
     requiredSkillLevel: 0
+  bonusDrops: []
   additionalLootChances:
   - 1
   - 0.6

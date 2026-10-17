@@ -18,6 +18,7 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly List<(Resource resource, EnemyData enemy, Button button)> journalDiscoveries = new();
         private Label journalDiscoveryCount;
         private int journalKnown = -1;
+        private bool journalAccessible;
 
         private void BuildMapJournal()
         {
@@ -28,7 +29,7 @@ namespace TimelessEchoes.UI.Toolkit
             for (var i = -1; i < definition.maps.Length; i++)
             {
                 var index = i;
-                var button = ToolkitGameplay.B(selectors, "", () => SelectJournalMap(index));
+                var button = ToolkitGameplay.B(selectors, "", () => SelectJournalMap(index, true));
                 button.name = "journal-map-" + (i + 1); button.AddToClassList("journal-selector");
                 JournalArt(button, i < 0 ? definition.portrait : definition.maps[i].icon);
                 Text(button, i < 0 ? ToolkitLocalization.Text("statistics.overall", "Overall") : ToolkitLocalization.Text("map." + definition.maps[i].config.name, definition.maps[i].label.Trim()), 7);
@@ -38,12 +39,23 @@ namespace TimelessEchoes.UI.Toolkit
             journalContent = ToolkitGameplay.E(layout, "journal-content");
             SelectJournalMap(Mathf.Clamp(journalMap, -1, definition.maps.Length - 1));
         }
-        public void SelectJournalMap(int index)
+        public void SelectJournalMap(int index, bool userInitiated = false)
         {
             if (index < -1 || index >= definition.maps.Length || journalContent == null) return;
             journalMap = index; journalRunKey = -1; journalKnown = -1;
             journalContent.Clear(); summaries.Clear(); journalDiscoveries.Clear();
             for (var i = 0; i < journalSelectors.Count; i++) StyleSelection(journalSelectors[i], i == index + 1);
+            journalAccessible = index < 0 || definition.maps[index].IsAccessible;
+            journalRecent = journalCollection = null; journalDiscoveryCount = null;
+            if (!journalAccessible)
+            {
+                var map = definition.maps[index];
+                Text(journalContent, ToolkitLocalization.Text("map." + map.config.name, map.label.Trim()), 8).AddToClassList("journal-heading");
+                var hint = Text(journalContent, ToolkitLocalization.Text("journal.locked." + map.config.name, map.lockedHint), 8);
+                hint.name = "journal-locked-hint"; hint.AddToClassList("journal-note");
+                return;
+            }
+            if (userInitiated && index >= 0) MapStatisticsGuidance.Viewed(definition.maps[index].config.name);
             var columns = ToolkitGameplay.E(journalContent, "journal-columns");
             var mainScroll = ToolkitControls.RecessedScroll(columns, "general-statistics", theme, definition.inset);
             mainScroll.parent.AddToClassList("journal-main");
@@ -60,8 +72,16 @@ namespace TimelessEchoes.UI.Toolkit
             BuildJournalCollection();
             RefreshMapJournal();
         }
+        private void RefreshJournalAccess()
+        {
+            if (selectedTab != 0 || journalContent == null || journalSelectors.Count != definition.maps.Length + 1) return;
+            for (var i = 0; i < definition.maps.Length; i++)
+                journalSelectors[i + 1].EnableInClassList("map-locked", !definition.maps[i].IsAccessible);
+            if (journalAccessible != (journalMap < 0 || definition.maps[journalMap].IsAccessible)) SelectJournalMap(journalMap);
+        }
         private void RefreshMapJournal()
         {
+            RefreshJournalAccess();
             if (summaries.Count == 0) return;
             var data = journalMap < 0
                 ? StatisticsPresentation.General(tracker, GameManager.Instance && GameManager.Instance.IsKillScalingMode)
@@ -119,7 +139,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var mask = ToolkitGameplay.E(parent, "journal-art");
             var image = new Image { sprite = sprite, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
-            if (sprite) { var size = sprite.rect.size * (16f / sprite.pixelsPerUnit); image.style.width = size.x; image.style.height = size.y; }
+            image.style.width = image.style.height = Length.Percent(100);
             image.style.flexShrink = 0; mask.Add(image);
         }
         private void BuildJournalCollection()

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TimelessEchoes.Hero;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Stats;
@@ -129,6 +130,9 @@ namespace TimelessEchoes.Buffs
                 return cachedRecipes;
             }
         }
+
+        public bool HasUnlockedAbilities => Recipes.Any(recipe => recipe && !recipe.IsRetired &&
+            (!recipe.requiredQuest || TimelessEchoes.Quests.QuestUtils.QuestCompleted(recipe.requiredQuest)));
 
         /// <summary>
         /// Recomputes effects for all active buffs (e.g., after Cauldron tiers change).

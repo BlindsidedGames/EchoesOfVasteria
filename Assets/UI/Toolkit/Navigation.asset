@@ -25,10 +25,10 @@ MonoBehaviour:
       fallback: Options
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName:
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
@@ -52,10 +52,10 @@ MonoBehaviour:
       fallback: 
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName:
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
@@ -79,10 +79,10 @@ MonoBehaviour:
       fallback: Adventure
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName:
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
@@ -93,7 +93,70 @@ MonoBehaviour:
     iconSliced: 0
     width: 61.28
     fontSize: 8
-    visibility: []
+    visibility:
+    - condition: 0
+      quest: {fileID: 11400000, guid: 298f411e97766fb47bf1d61e9e1a5bf8, type: 2}
+      npcId:
+  - id: skills
+    group: 2
+    action: 0
+    window: 6
+    map: {fileID: 0}
+    label:
+      key: navigation.skills
+      bold: 1
+      smallCaps: 0
+      fallback: Skills
+      localized:
+        m_TableReference:
+          m_TableCollectionName:
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key:
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 44
+    fontSize: 8
+    visibility:
+    - condition: 9
+      quest: {fileID: 0}
+      npcId:
+  - id: inventory
+    group: 2
+    action: 0
+    window: 10
+    map: {fileID: 0}
+    label:
+      key: forge.inventory
+      bold: 1
+      smallCaps: 0
+      fallback: Inventory
+      localized:
+        m_TableReference:
+          m_TableCollectionName:
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key:
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 60
+    fontSize: 8
+    visibility:
+    - condition: 0
+      quest: {fileID: 11400000, guid: 918ef9c4bf0607e479041a3d39b3f3b7, type: 2}
+      npcId:
   - id: hub
     group: 0
     action: 2
@@ -106,10 +169,10 @@ MonoBehaviour:
       fallback: Hub
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName:
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
@@ -120,7 +183,10 @@ MonoBehaviour:
     iconSliced: 0
     width: 31.61
     fontSize: 8
-    visibility: []
+    visibility:
+    - condition: 11
+      quest: {fileID: 0}
+      npcId:
   - id: townsfolk
     group: 0
     action: 3
@@ -133,10 +199,10 @@ MonoBehaviour:
       fallback: Townsfolk
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName:
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
@@ -163,10 +229,10 @@ MonoBehaviour:
       fallback: Quests
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName:
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
@@ -190,60 +256,6 @@ MonoBehaviour:
       fallback: Library
       localized:
         m_TableReference:
-          m_TableCollectionName: 
-        m_TableEntryReference:
-          m_KeyId: 0
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
-    icon: {fileID: 0}
-    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
-    iconSize: {x: 18, y: 18}
-    iconSliced: 0
-    width: 46.25
-    fontSize: 8
-    visibility: []
-  - id: close
-    group: 0
-    action: 5
-    window: 0
-    map: {fileID: 0}
-    label:
-      key: navigation.close
-      bold: 1
-      smallCaps: 1
-      fallback: Credits
-      localized:
-        m_TableReference:
-          m_TableCollectionName: 
-        m_TableEntryReference:
-          m_KeyId: 0
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-    background: {fileID: 0}
-    icon: {fileID: 369038022, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
-    shadow: {fileID: 0}
-    iconSize: {x: 18, y: 18.000004}
-    iconSliced: 1
-    width: 22
-    fontSize: 2.35
-    visibility: []
-  - id: inventory
-    group: 2
-    action: 0
-    window: 10
-    map: {fileID: 0}
-    label:
-      key: forge.inventory
-      bold: 1
-      smallCaps: 0
-      fallback: Inventory
-      localized:
-        m_TableReference:
           m_TableCollectionName:
         m_TableEntryReference:
           m_KeyId: 0
@@ -256,35 +268,38 @@ MonoBehaviour:
     shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
     iconSize: {x: 18, y: 18}
     iconSliced: 0
-    width: 80
+    width: 46.25
     fontSize: 8
-    visibility: []
-  - id: skills
-    group: 2
-    action: 0
-    window: 6
+    visibility:
+    - condition: 8
+      quest: {fileID: 0}
+      npcId:
+  - id: close
+    group: 0
+    action: 5
+    window: 0
     map: {fileID: 0}
     label:
-      key: navigation.skills
+      key: navigation.close
       bold: 1
-      smallCaps: 0
-      fallback: Skills
+      smallCaps: 1
+      fallback: Credits
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName:
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
-    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
-    icon: {fileID: 0}
-    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
-    iconSize: {x: 18, y: 18}
-    iconSliced: 0
-    width: 80
-    fontSize: 8
+    background: {fileID: 0}
+    icon: {fileID: 369038022, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    shadow: {fileID: 0}
+    iconSize: {x: 18, y: 18.000004}
+    iconSliced: 1
+    width: 22
+    fontSize: 2.35
     visibility: []
   - id: buffs
     group: 2
@@ -298,10 +313,10 @@ MonoBehaviour:
       fallback: Buffs
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName:
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
@@ -361,10 +376,10 @@ MonoBehaviour:
       fallback: Forge
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName:
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
@@ -394,10 +409,10 @@ MonoBehaviour:
       fallback: Cauldron
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName:
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
@@ -427,10 +442,10 @@ MonoBehaviour:
       fallback: Farmlands
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName:
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
@@ -443,7 +458,37 @@ MonoBehaviour:
     fontSize: 8
     visibility:
     - condition: 0
-      quest: {fileID: 11400000, guid: de222d7a217d39841a2a727a9a68563e, type: 2}
+      quest: {fileID: 11400000, guid: 298f411e97766fb47bf1d61e9e1a5bf8, type: 2}
+      npcId: 
+  - id: map-3
+    group: 1
+    action: 4
+    window: 0
+    map: {fileID: 11400000, guid: a0abc9be431dbc64d867ea8e6099b6f5, type: 2}
+    label:
+      key: navigation.map-3
+      bold: 1
+      smallCaps: 0
+      fallback: River
+      localized:
+        m_TableReference:
+          m_TableCollectionName:
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key:
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
+    icon: {fileID: 0}
+    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
+    iconSize: {x: 18, y: 18}
+    iconSliced: 0
+    width: 61.28
+    fontSize: 8
+    visibility:
+    - condition: 0
+      quest: {fileID: 11400000, guid: 918ef9c4bf0607e479041a3d39b3f3b7, type: 2}
       npcId: 
   - id: map-1
     group: 1
@@ -457,10 +502,10 @@ MonoBehaviour:
       fallback: Woods
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName:
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
@@ -487,10 +532,10 @@ MonoBehaviour:
       fallback: Mines
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName:
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
@@ -505,36 +550,6 @@ MonoBehaviour:
     - condition: 0
       quest: {fileID: 11400000, guid: 8a18857e90fcac348ba107a6d4b45789, type: 2}
       npcId: 
-  - id: map-3
-    group: 1
-    action: 4
-    window: 0
-    map: {fileID: 11400000, guid: a0abc9be431dbc64d867ea8e6099b6f5, type: 2}
-    label:
-      key: navigation.map-3
-      bold: 1
-      smallCaps: 0
-      fallback: River
-      localized:
-        m_TableReference:
-          m_TableCollectionName: 
-        m_TableEntryReference:
-          m_KeyId: 0
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-    background: {fileID: -2660333375279210, guid: 3e36fa7680d9c443ba82717e78f75f51, type: 3}
-    icon: {fileID: 0}
-    shadow: {fileID: -4362410828581672418, guid: 16e0654473de0754c90a7aaad75663ad, type: 3}
-    iconSize: {x: 18, y: 18}
-    iconSliced: 0
-    width: 61.28
-    fontSize: 8
-    visibility:
-    - condition: 0
-      quest: {fileID: 11400000, guid: 918ef9c4bf0607e479041a3d39b3f3b7, type: 2}
-      npcId: 
   - id: map-4
     group: 1
     action: 4
@@ -547,10 +562,10 @@ MonoBehaviour:
       fallback: Spooky
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName:
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
@@ -568,6 +583,9 @@ MonoBehaviour:
   forgeAttention: {fileID: 21300000, guid: 52ace75bf0b7f894d97b20a21000e1c8, type: 3}
   cauldronAttention: {fileID: 21300000, guid: 4cb6611cce92c664a91354038f2be24e, type: 3}
   questAttention: {fileID: 3947923570558630869, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+  questTutorialHand: {fileID: -6133907437499239528, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+  farmingIntroduction: {fileID: 11400000, guid: c985ab78ebd6132458d470465901ee43, type: 2}
+  hubIntroduction: {fileID: 11400000, guid: 71175c1334cf18144b304d9fbe1c9568, type: 2}
   autoPinFrame: {fileID: 239788920320451221, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
   toggleOn: {fileID: 9208044968218441874, guid: f429786718350477cb960cfcb3452aab, type: 3}
   toggleOff: {fileID: 7182660371469165703, guid: f429786718350477cb960cfcb3452aab, type: 3}
@@ -585,10 +603,10 @@ MonoBehaviour:
     fallback: Auto-Pin
     localized:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName:
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: 
+        m_Key:
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []

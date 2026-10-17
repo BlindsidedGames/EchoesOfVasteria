@@ -25,6 +25,11 @@ namespace TimelessEchoes.UI.Toolkit
         {
             
             body.style.paddingTop = body.style.paddingBottom = body.style.paddingLeft = body.style.paddingRight = 0;
+            if (!enemies && Blindsided.Oracle.oracle?.saveData?.General.TaskBoostTutorialStage == 1)
+            {
+                var hint = ToolkitControls.Text(ToolkitLocalization.Text("statistics.boost-lesson", "Boost makes a task more likely relative to others in its category. Completion milestones strengthen that bonus. Try Boost; toggle it again to undo."), ToolkitControls.TextRole.Body);
+                hint.name = "task-boost-lesson"; hint.style.whiteSpace = WhiteSpace.Normal; body.Add(hint);
+            }
             var scroll = ToolkitControls.RecessedScroll(body, enemies ? "enemy-statistics" : "task-statistics", theme, definition.inset);
             statContent = scroll.contentContainer; taskRows.Clear(); enemyRows.Clear(); statSortButtons.Clear();
             if (enemies)
@@ -117,7 +122,13 @@ namespace TimelessEchoes.UI.Toolkit
             }
             if (selectedTab == 0 || selectedTab == 3 || selectedTab == 4) dirty = true;
         }
-        private void TaskToggleChanged(TaskData _, bool __) { if (selectedTab == 4) dirty = true; }
+        private void TaskToggleChanged(TaskData task, bool enabled)
+        {
+            if (selectedTab == 4) dirty = true;
+            var general = Blindsided.Oracle.oracle?.saveData?.General;
+            if (IsOpen && selectedTab == 4 && general?.TaskBoostTutorialStage == 1 && task == TaskBoostGuidance.FindTask())
+                general.TaskBoostTutorialStage = 2;
+        }
         private void TaskWeightsChanged() { if (selectedTab == 4) dirty = true; }
         private void KillChanged(EnemyData _) { if (selectedTab == 0 || selectedTab == 3) dirty = true; }
         private void TaskCompleted() { if (selectedTab == 0 || selectedTab == 4) dirty = true; }

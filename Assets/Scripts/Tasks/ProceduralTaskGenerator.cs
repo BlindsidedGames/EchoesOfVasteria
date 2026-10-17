@@ -74,6 +74,7 @@ namespace TimelessEchoes.Tasks
         private TerrainSettings topTerrain;
 
         private readonly List<GameObject> generatedObjects = new();
+        private float taskDensityMultiplier = 1f;
 
         [SerializeField] private int physicsBufferSize = 8;
         private Collider2D[] physicsHits;
@@ -116,6 +117,9 @@ namespace TimelessEchoes.Tasks
         private void ApplyConfig(MapGenerationConfig cfg)
         {
             if (cfg == null) return;
+            // Snapshot this once so streaming later segments keeps the same density.
+            taskDensityMultiplier = cfg.name == "Farmlands" &&
+                TimelessEchoes.Stats.GameplayStatTracker.Instance?.CompletedAdventures == 0 ? .5f : 1f;
             minX = cfg.taskGeneratorSettings.minX;
             height = cfg.taskGeneratorSettings.height;
             enemyDensity = cfg.taskGeneratorSettings.enemyDensity;
@@ -259,6 +263,11 @@ namespace TimelessEchoes.Tasks
             GenerateInternal(localMinX, localMaxX, parent, false);
         }
 
+        private int TerrainTaskCount(float localMinX, float localMaxX, TerrainSettings terrain)
+        {
+            return Mathf.RoundToInt((localMaxX - localMinX) * (terrain?.taskSettings.taskDensity ?? 0f) * taskDensityMultiplier);
+        }
+
         private void GenerateInternal(float localMinX, float localMaxX, Transform parent, bool clearExisting)
         {
             if (Controller == null)
@@ -273,11 +282,11 @@ namespace TimelessEchoes.Tasks
             }
 
             var bottomCount =
-                Mathf.RoundToInt((localMaxX - localMinX) * (bottomTerrain?.taskSettings.taskDensity ?? 0f));
+                TerrainTaskCount(localMinX, localMaxX, bottomTerrain);
             var middleCount =
-                Mathf.RoundToInt((localMaxX - localMinX) * (middleTerrain?.taskSettings.taskDensity ?? 0f));
-            var topCount = Mathf.RoundToInt((localMaxX - localMinX) * (topTerrain?.taskSettings.taskDensity ?? 0f));
-            var enemyCount = Mathf.RoundToInt((localMaxX - localMinX) * enemyDensity);
+                TerrainTaskCount(localMinX, localMaxX, middleTerrain);
+            var topCount = TerrainTaskCount(localMinX, localMaxX, topTerrain);
+            var enemyCount = Mathf.RoundToInt((localMaxX - localMinX) * enemyDensity * taskDensityMultiplier);
             if (bottomCount + middleCount + topCount <= 0 && enemyCount <= 0)
                 return;
 
@@ -352,9 +361,7 @@ namespace TimelessEchoes.Tasks
                 if (!string.IsNullOrEmpty(npc.id) && StaticReferences.ActiveNpcMeetings.Contains(npc.id))
                     continue;
 
-                Vector3 pos;
-                if (!TryGetTerrainSpot(npc.localX, npc.spawnTerrains, out pos))
-                    pos = RandomPositionAtX(npc.localX);
+                if (!TryGetNpcPosition(npc, out var pos)) continue;
 
                 var npcTerrain = GetTerrainAt(pos);
                 if (npcTerrain == null ||
@@ -526,6 +533,46 @@ namespace TimelessEchoes.Tasks
             return new Vector3(worldX, worldY, 0f);
         }
 
+        private bool TryGetNpcPosition(MapGenerationConfig.ProceduralTaskSettings.NpcSpawnEntry npc, out Vector3 position)
+        {
+            if (!npc.placeAtWaterEdge)
+            {
+                if (!TryGetTerrainSpot(npc.localX, npc.spawnTerrains, out position))
+                    position = RandomPositionAtX(npc.localX);
+                return true;
+            }
+
+            position = Vector3.zero;
+            EnsureTilemaps();
+            if (!terrainMap || bottomTerrain == null || npc.spawnTerrains == null) return false;
+            var origin = terrainMap.WorldToCell(transform.position + Vector3.right * npc.localX);
+            var bottom = terrainMap.WorldToCell(transform.position).y;
+            // Search nearby columns so a bend in the shoreline does not put the rod on land.
+            for (int step = 0; step <= 8; step++)
+            {
+                int dx = step == 0 ? 0 : (step + 1) / 2 * (step % 2 == 1 ? 1 : -1);
+                for (int y = bottom; y < bottom + Mathf.CeilToInt(height); y++)
+                {
+                    var cell = new Vector3Int(origin.x + dx, y, 0);
+                    if (terrainMap.GetTile(cell + Vector3Int.down) != bottomTerrain.tile) continue;
+                    var candidate = terrainMap.GetCellCenterWorld(cell);
+                    // Stand near the lower edge of the land tile (six pixels below
+                    // its centre on the 16px world grid), keeping Gill's feet on land.
+                    candidate.y -= (candidate.y - terrainMap.CellToWorld(cell).y) * .75f;
+                    var terrain = GetTerrainAt(candidate);
+                    if (terrain == null || !npc.spawnTerrains.Contains(terrain) || !ValidateTerrainRules(terrain, cell)) continue;
+                    var bobber = terrainMap.WorldToCell(candidate + (Vector3)npc.fishingWaterOffset);
+                    // The first water row also draws the bank. Keep a full water
+                    // row above the hook so the fishing animation clears that art.
+                    if (terrainMap.GetTile(bobber) != bottomTerrain.tile ||
+                        terrainMap.GetTile(bobber + Vector3Int.up) != bottomTerrain.tile) continue;
+                    position = candidate;
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private bool TryGetTerrainSpot(float localX, TerrainSettings settings, out Vector3 position)
         {
             position = Vector3.zero;
@@ -615,10 +662,10 @@ namespace TimelessEchoes.Tasks
             scratchTaskPositions.Clear();
             scratchTaskMap.Clear();
 
-            var bottomCount = Mathf.RoundToInt((localMaxX - localMinX) * (bottomTerrain?.taskSettings.taskDensity ?? 0f));
-            var middleCount = Mathf.RoundToInt((localMaxX - localMinX) * (middleTerrain?.taskSettings.taskDensity ?? 0f));
-            var topCount = Mathf.RoundToInt((localMaxX - localMinX) * (topTerrain?.taskSettings.taskDensity ?? 0f));
-            var enemyCount = Mathf.RoundToInt((localMaxX - localMinX) * enemyDensity);
+            var bottomCount = TerrainTaskCount(localMinX, localMaxX, bottomTerrain);
+            var middleCount = TerrainTaskCount(localMinX, localMaxX, middleTerrain);
+            var topCount = TerrainTaskCount(localMinX, localMaxX, topTerrain);
+            var enemyCount = Mathf.RoundToInt((localMaxX - localMinX) * enemyDensity * taskDensityMultiplier);
 
             var spawnedThisBatch = 0;
             System.Func<bool> doYield = () =>
@@ -696,7 +743,7 @@ namespace TimelessEchoes.Tasks
                 if (npc.spawnOnlyOnce && StaticReferences.CompletedNpcTasks.Contains(npc.id)) continue;
                 if (!string.IsNullOrEmpty(npc.id) && StaticReferences.ActiveNpcMeetings.Contains(npc.id)) continue;
 
-                Vector3 pos; if (!TryGetTerrainSpot(npc.localX, npc.spawnTerrains, out pos)) pos = RandomPositionAtX(npc.localX);
+                if (!TryGetNpcPosition(npc, out var pos)) continue;
                 var npcTerrain = GetTerrainAt(pos);
                 if (npcTerrain == null || (npc.spawnTerrains != null && npc.spawnTerrains.Count > 0 && !npc.spawnTerrains.Contains(npcTerrain)) || !ValidateTerrainRules(npcTerrain, terrainMap.WorldToCell(pos))) continue;
 
@@ -913,7 +960,10 @@ namespace TimelessEchoes.Tasks
 
         private TaskData PickTaskEntry(float worldX)
         {
-            var chosen = PickEntry(taskCategories, worldX, _ => true);
+            var chosen = PickEntry(taskCategories, worldX,
+                category => TimelessEchoes.Quests.QuestUtils.QuestCompleted(category.requiredQuest) &&
+                    (string.IsNullOrEmpty(category.requiredNpcId) ||
+                     Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Contains(category.requiredNpcId)));
             if (chosen == null)
                 return null;
             return PickTaskFromCategory(chosen, worldX);
@@ -971,6 +1021,9 @@ namespace TimelessEchoes.Tasks
         public class WeightedTaskCategory : IWeighted
         {
             public float weight = 1f;
+            [Tooltip("Optional quest that must be handed in before this category can spawn on this map.")]
+            public TimelessEchoes.Quests.QuestData requiredQuest;
+            public string requiredNpcId;
             public List<TaskData> tasks = new();
 
             public float GetWeight(float worldX)

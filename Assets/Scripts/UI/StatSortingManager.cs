@@ -15,7 +15,6 @@ namespace TimelessEchoes.UI
         [SerializeField] private StatSortButton buttonPrefab;
 
         [SerializeField] private Button generalButton;
-        [SerializeField] private Button rankButton;
         [SerializeField] private Button graphsButton;
         [SerializeField] private Button enemiesButton;
         [SerializeField] private Button tasksButton;
@@ -26,7 +25,6 @@ namespace TimelessEchoes.UI
         [SerializeField] private ItemStatsPanelUI itemPanel;
         [SerializeField] private RunStatsPanelUI runStatsPanel;
         [SerializeField] private GameObject enemyDistanceControls; // Slider GameObject to toggle with Enemies tab
-        [SerializeField] private GameObject rankNameObject;
 
         private readonly List<StatSortButton> buttons = new();
         private readonly Dictionary<StatSortButton, Enum> buttonModes = new();
@@ -42,8 +40,6 @@ namespace TimelessEchoes.UI
             if (!enabled) return; // Retired presentation must not subscribe or build hidden UI.
             if (generalButton != null)
                 generalButton.onClick.AddListener(ShowGeneral);
-            if (rankButton != null)
-                rankButton.onClick.AddListener(ShowRank);
             if (graphsButton != null)
                 graphsButton.onClick.AddListener(ShowGraphs);
             if (enemiesButton != null)
@@ -65,8 +61,6 @@ namespace TimelessEchoes.UI
         {
             if (generalButton != null)
                 generalButton.onClick.RemoveListener(ShowGeneral);
-            if (rankButton != null)
-                rankButton.onClick.RemoveListener(ShowRank);
             if (graphsButton != null)
                 graphsButton.onClick.RemoveListener(ShowGraphs);
             if (enemiesButton != null)
@@ -80,11 +74,6 @@ namespace TimelessEchoes.UI
         private void ShowGeneral()
         {
             SetTab(0);
-        }
-
-        private void ShowRank()
-        {
-            SetTab(1);
         }
 
         private void ShowGraphs()
@@ -113,8 +102,6 @@ namespace TimelessEchoes.UI
             currentTab = tab;
             BuildButtons();
             // Toggle tab-specific controls based on active tab
-            if (rankNameObject != null)
-                rankNameObject.SetActive(currentTab == 1);
             if (enemyDistanceControls != null)
                 enemyDistanceControls.SetActive(currentTab == 3);
         }
@@ -126,9 +113,6 @@ namespace TimelessEchoes.UI
             {
                 case 0:
                     // General tab has no sorting buttons
-                    break;
-                case 1:
-                    // Rank tab has no sorting buttons
                     break;
                 case 2:
                     BuildGraphButtons();

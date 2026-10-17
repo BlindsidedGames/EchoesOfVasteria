@@ -24,11 +24,11 @@ MonoBehaviour:
     m_LocalVariables: []
   description:
     m_TableReference:
-      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+      m_TableCollectionName: Quests
     m_TableEntryReference:
-      m_KeyId: 4904353939456
-      m_Key: 
-    m_FallbackState: 0
+      m_KeyId: 0
+      m_Key: Ivan.return.v3.description
+    m_FallbackState: 2
     m_WaitForCompletion: 0
     m_LocalVariables: []
   rewardDescription:
@@ -41,9 +41,14 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   npcId: 
+  requiresTown: 1
+  acceptanceQuest: 0
+  acceptanceResources: []
   autoPin: 0
+  useN0ForPinnedNumbers: 0
   requiredQuests:
   - {fileID: 11400000, guid: c058038d0557e31478313cc9f9131098, type: 2}
+  minimumMaxRunDistanceExclusive: 0
   requirements:
   - type: 6
     resource: {fileID: 0}
@@ -52,6 +57,11 @@ MonoBehaviour:
     killName: 
     killIcon: {fileID: 0}
     meetNpcId: Ivan1
+    buffs: []
+    includeAutoCasts: 1
+    buffCastName:
+    buffCastIcon: {fileID: 0}
+  rewards: []
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 25

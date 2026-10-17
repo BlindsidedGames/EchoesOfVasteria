@@ -121,7 +121,7 @@ namespace TimelessEchoes.Upgrades
         {
             if (nativeView && nativeView.IsConfigured)
             {
-                nativeView.ShowSummary(BuildSummaryText(), amounts, bonusAmounts);
+                nativeView.ShowSummary(BuildSummary(), amounts, bonusAmounts);
                 return;
             }
             if (slotParent == null || slotPrefab == null)
@@ -186,6 +186,25 @@ namespace TimelessEchoes.Upgrades
             if (window != null && window.activeInHierarchy) UpdateSummaryText();
         }
 
+        public RunSummaryData BuildSummary()
+        {
+            var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
+            if (!tracker) return new RunSummaryData();
+            var runs = tracker.RecentRuns;
+            var last = runs != null && runs.Count > 0 ? runs[runs.Count - 1] : null;
+            var retreated = last != null && !last.Died && !last.Reaped && !last.Abandoned;
+            var perKill = TimelessEchoes.GameManager.Instance ? TimelessEchoes.GameManager.Instance.BonusPercentPerKill : 2f;
+            return new RunSummaryData
+            {
+                Map = last?.MapType ?? TimelessEchoes.GameManager.CurrentGenerationConfig?.name,
+                Duration = Mathf.Max(0, tracker.SessionDuration), Steps = Mathf.Max(0, tracker.SessionSteps),
+                Deaths = tracker.SessionDeaths, Reaps = tracker.SessionReaps,
+                StartingDistance = startingReapDistance, Distance = tracker.MaxRunDistance,
+                Retreated = retreated, Kills = last?.EnemiesKilled ?? 0,
+                RetreatBonusPercent = retreated ? last.EnemiesKilled * perKill : 0
+            };
+        }
+
         public string BuildSummaryText()
         {
             var tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
@@ -209,7 +228,7 @@ namespace TimelessEchoes.Upgrades
             {
                 var oldDist = $"{startingReapDistance:N0}";
                 var newDist = $"{tracker.MaxRunDistance:N0}";
-                lines.Add(ToolkitLocalization.Text("run.summary.reaping-distance", "Reaping Distance: {0}<sprite=9>{1}" , oldDist, newDist));
+                lines.Add(ToolkitLocalization.Text("run.summary.reaping-distance-text", "Reaping Distance: {0} → {1}" , oldDist, newDist));
             }
 
             // Line 3 (optional): Retreated with K kills for P% bonus (only if last run retreated)
@@ -232,4 +251,13 @@ namespace TimelessEchoes.Upgrades
             return string.Join("\n", lines);
         }
     }
+    [System.Serializable]
+    public sealed class RunSummaryData
+    {
+        public string Map;
+        public float Duration, Steps, StartingDistance, Distance, RetreatBonusPercent;
+        public int Deaths, Reaps, Kills;
+        public bool Retreated;
+    }
+
 }

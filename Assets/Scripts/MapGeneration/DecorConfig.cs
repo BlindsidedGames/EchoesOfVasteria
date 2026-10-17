@@ -10,6 +10,8 @@ namespace TimelessEchoes.MapGeneration
     public class DecorConfig
     {
         [MinValue(0f)] public float weight = 1f;
+        [Tooltip("Optional quest that must be handed in before this decoration can spawn.")]
+        public TimelessEchoes.Quests.QuestData requiredQuest;
         public float minX;
         public float maxX = float.PositiveInfinity;
         [MinValue(0)] [HideIf(nameof(borderOnly))] public int topBuffer = 1;
@@ -71,6 +73,7 @@ namespace TimelessEchoes.MapGeneration
         public float GetWeight(float worldX)
         {
             if (tile == null && prefab == null) return 0f;
+            if (!TimelessEchoes.Quests.QuestUtils.QuestCompleted(config.requiredQuest)) return 0f;
             if (worldX < config.minX || worldX > config.maxX) return 0f;
             return Mathf.Max(0f, config.weight);
         }

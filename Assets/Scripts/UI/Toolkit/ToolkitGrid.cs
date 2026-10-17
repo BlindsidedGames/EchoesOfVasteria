@@ -8,6 +8,7 @@ namespace TimelessEchoes.UI.Toolkit
     {
         private int columns;
         public int Columns => columns;
+        public float ContentWidth => columns * cellSize.x + (columns - 1) * spacing.x;
         private readonly Vector2 cellSize, spacing;
 
         public ToolkitGrid(int columns, Vector2 cellSize, Vector2 spacing)

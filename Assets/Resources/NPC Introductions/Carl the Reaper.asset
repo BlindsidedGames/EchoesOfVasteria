@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5ec439cd098aa84d91ee02650c3d212, type: 3}
+  m_Name: Carl the Reaper
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.UI.Toolkit.ToolkitNpcIntroduction
+  npcId: Reaper1
+  meetingPrefab: {fileID: 4473393103591709735, guid: 8ed7138ae18d6d148b1f94dd314d3c1b, type: 3}
+  portrait: {fileID: -4077104396257928421, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  portraitFrames:
+  - {fileID: -4077104396257928421, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  - {fileID: 6784386026123545574, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  - {fileID: 6978872590251833464, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  - {fileID: -3742758872729403601, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  - {fileID: -2100359184035004271, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  - {fileID: -1242654037959151116, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  portraitFramesPerSecond: 12
+  previouslyCompletedIntroduction: {fileID: 11400000, guid: de222d7a217d39841a2a727a9a68563e, type: 2}
+  lines:
+  - It's my job to make sure you don't stray too far from town.
+  - For now, you can reach distance 50. As you help the townsfolk and unlock new areas, I'll let you travel farther.
+  lineKeys:
+  - intro.Reaper.distance.line.01
+  - intro.Reaper.distance.line.02

@@ -219,7 +219,14 @@ namespace TimelessEchoes.UI.Toolkit
         private void LoadOrDelete(int index)
         {
             if (!CanLoad(index)) return;
-            if (safety[index]) { if (!SaveSlotActions.DeleteSlot(index)) return; if (index == Oracle.oracle.CurrentSlot) Oracle.oracle.WipeAllData(replacingDeletedSlot: true); }
+            if (safety[index])
+            {
+                if (index == Oracle.oracle.CurrentSlot)
+                {
+                    if (Oracle.oracle.ResetCurrentSlotAndReload()) return;
+                }
+                else if (!SaveSlotActions.DeleteSlot(index)) return;
+            }
             else Oracle.oracle.SelectSlot(index);
             RefreshSlots();
         }

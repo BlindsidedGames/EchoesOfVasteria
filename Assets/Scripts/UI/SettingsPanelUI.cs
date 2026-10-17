@@ -394,17 +394,6 @@ namespace TimelessEchoes.UI
                     if (currentUsernameText != null)
                         currentUsernameText.text = msg;
 
-                    // Refresh any visible Leaderboards panel so the new name shows immediately.
-                    try
-                    {
-                        var lb = UnityEngine.Object.FindAnyObjectByType<LeaderboardsPanelUI>(FindObjectsInactive.Exclude);
-                        if (lb != null)
-                        {
-                            lb.RefreshNow();
-                        }
-                    }
-                    catch { /* non-fatal if panel not present */ }
-
                     // Confirm for 2 seconds, then clear
                     ShowUsernameStatus("Name updated.", seconds: 2f, stickyError: false);
                 }
@@ -720,12 +709,14 @@ namespace TimelessEchoes.UI
 
             if (slot.safetyEnabled)
             {
+                if (index == Oracle.oracle.CurrentSlot)
+                {
+                    Oracle.oracle.ResetCurrentSlotAndReload();
+                    return;
+                }
                 if (!DeleteSlot(index))
                     return;
-                if (index == Oracle.oracle.CurrentSlot)
-                    Oracle.oracle.WipeAllData(replacingDeletedSlot: true);
-                else
-                    RefreshSlot(index);
+                RefreshSlot(index);
             }
             else
             {
