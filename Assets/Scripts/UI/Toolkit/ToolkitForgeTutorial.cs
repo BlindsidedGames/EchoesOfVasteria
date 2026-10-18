@@ -31,7 +31,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             bool active = ForgeFirstLesson.Active;
             lessonPanel.style.display = lessonPointer.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
-            main.style.marginTop = sidebar.style.marginTop = active ? FirstLessonMargin : 0;
+            main.style.marginTop = active ? FirstLessonMargin : 0;
             if (!active)
             {
                 lessonTarget = null;
@@ -55,7 +55,7 @@ namespace TimelessEchoes.UI.Toolkit
             lessonTarget = root.Q<Button>(target);
             foreach (var entry in definition.gear) root.Q<Button>("gear-" + entry.slot).SetEnabled(stage == 2 && entry.slot == "Weapon");
             foreach (var binding in definition.catalog.cores) root.Q<Button>("core-" + binding.core.name).SetEnabled(stage == 1 && binding.core == core);
-            autoCraft.SetEnabled(false);
+            automationControls.SetEnabled(false);
             foreach (var row in conversions.Values) row.amount.SetEnabled(false);
             if (stage == 4) replace.text = ToolkitLocalization.Text("forge.equip", "Equip");
             if (lessonStage != stage)
@@ -67,7 +67,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void PositionFirstLessonHand()
         {
             if (lessonTarget == null || !ForgeFirstLesson.Active) return;
-            main.style.marginTop = sidebar.style.marginTop = FirstLessonMargin;
+            main.style.marginTop = FirstLessonMargin;
             if (!((ScrollView)main).contentViewport.worldBound.Contains(lessonTarget.worldBound.center))
                 ((ScrollView)main).ScrollTo(lessonTarget);
             var anchor = root.WorldToLocal(new Vector2(lessonTarget.worldBound.center.x, lessonTarget.worldBound.yMax));

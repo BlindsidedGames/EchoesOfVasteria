@@ -217,6 +217,7 @@ namespace TimelessEchoes.Hero
             // Stat system is initialized by the concrete HeroController subclass
 
             OnPostAwakeAnimatorSetup();
+            TimelessEchoes.Characters.CharacterAppearance.Attach(spriteRenderer);
         }
 
 

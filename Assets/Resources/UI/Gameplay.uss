@@ -767,7 +767,7 @@
 
 /* Forge: shared spacing, native-pixel art and a single companion column. */
 .gameplay.eov-forge {padding:var(--space-section);}
-.gameplay.eov-forge .eov-forge-main {margin-right:var(--space-panel);}
+.gameplay.eov-forge .eov-forge-main {margin-right:0;flex-grow:1;}
 .gameplay.eov-forge .eov-forge-sidebar {width:220px;min-width:0;}
 .gameplay.eov-forge .forge-sidebar-tabs {margin-bottom:var(--space-section);}
 .gameplay.eov-forge .forge-sidebar-tabs > Button {flex-grow:1;flex-basis:0;margin:0;}
@@ -792,9 +792,9 @@
 .gameplay.eov-forge .eov-forge-selection {top:0;left:0;bottom:0;right:0;border-width:1px;border-color:var(--accent);background-image:none;}
 .gameplay.eov-forge .eov-forge-actions {margin-right:0;}
 .gameplay.eov-forge .eov-forge-actions > Button {margin-bottom:var(--space-control);}
-.gameplay.eov-forge .forge-toggles {flex-direction:column;margin-bottom:var(--space-control);}
-.gameplay.eov-forge .eov-forge-toggle {min-height:20px;height:20px;flex-basis:auto;flex-grow:0;justify-content:flex-start;padding:0;background-color:transparent;border-width:0;}
-.gameplay.eov-forge .eov-forge-toggle .eov-text {font-size:7px;}
+.gameplay.eov-forge .forge-toggles {flex-direction:row;flex-wrap:wrap;margin-bottom:var(--space-control);}
+.gameplay.eov-forge .eov-forge-toggle {min-height:20px;height:20px;flex-basis:auto;flex-grow:0;justify-content:flex-start;padding:0;margin-right:5px;background-color:transparent;border-width:0;}
+.gameplay.eov-forge .eov-forge-toggle .eov-text {font-size:6.5px;flex-basis:auto;flex-grow:0;flex-shrink:0;white-space:nowrap;}
 .gameplay.eov-forge .eov-forge-odds {width:48px;height:48px;margin:0 8px 0 0;}
 .gameplay.eov-forge .forge-comparison-section {margin-bottom:var(--space-section);}
 .gameplay.eov-forge .forge-comparison-heading {align-items:center;margin-bottom:var(--space-control);}
@@ -831,17 +831,17 @@
 .gameplay.eov-forge .eov-forge-core {height:42px;min-height:42px;}
 .gameplay.eov-forge .eov-forge-actions {flex-basis:0;margin-right:8px;}
 .gameplay.eov-forge .eov-forge-toggle .eov-text {-unity-text-align:middle-left;margin-left:4px;}
-.gameplay.eov-forge .forge-comparison-section {width:170px;flex-shrink:0;}
-.gameplay.eov-forge .forge-comparison-heading {flex-direction:column;align-items:stretch;}
+.gameplay.eov-forge .forge-comparison-section {width:46%;flex-shrink:0;}
+.gameplay.eov-forge .forge-comparison-heading {flex-direction:row;align-items:center;}
 .gameplay.eov-forge .forge-comparison-heading > .eov-text {margin-bottom:4px;}
-.gameplay.eov-forge .forge-comparison-heading Button {width:auto;}
-.gameplay.eov-forge .forge-comparison-section .forge-metric-name {display:none;}
+.gameplay.eov-forge .forge-comparison-heading Button {width:80px;}
+.gameplay.eov-forge .forge-comparison-section .forge-metric-name {display:flex;}
 .gameplay.eov-forge .forge-comparison-section .forge-metric {min-height:18px;}
 .gameplay.eov-forge .forge-comparison-section .forge-metric-header .forge-metric-name {display:flex;font-size:6px;}
-.gameplay.eov-forge .forge-comparison-section .forge-metric-value {flex-grow:1;flex-basis:0;width:auto;}
+.gameplay.eov-forge .forge-comparison-section .forge-metric-value {flex-grow:0;width:70px;}
 .gameplay.eov-forge .eov-forge-conversion {min-height:42px;}
 .gameplay.eov-forge.forge-narrow .forge-comparison-section {width:100%;margin-top:8px;}
-.gameplay.eov-forge .eov-forge-conversion {flex-direction:column;align-items:stretch;min-height:0;padding-right:6px;}
+.gameplay.eov-forge .eov-forge-conversion {flex-direction:column;align-items:stretch;min-height:0;min-width:0;flex-basis:0;flex-grow:1;padding:6px;border-width:.5px;border-color:var(--line);background-color:var(--control);}
 .gameplay.eov-forge .forge-conversion-title {font-size:8px;margin-bottom:4px;}
 .gameplay.eov-forge .eov-forge-conversion > .eov-forge-row {width:auto;height:36px;}
 .gameplay.eov-forge .eov-forge-conversion .eov-forge-button {width:47px;margin:0 0 0 4px;}
@@ -852,6 +852,13 @@
 .gameplay.eov-forge .eov-forge-conversion .eov-number-field {flex-basis:auto;}
 .gameplay.eov-forge .eov-forge-conversion .eov-number-field,
 .gameplay.eov-forge .eov-forge-conversion .eov-number-field .unity-text-element {font-size:7px;}
+.gameplay.eov-forge .eov-forge-conversion .eov-number-field {border-width:1px;border-color:#a88b79;background-color:#241e1f;}
+.gameplay.eov-forge .eov-forge-conversion .eov-number-field .unity-base-text-field__input,
+.gameplay.eov-forge .eov-forge-conversion .eov-number-field #unity-text-input {background-color:#241e1f;color:var(--text);border-width:0;padding-left:5px;padding-right:5px;}
+.gameplay.eov-forge .eov-forge-conversion .eov-number-field #unity-text-input .unity-text-element {background-color:transparent;color:var(--text);}
+.gameplay.eov-forge .eov-forge-conversion .eov-number-field:hover,
+.gameplay.eov-forge .eov-forge-conversion .eov-number-field:focus {border-color:var(--accent);}
+.gameplay.eov-forge .eov-forge-conversion .eov-number-field .unity-base-text-field__input:focus {border-width:1px;border-color:var(--accent);}
 .gameplay.eov-forge .eov-forge-conversion .forge-conversion-title {font-size:8px;}
 
 /* Forge resource readability: one owned count, larger masks, selection rarity. */
@@ -877,13 +884,21 @@
 .gameplay.eov-forge .eov-forge-core:focus {background-color:transparent;border-width:0;}
 .gameplay.eov-forge .eov-forge-core {height:42px;min-height:42px;}
 .gameplay.eov-forge .eov-forge-core-frame {width:27px;height:28px;margin-bottom:3px;border-width:.5px;}
-.gameplay.eov-forge .forge-odds-popup {position:absolute;width:168px;padding:8px;background-color:var(--surface);border-width:.5px;border-color:var(--panel-light);}
-.gameplay.eov-forge .forge-odds-popup > .eov-text--heading {font-size:9px;margin-bottom:4px;}
-.gameplay.eov-forge .forge-odds-row {flex-direction:row;align-items:center;height:17px;}
+.gameplay.eov-forge .forge-odds-summary {align-items:center;margin:2px 0;}
+.gameplay.eov-forge .forge-odds-legend {flex-grow:1;min-width:0;}
+.gameplay.eov-forge .forge-odds-legend > .eov-text--heading {font-size:8px;margin-bottom:3px;}
+.gameplay.eov-forge .forge-odds-rows {flex-direction:row;flex-wrap:wrap;}
+.gameplay.eov-forge .forge-odds-row {flex-direction:row;align-items:center;height:12px;width:50%;padding-right:6px;}
 .gameplay.eov-forge .forge-odds-row .eov-text {font-size:7px;white-space:nowrap;}
 .gameplay.eov-forge .forge-odds-swatch {width:6px;height:6px;margin-right:4px;flex-shrink:0;}
-.gameplay.eov-forge .forge-odds-name {flex-grow:1;}
-.gameplay.eov-forge .forge-odds-value {width:50px;-unity-text-align:middle-right;}
+.gameplay.eov-forge .forge-odds-name {flex-grow:1;flex-shrink:1;min-width:0;}
+.gameplay.eov-forge .forge-odds-value {width:36px;flex-shrink:0;-unity-text-align:middle-right;}
+.gameplay.eov-forge .forge-odds-zero {opacity:.35;}
+.gameplay.eov-forge .forge-craft-controls {align-items:center;margin-bottom:4px;}
+.gameplay.eov-forge .forge-craft-controls > Button {width:82px;min-height:28px;margin-right:8px;flex-shrink:0;}
+.gameplay.eov-forge .forge-craft-recipe {flex-grow:1;justify-content:center;}
+.gameplay.eov-forge #forge-automation-area {min-height:24px;}
+.gameplay.eov-forge .eov-forge-conversions {margin-top:auto;margin-bottom:0;flex-shrink:0;}
 
 
 /* Buff selection uses the shared framed icons and an explicit loadout. */
@@ -1020,56 +1035,83 @@
 .quests-embedded-inventory .eov-resource-slot.resource-selected,
 .inventory-standalone .eov-resource-slot.resource-selected { border-color: var(--accent); border-bottom-width: .5px; }
 
-/* Fields: stable grids, readable state, and a consistent rhythm. */
-.gameplay.fields-ui .fields-rates {margin-bottom:3px;}
-.gameplay.fields-ui .fields-seed-grid {align-content:flex-start;}
-.gameplay.fields-ui .fields-seed-card {width:64px;min-width:0;height:74px;margin-right:4px;margin-bottom:4px;padding:5px 3px;flex-direction:column;align-items:center;border-width:1px;border-color:var(--line);}
-.gameplay.fields-ui .fields-seed-card .icon {margin-bottom:3px;}
-.gameplay.fields-ui .fields-seed-caption {width:100%;height:24px;font-size:8px;-unity-text-align:middle-center;}
-.gameplay.fields-ui .fields-seed-count {width:100%;font-size:9px;-unity-text-align:middle-center;}
-.gameplay.fields-ui .fields-seed-card.primary Label {color:var(--on-accent);}
-.gameplay.fields-ui .fields-undiscovered {background-color:var(--field);}
-.gameplay.fields-ui .fields-undiscovered Label {color:var(--muted);}
-.gameplay.fields-ui .fields-plot {width:30%;min-width:0;flex-grow:1;margin-right:4px;margin-bottom:4px;height:88px;padding:2px 3px;flex-direction:column;align-items:center;border-width:1px;border-color:var(--line);}
-.gameplay.fields-ui .fields-plot-title {width:100%;height:12px;font-size:8px;-unity-text-align:middle-center;margin-bottom:2px;}
-.gameplay.fields-ui .fields-plot-art {margin-bottom:2px;}
-.gameplay.fields-ui .fields-plot-status {width:100%;height:23px;font-size:8px;-unity-font-style:normal;-unity-text-align:middle-center;}
-.gameplay.fields-ui .fields-plot .track {height:3px;margin:2px 0 0 0;}
-.gameplay.fields-ui .fields-plot.selected {border-color:var(--accent);background-color:var(--selected);}
-.gameplay.fields-ui .fields-plot:disabled {opacity:1;}
-.gameplay.fields-ui .fields-locked {background-color:var(--field);}
-.gameplay.fields-ui .fields-locked .fields-plot-art {opacity:.35;}
-.gameplay.fields-ui .fields-locked Label {color:var(--muted);}
-.gameplay.fields-ui .fields-ready .fields-plot-status {color:#a5dc99;}
-.gameplay.fields-ui .fields-ready .fill {background-color:#a5dc99;}
-.gameplay.fields-ui .fields-action-area {background-color:var(--field);border-width:.5px;border-color:var(--line);padding:4px;margin-top:4px;}
-.gameplay.fields-ui .fields-selection-strip {margin-bottom:5px;}
-.gameplay.fields-ui .fields-selection {font-size:9px;-unity-font-style:bold;margin-right:6px;}
-.gameplay.fields-ui .fields-selection-detail {font-size:8px;}
-.gameplay.fields-ui .fields-actions > .button {min-width:62px;min-height:24px;margin-right:4px;margin-bottom:3px;padding:4px 6px;}
-.gameplay.fields-ui .fields-harvest-help {font-size:8px;margin-top:2px;}
-.gameplay.fields-ui #fields-construction-foldout {margin:6px 0 0 0;}
-.gameplay.fields-ui .fields-build-row {padding:5px 0;border-bottom-width:.5px;border-bottom-color:var(--line);}
-
-.gameplay.fields-ui .fields-row-end {margin-right:0;}
-.gameplay.fields-ui .fields-actions > .button:disabled {opacity:1;background-color:var(--control);color:var(--muted);}
-
-.gameplay.fields-ui {padding:8px;}
-
-.gameplay.fields-ui .unity-foldout__toggle {min-height:18px;}
-
-.gameplay.fields-ui.fields-compact .quests-heading {margin-bottom:4px;}
-.gameplay.fields-ui.fields-compact .fields-rates {margin-bottom:1px;}
-.gameplay.fields-ui.fields-compact .fields-plot {height:76px;}
-.gameplay.fields-ui.fields-compact .fields-plot-title {margin-bottom:1px;}
-.gameplay.fields-ui.fields-compact .fields-plot-art {margin-bottom:1px;}
-.gameplay.fields-ui.fields-compact .fields-plot .track {height:2px;margin-top:1px;}
-.gameplay.fields-ui.fields-compact .fields-action-area {margin-top:2px;padding:3px;}
-.gameplay.fields-ui.fields-compact .fields-selection-strip {margin-bottom:3px;}
-.gameplay.fields-ui.fields-compact #fields-construction-foldout {margin-top:4px;}
-
-.gameplay.fields-ui .fields-seed-card.primary {background-color:var(--accent);border-color:var(--accent);}
-.gameplay.fields-ui .fields-seed-card.primary Label {color:var(--on-accent);}
+/* Fields: whole-farm overview with actions below the plot art. */
+.gameplay.fields-ui { padding:8px; }
+.gameplay.fields-ui .fields-header { align-items:center;min-height:22px;padding-bottom:5px;margin-bottom:5px;border-bottom-width:.5px;border-bottom-color:var(--line);flex-shrink:0; }
+.gameplay.fields-ui .fields-header .quests-heading { font-size:12px;margin-bottom:0; }
+.gameplay.fields-ui .fields-xp { align-items:center;width:190px;flex-shrink:0; }
+.gameplay.fields-ui .fields-xp Label { font-size:7px;margin-right:8px; }
+.gameplay.fields-ui .fields-xp .track { height:2px;flex-grow:1; }
+.gameplay.fields-ui #fields-workspace-frame { flex-grow:1;min-height:0;padding:0; }
+.gameplay.fields-ui #fields-workspace { flex-grow:1;min-height:0; }
+.gameplay.fields-ui .fields-board { align-items:flex-start;flex-shrink:0; }
+.gameplay.fields-ui .fields-crops { flex-grow:2;flex-basis:0;min-width:0;margin-right:10px; }
+.gameplay.fields-ui .fields-orchard { flex-grow:1;flex-basis:0;min-width:0; }
+.gameplay.fields-ui .heading { font-size:9px;margin-bottom:5px; }
+.gameplay.fields-ui .fields-bed-grid { flex-wrap:wrap;align-content:flex-start; }
+.gameplay.fields-ui .fields-plot { width:31%;flex-grow:1;flex-shrink:0;flex-basis:30%;height:84px;min-height:84px;margin-right:3px;margin-bottom:4px;padding:3px;border-width:.5px;border-color:var(--line);background-color:var(--control); }
+.gameplay.fields-ui .fields-plot-select { flex-direction:column;align-items:stretch;justify-content:flex-start;padding:0;margin:0;min-width:0;min-height:0;background-color:transparent;border-width:0;flex-grow:1; }
+.gameplay.fields-ui .fields-plot-select:hover { background-color:transparent; }
+.gameplay.fields-ui .fields-plot-select:focus { border-width:0;background-color:transparent; }
+.gameplay.fields-ui.keyboard .fields-plot-select:focus { border-width:.5px;border-color:var(--accent); }
+.gameplay.fields-ui .fields-plot-title { height:11px;font-size:8px;-unity-font-style:bold;-unity-text-align:middle-left; }
+.gameplay.fields-ui .fields-plot-body { height:34px;min-height:34px;align-items:center;margin-top:2px; }
+.gameplay.fields-ui .fields-plot-art { position:relative;width:24px;height:32px;min-width:24px;flex-shrink:0;margin-right:7px; }
+.gameplay.fields-ui .fields-plot-info { flex-grow:1;flex-basis:0;min-width:0; }
+.gameplay.fields-ui .fields-plot-status { white-space:normal;font-size:7px;-unity-font-style:normal;-unity-text-align:middle-left; }
+.gameplay.fields-ui .fields-plot-info .track { height:2px;margin-top:3px;width:100%; }
+.gameplay.fields-ui .fields-plot-action { min-height:18px;height:18px;padding:1px 3px;margin:5px 0 0;font-size:7px;flex-shrink:0; }
+.gameplay.fields-ui .fields-plot.selected,.gameplay.fields-ui .fields-orchard-slot.selected { border-color:var(--accent);background-color:var(--selected); }
+.gameplay.fields-ui .fields-locked { background-color:var(--field); }
+.gameplay.fields-ui .fields-locked .fields-plot-art { opacity:.3; }
+.gameplay.fields-ui .fields-locked .fields-plot-status { color:var(--muted); }
+.gameplay.fields-ui .fields-ready .fields-plot-status { color:#a5dc99; }
+.gameplay.fields-ui .fields-unbuilt .fields-plot-select { flex-grow:0;height:27px; }
+.gameplay.fields-ui .fields-unbuilt .fields-plot-body { height:11px;min-height:11px; }
+.gameplay.fields-ui .fields-unbuilt .fields-plot-art { display:none; }
+.gameplay.fields-ui .fields-unbuilt .fields-costs { flex-grow:1;align-items:center; }
+.gameplay.fields-ui .fields-costs { flex-direction:row;flex-wrap:wrap;min-height:12px;flex-shrink:0; }
+.gameplay.fields-ui .fields-cost { align-items:center;margin-right:4px;min-width:0; }
+.gameplay.fields-ui .fields-cost .icon { margin-right:3px;flex-shrink:0; }
+.gameplay.fields-ui .fields-cost-count { font-size:6.5px;color:#a5dc99;white-space:nowrap; }
+.gameplay.fields-ui .fields-cost-count.fields-shortfall { color:#d99084; }
+.gameplay.fields-ui .fields-orchard-pair { padding:3px;border-width:.5px;border-color:var(--line);background-color:var(--control);margin-bottom:4px;min-height:52px; }
+.gameplay.fields-ui .fields-pair-title { font-size:7.5px;-unity-font-style:bold;margin-bottom:2px; }
+.gameplay.fields-ui .fields-pair-slots { flex-shrink:0; }
+.gameplay.fields-ui .fields-orchard-slot { width:50%;padding:1px 3px;border-width:.5px;border-color:transparent; }
+.gameplay.fields-ui .fields-orchard-slot .fields-plot-title { display:none; }
+.gameplay.fields-ui .fields-orchard-slot .fields-plot-body { height:32px;min-height:32px;margin-top:0; }
+.gameplay.fields-ui .fields-orchard-slot .fields-plot-status { font-size:6px; }
+.gameplay.fields-ui .fields-orchard-slot .fields-plot-art { margin-right:3px; }
+.gameplay.fields-ui .fields-pair-status { font-size:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px; }
+.gameplay.fields-ui .fields-pair-build { min-height:17px;height:17px;padding:0 3px;font-size:7px;margin-top:2px; }
+.gameplay.fields-ui .fields-pair-locked .fields-pair-slots { display:none; }
+.gameplay.fields-ui .fields-drawer { padding:6px;margin-top:5px;border-width:.5px;border-color:var(--line);background-color:var(--control);flex-shrink:0;min-height:100px; }
+.gameplay.fields-ui .fields-selected { width:31%;min-width:0;margin-right:12px;flex-shrink:0; }
+.gameplay.fields-ui .fields-selection { font-size:9px;-unity-font-style:bold;margin-bottom:5px;white-space:normal; }
+.gameplay.fields-ui .fields-selection-detail { font-size:7px;white-space:normal;margin-bottom:6px; }
+.gameplay.fields-ui .fields-selected > .button { min-height:20px;font-size:8px;margin-top:3px;padding:2px 4px; }
+.gameplay.fields-ui .fields-actions { flex-wrap:wrap; }
+.gameplay.fields-ui .fields-actions .button { min-height:18px;font-size:7px;padding:1px 3px;margin-right:3px;margin-top:3px; }
+.gameplay.fields-ui .fields-seeds-column { flex-grow:1;flex-basis:0;min-width:0; }
+.gameplay.fields-ui #fields-seeds-frame { padding:0;max-height:82px;min-height:38px; }
+.gameplay.fields-ui #fields-seeds { max-height:82px;min-height:38px; }
+.gameplay.fields-ui .fields-seed-grid { flex-wrap:wrap;align-content:flex-start; }
+.gameplay.fields-ui .fields-seed-card { position:relative;min-width:0;min-height:36px;height:36px;flex-shrink:0;margin:0 2px 2px 0;padding:3px 2px 2px;flex-direction:column;align-items:flex-start;border-width:.5px;border-color:var(--line); }
+.gameplay.fields-ui .fields-seed-card .icon { margin:0 0 1px 2px; }
+.gameplay.fields-ui .fields-seed-caption { width:100%;height:14px;font-size:5.5px;-unity-text-align:middle-center;white-space:normal; }
+.gameplay.fields-ui .fields-seed-count { position:absolute;right:2px;top:3px;font-size:6px; }
+.gameplay.fields-ui .fields-seed-card.primary { background-color:var(--selected);border-color:var(--accent); }
+.gameplay.fields-ui .fields-seed-card.primary Label { color:var(--text); }
+.gameplay.fields-ui .fields-undiscovered Label { color:var(--muted); }
+.gameplay.fields-ui .fields-undiscovered-count { font-size:6px;margin-top:3px; }
+.gameplay.fields-ui.fields-narrow .fields-board,.gameplay.fields-ui.fields-narrow .fields-drawer { flex-direction:column; }
+.gameplay.fields-ui.fields-narrow .fields-crops,.gameplay.fields-ui.fields-narrow .fields-orchard { flex-grow:0;flex-basis:auto;width:100%;margin-right:0; }
+.gameplay.fields-ui.fields-narrow .fields-orchard { margin-top:6px; }
+.gameplay.fields-ui.fields-narrow .fields-selected { width:100%;margin-right:0;margin-bottom:8px; }
+.gameplay.fields-ui.fields-narrow .fields-xp { width:100px; }
+.gameplay.fields-ui.fields-narrow .fields-header .quests-heading { font-size:9px;white-space:normal;flex-shrink:1; }
+.gameplay.fields-ui.fields-narrow #fields-seeds-frame,.gameplay.fields-ui.fields-narrow #fields-seeds { max-height:160px; }
 
 .gameplay .journal-selector > .journal-art {width:100%;}
 .gameplay .journal-selector.map-locked {opacity:.65;}
@@ -1111,3 +1153,85 @@
 .gameplay .summary-return-bonus {font-size:7px;color:var(--accent);margin-bottom:8px;white-space:normal;}
 
 .gameplay .summary-narrow .summary-resource-right {padding-left:0;}
+
+/* Character creation uses the same appearance frames as the player and Echoes. */
+.gameplay .inventory-equipment-header { flex-direction:row;align-items:center;justify-content:space-between;margin-bottom:4px; }
+.gameplay .inventory-equipment-header .heading { margin-bottom:0;flex-shrink:0; }
+.gameplay .inventory-character-name { font-size:7px;margin-left:6px;flex-shrink:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted); }
+.gameplay .inventory-character-area { flex-direction:row;flex-wrap:wrap;align-items:center;padding:4px 0 8px;margin-bottom:8px;border-bottom-width:1px;border-bottom-color:var(--line); }
+.gameplay .inventory-character-column { flex-direction:row;align-items:center;margin-right:6px;flex-shrink:0; }
+.gameplay .inventory-character-preview { position:relative;width:64px;height:64px;overflow:hidden;background-color:var(--control); }
+.gameplay .inventory-character-turn { width:14px;min-width:14px;min-height:24px;padding:0;font-size:16px;margin:0 1px; }
+.gameplay .inventory-equipment-rows { flex-grow:1;flex-basis:0;min-width:100px; }
+.gameplay .inventory-equipment-row { flex-direction:row;align-items:center;margin-bottom:2px; }
+.gameplay .inventory-equipment-slot { flex-direction:row;align-items:center;justify-content:flex-start;flex-grow:1;flex-basis:0;min-width:0;min-height:24px;padding:2px 3px;margin:0; }
+.gameplay .inventory-equipment-icon { width:16px;height:16px;min-width:16px;margin-right:4px; }
+.gameplay .inventory-equipment-slot-name { font-size:7px;white-space:normal;flex-shrink:1;min-width:0; }
+.gameplay .inventory-visibility-button { width:24px;min-width:24px;min-height:24px;padding:3px;margin:0 0 0 3px;color:var(--muted); }
+.gameplay .inventory-visibility-button.shown { color:var(--text); }
+.gameplay .equipment-eye-icon { width:16px;height:16px;align-self:center; }
+.gameplay.character-overlay { position:absolute;left:0;right:0;top:0;bottom:0;background-color:rgba(0,0,0,0.82); }
+.gameplay .character-sheet { position:absolute;padding:14px 16px;background-color:var(--surface);border-width:1px;border-color:var(--line); }
+.gameplay .character-content { flex-direction:row;flex-grow:1;min-height:0;margin-top:10px; }
+.gameplay .character-preview-column { width:188px;margin-right:16px;align-items:center;justify-content:center;border-right-width:1px;border-right-color:var(--line);padding-right:12px; }
+.gameplay .character-portrait-row { flex-direction:row;align-items:center;justify-content:center; }
+.gameplay .character-preview { position:relative;width:124px;height:124px;background-color:var(--control);overflow:hidden; }
+.gameplay .character-arrow { width:20px;min-width:20px;min-height:24px;padding:2px;margin:0;align-items:center;justify-content:center; }
+.gameplay .character-arrow-icon { width:14px;height:14px; }
+.gameplay .character-turn { margin:0 1px; }
+.gameplay .character-preview-controls { flex-direction:row;align-items:center;width:104px;align-self:center;margin-top:8px; }
+.gameplay .character-animation-label { flex-grow:1;font-size:8px;-unity-text-align:middle-center; }
+.gameplay .character-options { flex-grow:1;min-width:0; }
+.gameplay .character-options .unity-text-field { margin-bottom:10px; }
+.gameplay .character-options .unity-text-field__input { min-width:0;background-color:var(--control);color:var(--text);font-size:9px;padding:5px; }
+.gameplay .character-options .unity-base-field__label { min-width:32px;font-size:9px; }
+.gameplay .character-options .eov-recessed-scroll { flex-grow:1;min-height:0; }
+.gameplay .character-option-row { flex-direction:row;align-items:center;padding:6px 0;border-bottom-width:1px;border-bottom-color:var(--line); }
+.gameplay .character-option-heading { width:44px;flex-shrink:0;align-items:center;margin-right:6px; }
+.gameplay .character-option-heading .strong { font-size:8px; }
+.gameplay .character-selectors { flex-grow:1;flex-shrink:1;min-width:0;align-items:center; }
+.gameplay .character-selector { flex-grow:1;flex-shrink:1;min-width:70px;margin-right:8px; }
+.gameplay .character-choice { align-items:center;min-height:22px; }
+.gameplay .character-choice .button { width:20px;height:22px;min-height:22px;padding:0; }
+.gameplay .character-choice-label { flex-grow:1;flex-shrink:1;width:0;white-space:normal;-unity-text-align:middle-center;font-size:8px;margin-left:4px;margin-right:4px; }
+.gameplay .character-colour-grid { flex-direction:row;flex-wrap:wrap;width:124px;flex-shrink:0;align-content:flex-start; }
+.gameplay .character-colour-button { flex-direction:row;align-items:center;width:100px;height:22px;min-height:22px;flex-shrink:0;padding:3px 5px; }
+.gameplay .character-colour-button > .character-colour-swatch { flex-grow:0; }
+.gameplay .character-colour-popup { position:absolute;left:0;right:0;top:0;bottom:0; }
+.gameplay .character-colour-menu { position:absolute;align-items:center;background-color:var(--surface);border-width:1px;border-color:var(--line);padding:2px; }
+.gameplay .character-swatch-button { width:28px;height:28px;min-width:28px;min-height:28px;flex-shrink:0;margin:1px;padding:1px;background-color:transparent;border-width:1px;border-color:transparent; }
+.gameplay .character-swatch-button .character-colour-swatch { width:24px;height:24px; }
+.gameplay .character-swatch-button:hover { border-color:var(--text); }
+.gameplay .character-swatch-button.selected { border-color:var(--text);background-color:var(--control); }
+.gameplay .character-swatch-button:focus { border-color:var(--text); }
+.gameplay .character-colour-swatch { flex-grow:1;width:10px;height:10px;flex-shrink:0;border-width:1px;border-color:rgba(255,255,255,0.25); }
+.gameplay .character-colour-secondary { position:absolute;top:0;bottom:0;right:0;width:50%; }
+.gameplay .character-presets { flex-direction:row;align-items:center;border-top-width:1px;border-top-color:var(--line);padding-top:7px;margin-top:8px; }
+.gameplay .character-presets > .strong { font-size:8px;width:80px;margin-right:8px; }
+.gameplay .character-preset-row { flex-grow:1; }
+.gameplay .character-preset { flex-direction:row;flex-grow:1;flex-basis:0;margin-right:6px; }
+.gameplay .character-preset .button { font-size:7px;min-height:22px;padding:3px 5px; }
+.gameplay .character-preset .character-load-preset { flex-grow:1;flex-shrink:1;width:0;overflow:hidden; }
+.gameplay .character-status { min-height:12px;font-size:7px;margin-top:3px;white-space:normal; }
+.gameplay .character-footer { justify-content:flex-end;margin-top:4px; }
+.gameplay .character-footer .button { margin-left:6px;min-height:24px;font-size:8px; }
+.gameplay .character-narrow .character-content { flex-direction:column; }
+.gameplay .character-narrow .character-preview-column { flex-direction:row;align-items:center;justify-content:center;width:auto;height:80px;margin-right:0;border-right-width:0;padding-right:0;flex-shrink:0; }
+.gameplay .character-narrow .character-preview { width:64px;height:64px; }
+.gameplay .character-narrow .character-preview-controls { width:74px;flex-direction:row;margin:0 0 0 8px; }
+.gameplay .character-narrow .character-preview-controls .character-arrow { width:18px;min-width:18px;padding:1px; }
+.gameplay .character-narrow .character-animation-label { font-size:7px; }
+.gameplay .character-narrow .character-option-row { flex-direction:column;align-items:stretch;padding:3px 0; }
+.gameplay .character-narrow .character-option-heading { width:auto;margin:0 0 2px; }
+.gameplay .character-narrow .character-colour-button { width:76px;padding:3px; }
+.gameplay .character-narrow .character-presets { flex-direction:column;align-items:stretch; }
+.gameplay .character-narrow .character-presets > .strong { width:auto;margin-bottom:4px; }
+.gameplay .character-narrow .character-preset { flex-direction:column;min-width:0;margin-right:3px; }
+.gameplay .character-narrow .character-preset .button { font-size:6px;min-height:18px;padding:2px; }
+.gameplay .character-narrow .character-preset .character-load-preset { width:auto;flex-grow:0;flex-shrink:0; }
+
+/* Lifetime crafting history lives in Statistics, separate from forge actions. */
+.gameplay .forging-statistics-section {margin-bottom:6px;}
+.gameplay .forging-statistics-row {flex-direction:row;align-items:center;padding:3px 0;border-bottom-width:.5px;border-bottom-color:var(--line);}
+.gameplay .forging-statistics-name {flex-grow:1;flex-shrink:1;white-space:normal;}
+.gameplay .forging-statistics-value {max-width:60%;margin-left:12px;white-space:normal;-unity-text-align:middle-right;}

@@ -12,7 +12,7 @@ namespace TimelessEchoes.UI.Toolkit
 {
     public sealed partial class ToolkitForgeScreen
     {
-        private string comparisonSignature, equipmentSignature;
+        private string comparisonSignature;
         private static void NativeSize(Image image)
         {
             var sprite = image.sprite;
@@ -46,7 +46,7 @@ namespace TimelessEchoes.UI.Toolkit
             var signature = session.Slot + ":" + (pending != null) + ":" + (equipped != null) + ":" + pq + ":" + eq + string.Join(";", p.Concat(e).Select(a => a.stat.name + ":" + a.value));
             if (signature == comparisonSignature) return;
             comparisonSignature = signature; comparisonRows.Clear();
-            Metric(comparisonRows, session.Slot, null, ToolkitLocalization.Text("forge.pending", "Pending"), ToolkitLocalization.Text("forge.equipped", "Equipped")).AddToClassList("forge-metric-header");
+            Metric(comparisonRows, session.Slot, null, ToolkitLocalization.Text("forge.new-item", "New item"), ToolkitLocalization.Text("forge.equipped", "Equipped")).AddToClassList("forge-metric-header");
             StatIconLookup.TryGetIcon(StatIconLookup.StatKey.Quality, out var quality);
             Metric(comparisonRows, ToolkitLocalization.Text("forge.quality", "Quality"), quality, pending == null ? "—" : pq.ToString("0.#")+"%", equipped == null ? "—" : eq.ToString("0.#")+"%", pending == null ? 0 : Math.Sign(pq-eq));
             var defs = p.Concat(e).Select(a=>a.stat).GroupBy(s=>s.heroMapping).Select(g=>g.First()).ToList();
@@ -58,48 +58,6 @@ namespace TimelessEchoes.UI.Toolkit
                 Metric(comparisonRows,def.GetName(),icon,pending == null ? "—" : Amount(pa,def.isPercent),equipped == null ? "—" : Amount(ea,def.isPercent),pending == null ? 0 : Math.Sign(pa-ea));
             }
             if(pending==null) Label(comparisonRows,ToolkitLocalization.Text("forge.compare-hint", "Craft an item to compare it with your equipment."),ToolkitControls.TextRole.Caption).AddToClassList("forge-empty-result");
-        }
-        private void RefreshEquipmentTotals()
-        {
-            var pieces=equipment.Slots.Select(slot=>(slot,item:equipment.GetEquipped(slot))).ToList();
-            var all=pieces.SelectMany(x=>Affixes(x.item)).ToList();var selected=Affixes(equipment.GetEquipped(session.Slot));
-            float quality=pieces.Sum(x=>x.item==null?0:UpgradeEvaluator.ComputeQualityPercent(crafting,x.item,x.slot));
-            var item=equipment.GetEquipped(session.Slot);float selectedQuality=item==null?0:UpgradeEvaluator.ComputeQualityPercent(crafting,item,session.Slot);
-            var sig=session.Slot+":"+quality+":"+selectedQuality+string.Join(";",all.Concat(selected).Select(a=>a.stat.name+":"+a.value));
-            if(sig==equipmentSignature)return;equipmentSignature=sig;equipmentRows.Clear();
-            Metric(equipmentRows,ToolkitLocalization.Text("forge.stat", "Stat"),null,ToolkitLocalization.Text("forge.total", "Total"),session.Slot).AddToClassList("forge-metric-header");
-            StatIconLookup.TryGetIcon(StatIconLookup.StatKey.Quality,out var q);Metric(equipmentRows,ToolkitLocalization.Text("forge.quality", "Quality"),q,quality.ToString("0.#")+"%",selectedQuality.ToString("0.#")+"%");
-            var defs=all.Select(a=>a.stat).GroupBy(s=>s.heroMapping).Select(g=>g.First()).ToList();defs.Sort((a,b)=>StatSortOrder.Compare(a.heroMapping,b.heroMapping));
-            foreach(var def in defs){StatIconLookup.TryGetIcon(def.heroMapping,out var icon);Metric(equipmentRows,def.GetName(),icon,Amount(all.Where(a=>a.stat.heroMapping==def.heroMapping).Sum(a=>a.value),def.isPercent),Amount(selected.Where(a=>a.stat.heroMapping==def.heroMapping).Sum(a=>a.value),def.isPercent));}
-        }
-        private static string HistoryTitle(string key) => ToolkitLocalization.Text("forge.stats.section-" + key.ToLowerInvariant().Replace(" ", "-"), key);
-        // Preserve the legacy presenter's complete metrics and calculations. Only its
-        // section/row presentation changes; values are not recomputed or discarded.
-        private void RefreshHistory(string text)
-        {
-            if(text==lastHistory)return;lastHistory=text;
-            var sections=Regex.Split(text,@"<size=105%><b>(.*?)</b></size>");
-            for(int i=1;i+1<sections.Length;i+=2)
-            {
-                var key=sections[i];
-                if(!historySections.TryGetValue(key,out var section))
-                {
-                    var title=key=="Totals"?ToolkitLocalization.Text("forge.crafting-history", "Crafting history"):key=="Autocraft"?ToolkitLocalization.Text("forge.automation", "Automation"):key=="Quality"?ToolkitLocalization.Text("forge.best-rolls", "Best rolls"):HistoryTitle(key);
-                    section=new ToolkitDisclosure(title,theme,false);section.AddToClassList("forge-history-section");historySections.Add(key,section);historyHost.Add(section);
-                }
-                var headerTitle=key=="Totals"?ToolkitLocalization.Text("forge.crafting-history", "Crafting history"):key=="Autocraft"?ToolkitLocalization.Text("forge.automation", "Automation"):key=="Quality"?ToolkitLocalization.Text("forge.best-rolls", "Best rolls"):HistoryTitle(key);
-                section.Q<Label>().text = "<b><smallcaps>" + headerTitle + "</smallcaps></b>";
-                section.Content.Clear();
-                var content=Regex.Replace(sections[i+1],@"</?(?:size|b|mspace)(?:=[^>]*)?>","");
-                foreach(var line in content.Split('\n'))
-                foreach(var part in line.Split('•'))
-                {
-                    var value=part.Trim();if(string.IsNullOrEmpty(value))continue;
-                    var split=value.IndexOf(": ",StringComparison.Ordinal);
-                    if(split>0) Metric(section.Content,value.Substring(0,split),null,value.Substring(split+2));
-                    else Label(section.Content,value.TrimEnd(':'),ToolkitControls.TextRole.Caption).AddToClassList("forge-history-subtitle");
-                }
-            }
         }
     }
 }

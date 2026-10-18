@@ -10,6 +10,8 @@ namespace Blindsided.SaveData
         public const int CurrentSchemaVersion = 7;
 
         public int SchemaVersion = CurrentSchemaVersion;
+        public TimelessEchoes.Characters.CharacterProfile Character = TimelessEchoes.Characters.CharacterProfile.Legacy();
+        public TimelessEchoes.Characters.EquipmentVisibility EquipmentVisibility = new();
         public HashSet<string> AppliedMigrationIds = new();
         public TimelessEchoes.Farming.FarmState Farm = new();
         [ShowInInspector] [TabGroup("GameDataTabs", "Preferences")]

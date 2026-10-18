@@ -219,6 +219,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void Update()
         {
             if (!IsOpen) return; Layout();
+            if (!embedded) UpdateEquipmentPreview();
             if (pendingScroll >= 0 && grid.layout.height > 0 && scroll.contentViewport.layout.height > 0)
             {
                 var y = (resourceOrder.IndexOf(pendingScroll) / grid.Columns) * (forgePresentation ? 40 : embedded ? 33 : 46);
@@ -232,6 +233,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (equipmentController) equipmentController.OnEquipmentChanged -= Changed;
             equipmentController = null; equipmentContent = null; equipmentColumn = null; gearSlots.Clear();
+            equipmentPreview = null; equipmentCharacterName = null; visibilityControls.Clear(); previewDirection = 0;
             ToolkitLocalization.Changed -= LocaleChanged;
             if (manager) manager.OnInventoryChanged -= Changed;
             Blindsided.EventHandler.OnLoadData -= Changed; root?.RemoveFromHierarchy(); root = null; embedded = false; slots.Clear(); resourceOrder.Clear(); selected = -1; pendingScroll = -1; deselectAt = -1; dirty = false;

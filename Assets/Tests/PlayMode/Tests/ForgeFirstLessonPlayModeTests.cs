@@ -63,10 +63,26 @@ namespace Tests.PlayMode
                 forge = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Forge.prefab"));
                 Assert.True(forge.GetComponent<ToolkitForgeScreen>().Show()); yield return new WaitForSecondsRealtime(.2f);
                 var ui = forge.GetComponent<UIDocument>().rootVisualElement;
+                Assert.IsNull(ui.Q<Button>("forge-inventory"));
+                Assert.IsNull(ui.Q<Button>("forge-info-tab"));
+                Assert.IsNull(ui.Q<Button>("forge-auto"), "Repeating crafting shares the main Craft button.");
+                Assert.AreEqual(1, ui.Query<Button>(className: "eov-forge-core").ToList().Count(b => b.name != "forge-locked-cores" && b.resolvedStyle.display != DisplayStyle.None));
+                Assert.AreEqual(DisplayStyle.Flex, ui.Q("forge-locked-cores").resolvedStyle.display);
+                Assert.AreEqual("—", ui.Q<Label>("forge-locked-core-count").text);
+                Assert.That(ui.Q("forge-locked-cores").Q(className: "eov-forge-core-frame").worldBound.y,
+                    Is.EqualTo(ui.Query<Button>(className: "eov-forge-core").ToList().First(b => b.name != "forge-locked-cores" && b.resolvedStyle.display != DisplayStyle.None)
+                        .Q(className: "eov-forge-core-frame").worldBound.y).Within(.5f), "Locked and discovered core frames should share a baseline.");
+                Assert.IsNull(ui.Q("forge-odds-popup"));
+                Assert.AreEqual(DisplayStyle.Flex, ui.Q("forge-odds-legend").resolvedStyle.display,
+                    "Rarity odds must be visible without hover or click.");
+                Assert.That(ui.Query<Label>(className: "forge-odds-name").ToList().Count(l => l.text == "???"), Is.GreaterThan(0),
+                    "Undiscovered rarities must not reveal their names.");
                 var session = forge.GetComponent<ForgeSession>();
                 Assert.IsNull(equipment.GetEquipped("Weapon"));
                 CaptureFeedback("first-forge-smelt.png"); yield return null; yield return null;
                 FieldsClick(ui.Q<Button>("smelt-Ingot")); yield return new WaitForSecondsRealtime(.2f);
+                Assert.That(ui.Query<Label>(className: "forge-odds-name").ToList().Any(l => l.text == "Bronze"), Is.True,
+                    "Discovering an ingot reveals its rarity in the odds legend.");
                 Assert.AreEqual(1, ForgeFirstLesson.Stage);
                 Assert.That(ui.Q("forge-first-lesson").Q<Label>().text, Does.Contain("rarity").And.Contain("higher tiers"));
                 CaptureFeedback("first-forge-core-explanation.png"); yield return null; yield return null;
@@ -117,18 +133,55 @@ namespace Tests.PlayMode
                 session.StartAutoCrafting();
                 Assert.False(session.IsAutoCrafting);
                 Assert.AreEqual(sessions, oracle.saveData.Forge.TotalAutocraftSessions);
-                Assert.False(ui.Q<Button>("forge-auto").enabledInHierarchy);
+                Assert.False(ui.Q<Button>("forge-repeat-craft").enabledInHierarchy);
                 Assert.AreEqual(DisplayStyle.Flex, ui.Q("forge-automation-locked").style.display.value);
                 CaptureFeedback("forge-automation-locked.png"); yield return null; yield return null;
                 oracle.saveData.CraftingMasteryLevel = 3;
                 resources.Add(binding.coreResource, 1);
                 yield return new WaitForSecondsRealtime(.2f);
-                Assert.True(ui.Q<Button>("forge-auto").enabledInHierarchy);
+                Assert.True(ui.Q<Button>("forge-repeat-craft").enabledInHierarchy);
                 Assert.AreEqual(DisplayStyle.None, ui.Q("forge-automation-locked").style.display.value);
                 Assert.AreEqual(automationBounds, ui.Q("forge-automation-area").worldBound, "Unlocking automation must preserve the work area layout.");
-                session.StartAutoCrafting();
+                FieldsClick(ui.Q<Button>("forge-repeat-craft"));
+                Assert.AreEqual(sessions, oracle.saveData.Forge.TotalAutocraftSessions, "Choosing repeat must not spend resources before Craft is clicked.");
+                FieldsClick(ui.Q<Button>("forge-craft"));
                 Assert.AreEqual(sessions + 1, oracle.saveData.Forge.TotalAutocraftSessions);
-                session.StopAutoCrafting();
+                FieldsClick(ui.Q<Button>("forge-repeat-craft"));
+                Assert.False(session.IsAutoCrafting, "Unchecking repeat stops the active batch.");
+                yield return null; yield return null;
+                var conversions = ui.Q(className: "eov-forge-conversions").worldBound;
+                var workViewport = ui.Q<ScrollView>().contentViewport.worldBound;
+                Assert.That(ui.Query<Label>().ToList().Any(l => l.text == "New item"), Is.True);
+                Assert.Greater(ui.Q<Button>("forge-repeat-craft").worldBound.xMin, ui.Q<Button>("forge-lock-stats").worldBound.xMin);
+                foreach (var toggle in ui.Query<Button>(className: "eov-forge-toggle").ToList())
+                    Assert.LessOrEqual(toggle.Q<Label>().worldBound.height, toggle.worldBound.height,
+                        "Automation labels must fit on one line inside their checkbox controls.");
+                Assert.That(conversions.yMax, Is.EqualTo(workViewport.yMax).Within(20), "Conversion cards should sit at the bottom of the forge viewport.");
+                foreach (var field in ui.Query<TextField>(className: "eov-number-field").ToList()) {
+                    Assert.True(field.enabledInHierarchy, "Conversion amounts remain editable even when there are not enough materials to convert.");
+                    Assert.GreaterOrEqual(field.resolvedStyle.borderLeftWidth, 1, "Editable quantity fields need a visible boundary against their card.");
+                }
+                CaptureFeedback("forge-persistent-odds-bottom-cards.png"); yield return null; yield return null;
+                ui.Q<TextField>("amount-Ingot").Focus(); yield return null;
+                var focused = ui.panel.focusController.focusedElement as VisualElement;
+                Assert.True(focused == ui.Q<TextField>("amount-Ingot") || ui.Q<TextField>("amount-Ingot").Contains(focused), "The editable quantity field must accept focus.");
+                CaptureFeedback("forge-quantity-field-focused.png"); yield return null; yield return null;
+                var lirium = session.Catalog.cores.Single(c => c.core.tierIndex == 4).ingotResource;
+                resources.Add(lirium, 1); yield return new WaitForSecondsRealtime(.2f);
+                Assert.True(ui.Query<Label>(className: "forge-odds-name").ToList().Any(l => l.text == "Lirium"));
+                resources.Spend(lirium, 1); yield return new WaitForSecondsRealtime(.2f);
+                Assert.True(ui.Query<Label>(className: "forge-odds-name").ToList().Any(l => l.text == "Lirium"), "Spending the last ingot must not hide a discovered rarity again.");
+                forge.GetComponent<ToolkitForgeScreen>().Hide();
+                var statistics = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Statistics.prefab"), owner.transform);
+                var statisticsScreen = statistics.GetComponent<ToolkitStatisticsScreen>();
+                Assert.True(statisticsScreen.Show());
+                var statisticsUi = statistics.GetComponent<UIDocument>().rootVisualElement;
+                yield return null; yield return null;
+                FieldsClick(statisticsUi.Q<Button>("stats-tab-6")); yield return null; yield return null;
+                var totalCrafts = statisticsUi.Query<Label>(className: "forging-statistics-name").ToList().Single(l => l.text == "Total Crafts");
+                Assert.AreEqual(oracle.saveData.Forge.TotalCrafts.ToString("N0"), totalCrafts.parent.Q<Label>(className: "forging-statistics-value").text,
+                    "The Statistics tab must retain the actual crafting history from the completed forge lesson.");
+                CaptureFeedback("forging-statistics.png"); yield return null; yield return null;
             }
             finally { if (forge) Object.DestroyImmediate(forge); if (board) Object.DestroyImmediate(board); Object.DestroyImmediate(owner); }
         }

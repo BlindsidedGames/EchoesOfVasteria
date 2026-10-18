@@ -122,14 +122,16 @@ namespace TimelessEchoes.Farming
             if (!KnownBed(id) || !AccessibleBed(state, id) || repeat && state.TwinsLevel < 20 || !result.Candidate.Beds.TryGetValue(id, out var bed) || bed == null) return Reject("RepeatLocked");
             bed.Repeat = repeat; return result;
         }
-        public static FarmCommandResult HarvestFields(GameData owner, string operationId, DateTime now, FarmContent content, bool automatic)
+        public static FarmCommandResult HarvestFields(GameData owner, string operationId, DateTime now, FarmContent content, bool automatic, string bedId = null)
         {
             if (owner?.Farm == null || !content) return Reject("MissingFarmContent");
+            if (bedId != null && (!KnownBed(bedId) || automatic)) return Reject("UnknownBed");
             if (automatic && owner.Farm.TwinsLevel < 20) return Reject("RepeatLocked");
-            var result = Begin(owner.Farm, operationId, automatic ? "harvest-auto" : "harvest-fields", now);
+            var result = Begin(owner.Farm, operationId, bedId != null ? "harvest-bed:" + bedId : automatic ? "harvest-auto" : "harvest-fields", now);
             if (!result.Accepted) return result;
             foreach (var id in GardenBeds.Concat(OrchardBeds))
             {
+                if (bedId != null && id != bedId) continue;
                 if (!AccessibleBed(result.Candidate, id) || !result.Candidate.Beds.TryGetValue(id, out var bed) || bed == null || !bed.IsReady || automatic && !bed.Repeat) continue;
                 var recipe = content.Recipe(bed.RecipeId);
                 var legacy = bed.BatchId.StartsWith("radish:", StringComparison.Ordinal);
@@ -177,7 +179,7 @@ namespace TimelessEchoes.Farming
             var token = bed.BatchId.Substring(7, bed.BatchId.Length - 7 - id.Length - 1);
             if (!FarmJournal.TrySequence(state, token, out var plantSequence, out var fingerprint) || plantSequence != bed.PlantSequence ||
                 FarmJournal.Inspect(state, token, fingerprint, out _) != FarmCommandStatus.AlreadyApplied) return false;
-            if (fingerprint != PlantFingerprint(id, bed.RecipeId) && fingerprint != "harvest-auto" && fingerprint != "harvest-fields") return false;
+            if (fingerprint != PlantFingerprint(id, bed.RecipeId) && fingerprint != "harvest-auto" && fingerprint != "harvest-fields" && fingerprint != "harvest-bed:" + id) return false;
             return !state.CompletedSequences.TryGetValue(plantSequence, out var receipt) || receipt.BatchIds?.Contains(bed.BatchId) == true;
         }
 

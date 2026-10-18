@@ -51,21 +51,25 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 var item = equipment.GetEquipped(entry.Key); entry.Value.icon.sprite = definition.GearSprite(item, entry.Key); entry.Value.selected.style.display = session.Slot == entry.Key ? DisplayStyle.Flex : DisplayStyle.None; entry.Value.tier.text = item?.rarity ? ToolkitLocalization.Text("inventory.tier", "Tier {0}", Mathf.Clamp(item.rarity.tierIndex + 1, 1, 8)) : "";
             }
+            var hasLockedCore = false;
             for (var i = 0; i < coreSlots.Count; i++)
             {
                 var binding = definition.catalog.cores[i]; var row = coreSlots[i]; var amount = binding.coreResource ? resources.GetAmount(binding.coreResource) : 0; var known = binding.coreResource && resources.IsUnlocked(binding.coreResource);
-                row.icon.sprite = known ? amount >= 1 ? definition.coreIcons[i] : binding.coreResource.UnknownIcon : null;
+                row.button.style.display = known ? DisplayStyle.Flex : DisplayStyle.None;
+                if (!known && !hasLockedCore) { hasLockedCore = true; lockedCoreIcon.sprite = binding.coreResource ? binding.coreResource.UnknownIcon : null; }
+                row.icon.sprite = known ? definition.coreIcons[i] : null;
                 row.selected.style.display = session.Core == binding.core ? DisplayStyle.Flex : DisplayStyle.None;
                 row.cores.text = CalcUtils.FormatNumber(Math.Floor(amount), hideDecimal: Math.Abs(Math.Floor(amount)) < 1000);
                 var count = Math.Floor(amount); if (binding.core && binding.core.ingotCost > 0) count = Math.Min(count, Math.Floor(binding.ingotResource ? resources.GetAmount(binding.ingotResource) : 0) / binding.core.ingotCost);
                 row.crafts.text = CalcUtils.FormatNumber(count, hideDecimal: Math.Abs(count) < 1000);
             }
+            lockedCore.style.display = hasLockedCore ? DisplayStyle.Flex : DisplayStyle.None;
             var core = session.Core; var bindingSelected = definition.catalog.Find(core); var ingot = bindingSelected?.ingotResource ? bindingSelected.ingotResource : core?.requiredIngot;
             costCore.sprite = ResourceSprite(bindingSelected?.coreResource, 1); costIngot.sprite = ResourceSprite(ingot, core ? core.ingotCost : 0); ingotCost.text = core ? core.ingotCost.ToString("0") : "";
             coreCost.EnableInClassList("forge-loss", !(bindingSelected?.coreResource) || resources.GetAmount(bindingSelected.coreResource) < 1);
             ingotCost.EnableInClassList("forge-loss", !ingot || resources.GetAmount(ingot) < (core ? core.ingotCost : 0));
             craftArrow.sprite = session.CanCraft() ? definition.arrowValid : definition.arrowInvalid;
-            maxCrafts.text = ToolkitLocalization.Text("forge.crafts-available", "{0:N0} crafts available", session.MaxCrafts); craft.text = session.IsAutoCrafting ? ToolkitLocalization.Text("common.stop", "Stop") : ToolkitLocalization.Text("forge.craft", "Craft"); craft.SetEnabled(session.IsAutoCrafting || session.CanCraft()); autoCraft.SetEnabled(session.AutomationUnlocked && !session.IsAutoCrafting && session.CanCraft()); replace.SetEnabled(session.CanReplace);
+            maxCrafts.text = ToolkitLocalization.Text("forge.crafts-available", "{0:N0} crafts available", session.MaxCrafts); craft.text = session.IsAutoCrafting ? ToolkitLocalization.Text("common.stop", "Stop") : ToolkitLocalization.Text("forge.craft", "Craft"); craft.SetEnabled(session.IsAutoCrafting || session.CanCraft()); replace.SetEnabled(session.CanReplace);
             automationControls.SetEnabled(session.AutomationUnlocked);
             automationControls.style.visibility = session.AutomationUnlocked ? Visibility.Visible : Visibility.Hidden;
             automationLock.style.display = session.AutomationUnlocked ? DisplayStyle.None : DisplayStyle.Flex;
@@ -73,26 +77,18 @@ namespace TimelessEchoes.UI.Toolkit
             var pending = session.HasResult ? session.Pending : null;
             RefreshComparison(pending, equipment.GetEquipped(session.Slot));
             resultIcon.sprite = definition.GearSprite(pending, session.Slot); resultTier.text = pending?.rarity ? ToolkitLocalization.Text("inventory.tier", "Tier {0}", Mathf.Clamp(pending.rarity.tierIndex + 1, 1, 8)) : "";
-            ToolkitGameplay.SetToggle(stopIcon,StopAutocraftOnVastium);ToolkitGameplay.SetToggle(lockIcon,LockAutocraftStatSet);
+            ToolkitGameplay.SetToggle(stopIcon,StopAutocraftOnVastium);ToolkitGameplay.SetToggle(lockIcon,LockAutocraftStatSet);ToolkitGameplay.SetToggle(repeatIcon,repeatCraft);
             var weights = RarityOddsCalculator.BuildRarityWeightInfo(core).weights;
-            odds.SetWeights(weights); RefreshOddsPopup(weights);
+            odds.SetWeights(weights, RarityColour); RefreshOddsLegend(weights);
             foreach (var entry in conversions) RefreshConversion(entry.Key, entry.Value);
-            var visibleConversions = conversions.Values.Count(r => r.root.style.display.value != DisplayStyle.None);
-            foreach (var entry in conversions.Values) entry.root.style.width = Length.Percent(100f / Math.Max(1, visibleConversions));
+            var visibleConversions = conversions.Values.Where(r => r.root.style.display.value != DisplayStyle.None).ToList();
+            for (var i = 0; i < visibleConversions.Count; i++) {
+                visibleConversions[i].root.style.width = StyleKeyword.Auto;
+                visibleConversions[i].root.style.marginRight = i == visibleConversions.Count - 1 ? 0 : 6;
+            }
             foreach (var entry in gearSlots) NativeSize(entry.Value.icon);
             foreach (var entry in coreSlots) NativeSize(entry.icon);
             RefreshFirstLesson();
-            if (!showInventory)
-            {
-                RefreshEquipmentTotals();
-                RefreshStatistics();
-            }
-        }
-        private void RefreshStatistics()
-        {
-            if (!statisticsDirty || showInventory || Time.unscaledTime < nextStatsRefresh) return;
-            RefreshHistory(statsPresentation.BuildStatsText(Oracle.oracle?.saveData?.Forge, preserveSectionIds: true));
-            nextStatsRefresh = Time.unscaledTime + .75f; statisticsDirty = false;
         }
         private void RefreshConversion(ConversionType type, ConversionRow row)
         {

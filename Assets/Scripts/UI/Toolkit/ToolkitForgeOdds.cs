@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 using TimelessEchoes.Gear;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -7,8 +8,9 @@ namespace TimelessEchoes.UI.Toolkit
     public sealed class ToolkitForgeOdds : VisualElement
     {
         private List<(RaritySO r, float w)> weights;
+        private Func<RaritySO, Color> colourForRarity;
         public ToolkitForgeOdds() { AddToClassList("eov-forge-odds"); generateVisualContent += Draw; }
-        public void SetWeights(List<(RaritySO r, float w)> value) { weights = value; MarkDirtyRepaint(); }
+        public void SetWeights(List<(RaritySO r, float w)> value, Func<RaritySO, Color> colourForRarity = null) { weights = value; this.colourForRarity = colourForRarity; MarkDirtyRepaint(); }
         private static float Weight(float value) => float.IsNaN(value) || float.IsInfinity(value) ? 0 : Mathf.Max(0,value);
         private void Draw(MeshGenerationContext context)
         {
@@ -23,7 +25,7 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 var weight=Weight(entry.w);if(weight<=0)continue;
                 float sweep=weight/total*Mathf.PI*2;int steps=Mathf.CeilToInt(weight/total*90);
-                var colour=(Color32)(entry.r?entry.r.color:Color.white);
+                var colour=(Color32)(colourForRarity != null ? colourForRarity(entry.r) : entry.r?entry.r.color:Color.white);
                 // Explicit triangle fans handle majority and full-circle slices without
                 // depending on Painter2D's arc/path joining and tessellation rules.
                 for(int step=0;step<steps;step++)

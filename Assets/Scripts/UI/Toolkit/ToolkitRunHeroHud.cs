@@ -12,6 +12,7 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly Dictionary<StatIconLookup.StatKey, Label> heroStatValues = new();
         private VisualElement heroStatsPanel;
         private Label heroHealthText;
+        private Label heroCharacterName;
         private Button heroStatsToggle;
         private bool heroStatsOpen;
 
@@ -24,6 +25,9 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void RefreshHeroHud(HeroController hero, HeroHealth health)
         {
+            var profile = TimelessEchoes.Characters.CharacterCreation.Current;
+            heroCharacterName.text = profile?.Name ?? "";
+            SetVisible(heroCharacterName, profile is { Created: true, Modular: true });
             var snapshot = HeroStatSystem.GetSnapshot();
             var maximum = health ? health.MaxHealth : snapshot.maxHealth;
             var current = health ? health.CurrentHealth : maximum;
@@ -100,6 +104,9 @@ namespace TimelessEchoes.UI.Toolkit
             heroStatsPanel.style.paddingTop = heroStatsPanel.style.paddingBottom = 5;
             heroStatsOpen = false; heroStatsPanel.style.display = DisplayStyle.None;
             HeroSurface(heroStatsPanel); hud.Add(heroStatsPanel);
+            heroCharacterName = HeroText(heroStatsPanel, "", 9); heroCharacterName.name = "run-character-name";
+            heroCharacterName.enableRichText = false; heroCharacterName.style.marginBottom = 4;
+            SetVisible(heroCharacterName, false);
             HeroMetric(heroStatsPanel, StatIconLookup.StatKey.Damage, "Damage");
             HeroMetric(heroStatsPanel, StatIconLookup.StatKey.AttackRate, "Attack speed");
             HeroMetric(heroStatsPanel, StatIconLookup.StatKey.CritChance, "Crit chance");

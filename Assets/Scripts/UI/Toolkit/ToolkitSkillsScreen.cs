@@ -45,6 +45,7 @@ namespace TimelessEchoes.UI.Toolkit
         private ScrollView milestoneList;
 
         private readonly List<Label> selectorLevels = new();
+        private readonly List<Image> selectorIcons = new();
 
         private readonly List<VisualElement> selections = new(), highlights = new();
 
@@ -99,6 +100,7 @@ namespace TimelessEchoes.UI.Toolkit
                 button.AddToClassList("eov-skills-selector"); if (i == definition.skills.Length - 1) button.style.marginRight = 0; selectorRow.Add(button);
 
                 var icon = new Image { sprite = definition.icons[i], scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore }; icon.AddToClassList("skill-selector-icon"); button.Add(icon);
+                selectorIcons.Add(icon);
 
                 var selection = Overlay(button, definition.selection); selections.Add(selection);
 
@@ -255,6 +257,7 @@ namespace TimelessEchoes.UI.Toolkit
             {
 
                 var selectorLevel = controller.GetProgress(definition.skills[i])?.Level ?? 1;
+                selectorIcons[i].sprite = TimelessEchoes.Characters.CharacterSkillTools.IconFor(definition.skills[i], selectorLevel, definition.icons[i]);
 
                 selectorLevels[i].text = ShowLevelText ? ToolkitLocalization.Text("skills.selector-level", "<b>Lvl: {0}</b>", selectorLevel) : "";
 
@@ -508,7 +511,7 @@ namespace TimelessEchoes.UI.Toolkit
             ToolkitLocalization.Changed -= Changed;
             ShowLevelTextChanged -= Changed; Blindsided.EventHandler.OnLoadData -= Changed;
 
-            titleBinding?.Dispose(); titleBinding = null; root?.RemoveFromHierarchy(); root = null; selectorLevels.Clear(); selections.Clear(); highlights.Clear();
+            titleBinding?.Dispose(); titleBinding = null; root?.RemoveFromHierarchy(); root = null; selectorLevels.Clear(); selectorIcons.Clear(); selections.Clear(); highlights.Clear();
 
         }
 

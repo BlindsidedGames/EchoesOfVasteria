@@ -29,8 +29,11 @@ namespace TimelessEchoes.UI.Toolkit
         private Image forgeAttention, cauldronAttention, questAttention;
         private VisualElement progressRoot, progressFill;
         private Image progressHero, progressReaper;
+        private TimelessEchoes.Characters.CharacterImage characterPortrait;
         private Transform progressHeroTransform;
         private Vector3 previousHeroPosition;
+        private bool progressHeroFacingLeft;
+        private float progressReapStarted = -1;
         private Label progressText;
         private RunProgressPresentation lastProgress;
         private bool hasProgress;
@@ -235,16 +238,51 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var hero = Hero.HeroController.Instance;
             if (!GameManager.Instance || !GameManager.Instance.CurrentMap || !hero)
-            { progressHeroTransform = null; return; }
+            { progressHeroTransform = null; progressReapStarted = -1; return; }
             var position = hero.transform.position;
-            var moving = progressHeroTransform == hero.transform && (position - previousHeroPosition).sqrMagnitude > .00000001f;
+            var sameHero = progressHeroTransform == hero.transform;
+            var delta = sameHero ? position - previousHeroPosition : Vector3.zero;
+            var moving = delta.sqrMagnitude > .00000001f;
+            if (!sameHero) { progressHeroFacingLeft = hero.MovementController.LastMoveDirection.x < 0; progressReapStarted = -1; }
+            if (delta.x < -.0001f) progressHeroFacingLeft = true;
+            else if (delta.x > .0001f) progressHeroFacingLeft = false;
+            progressHero.style.scale = new Scale(new Vector3(progressHeroFacingLeft ? -1 : 1, 1, 1));
             progressHeroTransform = hero.transform;
             previousHeroPosition = position;
             var frame = Mathf.FloorToInt(Time.time * Mathf.Max(1, definition.progressFramesPerSecond));
+            var reaped = false;
+            // The authored swing faces right; Carl stands at the right end of the route.
+            progressReaper.style.scale = new Scale(new Vector3(-1, 1, 1));
+            if (hero.ReaperSpawnedByDistance && definition.progressReaperReapFrames is { Length: > 0 } reapFrames) {
+                if (progressReapStarted < 0) progressReapStarted = Time.time;
+                var reapFrame = Mathf.Clamp(Mathf.FloorToInt((Time.time - progressReapStarted) * Mathf.Max(1, definition.progressFramesPerSecond)), 0, reapFrames.Length - 1);
+                progressReaper.sprite = reapFrames[reapFrame];
+                reaped = reapFrame >= definition.progressReapImpactFrame;
+            }
+            else {
+                progressReapStarted = -1;
+                if (definition.progressReaperFrames is { Length: > 0 } idleFrames) progressReaper.sprite = idleFrames[frame % idleFrames.Length];
+            }
             var heroFrames = moving ? definition.progressHeroRunFrames : definition.progressHeroIdleFrames;
-            if (heroFrames != null && heroFrames.Length > 0) progressHero.sprite = heroFrames[frame % heroFrames.Length];
-            if (definition.progressReaperFrames != null && definition.progressReaperFrames.Length > 0)
-                progressReaper.sprite = definition.progressReaperFrames[frame % definition.progressReaperFrames.Length];
+            var profile = TimelessEchoes.Characters.CharacterEquipmentAppearance.Resolve(TimelessEchoes.Characters.CharacterCreation.Current);
+            if (reaped && definition.progressHeroGravestone)
+            {
+                characterPortrait?.Set(null, 0);
+                progressHero.sprite = definition.progressHeroGravestone;
+                progressHero.style.scale = new Scale(Vector3.one);
+                progressHero.PlaceBehind(progressReaper);
+            }
+            else if (profile is { Created: true, Modular: true } && TimelessEchoes.Characters.CharacterCatalog.Load())
+            {
+                progressHero.sprite = null;
+                characterPortrait ??= new TimelessEchoes.Characters.CharacterImage(progressHero, 2);
+                characterPortrait.Set(profile, TimelessEchoes.Characters.CharacterCatalog.Load().Frame(moving ? "Running_Right" : "Idle_Right", frame));
+            }
+            else
+            {
+                characterPortrait?.Set(null, 0);
+                if (heroFrames != null && heroFrames.Length > 0) progressHero.sprite = heroFrames[frame % heroFrames.Length];
+            }
         }
 
         public void Refresh()
@@ -393,6 +431,7 @@ namespace TimelessEchoes.UI.Toolkit
             foreach (var binding in bindings) binding.Dispose();
             bindings.Clear(); rows.Clear(); buttons.Clear();
             root?.RemoveFromHierarchy(); root = null; popup = null; menuAnchor = null;
+            characterPortrait = null;
             tutorialPrompts.Clear(); highlightedEntryId = null;
             openGroup = Group.Toolbar;
         }

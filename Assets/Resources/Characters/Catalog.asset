@@ -1,0 +1,1334 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0d392db996ae2c43a68d8fb75b1fc19, type: 3}
+  m_Name: Catalog
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.Characters.CharacterCatalog
+  gear:
+  - helmet: Head/Plate_Helmet_1/Plate_Helmet_1_Bronze
+    chest: Chest/Plate_Chest/Plate_Chest_Bronze
+    legs: Legs/Plate_Legs/Plate_Legs_Bronze
+    boots: Feet/Plate_Boots_Bronze
+    tool: Tool/Metal0
+  - helmet: Head/Plate_Helmet_1/Plate_Helmet_1_Iron
+    chest: Chest/Plate_Chest/Plate_Chest_Iron
+    legs: Legs/Plate_Legs/Plate_Legs_Iron
+    boots: Feet/Plate_Boots_Iron
+    tool: Tool/Metal1
+  - helmet: Head/Plate_Helmet_1/Plate_Helmet_1_Gold
+    chest: Chest/Plate_Chest/Plate_Chest_Gold
+    legs: Legs/Plate_Legs/Plate_Legs_Gold
+    boots: Feet/Plate_Boots_Gold
+    tool: Tool/Metal2
+  - helmet: Head/Plate_Helmet_1/Plate_Helmet_1_Orange
+    chest: Chest/Plate_Chest/Plate_Chest_Orange
+    legs: Legs/Plate_Legs/Plate_Legs_Orange
+    boots: Feet/Plate_Boots_Orange
+    tool: Tool/Metal3
+  - helmet: Head/Plate_Helmet_1/Plate_Helmet_1_Blue
+    chest: Chest/Plate_Chest/Plate_Chest_Blue
+    legs: Legs/Plate_Legs/Plate_Legs_Blue
+    boots: Feet/Plate_Boots_Blue
+    tool: Tool/Metal4
+  - helmet: Head/Plate_Helmet_1/Plate_Helmet_1_Green
+    chest: Chest/Plate_Chest/Plate_Chest_Green
+    legs: Legs/Plate_Legs/Plate_Legs_Green
+    boots: Feet/Plate_Boots_Green
+    tool: Tool/Metal5
+  - helmet: Head/Plate_Helmet_1/Plate_Helmet_1_Red
+    chest: Chest/Plate_Chest/Plate_Chest_Red
+    legs: Legs/Plate_Legs/Plate_Legs_Red
+    boots: Feet/Plate_Boots_Red
+    tool: Tool/Metal6
+  - helmet: Head/Plate_Helmet_1/Plate_Helmet_1_Purple
+    chest: Chest/Plate_Chest/Plate_Chest_Purple
+    legs: Legs/Plate_Legs/Plate_Legs_Purple
+    boots: Feet/Plate_Boots_Purple
+    tool: Tool/Metal7
+  skillToolIcons:
+  - {fileID: 3201700494366066137, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: -6623575528231689321, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: -263682996174179970, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: -5728692859750609351, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 2523123832861834610, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 4176755172187440661, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 1531038899234720214, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 2599036286880119704, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: -5824133233151837530, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: -2460472047436448705, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 7851232504325670981, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 9029272197887675659, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: -4505024262308766840, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 7956039588396977987, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: -4140697692318271177, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 6673184388918582949, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: -5510697341002667634, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 6855456976275072185, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: -7510783403516455287, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 2960930908201269935, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: -2345784391616310455, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 8983852200927947292, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 6158907465996874936, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 7540541503264247404, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: -3670415696619329869, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 4518632081555291343, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 1881156685425355489, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 1018323232806602966, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 988328462840775078, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: -8131102093796530995, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 2924879849580228441, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 2340088926059697554, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: -8450999174311816064, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 3432706150465356156, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 1730325715849538794, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  - {fileID: 6996061709071157774, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+  parts:
+  - id: Body
+    label: Player Base animations
+    slot: 0
+    resourcePath: Characters/Parts/fb371b21c67a2edb0d83b3260e2f784b
+  - id: Legs/Farmer_Pants/Farmer_Pants_1_Black
+    label: Farmer Pants 1 Black
+    slot: 1
+    resourcePath: Characters/Parts/04fdf04cb8cbea97da4274adfbc50d4e
+  - id: Legs/Farmer_Pants/Farmer_Pants_1_Blue
+    label: Farmer Pants 1 Blue
+    slot: 1
+    resourcePath: Characters/Parts/f29edb0c69a3eb0cb814b5c2fb593026
+  - id: Legs/Farmer_Pants/Farmer_Pants_1_Green
+    label: Farmer Pants 1 Green
+    slot: 1
+    resourcePath: Characters/Parts/dc6ec245bb3034fa04f5bfcd5c5c6c52
+  - id: Legs/Farmer_Pants/Farmer_Pants_1_Orange
+    label: Farmer Pants 1 Orange
+    slot: 1
+    resourcePath: Characters/Parts/9bbad224dcd9c941889e5e5bf65e7d63
+  - id: Legs/Farmer_Pants/Farmer_Pants_1_Pink
+    label: Farmer Pants 1 Pink
+    slot: 1
+    resourcePath: Characters/Parts/2de8bab440df4f7cdd832d87cfdc5ef8
+  - id: Legs/Farmer_Pants/Farmer_Pants_1_Purple
+    label: Farmer Pants 1 Purple
+    slot: 1
+    resourcePath: Characters/Parts/299f0b3ba167e91c672579cda1f3451a
+  - id: Legs/Farmer_Pants/Farmer_Pants_1_Red
+    label: Farmer Pants 1 Red
+    slot: 1
+    resourcePath: Characters/Parts/9872f6489cdcdbd503e65cab9c0e48eb
+  - id: Legs/Farmer_Pants/Farmer_Pants_1_White_and_Brown
+    label: Farmer Pants 1 White and Brown
+    slot: 1
+    resourcePath: Characters/Parts/172e08802b17dead8b3591243438b43a
+  - id: Legs/OG_Pants/Pants_1_Black
+    label: Pants 1 Black
+    slot: 1
+    resourcePath: Characters/Parts/0b53dbd7dbb93c685855ad2baf165954
+  - id: Legs/OG_Pants/Pants_1_Blue
+    label: Pants 1 Blue
+    slot: 1
+    resourcePath: Characters/Parts/a7d4c8aa70b07f3a70dd1c4c346fd51b
+  - id: Legs/OG_Pants/Pants_1_Brown
+    label: Pants 1 Brown
+    slot: 1
+    resourcePath: Characters/Parts/880cb599448c93ed1e7fbfe4304abf87
+  - id: Legs/OG_Pants/Pants_1_Green
+    label: Pants 1 Green
+    slot: 1
+    resourcePath: Characters/Parts/04a2897639875f0f1e52b32daa80fed5
+  - id: Legs/OG_Pants/Pants_1_Orange
+    label: Pants 1 Orange
+    slot: 1
+    resourcePath: Characters/Parts/4d720010a880be623a7159cab9378a04
+  - id: Legs/OG_Pants/Pants_1_Pink
+    label: Pants 1 Pink
+    slot: 1
+    resourcePath: Characters/Parts/9a51901143d5faf9280438746bdd6ccc
+  - id: Legs/OG_Pants/Pants_1_Purple
+    label: Pants 1 Purple
+    slot: 1
+    resourcePath: Characters/Parts/c3e16131ead1680abad882391bcc5ef5
+  - id: Legs/OG_Pants/Pants_1_Red
+    label: Pants 1 Red
+    slot: 1
+    resourcePath: Characters/Parts/9c46517ced37b7cde533f1095126be94
+  - id: Legs/Plate_Legs/Plate_Legs_Blue
+    label: Plate Legs Blue
+    slot: 1
+    resourcePath: Characters/Parts/a54698c98f79ce385f6759e1c005d29b
+  - id: Legs/Plate_Legs/Plate_Legs_Bronze
+    label: Plate Legs Bronze
+    slot: 1
+    resourcePath: Characters/Parts/48e8973eab4647439995502cd47cd379
+  - id: Legs/Plate_Legs/Plate_Legs_Gold
+    label: Plate Legs Gold
+    slot: 1
+    resourcePath: Characters/Parts/a0ff1988f46341acd50bb59fbdbbba5a
+  - id: Legs/Plate_Legs/Plate_Legs_Green
+    label: Plate Legs Green
+    slot: 1
+    resourcePath: Characters/Parts/93e57e31643e332eea3000415f70106a
+  - id: Legs/Plate_Legs/Plate_Legs_Iron
+    label: Plate Legs Iron
+    slot: 1
+    resourcePath: Characters/Parts/669c413b328b3d066cb2dec5c57afd10
+  - id: Legs/Plate_Legs/Plate_Legs_Orange
+    label: Plate Legs Orange
+    slot: 1
+    resourcePath: Characters/Parts/b3ab860fd7552d11a9cc34d9a33798da
+  - id: Legs/Plate_Legs/Plate_Legs_Purple
+    label: Plate Legs Purple
+    slot: 1
+    resourcePath: Characters/Parts/bda4dc5470f18c9b492dc622fadedd0b
+  - id: Legs/Plate_Legs/Plate_Legs_Red
+    label: Plate Legs Red
+    slot: 1
+    resourcePath: Characters/Parts/01bbaed6c7395a5d68b48c34ee5a5501
+  - id: Legs/Royal_Pants/Royal_Pants_1_Black
+    label: Royal Pants 1 Black
+    slot: 1
+    resourcePath: Characters/Parts/7e5f5c083585dce6cdd5f91c3606dde2
+  - id: Legs/Royal_Pants/Royal_Pants_1_Blue
+    label: Royal Pants 1 Blue
+    slot: 1
+    resourcePath: Characters/Parts/654249a1dc7d18197c9f6184fd8470d2
+  - id: Legs/Royal_Pants/Royal_Pants_1_Green
+    label: Royal Pants 1 Green
+    slot: 1
+    resourcePath: Characters/Parts/0e2ca87239489754b078d8919ef6e774
+  - id: Legs/Royal_Pants/Royal_Pants_1_Orange
+    label: Royal Pants 1 Orange
+    slot: 1
+    resourcePath: Characters/Parts/5a636f0d0fad83d221dc81929d97a5fe
+  - id: Legs/Royal_Pants/Royal_Pants_1_Purple
+    label: Royal Pants 1 Purple
+    slot: 1
+    resourcePath: Characters/Parts/ace1e1d1193c4c7bd49392eb87d8bc37
+  - id: Legs/Royal_Pants/Royal_Pants_1_White
+    label: Royal Pants 1 White
+    slot: 1
+    resourcePath: Characters/Parts/e943efffe192d28f7e6ec15bc7ba98a4
+  - id: Legs/Royal_Pants/Royal_Pantst_1_Red
+    label: Royal Pantst 1 Red
+    slot: 1
+    resourcePath: Characters/Parts/2a0473f3d1378d521c78c671d5364640
+  - id: Feet/Plate_Boots_Blue
+    label: Plate Boots Blue
+    slot: 2
+    resourcePath: Characters/Parts/7188fe315eb6c7ec1a6072b2da152cfe
+  - id: Feet/Plate_Boots_Bronze
+    label: Plate Boots Bronze
+    slot: 2
+    resourcePath: Characters/Parts/8a2a0d6a61e9e0208a594d1c33d5cdaa
+  - id: Feet/Plate_Boots_Gold
+    label: Plate Boots Gold
+    slot: 2
+    resourcePath: Characters/Parts/f12bc416c422414df3439633a897e954
+  - id: Feet/Plate_Boots_Green
+    label: Plate Boots Green
+    slot: 2
+    resourcePath: Characters/Parts/726ad50e75985d72cdf8cd080683ef3f
+  - id: Feet/Plate_Boots_Iron
+    label: Plate Boots Iron
+    slot: 2
+    resourcePath: Characters/Parts/96d0ffba4629a2a1a4644d0bbed5074c
+  - id: Feet/Plate_Boots_Orange
+    label: Plate Boots Orange
+    slot: 2
+    resourcePath: Characters/Parts/f803160ce69ec4090988c132ee52472f
+  - id: Feet/Plate_Boots_Purple
+    label: Plate Boots Purple
+    slot: 2
+    resourcePath: Characters/Parts/6f22f2a0716b934fc260fa77619c007e
+  - id: Feet/Plate_Boots_Red
+    label: Plate Boots Red
+    slot: 2
+    resourcePath: Characters/Parts/dca8c99a37b32a65e00d765f53beca03
+  - id: Feet/Shoes_1_Black
+    label: Shoes 1 Black
+    slot: 2
+    resourcePath: Characters/Parts/9db58af14838f1520bd3c640f0d18346
+  - id: Feet/Shoes_1_Blue
+    label: Shoes 1 Blue
+    slot: 2
+    resourcePath: Characters/Parts/e83d673af63fdd519a7620a3413277c2
+  - id: Feet/Shoes_1_Brown
+    label: Shoes 1 Brown
+    slot: 2
+    resourcePath: Characters/Parts/7a59628089141039bdb3e500a8f8b37b
+  - id: Feet/Shoes_1_Green
+    label: Shoes 1 Green
+    slot: 2
+    resourcePath: Characters/Parts/8f19345d025e33f76666ae0b62bd8136
+  - id: Feet/Shoes_1_Orange
+    label: Shoes 1 Orange
+    slot: 2
+    resourcePath: Characters/Parts/2fa7b1564da32497b1e04b845812001d
+  - id: Feet/Shoes_1_Pink
+    label: Shoes 1 Pink
+    slot: 2
+    resourcePath: Characters/Parts/64c81acff6460af0a42899e4cedd4efa
+  - id: Feet/Shoes_1_Purple
+    label: Shoes 1 Purple
+    slot: 2
+    resourcePath: Characters/Parts/ab98cc5682240b47f2690de0a9b8a027
+  - id: Feet/Shoes_1_Red
+    label: Shoes 1 Red
+    slot: 2
+    resourcePath: Characters/Parts/e893c7daedc2b90fc533a641e1a540b2
+  - id: Feet/Shoes_1_White
+    label: Shoes 1 White
+    slot: 2
+    resourcePath: Characters/Parts/2d4cebd06abf3803db6004fbf9c79c6a
+  - id: Chest/Farmer_Shirt/Farmer_Shirt_1_Black
+    label: Farmer Shirt 1 Black
+    slot: 3
+    resourcePath: Characters/Parts/343d5af758346c95c4fcf4b538315558
+  - id: Chest/Farmer_Shirt/Farmer_Shirt_1_Blue
+    label: Farmer Shirt 1 Blue
+    slot: 3
+    resourcePath: Characters/Parts/441f8073b294e0667d8d140f88135f1f
+  - id: Chest/Farmer_Shirt/Farmer_Shirt_1_Green
+    label: Farmer Shirt 1 Green
+    slot: 3
+    resourcePath: Characters/Parts/92ad75a745f2bff89737b51d519f012a
+  - id: Chest/Farmer_Shirt/Farmer_Shirt_1_Orange
+    label: Farmer Shirt 1 Orange
+    slot: 3
+    resourcePath: Characters/Parts/9de674f185652416318a9546b9b7f6f8
+  - id: Chest/Farmer_Shirt/Farmer_Shirt_1_Pink
+    label: Farmer Shirt 1 Pink
+    slot: 3
+    resourcePath: Characters/Parts/19df933828e17189b47a99cddc7fd04d
+  - id: Chest/Farmer_Shirt/Farmer_Shirt_1_Purple
+    label: Farmer Shirt 1 Purple
+    slot: 3
+    resourcePath: Characters/Parts/1b6df415c24a3477b2bb247df8e12ab8
+  - id: Chest/Farmer_Shirt/Farmer_Shirt_1_Red
+    label: Farmer Shirt 1 Red
+    slot: 3
+    resourcePath: Characters/Parts/c003fc56a1d959998c26abe86d37dae8
+  - id: Chest/Farmer_Shirt/Farmer_Shirt_1_White_and_Brown
+    label: Farmer Shirt 1 White and Brown
+    slot: 3
+    resourcePath: Characters/Parts/3562a618de7d8695d5b431fc72dd9b89
+  - id: Chest/Lumberjack_Shirt/Lumberjack_Shirt_1_Black
+    label: Lumberjack Shirt 1 Black
+    slot: 3
+    resourcePath: Characters/Parts/0e661c6c53b9e932aad5e01e3e424420
+  - id: Chest/Lumberjack_Shirt/Lumberjack_Shirt_1_Blue
+    label: Lumberjack Shirt 1 Blue
+    slot: 3
+    resourcePath: Characters/Parts/d8dc75435cd029e96cf464e31ca23db8
+  - id: Chest/Lumberjack_Shirt/Lumberjack_Shirt_1_Brown
+    label: Lumberjack Shirt 1 Brown
+    slot: 3
+    resourcePath: Characters/Parts/a942ec1652a6c960675d0fe7ad5b349a
+  - id: Chest/Lumberjack_Shirt/Lumberjack_Shirt_1_Green
+    label: Lumberjack Shirt 1 Green
+    slot: 3
+    resourcePath: Characters/Parts/94b7061c8de434b81c83ddec5d7756d6
+  - id: Chest/Lumberjack_Shirt/Lumberjack_Shirt_1_Orange
+    label: Lumberjack Shirt 1 Orange
+    slot: 3
+    resourcePath: Characters/Parts/1fed127657a62ae62e6aa192063cc070
+  - id: Chest/Lumberjack_Shirt/Lumberjack_Shirt_1_Pink
+    label: Lumberjack Shirt 1 Pink
+    slot: 3
+    resourcePath: Characters/Parts/bd171394bd371c4c3ff205a81bf56526
+  - id: Chest/Lumberjack_Shirt/Lumberjack_Shirt_1_Purple
+    label: Lumberjack Shirt 1 Purple
+    slot: 3
+    resourcePath: Characters/Parts/4b6928da175f90abd43cb96c726a967f
+  - id: Chest/Lumberjack_Shirt/Lumberjack_Shirt_1_Red
+    label: Lumberjack Shirt 1 Red
+    slot: 3
+    resourcePath: Characters/Parts/7d7d6112a17e981c30bcbc48eef04fce
+  - id: Chest/Lumberjack_Shirt/Lumberjack_Shirt_1_White
+    label: Lumberjack Shirt 1 White
+    slot: 3
+    resourcePath: Characters/Parts/434c3c9a2af14fd24377b6dc84bdff5b
+  - id: Chest/OG_Shirt/Shirt_1_Black
+    label: Shirt 1 Black
+    slot: 3
+    resourcePath: Characters/Parts/1fdd8d457c22fef46f5adbe8fafa8e60
+  - id: Chest/OG_Shirt/Shirt_1_Blue
+    label: Shirt 1 Blue
+    slot: 3
+    resourcePath: Characters/Parts/1eafcc9ad9031c6408f33acc94ef795d
+  - id: Chest/OG_Shirt/Shirt_1_Brown
+    label: Shirt 1 Brown
+    slot: 3
+    resourcePath: Characters/Parts/a2df9ad8d746f7d28bf0f46f59269069
+  - id: Chest/OG_Shirt/Shirt_1_Green
+    label: Shirt 1 Green
+    slot: 3
+    resourcePath: Characters/Parts/ee5f51e8164483e474e11db5c4866fc0
+  - id: Chest/OG_Shirt/Shirt_1_Orange
+    label: Shirt 1 Orange
+    slot: 3
+    resourcePath: Characters/Parts/5ab50a42319d94dd4532d9402d262e09
+  - id: Chest/OG_Shirt/Shirt_1_Pink
+    label: Shirt 1 Pink
+    slot: 3
+    resourcePath: Characters/Parts/876ee667c9ae4b1c81c3c20e0847b1db
+  - id: Chest/OG_Shirt/Shirt_1_Purple
+    label: Shirt 1 Purple
+    slot: 3
+    resourcePath: Characters/Parts/c91221894d039bff1fd6fb393beec79c
+  - id: Chest/OG_Shirt/Shirt_1_Red
+    label: Shirt 1 Red
+    slot: 3
+    resourcePath: Characters/Parts/81859003743e6ca8177560c0ef906e6b
+  - id: Chest/Plate_Chest/Plate_Chest_Blue
+    label: Plate Chest Blue
+    slot: 3
+    resourcePath: Characters/Parts/64da4ab19efcee8c647202b873f4ba79
+  - id: Chest/Plate_Chest/Plate_Chest_Bronze
+    label: Plate Chest Bronze
+    slot: 3
+    resourcePath: Characters/Parts/19282d4c88e6e53a4cbc0c04a78da384
+  - id: Chest/Plate_Chest/Plate_Chest_Gold
+    label: Plate Chest Gold
+    slot: 3
+    resourcePath: Characters/Parts/de94d8c78f81109ff637801c462290e1
+  - id: Chest/Plate_Chest/Plate_Chest_Green
+    label: Plate Chest Green
+    slot: 3
+    resourcePath: Characters/Parts/234c6418ddace172311005492ce1e805
+  - id: Chest/Plate_Chest/Plate_Chest_Iron
+    label: Plate Chest Iron
+    slot: 3
+    resourcePath: Characters/Parts/ad3f2a2ac669e8f377d78b88df0f6d93
+  - id: Chest/Plate_Chest/Plate_Chest_Orange
+    label: Plate Chest Orange
+    slot: 3
+    resourcePath: Characters/Parts/0b558d66aababca3a48a80b962c87a28
+  - id: Chest/Plate_Chest/Plate_Chest_Purple
+    label: Plate Chest Purple
+    slot: 3
+    resourcePath: Characters/Parts/dc9d3746d36eb9e0c7d490ff225eb61c
+  - id: Chest/Plate_Chest/Plate_Chest_Red
+    label: Plate Chest Red
+    slot: 3
+    resourcePath: Characters/Parts/8a9f18bff2da27295846ef567ed1ce72
+  - id: Chest/Royal_Shirt/Royal_Shirt_1_Black
+    label: Royal Shirt 1 Black
+    slot: 3
+    resourcePath: Characters/Parts/c71e5e5429d7704489b9dffee633dd26
+  - id: Chest/Royal_Shirt/Royal_Shirt_1_Blue
+    label: Royal Shirt 1 Blue
+    slot: 3
+    resourcePath: Characters/Parts/5e95789776d88b7a7e1accd510aae07d
+  - id: Chest/Royal_Shirt/Royal_Shirt_1_Green
+    label: Royal Shirt 1 Green
+    slot: 3
+    resourcePath: Characters/Parts/be4c7d2927a97242278acde2b733d2e6
+  - id: Chest/Royal_Shirt/Royal_Shirt_1_Orange
+    label: Royal Shirt 1 Orange
+    slot: 3
+    resourcePath: Characters/Parts/954d05d08b9e5544c039d055494bd203
+  - id: Chest/Royal_Shirt/Royal_Shirt_1_Purple
+    label: Royal Shirt 1 Purple
+    slot: 3
+    resourcePath: Characters/Parts/30b8e30a43f40412f33356eb278e0305
+  - id: Chest/Royal_Shirt/Royal_Shirt_1_Red
+    label: Royal Shirt 1 Red
+    slot: 3
+    resourcePath: Characters/Parts/bbf5fbd65b0afa67f6b2547cb8f4ddef
+  - id: Chest/Royal_Shirt/Royal_Shirt_1_White
+    label: Royal Shirt 1 White
+    slot: 3
+    resourcePath: Characters/Parts/80921dda0eab59b62445fd4df1444a6b
+  - id: Head/Hair_1/Hair_1_Auburn
+    label: Hair 1 Auburn
+    slot: 5
+    resourcePath: Characters/Parts/b20d03c8a951c3d442c93cf6d9c94085
+  - id: Head/Hair_1/Hair_1_Black
+    label: Hair 1 Black
+    slot: 5
+    resourcePath: Characters/Parts/1faa71d4966d3ff0957df3ad13118913
+  - id: Head/Hair_1/Hair_1_Blonde
+    label: Hair 1 Blonde
+    slot: 5
+    resourcePath: Characters/Parts/38d36b12e2312ab3d52b96ef235e201d
+  - id: Head/Hair_1/Hair_1_Blue
+    label: Hair 1 Blue
+    slot: 5
+    resourcePath: Characters/Parts/b10d146c4b7de9c5e5a9b705ba579f5d
+  - id: Head/Hair_1/Hair_1_Brown
+    label: Hair 1 Brown
+    slot: 5
+    resourcePath: Characters/Parts/b55d6f5d65a309ccc9129b13f1ac06b6
+  - id: Head/Hair_1/Hair_1_Dark_Brown
+    label: Hair 1 Dark Brown
+    slot: 5
+    resourcePath: Characters/Parts/894913ddcf60cfb6e96ad81c5366e4e7
+  - id: Head/Hair_1/Hair_1_Ginger
+    label: Hair 1 Ginger
+    slot: 5
+    resourcePath: Characters/Parts/84ace11c4f5a9b1bc9df250b9bf512d2
+  - id: Head/Hair_1/Hair_1_Grey
+    label: Hair 1 Grey
+    slot: 5
+    resourcePath: Characters/Parts/9684df8846d1828eeed59ebcef58751a
+  - id: Head/Hair_1/Hair_1_Light_Brown
+    label: Hair 1 Light Brown
+    slot: 5
+    resourcePath: Characters/Parts/239ce6066bdb341c892ba588a60379eb
+  - id: Head/Hair_1/Hair_1_Pink
+    label: Hair 1 Pink
+    slot: 5
+    resourcePath: Characters/Parts/1abb6e35419019b7f6f1a6ec45543e00
+  - id: Head/Hair_1/Hair_1_Purple
+    label: Hair 1 Purple
+    slot: 5
+    resourcePath: Characters/Parts/7d34372356791111107c878abf2b2b12
+  - id: Head/Hair_1/Hair_1_White
+    label: Hair 1 White
+    slot: 5
+    resourcePath: Characters/Parts/3cf9344ee7527a311f4d24476c5a6787
+  - id: Head/Hair_2/Hair_2_Auburn
+    label: Hair 2 Auburn
+    slot: 5
+    resourcePath: Characters/Parts/af191d1d4c1c78f080c7f0dd12083fcf
+  - id: Head/Hair_2/Hair_2_Black
+    label: Hair 2 Black
+    slot: 5
+    resourcePath: Characters/Parts/a63fbf99f26495877a04f94e47a8ab73
+  - id: Head/Hair_2/Hair_2_Blonde
+    label: Hair 2 Blonde
+    slot: 5
+    resourcePath: Characters/Parts/0aa4d7f1be7faa49422d0a3938803ee4
+  - id: Head/Hair_2/Hair_2_Blue
+    label: Hair 2 Blue
+    slot: 5
+    resourcePath: Characters/Parts/b49d273471c102bb74e593efcda5e045
+  - id: Head/Hair_2/Hair_2_Brown
+    label: Hair 2 Brown
+    slot: 5
+    resourcePath: Characters/Parts/ebf27f0f0745aa3d6f72622b94fd9f6f
+  - id: Head/Hair_2/Hair_2_Dark_Brown
+    label: Hair 2 Dark Brown
+    slot: 5
+    resourcePath: Characters/Parts/8746436d3aee8ad3e92ec9b141d4f749
+  - id: Head/Hair_2/Hair_2_Ginger
+    label: Hair 2 Ginger
+    slot: 5
+    resourcePath: Characters/Parts/7165b03a534fa69a09b1af816feed8e2
+  - id: Head/Hair_2/Hair_2_Grey
+    label: Hair 2 Grey
+    slot: 5
+    resourcePath: Characters/Parts/0b190c3046197f9591b24537539df2f0
+  - id: Head/Hair_2/Hair_2_Light_Brown
+    label: Hair 2 Light Brown
+    slot: 5
+    resourcePath: Characters/Parts/9215fbdea6a5b2611c52edeae4915a03
+  - id: Head/Hair_2/Hair_2_Pink
+    label: Hair 2 Pink
+    slot: 5
+    resourcePath: Characters/Parts/8efdf928704b7107900710b7c748baf6
+  - id: Head/Hair_2/Hair_2_Purple
+    label: Hair 2 Purple
+    slot: 5
+    resourcePath: Characters/Parts/8d802fdba48f94ecdd3c3e12ba6584f5
+  - id: Head/Hair_2/Hair_2_White
+    label: Hair 2 White
+    slot: 5
+    resourcePath: Characters/Parts/476389d8bcc1ccc2c1e105ef5a05eaaf
+  - id: Head/Hair_3/Hair_3_Auburn
+    label: Hair 3 Auburn
+    slot: 5
+    resourcePath: Characters/Parts/62775df2f7173e08a13a92c0eee9fb55
+  - id: Head/Hair_3/Hair_3_Black
+    label: Hair 3 Black
+    slot: 5
+    resourcePath: Characters/Parts/05f46a91588b14dc2eafa1bcba87a118
+  - id: Head/Hair_3/Hair_3_Blonde
+    label: Hair 3 Blonde
+    slot: 5
+    resourcePath: Characters/Parts/13a74ff4464d629d8f869b54cbd70d5e
+  - id: Head/Hair_3/Hair_3_Blue
+    label: Hair 3 Blue
+    slot: 5
+    resourcePath: Characters/Parts/485edb4fa55f66192cb8c1850e75db8e
+  - id: Head/Hair_3/Hair_3_Brown
+    label: Hair 3 Brown
+    slot: 5
+    resourcePath: Characters/Parts/2499cc80d0211ecbe7ca16a99bf1aee8
+  - id: Head/Hair_3/Hair_3_Dark_Brown
+    label: Hair 3 Dark Brown
+    slot: 5
+    resourcePath: Characters/Parts/311a01a9e2f686577e567637a83e45f2
+  - id: Head/Hair_3/Hair_3_Ginger
+    label: Hair 3 Ginger
+    slot: 5
+    resourcePath: Characters/Parts/c6ed10b1f12578da96590e22159673e9
+  - id: Head/Hair_3/Hair_3_Grey
+    label: Hair 3 Grey
+    slot: 5
+    resourcePath: Characters/Parts/0b1dd353a04b3c44c36b73ef01d9455b
+  - id: Head/Hair_3/Hair_3_Light_Brown
+    label: Hair 3 Light Brown
+    slot: 5
+    resourcePath: Characters/Parts/f5fe2443082983732b26d759f35d2c90
+  - id: Head/Hair_3/Hair_3_Pink
+    label: Hair 3 Pink
+    slot: 5
+    resourcePath: Characters/Parts/3a7753ebb4e7a0f569c5bf37ee8eaf9e
+  - id: Head/Hair_3/Hair_3_Purple
+    label: Hair 3 Purple
+    slot: 5
+    resourcePath: Characters/Parts/bd248d9f55379748bc3c3d4238354f5d
+  - id: Head/Hair_3/Hair_3_White
+    label: Hair 3 White
+    slot: 5
+    resourcePath: Characters/Parts/a7306ddf28130b3debd190f4420b42a0
+  - id: Head/Hair_4/Hair_4_Auburn
+    label: Hair 4 Auburn
+    slot: 5
+    resourcePath: Characters/Parts/a8bcfd54f5cd54be1d1828c4a50a717a
+  - id: Head/Hair_4/Hair_4_Black
+    label: Hair 4 Black
+    slot: 5
+    resourcePath: Characters/Parts/3570eb6800331f215d7b6a161aa0edd3
+  - id: Head/Hair_4/Hair_4_Blonde
+    label: Hair 4 Blonde
+    slot: 5
+    resourcePath: Characters/Parts/a6dd103ca806a3a7166f280ac66064a5
+  - id: Head/Hair_4/Hair_4_Blue
+    label: Hair 4 Blue
+    slot: 5
+    resourcePath: Characters/Parts/df783e784bbf58e9cb6d07af4822c526
+  - id: Head/Hair_4/Hair_4_Brown
+    label: Hair 4 Brown
+    slot: 5
+    resourcePath: Characters/Parts/639b19c03f2ced2e24739de3814e429e
+  - id: Head/Hair_4/Hair_4_Dark_Brown
+    label: Hair 4 Dark Brown
+    slot: 5
+    resourcePath: Characters/Parts/ddf6e8ef079985fbc10d0d5ccddb7788
+  - id: Head/Hair_4/Hair_4_Ginger
+    label: Hair 4 Ginger
+    slot: 5
+    resourcePath: Characters/Parts/1b69d3e12acd888c7d64ae151fe9972e
+  - id: Head/Hair_4/Hair_4_Grey
+    label: Hair 4 Grey
+    slot: 5
+    resourcePath: Characters/Parts/870ade768b01aa29e7cc30c361eb4221
+  - id: Head/Hair_4/Hair_4_Light_Brown
+    label: Hair 4 Light Brown
+    slot: 5
+    resourcePath: Characters/Parts/e47474cd9164b50b496b3aed7bac7286
+  - id: Head/Hair_4/Hair_4_Pink
+    label: Hair 4 Pink
+    slot: 5
+    resourcePath: Characters/Parts/db7f51bb9977f10323e2a816e47644bf
+  - id: Head/Hair_4/Hair_4_Purple
+    label: Hair 4 Purple
+    slot: 5
+    resourcePath: Characters/Parts/7b3d3fa11262fb17751f7be45a2c0096
+  - id: Head/Hair_4/Hair_4_White
+    label: Hair 4 White
+    slot: 5
+    resourcePath: Characters/Parts/236c376c36af6c50075b05fc0858bc14
+  - id: Head/Hair_5/Hair_5_Auburn
+    label: Hair 5 Auburn
+    slot: 5
+    resourcePath: Characters/Parts/32d30ed6bf0eac55ed6e9a9279e1a815
+  - id: Head/Hair_5/Hair_5_Black
+    label: Hair 5 Black
+    slot: 5
+    resourcePath: Characters/Parts/8af38c238bde12c69acf85950268b218
+  - id: Head/Hair_5/Hair_5_Blonde
+    label: Hair 5 Blonde
+    slot: 5
+    resourcePath: Characters/Parts/fd01bc4b95d44e273b842b898120472b
+  - id: Head/Hair_5/Hair_5_Blue
+    label: Hair 5 Blue
+    slot: 5
+    resourcePath: Characters/Parts/5171c9c6d452ced90113ab76a994abdc
+  - id: Head/Hair_5/Hair_5_Brown
+    label: Hair 5 Brown
+    slot: 5
+    resourcePath: Characters/Parts/30cfce98e3370bd5ce94ec1bcff4bcad
+  - id: Head/Hair_5/Hair_5_Dark_Brown
+    label: Hair 5 Dark Brown
+    slot: 5
+    resourcePath: Characters/Parts/1da0a9ec41b251a2d22c6315742269d0
+  - id: Head/Hair_5/Hair_5_Ginger
+    label: Hair 5 Ginger
+    slot: 5
+    resourcePath: Characters/Parts/42a42050b5c61dc39700f81d1644a0c0
+  - id: Head/Hair_5/Hair_5_Grey
+    label: Hair 5 Grey
+    slot: 5
+    resourcePath: Characters/Parts/f7eed01221ab95d145d531a6612de0ff
+  - id: Head/Hair_5/Hair_5_Light_Brown
+    label: Hair 5 Light Brown
+    slot: 5
+    resourcePath: Characters/Parts/e375f8109938ccf46483a93f81146712
+  - id: Head/Hair_5/Hair_5_Pink
+    label: Hair 5 Pink
+    slot: 5
+    resourcePath: Characters/Parts/5a4e9b09bbe57c8c75eab1d26aea21c7
+  - id: Head/Hair_5/Hair_5_Purple
+    label: Hair 5 Purple
+    slot: 5
+    resourcePath: Characters/Parts/13e1847d83e7198b0b3b057145513531
+  - id: Head/Hair_5/Hair_5_White
+    label: Hair 5 White
+    slot: 5
+    resourcePath: Characters/Parts/435a617ea13e3f672fa723747a65039e
+  - id: Head/Hair_6/Hair_6_Auburn
+    label: Hair 6 Auburn
+    slot: 5
+    resourcePath: Characters/Parts/efe8671839c43def072ad40bd486f3c5
+  - id: Head/Hair_6/Hair_6_Black
+    label: Hair 6 Black
+    slot: 5
+    resourcePath: Characters/Parts/a325eebc6cc63c65e305317970427dcb
+  - id: Head/Hair_6/Hair_6_Blonde
+    label: Hair 6 Blonde
+    slot: 5
+    resourcePath: Characters/Parts/0a2310d87074a1ab9e90f6a2fbda8dd6
+  - id: Head/Hair_6/Hair_6_Blue
+    label: Hair 6 Blue
+    slot: 5
+    resourcePath: Characters/Parts/a334596a65d306261a030a7a951c4c03
+  - id: Head/Hair_6/Hair_6_Brown
+    label: Hair 6 Brown
+    slot: 5
+    resourcePath: Characters/Parts/504ba6e6c01290403e6c1696a238a64b
+  - id: Head/Hair_6/Hair_6_Dark_Brown
+    label: Hair 6 Dark Brown
+    slot: 5
+    resourcePath: Characters/Parts/a4acb815d292a07ac34c436eb6a42cff
+  - id: Head/Hair_6/Hair_6_Ginger
+    label: Hair 6 Ginger
+    slot: 5
+    resourcePath: Characters/Parts/312891f21b8e3017baeeab2fc8360451
+  - id: Head/Hair_6/Hair_6_Grey
+    label: Hair 6 Grey
+    slot: 5
+    resourcePath: Characters/Parts/bb109c71e30967ec7e917ff9d66039f3
+  - id: Head/Hair_6/Hair_6_Light_Brown
+    label: Hair 6 Light Brown
+    slot: 5
+    resourcePath: Characters/Parts/eba762922f4570380b3bbcb7a2c59d91
+  - id: Head/Hair_6/Hair_6_Pink
+    label: Hair 6 Pink
+    slot: 5
+    resourcePath: Characters/Parts/fb697c44ee14d635f93dacc2197597b8
+  - id: Head/Hair_6/Hair_6_Purple
+    label: Hair 6 Purple
+    slot: 5
+    resourcePath: Characters/Parts/3ee67c83fc51f61aac176650d31ed220
+  - id: Head/Hair_6/Hair_6_White
+    label: Hair 6 White
+    slot: 5
+    resourcePath: Characters/Parts/17f5286fb8168f5a941a7fb54bff5a0c
+  - id: Head/Plate_Helmet_1/Plate_Helmet_1_Blue
+    label: Plate Helmet 1 Blue
+    slot: 5
+    resourcePath: Characters/Parts/ce399f103494b2c0ce67cdd2fe209825
+  - id: Head/Plate_Helmet_1/Plate_Helmet_1_Bronze
+    label: Plate Helmet 1 Bronze
+    slot: 5
+    resourcePath: Characters/Parts/9f58650ac86846a57af51ebcba2516ea
+  - id: Head/Plate_Helmet_1/Plate_Helmet_1_Gold
+    label: Plate Helmet 1 Gold
+    slot: 5
+    resourcePath: Characters/Parts/b202cad9312eae6f9e1d5ba265068595
+  - id: Head/Plate_Helmet_1/Plate_Helmet_1_Green
+    label: Plate Helmet 1 Green
+    slot: 5
+    resourcePath: Characters/Parts/a71aa3e8fea7d5f552404dc56ad8f404
+  - id: Head/Plate_Helmet_1/Plate_Helmet_1_Iron
+    label: Plate Helmet 1 Iron
+    slot: 5
+    resourcePath: Characters/Parts/5381b60e8a93f5aa74710023438707a9
+  - id: Head/Plate_Helmet_1/Plate_Helmet_1_Orange
+    label: Plate Helmet 1 Orange
+    slot: 5
+    resourcePath: Characters/Parts/a8cc53c88bd22b457a49e1a9140955d4
+  - id: Head/Plate_Helmet_1/Plate_Helmet_1_Purple
+    label: Plate Helmet 1 Purple
+    slot: 5
+    resourcePath: Characters/Parts/ad91f0a1bd4f0c25f696760f264ef50d
+  - id: Head/Plate_Helmet_1/Plate_Helmet_1_Red
+    label: Plate Helmet 1 Red
+    slot: 5
+    resourcePath: Characters/Parts/cdfe095e0977b0d6b182801d74d093b7
+  - id: Head/Plate_Helmet_2/Heavy_Plate_Helmet_1_Blue
+    label: Heavy Plate Helmet 1 Blue
+    slot: 5
+    resourcePath: Characters/Parts/6d304d7ab45f68b87b1f6a424c7961f9
+  - id: Head/Plate_Helmet_2/Heavy_Plate_Helmet_1_Bronze
+    label: Heavy Plate Helmet 1 Bronze
+    slot: 5
+    resourcePath: Characters/Parts/58cdfbc9f5a3c33810ffc46f6af2a65b
+  - id: Head/Plate_Helmet_2/Heavy_Plate_Helmet_1_Gold
+    label: Heavy Plate Helmet 1 Gold
+    slot: 5
+    resourcePath: Characters/Parts/8b3f879dc7b532394c9819ca43255b97
+  - id: Head/Plate_Helmet_2/Heavy_Plate_Helmet_1_Green
+    label: Heavy Plate Helmet 1 Green
+    slot: 5
+    resourcePath: Characters/Parts/8def084ff3b84f23d034308ea3ec30a7
+  - id: Head/Plate_Helmet_2/Heavy_Plate_Helmet_1_Iron
+    label: Heavy Plate Helmet 1 Iron
+    slot: 5
+    resourcePath: Characters/Parts/78224ade2479caba5bb62cae464ab77e
+  - id: Head/Plate_Helmet_2/Heavy_Plate_Helmet_1_Orange
+    label: Heavy Plate Helmet 1 Orange
+    slot: 5
+    resourcePath: Characters/Parts/84313e0471bdc745359b8f573edf5a0c
+  - id: Head/Plate_Helmet_2/Heavy_Plate_Helmet_1_Purple
+    label: Heavy Plate Helmet 1 Purple
+    slot: 5
+    resourcePath: Characters/Parts/c95be16825f7912298618146829e173b
+  - id: Head/Plate_Helmet_2/Heavy_Plate_Helmet_1_Red
+    label: Heavy Plate Helmet 1 Red
+    slot: 5
+    resourcePath: Characters/Parts/7df00dd5ad6d20a40cb7e391d7e70bbf
+  - id: Accessories/Farmer_Hat_1
+    label: Farmer Hat 1
+    slot: 6
+    resourcePath: Characters/Parts/866140a77bdff790236458c636d84036
+  - id: Hands
+    label: Hands 1 Bare
+    slot: 4
+    resourcePath: Characters/Parts/3be63e8bd6a3db850abf1e5406f3dd54
+  - id: Tool
+    label: Tools
+    slot: 7
+    resourcePath: Characters/Parts/e13dfd8ce8552362c2deaf3248d32022
+  - id: Tool/Unarmed
+    label: Unarmed
+    slot: 7
+    resourcePath: Characters/Parts/7dedf835d54016f68a1ddb5f90e433a4
+  - id: Tool/SkillBrown
+    label: Brown skill tools
+    slot: 7
+    resourcePath: Characters/Parts/612be4968eb3d3e18f8b6c9dbf2ef1ff
+  - id: Tool/Metal0
+    label: Bronze sword
+    slot: 7
+    resourcePath: Characters/Parts/020c5b8080e91262b9b443e58091b612
+  - id: Tool/SkillMetal0
+    label: Bronze skill tools
+    slot: 7
+    resourcePath: Characters/Parts/bcc9f95246438b5a51885948dd684060
+  - id: Tool/Metal1
+    label: Iron sword
+    slot: 7
+    resourcePath: Characters/Parts/6f6625c4fc1ece1ecb2ed5084b1cd86b
+  - id: Tool/SkillMetal1
+    label: Iron skill tools
+    slot: 7
+    resourcePath: Characters/Parts/c9c06ea511297060f4beb3a9f2337bf7
+  - id: Tool/Metal2
+    label: Gold sword
+    slot: 7
+    resourcePath: Characters/Parts/791814639b2bc4d75f406556ff1413a6
+  - id: Tool/SkillMetal2
+    label: Gold skill tools
+    slot: 7
+    resourcePath: Characters/Parts/c9dff826b9749ab66086f3f37cd46b3f
+  - id: Tool/Metal3
+    label: Orange sword
+    slot: 7
+    resourcePath: Characters/Parts/1c751b67092d51b05325d9523ad57962
+  - id: Tool/SkillMetal3
+    label: Orange skill tools
+    slot: 7
+    resourcePath: Characters/Parts/f002bad2ba32587181d30da0ba293a97
+  - id: Tool/Metal4
+    label: Blue sword
+    slot: 7
+    resourcePath: Characters/Parts/fb39d157934ae3128a2b3114cdd41a93
+  - id: Tool/SkillMetal4
+    label: Blue skill tools
+    slot: 7
+    resourcePath: Characters/Parts/6a611a8e72dbcc9e2aa6ca2062220c56
+  - id: Tool/Metal5
+    label: Green sword
+    slot: 7
+    resourcePath: Characters/Parts/b6a5e45d919963161768b79078392d57
+  - id: Tool/SkillMetal5
+    label: Green skill tools
+    slot: 7
+    resourcePath: Characters/Parts/1d660c26e2a7bc75fcde350cb1cb428b
+  - id: Tool/Metal6
+    label: Red sword
+    slot: 7
+    resourcePath: Characters/Parts/d2b7f20a8c9c48eddeb44388384469d3
+  - id: Tool/SkillMetal6
+    label: Red skill tools
+    slot: 7
+    resourcePath: Characters/Parts/645aa39f69b7949920cf5ecba91563b8
+  - id: Tool/Metal7
+    label: Purple sword
+    slot: 7
+    resourcePath: Characters/Parts/157845e78d09ddca0ca4aaa4610661ba
+  - id: Tool/SkillMetal7
+    label: Purple skill tools
+    slot: 7
+    resourcePath: Characters/Parts/0c3a8577d8914922e50cc5c3e27b819e
+  poses:
+  - name: Idle_Down
+    start: 0
+    length: 6
+  - name: Idle_Right
+    start: 6
+    length: 6
+  - name: Idle_Up
+    start: 12
+    length: 6
+  - name: Running_Down
+    start: 18
+    length: 6
+  - name: Running_Right
+    start: 24
+    length: 6
+  - name: Running_Up
+    start: 30
+    length: 6
+  - name: SwordAttack_1_Down
+    start: 36
+    length: 4
+  - name: SwordAttack_2_Down
+    start: 40
+    length: 4
+  - name: SwordAttack_3_Down
+    start: 44
+    length: 4
+  - name: SwordAttack_1_Right
+    start: 48
+    length: 4
+  - name: SwordAttack_2_Right
+    start: 52
+    length: 4
+  - name: SwordAttack_3_Right
+    start: 56
+    length: 4
+  - name: SwordAttack_1_Up
+    start: 60
+    length: 4
+  - name: SwordAttack_2_Up
+    start: 64
+    length: 4
+  - name: SwordAttack_3_Up
+    start: 68
+    length: 4
+  - name: Die
+    start: 72
+    length: 4
+  - name: Climb
+    start: 76
+    length: 6
+  - name: Roll_Down
+    start: 82
+    length: 8
+  - name: Roll_Right
+    start: 90
+    length: 8
+  - name: Roll_Up
+    start: 98
+    length: 8
+  - name: Push_Idle_Down
+    start: 106
+    length: 1
+  - name: Push_Idle_Right
+    start: 107
+    length: 1
+  - name: Push_Idle_Up
+    start: 108
+    length: 1
+  - name: Push_Down
+    start: 109
+    length: 5
+  - name: Push_Right
+    start: 114
+    length: 5
+  - name: Push_Up
+    start: 119
+    length: 5
+  - name: Jump_Down
+    start: 124
+    length: 6
+  - name: Jump_Right
+    start: 130
+    length: 6
+  - name: Jump_Up
+    start: 136
+    length: 6
+  - name: BowAttack_Down
+    start: 142
+    length: 6
+  - name: BowAttack_Right
+    start: 148
+    length: 6
+  - name: BowAttack_Up
+    start: 154
+    length: 6
+  - name: Chop_Down
+    start: 160
+    length: 6
+  - name: Chop_Right
+    start: 166
+    length: 6
+  - name: Chop_Up
+    start: 172
+    length: 6
+  - name: Mine_Down
+    start: 178
+    length: 6
+  - name: Mine_Right
+    start: 184
+    length: 6
+  - name: Mine_Up
+    start: 190
+    length: 6
+  - name: Till_Down
+    start: 196
+    length: 6
+  - name: Till_Right
+    start: 202
+    length: 6
+  - name: Till_Up
+    start: 208
+    length: 6
+  - name: Watering_Down
+    start: 214
+    length: 6
+  - name: Watering_Right
+    start: 220
+    length: 6
+  - name: Watering_Up
+    start: 226
+    length: 6
+  - name: Fishing_Cast_Down
+    start: 232
+    length: 9
+  - name: Fishing_Cast_Right
+    start: 241
+    length: 9
+  - name: Fishing_Cast_Up
+    start: 250
+    length: 9
+  - name: Fishing_Catch_Down
+    start: 259
+    length: 8
+  - name: Fishing_Catch_Right
+    start: 267
+    length: 8
+  - name: Fishing_Catch_Up
+    start: 275
+    length: 8
+  - name: Ride_Idle_Down
+    start: 283
+    length: 2
+  - name: Ride_Idle_Right
+    start: 285
+    length: 2
+  - name: Ride_Idle_Up
+    start: 287
+    length: 2
+  - name: Ride_Down
+    start: 289
+    length: 6
+  - name: Ride_Right
+    start: 295
+    length: 6
+  - name: Ride_Up
+    start: 301
+    length: 6
+  sourceFrames:
+  - sprite: {fileID: 773687268605703424, guid: cae147e55a1bf9744a1d5e5d2b7406d5, type: 3}
+    frame: 36
+  - sprite: {fileID: 6382888529368887811, guid: cae147e55a1bf9744a1d5e5d2b7406d5, type: 3}
+    frame: 37
+  - sprite: {fileID: 1261359657393050537, guid: cae147e55a1bf9744a1d5e5d2b7406d5, type: 3}
+    frame: 38
+  - sprite: {fileID: -5895811029334308423, guid: cae147e55a1bf9744a1d5e5d2b7406d5, type: 3}
+    frame: 39
+  - sprite: {fileID: -4558648323690201470, guid: cae147e55a1bf9744a1d5e5d2b7406d5, type: 3}
+    frame: 48
+  - sprite: {fileID: -4534821594531336040, guid: cae147e55a1bf9744a1d5e5d2b7406d5, type: 3}
+    frame: 49
+  - sprite: {fileID: 1507516891353720618, guid: cae147e55a1bf9744a1d5e5d2b7406d5, type: 3}
+    frame: 50
+  - sprite: {fileID: -8037851645489324317, guid: cae147e55a1bf9744a1d5e5d2b7406d5, type: 3}
+    frame: 51
+  - sprite: {fileID: -8435606927178541192, guid: cae147e55a1bf9744a1d5e5d2b7406d5, type: 3}
+    frame: 60
+  - sprite: {fileID: 1187367610876915534, guid: cae147e55a1bf9744a1d5e5d2b7406d5, type: 3}
+    frame: 61
+  - sprite: {fileID: -7988997021168422142, guid: cae147e55a1bf9744a1d5e5d2b7406d5, type: 3}
+    frame: 62
+  - sprite: {fileID: -8908509503456581993, guid: cae147e55a1bf9744a1d5e5d2b7406d5, type: 3}
+    frame: 63
+  - sprite: {fileID: -5555924395102676273, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 160
+  - sprite: {fileID: 1450002549818855226, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 161
+  - sprite: {fileID: 3056069410256819844, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 162
+  - sprite: {fileID: 5871809994451178286, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 163
+  - sprite: {fileID: -5776312597168736359, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 164
+  - sprite: {fileID: -7324101332035450497, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 165
+  - sprite: {fileID: -1909226211055816375, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 166
+  - sprite: {fileID: -625971688512197792, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 167
+  - sprite: {fileID: -2558450424765420930, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 168
+  - sprite: {fileID: -4801773934866289665, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 169
+  - sprite: {fileID: -2113528381628876382, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 170
+  - sprite: {fileID: 3483655593486987679, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 171
+  - sprite: {fileID: 7103538616908428675, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 172
+  - sprite: {fileID: 599985461618379606, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 173
+  - sprite: {fileID: 8988180472156170885, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 174
+  - sprite: {fileID: 4275858388263748010, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 175
+  - sprite: {fileID: -6259258514578981289, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 176
+  - sprite: {fileID: 6470188235748939568, guid: b3016dd258ec17a439f509f9275b121b, type: 3}
+    frame: 177
+  - sprite: {fileID: -7935386093079373060, guid: 063d6bf202e928d4899934794cdece22, type: 3}
+    frame: 232
+  - sprite: {fileID: -5533655390580937041, guid: 063d6bf202e928d4899934794cdece22, type: 3}
+    frame: 233
+  - sprite: {fileID: -4919387785751152799, guid: 063d6bf202e928d4899934794cdece22, type: 3}
+    frame: 234
+  - sprite: {fileID: -1242164424125848954, guid: 063d6bf202e928d4899934794cdece22, type: 3}
+    frame: 235
+  - sprite: {fileID: -8379348104969297101, guid: 063d6bf202e928d4899934794cdece22, type: 3}
+    frame: 237
+  - sprite: {fileID: 6023101433421917647, guid: 063d6bf202e928d4899934794cdece22, type: 3}
+    frame: 238
+  - sprite: {fileID: 7668003105685359278, guid: 063d6bf202e928d4899934794cdece22, type: 3}
+    frame: 239
+  - sprite: {fileID: -1125241856758207018, guid: 063d6bf202e928d4899934794cdece22, type: 3}
+    frame: 240
+  - sprite: {fileID: -6385871958754740465, guid: 063d6bf202e928d4899934794cdece22, type: 3}
+    frame: 259
+  - sprite: {fileID: 5449237564962535859, guid: 063d6bf202e928d4899934794cdece22, type: 3}
+    frame: 261
+  - sprite: {fileID: 5050534783616631501, guid: 063d6bf202e928d4899934794cdece22, type: 3}
+    frame: 263
+  - sprite: {fileID: -1857133859468458858, guid: 063d6bf202e928d4899934794cdece22, type: 3}
+    frame: 264
+  - sprite: {fileID: -1750279312061062153, guid: 063d6bf202e928d4899934794cdece22, type: 3}
+    frame: 266
+  - sprite: {fileID: -6985854200699225810, guid: 063d6bf202e928d4899934794cdece22, type: 3}
+    frame: 240
+  - sprite: {fileID: -3617026501487528266, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 0
+  - sprite: {fileID: 1581084114934640288, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 1
+  - sprite: {fileID: -8238132730776931700, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 2
+  - sprite: {fileID: -1000312686133425549, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 3
+  - sprite: {fileID: 1727315873896149497, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 4
+  - sprite: {fileID: -4819167343633106717, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 5
+  - sprite: {fileID: -4925942937979303863, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 6
+  - sprite: {fileID: -5324725660435771485, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 7
+  - sprite: {fileID: -8141236803020188722, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 8
+  - sprite: {fileID: 5508544339076578323, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 9
+  - sprite: {fileID: -7227774011528302950, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 10
+  - sprite: {fileID: 8469775943455081009, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 11
+  - sprite: {fileID: 618266720509580103, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 12
+  - sprite: {fileID: -1088423931861098506, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 13
+  - sprite: {fileID: -6102552431427952899, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 14
+  - sprite: {fileID: 6673282433576604856, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 15
+  - sprite: {fileID: 833775526697704786, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 16
+  - sprite: {fileID: 1927301803161757188, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+    frame: 17
+  - sprite: {fileID: 9069906734339060064, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 178
+  - sprite: {fileID: 8692585099856347311, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 179
+  - sprite: {fileID: -7059802724601974523, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 180
+  - sprite: {fileID: 2262230614403929510, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 181
+  - sprite: {fileID: 2835440679233668873, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 182
+  - sprite: {fileID: 1088471946942990471, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 183
+  - sprite: {fileID: -3058580926623813211, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 184
+  - sprite: {fileID: -3020958940799652820, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 185
+  - sprite: {fileID: -6208403046894744209, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 186
+  - sprite: {fileID: 7402643228682558537, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 187
+  - sprite: {fileID: -7609199132049083791, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 188
+  - sprite: {fileID: -7064962319364475131, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 189
+  - sprite: {fileID: -6227519855436995858, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 190
+  - sprite: {fileID: 7621330151800032722, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 191
+  - sprite: {fileID: 2798209377384772949, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 192
+  - sprite: {fileID: -1275648499600407649, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 193
+  - sprite: {fileID: -1109812595755273336, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 194
+  - sprite: {fileID: 7220810177370056629, guid: f0c50641d6d98484c9cce03f841c7896, type: 3}
+    frame: 195
+  - sprite: {fileID: -3400930937252289925, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 118
+  - sprite: {fileID: 2690876682402662586, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 110
+  - sprite: {fileID: -2522247634376086440, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 111
+  - sprite: {fileID: -3615319394231068633, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 111
+  - sprite: {fileID: 2707706631928045565, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 112
+  - sprite: {fileID: 28050371250341433, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 113
+  - sprite: {fileID: 5785441279028039808, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 114
+  - sprite: {fileID: 7719149015588345927, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 115
+  - sprite: {fileID: -5507684974039784425, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 115
+  - sprite: {fileID: -7958464835228326390, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 116
+  - sprite: {fileID: -8065661119432607618, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 117
+  - sprite: {fileID: -5332337474401445812, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 117
+  - sprite: {fileID: 1376997266551682590, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 119
+  - sprite: {fileID: 7990799500514928283, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 120
+  - sprite: {fileID: 2269540970089229836, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 121
+  - sprite: {fileID: -621190135931913939, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 121
+  - sprite: {fileID: -5757345530464100433, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 122
+  - sprite: {fileID: 8122589601795222667, guid: 7bd44a847a5139a4085f279a5a2cd77d, type: 3}
+    frame: 123
+  - sprite: {fileID: 8150577291073215391, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 18
+  - sprite: {fileID: -1687205134778645926, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 19
+  - sprite: {fileID: -8833728158043154075, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 20
+  - sprite: {fileID: 3022130152322988576, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 21
+  - sprite: {fileID: 7663797770982363796, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 22
+  - sprite: {fileID: -3753111766167756131, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 23
+  - sprite: {fileID: 8409630621451459521, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 24
+  - sprite: {fileID: 6328838539812940616, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 25
+  - sprite: {fileID: 2752747473775278013, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 26
+  - sprite: {fileID: -6480626508271498766, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 27
+  - sprite: {fileID: -3691832696183019322, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 28
+  - sprite: {fileID: 2770544965233694565, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 29
+  - sprite: {fileID: -2233625355690790202, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 30
+  - sprite: {fileID: -5395829008913882192, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 31
+  - sprite: {fileID: -8284253272190293013, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 32
+  - sprite: {fileID: 5380481540281615023, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 33
+  - sprite: {fileID: -6697260632743506030, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 34
+  - sprite: {fileID: 9185861327077283969, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+    frame: 35
+  - sprite: {fileID: -50085752493568120, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 214
+  - sprite: {fileID: 5361431897675849213, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 215
+  - sprite: {fileID: -3198478123615958963, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 216
+  - sprite: {fileID: 7916404118515439099, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 217
+  - sprite: {fileID: -2434358336668753943, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 218
+  - sprite: {fileID: -41835365991735957, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 219
+  - sprite: {fileID: -4250310579061731108, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 220
+  - sprite: {fileID: -2253421638197426678, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 221
+  - sprite: {fileID: 2027566662633541777, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 222
+  - sprite: {fileID: 890549317884334830, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 223
+  - sprite: {fileID: 1558501666602678916, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 224
+  - sprite: {fileID: -3705281659872862651, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 225
+  - sprite: {fileID: 96329132645780077, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 226
+  - sprite: {fileID: -9109088667738340970, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 227
+  - sprite: {fileID: -500634587338221603, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 228
+  - sprite: {fileID: 2693952608569559379, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 229
+  - sprite: {fileID: -2117271141450940707, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 230
+  - sprite: {fileID: -4105899837105166069, guid: c95882cfbb3bd8c4f8ac5437bbb18be5, type: 3}
+    frame: 231
+  toolBehind: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001010100010101000101010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010101010101000000000000000000000000010101010101000000000000000000000000010101010101000000000000000000000000010101010101000000000000000000000000000000000000010101010101010101000000000000000000000000000000000101010101010101000000000000000000000000000000000000000000000000y
+  defaults:
+    Created: 0
+    Modular: 1
+    Name: 
+    Head: Head/Hair_1/Hair_1_Brown
+    Chest: Chest/Farmer_Shirt/Farmer_Shirt_1_Green
+    Legs: Legs/Farmer_Pants/Farmer_Pants_1_Blue
+    Feet: Feet/Shoes_1_Brown
+    Accessory: 
+    Tool: 

@@ -903,7 +903,7 @@ namespace Tests.PlayMode
                 Assert.True(inventoryView.GetComponent<ToolkitResourceInventoryScreen>().IsOpen);
                 var inventoryUi = inventoryView.GetComponent<UIDocument>().rootVisualElement;
                 var equipmentUi = inventoryUi.Q("inventory-equipment"); Assert.NotNull(equipmentUi);
-                Assert.AreEqual(4, equipmentUi.Query<Button>().ToList().Count);
+                Assert.AreEqual(4, equipmentUi.Query<Button>().ToList().Count(b => b.name != null && b.name.StartsWith("inventory-gear-", System.StringComparison.Ordinal)));
                 var gearArt = AssetDatabase.LoadAssetAtPath<ToolkitForgeDefinition>("Assets/UI/Toolkit/Forge.asset");
                 Assert.AreSame(gearArt.GearSprite(boots, "Boots"), equipmentUi.Q<Button>("inventory-gear-Boots").Q<Image>().sprite);
                 Assert.AreSame(gearArt.GearSprite(null, "Weapon"), equipmentUi.Q<Button>("inventory-gear-Weapon").Q<Image>().sprite);

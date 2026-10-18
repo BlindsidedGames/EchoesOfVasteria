@@ -76,6 +76,7 @@ namespace TimelessEchoes.Farming
             if (value == null) return false;
             if (value.StartsWith("build:", StringComparison.Ordinal)) return FarmCommands.KnownBuild(value.Substring(6));
             if (value.StartsWith("water:", StringComparison.Ordinal)) return FarmCommands.KnownBed(value.Substring(6));
+            if (value.StartsWith("harvest-bed:", StringComparison.Ordinal)) return FarmCommands.KnownBed(value.Substring(12));
             var parts = value.Split(':');
             if (parts.Length != 3) return false;
             return parts[0] == "plant" ? FarmCommands.KnownBed(parts[1]) && FarmCommands.KnownRecipe(parts[2]) :

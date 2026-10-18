@@ -47,6 +47,7 @@ namespace TimelessEchoes.Hero
             {
                 if (autoBuffSpriteRenderer == null)
                     autoBuffSpriteRenderer = autoBuffAnimator.GetComponent<SpriteRenderer>();
+                TimelessEchoes.Characters.CharacterAppearance.Attach(autoBuffSpriteRenderer);
 
                 if (autoBuffAnimator.gameObject.GetComponent<HeroAudio>() == null)
                     autoBuffAnimator.gameObject.AddComponent<HeroAudio>();
