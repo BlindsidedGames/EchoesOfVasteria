@@ -53,7 +53,7 @@ namespace TimelessEchoes.UI.Toolkit
             else if (selectedTab != 0)
             {
                 mapTutorialText.text = ToolkitLocalization.Text("journal.tutorial.general", "Open General to view the maps.");
-                target = tabButtons[0];
+                target = StatisticsSectionTarget(0);
             }
             else
             {
@@ -64,15 +64,12 @@ namespace TimelessEchoes.UI.Toolkit
                     mapTutorialText.text = ToolkitLocalization.Text("journal.tutorial." + map,
                         map == "Farmlands" ? "Choose Farmlands to see its resources." : "Now choose {0} to compare its resources.",
                         ToolkitLocalization.Text("map." + map, definition.maps[index].label.Trim()));
-                    target = journalSelectors[index + 1];
+                    target = ToolkitResponsiveLayout.IsPortrait ? journalArea : journalSelectors[index + 1];
                 }
             }
             mapTutorialHand.style.display = target != null && definition.tutorialHand ? DisplayStyle.Flex : DisplayStyle.None;
             if (target == null) return;
-            var p = root.WorldToLocal(new Vector2(target.worldBound.center.x, target.worldBound.yMax));
-            mapTutorialHand.style.left = Mathf.Round(p.x - 12);
-            mapTutorialHand.style.top = Mathf.Round(p.y - 6 + 4 * (1 + Mathf.Cos(Time.unscaledTime * 5)));
-            mapTutorialHand.BringToFront();
+            PositionStatisticsHand(mapTutorialHand, target);
         }
     }
 }

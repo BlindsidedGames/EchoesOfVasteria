@@ -9,7 +9,8 @@ namespace TimelessEchoes.UI.Toolkit
         private int columns;
         public int Columns => columns;
         public float ContentWidth => columns * cellSize.x + (columns - 1) * spacing.x;
-        private readonly Vector2 cellSize, spacing;
+        private Vector2 cellSize;
+        private readonly Vector2 spacing;
 
         public ToolkitGrid(int columns, Vector2 cellSize, Vector2 spacing)
         {
@@ -33,6 +34,27 @@ namespace TimelessEchoes.UI.Toolkit
             Add(cell);
             int rows = (childCount + columns - 1) / columns;
             style.height = rows * cellSize.y + (rows - 1) * spacing.y;
+        }
+        public void FillWidth(float width, Vector2 minimumCellSize, int maximumColumns = 14)
+        {
+            if (width <= 0) return;
+            var next = Mathf.Clamp(Mathf.FloorToInt((width + spacing.x) / (minimumCellSize.x + spacing.x)), 1, maximumColumns);
+            var size = (width - (next - 1) * spacing.x) / next;
+            var height = size * minimumCellSize.y / minimumCellSize.x;
+            if (next == columns && Mathf.Abs(size - cellSize.x) < .01f) return;
+            columns = next;
+            cellSize = new Vector2(size, height);
+            style.width = width;
+            for (int i = 0; i < childCount; i++)
+            {
+                var cell = ElementAt(i);
+                cell.style.left = i % columns * (cellSize.x + spacing.x);
+                cell.style.top = i / columns * (cellSize.y + spacing.y);
+                cell.style.width = cellSize.x;
+                cell.style.height = cellSize.y;
+            }
+            var rows = (childCount + columns - 1) / columns;
+            style.height = rows * cellSize.y + Mathf.Max(0, rows - 1) * spacing.y;
         }
         public void FitWidth(float width, int maximumColumns = 6)
         {

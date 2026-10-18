@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

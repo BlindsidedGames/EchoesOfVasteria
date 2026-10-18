@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using Blindsided.Utilities;
 using TimelessEchoes.References.UI;
 using TimelessEchoes.Stats;

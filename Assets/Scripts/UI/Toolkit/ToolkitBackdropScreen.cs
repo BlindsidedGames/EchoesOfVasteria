@@ -19,6 +19,8 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private PanelSettings settings;
         private VisualElement root;
+        private ToolkitNavigationScreen navigation;
+        private List<FilterFunction> desktopBlur;
         private void OnEnable()
         {
             if (!theme || !runtimeTheme || !textSettings) return;
@@ -27,16 +29,25 @@ namespace TimelessEchoes.UI.Toolkit
             root = new VisualElement { name = "window-backdrop" };
             root.style.position = Position.Absolute;
             root.style.backgroundColor = new Color(0, 0, 0, .6f);
-            root.style.backdropFilter = Blur();
+            desktopBlur = Blur();
+            root.style.backdropFilter = desktopBlur;
             document.rootVisualElement.Add(root); Refresh();
         }
         private void Update() => Refresh();
         private void Refresh()
         {
             if (root == null) return;
-            root.style.display = TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow ? DisplayStyle.Flex : DisplayStyle.None;
-            // Only controls use SafeArea. Dimming and input blocking cover the full viewport.
-            root.style.left = root.style.top = root.style.right = root.style.bottom = 0;
+            if (!navigation) navigation = FindAnyObjectByType<ToolkitNavigationScreen>();
+            var portrait = ToolkitResponsiveLayout.IsPortrait;
+            root.style.display = (TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow) ||
+                (portrait && navigation && navigation.HasOpenMenu) ? DisplayStyle.Flex : DisplayStyle.None;
+            root.style.backdropFilter = portrait ? StyleKeyword.None : desktopBlur;
+            root.style.backgroundColor = portrait && ToolkitResponsiveLayout.TownView ?
+                (Color)new Color32(41, 36, 38, 255) : new Color(0, 0, 0, .6f);
+            // Town sheets cover the world; in-run sheets leave the HUD unobscured.
+            root.style.left = root.style.right = root.style.bottom = 0;
+            root.style.top = portrait && !ToolkitResponsiveLayout.TownView ?
+                ToolkitWindowLayout.SafeArea.y + (navigation && navigation.HasOpenMenu ? ToolkitResponsiveLayout.MenuTop : ToolkitResponsiveLayout.WindowTop) : 0;
         }
         private void OnDisable() { root?.RemoveFromHierarchy(); root = null; if (settings) Destroy(settings); settings = null; }
     }

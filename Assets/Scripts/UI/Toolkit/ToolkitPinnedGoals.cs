@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +44,7 @@ namespace TimelessEchoes.UI.Toolkit {
    }
    root.style.width=width;
   }
-  void Update(){if(root==null)return;var visible=GameManager.Instance&&GameManager.Instance.IsMapUIVisible&&oracle!=null&&oracle.saveData.PinnedQuests.Count>0;root.style.display=visible?DisplayStyle.Flex:DisplayStyle.None;if(!visible)return;if(dirty){dirty=false;Refresh();}var safe=ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width,Screen.height),Screen.safeArea,Application.isMobilePlatform?1:SafeAreaRatio);root.style.left=safe.xMax;root.style.top=safe.y+65;}
+  void Update(){if(root==null)return;var visible=!ToolkitResponsiveLayout.IsPortrait&&GameManager.Instance&&GameManager.Instance.IsMapUIVisible&&oracle!=null&&oracle.saveData.PinnedQuests.Count>0;root.style.display=visible?DisplayStyle.Flex:DisplayStyle.None;if(!visible)return;if(dirty){dirty=false;Refresh();}var safe=ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width,Screen.height),Screen.safeArea,UnityEngine.Device.Application.isMobilePlatform?1:SafeAreaRatio);root.style.left=safe.xMax;root.style.top=safe.y+(ToolkitResponsiveLayout.IsPortrait?132:65);root.style.maxWidth=ToolkitResponsiveLayout.IsPortrait?safe.width:StyleKeyword.None;}
   void OnDisable(){StopAllCoroutines();if(manager){manager.NoticeboardChanged-=Changed;manager.QuestProgressChanged-=ProgressChanged;}Blindsided.EventHandler.OnLoadData-=Changed;LocalizationSettings.SelectedLocaleChanged-=LocaleChanged;root?.RemoveFromHierarchy();root=null;}
   void OnDestroy(){if(settings)Destroy(settings);}
  }

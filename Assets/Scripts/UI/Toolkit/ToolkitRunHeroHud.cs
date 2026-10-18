@@ -27,7 +27,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var profile = TimelessEchoes.Characters.CharacterCreation.Current;
             heroCharacterName.text = profile?.Name ?? "";
-            SetVisible(heroCharacterName, profile is { Created: true, Modular: true });
+            SetVisible(heroCharacterName, false);
             var snapshot = HeroStatSystem.GetSnapshot();
             var maximum = health ? health.MaxHealth : snapshot.maxHealth;
             var current = health ? health.CurrentHealth : maximum;
@@ -57,6 +57,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void HeroMetric(VisualElement parent, StatIconLookup.StatKey key, string name)
         {
             var row = HeroRow(parent); row.style.height = 13;
+            row.AddToClassList("hero-stat-row");
             StatIconLookup.TryGetIcon(key, out var sprite);
             var icon = new Image { sprite = sprite, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
             icon.style.width = icon.style.height = 9; icon.style.marginRight = 5; row.Add(icon);
@@ -112,6 +113,7 @@ namespace TimelessEchoes.UI.Toolkit
             HeroMetric(heroStatsPanel, StatIconLookup.StatKey.CritChance, "Crit chance");
             HeroMetric(heroStatsPanel, StatIconLookup.StatKey.CritDamage, "Crit damage");
             var line = new VisualElement(); line.style.height = .5f; line.style.marginTop = line.style.marginBottom = 3;
+            line.AddToClassList("hero-stat-divider");
             line.style.backgroundColor = (Color)new Color32(112, 86, 73, 255); heroStatsPanel.Add(line);
             HeroMetric(heroStatsPanel, StatIconLookup.StatKey.Defense, "Damage reduction");
             HeroMetric(heroStatsPanel, StatIconLookup.StatKey.Regen, "Health regen");

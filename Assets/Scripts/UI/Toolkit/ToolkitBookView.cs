@@ -18,7 +18,9 @@ namespace TimelessEchoes.UI.Toolkit
         private VisualElement articleContent;
         private Label articleTitle;
         private Image articleIcon;
-        private Button overview, reference;
+        private Button overview, reference, portraitTopics;
+        private VisualElement topicIndex, portraitArticle;
+        private bool topicsOpen;
         private ToolkitBookDefinition.Section selected;
         private readonly Dictionary<string, int> selectedIllustrations;
         private ToolkitTextBinding illustrationBinding;
@@ -47,11 +49,12 @@ namespace TimelessEchoes.UI.Toolkit
             }
             bindings.Add(new ToolkitTextBinding(heading, LocalText("help.library.title", "Library")));
             Root.AddToClassList("library-reader");
+            portraitTopics = ToolkitGameplay.B(frame, "Browse topics", () => { topicsOpen = !topicsOpen; RefreshPortrait(); }, "portrait-topic-picker");
             var layout = new VisualElement(); layout.AddToClassList("library-layout"); frame.Add(layout);
             var index = new ScrollView(ScrollViewMode.Vertical) { name = "library-topics" };
-            index.AddToClassList("library-topics");
+            topicIndex = index; index.AddToClassList("library-topics");
             theme.StyleScroll(index); ToolkitGameplay.StyleScroll(index); layout.Add(index);
-            var article = new VisualElement(); article.AddToClassList("library-article"); layout.Add(article);
+            var article = portraitArticle = new VisualElement(); article.AddToClassList("library-article"); layout.Add(article);
             var titleRow = new VisualElement(); titleRow.AddToClassList("library-title-row"); article.Add(titleRow);
             articleIcon = ToolkitGameplay.Icon(titleRow, null, 22);
             articleTitle = new Label { name = "library-article-title" }; articleTitle.AddToClassList("library-article-title"); titleRow.Add(articleTitle);
@@ -83,6 +86,20 @@ namespace TimelessEchoes.UI.Toolkit
             RefreshVisibility();
         }
 
+        public void RefreshPortrait()
+        {
+            if (portraitTopics == null) return;
+            var portrait = ToolkitResponsiveLayout.IsPortrait;
+            var tabs = overview.parent;
+            if (portrait && tabs.parent != Root) Root.Add(tabs);
+            else if (!portrait && tabs.parent == Root) portraitArticle.Insert(1, tabs);
+            tabs.style.display = portrait && topicsOpen ? DisplayStyle.None : DisplayStyle.Flex;
+            Root.style.paddingBottom = portrait ? 48 : StyleKeyword.Null;
+            portraitTopics.style.display = portrait ? DisplayStyle.Flex : DisplayStyle.None;
+            portraitTopics.text = topicsOpen ? "Back to article" : "Browse topics";
+            topicIndex.style.display = !portrait || topicsOpen ? DisplayStyle.Flex : DisplayStyle.None;
+            portraitArticle.style.display = portrait && topicsOpen ? DisplayStyle.None : DisplayStyle.Flex;
+        }
         private static ToolkitBookDefinition.Text LocalText(string key, string fallback) => new()
         { fallback = fallback, localized = new LocalizedString("Wiki", key) };
 
@@ -98,7 +115,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (section == null || !ToolkitVisibilityRule.All(section.visibility)) return;
             illustrationBinding?.Dispose(); illustrationBinding = null;
             foreach (var binding in articleBindings) binding.Dispose(); articleBindings.Clear();
-            selected = section; ReferenceSelected = isReference;
+            selected = section; ReferenceSelected = isReference; topicsOpen = false; RefreshPortrait();
             foreach (var topic in topics) topic.Value.EnableInClassList("active", topic.Key == section);
             articleBindings.Add(new ToolkitTextBinding(articleTitle, section.title)); articleIcon.sprite = section.icon;
             overview.EnableInClassList("active", !isReference); reference.EnableInClassList("active", isReference);
@@ -137,6 +154,7 @@ namespace TimelessEchoes.UI.Toolkit
             }
             BindText(articleContent, isReference ? section.details : section.body, "library-prose").name = "library-article-body";
             if (isReference && section.referenceRows.Length > 0) AddTable(section);
+            foreach (var button in Scroll.contentContainer.Query<Button>().ToList()) ToolkitDragScroll.EnableFrom(Scroll, button);
         }
 
         private Label BindText(VisualElement parent, ToolkitBookDefinition.Text text, string css)

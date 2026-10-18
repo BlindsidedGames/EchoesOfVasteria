@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 // AspectRatioBox.cs
 using UnityEngine;
 
@@ -45,6 +46,12 @@ public class AspectRatioBox : MonoBehaviour
 
     void UpdateViewport()
     {
+        if (UI.Toolkit.ToolkitResponsiveLayout.IsPortrait)
+        {
+            var pixels = UI.Toolkit.ToolkitResponsiveLayout.WorldPixels(new Vector2Int(Screen.width, Screen.height), Screen.safeArea);
+            targetCamera.rect = new Rect(pixels.x / Screen.width, pixels.y / Screen.height, pixels.width / Screen.width, pixels.height / Screen.height);
+            return;
+        }
         float windowAspect = (float)Screen.width / Screen.height;
         float targetAspect = Mathf.Clamp(windowAspect, minAspect, maxAspect);
         float scale = windowAspect / targetAspect;

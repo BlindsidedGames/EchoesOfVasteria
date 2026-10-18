@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,6 +28,8 @@ namespace TimelessEchoes.UI.Toolkit
         private IDisposable conversationWait;
         private Rect lastArea;
         private int lastIndex = -1;
+        private bool lastPortrait;
+        public static bool HasVisibleMeeting => Visible.Count > 0;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => Visible.Clear();
@@ -95,6 +98,8 @@ namespace TimelessEchoes.UI.Toolkit
             if (view != null)
             {
                 ApplyLayout();
+                if (ToolkitResponsiveLayout.IsPortrait)
+                    view.FitPortrait(Mathf.Min(220, ToolkitResponsiveLayout.SafeScreenArea.height - 100));
                 meetHand.style.display = view.AwaitingMeet && definition.tutorialHand ? DisplayStyle.Flex : DisplayStyle.None;
                 if (view.AwaitingMeet)
                 {
@@ -114,13 +119,21 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void ApplyLayout()
         {
-            var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height),
-                Screen.safeArea, Application.isMobilePlatform ? 1 : SafeAreaRatio);
+            var portraitMode = ToolkitResponsiveLayout.IsPortrait;
+            var area = portraitMode ? ToolkitResponsiveLayout.WorldArea :
+                ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height),
+                    Screen.safeArea, UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);
             var index = Visible.IndexOf(this);
-            if (area == lastArea && index == lastIndex) return;
-            lastArea = area; lastIndex = index;
-            view.Root.style.left = Mathf.Round(area.xMin + 8 + index * 12);
-            view.Root.style.top = Mathf.Round(area.yMin + 48 + index * 12);
+            // Queue simultaneous portrait conversations instead of stacking their
+            // cards and action buttons on top of one another.
+            view.Root.style.display = !portraitMode || index == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            if (area == lastArea && index == lastIndex && lastPortrait == portraitMode) return;
+            lastArea = area; lastIndex = index; lastPortrait = portraitMode;
+            view.LayoutPortrait(portraitMode);
+            view.Root.style.width = portraitMode ? area.width - 16 : StyleKeyword.Null;
+            view.Root.style.height = portraitMode ? Mathf.Min(168, area.height - 40) : StyleKeyword.Null;
+            view.Root.style.left = Mathf.Round(area.xMin + 8 + (portraitMode ? 0 : index * 12));
+            view.Root.style.top = Mathf.Round(area.yMin + (portraitMode ? 8 : 48 + index * 12));
         }
 
         private void OnDisable()

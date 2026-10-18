@@ -21,11 +21,26 @@ namespace TimelessEchoes.UI.Toolkit
         private Metric metric;
         private int map = -1, selectedRun = -1;
         private bool perMinute;
+        private readonly DropdownField portraitMetric, portraitMap;
         public ToolkitRunGraphView(VisualElement body, VisualElement footer, ToolkitStatisticsDefinition definition, Func<IReadOnlyList<GameData.RunRecord>> history)
         {
             this.definition = definition; this.history = history;
             body.style.paddingTop = body.style.paddingBottom = body.style.paddingLeft = body.style.paddingRight = 0;
             footer.style.display = DisplayStyle.None;
+            var scroll = ToolkitGameplay.Scroll(body, "run-graph-scroll");
+            scroll.style.flexGrow = 1; scroll.style.minHeight = 0;
+            scroll.contentContainer.style.flexGrow = 1;
+            scroll.contentViewport.RegisterCallback<GeometryChangedEvent>(e => scroll.contentContainer.style.minHeight = e.newRect.height);
+            body = scroll.contentContainer;
+            body.AddToClassList("run-graph-content");
+            var phoneFilters = ToolkitGameplay.E(body, "portrait-graph-pickers");
+            portraitMetric = new DropdownField(Enum.GetValues(typeof(Metric)).Cast<Metric>().Select(MetricLabel).ToList(), 0);
+            portraitMetric.AddToClassList("portrait-picker"); phoneFilters.Add(portraitMetric);
+            portraitMetric.RegisterValueChangedCallback(_ => { if (portraitMetric.index >= 0) SetMetric((Metric)portraitMetric.index); });
+            var mapNames = new List<string> { ToolkitLocalization.Text("graph.all-maps", "All maps") };
+            mapNames.AddRange(definition.maps.Select(m => ToolkitLocalization.Text("map." + m.config.name, m.label.Trim())));
+            portraitMap = new DropdownField(mapNames, 0); portraitMap.AddToClassList("portrait-picker"); phoneFilters.Add(portraitMap);
+            portraitMap.RegisterValueChangedCallback(_ => { map = portraitMap.index - 1; selectedRun = -1; Refresh(); });
             var controls = ToolkitGameplay.E(body, "graph-controls");
             foreach (Metric m in Enum.GetValues(typeof(Metric)))
             { var choice=m; metrics.Add(Choice(controls, "graph-"+m, MetricLabel(m),()=>SetMetric(choice))); }
@@ -49,7 +64,7 @@ namespace TimelessEchoes.UI.Toolkit
             var legend=ToolkitGameplay.E(body,"graph-legend");
             Legend(legend,ToolkitLocalization.Text("run.outcome-retreated", "Retreated"),new Color(.72f,.66f,.61f));Legend(legend,ToolkitLocalization.Text("run.outcome-reaped", "Reaped"),new Color(.70f,.54f,.79f));Legend(legend,ToolkitLocalization.Text("run.outcome-died", "Died"),new Color(.82f,.40f,.40f));Legend(legend,ToolkitLocalization.Text("run.outcome-abandoned", "Abandoned"),new Color(.43f,.42f,.43f));
             var detailHeader=ToolkitGameplay.E(body,"graph-detail-heading");detailTitle=Text(detailHeader,"","graph-detail-title");
-            Text(detailHeader,ToolkitLocalization.Text("graph.interaction-hint", "Hover to preview · click or tap to select"),"graph-detail-hint");
+            Text(detailHeader,ToolkitLocalization.Text("graph.select-bar", "Select a bar for details"),"graph-detail-hint");
             details=ToolkitGameplay.E(body,"graph-details");
             Refresh();
         }
@@ -80,6 +95,8 @@ namespace TimelessEchoes.UI.Toolkit
         private string Format(double value)=>metric==Metric.Duration?CalcUtils.FormatTime(value):ItemStatisticsPresentation.Number(value);
         public void Refresh()
         {
+            portraitMetric.SetValueWithoutNotify(MetricLabel(metric));
+            portraitMap.SetValueWithoutNotify(portraitMap.choices[Mathf.Clamp(map + 1, 0, portraitMap.choices.Count - 1)]);
             var all=history();var key=map<0?null:definition.maps[map].config.name;
             var filtered=all.Where(r=>key==null||r.MapType==key).ToList();
             visible=filtered.Where(r=>!perMinute||r.Duration>0).ToList();

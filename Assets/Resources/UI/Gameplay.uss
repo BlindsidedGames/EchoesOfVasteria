@@ -994,10 +994,10 @@
 .gameplay.quests-reviewed .eov-quest-controls {width:64px;margin-left:var(--space-section);}
 .gameplay.quests-reviewed .eov-quest-turn-in {width:64px;min-height:22px;}
 .gameplay.quests-reviewed .quest-pin {width:64px;margin-top:var(--space-control);min-height:22px;font-size:7px;}
-.gameplay.quests-reviewed .quest-description {margin-top:var(--space-control);color:var(--muted);}
+.gameplay.quests-reviewed .quest-description {margin-top:var(--space-control);color:var(--muted);font-size:6px;}
 .gameplay.quests-reviewed .quest-requirement {margin-top:var(--space-control);}
 .gameplay.quests-reviewed .quest-requirement .track {margin-top:var(--space-tight);}
-.gameplay.quests-reviewed .quest-reward {margin-top:var(--space-control);color:var(--muted);}
+.gameplay.quests-reviewed .quest-reward {margin-top:var(--space-control);color:var(--muted);font-size:7px;}
 .gameplay.quests-reviewed .quest-ready .quest-name {color:var(--accent);}
 .gameplay.quests-reviewed .quest-completed .quest-name {color:var(--muted);}
 .gameplay .eov-options-modal-dismiss {background-color:rgba(0,0,0,.35);}

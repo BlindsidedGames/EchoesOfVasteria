@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,12 +50,12 @@ namespace TimelessEchoes.UI.Toolkit
             var safe = Screen.safeArea;
             if (safe.width <= 0 || safe.height <= 0 || safe.xMax > Screen.width + 1 || safe.yMax > Screen.height + 1)
                 safe = new Rect(0, 0, Screen.width, Screen.height);
-            var scale = 432f / Mathf.Max(1, Screen.height);
+            var scale = ToolkitResponsiveLayout.Scale(new Vector2Int(Screen.width, Screen.height));
             var area = new Rect(safe.x * scale, (Screen.height - safe.yMax) * scale, safe.width * scale, safe.height * scale);
             sheet.style.width = Mathf.Min(600, area.width - 20);
-            sheet.style.height = Mathf.Min(400, area.height - 16);
+            sheet.style.height = Mathf.Min(ToolkitResponsiveLayout.IsPortrait ? 720 : 400, area.height - 16);
             sheet.style.left = area.x + (area.width - Mathf.Min(600, area.width - 20)) / 2;
-            sheet.style.top = area.y + (area.height - Mathf.Min(400, area.height - 16)) / 2;
+            sheet.style.top = area.y + (area.height - Mathf.Min(ToolkitResponsiveLayout.IsPortrait ? 720 : 400, area.height - 16)) / 2;
             sheet.EnableInClassList("character-narrow", area.width < 540);
             if (Time.unscaledTime < nextFrame) return;
             nextFrame = Time.unscaledTime + 1f / 12;

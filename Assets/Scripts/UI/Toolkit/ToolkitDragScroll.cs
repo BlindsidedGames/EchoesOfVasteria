@@ -28,6 +28,16 @@ namespace TimelessEchoes.UI.Toolkit
             if (scroll.ClassListContains(marker)) return;
             scroll.AddToClassList(marker);
             scroll.contentViewport.AddManipulator(new ToolkitDragScroll(scroll));
+            scroll.RegisterCallback<GeometryChangedEvent>(_ =>
+            {
+                foreach (var button in scroll.contentContainer.Query<Button>().ToList()) EnableFrom(scroll, button);
+                // Put phone scrollbars in the outer gutter, without taking width
+                // away from the content. Leave inset dialogs and nested columns alone.
+                var gap = ToolkitResponsiveLayout.Size.x - scroll.worldBound.xMax;
+                var edge = ToolkitResponsiveLayout.IsPortrait && gap >= 0 && gap <= 24;
+                scroll.EnableInClassList("portrait-edge-scroll", edge);
+                scroll.verticalScroller.style.right = edge ? new StyleLength(2 - gap) : StyleKeyword.Null;
+            });
         }
 
         public ToolkitDragScroll(ScrollView scroll) => this.scroll = scroll;
@@ -57,7 +67,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             ResetDrag();
             suppressClick = false;
-            if (evt.button != 0 || evt.pointerType != UnityEngine.UIElements.PointerType.mouse) return;
+            if (evt.button != 0) return;
             for (var element = evt.target as VisualElement; element != null && element != target; element = element.parent)
             {
                 // Unity's logical parent chain can skip the internal viewport.
@@ -75,7 +85,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (evt.pointerId != pointerId || pointerId < 0) return;
             // A control can consume pointer-up before it reaches the viewport.
-            if ((evt.pressedButtons & 1) == 0) { ResetDrag(); return; }
+            if (evt.pointerType == UnityEngine.UIElements.PointerType.mouse && (evt.pressedButtons & 1) == 0) { ResetDrag(); return; }
             var delta = (Vector2)evt.position - origin;
             if (!dragging && delta.sqrMagnitude < 25) return;
             if (!dragging) { dragging = true; target.CapturePointer(pointerId); }

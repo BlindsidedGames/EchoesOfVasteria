@@ -13,10 +13,13 @@ namespace TimelessEchoes
     public class DadJokeManager : MonoBehaviour
     {
         [SerializeField] private Button jokeButton;
+        [SerializeField] private Transform worldAnchor;
+        public Transform WorldAnchor => worldAnchor;
         [SerializeField] private GameObject textBox;
         [SerializeField] private TMP_Text jokeText;
         [SerializeField] private List<string> dadJokes = new();
 
+        private DadJokeWorldView worldView;
         private int currentJokeIndex;
         private string currentJokeEnglish;
 
@@ -32,6 +35,13 @@ namespace TimelessEchoes
                 textBox.SetActive(false);
             if (jokeButton != null)
                 jokeButton.onClick.AddListener(OnJokeButtonClicked);
+            if (worldAnchor && jokeButton && textBox)
+            {
+                var host = new GameObject("Dadocado world UI", typeof(RectTransform));
+                host.transform.SetParent(worldAnchor, false);
+                worldView = host.AddComponent<DadJokeWorldView>();
+                worldView.Initialize(this, textBox);
+            }
         }
 
         private void Update()
@@ -55,6 +65,7 @@ namespace TimelessEchoes
         {
             if (jokeButton != null)
                 jokeButton.onClick.RemoveListener(OnJokeButtonClicked);
+            if (worldView) Destroy(worldView.gameObject);
         }
 
         private void OnJokeButtonClicked()

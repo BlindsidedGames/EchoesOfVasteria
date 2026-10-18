@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Blindsided.SaveData;
 using Blindsided.Utilities;
 using TimelessEchoes.Stats;
@@ -27,6 +28,11 @@ namespace TimelessEchoes.UI.Toolkit
         private Image boostHand;
         private bool boostScrolled;
         private int selectedTab;
+        private DropdownField portraitSection, portraitSort;
+        private bool syncingPortraitSelectors;
+        private bool? previousPortraitLayout;
+        private readonly List<(string title, System.Action action)> portraitSortActions = new();
+        private static readonly int[] PortraitSections = { 0, 2, 3, 4, 5, 6 };
         private ToolkitForgingStatisticsView forgingView;
         private float nextForgeRefresh;
         public bool IsOpen => root != null;
@@ -38,6 +44,9 @@ namespace TimelessEchoes.UI.Toolkit
             if (!settings) { settings = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); settings.sortingOrder = 100; }
             var document = GetComponent<UIDocument>(); document.panelSettings = settings; document.rootVisualElement.pickingMode = PickingMode.Ignore;
             root = new VisualElement { name = "statistics" }; root.AddToClassList("eov-statistics"); theme.Apply(root);ToolkitGameplay.Apply(root,theme);root.AddToClassList("menu-surface"); document.rootVisualElement.Add(root);
+            portraitSection = new DropdownField(PortraitSections.Select(TabTitle).ToList(), 0) { name = "portrait-statistics-section" };
+            portraitSection.AddToClassList("portrait-picker"); root.Add(portraitSection);
+            portraitSection.RegisterValueChangedCallback(_ => { if (portraitSection.index >= 0) SelectTab(PortraitSections[portraitSection.index]); });
             var tabs = new VisualElement(); tabs.AddToClassList("eov-stat-tabs"); root.Add(tabs);
             foreach (var index in new[] { 0, 2, 3, 4, 5, 6 })
             {
@@ -46,6 +55,9 @@ namespace TimelessEchoes.UI.Toolkit
             }
             BuildMapTutorial();
             body = new VisualElement { name = "stats-body" }; body.AddToClassList("eov-stat-body"); root.Add(body);
+            portraitSort = new DropdownField("Sort", new List<string> { "Default" }, 0) { name = "portrait-statistics-sort" };
+            portraitSort.AddToClassList("portrait-picker"); root.Add(portraitSort);
+            portraitSort.RegisterValueChangedCallback(evt => { var i = portraitSortActions.FindIndex(a => a.title == evt.newValue); if (!syncingPortraitSelectors && i >= 0 && i < portraitSortActions.Count) portraitSortActions[i].action(); });
             footer = new VisualElement(); footer.AddToClassList("eov-stat-tabs"); root.Add(footer);
             tooltip = Text(root, "", 6); tooltip.name = "run-tooltip"; tooltip.AddToClassList("eov-stat-tooltip"); tooltip.style.display = DisplayStyle.None;
             tracker.OnRunEnded += RunEnded; tracker.OnDistanceAdded += DistanceChanged; tracker.OnTaskCompletedEvent += TaskCompleted; tracker.OnMaxRunDistanceChanged += MaximumDistanceChanged;
@@ -60,7 +72,7 @@ namespace TimelessEchoes.UI.Toolkit
         public void SelectTab(int index)
         {
             if (!IsOpen || !tabButtons.ContainsKey(index)) return;
-            runGraph = null; forgingView = null; selectedTab = index; distanceControls?.RemoveFromHierarchy(); distanceControls = null; enemyDistance = null; body.Clear(); footer.Clear(); summaries.Clear(); tooltip.style.display = DisplayStyle.None;
+            runGraph = null; forgingView = null; selectedTab = index; distanceControls?.RemoveFromHierarchy(); distanceControls = null; enemyDistance = null; body.Clear(); footer.Clear(); portraitSortActions.Clear(); summaries.Clear(); tooltip.style.display = DisplayStyle.None;
             foreach (var pair in tabButtons) StyleSelection(pair.Value, pair.Key == index);
             footer.style.display = index != 0 && index != 6 ? DisplayStyle.Flex : DisplayStyle.None;
             boostScrolled = false;
@@ -147,6 +159,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private Button Action(VisualElement parent, string name, string title, Action clicked)
         {
+            if (parent == footer) portraitSortActions.Add((title, clicked));
             var button = ToolkitGameplay.B(parent,title,clicked);button.name=name; button.AddToClassList("eov-control--tab"); button.text = "<b>" + title + "</b>"; button.AddToClassList("eov-stat-tab"); if (parent.childCount > 0) parent.ElementAt(parent.childCount - 1).style.marginRight = 2; button.style.marginRight = 0; parent.Add(button); return button;
         }
         private void StyleSelection(Button button, bool selected)
@@ -173,8 +186,50 @@ namespace TimelessEchoes.UI.Toolkit
         private void RunEnded(bool _) => Changed();
         private void DistanceChanged(float _) { if (selectedTab == 0) dirty = true; }
         private void Update() { if (!IsOpen) return; Layout(); RefreshJournalAccess(); RefreshMapTutorial(); RefreshGraphGuidance(); RefreshBoostGuidance(); if (localizationDirty) { localizationDirty = false; RefreshLocalization(); } if (dirty || selectedTab == 6 && Time.unscaledTime >= nextForgeRefresh) Refresh(); }
+        private VisualElement StatisticsSectionTarget(int tab) => ToolkitResponsiveLayout.IsPortrait ? portraitSection : tabButtons[tab];
+        private void PositionStatisticsHand(Image hand, VisualElement target)
+        {
+            if (target == null || target.resolvedStyle.display == DisplayStyle.None || target.worldBound.width <= 0)
+            { hand.style.display = DisplayStyle.None; return; }
+            // A labelled dropdown includes its caption. Point at its actual input.
+            var input = target is DropdownField ? target.Q(className: "unity-base-popup-field__input") : null;
+            var rect = (input ?? target).worldBound;
+            var anchorX = ToolkitResponsiveLayout.IsPortrait && target is DropdownField ? rect.xMax - 12 : rect.center.x;
+            var below = root.WorldToLocal(new Vector2(anchorX, rect.yMax));
+            var top = root.WorldToLocal(new Vector2(anchorX, rect.yMin));
+            var above = below.y + 38 > root.contentRect.height ||
+                ToolkitResponsiveLayout.IsPortrait && target is DropdownField && top.y >= 34;
+            var point = above ? top : below;
+            var bounce = Mathf.Round(4 * (1 + Mathf.Cos(Time.unscaledTime * 5)));
+            hand.style.left = Mathf.Clamp(Mathf.Round(point.x - 12), 0, Mathf.Max(0, root.contentRect.width - 24));
+            hand.style.top = Mathf.Round(above ? point.y - 26 - bounce : point.y + 2 + bounce);
+            hand.style.rotate = new Rotate(Angle.Degrees(above ? 180 : 0));
+            hand.BringToFront();
+        }
         private readonly ToolkitWindowLayout windowLayout = new();
-        private void Layout() => windowLayout.Centered(root, theme);
+        private void Layout()
+        {
+            windowLayout.Centered(root, theme);
+            var portrait = ToolkitResponsiveLayout.IsPortrait;
+            if (previousPortraitLayout.HasValue && previousPortraitLayout.Value != portrait && selectedTab == 0) SelectTab(0);
+            previousPortraitLayout = portrait;
+            syncingPortraitSelectors = true;
+            portraitSection.style.display = portrait ? DisplayStyle.Flex : DisplayStyle.None;
+            if (portrait && root.IndexOf(portraitSection) != root.childCount - 1) root.Add(portraitSection);
+            footer.style.display = !portrait && selectedTab != 2 ? DisplayStyle.Flex : DisplayStyle.None;
+            portraitSection.SetValueWithoutNotify(TabTitle(selectedTab));
+            portraitSort.style.display = portrait && portraitSortActions.Count > 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            if (portraitSortActions.Count > 0)
+            {
+                var labels = portraitSortActions.Select(a => a.title).ToList();
+                if (!portraitSort.choices.SequenceEqual(labels)) portraitSort.choices = labels;
+                var buttons = footer.Query<Button>().ToList();
+                var selected = buttons.FindIndex(b => b.ClassListContains("active"));
+                portraitSort.SetValueWithoutNotify(labels[Mathf.Clamp(selected, 0, labels.Count - 1)]);
+                if (distanceControls != null) distanceControls.PlaceBehind(portraitSort);
+            }
+            syncingPortraitSelectors = false;
+        }
         public void Hide()
         {
             if (IsOpen && MapStatisticsGuidance.Stage == 7)

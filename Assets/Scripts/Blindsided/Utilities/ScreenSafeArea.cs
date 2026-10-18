@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -62,7 +63,7 @@ namespace Blindsided.Utilities
             lastScreenSize = new Vector2Int(Screen.width, Screen.height);
             lastSafeArea = Screen.safeArea;
 
-            if (Application.isMobilePlatform)
+            if (UnityEngine.Device.Application.isMobilePlatform)
             {
                 if (hideOnMobile != null)
                     hideOnMobile.SetActive(false);
@@ -210,6 +211,15 @@ namespace Blindsided.Utilities
             var right = Mathf.Max(devRight, minPaddingRight);
             var top = Mathf.Max(devTop, minPaddingTop);
             var bottom = Mathf.Max(devBottom, minPaddingBottom);
+
+            if (TimelessEchoes.UI.Toolkit.ToolkitResponsiveLayout.IsPortrait)
+            {
+                var world = TimelessEchoes.UI.Toolkit.ToolkitResponsiveLayout.WorldPixels(new Vector2Int(Screen.width, Screen.height), Screen.safeArea);
+                top = (Screen.height - world.yMin) * scaleY + minPaddingTop;
+                _rectTransform.offsetMin = new Vector2(left, bottom);
+                _rectTransform.offsetMax = new Vector2(-right, -top);
+                return;
+            }
 
             if (limitAspect)
             {

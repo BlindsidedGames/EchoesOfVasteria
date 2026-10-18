@@ -162,7 +162,7 @@ namespace TimelessEchoes.UI
                 messages.Clear();
             }
 
-            ShowNotification(new NotificationData(skill.skillIcon, builder.ToString(), backgroundSprite));
+            ShowNotification(new NotificationData(TimelessEchoes.Characters.CharacterSkillTools.IconFor(skill, endLevel, skill.skillIcon), builder.ToString(), backgroundSprite));
         }
 
         private void OnMilestoneUnlocked(Skill skill, MilestoneDefinition milestone)

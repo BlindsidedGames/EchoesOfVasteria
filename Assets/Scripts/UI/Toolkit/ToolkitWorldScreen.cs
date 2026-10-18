@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -21,11 +22,18 @@ namespace TimelessEchoes.UI.Toolkit
             if (!theme || !runtimeTheme || !textSettings) return;
             settings = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); settings.sortingOrder = 10;
             var document = GetComponent<UIDocument>(); document.panelSettings = settings;
-            root = document.rootVisualElement; root.pickingMode = PickingMode.Ignore; theme.Apply(root);
+            document.rootVisualElement.pickingMode = PickingMode.Ignore;
+            root = new VisualElement { name = "world-viewport", pickingMode = PickingMode.Ignore };
+            root.style.position = Position.Absolute; root.style.overflow = Overflow.Hidden;
+            document.rootVisualElement.Add(root); theme.Apply(root);
         }
         private void LateUpdate()
         {
             var camera = Camera.main; if (root == null || !camera) return;
+            var pixels = camera.pixelRect;
+            var scale = ToolkitResponsiveLayout.Scale(new Vector2Int(Screen.width, Screen.height));
+            var offset = new Vector2(pixels.xMin, Screen.height - pixels.yMax) * scale;
+            root.style.left = offset.x; root.style.top = offset.y; root.style.width = pixels.width * scale; root.style.height = pixels.height * scale;
             foreach (var pair in views) if (!pair.Key || !ToolkitWorldAnchor.Active.Contains(pair.Key)) retired.Add(pair.Key);
             foreach (var anchor in retired) { foreach (var node in views[anchor]) node.RemoveFromHierarchy(); views.Remove(anchor); } retired.Clear();
             foreach (var anchor in ToolkitWorldAnchor.Active)
@@ -69,7 +77,7 @@ namespace TimelessEchoes.UI.Toolkit
                     var a = RuntimePanelUtils.ScreenToPanel(root.panel, new Vector2(lower.x, Screen.height - upper.y));
                     var b = RuntimePanelUtils.ScreenToPanel(root.panel, new Vector2(upper.x, Screen.height - lower.y));
                     float width = Mathf.Abs(b.x - a.x), height = Mathf.Abs(b.y - a.y);
-                    node.style.left = Mathf.Min(a.x,b.x); node.style.top = Mathf.Min(a.y,b.y);
+                    node.style.left = Mathf.Min(a.x,b.x) - offset.x; node.style.top = Mathf.Min(a.y,b.y) - offset.y;
                     node.style.width = width * anchor.Fill(data.value); node.style.height = height;
                     if (node is Label text) { text.text = anchor.Text(data); text.style.fontSize = data.fontSize * height / Mathf.Max(.01f,data.anchor.rect.height); }
                     else if ((data.value == ToolkitWorldAnchor.Value.HealthFill && anchor.health) || (data.value == ToolkitWorldAnchor.Value.EchoFill && anchor.echo))

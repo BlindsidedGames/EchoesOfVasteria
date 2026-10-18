@@ -132,7 +132,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void RunStarted(){inRun=true;selected=null;Refresh();}
         private void RunEnded(){inRun=false;Refresh();}
         private readonly ToolkitWindowLayout windowLayout=new();
-        private void Layout(){var area=ToolkitWindowLayout.SafeArea;var width=Mathf.Min(744,area.width-24);windowLayout.Apply(root,new Rect(area.center.x-width/2,area.y+44,width,Mathf.Max(0,area.height-56)));}
+        private void Layout(){var area=ToolkitWindowLayout.SafeArea;var width=Mathf.Min(744,area.width-24);windowLayout.Apply(root,new Rect(area.center.x-width/2,area.y+ToolkitResponsiveLayout.WindowTop,width,Mathf.Max(0,area.height-ToolkitResponsiveLayout.WindowTop-ToolkitResponsiveLayout.WindowBottom)));}
         private void Update(){if(!IsOpen)return;Layout();if(rebuild){rebuild=false;BuildRows();Refresh();}if(Time.unscaledTime>=nextRefresh){nextRefresh=Time.unscaledTime+.25f;Refresh();}}
         public void Hide(){ToolkitLocalization.Changed-=LocalizationChanged;Blindsided.EventHandler.OnLoadData-=Loaded;Blindsided.EventHandler.OnQuestHandin-=QuestChanged;Blindsided.EventHandler.OnRunStarted-=RunStarted;Blindsided.EventHandler.OnRunEnded-=RunEnded;root?.RemoveFromHierarchy();root=null;scroll=null;selected=null;rows.Clear();}
         private void OnDisable()=>Hide();

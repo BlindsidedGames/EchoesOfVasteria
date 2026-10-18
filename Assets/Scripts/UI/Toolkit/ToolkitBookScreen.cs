@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Blindsided.SaveData.StaticReferences;
@@ -88,7 +89,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void Update()
         {
             if (!IsOpen) return;
-            var ratio = Application.isMobilePlatform ? 1f : SafeAreaRatio;
+            var ratio = UnityEngine.Device.Application.isMobilePlatform ? 1f : SafeAreaRatio;
             if (lastSize.x != Screen.width || lastSize.y != Screen.height ||
                 lastSafeArea != Screen.safeArea || !Mathf.Approximately(lastRatio, ratio))
                 ApplyLayout();
@@ -98,20 +99,22 @@ namespace TimelessEchoes.UI.Toolkit
         {
             lastSize = new Vector2Int(Screen.width, Screen.height);
             lastSafeArea = Screen.safeArea;
-            lastRatio = Application.isMobilePlatform ? 1f : SafeAreaRatio;
+            lastRatio = UnityEngine.Device.Application.isMobilePlatform ? 1f : SafeAreaRatio;
             var area = CalculateSafeArea(lastSize, lastSafeArea, lastRatio);
-            var width=Mathf.Min(definition.presentation == ToolkitBookDefinition.Presentation.Library ? 920 : 640,area.width-24);
+            var width=ToolkitResponsiveLayout.IsPortrait ? area.width : Mathf.Min(definition.presentation == ToolkitBookDefinition.Presentation.Library ? 920 : 640,area.width-24);
             view.Root.EnableInClassList("library-narrow", width < 500);
+            view.RefreshPortrait();
             view.Root.style.left = area.center.x-width/2;
-            view.Root.style.top = area.y + 44;
+            view.Root.style.top = area.y + ToolkitResponsiveLayout.WindowTop;
             view.Root.style.width = width;
-            view.Root.style.height = Mathf.Max(0, area.height - 56);
+            view.Root.style.height = Mathf.Max(0, area.height - ToolkitResponsiveLayout.WindowTop - ToolkitResponsiveLayout.WindowBottom);
         }
 
         /// <summary>Matches the existing six-unit safe inset and saved 16:9–32:9 width setting.</summary>
         public static Rect CalculateSafeArea(Vector2Int screen, Rect deviceSafeArea, float ratio)
         {
             if (screen.x <= 0 || screen.y <= 0) return Rect.zero;
+            if (ToolkitResponsiveLayout.Portrait(screen)) return ToolkitResponsiveLayout.DockArea(screen, deviceSafeArea);
             const float height = 432, minimum = 16f / 9f;
             var scale = height / screen.y;
             var width = screen.x * scale;

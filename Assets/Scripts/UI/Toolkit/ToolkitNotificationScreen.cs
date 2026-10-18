@@ -50,7 +50,7 @@ namespace TimelessEchoes.UI.Toolkit
                 text.text = ToolkitLocalization.Text(localizedKey, localizedEnglish, localizedArguments);
             }
             var area = ToolkitWindowLayout.SafeArea; float width = Mathf.Min(240, area.width);
-            root.style.left = area.center.x - width / 2; root.style.top = area.y + 44; root.style.width = width;
+            root.style.left = area.center.x - width / 2; root.style.top = area.y + ToolkitResponsiveLayout.WindowTop; root.style.width = width;
             float remaining = expires - Time.unscaledTime;
             fill.style.width = Length.Percent(Mathf.Clamp01(remaining / duration) * 100);
             if (remaining <= 0) root.style.display = DisplayStyle.None;
