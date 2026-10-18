@@ -370,6 +370,14 @@ namespace TimelessEchoes.UI
 
             if (!Oracle.oracle.saveData.SavedPreferences.Tutorial)
             {
+                // Native onboarding owns its prompts. The legacy forced popup also
+                // disabled its own navigation button, trapping touch-only players.
+                if (toolkitQuests != null && toolkitQuests.IsConfigured)
+                {
+                    Oracle.oracle.saveData.SavedPreferences.Tutorial = true;
+                    EventHandler.SaveData();
+                    return;
+                }
                 CloseAllWindows();
                 if (quests.window != null)
                 {
@@ -560,7 +568,7 @@ namespace TimelessEchoes.UI
             if (toolkitResources == null || !toolkitResources.IsOpen || toolkitResources.ManualLayout) return;
             var area = Toolkit.ToolkitWindowLayout.SafeArea;
             var width = Mathf.Min(640, Mathf.Max(0, area.width - 24));
-            toolkitResources.Bounds = new Rect(area.center.x - width / 2, area.y + 44, width, Mathf.Max(0,area.height - 56));
+            toolkitResources.Bounds = new Rect(area.center.x - width / 2, area.y + Toolkit.ToolkitResponsiveLayout.WindowTop, width, Mathf.Max(0,area.height - Toolkit.ToolkitResponsiveLayout.WindowTop - Toolkit.ToolkitResponsiveLayout.WindowBottom));
         }
 
         private void ToggleForgeInfo()

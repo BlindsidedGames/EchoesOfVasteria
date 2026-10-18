@@ -3,6 +3,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 namespace TimelessEchoes
 {
@@ -63,7 +64,19 @@ namespace TimelessEchoes
             hits.Clear();
             EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current)
                 { position = position }, hits);
-            return hits.Count != 0;
+            foreach (var hit in hits)
+            {
+                if (hit.module is PanelRaycaster toolkit)
+                {
+                    // A captured UITK pointer can keep RaycastAll reporting its panel
+                    // after a sheet closes. Check what is actually under this touch.
+                    var point = new Vector2(position.x, UnityEngine.Device.Screen.height - position.y);
+                    if (toolkit.panel != null && toolkit.panel.Pick(RuntimePanelUtils.ScreenToPanel(toolkit.panel, point)) != null)
+                        return true;
+                }
+                else return true;
+            }
+            return false;
         }
 
         private bool CanZoomAt(Vector2 position) =>

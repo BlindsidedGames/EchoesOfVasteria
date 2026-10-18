@@ -40,11 +40,8 @@ namespace TimelessEchoes.UI.Toolkit
             if (graphHand == null) return;
             graphHand.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
             if (!active) return;
-            var target = tabButtons[2];
-            var p = root.WorldToLocal(new Vector2(target.worldBound.center.x, target.worldBound.yMax));
-            graphHand.style.left = Mathf.Round(p.x - 12);
-            graphHand.style.top = Mathf.Round(p.y + 2 + 4 * (1 + Mathf.Cos(Time.unscaledTime * 5)));
-            graphHand.BringToFront();
+            var target = StatisticsSectionTarget(2);
+            PositionStatisticsHand(graphHand, target);
         }
     }
 }

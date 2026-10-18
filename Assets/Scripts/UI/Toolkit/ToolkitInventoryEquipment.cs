@@ -18,6 +18,8 @@ namespace TimelessEchoes.UI.Toolkit
         private Label equipmentCharacterName;
         private int previewDirection;
         private float nextPreviewFrame;
+        private VisualElement portraitInventoryTabs;
+        private bool portraitEquipmentSelected;
         private void BuildEquipment(VisualElement frame)
         {
             equipmentController = EquipmentController.Instance;
@@ -28,6 +30,12 @@ namespace TimelessEchoes.UI.Toolkit
             column.style.flexGrow = 1; column.style.flexBasis = 0;
             column.style.minWidth = 130; column.style.paddingLeft = 8; column.style.flexShrink = 0;
             frame.Add(column);
+            portraitInventoryTabs = ToolkitGameplay.E(root, "row portrait-inventory-tabs");
+            root.Add(portraitInventoryTabs);
+            var resourcesTab = ToolkitGameplay.B(portraitInventoryTabs, "Resources", () => { portraitEquipmentSelected = false; FitEquipmentColumns(); });
+            ToolkitLocalization.Bind(resourcesTab, "inventory.resources", "Resources");
+            var equipmentTab = ToolkitGameplay.B(portraitInventoryTabs, "Equipment", () => { portraitEquipmentSelected = true; FitEquipmentColumns(); });
+            ToolkitLocalization.Bind(equipmentTab, "inventory.equipment", "Equipment");
             frame.RegisterCallback<GeometryChangedEvent>(_ => FitEquipmentColumns());
             var header = ToolkitGameplay.E(column, "inventory-equipment-header");
             ToolkitGameplay.L(header, ToolkitLocalization.Text("inventory.equipped", "Equipped items"), "heading");
@@ -70,7 +78,22 @@ namespace TimelessEchoes.UI.Toolkit
         private void FitEquipmentColumns()
         {
             if (equipmentColumn == null || grid == null) return;
+            var portrait = ToolkitResponsiveLayout.IsPortrait;
+            selectedName.style.visibility = portrait && portraitEquipmentSelected ? Visibility.Hidden : Visibility.Visible;
+            portraitInventoryTabs.style.display = portrait ? DisplayStyle.Flex : DisplayStyle.None;
+            root.style.paddingBottom = portrait ? 48 : StyleKeyword.Null;
+            portraitInventoryTabs.ElementAt(0).EnableInClassList("active", !portraitEquipmentSelected);
+            portraitInventoryTabs.ElementAt(1).EnableInClassList("active", portraitEquipmentSelected);
+            equipmentColumn.style.display = portrait && !portraitEquipmentSelected ? DisplayStyle.None : DisplayStyle.Flex;
+            scroll.style.display = portrait && portraitEquipmentSelected ? DisplayStyle.None : DisplayStyle.Flex;
+            equipmentColumn.style.paddingLeft = portrait ? 0 : 8;
             var available = equipmentColumn.parent.contentRect.width;
+            if (portrait)
+            {
+                scroll.style.width = available;
+                grid.FillWidth(scroll.contentViewport.contentRect.width, new Vector2(44, 48));
+                return;
+            }
             if (available <= 0 || scroll.layout.width <= 0) return;
             var chrome = Mathf.Max(0, scroll.layout.width - scroll.contentViewport.contentRect.width);
             var equipmentWidth = Mathf.Clamp(available * .42f, 130, 240);
@@ -129,6 +152,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void EquipmentStat(StatDefSO stat, float value)
         {
             var row = new VisualElement(); row.style.flexDirection = FlexDirection.Row;
+            row.AddToClassList("inventory-equipment-stat");
             row.style.alignItems = Align.Center; row.style.marginBottom = 3; row.style.paddingLeft = 6; row.style.paddingRight = 4; equipmentContent.Add(row);
             if (StatIconLookup.TryGetIcon(stat.heroMapping, out var sprite))
             {

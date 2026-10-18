@@ -78,6 +78,8 @@ namespace TimelessEchoes.UI.Toolkit
             var record = tracker ? tracker.GetTaskRecord(task) : null;
             var completed = record?.TotalCompleted ?? 0; var known = completed > 0;
             var totals = ToolkitLocalization.Text("statistics.task-totals", "Completions: {0}\nTime on Task: {1}\nXP Gained: {2}", CalcUtils.FormatNumber(completed, true), CalcUtils.FormatTime(record?.TimeSpent ?? 0), CalcUtils.FormatNumber(record?.XpGained ?? 0, true));
+            if (ToolkitResponsiveLayout.IsPortrait)
+                totals = ToolkitLocalization.Text("statistics.task-totals-compact", "Done: {0}\nTime: {1}\nXP: {2}", CalcUtils.FormatNumber(completed, true), CalcUtils.FormatTime(record?.TimeSpent ?? 0), CalcUtils.FormatNumber(record?.XpGained ?? 0, true));
             var detail = string.Empty;
             if (known)
             {
@@ -89,8 +91,9 @@ namespace TimelessEchoes.UI.Toolkit
                 {
                     chance = Mathf.Clamp01(float.IsFinite(chance) ? chance : 0);
                     var next = TaskWeightService.TryGetNextThreshold(task, out var remaining) ? remaining : 0;
-                    var improvement = next > 0 ? ToolkitLocalization.Text("statistics.task-improvement", "Next improvement: {0} Tasks", CalcUtils.FormatNumber(next, true)) : ToolkitLocalization.Text("statistics.task-improvement-maxed", "Next improvement: Maxed");
-                    detail = ToolkitLocalization.Text("statistics.task-chance", "Spawn chance: {0:0.##}% ({1})\n{2}\n{3}", chance * 100, weightText, improvement, distance);
+                    var compact = ToolkitResponsiveLayout.IsPortrait;
+                    var improvement = next > 0 ? ToolkitLocalization.Text(compact ? "statistics.task-improvement-compact" : "statistics.task-improvement", compact ? "Next boost: {0} tasks" : "Next improvement: {0} Tasks", CalcUtils.FormatNumber(next, true)) : ToolkitLocalization.Text("statistics.task-improvement-maxed", "Next improvement: Maxed");
+                    detail = ToolkitLocalization.Text(compact ? "statistics.task-chance-compact" : "statistics.task-chance", compact ? "Chance: {0:0.##}% ({1})\n{2}\n{3}" : "Spawn chance: {0:0.##}% ({1})\n{2}\n{3}", chance * 100, weightText, improvement, distance);
                 }
                 else detail = ToolkitLocalization.Text("statistics.task-no-chance", "Spawn chance: -- ({0})\nNext improvement: --\n{1}", weightText, distance);
             }

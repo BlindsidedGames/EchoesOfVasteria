@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using System;
 using System.Collections.Generic;
 using Blindsided.SaveData;
@@ -156,7 +157,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (frame == null) return;
             var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height), Screen.safeArea,
-                Application.isMobilePlatform ? 1 : Blindsided.SaveData.StaticReferences.SafeAreaRatio);
+                UnityEngine.Device.Application.isMobilePlatform ? 1 : Blindsided.SaveData.StaticReferences.SafeAreaRatio);
             frame.style.left = area.center.x; frame.style.top = area.center.y; frame.style.maxWidth = area.width; frame.style.maxHeight = area.height;
         }
         private void Update() { if (IsOpen) Layout(); }

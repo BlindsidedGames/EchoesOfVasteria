@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using System.Collections.Generic;
 using TimelessEchoes.Farming;
 using Blindsided.Utilities;
@@ -25,7 +26,13 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly Dictionary<Entry, Button> buttons = new();
         private PanelSettings panel;
         private VisualElement root, popup, autoPinGroup;
-        private Button autoPin, discord;
+        private Button autoPin, discord, moreButton;
+        private Label portraitMenuTitle;
+        private VisualElement portraitMenuHeader, portraitMoreHeader;
+        private ScrollView portraitGroupScroll, portraitMoreScroll;
+        private VisualElement morePopup;
+        private bool moreOpen;
+        private bool? portraitNavigation;
         private Image forgeAttention, cauldronAttention, questAttention;
         private VisualElement progressRoot, progressFill;
         private Image progressHero, progressReaper;
@@ -66,6 +73,10 @@ namespace TimelessEchoes.UI.Toolkit
             theme.Apply(root);ToolkitGameplay.Apply(root,theme);
             root.Q("navigation-bar").pickingMode = PickingMode.Ignore;
             popup = root.Q("navigation-popup");
+            portraitMenuHeader = CreatePortraitHeader(popup);
+            portraitMenuTitle = ToolkitGameplay.L(portraitMenuHeader, "", "portrait-navigation-title heading");
+            portraitMenuTitle.style.flexGrow = 1;
+            portraitMenuTitle.style.marginBottom = 0;
             foreach (var entry in definition.entries)
             {
                 var row = new VisualElement { name = entry.id + "-row", pickingMode = PickingMode.Ignore };
@@ -87,6 +98,12 @@ namespace TimelessEchoes.UI.Toolkit
                     var label = new Label { name = "fields-navigation-label", text = FarmContent.Load()?.DisplayName ?? "Fields", pickingMode = PickingMode.Ignore };
                     label.AddToClassList("eov-navigation-label"); button.Add(label);
                 }
+                else if (entry.action == NavAction.TownsfolkMenu)
+                {
+                    var label = new Label { pickingMode = PickingMode.Ignore };
+                    label.AddToClassList("eov-navigation-label"); button.Add(label);
+                    ToolkitLocalization.Bind(label, "navigation.town", "Town");
+                }
                 else if (entry.icon)
                 {
                     VisualElement icon;
@@ -103,7 +120,7 @@ namespace TimelessEchoes.UI.Toolkit
                     button.Add(label); bindings.Add(new ToolkitTextBinding(label, entry.label));
                 }
                 row.Add(button);
-                if (entry.id is "quests" or "close" or "adventure" or "map-0" or "map-1" or "map-3" or "stats" or "townsfolk" or "forge" or "hub" or "skills" or "inventory" or "buffs")
+                if (entry.id is "options" or "quests" or "close" or "adventure" or "map-0" or "map-1" or "map-3" or "stats" or "townsfolk" or "forge" or "hub" or "skills" or "inventory" or "buffs")
                 {
                     var prompt = new VisualElement { name = entry.id == "quests" ? "quest-tutorial-pointer" : "tutorial-pointer-" + entry.id, pickingMode = PickingMode.Ignore };
                     prompt.style.position = Position.Absolute;
@@ -132,6 +149,14 @@ namespace TimelessEchoes.UI.Toolkit
                 }
                 else popup.Add(row);
             }
+            moreButton = new Button(ToggleMore) { name = "navigation-more", text = "More" };
+            moreButton.AddToClassList("button"); moreButton.AddToClassList("portrait-more");
+            morePopup = new VisualElement { name = "navigation-more-popup" };
+            portraitMoreHeader = CreatePortraitHeader(morePopup);
+            var moreTitle = ToolkitGameplay.L(portraitMoreHeader, "More", "portrait-navigation-title heading");
+            moreTitle.style.flexGrow = 1;
+            moreTitle.style.marginBottom = 0;
+            morePopup.AddToClassList("eov-navigation-popup"); morePopup.AddToClassList("portrait-more-popup"); root.Add(morePopup);
             CreateContext();
             document.rootVisualElement.Add(root);
             CloseMenu();
@@ -146,7 +171,9 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void CreateContext()
         {
+            ConfigurePortraitNavigation();
             var context = root.Q("navigation-context");
+            context.style.display = ToolkitResponsiveLayout.IsPortrait && !(GameManager.Instance && GameManager.Instance.CurrentMap) ? DisplayStyle.None : DisplayStyle.Flex;
             progressRoot = new VisualElement { name = "run-progress", pickingMode = PickingMode.Ignore };
             progressRoot.AddToClassList("eov-navigation-progress");
             var track = new VisualElement { pickingMode = PickingMode.Ignore };
@@ -184,15 +211,23 @@ namespace TimelessEchoes.UI.Toolkit
         private void Activate(Entry entry)
         {
             if (!ToolkitVisibilityRule.All(entry.visibility)) return;
+            moreOpen = false; if (morePopup != null) morePopup.style.display = DisplayStyle.None;
             if (!windows) windows = TownWindowManager.Instance;
             switch (entry.action)
             {
-                case NavAction.Window: CloseMenu(); windows?.OpenWindow(entry.window); break;
+                case NavAction.Window:
+                    CloseMenu();
+                    if (ToolkitResponsiveLayout.IsPortrait && windows && windows.IsWindowOpen(entry.window))
+                        windows.CloseAllWindows();
+                    else windows?.OpenWindow(entry.window);
+                    break;
                 case NavAction.Close: windows?.CloseAllWindows(); CloseMenu(); break;
                 case NavAction.BeginMap:
                     CloseMenu(); GameManager.Instance?.BeginAdventure(entry.map); break;
                 case NavAction.AdventureMenu: ToggleMenu(Group.Adventure, buttons[entry]); break;
-                case NavAction.HubMenu: ToggleMenu(Group.Hub, buttons[entry]); break;
+                case NavAction.HubMenu:
+                    ToggleMenu(Group.Hub, buttons[entry]);
+                    break;
                 case NavAction.TownsfolkMenu: ToggleMenu(Group.Townsfolk, buttons[entry]); break;
             }
             Refresh();
@@ -200,16 +235,25 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void ToggleMenu(Group group, Button anchor)
         {
-            if (openGroup == group) { CloseMenu(); return; }
-            openGroup = group; menuAnchor = anchor; popup.style.display = DisplayStyle.Flex;
+            if (openGroup == group || ToolkitResponsiveLayout.IsPortrait &&
+                (group == Group.Hub && HubWindowOpen() || group == Group.Townsfolk && TownWindowOpen()))
+            {
+                windows?.CloseAllWindows(); CloseMenu(); Refresh(); return;
+            }
+            if (ToolkitResponsiveLayout.IsPortrait) windows?.CloseAllWindows();
+            portraitMenuTitle.text = group == Group.Adventure ? "Adventure" : group == Group.Hub ? "Hub" : ToolkitLocalization.Text("navigation.town", "Town");
+            openGroup = group; menuAnchor = ToolkitResponsiveLayout.IsPortrait && anchor.parent?.parent == morePopup ? moreButton : anchor; popup.style.display = DisplayStyle.Flex;
             Refresh();
         }
 
         public void CloseMenu()
         {
-            openGroup = Group.Toolbar; menuAnchor = null;
+            openGroup = Group.Toolbar; menuAnchor = null; moreOpen = false;
+            if (morePopup != null) morePopup.style.display = DisplayStyle.None;
             if (popup != null) popup.style.display = DisplayStyle.None;
         }
+
+        public bool HasOpenMenu => openGroup != Group.Toolbar || moreOpen;
 
         private void Update()
         {
@@ -294,20 +338,35 @@ namespace TimelessEchoes.UI.Toolkit
             foreach (var entry in definition.entries)
             {
                 var visible = ToolkitVisibilityRule.All(entry.visibility) && (entry.group == Group.Toolbar || entry.group == openGroup);
-                if (entry.action == NavAction.Close) visible &= windows != null && windows.HasOpenWindow;
+                if (ToolkitResponsiveLayout.IsPortrait && entry.group == Group.Toolbar && !PortraitBottomEntry(entry))
+                    visible &= openGroup == Group.Townsfolk;
+                if (entry.action == NavAction.Close) visible &= !ToolkitResponsiveLayout.IsPortrait && windows != null && windows.HasOpenWindow;
                 rows[entry].style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
                 if (entry.action == NavAction.Window && entry.window == TownWindowManager.Window.Farm)
                 {
                     var label = buttons[entry].Q<Label>("fields-navigation-label");
                     if (label != null) label.text = FarmContent.Load()?.DisplayName ?? "Fields";
                 }
-                buttons[entry].SetEnabled(entry.action != NavAction.Window || windows == null || windows.CanOpenWindow(entry.window));
+                buttons[entry].SetEnabled(entry.action != NavAction.Window || windows == null ||
+                    windows.IsWindowOpen(entry.window) || windows.CanOpenWindow(entry.window));
+                var selected = entry.action == NavAction.Window && windows && windows.IsWindowOpen(entry.window);
+                if (entry.id == "hub" && windows) selected = openGroup == Group.Hub || windows.IsWindowOpen(TownWindowManager.Window.Inventory) || windows.IsWindowOpen(TownWindowManager.Window.Skills) || windows.IsWindowOpen(TownWindowManager.Window.Buffs);
+                if (entry.id == "townsfolk") selected = openGroup == Group.Townsfolk || TownWindowOpen();
+                if (entry.id == "adventure") selected = openGroup == Group.Adventure;
+                buttons[entry].EnableInClassList("active", ToolkitResponsiveLayout.IsPortrait && selected);
+            }
+            SetVisible(morePopup, ToolkitResponsiveLayout.IsPortrait && moreOpen);
+            SetVisible(moreButton, false);
+            if (moreButton != null)
+            {
+                var primary = windows && (windows.IsWindowOpen(TownWindowManager.Window.Inventory) || windows.IsWindowOpen(TownWindowManager.Window.Skills) || windows.IsWindowOpen(TownWindowManager.Window.Buffs) || windows.IsWindowOpen(TownWindowManager.Window.Quests));
+                moreButton.EnableInClassList("active", moreOpen || openGroup == Group.Townsfolk || windows && windows.HasOpenWindow && !primary);
             }
             RefreshTutorialPrompt();
             SetVisible(forgeAttention, windows != null && windows.ForgeNeedsAttention);
             SetVisible(cauldronAttention, windows != null && windows.CauldronNeedsAttention);
             SetVisible(questAttention, QuestManager.Instance != null && QuestManager.Instance.HasQuestsReadyForTurnIn());
-            SetVisible(autoPinGroup, windows != null && windows.IsWindowOpen(TownWindowManager.Window.Quests));
+            SetVisible(autoPinGroup, !ToolkitResponsiveLayout.IsPortrait && windows != null && windows.IsWindowOpen(TownWindowManager.Window.Quests));
             SetVisible(discord, windows != null && windows.IsWindowOpen(TownWindowManager.Window.Options));
             var inRun = GameManager.Instance != null && GameManager.Instance.CurrentMap != null;
             SetVisible(progressRoot, inRun);
@@ -317,7 +376,7 @@ namespace TimelessEchoes.UI.Toolkit
                 var current = RunProgressPresentation.Read(hero.transform.position.x);
                 if (!hasProgress || !current.SameText(lastProgress)) progressText.text = "<b>" + current.FormatText() + "</b>";
                 progressFill.style.width = Length.Percent(current.normalized * 100);
-                progressHero.style.left = -16.5f + current.normalized * 103;
+                progressHero.style.left = -16.5f + current.normalized * (ToolkitResponsiveLayout.IsPortrait ? Mathf.Max(103, ToolkitWindowLayout.SafeArea.width - 20) : 103);
                 lastProgress = current; hasProgress = true;
             }
             ToolkitGameplay.SetToggle(autoPin,AutoPinActiveQuests);
@@ -390,6 +449,10 @@ namespace TimelessEchoes.UI.Toolkit
                 desired = windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Adventure ? "map-3" : "adventure";
             else if (data != null && inTown && QuestUtils.QuestCompleted("Another Magicool Gift") && !data.CompletedNpcTasks.Contains("Ivan1"))
                 desired = windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Adventure ? "map-1" : "adventure";
+            if (ToolkitResponsiveLayout.IsPortrait && desired == "close" && windows)
+                desired = HubWindowOpen() ? "hub" : windows.IsWindowOpen(TownWindowManager.Window.Quests) ? "quests" :
+                    windows.IsWindowOpen(TownWindowManager.Window.Stats) ? "stats" :
+                    windows.IsWindowOpen(TownWindowManager.Window.Options) ? "options" : "townsfolk";
             if (desired != highlightedEntryId) { highlightedEntryId = desired; questHighlightStartedAt = Time.unscaledTime; }
             foreach (var pair in tutorialPrompts)
             {
@@ -401,9 +464,13 @@ namespace TimelessEchoes.UI.Toolkit
                     if (entry.id != pair.Key) continue;
                     var phase = Mathf.Repeat(Time.unscaledTime - questHighlightStartedAt, 1.2f) / 1.2f;
                     var approach = .5f - .5f * Mathf.Cos(phase * Mathf.PI * 2);
-                    var anchor = root.WorldToLocal(new Vector2(buttons[entry].worldBound.center.x, buttons[entry].worldBound.yMax));
+                    var target = ToolkitResponsiveLayout.IsPortrait && !PortraitBottomEntry(entry) &&
+                        entry.group == Group.Toolbar && openGroup != Group.Townsfolk
+                        ? buttons[System.Array.Find(definition.entries, e => e.id == "townsfolk")] : buttons[entry];
+                    var anchor = root.WorldToLocal(new Vector2(target.worldBound.center.x, (ToolkitResponsiveLayout.IsPortrait ? target.worldBound.yMin : target.worldBound.yMax)));
                     pair.Value.style.left = Mathf.Round(anchor.x - 12);
-                    pair.Value.style.top = Mathf.Round(anchor.y - 6 + 8 * (1 - approach));
+                    pair.Value.style.top = Mathf.Round(ToolkitResponsiveLayout.IsPortrait ? anchor.y - 22 - 8 * (1 - approach) : anchor.y - 6 + 8 * (1 - approach));
+                    pair.Value.style.rotate = new Rotate(new Angle(ToolkitResponsiveLayout.IsPortrait ? 180 : 0, AngleUnit.Degree));
                     break;
                 }
             }
@@ -412,15 +479,131 @@ namespace TimelessEchoes.UI.Toolkit
         private static void SetVisible(VisualElement element, bool visible)
         { if (element != null) element.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None; }
 
+        private void ConfigurePortraitNavigation()
+        {
+            var portrait = ToolkitResponsiveLayout.IsPortrait;
+            if (portraitNavigation == portrait) return;
+            portraitNavigation = portrait;
+            moreOpen = false;
+            var bar = root.Q("navigation-buttons");
+            if (portrait)
+            {
+                portraitGroupScroll ??= ToolkitGameplay.Scroll(popup, "portrait-navigation-list");
+                portraitMoreScroll ??= ToolkitGameplay.Scroll(morePopup, "portrait-more-list");
+                popup.Add(portraitGroupScroll); morePopup.Add(portraitMoreScroll);
+            }
+            foreach (var entry in definition.entries)
+            {
+                if (entry.group != Group.Toolbar)
+                {
+                    if (portrait) portraitGroupScroll.Add(rows[entry]); else popup.Add(rows[entry]);
+                    continue;
+                }
+                if (entry.action == NavAction.Close) continue;
+                var bottom = PortraitBottomEntry(entry);
+                if (portrait && !bottom) portraitGroupScroll.Add(rows[entry]); else bar.Add(rows[entry]);
+                var iconOnly = entry.id is "options" or "stats";
+                rows[entry].EnableInClassList("portrait-main-tab", portrait && bottom && !iconOnly);
+                rows[entry].EnableInClassList("portrait-icon-tab", portrait && iconOnly);
+                buttons[entry].Q<Label>("portrait-menu-label")?.RemoveFromHierarchy();
+            }
+            if (!portrait) { portraitGroupScroll?.RemoveFromHierarchy(); portraitMoreScroll?.RemoveFromHierarchy(); }
+            if (portrait)
+            {
+                foreach (var id in new[] { "adventure", "hub", "quests", "townsfolk", "stats", "options" })
+                {
+                    var entry = System.Array.Find(definition.entries, e => e.id == id);
+                    if (entry != null) bar.Add(rows[entry]);
+                }
+            }
+            else
+            {
+                var right = root.Q("navigation-close");
+                foreach (var id in new[] { "stats", "options" })
+                {
+                    var entry = System.Array.Find(definition.entries, e => e.id == id);
+                    if (entry != null) right.Insert(Mathf.Min(id == "stats" ? 0 : 1, right.childCount), rows[entry]);
+                }
+            }
+            moreButton.style.display = DisplayStyle.None;
+        }
+
+        private static VisualElement CreatePortraitHeader(VisualElement parent)
+        {
+            var header = new VisualElement();
+            header.AddToClassList("portrait-menu-header");
+            header.style.flexDirection = FlexDirection.Row;
+            header.style.alignItems = Align.Center;
+            header.style.flexShrink = 0;
+            header.style.marginBottom = 16;
+            parent.Add(header);
+            return header;
+        }
+
+        private static bool PortraitBottomEntry(Entry entry) => entry.id is "adventure" or "hub" or "quests" or "townsfolk" or "stats" or "options";
+
+        private bool TownWindowOpen() => windows && windows.HasOpenWindow && !HubWindowOpen() &&
+            !windows.IsWindowOpen(TownWindowManager.Window.Quests) &&
+            !windows.IsWindowOpen(TownWindowManager.Window.Stats) &&
+            !windows.IsWindowOpen(TownWindowManager.Window.Options);
+
+        private bool HubWindowOpen() => windows &&
+            (windows.IsWindowOpen(TownWindowManager.Window.Inventory) ||
+             windows.IsWindowOpen(TownWindowManager.Window.Skills) ||
+             windows.IsWindowOpen(TownWindowManager.Window.Buffs));
+
+        private void ToggleMore()
+        {
+            if (!windows) windows = TownWindowManager.Instance;
+            var ownsWindow = windows && windows.HasOpenWindow && !HubWindowOpen() &&
+                !windows.IsWindowOpen(TownWindowManager.Window.Quests);
+            var close = moreOpen || openGroup == Group.Townsfolk || ownsWindow;
+            windows?.CloseAllWindows();
+            CloseMenu();
+            moreOpen = !close;
+            Refresh();
+        }
+
         private void ApplyLayout()
         {
             var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height), Screen.safeArea,
-                Application.isMobilePlatform ? 1 : SafeAreaRatio);
-            root.style.left = area.x+8;root.style.top=area.y+8;root.style.width=area.width-16;root.style.height=36;
-            if (menuAnchor != null)
+                UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);
+            root.style.left = area.x + (ToolkitResponsiveLayout.IsPortrait ? 0 : 8);
+            root.style.top = ToolkitResponsiveLayout.IsPortrait ? area.yMax - 44 : area.y + 8;
+            root.style.width = area.width - (ToolkitResponsiveLayout.IsPortrait ? 0 : 16);
+            // Continue the same navigation surface through the home-indicator inset.
+            root.style.height = ToolkitResponsiveLayout.IsPortrait ? ToolkitResponsiveLayout.Size.y - (area.yMax - 44) : 36;
+            ConfigurePortraitNavigation();
+            portraitMenuHeader.style.display = ToolkitResponsiveLayout.IsPortrait ? DisplayStyle.Flex : DisplayStyle.None;
+            portraitMoreHeader.style.display = ToolkitResponsiveLayout.IsPortrait ? DisplayStyle.Flex : DisplayStyle.None;
+            var context = root.Q("navigation-context");
+            context.style.display = ToolkitResponsiveLayout.IsPortrait && !(GameManager.Instance && GameManager.Instance.CurrentMap) ? DisplayStyle.None : DisplayStyle.Flex;
+            context.style.top = ToolkitResponsiveLayout.IsPortrait ?
+                ToolkitResponsiveLayout.WorldArea.yMax - root.resolvedStyle.top - 39 : StyleKeyword.Null;
+            progressRoot.style.width = ToolkitResponsiveLayout.IsPortrait ? area.width - 16 : StyleKeyword.Null;
+            progressRoot.Q(className: "eov-navigation-progress-track").style.width = ToolkitResponsiveLayout.IsPortrait ? area.width - 20 : StyleKeyword.Null;
+            progressReaper.style.left = ToolkitResponsiveLayout.IsPortrait ? area.width - 40 : StyleKeyword.Null;
+            if (ToolkitResponsiveLayout.IsPortrait)
+                foreach (var entry in definition.entries) buttons[entry].style.minWidth = entry.group == Group.Toolbar ? StyleKeyword.Auto : entry.width;
+            else
+                foreach (var entry in definition.entries) buttons[entry].style.minWidth = entry.width;
+            if (ToolkitResponsiveLayout.IsPortrait)
             {
-                popup.style.left = Mathf.Max(0, Mathf.Min(root.WorldToLocal(menuAnchor.worldBound.position).x, root.layout.width - popup.layout.width));
-                popup.style.top = 32;
+                var top = area.y + ToolkitResponsiveLayout.MenuTop - root.resolvedStyle.top;
+                foreach (var menu in new[] { popup, morePopup })
+                {
+                    menu.style.left = 0; menu.style.top = top; menu.style.width = area.width;
+                    menu.style.height = Mathf.Max(0, area.height - ToolkitResponsiveLayout.MenuTop - ToolkitResponsiveLayout.WindowBottom);
+                }
+            }
+            else
+            {
+                popup.style.width = StyleKeyword.Null; popup.style.height = StyleKeyword.Null;
+                if (menuAnchor != null)
+                {
+                    popup.style.left = Mathf.Max(0, Mathf.Min(root.WorldToLocal(menuAnchor.worldBound.position).x, root.layout.width - popup.layout.width));
+                    popup.style.top = 32;
+                }
             }
         }
 
@@ -430,7 +613,7 @@ namespace TimelessEchoes.UI.Toolkit
             hooked = false;
             foreach (var binding in bindings) binding.Dispose();
             bindings.Clear(); rows.Clear(); buttons.Clear();
-            root?.RemoveFromHierarchy(); root = null; popup = null; menuAnchor = null;
+            root?.RemoveFromHierarchy(); root = null; popup = null; menuAnchor = null; morePopup = null; moreButton = null; portraitGroupScroll = null; portraitMoreScroll = null; portraitNavigation = null;
             characterPortrait = null;
             tutorialPrompts.Clear(); highlightedEntryId = null;
             openGroup = Group.Toolbar;

@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using System;
 using static TimelessEchoes.UI.Toolkit.ToolkitGameplay;
 using System.Collections.Generic;
@@ -25,22 +26,21 @@ namespace TimelessEchoes.UI.Toolkit
         private VisualElement root, hud, bar, returnControls, death, deathFill, overlay, detail, tooltip, abilityBar;
         private Label runTime,runRatesLeft,runRatesRight;
         private Label deathTitle, detailTitle, tooltipText;
-        private Button retreat, returnOnDeath, restart, deathReturn, deathSummary, breakdown, joke;
+        private Button retreat, returnOnDeath, restart, deathReturn, deathSummary, breakdown;
         private Image ivanReturnPointer;
         private Image firstEchoArrow;
         private BuffManager guidedBuffManager;
-        private DadJokeManager jokes;
-        private VisualElement jokeBubble, jokeCountdown;
-        private const float JokeDisplaySeconds = 3f;
-        private float jokeClosesAt;
-        private Label jokeText;
         private ScrollView detailRows;
         private readonly List<(Button button, Image icon, Image auto, Label text, VisualElement fill)> slots = new();
         private readonly Dictionary<Resource, double> runResources = new();
         private readonly Dictionary<Resource, VisualElement> resourceRows = new();
         private ResourceManager resources;
         private GameplayStatTracker tracker;
-        private bool showingBreakdown;
+        private bool showingBreakdown, portraitDetails;
+        private bool? portraitRun;
+        private VisualElement portraitRunActions;
+        private VisualElement portraitDashboard;
+        private ScrollView portraitStatsScroll;
         private float nextRefresh, elapsedAtEnd, runStartedAt;
         private int tooltipSlot = -1;
         public bool IsConfigured => definition && definition.buffs && theme && runtimeTheme && textSettings;
@@ -56,7 +56,7 @@ namespace TimelessEchoes.UI.Toolkit
             hud = E(root,"hero-corner");hud.style.left=12;hud.style.bottom=12;
             abilityBar=E(hud,"row abilities");abilityBar.name="run-abilities";for(int i=0;i<5;i++)BuildBuff(abilityBar,i);
             SetVisible(abilityBar, false);
-            BuildHeroHud();
+            BuildHeroHud(); BuildPortraitResources();
             StatIconLookup.TryGetIcon(StatIconLookup.StatKey.UpArrow, out var echoArrow);
             firstEchoArrow = new Image { name = "first-echo-arrow", sprite = echoArrow, pickingMode = PickingMode.Ignore };
             firstEchoArrow.style.position = Position.Absolute; firstEchoArrow.style.width = firstEchoArrow.style.height = 12;
@@ -79,23 +79,6 @@ namespace TimelessEchoes.UI.Toolkit
             tooltip = Panel(root, "eov-run-tooltip", definition.tooltipFrame); tooltipText = Text(tooltip, ""); SetVisible(tooltip, false);
             ToolkitLocalization.Changed += LocalizationChanged;
             Blindsided.EventHandler.OnRunStarted += RunStarted;
-            jokes = FindAnyObjectByType<DadJokeManager>(FindObjectsInactive.Include);
-            joke = LocalizedButton(root, "town-joke", "run.dad-o-cado", "Dad-O-Cado", ShowJoke); joke.AddToClassList("eov-town-joke");
-            jokeBubble = E(root, "town-joke-bubble"); jokeBubble.name = "town-joke-bubble";
-            var bubbleArt = E(jokeBubble, "town-joke-art");
-            bubbleArt.pickingMode = PickingMode.Ignore;
-            ToolkitTheme.Background(bubbleArt, definition.dadJokeBubble);
-            jokeText = L(jokeBubble, "", "town-joke-text");
-            jokeText.style.unityFontDefinition = FontDefinition.FromFont(definition.dadJokeFont ? definition.dadJokeFont : theme.gameplayFont);
-            jokeText.pickingMode = PickingMode.Ignore;
-            var countdownTrack = E(jokeBubble, "town-joke-countdown");
-            countdownTrack.pickingMode = PickingMode.Ignore;
-            jokeCountdown = E(countdownTrack, "town-joke-countdown-fill");
-            jokeCountdown.pickingMode = PickingMode.Ignore;
-            jokeBubble.focusable = true;
-            jokeBubble.RegisterCallback<ClickEvent>(_ => DismissJoke());
-            jokeBubble.RegisterCallback<NavigationSubmitEvent>(_ => DismissJoke());
-            DismissJoke();
             AttachServices(); Refresh();
         }
         private static Label LocalizedLabel(VisualElement parent, string key, string english, string classes = "")
@@ -159,6 +142,8 @@ namespace TimelessEchoes.UI.Toolkit
             var auto = ToolkitGameplay.Icon(button,definition.buffs.autoCast,20);auto.AddToClassList("ability-echo");auto.tintColor=definition.buffs.autoCastTint;
             var fill = new ToolkitBorderProgress();button.Insert(0,fill);
             var label = Text(button, "", ToolkitControls.TextRole.Caption);
+            label.AddToClassList("ability-status");
+            label.style.whiteSpace = WhiteSpace.NoWrap;
             var held = button.schedule.Execute(() => { suppress = true; BuffManager.Instance?.ToggleSlotAutoCast(index); }); held.Pause();
             button.RegisterCallback<PointerDownEvent>(e => { if (e.button == 0) { suppress = false; held.ExecuteLater(1000); } else if (e.button == 1) BuffManager.Instance?.ToggleSlotAutoCast(index); }, TrickleDown.TrickleDown);
             button.RegisterCallback<PointerUpEvent>(_ => held.Pause(), TrickleDown.TrickleDown);
@@ -175,22 +160,14 @@ namespace TimelessEchoes.UI.Toolkit
             if (root == null) return; AttachServices();
             var area = ToolkitWindowLayout.SafeArea;
             root.style.left = area.x; root.style.top = area.y; root.style.width = area.width; root.style.height = area.height;
-            // Original town anchors in the Canvas's 768x432 reference units.
-            joke.style.left = Mathf.Clamp(area.width / 2 + 303.25f, 0, Mathf.Max(0, area.width - 54.45f));
-            joke.style.top = Mathf.Clamp(area.height / 2 + 138.9f, 0, Mathf.Max(0, area.height - 17));
-            jokeBubble.style.left = Mathf.Clamp(area.width / 2 + 230, 0, Mathf.Max(0, area.width - 84.39f));
-            jokeBubble.style.bottom = Mathf.Max(20, area.height / 2 - 135);
+            ConfigurePortraitHud(area);
+            UpdatePortraitResources(area);
             // Run-summary backdrops also extend outside the HUD safe area.
-            overlay.style.left = -area.x; overlay.style.top = -area.y;
-            overlay.style.width = Screen.height > 0 ? Screen.width * 432f / Screen.height : 768;
-            overlay.style.height = 432;
-            if (summaryData != null) LayoutSummary(area);
-            if (jokeClosesAt > 0)
-            {
-                var remaining = jokeClosesAt - Time.unscaledTime;
-                if (remaining <= 0) DismissJoke();
-                else jokeCountdown.style.width = Length.Percent(remaining / JokeDisplaySeconds * 100);
-            }
+            overlay.style.left = ToolkitResponsiveLayout.IsPortrait ? 0 : -area.x; overlay.style.top = ToolkitResponsiveLayout.IsPortrait ? 0 : -area.y;
+            overlay.style.width = ToolkitResponsiveLayout.IsPortrait ? area.width : ToolkitResponsiveLayout.Size.x;
+            overlay.style.height = ToolkitResponsiveLayout.IsPortrait ? area.height : ToolkitResponsiveLayout.Size.y;
+            if (summaryData != null || ToolkitResponsiveLayout.IsPortrait || portraitDetails) LayoutSummary(area);
+            portraitDetails = ToolkitResponsiveLayout.IsPortrait;
             HandleBuffHotkeys();
             RefreshFirstEchoArrow();
             var guideReturn = GameManager.Instance && GameManager.Instance.CurrentMap && !GameManager.Instance.FirstReapDialoguePending && (GameManager.Instance.IvanReturnPending || GameManager.Instance.FirstReapReturnPending) && !(TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow);
@@ -204,9 +181,105 @@ namespace TimelessEchoes.UI.Toolkit
             if (Mouse.current?.rightButton.wasPressedThisFrame == true || Keyboard.current?.escapeKey.wasPressedThisFrame == true) { HideDetails(); SetHeroStatsOpen(false); }
             if (Time.unscaledTime < nextRefresh) return; nextRefresh = Time.unscaledTime + .1f; Refresh();
         }
+        private void ConfigurePortraitHud(Rect area)
+        {
+            var portrait = ToolkitResponsiveLayout.IsPortrait;
+            root.style.overflow = portrait ? Overflow.Visible : Overflow.Hidden;
+            var health = hud.Q("run-health-strip");
+            var world = ToolkitResponsiveLayout.WorldArea;
+            hud.style.left = portrait ? 8 : 12;
+            hud.style.top = portrait ? 8 : StyleKeyword.Auto;
+            hud.style.bottom = portrait ? StyleKeyword.Auto : 12;
+            hud.style.width = portrait ? Mathf.Min(138, world.width - 220) : 154;
+            if (portraitStatsScroll != null)
+            {
+                portraitStatsScroll.style.maxHeight = Mathf.Min(180, area.height - 140);
+                portraitStatsScroll.style.width = area.width - 16;
+                SetVisible(portraitStatsScroll, portrait && heroStatsOpen);
+            }
+            if (portrait)
+            {
+                abilityBar.style.left = area.width - 204;
+                abilityBar.style.top = 8;
+            }
+            if (portraitRun == portrait) return;
+            portraitRun = portrait;
+            health.style.width = portrait ? Length.Percent(100) : 154;
+            health.style.height = portrait ? 36 : 24;
+            health.style.backgroundColor = portrait ? Color.clear : (Color)new Color32(43, 36, 37, 255);
+            health.style.borderLeftWidth = health.style.borderRightWidth = health.style.borderTopWidth = health.style.borderBottomWidth = portrait ? 0 : .5f;
+            health.style.paddingLeft = portrait ? 0 : 5;
+            health.style.paddingRight = portrait ? 0 : 3;
+            heroStatsToggle.style.backgroundColor = portrait ? Color.clear : (Color)new Color32(43, 36, 37, 255);
+            heroStatsToggle.style.borderLeftWidth = heroStatsToggle.style.borderRightWidth = heroStatsToggle.style.borderTopWidth = heroStatsToggle.style.borderBottomWidth = portrait ? 0 : .5f;
+            heroStatsPanel.EnableInClassList("portrait-stats-content", portrait);
+            heroStatsPanel.style.position = portrait ? Position.Relative : Position.Absolute;
+            heroStatsPanel.style.bottom = portrait ? StyleKeyword.Auto : Length.Percent(100);
+            heroStatsPanel.style.width = portrait ? Length.Percent(100) : 154;
+            heroStatsPanel.style.marginBottom = portrait ? 0 : 4;
+            heroStatsPanel.style.backgroundColor = portrait ? Color.clear : (Color)new Color32(43, 36, 37, 255);
+            heroStatsPanel.style.borderLeftWidth = heroStatsPanel.style.borderRightWidth = heroStatsPanel.style.borderTopWidth = heroStatsPanel.style.borderBottomWidth = portrait ? 0 : .5f;
+            heroHealthText.style.fontSize = portrait ? 9 : 8;
+            heroStatsToggle.style.fontSize = portrait ? 9 : 8;
+            heroStatsToggle.style.height = portrait ? 28 : 18;
+            heroStatsToggle.style.minWidth = portrait ? 34 : 31;
+            if (portrait)
+            {
+                root.Add(abilityBar);
+                portraitStatsScroll = ToolkitGameplay.Scroll(hud, "portrait-combat-stats");
+                portraitStatsScroll.Add(heroStatsPanel);
+                portraitStatsScroll.style.position = Position.Absolute;
+                portraitStatsScroll.style.top = 44;
+                portraitStatsScroll.style.width = area.width - 16;
+                portraitStatsScroll.style.maxHeight = Mathf.Min(180, area.height - 140);
+                SetVisible(portraitStatsScroll, heroStatsOpen);
+                portraitDashboard = E(root, "portrait-run-dashboard");
+                portraitRunActions = E(portraitDashboard, "portrait-run-actions row");
+                portraitRunActions.Add(returnControls);
+                portraitRunActions.Add(breakdown);
+                portraitDashboard.Add(death);
+            }
+            else
+            {
+                hud.Insert(0, abilityBar);
+                abilityBar.PlaceBehind(health);
+                hud.Insert(2, heroStatsPanel);
+                portraitStatsScroll?.RemoveFromHierarchy();
+                portraitStatsScroll = null;
+                root.Add(returnControls);
+                root.Add(death);
+                root.Add(breakdown);
+                portraitRunActions?.RemoveFromHierarchy();
+                portraitRunActions = null;
+                portraitDashboard?.RemoveFromHierarchy();
+                portraitDashboard = null;
+            }
+            abilityBar.EnableInClassList("portrait-map-abilities", portrait);
+            abilityBar.style.position = portrait ? Position.Absolute : Position.Relative;
+            if (!portrait) abilityBar.style.left = abilityBar.style.top = StyleKeyword.Null;
+            returnControls.style.position = portrait ? Position.Relative : Position.Absolute;
+            returnControls.style.top = returnControls.style.right = portrait ? StyleKeyword.Auto : StyleKeyword.Null;
+            returnControls.style.marginTop = 0;
+            returnControls.style.flexDirection = portrait ? FlexDirection.Row : FlexDirection.Column;
+            foreach (var control in new VisualElement[] { death, breakdown })
+            {
+                control.style.position = portrait ? Position.Relative : Position.Absolute;
+                control.style.left = control.style.right = control.style.top = control.style.bottom = portrait ? StyleKeyword.Auto : StyleKeyword.Null;
+                control.style.translate = portrait ? new Translate(0, 0) : StyleKeyword.Null;
+                control.style.width = portrait && control == death ? Length.Percent(100) : StyleKeyword.Null;
+                control.style.marginTop = portrait && control == death ? 8 : 0;
+            }
+            heroStatsPanel.style.position = portrait ? Position.Relative : Position.Absolute;
+            heroStatsPanel.style.bottom = portrait ? StyleKeyword.Auto : Length.Percent(100);
+            heroStatsPanel.style.width = portrait ? Length.Percent(100) : 154;
+            foreach (var label in heroStatsPanel.Query<Label>().ToList())
+                label.style.fontSize = portrait ? 10 : label == heroCharacterName ? 9 : 8;
+            foreach (var value in heroStatValues.Values) value.parent.style.height = portrait ? 26 : 13;
+        }
+
         private void HandleBuffHotkeys()
         {
-            if (Application.isMobilePlatform || Keyboard.current == null || (ToolkitConsoleScreen.Instance && ToolkitConsoleScreen.Instance.IsActive)) return;
+            if (UnityEngine.Device.Application.isMobilePlatform || Keyboard.current == null || (ToolkitConsoleScreen.Instance && ToolkitConsoleScreen.Instance.IsActive)) return;
             var manager = BuffManager.Instance;
             if (!manager || !manager.HasUnlockedAbilities) return;
             for (int i = 0; i < slots.Count; i++)
@@ -219,8 +292,14 @@ namespace TimelessEchoes.UI.Toolkit
             var gm = GameManager.Instance; bool inRun = gm && gm.CurrentMap;
             var waitingForReapDialogue = gm && gm.FirstReapDialoguePending;
             SetVisible(hud, inRun); SetVisible(returnControls, inRun&&!waitingForReapDialogue&&!(TownWindowManager.Instance&&TownWindowManager.Instance.HasOpenWindow)); SetVisible(breakdown, inRun&&!waitingForReapDialogue); SetVisible(death, inRun && gm.DeathPromptVisible && !waitingForReapDialogue);
-            SetVisible(joke, !inRun && jokes && !(TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow));
-            if (inRun || (TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow)) DismissJoke();
+            if (portraitDashboard != null) SetVisible(portraitDashboard, inRun && !heroStatsOpen && !(TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow));
+            if (ToolkitResponsiveLayout.IsPortrait && ToolkitMeetingScreen.HasVisibleMeeting) SetVisible(hud, false);
+            SetVisible(abilityBar, inRun && BuffManager.Instance && BuffManager.Instance.HasUnlockedAbilities && !ToolkitMeetingScreen.HasVisibleMeeting && !HasOpenDetails);
+            if (ToolkitResponsiveLayout.IsPortrait && inRun)
+            {
+                SetVisible(returnControls, !gm.HeroIsDead && !waitingForReapDialogue && !(TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow));
+                SetVisible(breakdown, !gm.HeroIsDead && !waitingForReapDialogue);
+            }
             if (!inRun) { SetHeroStatsOpen(false); return; }
             var hero = HeroController.Instance; var health = hero ? hero.GetComponent<HeroHealth>() : null;
             RefreshHeroHud(hero, health);
@@ -230,7 +309,8 @@ namespace TimelessEchoes.UI.Toolkit
             restart.SetEnabled(!waitingForReapDialogue);
             deathSummary.SetEnabled(!waitingForReapDialogue);
             breakdown.SetEnabled(!waitingForReapDialogue);
-            breakdown.text = ToolkitLocalization.Text("run.breakdown-bonus", "Run breakdown\n<size=75%>+{0:0}% Resources</size>", (tracker ? tracker.CurrentRunKills : 0) * gm.BonusPercentPerKill);
+            breakdown.text = ToolkitResponsiveLayout.IsPortrait ? ToolkitLocalization.Text("run.summary-short", "Summary") :
+                ToolkitLocalization.Text("run.breakdown-bonus", "Run breakdown\n<size=75%>+{0:0}% Resources</size>", (tracker ? tracker.CurrentRunKills : 0) * gm.BonusPercentPerKill);
             deathTitle.text = gm.IvanReturnPending ? ToolkitLocalization.Text("run.return-ivan", "Return to town to meet Ivan") : gm.RunEndedByReaper ? ToolkitLocalization.Text("run.reaped-prompt", "You were reaped...") : ToolkitLocalization.Text("run.died-prompt", "You have Died...");
             SetVisible(deathFill.parent, !gm.IvanReturnPending && !gm.FirstReapReturnPending);
             deathFill.style.width = Length.Percent(gm.DeathPromptProgress * 100);
@@ -240,13 +320,16 @@ namespace TimelessEchoes.UI.Toolkit
         private void RefreshBuffs(bool alive)
         {
             var manager = BuffManager.Instance;
-            SetVisible(abilityBar, manager && manager.HasUnlockedAbilities);
+            SetVisible(abilityBar, manager && manager.HasUnlockedAbilities &&
+                (!ToolkitResponsiveLayout.IsPortrait || (!ToolkitMeetingScreen.HasVisibleMeeting && !HasOpenDetails)));
             if (!manager || !manager.HasUnlockedAbilities) { tooltipSlot = -1; SetVisible(tooltip, false); return; }
             for (int i = 0; i < slots.Count; i++)
             {
                 var row = slots[i]; var recipe = manager.GetAssigned(i); row.icon.sprite = recipe ? recipe.buffIcon : null;
                 SetVisible(row.auto, manager.IsSlotAutoCasting(i)); ((ToolkitBorderProgress)row.fill).Value=0; row.text.text = "";
                 bool unlocked = i < manager.UnlockedSlots; row.button.SetEnabled(unlocked && recipe); row.icon.tintColor = Color.white;
+                row.button.EnableInClassList("ability-locked", !unlocked);
+                SetVisible(row.icon, unlocked && recipe);
                 if (!unlocked) { row.text.text = ToolkitLocalization.Text("common.locked", "Locked"); continue; } if (!recipe) continue;
                 float remain = manager.GetRemaining(recipe), cooldown = manager.GetCooldownRemaining(recipe);
                 if (!alive) { row.text.text = ToolkitLocalization.Text("run.dead", "Dead"); row.icon.tintColor = Color.gray; continue; }
@@ -265,18 +348,10 @@ namespace TimelessEchoes.UI.Toolkit
             var recipe = tooltipSlot >= 0 ? BuffManager.Instance?.GetAssigned(tooltipSlot) : null;
             SetVisible(tooltip, recipe); if (recipe) tooltipText.text = recipe.GetDisplayName() + "\n" + string.Join("\n", recipe.GetDescriptionLines());
         }
-        private void RunStarted() { SetHeroStatsOpen(false); runResources.Clear(); elapsedAtEnd = 0; runStartedAt = Time.time; HideDetails(); }
+        private void RunStarted() { portraitResourcesDirty = true; SetHeroStatsOpen(false); runResources.Clear(); elapsedAtEnd = 0; runStartedAt = Time.time; HideDetails(); }
         private void RunEnded(bool died) { elapsedAtEnd = tracker ? tracker.LastRunDuration : 0; if (died) HideDetails(); }
         private void ResourceAdded(Resource resource, double amount, bool bonus)
-        { if (!tracker || !tracker.RunInProgress || !resource || resource.DisableAlterEcho || bonus || amount <= 0) return; runResources.TryGetValue(resource, out var current); runResources[resource] = current + amount; }
-        private void ShowJoke()
-        {
-            HideDetails(); jokeText.text = jokes ? jokes.NextJoke() : "";
-            jokeClosesAt = Time.unscaledTime + JokeDisplaySeconds;
-            jokeCountdown.style.width = Length.Percent(100);
-            SetVisible(jokeBubble, true);
-        }
-        private void DismissJoke() { jokeClosesAt = 0; SetVisible(jokeBubble, false); }
+        { if (!tracker || !tracker.RunInProgress || !resource || resource.DisableAlterEcho || bonus || amount <= 0) return; runResources.TryGetValue(resource, out var current); runResources[resource] = current + amount; portraitResourcesDirty = true; }
         public void ShowBreakdown() { HideDetails(); detail.Q(className: "breakdown-rate").style.display=DisplayStyle.Flex; showingBreakdown = true; detailTitle.text = ToolkitLocalization.Text("run.breakdown-title", "Run Breakdown"); SetVisible(overlay, true); RefreshBreakdown(); }
         private void RefreshBreakdown()
         {
@@ -291,10 +366,11 @@ namespace TimelessEchoes.UI.Toolkit
             row.Q<Label>("amount").text = value;
         }
         public bool HasOpenDetails => overlay != null && overlay.style.display.value != DisplayStyle.None;
-        public void HideDetails() { DismissJoke(); if(detail!=null)detail.Q(className: "breakdown-rate").style.display=DisplayStyle.None; showingBreakdown = false; ClearSummary();if(runTime!=null)runTime.text="";if(runRatesLeft!=null)runRatesLeft.text="";if(runRatesRight!=null)runRatesRight.text="";SetVisible(overlay, false); detailRows?.Clear(); resourceRows.Clear(); }
+        public void HideDetails() { if(detail!=null)detail.Q(className: "breakdown-rate").style.display=DisplayStyle.None; showingBreakdown = false; ClearSummary();if(runTime!=null)runTime.text="";if(runRatesLeft!=null)runRatesLeft.text="";if(runRatesRight!=null)runRatesRight.text="";SetVisible(overlay, false); detailRows?.Clear(); resourceRows.Clear(); }
         private static void SetVisible(VisualElement element, bool value) { if (element != null) element.style.display = value ? DisplayStyle.Flex : DisplayStyle.None; }
         private void OnDisable()
         {
+            portraitRun = null;
             ToolkitLocalization.Changed -= LocalizationChanged;
             Blindsided.EventHandler.OnRunStarted -= RunStarted;
             if (resources) resources.OnResourceAdded -= ResourceAdded;

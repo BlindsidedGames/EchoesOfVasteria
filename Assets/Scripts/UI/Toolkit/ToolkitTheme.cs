@@ -29,6 +29,7 @@ namespace TimelessEchoes.UI.Toolkit
         public void Apply(VisualElement root)
         {
             root.AddToClassList("eov-theme");
+            ToolkitResponsiveLayout.Bind(root);
             if (styles) root.styleSheets.Add(styles);
             ToolkitLocaleFonts.Bind(root, font);
             root.style.color = textColor;

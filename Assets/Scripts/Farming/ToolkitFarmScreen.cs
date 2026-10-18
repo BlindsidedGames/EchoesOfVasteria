@@ -33,6 +33,7 @@ namespace TimelessEchoes.UI.Toolkit
         private string selectedRecipe, selectedBed;
         private float nextRefresh;
         private bool narrow;
+        private ToolkitPortraitPages portraitPages;
         public float CompanionWidth { get; set; }
         public bool IsOpen => root != null;
         public bool IsConfigured => theme && runtimeTheme && textSettings && (source != null || sourceBehaviour is IFarmPresentationSource);
@@ -118,6 +119,10 @@ namespace TimelessEchoes.UI.Toolkit
                 seeds[id] = new SeedCard { Button = button, Title = title, Count = count, Icon = icon };
             }
             undiscovered = L(seedColumn, "", "muted fields-undiscovered-count");
+            portraitPages = new ToolkitPortraitPages(workspace.contentContainer, null, new[] { board }, workspace,
+                new ToolkitPortraitPages.Page("Crops", cropSection),
+                new ToolkitPortraitPages.Page("Orchard", orchardSection),
+                new ToolkitPortraitPages.Page("Planting", drawer));
             source.Changed += Refresh; ToolkitLocalization.Changed += Refresh;
             layout.Fill(root, theme, CompanionWidth); ApplyLayout(); Refresh(); return true;
         }
@@ -192,6 +197,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void SelectBed(string id)
         {
             selectedBed = id; var snapshot = source.CapturePresentation(); var bed = snapshot.Beds.FirstOrDefault(b => b.Id == id);
+            if (ToolkitResponsiveLayout.IsPortrait) portraitPages?.Select(2);
             var recipe = snapshot.Recipes.FirstOrDefault(r => r.Id == selectedRecipe);
             if (bed != null && (bed.Planted || recipe == null || recipe.Orchard != bed.Orchard))
                 selectedRecipe = bed.RecipeId ?? snapshot.Recipes.FirstOrDefault(r => r.Orchard == bed.Orchard && r.Discovered && r.Eligible)?.Id;
@@ -334,7 +340,7 @@ namespace TimelessEchoes.UI.Toolkit
         private static string PlantCost(bool orchard) => ToolkitLocalization.Text(orchard ? "fields.plant-sapling-cost" : "fields.plant-seed-cost", orchard ? "Requires {0} matching sapling per plot." : "Requires {0} matching seed pack per field.", FarmContent.PlantingCost(orchard));
         private static string BedStatus(FarmBedPresentation bed) => !bed.Unlocked ? T("fields.locked", "Locked · construction required") : !bed.Planted ? T("fields.empty", "Empty") : bed.RecipeTitle + "\n" + (bed.Ready ? T("fields.ready", "Ready") : FormatTime(Math.Max(0, bed.RemainingSeconds), mspace: false, shortForm: true));
         private void ApplyLayout()
-        { narrow = ToolkitWindowLayout.SafeArea.width - CompanionWidth < 640; root.EnableInClassList("fields-narrow", narrow); }
+        { portraitPages?.Update(); narrow = ToolkitWindowLayout.SafeArea.width - CompanionWidth < 640; root.EnableInClassList("fields-narrow", narrow); }
         private void Update()
         {
             if (!IsOpen) return; layout.Fill(root, theme, CompanionWidth); ApplyLayout();

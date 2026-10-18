@@ -82,13 +82,24 @@ namespace TimelessEchoes.UI.Toolkit
             odds.SetWeights(weights, RarityColour); RefreshOddsLegend(weights);
             foreach (var entry in conversions) RefreshConversion(entry.Key, entry.Value);
             var visibleConversions = conversions.Values.Where(r => r.root.style.display.value != DisplayStyle.None).ToList();
-            for (var i = 0; i < visibleConversions.Count; i++) {
-                visibleConversions[i].root.style.width = StyleKeyword.Auto;
-                visibleConversions[i].root.style.marginRight = i == visibleConversions.Count - 1 ? 0 : 6;
-            }
+            LayoutConversions();
             foreach (var entry in gearSlots) NativeSize(entry.Value.icon);
             foreach (var entry in coreSlots) NativeSize(entry.icon);
             RefreshFirstLesson();
+        }
+        private void LayoutConversions()
+        {
+            var visible = conversions.Values.Where(r => r.root.style.display.value != DisplayStyle.None).ToList();
+            var phone = ToolkitResponsiveLayout.IsPortrait;
+            var width = Mathf.Max(0, (root.Q(className: "eov-forge-conversions").contentRect.width - 8) * .5f);
+            for (var i = 0; i < visible.Count; i++)
+            {
+                var style = visible[i].root.style;
+                style.width = phone ? width : StyleKeyword.Auto;
+                style.flexBasis = phone ? width : StyleKeyword.Null;
+                style.flexGrow = phone ? 0 : 1;
+                style.marginRight = phone ? (i % 2 == 0 ? 8 : 0) : (i == visible.Count - 1 ? 0 : 6);
+            }
         }
         private void RefreshConversion(ConversionType type, ConversionRow row)
         {

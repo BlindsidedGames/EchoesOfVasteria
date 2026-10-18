@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using System;
 using System.Collections.Generic;
 using Blindsided;
@@ -157,24 +158,25 @@ namespace TimelessEchoes.UI.Toolkit
                 },22);
             }
             var mute=LabelledToggle(frame,"mute","mute-label",()=>{MuteWhenUnfocused=!MuteWhenUnfocused;AudioManager.Instance?.ApplyFocusMuteNow();});
-            mute.style.display=Application.isMobilePlatform?DisplayStyle.None:DisplayStyle.Flex;
+            mute.style.display=UnityEngine.Device.Application.isMobilePlatform?DisplayStyle.None:DisplayStyle.Flex;
         }
         private void BuildDisplay()
         {
             var frame=Frame("display");
-            var widthSetting=new VisualElement();widthSetting.style.display=Application.isMobilePlatform?DisplayStyle.None:DisplayStyle.Flex;frame.Add(widthSetting);
+            var widthSetting=new VisualElement { name = "desktop-display-width" };widthSetting.style.display=UnityEngine.Device.Application.isMobilePlatform?DisplayStyle.None:DisplayStyle.Flex;frame.Add(widthSetting);
             Text(widthSetting,"width-label");Slider(widthSetting,"width",value=>{SafeAreaRatio=value;foreach(var safe in FindObjectsByType<ScreenSafeArea>())safe.RatioPreference=value;},22);
             var row=Row(frame);row.AddToClassList("settings-actions");
             var full=ActionButton(row,"fullscreen",()=>Screen.fullScreenMode=FullScreenMode.FullScreenWindow,22);Grow(full);
             var window=ActionButton(row,"windowed",()=>Screen.fullScreenMode=FullScreenMode.Windowed,22);Grow(window);
-            full.style.display=window.style.display=Application.isMobilePlatform?DisplayStyle.None:DisplayStyle.Flex;
+            full.style.display=window.style.display=UnityEngine.Device.Application.isMobilePlatform?DisplayStyle.None:DisplayStyle.Flex;
             var fps=ActionButton(row,"fps",()=>{TargetFps=TargetFps==30?60:TargetFps==60?120:30;ApplyFps();RefreshValues();},22);Grow(fps);
             LabelledToggle(row,"vsync","vsync-label",()=>{VSyncEnabled=!VSyncEnabled;ApplyFps();});
         }
         private static void ApplyFps()
         {
             if(TargetFps==0)TargetFps=60;
-            QualitySettings.vSyncCount=VSyncEnabled?1:0;Application.targetFrameRate=VSyncEnabled?-1:TargetFps;
+            var sync = VSyncEnabled && !UnityEngine.Device.Application.isMobilePlatform && !ToolkitResponsiveLayout.IsPortrait;
+            QualitySettings.vSyncCount=sync?1:0;Application.targetFrameRate=sync?-1:TargetFps;
         }
         private void BuildFloating()
         {
@@ -211,7 +213,7 @@ namespace TimelessEchoes.UI.Toolkit
             Grow(ActionButton(row,"credits",()=>windows?.OpenWindow(TownWindowManager.Window.Credits),22));
             var language=ActionButton(row,"language",()=>OpenDialog("language"),22);Grow(language);
             var folder=ActionButton(row,"folder",()=>Application.OpenURL($"file://{Application.persistentDataPath}"),22);Grow(folder);
-            language.style.display=folder.style.display=Application.isMobilePlatform?DisplayStyle.None:DisplayStyle.Flex;
+            language.style.display=folder.style.display=UnityEngine.Device.Application.isMobilePlatform?DisplayStyle.None:DisplayStyle.Flex;
             Text(row,"version-label",7).AddToClassList("settings-version");
         }
         private bool CanSave(int index) => Oracle.oracle != null && Oracle.oracle.CanBeginSaveMutation && (index == Oracle.oracle.CurrentSlot || safety[index]);
@@ -271,9 +273,19 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void Layout()
         {
-            var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height), Screen.safeArea, Application.isMobilePlatform ? 1 : SafeAreaRatio);
+            var phone = UnityEngine.Device.Application.isMobilePlatform || ToolkitResponsiveLayout.IsPortrait;
+            root.Q("desktop-display-width").style.display = phone ? DisplayStyle.None : DisplayStyle.Flex;
+            buttons["fullscreen"].style.display = buttons["windowed"].style.display = phone ? DisplayStyle.None : DisplayStyle.Flex;
+            buttons["vsync"].style.display = phone ? DisplayStyle.None : DisplayStyle.Flex;
+            if (phone)
+            {
+                labels["display-title"].text = "Performance";
+                buttons["fps"].SetEnabled(true);
+                labels["fps-label"].text = ToolkitLocalization.Text("options.fps", "FPS: {0}", TargetFps == 0 ? 60 : TargetFps);
+            }
+            var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height), Screen.safeArea, UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);
             widthPreview.style.left = area.x; widthPreview.style.top = area.y; widthPreview.style.width = area.width; widthPreview.style.height = area.height;
-            root.style.left = area.center.x; root.style.top = area.y + 44; root.style.width = Mathf.Min(600, area.width-24); root.style.height = Mathf.Max(0,area.height - 56);
+            root.style.left = area.center.x; root.style.top = area.y + ToolkitResponsiveLayout.WindowTop; root.style.width = ToolkitResponsiveLayout.IsPortrait ? area.width : Mathf.Min(600, area.width-24); root.style.height = Mathf.Max(0,area.height - ToolkitResponsiveLayout.WindowTop - ToolkitResponsiveLayout.WindowBottom);
         }
         private void Update() { if (!IsOpen) return; Layout(); if (Time.unscaledTime >= nextRefresh) { nextRefresh = Time.unscaledTime + 1; RefreshSlotLabels(); } }
         public void Hide()

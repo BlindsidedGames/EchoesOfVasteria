@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using System.Collections.Generic;
 using System.Linq;
 using TimelessEchoes.Upgrades;
@@ -50,6 +51,15 @@ namespace TimelessEchoes.UI.Toolkit
         }
 
         public bool Show() => Show(false);
+        public bool ShowOverQuests()
+        {
+            if (IsOpen) return true;
+            if (!Show()) return false;
+            settings.sortingOrder = 110;
+            var close = root.Q<Button>("inventory-close");
+            close.style.display = DisplayStyle.None;
+            return true;
+        }
         private bool Show(bool inForge, bool inQuests = false)
         {
             if (IsOpen) return true;
@@ -215,14 +225,14 @@ namespace TimelessEchoes.UI.Toolkit
             }
         }
         private readonly ToolkitWindowLayout windowLayout = new();
-        private void Layout() { if (!embedded) windowLayout.Apply(root, new Rect(Bounds.x + 4, Bounds.y, Mathf.Max(0, Bounds.width - 4), Bounds.height)); }
+        private void Layout() { if (equipmentColumn != null) FitEquipmentColumns(); if (!embedded) windowLayout.Apply(root, new Rect(Bounds.x + 4, Bounds.y, Mathf.Max(0, Bounds.width - 4), Bounds.height)); }
         private void Update()
         {
             if (!IsOpen) return; Layout();
             if (!embedded) UpdateEquipmentPreview();
             if (pendingScroll >= 0 && grid.layout.height > 0 && scroll.contentViewport.layout.height > 0)
             {
-                var y = (resourceOrder.IndexOf(pendingScroll) / grid.Columns) * (forgePresentation ? 40 : embedded ? 33 : 46);
+                var y = slots[pendingScroll].button.layout.y;
                 scroll.scrollOffset = new Vector2(0, Mathf.Min(y, Mathf.Max(0, scroll.contentContainer.layout.height - scroll.contentViewport.layout.height)));
                 pendingScroll = -1;
             }

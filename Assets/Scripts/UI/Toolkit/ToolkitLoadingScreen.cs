@@ -24,7 +24,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void RefreshText(){if(loadingLabel!=null)loadingLabel.text=ToolkitLocalization.Text("loading.title", "Loading...");}
         private void Update()=>Refresh();
-        private void Refresh(){if(root==null)return;root.style.width=Screen.width*432f/Mathf.Max(1,Screen.height);root.style.height=432;var manager=GameManager.Instance;bool loading=SceneManager.GetActiveScene().name=="Loading" || manager&&manager.RunLoadingActive;root.style.display=loading?DisplayStyle.Flex:DisplayStyle.None;fill.style.width=Length.Percent(manager?manager.RunLoadingFraction*100:0);}
+        private void Refresh(){if(root==null)return;root.style.width=ToolkitResponsiveLayout.Size.x;root.style.height=ToolkitResponsiveLayout.Size.y;var manager=GameManager.Instance;bool loading=SceneManager.GetActiveScene().name=="Loading" || manager&&manager.RunLoadingActive;root.style.display=loading?DisplayStyle.Flex:DisplayStyle.None;fill.style.width=Length.Percent(manager?manager.RunLoadingFraction*100:0);}
         private void OnDisable(){ToolkitLocalization.Changed-=RefreshText;loadingLabel=null;root?.RemoveFromHierarchy();root=null;if(settings)Destroy(settings);settings=null;}
     }
 }

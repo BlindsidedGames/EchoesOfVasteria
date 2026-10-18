@@ -17,7 +17,7 @@ namespace TimelessEchoes.UI.Toolkit
             VisualElement target = null;
             if (active)
             {
-                if (selectedTab != 4) target = tabButtons[4];
+                if (selectedTab != 4) target = StatisticsSectionTarget(4);
                 else
                 {
                     var task = TaskBoostGuidance.FindTask();
@@ -31,8 +31,7 @@ namespace TimelessEchoes.UI.Toolkit
             }
             boostHand.style.display = target != null ? DisplayStyle.Flex : DisplayStyle.None;
             if (target == null) return;
-            var p = root.WorldToLocal(new Vector2(target.worldBound.center.x, target.worldBound.yMax));
-            boostHand.style.left = Mathf.Round(p.x - 12); boostHand.style.top = Mathf.Round(p.y + 2 + 4 * (1 + Mathf.Cos(Time.unscaledTime * 5)));
+            PositionStatisticsHand(boostHand, target);
         }
     }
 }

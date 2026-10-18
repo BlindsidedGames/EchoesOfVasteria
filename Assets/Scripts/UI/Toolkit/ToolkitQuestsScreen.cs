@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,7 @@ namespace TimelessEchoes.UI.Toolkit
         private Button inventoryToggle;
         private VisualElement inventoryTriangle;
         private bool inventoryExpanded;
+        private Button portraitAutoPin;
         private ToolkitTextBinding instructionBinding;
         private readonly Dictionary<string, Action<float>> progress = new();
         private readonly HashSet<string> dirtyProgress = new();
@@ -67,6 +69,12 @@ namespace TimelessEchoes.UI.Toolkit
                 painter.LineTo(new Vector2(back, rect.yMax)); painter.ClosePath(); painter.Fill();
             };
             inventoryToggle.Add(inventoryTriangle); heading.Add(inventoryToggle);
+            var inventoryLabel = new Label("Inventory"); inventoryLabel.AddToClassList("quest-inventory-label"); inventoryLabel.pickingMode = PickingMode.Ignore; inventoryToggle.Add(inventoryLabel);
+            portraitAutoPin = ToolkitGameplay.B(heading, "", () => {
+                Blindsided.SaveData.StaticReferences.AutoPinActiveQuests = !Blindsided.SaveData.StaticReferences.AutoPinActiveQuests;
+                RefreshPortraitAutoPin();
+            });
+            portraitAutoPin.name = "quests-auto-pin"; RefreshPortraitAutoPin();
             scroll = new ScrollView(ScrollViewMode.Vertical) { name = "quest-scroll", horizontalScrollerVisibility = ScrollerVisibility.Hidden, verticalScrollerVisibility = ScrollerVisibility.Auto };
             scroll.AddToClassList("eov-buffs-scroll"); theme.StyleScroll(scroll);ToolkitGameplay.StyleScroll(scroll); quests.Add(scroll);
             if (inventoryTemplate && inventoryTemplate.IsConfigured)
@@ -74,7 +82,7 @@ namespace TimelessEchoes.UI.Toolkit
                 inventoryHost = new VisualElement { name = "quests-inventory" };
                 inventoryHost.AddToClassList("quests-inventory"); columns.Add(inventoryHost);
                 companionInventory = inventoryTemplate.CreateCompanionView();
-                if (!companionInventory.ShowInQuests(inventoryHost))
+                if (!ToolkitResponsiveLayout.IsPortrait && !companionInventory.ShowInQuests(inventoryHost))
                 {
                     Destroy(companionInventory.gameObject); companionInventory = null;
                     inventoryHost.RemoveFromHierarchy();
@@ -91,14 +99,21 @@ namespace TimelessEchoes.UI.Toolkit
         private void SetInventoryExpanded(bool expanded)
         {
             inventoryExpanded = expanded;
-            if (inventoryHost != null) inventoryHost.style.display = expanded ? DisplayStyle.Flex : DisplayStyle.None;
+            if (ToolkitResponsiveLayout.IsPortrait && companionInventory)
+            {
+                if (inventoryHost != null) inventoryHost.style.display = DisplayStyle.None;
+                if (expanded) companionInventory.ShowOverQuests();
+                else companionInventory.Hide();
+            }
+            inventoryToggle?.EnableInClassList("active", expanded);
+            if (inventoryHost != null && !ToolkitResponsiveLayout.IsPortrait) inventoryHost.style.display = expanded ? DisplayStyle.Flex : DisplayStyle.None;
             if (inventoryToggle != null) inventoryToggle.tooltip = expanded ? ToolkitLocalization.Text("quests.hide-inventory", "Hide inventory") : ToolkitLocalization.Text("quests.show-inventory", "Show inventory");
             inventoryTriangle?.MarkDirtyRepaint();
         }
         private void LocaleChanged(UnityEngine.Localization.Locale _) { manager.RefreshNoticeboard(); dirty = true; }
         public bool TryHighlightResource(Upgrades.Resource resource, bool scrollToSlot)
         {
-            if (!IsOpen || !companionInventory || !companionInventory.IsOpen) return false;
+            if (!IsOpen || !companionInventory) return false;
             SetInventoryExpanded(true);
             companionInventory.HighlightResource(resource, scrollToSlot);
             return true;
@@ -155,6 +170,7 @@ namespace TimelessEchoes.UI.Toolkit
             var pinned = Blindsided.Oracle.oracle?.saveData?.PinnedQuests?.Contains(quest.questId) == true;
             Text(texts, "<b>" + quest.questName.GetLocalizedString() + "</b>", 9).AddToClassList("quest-name");
             var description = Text(texts, quest.description.GetLocalizedString(), 6); description.AddToClassList("quest-description");
+            description.style.fontSize = StyleKeyword.Null;
             Button turnIn = null;
             Label turnInLabel = null;
             var first = quest.requirements?.FirstOrDefault()?.type;
@@ -182,6 +198,7 @@ namespace TimelessEchoes.UI.Toolkit
                     requirements.Add((req, label, fill));
                 }
             var reward = Text(row, ToolkitLocalization.Text("quests.reward", "Reward: {0}", quest.rewardDescription.GetLocalizedString()), 7); reward.AddToClassList("quest-reward");
+            reward.style.fontSize = StyleKeyword.Null;
             foreach (var equipment in quest.rewards.Where(r => r.type == QuestData.RewardType.Equipment && r.equipment))
             {
                 var stats = new VisualElement { name = "equipment-reward-stats" };
@@ -234,7 +251,21 @@ namespace TimelessEchoes.UI.Toolkit
  parent.Add(label); return label;
         }
         private readonly ToolkitWindowLayout windowLayout = new();
-        private void Layout() => windowLayout.Fill(root, theme);
+        private void RefreshPortraitAutoPin()
+        {
+            if (portraitAutoPin == null) return;
+            portraitAutoPin.style.display = ToolkitResponsiveLayout.IsPortrait ? DisplayStyle.Flex : DisplayStyle.None;
+            portraitAutoPin.text = ToolkitLocalization.Text("quests.auto-pin", "Auto pin") + ": " +
+                ToolkitLocalization.Text(Blindsided.SaveData.StaticReferences.AutoPinActiveQuests ? "common.on" : "common.off", Blindsided.SaveData.StaticReferences.AutoPinActiveQuests ? "On" : "Off");
+        }
+        private void Layout()
+        {
+            windowLayout.Fill(root, theme); RefreshPortraitAutoPin();
+            var phone = ToolkitResponsiveLayout.IsPortrait;
+            inventoryToggle.style.width = inventoryToggle.style.minWidth = phone ? 76 : 22;
+            inventoryToggle.Q<Label>().style.display = phone ? DisplayStyle.Flex : DisplayStyle.None;
+            inventoryTriangle.style.display = phone ? DisplayStyle.None : DisplayStyle.Flex;
+        }
         private void Update()
         {
             if (!IsOpen) return; Layout();
@@ -261,6 +292,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         public void Hide()
         {
+            if (ToolkitResponsiveLayout.IsPortrait) inventoryExpanded = false;
             if (companionInventory)
             {
                 companionInventory.Hide(); Destroy(companionInventory.gameObject); companionInventory = null;

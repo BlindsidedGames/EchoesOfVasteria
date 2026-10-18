@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using System.Collections.Generic;
 
 using System.Linq;
@@ -54,6 +55,7 @@ namespace TimelessEchoes.UI.Toolkit
         private int selected;
 
         private bool dirty;
+        private ToolkitPortraitPages portraitPages;
 
         private Skill Current => definition.skills.Length > 0 ? definition.skills[Mathf.Clamp(selected, 0, definition.skills.Length - 1)] : null;
 
@@ -159,6 +161,9 @@ namespace TimelessEchoes.UI.Toolkit
 
             var inset = Frame(right, definition.inset); inset.AddToClassList("eov-skills-milestone-inset"); milestoneList = Scroll(inset, "milestones");
 
+            portraitPages = new ToolkitPortraitPages(root, header, new[] { left }, null,
+                new ToolkitPortraitPages.Page("Progress", right),
+                new ToolkitPortraitPages.Page("Bonuses", summaryFrame));
             controller.OnExperienceGained += Experience; controller.OnLevelUp += LevelUp;
 
             controller.OnMilestoneDataChanged += Changed; controller.OnActiveSlotsChanged += ActiveChanged;
@@ -494,9 +499,10 @@ namespace TimelessEchoes.UI.Toolkit
 
         {
 
-            var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height), Screen.safeArea, Application.isMobilePlatform ? 1 : SafeAreaRatio);
+            portraitPages?.Update();
+            var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height), Screen.safeArea, UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);
 
-            root.style.width = Mathf.Min(640, area.width-24); root.style.left = area.center.x; root.style.top = area.y + 44; root.style.height = Mathf.Max(0, area.height - 56);
+            root.style.width = ToolkitResponsiveLayout.IsPortrait ? area.width : Mathf.Min(640, area.width-24); root.style.left = area.center.x; root.style.top = area.y + ToolkitResponsiveLayout.WindowTop; root.style.height = Mathf.Max(0, area.height - ToolkitResponsiveLayout.WindowTop - ToolkitResponsiveLayout.WindowBottom);
 
         }
 

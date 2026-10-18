@@ -247,7 +247,19 @@ namespace TimelessEchoes.UI.Toolkit
         private void QuestChanged(string _) { collections.Rebuild(); membershipKey = collections.MembershipKey(); dirty = true; }
         private void LocaleChanged(UnityEngine.Localization.Locale _) { collections.Rebuild(); dirty = true; }
         private readonly ToolkitWindowLayout windowLayout = new();
-        private void Layout(){var area=ToolkitWindowLayout.SafeArea;windowLayout.Apply(root,new Rect(area.x+12,area.y+44,area.width-24,area.height-56));root.EnableInClassList("compact-width",area.width<650);bool narrow=area.width<350;root.EnableInClassList("narrow",narrow);wasNarrow=narrow;ApplyMobileTabs();}
+        private void Layout()
+        {
+            var area = ToolkitWindowLayout.SafeArea;
+            windowLayout.Apply(root, new Rect(area.x + 12, area.y + ToolkitResponsiveLayout.WindowTop,
+                area.width - 24, area.height - ToolkitResponsiveLayout.WindowTop - ToolkitResponsiveLayout.WindowBottom));
+            var phone = ToolkitResponsiveLayout.IsPortrait;
+            root.EnableInClassList("compact-width", area.width < 650);
+            wasNarrow = phone || area.width < 350;
+            root.EnableInClassList("narrow", wasNarrow);
+            mobileTabs.EnableInClassList("portrait-page-tabs", phone);
+            root.style.paddingBottom = phone ? 48 : StyleKeyword.Null;
+            ApplyMobileTabs();
+        }
         private void ApplyMobileTabs(){if(mobileTabs==null)return;mobileTabs.style.display=wasNarrow?DisplayStyle.Flex:DisplayStyle.None;ingredientsColumn.style.display=!wasNarrow||mobileTab=="Ingredients"?DisplayStyle.Flex:DisplayStyle.None;tastingColumn.style.display=!wasNarrow||mobileTab=="Tasting"?DisplayStyle.Flex:DisplayStyle.None;collectionColumn.style.display=!wasNarrow||mobileTab=="Collection"?DisplayStyle.Flex:DisplayStyle.None;foreach(var b in mobileTabs.Query<Button>().ToList())b.EnableInClassList("active",(string)b.userData==mobileTab);}
         private void Update()
         {

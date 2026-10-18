@@ -19,12 +19,18 @@ namespace TimelessEchoes.UI.Toolkit
         private Label journalDiscoveryCount;
         private int journalKnown = -1;
         private bool journalAccessible;
+        private DropdownField journalArea;
 
         private void BuildMapJournal()
         {
             body.style.paddingTop = body.style.paddingBottom = body.style.paddingLeft = body.style.paddingRight = 0;
             journalSelectors.Clear();
             var layout = ToolkitGameplay.E(body, "journal-layout");
+            var areas = new List<string> { ToolkitLocalization.Text("statistics.overall", "Overall") };
+            areas.AddRange(definition.maps.Select(m => ToolkitLocalization.Text("map." + m.config.name, m.label.Trim())));
+            journalArea = new DropdownField("Area", areas, 0) { name = "journal-area" };
+            journalArea.AddToClassList("portrait-picker"); layout.Add(journalArea);
+            journalArea.RegisterValueChangedCallback(_ => SelectJournalMap(journalArea.index - 1, true));
             var selectors = ToolkitGameplay.E(layout, "journal-selectors");
             for (var i = -1; i < definition.maps.Length; i++)
             {
@@ -43,6 +49,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (index < -1 || index >= definition.maps.Length || journalContent == null) return;
             journalMap = index; journalRunKey = -1; journalKnown = -1;
+            journalArea?.SetValueWithoutNotify(journalArea.choices[index + 1]);
             journalContent.Clear(); summaries.Clear(); journalDiscoveries.Clear();
             for (var i = 0; i < journalSelectors.Count; i++) StyleSelection(journalSelectors[i], i == index + 1);
             journalAccessible = index < 0 || definition.maps[index].IsAccessible;
@@ -62,7 +69,8 @@ namespace TimelessEchoes.UI.Toolkit
             var main = mainScroll.contentContainer;
             var side = ToolkitGameplay.E(columns, "journal-side");
             Text(side, ToolkitLocalization.Text("journal.recent-runs", "Recent runs"), 8).AddToClassList("journal-section-title");
-            journalRecent = ToolkitControls.RecessedScroll(side, "journal-run-scroll", theme, definition.inset).contentContainer;
+            journalRecent = ToolkitResponsiveLayout.IsPortrait ? ToolkitGameplay.E(side, "journal-recent-content") :
+                ToolkitControls.RecessedScroll(side, "journal-run-scroll", theme, definition.inset).contentContainer;
             Text(main, ToolkitLocalization.Text("journal.lifetime", "Lifetime"), 8).AddToClassList("journal-section-title");
             AddSummary(main, index < 0 ? (ToolkitStatisticsDefinition.MapEntry?)null : definition.maps[index]);
             var summary = main.Q(className: "eov-stat-summary");
@@ -70,6 +78,7 @@ namespace TimelessEchoes.UI.Toolkit
             summary.Q(className: "general-identity").style.display = DisplayStyle.None;
             journalCollection = ToolkitGameplay.E(main, "journal-collection");
             BuildJournalCollection();
+            if (ToolkitResponsiveLayout.IsPortrait) main.Add(side);
             RefreshMapJournal();
         }
         private void RefreshJournalAccess()

@@ -42,6 +42,11 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly ToolkitWindowLayout layout = new();
         private Image ivanPortrait;
         private VisualElement comparisonRows;
+        private ToolkitPortraitPages portraitPages;
+        private GearItem portraitPending;
+        private VisualElement portraitOdds;
+        private Button portraitOddsToggle;
+        private bool portraitOddsOpen;
 
         public bool IsOpen => root != null;
         public bool IsConfigured => definition && definition.catalog && theme && runtimeTheme && textSettings;
@@ -63,6 +68,10 @@ namespace TimelessEchoes.UI.Toolkit
             mainScroll.contentContainer.style.flexGrow = 1;
             mainScroll.contentViewport.RegisterCallback<GeometryChangedEvent>(e => mainScroll.contentContainer.style.minHeight = e.newRect.height);
             BuildHeader(); BuildWork(); BuildConversions(); BuildFirstLesson();
+            var content = mainScroll.contentContainer;
+            portraitPages = new ToolkitPortraitPages(content, null, new[] { root.Q(className: "eov-forge-work") }, mainScroll,
+                new ToolkitPortraitPages.Page("Craft", root.Q(className: "eov-forge-selections"), root.Q(className: "eov-forge-actions"), root.Q(className: "forge-comparison-section")),
+                new ToolkitPortraitPages.Page("Materials", root.Q(className: "eov-forge-conversions")));
             ToolkitLocalization.Changed += LocalizationChanged;
             resources.OnInventoryChanged += MarkDirty; equipment.OnEquipmentChanged += MarkDirty; crafting.OnIvanXpChanged += XpChanged; session.Changed += MarkDirty;
             nextRefresh = 0; comparisonSignature = null; Refresh(); Layout();
@@ -125,7 +134,8 @@ namespace TimelessEchoes.UI.Toolkit
             automationLock.style.left = automationLock.style.right = automationLock.style.top = automationLock.style.bottom = 0;
             automationLock.style.unityTextAlign = TextAnchor.MiddleCenter;
             automationLock.style.whiteSpace = WhiteSpace.Normal;
-            var oddsSummary = Row(actions); oddsSummary.AddToClassList("forge-odds-summary");
+            portraitOddsToggle = ToolkitGameplay.B(actions, "Rarity odds", () => { portraitOddsOpen = !portraitOddsOpen; RefreshPortraitForge(); }, "portrait-odds-toggle");
+            var oddsSummary = portraitOdds = Row(actions); oddsSummary.AddToClassList("forge-odds-summary");
             odds = new ToolkitForgeOdds { name = "forge-odds", pickingMode = PickingMode.Ignore }; oddsSummary.Add(odds);
             BuildOddsLegend(oddsSummary);
             var results = new VisualElement(); results.AddToClassList("forge-comparison-section"); columns.Add(results);
@@ -160,8 +170,23 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var area = ToolkitWindowLayout.SafeArea;
             var width = Mathf.Min(744, area.width - 24);
-            layout.Apply(root, new Rect(area.center.x-width/2, area.y+44, width, Mathf.Max(0, area.height-56)));
+            layout.Apply(root, new Rect(area.center.x-width/2, area.y+ToolkitResponsiveLayout.WindowTop, width, Mathf.Max(0, area.height-ToolkitResponsiveLayout.WindowTop-ToolkitResponsiveLayout.WindowBottom)));
             root.EnableInClassList("forge-narrow", width < 620);
+            RefreshPortraitForge();
+            LayoutConversions();
+        }
+        private void RefreshPortraitForge()
+        {
+            portraitPages?.Update();
+            if (portraitOdds == null) return;
+            portraitOddsToggle.style.display = ToolkitResponsiveLayout.IsPortrait ? DisplayStyle.Flex : DisplayStyle.None;
+            portraitOdds.style.display = !ToolkitResponsiveLayout.IsPortrait || portraitOddsOpen ? DisplayStyle.Flex : DisplayStyle.None;
+            portraitOddsToggle.text = portraitOddsOpen ? "Hide rarity odds" : "Rarity odds";
+            if (!ToolkitResponsiveLayout.IsPortrait) return;
+            if (session.Pending != null && session.Pending != portraitPending) portraitPages.Select(0);
+            portraitPending = session.Pending;
+            if (TimelessEchoes.Gear.ForgeFirstLesson.Active)
+                portraitPages.Select(TimelessEchoes.Gear.ForgeFirstLesson.Stage == 0 ? 1 : 0);
         }
         public void Hide()
         {

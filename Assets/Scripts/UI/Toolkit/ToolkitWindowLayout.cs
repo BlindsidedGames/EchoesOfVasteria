@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Blindsided.SaveData.StaticReferences;
@@ -10,7 +11,7 @@ namespace TimelessEchoes.UI.Toolkit
         private Rect previousBounds;
         public static Rect SafeArea => ToolkitBookScreen.CalculateSafeArea(
             new Vector2Int(Screen.width, Screen.height), Screen.safeArea,
-            Application.isMobilePlatform ? 1 : SafeAreaRatio);
+            UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);
 
         public bool Centered(VisualElement root, ToolkitTheme theme)
         {
@@ -18,8 +19,9 @@ namespace TimelessEchoes.UI.Toolkit
             if(root!=null && root.ClassListContains("gameplay"))
             {
                 var modernWidth=Mathf.Min(640,area.width-24);
-                return Apply(root,new Rect(area.center.x-modernWidth/2,area.y+44,modernWidth,Mathf.Max(0,area.height-56)));
+                return Apply(root,new Rect(area.center.x-modernWidth/2,area.y+ToolkitResponsiveLayout.WindowTop,modernWidth,Mathf.Max(0,area.height-ToolkitResponsiveLayout.WindowTop-ToolkitResponsiveLayout.WindowBottom)));
             }
+            if (ToolkitResponsiveLayout.IsPortrait) return Apply(root, new Rect(area.x, area.y + ToolkitResponsiveLayout.WindowTop, area.width, Mathf.Max(0, area.height - ToolkitResponsiveLayout.WindowTop - ToolkitResponsiveLayout.WindowBottom)));
             var width = Mathf.Min(theme.windowWidth, area.width);
             return Apply(root, new Rect(area.center.x - width * .5f, area.y + theme.windowTopInset,
                 width, Mathf.Max(0, area.height - theme.windowTopInset - theme.windowBottomInset)));
@@ -29,14 +31,22 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var area = SafeArea;
             if(root!=null && root.ClassListContains("gameplay"))
-                return Apply(root,new Rect(area.x+12,area.y+44,Mathf.Max(0,area.width-companionWidth-24),Mathf.Max(0,area.height-56)));
+                return Apply(root,new Rect(area.x+12,area.y+ToolkitResponsiveLayout.WindowTop,Mathf.Max(0,area.width-companionWidth-24),Mathf.Max(0,area.height-ToolkitResponsiveLayout.WindowTop-ToolkitResponsiveLayout.WindowBottom)));
+            if (ToolkitResponsiveLayout.IsPortrait) return Apply(root, new Rect(area.x, area.y + ToolkitResponsiveLayout.WindowTop, Mathf.Max(0, area.width - companionWidth), Mathf.Max(0, area.height - ToolkitResponsiveLayout.WindowTop - ToolkitResponsiveLayout.WindowBottom)));
             return Apply(root, new Rect(area.x, area.y + theme.windowTopInset,
                 Mathf.Max(0, area.width - companionWidth), Mathf.Max(0, area.height - theme.windowTopInset - theme.windowBottomInset)));
         }
 
         public bool Apply(VisualElement root, Rect bounds)
         {
-            if (root == null || (ReferenceEquals(root, previousRoot) && previousBounds == bounds)) return false;
+            if (root == null) return false;
+            if (ToolkitResponsiveLayout.IsPortrait && root.ClassListContains("gameplay"))
+            {
+                var area = SafeArea;
+                bounds = new Rect(area.x, area.y + ToolkitResponsiveLayout.WindowTop, area.width,
+                    Mathf.Max(0, area.height - ToolkitResponsiveLayout.WindowTop - ToolkitResponsiveLayout.WindowBottom));
+            }
+            if (ReferenceEquals(root, previousRoot) && previousBounds == bounds) return false;
             previousRoot = root; previousBounds = bounds;
             root.style.left = bounds.x; root.style.top = bounds.y;
             root.style.width = bounds.width; root.style.height = bounds.height;

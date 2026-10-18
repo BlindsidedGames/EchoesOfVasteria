@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -108,7 +109,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void ApplyLayout()
         {
             var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height),
-                Screen.safeArea, Application.isMobilePlatform ? 1 : SafeAreaRatio);
+                Screen.safeArea, UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);
             root.style.left = area.center.x;
             root.style.top = area.center.y;
             root.style.width = Mathf.Max(1, Mathf.Min(maximumWidth, area.width - 12));

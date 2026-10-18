@@ -161,13 +161,17 @@ namespace TimelessEchoes.UI.Toolkit
             if (summaryGuideStep < 0 || summaryGuideTarget?.panel == null) return;
             var action = summaryGuideStep < 2 ? summaryGuideNext : detailsClose;
             var button = action.worldBound;
-            var point = overlay.WorldToLocal(new Vector2(button.center.x, button.yMax));
+            var above = ToolkitResponsiveLayout.IsPortrait;
+            var point = overlay.WorldToLocal(new Vector2(button.center.x, above ? button.yMin : button.yMax));
             var bob = 2 * (1 + Mathf.Cos(Time.unscaledTime * 5));
             summaryGuideHand.style.left = Mathf.Round(point.x - 12);
-            summaryGuideHand.style.top = Mathf.Round(point.y + 1 + bob);
+            summaryGuideHand.style.top = Mathf.Round(above ? point.y - 25 - bob : point.y + 1 + bob);
+            summaryGuideHand.style.rotate = new Rotate(Angle.Degrees(above ? 180 : 0));
             var target = summaryGuideTarget.worldBound;
             var observation = overlay.WorldToLocal(new Vector2(target.xMin, target.center.y));
-            summaryGuideArrow.style.left = Mathf.Round(observation.x - 15 - bob);
+            var fromRight = observation.x < 20;
+            summaryGuideArrow.style.rotate = new Rotate(Angle.Degrees(fromRight ? 270 : 90));
+            summaryGuideArrow.style.left = Mathf.Round(fromRight ? overlay.WorldToLocal(new Vector2(target.xMax, target.center.y)).x + 3 + bob : observation.x - 15 - bob);
             summaryGuideArrow.style.top = Mathf.Round(observation.y - 6);
         }
 
@@ -188,8 +192,11 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void LayoutSummary(Rect area)
         {
-            detail.style.width = Mathf.Max(160, Mathf.Min(480, area.width - 24));
-            detail.style.height = Mathf.Max(220, Mathf.Min(350, area.height - 64));
+            detail.style.width = ToolkitResponsiveLayout.IsPortrait ? area.width : Mathf.Max(160, Mathf.Min(480, area.width - 24));
+            detailsClose.text = ToolkitResponsiveLayout.IsPortrait ? ToolkitLocalization.Text("common.continue", "Continue") : "×";
+            detail.style.height = ToolkitResponsiveLayout.IsPortrait ? Mathf.Max(100, area.height - ToolkitResponsiveLayout.WindowTop - ToolkitResponsiveLayout.WindowBottom) : Mathf.Max(220, Mathf.Min(350, area.height - 64));
+            if (ToolkitResponsiveLayout.IsPortrait) { detail.style.top = ToolkitResponsiveLayout.WindowTop; detail.style.left = 0; detail.style.translate = new Translate(0, 0); }
+            else { detail.style.top = StyleKeyword.Null; detail.style.left = StyleKeyword.Null; detail.style.translate = StyleKeyword.Null; }
             detail.EnableInClassList("summary-narrow", area.width < 500);
             PositionSummaryGuide();
         }

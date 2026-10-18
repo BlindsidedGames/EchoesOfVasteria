@@ -20,6 +20,7 @@ namespace TimelessEchoes.UI.Toolkit
             panel.referenceSpritePixelsPerUnit = 16;
             panel.themeStyleSheet = theme;
             panel.textSettings = textSettings;
+            ToolkitResponsiveLayout.Register(panel);
             return panel;
         }
     }

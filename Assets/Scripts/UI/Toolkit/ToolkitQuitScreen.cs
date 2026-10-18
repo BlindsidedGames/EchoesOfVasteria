@@ -1,3 +1,4 @@
+using Screen = UnityEngine.Device.Screen;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -79,10 +80,10 @@ namespace TimelessEchoes.UI.Toolkit
         private void Update()
         {
             if (root == null) return;
-            var visible = !Application.isMobilePlatform && (GameManager.Instance == null || GameManager.Instance.CurrentMap == null)
+            var visible = !UnityEngine.Device.Application.isMobilePlatform && !ToolkitResponsiveLayout.IsPortrait && (GameManager.Instance == null || GameManager.Instance.CurrentMap == null)
                 && (!windows || !windows.HasOpenWindow);
             root.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
-            var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height), Screen.safeArea, Application.isMobilePlatform ? 1 : SafeAreaRatio);
+            var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height), Screen.safeArea, UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);
             root.style.left = area.xMax; root.style.top = area.y;
         }
 
