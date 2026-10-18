@@ -39,6 +39,7 @@ namespace TimelessEchoes
 
         public void Focus(Vector2 worldPosition)
         {
+            if (Characters.CharacterCreation.Required || UI.Toolkit.ToolkitCharacterCreator.BlocksWorldInput) return;
             if (panTarget == null || landBounds == null || outputCamera == null) return;
             ResetGesture();
             requestedSize = preferredSize * .5f;
@@ -70,6 +71,7 @@ namespace TimelessEchoes
 
         private void Update()
         {
+            if (Characters.CharacterCreation.Required || UI.Toolkit.ToolkitCharacterCreator.BlocksWorldInput) { ResetGesture(); return; }
             if (panTarget == null || landBounds == null || outputCamera == null) return;
             if (GameManager.Instance != null && !GameManager.Instance.IsInTown)
             {

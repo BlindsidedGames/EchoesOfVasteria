@@ -27,6 +27,8 @@ namespace TimelessEchoes.UI.Toolkit
         private Image boostHand;
         private bool boostScrolled;
         private int selectedTab;
+        private ToolkitForgingStatisticsView forgingView;
+        private float nextForgeRefresh;
         public bool IsOpen => root != null;
         public bool IsConfigured => definition && theme && runtimeTheme && textSettings;
         public bool Show()
@@ -37,7 +39,7 @@ namespace TimelessEchoes.UI.Toolkit
             var document = GetComponent<UIDocument>(); document.panelSettings = settings; document.rootVisualElement.pickingMode = PickingMode.Ignore;
             root = new VisualElement { name = "statistics" }; root.AddToClassList("eov-statistics"); theme.Apply(root);ToolkitGameplay.Apply(root,theme);root.AddToClassList("menu-surface"); document.rootVisualElement.Add(root);
             var tabs = new VisualElement(); tabs.AddToClassList("eov-stat-tabs"); root.Add(tabs);
-            foreach (var index in new[] { 0, 2, 3, 4, 5 })
+            foreach (var index in new[] { 0, 2, 3, 4, 5, 6 })
             {
                 var tab = index;
                 tabButtons.Add(tab, Action(tabs, "stats-tab-" + tab, TabTitle(tab), () => SelectTab(tab)));
@@ -58,11 +60,11 @@ namespace TimelessEchoes.UI.Toolkit
         public void SelectTab(int index)
         {
             if (!IsOpen || !tabButtons.ContainsKey(index)) return;
-            runGraph = null; selectedTab = index; distanceControls?.RemoveFromHierarchy(); distanceControls = null; enemyDistance = null; body.Clear(); footer.Clear(); summaries.Clear(); tooltip.style.display = DisplayStyle.None;
+            runGraph = null; forgingView = null; selectedTab = index; distanceControls?.RemoveFromHierarchy(); distanceControls = null; enemyDistance = null; body.Clear(); footer.Clear(); summaries.Clear(); tooltip.style.display = DisplayStyle.None;
             foreach (var pair in tabButtons) StyleSelection(pair.Value, pair.Key == index);
-            footer.style.display = index != 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            footer.style.display = index != 0 && index != 6 ? DisplayStyle.Flex : DisplayStyle.None;
             boostScrolled = false;
-            if (index == 0) BuildGeneral(); else if (index == 2) BuildGraph(); else if (index == 5) BuildItems(); else BuildStatList(index == 3); Refresh();
+            if (index == 0) BuildGeneral(); else if (index == 2) BuildGraph(); else if (index == 5) BuildItems(); else if (index == 6) forgingView = new ToolkitForgingStatisticsView(body, theme); else BuildStatList(index == 3); Refresh();
         }
         private static string TabTitle(int index) => index switch
         {
@@ -71,6 +73,7 @@ namespace TimelessEchoes.UI.Toolkit
             3 => ToolkitLocalization.Text("statistics.tab-enemies", "Enemies"),
             4 => ToolkitLocalization.Text("statistics.tab-tasks", "Tasks"),
             5 => ToolkitLocalization.Text("statistics.tab-items", "Items"),
+            6 => ToolkitLocalization.Text("statistics.tab-forging", "Forging"),
             _ => ""
         };
 
@@ -127,6 +130,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void Refresh()
         {
             dirty = false;
+            if (selectedTab == 6) { forgingView?.Refresh(); nextForgeRefresh = Time.unscaledTime + .75f; return; }
             if (selectedTab == 2) { RefreshGraph(); return; }
             if (selectedTab == 5) { RefreshItems(); return; }
             if (selectedTab == 3) { RefreshEnemies(); return; }
@@ -168,7 +172,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void Changed() { dirty = true; }
         private void RunEnded(bool _) => Changed();
         private void DistanceChanged(float _) { if (selectedTab == 0) dirty = true; }
-        private void Update() { if (!IsOpen) return; Layout(); RefreshJournalAccess(); RefreshMapTutorial(); RefreshGraphGuidance(); RefreshBoostGuidance(); if (localizationDirty) { localizationDirty = false; RefreshLocalization(); } if (dirty) Refresh(); }
+        private void Update() { if (!IsOpen) return; Layout(); RefreshJournalAccess(); RefreshMapTutorial(); RefreshGraphGuidance(); RefreshBoostGuidance(); if (localizationDirty) { localizationDirty = false; RefreshLocalization(); } if (dirty || selectedTab == 6 && Time.unscaledTime >= nextForgeRefresh) Refresh(); }
         private readonly ToolkitWindowLayout windowLayout = new();
         private void Layout() => windowLayout.Centered(root, theme);
         public void Hide()
@@ -184,7 +188,7 @@ namespace TimelessEchoes.UI.Toolkit
             taskRows.Clear(); enemyRows.Clear(); statSortButtons.Clear(); distanceControls = null; enemyDistance = null;
             itemRows.Clear(); itemSortButtons.Clear(); itemContent = null;
             journalSelectors.Clear(); journalDiscoveries.Clear(); journalContent = journalRecent = journalCollection = null; journalDiscoveryCount = null;
-            Blindsided.EventHandler.OnLoadData -= Changed; root?.RemoveFromHierarchy(); root = null; tracker = null; runGraph = null; tabButtons.Clear(); summaries.Clear();
+            Blindsided.EventHandler.OnLoadData -= Changed; root?.RemoveFromHierarchy(); root = null; tracker = null; runGraph = null; forgingView = null; tabButtons.Clear(); summaries.Clear();
         }
         private void OnDisable() => Hide();
         private void OnDestroy() { Hide(); if (settings) Destroy(settings); }

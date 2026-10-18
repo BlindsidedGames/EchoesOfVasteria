@@ -594,6 +594,8 @@ MonoBehaviour:
   progressFill: {fileID: -5961661648687546396, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
   progressHero: {fileID: -4925942937979303863, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
   progressReaper: {fileID: -4962761325604482230, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  progressHeroGravestone: {fileID: -3726469635597064741, guid: 7b8d6db7b9c894d4588839285a62ad3c, type: 3}
+  progressReapImpactFrame: 4
   progressHeroIdleFrames:
   - {fileID: -4925942937979303863, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
   - {fileID: -5324725660435771485, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
@@ -615,6 +617,15 @@ MonoBehaviour:
   - {fileID: -3742758872729403601, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
   - {fileID: -2100359184035004271, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
   - {fileID: -1242654037959151116, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  progressReaperReapFrames:
+  - {fileID: 4623901302641482415, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  - {fileID: -2542056907218578550, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  - {fileID: -8828806111617314184, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  - {fileID: -4962761325604482230, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  - {fileID: -106563386523701154, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  - {fileID: 5749185751305992505, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  - {fileID: -1925700085088303981, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  - {fileID: 2406326316530964425, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
   progressFramesPerSecond: 12
   progressTextColor: {r: 0.9176471, g: 0.8313726, b: 0.6666667, a: 1}
   discordUrl: https://discord.gg/DykjPFgYCR

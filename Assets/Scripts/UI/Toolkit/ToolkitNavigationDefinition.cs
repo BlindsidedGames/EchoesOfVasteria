@@ -32,9 +32,12 @@ namespace TimelessEchoes.UI.Toolkit
         public ToolkitNpcIntroduction hubIntroduction;
         public Sprite autoPinFrame, toggleOn, toggleOff, discord;
         public Sprite progressTrack, progressFill, progressHero, progressReaper;
+        public Sprite progressHeroGravestone;
+        [Min(0)] public int progressReapImpactFrame = 4;
         public Sprite[] progressHeroIdleFrames = Array.Empty<Sprite>();
         public Sprite[] progressHeroRunFrames = Array.Empty<Sprite>();
         public Sprite[] progressReaperFrames = Array.Empty<Sprite>();
+        public Sprite[] progressReaperReapFrames = Array.Empty<Sprite>();
         [Min(1)] public float progressFramesPerSecond = 12;
         public Color progressTextColor;
         public string discordUrl;

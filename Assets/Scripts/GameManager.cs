@@ -564,6 +564,7 @@ namespace TimelessEchoes
         /// <summary>Starts an authored map with the same music and scaling used by its original button.</summary>
         public bool BeginAdventure(MapGenerationConfig config)
         {
+            if (TimelessEchoes.Characters.CharacterCreation.Required) return false;
             if (UI.Toolkit.BuffIntroductionGuidance.Active || UI.Toolkit.BuffIntroductionGuidance.Eligible) return false;
             if (config == null) return false;
             foreach (var entry in generationButtons)

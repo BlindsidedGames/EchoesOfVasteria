@@ -95,7 +95,7 @@ namespace TimelessEchoes.Farming
         {
             "TownRequired" => ToolkitLocalization.Text("fields.error.TownRequired", "Return to town to tend the beds."),
             "NoReadyBeds" => ToolkitLocalization.Text("fields.error.NoReadyBeds", "No beds are ready to harvest."),
-            "NoMatchingSeeds" => ToolkitLocalization.Text("fields.error.NoMatchingSeeds", "You need 9 matching seed packs to sow a field."),
+            "NoMatchingSeeds" => ToolkitLocalization.Text("fields.error.NoMatchingSeeds", "You need 1 matching seed pack to sow a field."),
             "NoMatchingSapling" => ToolkitLocalization.Text("fields.error.NoMatchingSapling", "Find a matching sapling on an adventure first."),
             "NoRadishSeeds" => ToolkitLocalization.Text("fields.error.NoRadishSeeds", "Find a Radish seed pack on an adventure first."),
             "BedOccupied" => ToolkitLocalization.Text("fields.error.BedOccupied", "This bed already has a crop growing."),
@@ -139,6 +139,8 @@ namespace TimelessEchoes.Farming
             FarmJournal.NextOperation(state, "repeat:" + bedId + ":" + (repeat ? "1" : "0")), DateTime.UtcNow), true);
         public bool HarvestReady() => Execute(state => FarmCommands.HarvestFields(Oracle.oracle.saveData,
             FarmJournal.NextOperation(state, "harvest-fields"), DateTime.UtcNow, Content, false), true);
+        public bool Harvest(string bedId) => Execute(state => FarmCommands.HarvestFields(Oracle.oracle.saveData,
+            FarmJournal.NextOperation(state, "harvest-bed:" + bedId), DateTime.UtcNow, Content, false, bedId), true);
 
         /// <summary>Eligibility and ownership are captured before ordinary completion callbacks.</summary>
         public sealed class StagedTaskCredit
@@ -233,7 +235,7 @@ namespace TimelessEchoes.Farming
                 var discovered = r.paidInput ? ResourceManager.Instance ? ResourceManager.Instance.IsUnlocked(r.paidInput, data) :
                     data?.Resources?.TryGetValue(r.paidInput.name, out var input) == true && input.Earned : false;
                 return new FarmRecipePresentation { Id=r.id, Title=r.paidInput ? ToolkitLocalization.Name(r.paidInput) : ToolkitLocalization.Text("fields.recipe-seeds", "{0} seeds", ToolkitLocalization.Name(r.output)),
-                    SeedQuantity=quantity, Discovered=discovered, Eligible=config.CanPlant(data,r), Orchard=r.orchard,
+                    CropTitle=ToolkitLocalization.Name(r.output),SeedQuantity=quantity, Discovered=discovered, Eligible=config.CanPlant(data,r), Orchard=r.orchard,
                     Icon=r.packIcon, UnknownIcon=r.unknownIcon, RequiredHeroLevel=r.source ? r.source.requiredSkillLevel : 1 };
             }).ToArray();
             var builds = new List<FarmBuildPresentation>();
@@ -248,7 +250,9 @@ namespace TimelessEchoes.Farming
                 var costText=string.Join(" + ",build.costs.Select(c => ToolkitLocalization.Text("fields.material-cost", "{0:N0} {1}", c.amount, ToolkitLocalization.Name(c.resource))));
                 var materials=build.costs.All(c=>Amount(c.resource)>=c.amount);
                 builds.Add(new FarmBuildPresentation { QuestId=build.questId,Title=QuestTitle(build.questId, build.title),TwinsLevel=build.twinsLevel,Completed=completed,
-                    Costs=costText,CanTurnIn=InTown && !completed && gate==null && materials && ready.Contains(build.questId),
+                    GardenCapacity=build.gardenCapacity,OrchardCapacity=build.orchardCapacity,
+                    Materials=build.costs.Select(c=>new FarmMaterialPresentation { Title=ToolkitLocalization.Name(c.resource),Icon=c.resource.icon,Owned=Amount(c.resource),Required=c.amount }).ToArray(),
+                    Costs=costText,CanTurnIn=InTown && !completed && gate==null && materials,
                     Status=completed ? ToolkitLocalization.Text("fields.built", "Built") : gate ?? (materials ? ToolkitLocalization.Text("fields.ready-build", "Ready to build") : ToolkitLocalization.Text("fields.gather-materials", "Gather the construction materials")) });
             }
             var radish = recipes.FirstOrDefault(r => r.Id == FarmCommands.RadishRecipeId);
@@ -265,7 +269,7 @@ namespace TimelessEchoes.Farming
                     state.Beds.TryGetValue(id,out var bed);
                     var recipe=config.Recipe(bed?.RecipeId ?? bed?.SelectedRecipeId);
                     var orchard=index>=6;
-                    return new FarmBedPresentation { Id=id,Title=orchard ? ToolkitLocalization.Text("fields.orchard-number", "Orchard plot {0}", index-5) : ToolkitLocalization.Text("fields.bed-number", "Bed {0}", index+1),
+                    return new FarmBedPresentation { Id=id,Title=orchard ? ToolkitLocalization.Text("fields.orchard-number", "Orchard plot {0}", index-5) : ToolkitLocalization.Text("fields.plot-number", "Plot {0}", index+1),
                         Unlocked=FarmCommands.AccessibleBed(state,id),Orchard=orchard,RecipeId=recipe?.id,RecipeTitle=ToolkitLocalization.Name(recipe?.output),
                         Icon=bed?.IsPlanted==true?recipe?.output?.icon:null,Watered=bed?.Watered==true,Repeat=bed?.Repeat==true,Planted=bed?.IsPlanted==true,Ready=bed?.IsReady==true,
                         Progress01=bed?.IsPlanted==true && bed.ReadyAfterSeconds>0?Mathf.Clamp01((float)(bed.ElapsedSeconds/bed.ReadyAfterSeconds)):0,

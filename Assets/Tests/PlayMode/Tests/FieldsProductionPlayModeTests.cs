@@ -140,7 +140,7 @@ namespace Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator DurableHarvestRepeatsAndRunningServiceStopsAtNinePackExhaustion()
+        public IEnumerator DurableHarvestRepeatsAndRunningServiceStopsAtOnePackExhaustion()
         {
             PreparePaidCrop();
             service.State.TwinsLevel = 20; // Controlled progression fixture, not natural earning proof.
@@ -226,7 +226,7 @@ namespace Tests.PlayMode
             oracle.saveData.Resources["Stick"] = new GameData.ResourceEntry { Amount = 20, Earned = true };
             Build("Farm.Garden.Build01.v1");
             var recipe = content.recipes.Single(r => r.seedId == FarmCommands.RadishSeedId);
-            oracle.saveData.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 18, Earned = true, Tier = 1 };
+            oracle.saveData.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 2, Earned = true, Tier = 1 };
             Assert.True(Commit(s => FarmCommands.PlantRecipe(oracle.saveData, FarmCommands.WestBedId, recipe.id,
                 FarmJournal.NextOperation(s, FarmCommands.PlantFingerprint(FarmCommands.WestBedId, recipe.id)), Now, content)));
         }

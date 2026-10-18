@@ -803,6 +803,7 @@ namespace Blindsided
             {
                 PublishLoadedData(new GameData
                 {
+                    Character = TimelessEchoes.Characters.CharacterProfile.Fresh(),
                     DateStarted = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture)
                 });
                 yield break;
@@ -812,6 +813,7 @@ namespace Blindsided
             {
                 var freshData = new GameData
                 {
+                    Character = TimelessEchoes.Characters.CharacterProfile.Fresh(),
                     DateStarted = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture)
                 };
                 var replacementTask = SaveManager.Instance.ReplaceSlotDetailedAsync(freshData, slotName);
@@ -1423,6 +1425,7 @@ namespace Blindsided
 
         private static void NormalizeLoadedData(GameData data)
         {
+            data.Character ??= TimelessEchoes.Characters.CharacterProfile.Legacy();
             data.Farm ??= new TimelessEchoes.Farming.FarmState();
             data.UpgradeLevels ??= new Dictionary<string, int>();
             data.Resources ??= new Dictionary<string, GameData.ResourceEntry>();
@@ -1754,6 +1757,7 @@ namespace Blindsided
             var now = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
             return new GameData
             {
+                Character = TimelessEchoes.Characters.CharacterProfile.Fresh(),
                 SavedPreferences = preferences ?? new GameData.Preferences(),
                 DateStarted = now,
                 DateQuitString = now,

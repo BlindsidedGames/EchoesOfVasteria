@@ -25,6 +25,7 @@ namespace TimelessEchoes.UI.Toolkit
             // Let the existing first-launch notice finish before introducing Orin.
             yield return null;
             while (intro && intro.IsVisible) yield return null;
+            while (TimelessEchoes.Characters.CharacterCreation.Required) yield return null;
             if (!meetingPrefab) yield break;
             // Field encounter cards are hidden in town. Keep this native panel at
             // the scene root, independent of field visibility and other UIDocuments.
@@ -58,7 +59,7 @@ namespace TimelessEchoes.UI.Toolkit
                     Gear.ForgeFirstLesson.Stage >= 5 && QuestUtils.QuestCompleted(Gear.ForgeFirstLesson.QuestId))
                     data.General.MapStatisticsTutorialStage = 1;
                 if (!runScreen) runScreen = FindAnyObjectByType<ToolkitRunScreen>();
-                if (data == null || !windows || windows.HasOpenWindow ||
+                if (TimelessEchoes.Characters.CharacterCreation.Required || data == null || !windows || windows.HasOpenWindow ||
                     runScreen?.HasOpenDetails == true ||
                     Blindsided.SaveData.StaticReferences.ActiveNpcMeetings.Count > 0 || (gm && gm.RunLoadingActive))
                 { yield return null; continue; }

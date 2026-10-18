@@ -15,7 +15,7 @@ namespace TimelessEchoes.Farming
     public sealed class FarmContent : ScriptableObject
     {
         public const string IntroductionId = "Farm.Garden.Introduction.v1";
-        public static int PlantingCost(bool orchard) => orchard ? 1 : 9;
+        public static int PlantingCost(bool orchard) => 1;
         public string displayNameKey = "farm.display-name";
         public string displayName = "Fields";
         public LocalizedString localizedDisplayName = new("TownUI", "farm.display-name");
@@ -49,7 +49,9 @@ namespace TimelessEchoes.Farming
         public string BuildGate(GameData data, FarmBuild build)
         {
             if (data?.Farm == null || data.General == null || build == null) return ToolkitLocalization.Text("fields.error.unknown-build", "Unknown construction.");
-            if (!Completed(data, build.previousQuestId)) return ToolkitLocalization.Text("fields.error.preceding-build", "Complete the preceding construction quest.");
+            if (!Completed(data, build.previousQuestId)) return build.previousQuestId == IntroductionId
+                ? ToolkitLocalization.Text("fields.error.farming-introduction", "Complete Flora and Tillman's introduction first.")
+                : ToolkitLocalization.Text("fields.error.preceding-build", "Build the earlier plots first.");
             if (data.Farm.TwinsLevel < build.twinsLevel) return ToolkitLocalization.Text("fields.error.twins-level", "Twins level {0} required.", build.twinsLevel);
             if (build.sources == null || build.sources.Count == 0) return ToolkitLocalization.Text("fields.error.missing-source", "Missing gathering sources.");
             foreach (var source in build.sources)

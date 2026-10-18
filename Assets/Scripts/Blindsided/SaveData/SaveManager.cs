@@ -2210,6 +2210,8 @@ namespace Blindsided.SaveData
             return true;
         }
 
+        public static string SharedProfileDirectory => Path.Combine(GetRootPath(), "Profiles");
+
         private static string GetRootPath()
         {
             return string.IsNullOrEmpty(rootPathOverride) ? Application.persistentDataPath : rootPathOverride;

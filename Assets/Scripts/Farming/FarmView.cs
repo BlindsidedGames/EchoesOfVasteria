@@ -51,7 +51,7 @@ namespace TimelessEchoes.Farming
 
     public sealed class FarmRecipePresentation
     {
-        public string Id, Title;
+        public string Id, Title, CropTitle;
         public double SeedQuantity;
         public bool Discovered, Eligible, Orchard;
         public int RequiredHeroLevel;
@@ -61,8 +61,16 @@ namespace TimelessEchoes.Farming
     public sealed class FarmBuildPresentation
     {
         public string QuestId, Title, Status, Costs;
-        public int TwinsLevel;
+        public int TwinsLevel, GardenCapacity, OrchardCapacity;
         public bool Completed, CanTurnIn;
+        public FarmMaterialPresentation[] Materials = Array.Empty<FarmMaterialPresentation>();
+    }
+    public sealed class FarmMaterialPresentation
+    {
+        public string Title;
+        public Sprite Icon;
+        public double Owned;
+        public int Required;
     }
 
     /// <summary>Reuses authored crop sprites at the existing bed anchors without changing task art.</summary>
