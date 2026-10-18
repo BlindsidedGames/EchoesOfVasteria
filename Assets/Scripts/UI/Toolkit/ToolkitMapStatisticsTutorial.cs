@@ -7,7 +7,7 @@ namespace TimelessEchoes.UI.Toolkit
     public static class MapStatisticsGuidance
     {
         public static int Stage => Oracle.oracle?.saveData?.General.MapStatisticsTutorialStage ?? 0;
-        public static bool Active => Stage > 0 && Stage < 7;
+        public static bool Active => Stage > 0 && Stage < 8;
         public static string TargetMap => Stage switch { 4 => "Farmlands", 5 => "River", 6 => "Woods", _ => null };
         public static void Viewed(string map)
         {
@@ -46,7 +46,11 @@ namespace TimelessEchoes.UI.Toolkit
             if (general.MapStatisticsTutorialStage == 2) general.MapStatisticsTutorialStage = 3;
             if (general.MapStatisticsTutorialStage == 3 && selectedTab == 0) general.MapStatisticsTutorialStage = 4;
             VisualElement target = null;
-            if (selectedTab != 0)
+            if (general.MapStatisticsTutorialStage >= 7)
+            {
+                mapTutorialText.text = ToolkitLocalization.Text("journal.tutorial.close", "Close Statistics to finish the tutorial.");
+            }
+            else if (selectedTab != 0)
             {
                 mapTutorialText.text = ToolkitLocalization.Text("journal.tutorial.general", "Open General to view the maps.");
                 target = tabButtons[0];

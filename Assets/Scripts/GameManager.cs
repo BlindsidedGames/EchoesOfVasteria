@@ -273,6 +273,7 @@ namespace TimelessEchoes
         public bool DeathPromptVisible { get; private set; }
         public float DeathPromptProgress { get; private set; }
         public bool FirstReapReturnPending => heroDead && runEndedByReaper && Blindsided.Oracle.oracle?.saveData?.General.FirstReapTownVisited == false;
+        public bool FirstReapDialoguePending => FirstReapReturnPending && !StaticReferences.CompletedNpcTasks.Contains("FirstReapIntroduction");
         public bool IvanReturnPending => StaticReferences.CompletedNpcTasks.Contains("Ivan1") && !TimelessEchoes.Quests.QuestUtils.QuestCompleted("Meeting Ivan");
         public void RequestRetreat() => OnReturnToTavernButton();
         public void RequestReturnOnDeath() => QueueReturnOnDeath();
@@ -563,6 +564,7 @@ namespace TimelessEchoes
         /// <summary>Starts an authored map with the same music and scaling used by its original button.</summary>
         public bool BeginAdventure(MapGenerationConfig config)
         {
+            if (UI.Toolkit.BuffIntroductionGuidance.Active || UI.Toolkit.BuffIntroductionGuidance.Eligible) return false;
             if (config == null) return false;
             foreach (var entry in generationButtons)
             {
@@ -939,6 +941,7 @@ namespace TimelessEchoes
 
         private void OnDeathRunButton()
         {
+            if (FirstReapDialoguePending) return;
             if (deathWindowCoroutine != null)
                 StopCoroutine(deathWindowCoroutine);
             DeathPromptVisible = false;
@@ -952,6 +955,7 @@ namespace TimelessEchoes
 
         private void OnDeathReturnButton()
         {
+            if (FirstReapDialoguePending) return;
             if (deathWindowCoroutine != null)
                 StopCoroutine(deathWindowCoroutine);
             DeathPromptVisible = false;
@@ -1057,6 +1061,8 @@ namespace TimelessEchoes
 
         private IEnumerator ReturnToTavernRoutine(bool abandon = false)
         {
+            // Queued returns must also let the first reaping explanation finish.
+            while (FirstReapDialoguePending) yield return null;
             HideTooltip();
             // Ensure any death window countdown is cancelled to avoid unintended auto-run
             if (deathWindowCoroutine != null)

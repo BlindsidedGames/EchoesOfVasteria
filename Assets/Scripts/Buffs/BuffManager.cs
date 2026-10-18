@@ -131,8 +131,7 @@ namespace TimelessEchoes.Buffs
             }
         }
 
-        public bool HasUnlockedAbilities => Recipes.Any(recipe => recipe && !recipe.IsRetired &&
-            (!recipe.requiredQuest || TimelessEchoes.Quests.QuestUtils.QuestCompleted(recipe.requiredQuest)));
+        public bool HasUnlockedAbilities => Recipes.Any(recipe => recipe && recipe.IsUnlocked);
 
         /// <summary>
         /// Recomputes effects for all active buffs (e.g., after Cauldron tiers change).
@@ -264,12 +263,7 @@ namespace TimelessEchoes.Buffs
             if (GetRemaining(recipe) > 0f) return false;
             if (cooldowns.TryGetValue(recipe, out var cd) && cd > 0f) return false;
 
-            if (recipe.requiredQuest != null)
-            {
-                var qm = QuestManager.Instance;
-                if (qm == null || !qm.IsQuestCompleted(recipe.requiredQuest))
-                    return false;
-            }
+            if (!recipe.IsUnlocked) return false;
 
             var tracker = GameplayStatTracker.Instance ??
                           FindAnyObjectByType<GameplayStatTracker>();

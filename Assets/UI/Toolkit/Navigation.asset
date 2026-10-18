@@ -46,10 +46,10 @@ MonoBehaviour:
     window: 5
     map: {fileID: 0}
     label:
-      key: 
+      key:
       bold: 0
       smallCaps: 0
-      fallback: 
+      fallback:
       localized:
         m_TableReference:
           m_TableCollectionName:
@@ -216,7 +216,7 @@ MonoBehaviour:
     visibility:
     - condition: 0
       quest: {fileID: 11400000, guid: c09209e764b12664d970cbd53a3f25a5, type: 2}
-      npcId: 
+      npcId:
   - id: quests
     group: 0
     action: 0
@@ -330,10 +330,10 @@ MonoBehaviour:
     visibility:
     - condition: 0
       quest: {fileID: 11400000, guid: 18cb43a77b364b24fb75a31ff790efc5, type: 2}
-      npcId: 
+      npcId:
     - condition: 0
       quest: {fileID: 11400000, guid: 18cb43a77b364b24fb75a31ff790efc5, type: 2}
-      npcId: 
+      npcId:
   - id: farm
     group: 3
     action: 0
@@ -393,10 +393,10 @@ MonoBehaviour:
     visibility:
     - condition: 0
       quest: {fileID: 11400000, guid: c09209e764b12664d970cbd53a3f25a5, type: 2}
-      npcId: 
+      npcId:
     - condition: 0
       quest: {fileID: 11400000, guid: c09209e764b12664d970cbd53a3f25a5, type: 2}
-      npcId: 
+      npcId:
   - id: cauldron
     group: 3
     action: 0
@@ -426,10 +426,10 @@ MonoBehaviour:
     visibility:
     - condition: 0
       quest: {fileID: 11400000, guid: c09209e764b12664d970cbd53a3f25a5, type: 2}
-      npcId: 
+      npcId:
     - condition: 0
       quest: {fileID: 11400000, guid: 9ff6011875dbd3e4d91801288f50ebc0, type: 2}
-      npcId: 
+      npcId:
   - id: map-0
     group: 1
     action: 4
@@ -459,7 +459,7 @@ MonoBehaviour:
     visibility:
     - condition: 0
       quest: {fileID: 11400000, guid: 298f411e97766fb47bf1d61e9e1a5bf8, type: 2}
-      npcId: 
+      npcId:
   - id: map-3
     group: 1
     action: 4
@@ -489,7 +489,7 @@ MonoBehaviour:
     visibility:
     - condition: 0
       quest: {fileID: 11400000, guid: 918ef9c4bf0607e479041a3d39b3f3b7, type: 2}
-      npcId: 
+      npcId:
   - id: map-1
     group: 1
     action: 4
@@ -519,7 +519,7 @@ MonoBehaviour:
     visibility:
     - condition: 0
       quest: {fileID: 11400000, guid: c058038d0557e31478313cc9f9131098, type: 2}
-      npcId: 
+      npcId:
   - id: map-2
     group: 1
     action: 4
@@ -549,7 +549,7 @@ MonoBehaviour:
     visibility:
     - condition: 0
       quest: {fileID: 11400000, guid: 8a18857e90fcac348ba107a6d4b45789, type: 2}
-      npcId: 
+      npcId:
   - id: map-4
     group: 1
     action: 4
@@ -579,7 +579,7 @@ MonoBehaviour:
     visibility:
     - condition: 0
       quest: {fileID: 11400000, guid: 1146a0d8f3daaf04fb64f91860e4e2ea, type: 2}
-      npcId: 
+      npcId:
   forgeAttention: {fileID: 21300000, guid: 52ace75bf0b7f894d97b20a21000e1c8, type: 3}
   cauldronAttention: {fileID: 21300000, guid: 4cb6611cce92c664a91354038f2be24e, type: 3}
   questAttention: {fileID: 3947923570558630869, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
@@ -594,6 +594,28 @@ MonoBehaviour:
   progressFill: {fileID: -5961661648687546396, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
   progressHero: {fileID: -4925942937979303863, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
   progressReaper: {fileID: -4962761325604482230, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  progressHeroIdleFrames:
+  - {fileID: -4925942937979303863, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+  - {fileID: -5324725660435771485, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+  - {fileID: -8141236803020188722, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+  - {fileID: 5508544339076578323, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+  - {fileID: -7227774011528302950, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+  - {fileID: 8469775943455081009, guid: 4d5848b65e005e0488d905c7fc6b951e, type: 3}
+  progressHeroRunFrames:
+  - {fileID: 8409630621451459521, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+  - {fileID: 6328838539812940616, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+  - {fileID: 2752747473775278013, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+  - {fileID: -6480626508271498766, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+  - {fileID: -3691832696183019322, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+  - {fileID: 2770544965233694565, guid: 00be3d5ba46e6274a90b830da9db1d4a, type: 3}
+  progressReaperFrames:
+  - {fileID: -4077104396257928421, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  - {fileID: 6784386026123545574, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  - {fileID: 6978872590251833464, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  - {fileID: -3742758872729403601, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  - {fileID: -2100359184035004271, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  - {fileID: -1242654037959151116, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+  progressFramesPerSecond: 12
   progressTextColor: {r: 0.9176471, g: 0.8313726, b: 0.6666667, a: 1}
   discordUrl: https://discord.gg/DykjPFgYCR
   autoPinLabel:

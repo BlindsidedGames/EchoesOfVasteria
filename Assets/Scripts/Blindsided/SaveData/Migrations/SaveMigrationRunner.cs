@@ -363,7 +363,7 @@ namespace Blindsided.SaveData.Migrations
 
         private static void NormalizeBuffSlots(GameData data)
         {
-            data.BuffSlots ??= new List<string> { "Echo Tasks", null, null, null, null };
+            data.BuffSlots ??= new List<string> { null, null, null, null, null };
             while (data.BuffSlots.Count < 5)
                 data.BuffSlots.Add(null);
 

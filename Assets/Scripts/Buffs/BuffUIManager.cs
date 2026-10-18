@@ -400,12 +400,10 @@ namespace TimelessEchoes.Buffs
                     Destroy(panel.gameObject);
             recipeEntries.Clear();
 
-            var qm = QuestManager.Instance;
-
             foreach (var recipe in manager.Recipes)
             {
                 if (recipe == null) continue;
-                if (recipe.requiredQuest != null && (qm == null || !qm.IsQuestCompleted(recipe.requiredQuest)))
+                if (!recipe.IsUnlocked)
                     continue;
                 var panel = Instantiate(recipePrefab, recipeParent);
                 if (panel.iconImage != null)

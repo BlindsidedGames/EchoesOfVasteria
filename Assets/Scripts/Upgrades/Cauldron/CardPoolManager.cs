@@ -332,7 +332,6 @@ namespace TimelessEchoes.Upgrades.Cauldron
             _cachedLowestCount = int.MaxValue;
 
             var rm = _resourceManagerGetter?.Invoke();
-            var qm = _questManagerGetter?.Invoke();
 
             // Use cached arrays if available, otherwise fetch fresh
             var resources = _cachedResources ?? AssetCache.GetAll<Resource>();
@@ -373,8 +372,7 @@ namespace TimelessEchoes.Upgrades.Cauldron
             foreach (var buff in buffs)
             {
                 if (buff == null) continue;
-                var required = buff.requiredQuest;
-                if (required != null && (qm == null || !qm.IsQuestCompleted(required)))
+                if (!buff.IsUnlocked)
                     continue;
 
                 var id = GetCachedBuffId(buff);

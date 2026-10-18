@@ -17,6 +17,9 @@ namespace TimelessEchoes.Buffs
         // Keep serialized effect IDs and old card counts readable after retirement.
         public static bool IsRetiredName(string value) => value == "Prospector" || value == "Slipstream";
         public bool IsRetired => IsRetiredName(name) || HasEffect(BuffEffectType.ProspectorWeightPercent);
+        // Retain Bonus Experience already earned before its unlock moved to Echo Casting.
+        public bool IsUnlocked => !IsRetired && (!requiredQuest || QuestUtils.QuestCompleted(requiredQuest) ||
+            (name == "Bonus Experience" && QuestUtils.QuestCompleted("Into The Multiverse")));
         private static BuffRecipe[] availableSource, availableBuffs;
         public static BuffRecipe[] LoadAvailable(string path = "")
         {

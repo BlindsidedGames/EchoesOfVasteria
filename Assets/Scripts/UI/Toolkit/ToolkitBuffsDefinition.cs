@@ -6,6 +6,7 @@ namespace TimelessEchoes.UI.Toolkit
     public sealed class ToolkitBuffsDefinition : ScriptableObject
     {
         public Sprite window, row, inset, slot, button, autoCast;
+        public Sprite tutorialHand;
         public Sprite pickerFrame, pickerRow, pickerIconFrame, pickerButton;
         public Color autoCastTint, pickerDimmer, selectedRowTint;
         public ToolkitBookDefinition.Text instructions;

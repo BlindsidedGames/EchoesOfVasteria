@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0af36f21f516c014e84b0332b152cb1c, type: 3}
   m_Name: Bonus Experience
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   title: Bonus Experience
-  description: 
+  description:
   buffIcon: {fileID: 3365429046567243591, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
   durationType: 0
   baseDuration: 42
@@ -22,7 +22,7 @@ MonoBehaviour:
   echoConfig:
     capableSkills: []
     echoType: 1
-  requiredQuest: {fileID: 11400000, guid: 6290a22786cc71c4898ee37154292231, type: 2}
+  requiredQuest: {fileID: 11400000, guid: 855ba6baa9f3a964fa329fdfaa859048, type: 2}
   baseEffects:
   - type: 14
     value: 0.5

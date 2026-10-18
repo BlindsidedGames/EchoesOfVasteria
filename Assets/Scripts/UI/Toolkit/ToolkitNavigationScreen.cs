@@ -28,7 +28,9 @@ namespace TimelessEchoes.UI.Toolkit
         private Button autoPin, discord;
         private Image forgeAttention, cauldronAttention, questAttention;
         private VisualElement progressRoot, progressFill;
-        private Image progressHero;
+        private Image progressHero, progressReaper;
+        private Transform progressHeroTransform;
+        private Vector3 previousHeroPosition;
         private Label progressText;
         private RunProgressPresentation lastProgress;
         private bool hasProgress;
@@ -98,7 +100,7 @@ namespace TimelessEchoes.UI.Toolkit
                     button.Add(label); bindings.Add(new ToolkitTextBinding(label, entry.label));
                 }
                 row.Add(button);
-                if (entry.id is "quests" or "close" or "adventure" or "map-0" or "map-1" or "map-3" or "stats" or "townsfolk" or "forge" or "hub" or "skills" or "inventory")
+                if (entry.id is "quests" or "close" or "adventure" or "map-0" or "map-1" or "map-3" or "stats" or "townsfolk" or "forge" or "hub" or "skills" or "inventory" or "buffs")
                 {
                     var prompt = new VisualElement { name = entry.id == "quests" ? "quest-tutorial-pointer" : "tutorial-pointer-" + entry.id, pickingMode = PickingMode.Ignore };
                     prompt.style.position = Position.Absolute;
@@ -152,8 +154,9 @@ namespace TimelessEchoes.UI.Toolkit
             progressFill.AddToClassList("fill"); track.Add(progressFill); progressRoot.Add(track);
             progressHero = new Image { sprite = definition.progressHero, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
             progressHero.AddToClassList("eov-navigation-progress-actor");progressHero.AddToClassList("progress-hero"); progressRoot.Add(progressHero);
-            var reaper = new Image { sprite = definition.progressReaper, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
-            reaper.AddToClassList("eov-navigation-progress-actor"); reaper.AddToClassList("progress-reaper");reaper.style.scale=new Scale(new Vector3(-1,1,1)); progressRoot.Add(reaper);
+            progressReaper = new Image { name = "progress-reaper", sprite = definition.progressReaper, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
+            progressReaper.AddToClassList("eov-navigation-progress-actor"); progressReaper.AddToClassList("progress-reaper");progressReaper.style.scale=new Scale(new Vector3(-1,1,1)); progressRoot.Add(progressReaper);
+            progressHero.name = "progress-hero";
             progressText = new Label { pickingMode = PickingMode.Ignore, enableRichText = true };
             progressText.AddToClassList("eov-navigation-progress-text"); progressText.style.color = definition.progressTextColor;
             progressRoot.Add(progressText); context.Add(progressRoot);
@@ -214,6 +217,7 @@ namespace TimelessEchoes.UI.Toolkit
                 windows.CloseRequested += CloseMenu; windows.WindowsChanged += Refresh; hooked = true;
             }
             ApplyLayout();
+            AnimateProgressActors();
             RefreshTutorialPrompt();
             if (Time.unscaledTime < nextRefresh) return;
             nextRefresh = Time.unscaledTime + .1f;
@@ -225,6 +229,22 @@ namespace TimelessEchoes.UI.Toolkit
             highlightQuestsUntilOpened = true;
             questHighlightStartedAt = Time.unscaledTime;
             Refresh();
+        }
+
+        private void AnimateProgressActors()
+        {
+            var hero = Hero.HeroController.Instance;
+            if (!GameManager.Instance || !GameManager.Instance.CurrentMap || !hero)
+            { progressHeroTransform = null; return; }
+            var position = hero.transform.position;
+            var moving = progressHeroTransform == hero.transform && (position - previousHeroPosition).sqrMagnitude > .00000001f;
+            progressHeroTransform = hero.transform;
+            previousHeroPosition = position;
+            var frame = Mathf.FloorToInt(Time.time * Mathf.Max(1, definition.progressFramesPerSecond));
+            var heroFrames = moving ? definition.progressHeroRunFrames : definition.progressHeroIdleFrames;
+            if (heroFrames != null && heroFrames.Length > 0) progressHero.sprite = heroFrames[frame % heroFrames.Length];
+            if (definition.progressReaperFrames != null && definition.progressReaperFrames.Length > 0)
+                progressReaper.sprite = definition.progressReaperFrames[frame % definition.progressReaperFrames.Length];
         }
 
         public void Refresh()
@@ -295,6 +315,8 @@ namespace TimelessEchoes.UI.Toolkit
             if (!runScreen) runScreen = FindAnyObjectByType<ToolkitRunScreen>();
             if (ActiveNpcMeetings.Count > 0 || (runScreen && runScreen.HasOpenDetails)) desired = null;
             else if (highlightQuestsUntilOpened) desired = "quests";
+            else if (inTown && BuffIntroductionGuidance.Active)
+                desired = windows != null && windows.IsWindowOpen(TownWindowManager.Window.Buffs) ? null : windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Hub ? "buffs" : "hub";
             else if (hubTutorial)
                 desired = windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Hub ? "skills" : "hub";
             else if (inventoryTutorial)
@@ -309,7 +331,9 @@ namespace TimelessEchoes.UI.Toolkit
                       (QuestUtils.QuestCompleted("Meeting Ivan") && !TimelessEchoes.Gear.ForgeFirstLesson.Accepted && (data.Forge?.TotalCrafts ?? 0) == 0)))
                 desired = windows != null && windows.IsWindowOpen(TownWindowManager.Window.Quests) ? null : "quests";
             else if (data != null && inTown && MapStatisticsGuidance.Active)
-                desired = data.General.MapStatisticsTutorialStage == 1 ||
+                desired = data.General.MapStatisticsTutorialStage >= 7 ?
+                    (windows != null && windows.HasOpenWindow ? "close" : null) :
+                    data.General.MapStatisticsTutorialStage == 1 ||
                     (windows != null && windows.HasOpenWindow && !windows.IsWindowOpen(TownWindowManager.Window.Stats)) ?
                     (windows != null && windows.HasOpenWindow ? "close" : null) :
                     windows != null && windows.IsWindowOpen(TownWindowManager.Window.Stats) ? null : "stats";

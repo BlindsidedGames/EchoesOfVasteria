@@ -130,6 +130,8 @@ namespace TimelessEchoes.Quests
         {
             if (oracle == null) return;
             oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
+            // Keep the retired quest record for previously earned buff access, but stop tracking it.
+            oracle.saveData.PinnedQuests?.RemoveAll(id => id == "Into The Multiverse");
             active.Clear();
             StartAvailableQuests();
             RefreshNoticeboard();
@@ -831,13 +833,17 @@ namespace TimelessEchoes.Quests
             inst.ui = null;
 
             active[quest.questId] = inst;
-            if (isNewQuest && (AutoPinActiveQuests || quest.autoPin) && !IsInstantQuest(quest))
+            if (((isNewQuest && AutoPinActiveQuests) || quest.autoPin) && !IsInstantQuest(quest))
             {
                 var pins = oracle.saveData.PinnedQuests;
-                if (!pins.Contains(quest.questId) && pins.Count < PinnedQuestUIManager.MaxPins)
+                if (quest.autoPin) pins.Remove(quest.questId);
+                if (!pins.Contains(quest.questId) && (quest.autoPin || pins.Count < PinnedQuestUIManager.MaxPins))
                 {
-                    // Auto-pin newly started quests when there's room; skip if list is full.
-                    pins.Insert(0, quest.questId);
+                    // Authored priority quests take precedence over general automatic tracking.
+                    if (quest.autoPin && pins.Count >= PinnedQuestUIManager.MaxPins)
+                        pins.RemoveAt(pins.Count - 1);
+                    var index = quest.autoPin ? 0 : pins.FindIndex(id => GetQuestData(id)?.autoPin != true);
+                    pins.Insert(index < 0 ? pins.Count : index, quest.questId);
                     PinnedQuestUIManager.Instance?.RefreshPins();
                 }
             }

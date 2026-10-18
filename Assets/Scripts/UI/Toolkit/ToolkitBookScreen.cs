@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-using System.Collections.Generic;
 using static Blindsided.SaveData.StaticReferences;
 
 namespace TimelessEchoes.UI.Toolkit
@@ -19,8 +18,10 @@ namespace TimelessEchoes.UI.Toolkit
         private Rect lastSafeArea;
         private Vector2Int lastSize;
         private float lastRatio = -1;
-        private Dictionary<string, bool> expandedState;
+        private string selectedSection;
+        private bool referenceSelected;
         private Vector2 scrollOffset;
+        private readonly System.Collections.Generic.Dictionary<string, int> selectedIllustrations = new();
 
         public bool IsOpen => view != null;
         public bool IsConfigured => definition && theme && template && runtimeTheme && textSettings;
@@ -37,7 +38,7 @@ namespace TimelessEchoes.UI.Toolkit
             }
             document.panelSettings = panel;
             document.rootVisualElement.pickingMode = PickingMode.Ignore;
-            view = new ToolkitBookView(definition, theme, template, expandedState);
+            view = new ToolkitBookView(definition, theme, template, selectedSection, referenceSelected, selectedIllustrations);
             view.Root.style.position = Position.Absolute;
             document.rootVisualElement.Add(view.Root);
             ApplyLayout();
@@ -54,7 +55,8 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (view != null)
             {
-                expandedState = view.CaptureExpanded();
+                selectedSection = view.SelectedSectionId;
+                referenceSelected = view.ReferenceSelected;
                 scrollOffset = view.Scroll.scrollOffset;
             }
             view?.Dispose();
@@ -98,7 +100,8 @@ namespace TimelessEchoes.UI.Toolkit
             lastSafeArea = Screen.safeArea;
             lastRatio = Application.isMobilePlatform ? 1f : SafeAreaRatio;
             var area = CalculateSafeArea(lastSize, lastSafeArea, lastRatio);
-            var width=Mathf.Min(640,area.width-24);
+            var width=Mathf.Min(definition.presentation == ToolkitBookDefinition.Presentation.Library ? 920 : 640,area.width-24);
+            view.Root.EnableInClassList("library-narrow", width < 500);
             view.Root.style.left = area.center.x-width/2;
             view.Root.style.top = area.y + 44;
             view.Root.style.width = width;

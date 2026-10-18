@@ -75,6 +75,8 @@ namespace TimelessEchoes.Tasks
 
         private readonly List<GameObject> generatedObjects = new();
         private float taskDensityMultiplier = 1f;
+        private bool firstRiverRun;
+        private readonly HashSet<int> riverIntroSpots = new();
 
         [SerializeField] private int physicsBufferSize = 8;
         private Collider2D[] physicsHits;
@@ -117,6 +119,8 @@ namespace TimelessEchoes.Tasks
         private void ApplyConfig(MapGenerationConfig cfg)
         {
             if (cfg == null) return;
+            firstRiverRun = cfg.name == "River" && oracle?.saveData?.General.ReturnedFromRiver == false;
+            riverIntroSpots.Clear();
             // Snapshot this once so streaming later segments keeps the same density.
             taskDensityMultiplier = cfg.name == "Farmlands" &&
                 TimelessEchoes.Stats.GameplayStatTracker.Instance?.CompletedAdventures == 0 ? .5f : 1f;
@@ -277,6 +281,7 @@ namespace TimelessEchoes.Tasks
 
             if (clearExisting)
             {
+                riverIntroSpots.Clear();
                 ClearSpawnedObjects();
                 Controller.ClearTaskObjects();
             }
@@ -287,7 +292,7 @@ namespace TimelessEchoes.Tasks
                 TerrainTaskCount(localMinX, localMaxX, middleTerrain);
             var topCount = TerrainTaskCount(localMinX, localMaxX, topTerrain);
             var enemyCount = Mathf.RoundToInt((localMaxX - localMinX) * enemyDensity * taskDensityMultiplier);
-            if (bottomCount + middleCount + topCount <= 0 && enemyCount <= 0)
+            if (bottomCount + middleCount + topCount <= 0 && enemyCount <= 0 && !firstRiverRun)
                 return;
 
             // Use scratch containers at runtime to avoid allocations each segment
@@ -297,6 +302,7 @@ namespace TimelessEchoes.Tasks
             spawnedTasks.Clear();
             taskPositions.Clear();
             taskMap.Clear();
+            SpawnRiverIntroduction(localMinX, localMaxX, parent, clearExisting, spawnedTasks, taskPositions, taskMap);
             SpawnTasks(bottomCount, localMinX, localMaxX, parent, clearExisting, true, false, false, spawnedTasks,
                 taskPositions, taskMap);
             SpawnTasks(middleCount, localMinX, localMaxX, parent, clearExisting, false, true, false, spawnedTasks,
@@ -308,6 +314,7 @@ namespace TimelessEchoes.Tasks
             for (var i = 0; i < enemyCount; i++)
             {
                 var localX = Random.Range(localMinX, localMaxX);
+                if (firstRiverRun && localX < 38f) continue;
                 var worldX = transform.position.x + localX;
 
                 var entry = PickEntry(enemies, worldX, e => TaskAllowed(e, true, true, true));
@@ -428,6 +435,27 @@ namespace TimelessEchoes.Tasks
             }
         }
 
+        private void SpawnRiverIntroduction(float localMinX, float localMaxX, Transform parent, bool clearExisting,
+            List<(Vector3 pos, MonoBehaviour obj)> spawnedTasks, List<Vector3> taskPositions,
+            Dictionary<Vector3, MonoBehaviour> taskMap)
+        {
+            if (!firstRiverRun) return;
+            var fish = Resources.Load<TaskData>("Tasks/Fishing/Flippy Floppy");
+            for (var index = 0; index < 5; index++)
+            {
+                var x = 18f + index * 4f;
+                if (x < localMinX || x >= localMaxX || riverIntroSpots.Contains(index)) continue;
+                // Reserve these before random tasks, before Barkley and the first reaping line.
+                // Forced task data bypasses optional task weights; terrain/path rules still apply.
+                var spawned = false;
+                for (var attempt = 0; attempt < 24 && !spawned; attempt++)
+                    spawned = TrySpawnTask(x, parent, clearExisting, false, false, false,
+                        spawnedTasks, taskPositions, taskMap, fish);
+                if (spawned) riverIntroSpots.Add(index);
+                else Debug.LogError("Could not place opening River fishing spot at " + x, this);
+            }
+        }
+
         private void SpawnTasks(int count, float localMinX, float localMaxX, Transform parent, bool clearExisting,
             bool requireBottomTask, bool requireMiddleTask, bool requireTopTask,
             List<(Vector3 pos, MonoBehaviour obj)> spawnedTasks, List<Vector3> taskPositions,
@@ -444,11 +472,11 @@ namespace TimelessEchoes.Tasks
         private bool TrySpawnTask(float localX, Transform parent, bool clearExisting,
             bool requireBottomTask, bool requireMiddleTask, bool requireTopTask,
             List<(Vector3 pos, MonoBehaviour obj)> spawnedTasks, List<Vector3> taskPositions,
-            Dictionary<Vector3, MonoBehaviour> taskMap)
+            Dictionary<Vector3, MonoBehaviour> taskMap, TaskData guaranteedTask = null)
         {
             var worldX = transform.position.x + localX;
 
-            var data = PickTaskEntry(worldX);
+            var data = guaranteedTask ? guaranteedTask : PickTaskEntry(worldX);
             if (data == null || data.taskPrefab == null)
                 return false;
 
@@ -510,7 +538,7 @@ namespace TimelessEchoes.Tasks
             var mono = spawned.GetComponent<BaseTask>();
             if (mono == null) return true;
 
-            var addToList = chosenTerrain == null || chosenTerrain.taskSettings.addToTaskList;
+            var addToList = guaranteedTask || chosenTerrain == null || chosenTerrain.taskSettings.addToTaskList;
 
             if (addToList)
             {
@@ -661,6 +689,7 @@ namespace TimelessEchoes.Tasks
             scratchSpawnedTasks.Clear();
             scratchTaskPositions.Clear();
             scratchTaskMap.Clear();
+            SpawnRiverIntroduction(localMinX, localMaxX, parent, false, scratchSpawnedTasks, scratchTaskPositions, scratchTaskMap);
 
             var bottomCount = TerrainTaskCount(localMinX, localMaxX, bottomTerrain);
             var middleCount = TerrainTaskCount(localMinX, localMaxX, middleTerrain);
@@ -708,6 +737,7 @@ namespace TimelessEchoes.Tasks
             for (var i = 0; i < enemyCount; i++)
             {
                 var localX = UnityEngine.Random.Range(localMinX, localMaxX);
+                if (firstRiverRun && localX < 38f) continue;
                 var worldX = transform.position.x + localX;
                 var entry = PickEntry(enemies, worldX, e => TaskAllowed(e, true, true, true));
                 if (entry == null || entry.data == null || entry.data.prefab == null) continue;

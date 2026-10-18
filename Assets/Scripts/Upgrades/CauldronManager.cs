@@ -344,14 +344,12 @@ namespace TimelessEchoes.Upgrades
         /// </summary>
         public int GetBuffsGroupTier()
         {
-            var qm = questManager ?? TimelessEchoes.Quests.QuestManager.Instance;
             var any = false;
             var minTier = int.MaxValue;
             foreach (var buff in Blindsided.Utilities.AssetCache.GetAll<TimelessEchoes.Buffs.BuffRecipe>())
             {
                 if (buff == null) continue;
-                var required = buff.requiredQuest;
-                if (required != null && (qm == null || !qm.IsQuestCompleted(required)))
+                if (!buff.IsUnlocked)
                     continue;
                 any = true;
                 var t = GetBuffTier(buff.name);
@@ -1140,7 +1138,6 @@ namespace TimelessEchoes.Upgrades
             var list = new List<string>();
             // Use cached references; do not call Find* on hot paths
             var rm = resourceManager ?? ResourceManager.Instance;
-            var qm = questManager ?? TimelessEchoes.Quests.QuestManager.Instance;
             if (!onlyBuffs)
             {
                 foreach (var res in AssetCache.GetAll<Resource>())
@@ -1155,8 +1152,7 @@ namespace TimelessEchoes.Upgrades
                 foreach (var buff in BuffRecipe.LoadAvailable())
                 {
                     if (buff == null) continue;
-                    var required = buff.requiredQuest;
-                    if (required == null || (qm != null && qm.IsQuestCompleted(required)))
+                    if (buff.IsUnlocked)
                         list.Add(buff.CardId);
                 }
             }
@@ -1177,7 +1173,6 @@ namespace TimelessEchoes.Upgrades
             poolInfinityCards.Clear();
 
             var rm = resourceManager ?? ResourceManager.Instance;
-            var qm = questManager ?? TimelessEchoes.Quests.QuestManager.Instance;
 
             foreach (var res in AssetCache.GetAll<Resource>())
             {
@@ -1197,8 +1192,7 @@ namespace TimelessEchoes.Upgrades
             foreach (var buff in BuffRecipe.LoadAvailable())
             {
                 if (buff == null) continue;
-                var required = buff.requiredQuest;
-                if (required == null || (qm != null && qm.IsQuestCompleted(required)))
+                if (buff.IsUnlocked)
                 {
                     var id = buff.CardId;
                     // Skip maxed buffs

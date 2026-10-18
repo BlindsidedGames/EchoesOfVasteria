@@ -24,31 +24,35 @@ MonoBehaviour:
     m_LocalVariables: []
   description:
     m_TableReference:
-      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+      m_TableCollectionName: Quests
     m_TableEntryReference:
-      m_KeyId: 7955959563392
-      m_Key: 
+      m_KeyId: 0
+      m_Key: Mildred.early-buffs.description
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   rewardDescription:
     m_TableReference:
-      m_TableCollectionName: GUID:f47e1bc3466d50a44a1f557a2552b815
+      m_TableCollectionName: Quests
     m_TableEntryReference:
-      m_KeyId: 7955960563392
-      m_Key: 
+      m_KeyId: 0
+      m_Key: Mildred.early-buffs.reward
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   npcId: 
-  autoPin: 0
+  requiresTown: 0
+  acceptanceQuest: 0
+  acceptanceResources: []
+  autoPin: 1
   useN0ForPinnedNumbers: 0
   requiredQuests:
   - {fileID: 11400000, guid: 918ef9c4bf0607e479041a3d39b3f3b7, type: 2}
+  minimumMaxRunDistanceExclusive: 0
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: 691350e69adc08a4082225a8015d2955, type: 2}
-    amount: 25
+    amount: 5
     enemies: []
     killName: 
     killIcon: {fileID: 0}

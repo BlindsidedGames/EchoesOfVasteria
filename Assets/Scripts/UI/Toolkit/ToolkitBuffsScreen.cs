@@ -8,6 +8,14 @@ using UnityEngine.UIElements;
 using Blindsided.Utilities;
 namespace TimelessEchoes.UI.Toolkit
 {
+    public static class BuffIntroductionGuidance
+    {
+        public static int Stage => Blindsided.Oracle.oracle?.saveData?.General.BuffTutorialStage ?? 0;
+        public static bool Eligible => Stage == 0 && QuestUtils.QuestCompleted("Mildred") &&
+            !(QuestUtils.QuestCompleted("Into The Multiverse") && Blindsided.Oracle.oracle.saveData.BuffSlots?.Any(s => s == "Echo Tasks" || s == "Echo Combat") == true);
+        public static bool Active => Stage == 1 || Stage == 2;
+        public static bool IsFirstEcho(BuffRecipe recipe) => recipe && (recipe.name == "Echo Tasks" || recipe.name == "Echo Combat");
+    }
     [RequireComponent(typeof(UIDocument))]
     public sealed class ToolkitBuffsScreen : MonoBehaviour
     {
@@ -26,6 +34,7 @@ namespace TimelessEchoes.UI.Toolkit
         private BuffRecipe selected;
         private bool inRun,rebuild;
         private float nextRefresh;
+        private Image lessonHand;
         public bool IsOpen=>root!=null;
         public bool IsConfigured=>definition&&theme&&runtimeTheme&&textSettings;
         public bool Show()
@@ -45,6 +54,8 @@ namespace TimelessEchoes.UI.Toolkit
                 autoIcons[i]=new Image{sprite=definition.autoCast,scaleMode=ScaleMode.ScaleToFit,tintColor=definition.autoCastTint,pickingMode=PickingMode.Ignore};autoIcons[i].AddToClassList("eov-buffs-auto");button.Add(autoIcons[i]);
             }
             var instructions=new VisualElement();instructions.AddToClassList("eov-buffs-instructions");header.Add(instructions);
+            lessonHand = new Image { sprite=definition.tutorialHand,pickingMode=PickingMode.Ignore };
+            lessonHand.style.position=Position.Absolute;lessonHand.style.width=lessonHand.style.height=24;root.Add(lessonHand);
             instruction=Label("",6.7f);instruction.style.unityFontStyleAndWeight=FontStyle.Normal;instruction.style.letterSpacing=.134f;instructions.Add(instruction);
             scroll=ToolkitControls.RecessedScroll(root,"buff-recipes",theme,definition.inset);scroll.parent.AddToClassList("buff-list-frame");scroll.contentContainer.AddToClassList("buff-list-content");scroll.contentViewport.RegisterCallback<GeometryChangedEvent>(_=>SizeRows());
             inRun=GameplayStatTracker.Instance?.RunInProgress==true;
@@ -63,9 +74,11 @@ namespace TimelessEchoes.UI.Toolkit
         private void BuildRows()
         {
             var offset=scroll.scrollOffset;scroll.Clear();rows.Clear();var manager=BuffManager.Instance;if(!manager)return;
-            foreach(var recipe in manager.Recipes)
+            // Keep the introductory Echo choices first; preserve the remaining recipe order.
+            foreach(var recipe in manager.Recipes.OrderBy(recipe => !recipe ? 3 : recipe.name == "Echo Tasks" ? 0 : recipe.name == "Echo Combat" ? 1 : 2))
             {
-                if(!recipe||(recipe.requiredQuest&&(QuestManager.Instance==null||!QuestManager.Instance.IsQuestCompleted(recipe.requiredQuest))))continue;
+                if(!recipe||!recipe.IsUnlocked)continue;
+                if (BuffIntroductionGuidance.Active && !BuffIntroductionGuidance.IsFirstEcho(recipe)) continue;
                 var row=new VisualElement{name="recipe-"+recipe.name};row.AddToClassList("buff-entry");scroll.Add(row);
                 var line=new VisualElement();line.AddToClassList("buff-entry-heading");row.Add(line);
                 var frame=new VisualElement();frame.AddToClassList("buff-entry-icon");line.Add(frame);NativeIcon(frame,recipe.buffIcon);
@@ -78,11 +91,15 @@ namespace TimelessEchoes.UI.Toolkit
             SizeRows();scroll.scrollOffset=offset;
         }
         private void SizeRows(){if(scroll==null)return;var width=scroll.contentViewport.contentRect.width;if(width<=0)return;var columns=width>=560?2:1;var size=Mathf.Floor((width-(columns-1)*12-1)/columns);for(int i=0;i<rows.Count;i++){rows[i].root.style.width=size;rows[i].root.style.marginRight=i%columns==columns-1?0:12;}}
-        private void AssignSlot(int index){var manager=BuffManager.Instance;if(!manager)return;if(!inRun&&selected&&manager.IsSlotUnlocked(index))manager.AssignBuff(index,selected);else manager.ToggleSlotAutoCast(index);selected=null;Refresh();}
+        private void AssignSlot(int index){var manager=BuffManager.Instance;if(!manager)return;if(!inRun&&selected&&manager.IsSlotUnlocked(index)){manager.AssignBuff(index,selected);if(BuffIntroductionGuidance.Active&&BuffIntroductionGuidance.IsFirstEcho(manager.GetAssigned(index))){Blindsided.Oracle.oracle.saveData.General.BuffTutorialStage=3;Blindsided.EventHandler.SaveData();rebuild=true;}}else manager.ToggleSlotAutoCast(index);selected=null;Refresh();}
         private void Refresh()
         {
             var manager=BuffManager.Instance;if(!manager||!IsOpen)return;
             instruction.text=inRun?ToolkitLocalization.Text("buffs.instructions-running", "Assignments are locked during runs. Select an equipped slot to toggle autocast."):selected?ToolkitLocalization.Text("buffs.instructions-select-slot", "Choose a slot for {0}. Select Cancel to finish without assigning.", selected.GetDisplayName()):ToolkitLocalization.Text("buffs.instructions-select-buff", "Select a buff to assign it. Select an equipped slot to toggle autocast.");
+            if (BuffIntroductionGuidance.Active)
+                instruction.text = selected ? ToolkitLocalization.Text("buffs.lesson.slot", "Click your first slot to equip this Echo.") : ToolkitLocalization.Text("buffs.lesson.choice", "Choose Task Echo to gather resources, or Combat Echo to fight enemies. Select Assign, then choose your first slot.");
+            else if (!inRun && !selected && BuffIntroductionGuidance.Stage >= 3 && !manager.IsAutoSlotUnlocked(0))
+                instruction.text = ToolkitLocalization.Text("buffs.lesson.casting", "Click your Echo's button during an adventure to summon it. Complete Echo Casting to unlock autocasting.");
             for(int i=0;i<5;i++)
             {
                 var recipe=manager.GetAssigned(i);icons[i].sprite=recipe?recipe.buffIcon:null;
@@ -106,6 +123,8 @@ namespace TimelessEchoes.UI.Toolkit
                 row.effects.text=string.Join("\n",row.recipe.GetDescriptionLines(includeTiming:false));
                 row.timing.text=row.recipe.durationType==BuffDurationType.DistancePercent?ToolkitLocalization.Text("buffs.timing-distance", "Distance {0}%", Mathf.CeilToInt(row.recipe.GetDuration()*100)):ToolkitLocalization.Text("buffs.timing-duration", "Duration {0}   ·   Cooldown {1}", CalcUtils.FormatTime(row.recipe.GetDuration(),shortForm:true), CalcUtils.FormatTime(row.recipe.GetCooldown(),shortForm:true));
             }
+            lessonHand.style.display=BuffIntroductionGuidance.Active&&selected&&definition.tutorialHand?DisplayStyle.Flex:DisplayStyle.None;
+            if(BuffIntroductionGuidance.Active&&selected){var p=root.WorldToLocal(new Vector2(slots[0].worldBound.center.x,slots[0].worldBound.yMax));lessonHand.style.left=Mathf.Round(p.x-12);lessonHand.style.top=Mathf.Round(p.y+2+4*(1+Mathf.Cos(Time.unscaledTime*5)));lessonHand.BringToFront();}
         }
         private void LocalizationChanged(){rebuild=true;nextRefresh=0;}
         private void Loaded(){selected=null;rebuild=true;}
