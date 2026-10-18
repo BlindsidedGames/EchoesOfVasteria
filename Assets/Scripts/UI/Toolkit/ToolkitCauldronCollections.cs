@@ -52,9 +52,8 @@ namespace TimelessEchoes.UI.Toolkit
 
         public string MembershipKey()
         {
-            var qm = TimelessEchoes.Quests.QuestManager.Instance;
             return string.Join("|", Blindsided.Utilities.AssetCache.GetAll<Resource>("").Where(r => r && !r.DisableAlterEcho && resources.IsUnlocked(r, oracle?.saveData)).Select(r => r.name))
-                + string.Join("|", BuffRecipe.LoadAvailable("").Where(b => b && (!b.requiredQuest || qm && qm.IsQuestCompleted(b.requiredQuest))).Select(b => b.name)) + manager.IsInfinityActive();
+                + string.Join("|", BuffRecipe.LoadAvailable("").Where(b => b && b.IsUnlocked).Select(b => b.name)) + manager.IsInfinityActive();
         }
         public void Rebuild()
         {
@@ -65,8 +64,7 @@ namespace TimelessEchoes.UI.Toolkit
                 foreach (var stat in Blindsided.Utilities.AssetCache.GetAll<InfinityCauldronStatSO>("Infinity"))
                     if (stat) {var id="INF:"+stat.Stat;infinityById[id]=stat;AddCard(section,id,stat.Icon);}
             }
-            var qm = TimelessEchoes.Quests.QuestManager.Instance;
-            var buffs = BuffRecipe.LoadAvailable("").Where(b => b && (!b.requiredQuest || qm && qm.IsQuestCompleted(b.requiredQuest))).ToList();
+            var buffs = BuffRecipe.LoadAvailable("").Where(b => b && b.IsUnlocked).ToList();
             if (buffs.Count > 0)
             {
                 var section = AddSection("Buffs", null, true, false);

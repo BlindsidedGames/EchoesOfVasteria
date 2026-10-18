@@ -14,405 +14,3489 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.UI.Toolkit.ToolkitBookDefinition
   presentation: 0
   sections:
-  - id: chapter-0
+  - id: help-adventures
+    group: 0
+    icon: {fileID: -2997195532997922311, guid: e36f7692c71d2a34383e21fe9d44dc80, type: 3}
     title:
-      key: library.0.title
-      bold: 1
-      smallCaps: 1
-      fallback: Roadmap
+      key: help.adventures.title
+      bold: 0
+      smallCaps: 0
+      fallback: Adventures & Maps
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key: help.adventures.title
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
     body:
-      key: library.0.body
+      key:
       bold: 0
       smallCaps: 0
-      fallback: 
+      fallback: "<b>Start:</b> Adventure \u2192 select a map.\n\nYour character travels between tasks and gathers resources automatically. Each map has different resources.\n\n<b>Map information:</b> Statistics \u2192 General \u2192 select a map. Discovered resources are shown there. Locked maps show where to learn more."
       localized:
         m_TableReference:
-          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
-          m_KeyId: 9824133185945600
-          m_Key: 
+          m_KeyId: 0
+          m_Key: help.adventures.body
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
+    details:
+      key:
+      bold: 0
+      smallCaps: 0
+      fallback: Farming tasks appear only in Farmlands. Quests and NPC encounters unlock other routes.
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.adventures.details
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    illustrations:
+    - sprite: {fileID: -2997195532997922311, guid: e36f7692c71d2a34383e21fe9d44dc80, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Farmlands
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.adventures.art.0
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: '<b>Farmlands</b>
+
+          Gather crops here. Farming tasks do not appear on other maps. Carl''s distance limit does not increase when you are reaped in Farmlands.'
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.adventures.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    referenceColumns: []
+    referenceRows: []
     expanded: 0
     visibility: []
-  - id: chapter-1
+  - id: help-tasks
+    group: 0
+    icon: {fileID: -263682996174179970, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
     title:
-      key: library.1.title
-      bold: 1
-      smallCaps: 1
+      key: help.tasks.title
+      bold: 0
+      smallCaps: 0
+      fallback: Tasks & Skills
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.tasks.title
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key:
+      bold: 0
+      smallCaps: 0
+      fallback: "Tasks award resources and skill XP.\n\n<b>Skill bonuses and unlocks:</b> Hub \u2192 Skills \u2192 select a skill.\n\n<b>Task chances:</b> Statistics \u2192 Tasks. Adjust a task's weight to change how often it appears among eligible tasks."
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.tasks.body
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    details:
+      key:
+      bold: 0
+      smallCaps: 0
+      fallback: "Task weights do not unlock tasks or change which maps they appear on. Map, distance, and progression still apply.\n\nCombat levels unlock higher core and crystal tiers. Required levels are listed under Skills \u2192 Combat."
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.tasks.details
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    illustrations:
+    - sprite: {fileID: -263682996174179970, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Farming
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tasks.art.0
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: "<b>Farming</b>\nHarvest crop patches in Farmlands to gain crops and Farming XP. These adventure tasks are separate from planting crops in town. Check Skills \u2192 Farming for bonuses and unlocks."
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tasks.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: -5728692859750609351, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Fishing
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tasks.art.1
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: "<b>Fishing</b>\nGill provides your first rod. Fishing tasks catch fish and award Fishing XP. Check Statistics \u2192 General for a map's discovered resources, and Skills \u2192 Fishing for progression."
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tasks.art.1.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: -6623575528231689321, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Mining
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tasks.art.2
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: "<b>Mining</b>\nMining tasks provide ores and Mining XP. Smelt ores into ingots at the Forge to craft equipment. Check Skills \u2192 Mining for ore unlock levels."
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tasks.art.2.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: 3201700494366066137, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Woodcutting
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tasks.art.3
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: "<b>Woodcutting</b>\nWoodcutting tasks provide wood resources and Woodcutting XP. Follow Barkley's quests to progress into the Woods. Check Skills \u2192 Woodcutting for unlocks and Statistics \u2192 Tasks to adjust eligible task chances."
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tasks.art.3.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    referenceColumns: []
+    referenceRows: []
+    expanded: 0
+    visibility: []
+  - id: help-quests
+    group: 0
+    icon: {fileID: 3947923570558630869, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+    title:
+      key: help.quests.title
+      bold: 0
+      smallCaps: 0
       fallback: Quests
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key: help.quests.title
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
     body:
-      key: library.1.body
+      key:
       bold: 0
       smallCaps: 0
-      fallback: 
+      fallback: '<b>Open:</b> Quests.
+
+
+        Accept a quest, complete its requirements, then turn it in while in town. Resource hand-ins spend the requested items.
+
+
+        Tracked quests appear on your HUD. Untracked quests remain in the quest list.'
       localized:
         m_TableReference:
-          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
-          m_KeyId: 505754247643136
-          m_Key: 
+          m_KeyId: 0
+          m_Key: help.quests.body
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
+    details:
+      key:
+      bold: 0
+      smallCaps: 0
+      fallback: 'A quest can require resources, enemy kills, an NPC meeting, or a guided interaction. Meeting its requirements makes it ready to turn in; rewards are claimed at turn-in.
+
+
+        Quests cannot be turned in during an adventure.'
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.quests.details
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    illustrations:
+    - sprite: {fileID: 3947923570558630869, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Quest ready to turn in
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.quests.art.0
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: '<b>Ready to turn in</b>
+
+          The star marks a quest whose requirements are met. Return to town and select Turn In to claim its reward. Resource hand-ins spend the listed items.'
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.quests.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    referenceColumns: []
+    referenceRows: []
     expanded: 0
     visibility: []
-  - id: chapter-2
+  - id: help-equipment
+    group: 1
+    icon: {fileID: -5938119891582100046, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
     title:
-      key: library.2.title
-      bold: 1
-      smallCaps: 1
+      key: help.equipment.title
+      bold: 0
+      smallCaps: 0
+      fallback: Inventory & Equipment
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.equipment.title
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key:
+      bold: 0
+      smallCaps: 0
+      fallback: "<b>Open:</b> Hub \u2192 Inventory.\n\nSelect an equipped slot to inspect its bonuses. Total equipment bonuses combine all equipped items.\n\nCompare stat values when replacing equipment. Higher rarity does not guarantee a better item.\n\n<b>Current combat stats:</b> in-run HUD \u2192 Stats."
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.equipment.body
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    details:
+      key:
+      bold: 0
+      smallCaps: 0
+      fallback: Discovered resources appear first, followed by undiscovered resources. Each group keeps your chosen sort order.
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.equipment.details
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    illustrations:
+    - sprite: {fileID: 5064720189575774579, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Weapon
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.equipment.art.0
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: '<b>Weapon</b>
+
+          Crafted weapons guarantee damage. Compare the other rolled stats before replacing your current weapon.'
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.equipment.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: -5938119891582100046, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Helmet
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.equipment.art.1
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: '<b>Helmet</b>
+
+          Crafted helmets guarantee health. Other rolled stats can improve offense, defense, or recovery.'
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.equipment.art.1.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: 3631121382201776489, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Chest
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.equipment.art.2
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: '<b>Chest</b>
+
+          Crafted chest pieces guarantee defense. Defense reduces incoming damage with diminishing returns.'
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.equipment.art.2.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: -4207116279972355936, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Boots
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.equipment.art.3
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: '<b>Boots</b>
+
+          Crafted boots guarantee movement, which increases travel speed. Movement rolls are exclusive to this slot.'
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.equipment.art.3.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    referenceColumns: []
+    referenceRows: []
+    expanded: 0
+    visibility: []
+  - id: help-combat
+    group: 0
+    icon: {fileID: -1557160357, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+    title:
+      key: help.combat.title
+      bold: 0
+      smallCaps: 0
+      fallback: Combat
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.combat.title
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key:
+      bold: 0
+      smallCaps: 0
+      fallback: "Your character fights enemies automatically, then returns to their task.\n\n<b>Current stats:</b> in-run HUD \u2192 Stats.\n<b>Enemy stats and kill bonuses:</b> Statistics \u2192 Enemies."
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.combat.body
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    details:
+      key:
+      bold: 0
+      smallCaps: 0
+      fallback: "<b>Defense:</b> with default tuning, damage taken = incoming damage \xD7 25 \xF7 (defense + 25). Negative defense is treated as zero.\n\nRepeated kills against an enemy grant bonus damage against that enemy. Its Statistics entry shows the bonus and next milestone."
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.combat.details
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    illustrations:
+    - sprite: {fileID: -1557160357, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Damage
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.art.0
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: '<b>Damage</b>
+
+          Determines damage dealt per hit before enemy defense and other modifiers. Attack speed controls how often you hit; critical chance and critical damage affect critical hits. View current values in the in-run Stats panel.'
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: 967639951, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Defense
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.art.1
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: '<b>Defense</b>
+
+          Reduces incoming damage. At 25 defense you take half damage; at 75 defense you take one quarter. Defense does not prevent damage completely. The formula is in Reference.'
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.art.1.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: 134269120, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Health
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.art.2
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: '<b>Health</b>
+
+          Your character dies when health reaches zero. Equipment can increase maximum health; regeneration restores health over time. Check the health bar and current Stats during a run.'
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.art.2.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    referenceColumns:
+    - key:
+      bold: 0
+      smallCaps: 0
+      fallback: Stat
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.combat.column.0
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    - key:
+      bold: 0
+      smallCaps: 0
+      fallback: Effect
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.combat.column.1
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    referenceRows:
+    - icon: {fileID: -1557160357, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Damage
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.0.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Damage dealt per hit
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.0.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.0.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: -1482645536, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Attack speed
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.1.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: How often attacks occur
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.1.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.1.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: -1747760985, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Critical chance
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.2.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Chance of a critical hit
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.2.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.2.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 88259138, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Critical damage
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.3.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Damage multiplier on critical hits
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.3.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.3.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 134269120, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Health
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.4.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Damage your character can survive
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.4.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.4.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 967639951, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Defense
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.5.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Reduces incoming damage
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.5.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.5.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: -166140423, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Regeneration
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.6.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Restores health over time
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.6.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.6.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: -757387047, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Movement
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.7.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Travel speed
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.7.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.combat.row.7.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    expanded: 0
+    visibility: []
+  - id: help-reaping
+    group: 0
+    icon: {fileID: 5850598286787540372}
+    title:
+      key: help.reaping.title
+      bold: 0
+      smallCaps: 0
+      fallback: Reaping & Returning
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.reaping.title
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key:
+      bold: 0
+      smallCaps: 0
+      fallback: "Carl reaps your character at the map's limit. The run ends; gathered resources and skill progress are kept.\n\nReturn to town to turn in quests. The Run Summary lists your gains and progress.\n\n<b>Map limits:</b> Statistics \u2192 General \u2192 select a map."
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.reaping.body
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    details:
+      key:
+      bold: 0
+      smallCaps: 0
+      fallback: Reaping at the limit increases distance by 1% on River, Woods, and Mines. Farmlands gives no increase. Spooky uses a kill limit instead of distance. Some quests also increase your reach.
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.reaping.details
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    illustrations:
+    - sprite: {fileID: 5850598286787540372}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Carl
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.reaping.art.0
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: '<b>Carl</b>
+
+          Carl ends the run at the map''s limit. You keep gathered resources and skill progress. River, Woods, and Mines gain 1% distance when you are reaped at the limit; Farmlands does not. Spooky uses kills instead of distance.'
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.reaping.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    referenceColumns:
+    - key:
+      bold: 0
+      smallCaps: 0
+      fallback: Map
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.reaping.column.0
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    - key:
+      bold: 0
+      smallCaps: 0
+      fallback: Limit progression
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.reaping.column.1
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    referenceRows:
+    - icon: {fileID: -2997195532997922311, guid: e36f7692c71d2a34383e21fe9d44dc80, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Farmlands
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.reaping.row.0.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: No increase from reaping
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.reaping.row.0.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.reaping.row.0.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: -4548796474974412338, guid: 674345f33219f70418aca2a3db04ecbc, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: River
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.reaping.row.1.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: +1% when reaped at the limit
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.reaping.row.1.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.reaping.row.1.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 621266246945384593, guid: b45d02bebb0bae34490e63de2e1440b9, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Woods
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.reaping.row.2.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: +1% when reaped at the limit
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.reaping.row.2.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.reaping.row.2.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: -7112000108182893260, guid: 17ab04ce672d2cf4fbe3b9314f205693, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Mines
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.reaping.row.3.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: +1% when reaped at the limit
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.reaping.row.3.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.reaping.row.3.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 2029275289, guid: 3683944cef7e6bd4cae5ecd76295b35f, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Spooky
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.reaping.row.4.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Kill limit
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.reaping.row.4.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.reaping.row.4.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    expanded: 0
+    visibility: []
+  - id: help-retreating
+    group: 0
+    icon: {fileID: -757387047, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+    title:
+      key: help.retreating.title
+      bold: 0
+      smallCaps: 0
+      fallback: Retreat Bonus
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.retreating.title
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    body:
+      key:
+      bold: 0
+      smallCaps: 0
+      fallback: '<b>Return:</b> use the return-to-town control during a run.
+
+
+        Each kill adds 2% to your retreat resource bonus. The return control shows the current bonus.
+
+
+        A return requested during combat is queued until the fight ends.'
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.retreating.body
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    details:
+      key:
+      bold: 0
+      smallCaps: 0
+      fallback: The retreat bonus is based on kills earned during the current run. Reaping and retreating are different ways to end a run.
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.retreating.details
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    illustrations: []
+    referenceColumns: []
+    referenceRows: []
+    expanded: 0
+    visibility: []
+  - id: help-forge
+    group: 1
+    icon: {fileID: 2895363419561144551}
+    title:
+      key: help.forge.title
+      bold: 0
+      smallCaps: 0
       fallback: Forge
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key: help.forge.title
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
     body:
-      key: library.2.body
+      key:
       bold: 0
       smallCaps: 0
-      fallback: 
+      fallback: "<b>Open:</b> Townsfolk \u2192 Forge, after meeting Ivan.\n\n<b>1. Smelt ingots</b> from the required materials.\n<b>2. Select a core.</b> It sets rarity odds and material costs.\n<b>3. Select a slot and Craft.</b> Each craft spends ingots and one core.\n<b>4. Compare the result.</b> Choose Equip to replace your current item.\n\nOutside Ivan's lesson, crafting for an empty slot equips the result automatically."
       localized:
         m_TableReference:
-          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
-          m_KeyId: 9824133160779776
-          m_Key: 
+          m_KeyId: 0
+          m_Key: help.forge.body
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
+    details:
+      key:
+      bold: 0
+      smallCaps: 0
+      fallback: "<b>Salvage</b>\nAn unused result is salvaged when you craft again or switch slots. Review it before continuing.\n\n<b>Automation \u2014 Forge mastery level 3</b>\nCraft Until Upgrade repeats crafting and spends materials each time.\nStop for Vastium stops on a Vastium result, even if it is a downgrade.\nStat Matching requires an upgrade to match your equipped item's affix types before stopping for that upgrade.\n\n<b>Core and crystal unlocks:</b> Hub \u2192 Skills \u2192 Combat."
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.forge.details
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    illustrations:
+    - sprite: {fileID: 8925258338319069828, guid: f84262455b69072498ba0e2afc130d21, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Ingot
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.art.0
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: '<b>Ingots</b>
+
+          Smelt the materials shown by the ingot control. The selected core determines the ingot type and quantity required for a craft. Smelting creates materials; it does not create equipment.'
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: 791382025818577539, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Core
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.art.1
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: '<b>Cores</b>
+
+          Each craft consumes one core. The selected core determines rarity odds and material costs. Combat levels unlock higher core tiers; upgrade cores using the Forge''s conversion controls.'
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.art.1.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: 5064720189575774579, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Sword
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.art.2
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: '<b>Sword</b>
+
+          Select Weapon, then Craft. Weapons guarantee a damage stat. Review the rolled bonuses and choose Equip to replace your current weapon. An unused result is salvaged when you craft again or switch slots.'
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.art.2.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    referenceColumns:
+    - key:
+      bold: 0
+      smallCaps: 0
+      fallback: Slot
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.forge.column.0
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    - key:
+      bold: 0
+      smallCaps: 0
+      fallback: Guaranteed stat
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.forge.column.1
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    referenceRows:
+    - icon: {fileID: 5064720189575774579, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Weapon
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.row.0.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Damage
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.row.0.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.row.0.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: -5938119891582100046, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Helmet
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.row.1.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Health
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.row.1.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.row.1.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 3631121382201776489, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Chest
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.row.2.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Defense
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.row.2.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.row.2.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: -4207116279972355936, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Boots
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.row.3.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Movement (boots only)
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.row.3.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.forge.row.3.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
     expanded: 0
     visibility:
     - condition: 0
       quest: {fileID: 11400000, guid: c09209e764b12664d970cbd53a3f25a5, type: 2}
-      npcId: 
-  - id: chapter-3
+      npcId:
+  - id: help-buffs
+    group: 2
+    icon: {fileID: 7039786379928897746, guid: 6eca58ce81dde1648bbe834da736d225, type: 3}
     title:
-      key: library.3.title
-      bold: 1
-      smallCaps: 1
-      fallback: Cauldron
-      localized:
-        m_TableReference:
-          m_TableCollectionName: 
-        m_TableEntryReference:
-          m_KeyId: 0
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-    body:
-      key: library.3.body
+      key: help.buffs.title
       bold: 0
       smallCaps: 0
-      fallback: 
-      localized:
-        m_TableReference:
-          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
-        m_TableEntryReference:
-          m_KeyId: 12027031164698624
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-    expanded: 0
-    visibility:
-    - condition: 0
-      quest: {fileID: 11400000, guid: 9ff6011875dbd3e4d91801288f50ebc0, type: 2}
-      npcId: 
-  - id: chapter-5
-    title:
-      key: library.5.title
-      bold: 1
-      smallCaps: 1
       fallback: Buffs
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key: help.buffs.title
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
     body:
-      key: library.5.body
+      key:
       bold: 0
       smallCaps: 0
-      fallback: Buffs are short-term, timed powers that expire when they run out or if you return to town.  They cost resources to activate and give you powerful bonuses for your run.
+      fallback: "<b>Open:</b> Hub \u2192 Buffs.\n\nBuffs provide temporary bonuses. Check the effect, cost, and duration before activating one. Buffs expire when their duration ends or you return to town.\n\nComplete a slot's required quest to unlock autocasting. Toggle autocasting from that slot."
       localized:
         m_TableReference:
-          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
-          m_KeyId: 478381752320
-          m_Key: 
+          m_KeyId: 0
+          m_Key: help.buffs.body
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
+    details:
+      key:
+      bold: 0
+      smallCaps: 0
+      fallback: Eva's Cauldron provides buff cards that improve power and cooldowns.
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.buffs.details
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    illustrations:
+    - sprite: {fileID: 7039786379928897746, guid: 6eca58ce81dde1648bbe834da736d225, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Resource Doubler
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.buffs.art.0
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: "<b>Resource Doubler</b>\nA temporary resource-gathering buff. Check its displayed effect, cost, and duration in Hub \u2192 Buffs. Eligible slots can autocast after their required quests are completed."
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.buffs.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: 7997396682134867387, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Task Speed
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.buffs.art.1
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: "<b>Task Speed</b>\nA temporary buff that speeds up task completion. Manage its slot and autocasting in Hub \u2192 Buffs. Buffs end when their duration expires or you return to town."
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.buffs.art.1.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    referenceColumns: []
+    referenceRows: []
     expanded: 0
     visibility:
     - condition: 0
       quest: {fileID: 11400000, guid: 18cb43a77b364b24fb75a31ff790efc5, type: 2}
-      npcId: 
-  - id: chapter-6
+      npcId:
+  - id: help-cauldron
+    group: 2
+    icon: {fileID: -6316128909204395339, guid: de898b1a9190842419c92214290725b9, type: 3}
     title:
-      key: library.6.title
-      bold: 1
-      smallCaps: 1
-      fallback: 'Combat
-
-'
+      key: help.cauldron.title
+      bold: 0
+      smallCaps: 0
+      fallback: Cauldron
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key: help.cauldron.title
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
     body:
-      key: library.6.body
+      key:
       bold: 0
       smallCaps: 0
-      fallback: 'Caleb will enter combat automatically, and only engage enemies who get in the way! Tasks first fun later.
-
-
-        You may notice floating damage numbers EG. <color=#C69B60>4.27<font-weight=400></font-weight><size=80%><color=#60C560> +1.45<font-weight=400></font-weight></color></size><size=70%> -0.10<font-weight=400></font-weight></color></size>
-
-        The first is your base damage, the second is your bonus damage and the last one is the reduction from enemy defense.
-
-
-        Reaching your 10th, 100th, 1,000th, and 10,000th kill against a specific enemy will grant you 25% bonus damage against that specific enemy. This is where the majority of the green damage you see comes from.'
+      fallback: "<b>Open:</b> Townsfolk \u2192 Cauldron.\n\nMix food into stew, then taste the stew to receive cards. Check the displayed reward chances before tasting.\n\nResource cards increase matching resource yield. Buff cards improve buffs. Card levels are separate from resource rarity tiers."
       localized:
         m_TableReference:
-          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
-        m_TableEntryReference:
-          m_KeyId: 492340396032
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-    expanded: 0
-    visibility: []
-  - id: chapter-7
-    title:
-      key: library.7.title
-      bold: 1
-      smallCaps: 1
-      fallback: Reaping
-      localized:
-        m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key: help.cauldron.body
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
-    body:
-      key: library.7.body
+    details:
+      key:
       bold: 0
       smallCaps: 0
-      fallback: 
+      fallback: 'A category uses the lowest card tier among its unlocked resources; unowned cards count as tier zero.
+
+
+        Resource-card and category bonuses add together, up to 70%. They apply to gathering, enemy drops, and town crop harvests. Rewards, seeds, refunds, and conversions do not receive them.
+
+
+        Complete all available resource and buff collections to unlock Eternal Boons.'
       localized:
         m_TableReference:
-          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
-          m_KeyId: 3785742338113536
-          m_Key: 
+          m_KeyId: 0
+          m_Key: help.cauldron.details
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
+    illustrations:
+    - sprite: {fileID: -6316128909204395339, guid: de898b1a9190842419c92214290725b9, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Eva's Cauldron
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.art.0
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: '<b>Cauldron</b>
+
+          Choose food and a quantity to mix into stew. Taste stew to receive cards using the displayed reward chances. Resource cards improve matching resource yield; buff cards improve buffs. Reference lists resource-card and category thresholds.'
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    referenceColumns:
+    - key:
+      bold: 0
+      smallCaps: 0
+      fallback: Card tier
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.cauldron.column.0
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    - key:
+      bold: 0
+      smallCaps: 0
+      fallback: Copies needed
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.cauldron.column.1
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    - key:
+      bold: 0
+      smallCaps: 0
+      fallback: Resource / category yield
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.cauldron.column.2
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    referenceRows:
+    - icon: {fileID: 0}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 1
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.0.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 1
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.0.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 1% / 2%
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.0.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 0}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 2
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.1.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 25
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.1.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 2% / 5%
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.1.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 0}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 3
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.2.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 75
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.2.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 3% / 10%
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.2.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 0}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 4
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.3.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 200
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.3.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 5% / 15%
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.3.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 0}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 5
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.4.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 750
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.4.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 7% / 20%
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.4.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 0}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 6
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.5.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 1,500
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.5.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 10% / 30%
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.5.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 0}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 7
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.6.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 3,500
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.6.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 15% / 40%
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.6.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 0}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 8
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.7.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 10,000
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.7.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 20% / 50%
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.cauldron.row.7.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
     expanded: 0
-    visibility: []
-  - id: chapter-8
+    visibility:
+    - condition: 0
+      quest: {fileID: 11400000, guid: 9ff6011875dbd3e4d91801288f50ebc0, type: 2}
+      npcId:
+  - id: help-echoes
+    group: 2
+    icon: {fileID: 21300000, guid: 27afd0a9708dae942b5fcb9f60c65dff, type: 3}
     title:
-      key: library.8.title
-      bold: 1
-      smallCaps: 1
+      key: help.echoes.title
+      bold: 0
+      smallCaps: 0
       fallback: Echoes
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key: help.echoes.title
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
     body:
-      key: library.8.body
+      key:
       bold: 0
       smallCaps: 0
-      fallback: "Echoes are alternate versions of Caleb who will shift slightly into his reality to help out under various circumstances.\n\nEach echo can have a combination of Calebs skillset. But most Echoes won't have them all.\n\nThe main difference in Echo behaviour comes from whether or not they are combat enabled.\nCombat enabled Echoes have two different styles depending on whether or not they can also complete tasks. \n\nA combat enabled Echo that does NOT have the ability to do tasks will seek out enemies specifically.\nA combat enabled Echo that DOES have the ability to do tasks will prioritize tasks over combat and only engage enemies that see them.\n\nEchoes that do not have combat will not be targetted by or target enemies.\n\nDev Note | Right now there are no echoes in the game that can do both combat and tasks. Echoes from Milestones specifically seek out tasks for that skills milestone EG an echo spawned with woodcutting will only seek out woodcutting tasks."
+      fallback: "Echoes are temporary copies of your character that gather resources or fight enemies.\n\nOrin's realms are connected. Spikes in temporal energy let Echoes of your past cross between them to help you. Helping the townsfolk earns you the power to summon Echoes at will.\n\nSkill milestone Echoes seek tasks belonging to that skill. Check Skills \u2192 Milestones or the summoning buff for its effects."
       localized:
         m_TableReference:
-          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
-          m_KeyId: 512217202688
-          m_Key: 
+          m_KeyId: 0
+          m_Key: help.echoes.body
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
-    expanded: 0
-    visibility: []
-  - id: chapter-9
-    title:
-      key: library.9.title
-      bold: 1
-      smallCaps: 1
-      fallback: Retreating
+    details:
+      key:
+      bold: 0
+      smallCaps: 0
+      fallback: An Echo with both task and combat abilities prioritizes tasks and fights when engaged.
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key: help.echoes.details
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    illustrations:
+    - sprite: {fileID: 21300000, guid: 27afd0a9708dae942b5fcb9f60c65dff, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Task Echo
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.echoes.art.0
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: '<b>Task Echo</b>
+
+          Gathers resources without attacking or attracting enemies. Skill milestone Echoes seek tasks for that skill. The summoning buff or milestone specifies the Echo''s duration and abilities.'
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.echoes.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: 7218046035808895280, guid: 16b9f4cabb88e55479fb4cb5a33be70d, type: 3}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Combat Echo
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.echoes.art.1
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: '<b>Combat Echo</b>
+
+          Seeks and fights enemies. Combat-only Echoes do not gather resources. An Echo with both task and combat abilities prioritizes tasks and fights when engaged.'
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.echoes.art.1.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    referenceColumns:
+    - key:
+      bold: 0
+      smallCaps: 0
+      fallback: Role
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.echoes.column.0
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    - key:
+      bold: 0
+      smallCaps: 0
+      fallback: Behaviour
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.echoes.column.1
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    referenceRows:
+    - icon: {fileID: 21300000, guid: 27afd0a9708dae942b5fcb9f60c65dff, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Task Echo
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.echoes.row.0.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Gathers resources; does not attack or attract enemies
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.echoes.row.0.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.echoes.row.0.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 7218046035808895280, guid: 16b9f4cabb88e55479fb4cb5a33be70d, type: 3}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Combat Echo
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.echoes.row.1.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Seeks and fights enemies
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.echoes.row.1.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback:
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.echoes.row.1.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    expanded: 0
+    visibility: []
+  - id: help-tiers
+    group: 1
+    icon: {fileID: 511531087981754570, guid: 1dc8e874f9facc24fa08bd9484c90178, type: 3}
+    title:
+      key: help.tiers.title
+      bold: 0
+      smallCaps: 0
+      fallback: Resource Tiers
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.tiers.title
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
     body:
-      key: library.9.body
+      key:
       bold: 0
       smallCaps: 0
-      fallback: 'For each kill you get on a run your resource bonus goes up by 2% During combat this is temporarily set back to 0%
+      fallback: 'Gathering can raise a resource''s rarity tier. Higher tiers permanently increase future yield for that resource.
 
 
-        Aim to retreat just before combat gets too tough for you to handle so that you get as many bonus resources as possible!'
+        Town crop harvests use your current tier bonus but do not roll upgrades.
+
+
+        Resource tiers, equipment rarity, and Cauldron card levels are separate systems.'
       localized:
         m_TableReference:
-          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
-        m_TableEntryReference:
-          m_KeyId: 532437942272
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-    expanded: 0
-    visibility: []
-  - id: chapter-10
-    title:
-      key: library.10.title
-      bold: 1
-      smallCaps: 1
-      fallback: 'Tasks
-
-'
-      localized:
-        m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key: help.tiers.body
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
-    body:
-      key: library.10.body
+    details:
+      key:
       bold: 0
       smallCaps: 0
-      fallback: 'Tasks are the primary purpose of Caleb''s journey. Gathering resources for the town is essential to growth.
-
-
-        These are completed automatically, and you will complete them faster as your skills level.'
+      fallback: Upgrade chances are per eligible collection at the previous tier. Tier 1 is the starting tier.
       localized:
         m_TableReference:
-          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
-        m_TableEntryReference:
-          m_KeyId: 698595295232
-          m_Key: 
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-    expanded: 0
-    visibility: []
-  - id: chapter-11
-    title:
-      key: library.11.title
-      bold: 1
-      smallCaps: 1
-      fallback: Item Tiers
-      localized:
-        m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key: help.tiers.details
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
-    body:
-      key: library.11.body
+    illustrations: []
+    referenceColumns:
+    - key:
       bold: 0
       smallCaps: 0
-      fallback: 
+      fallback: Resource tier
       localized:
         m_TableReference:
-          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
-          m_KeyId: 18915029441462272
-          m_Key: 
+          m_KeyId: 0
+          m_Key: help.tiers.column.0
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
+    - key:
+      bold: 0
+      smallCaps: 0
+      fallback: Yield bonus
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.tiers.column.1
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    - key:
+      bold: 0
+      smallCaps: 0
+      fallback: Upgrade chance
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.tiers.column.2
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    referenceRows:
+    - icon: {fileID: 0}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Tier 1
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.0.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 0%
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.0.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Starting tier
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.0.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 0}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Tier 2
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.1.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 10%
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.1.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 1 in 1,000
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.1.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 0}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Tier 3
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.2.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 20%
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.2.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 1 in 5,000
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.2.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 0}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Tier 4
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.3.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 30%
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.3.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 1 in 10,000
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.3.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 0}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Tier 5
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.4.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 50%
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.4.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 1 in 50,000
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.4.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 0}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Tier 6
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.5.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 75%
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.5.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 1 in 100,000
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.5.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 0}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Tier 7
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.6.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 100%
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.6.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 1 in 250,000
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.6.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - icon: {fileID: 0}
+      label:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Tier 8
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.7.label
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      value:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 150%
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.7.value
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      extra:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: 1 in 1,000,000
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.tiers.row.7.extra
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
     expanded: 0
     visibility: []
-  - id: chapter-12
+  - id: help-patchnotes
+    group: 2
+    icon: {fileID: -15454793016451926, guid: 1d379f5925be2cb4596f1d9b8ea6eab4, type: 3}
     title:
-      key: library.12.title
-      bold: 1
-      smallCaps: 1
+      key:
+      bold: 0
+      smallCaps: 0
       fallback: Patch Notes
       localized:
         m_TableReference:
-          m_TableCollectionName: 
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
           m_KeyId: 0
-          m_Key: 
+          m_Key: help.patchnotes.title
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
     body:
-      key: library.12.body
+      key:
       bold: 0
       smallCaps: 0
-      fallback: 1.1.1
+      fallback: "<b>Current development changes</b>\n\n<b>Opening and progression</b>\n\u2022 Reworked the opening quests and NPC introductions.\n\u2022 Gill leads players to the River; Barkley leads them toward the Woods.\n\u2022 Gill rewards Old Boots. Ivan supplies materials and teaches players to forge and equip their first sword.\n\u2022 Menus and tutorials appear as their systems become relevant.\n\u2022 Quests can only be turned in while in town.\n\n<b>Interface</b>\n\u2022 Redesigned the Run Summary and added a compact in-run Stats panel.\n\u2022 Inventory now shows equipped items and equipment bonuses.\n\u2022 Added drag scrolling throughout the interface.\n\u2022 Rebuilt the Library with topic navigation, reference tables, and selectable icon explanations.\n\n<b>Gameplay and fixes</b>\n\u2022 Reduced task density on the first Farmlands adventure.\n\u2022 Farming tasks appear only in Farmlands.\n\u2022 Core and crystal tiers unlock through Combat levels.\n\u2022 Fixed enemy health-bar overlays and fishing animation issues.\n\u2022 Removed leaderboards.\n\nSelect Reference for earlier patch notes."
       localized:
         m_TableReference:
-          m_TableCollectionName: GUID:bfa36fdea331abe4cb2b293833ff63a0
+          m_TableCollectionName: Wiki
         m_TableEntryReference:
-          m_KeyId: 6939642239008768
-          m_Key: 
+          m_KeyId: 0
+          m_Key: help.patchnotes.body
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
+    details:
+      key:
+      bold: 0
+      smallCaps: 0
+      fallback: "<b>Earlier patch notes</b>\n\n\u2022 Added For the Jam! and Gilliver's Travels.\n\u2022 Improved the introduction message.\n\u2022 Fixed level-up alerts showing lower values than expected.\n\u2022 Removed the Forge's Quality Equipped block.\n\u2022 Pinned quests show Ready to turn in instead of Complete.\n\u2022 Added a loading overlay when changing maps.\n\u2022 Added the Cauldron's Mix All button.\n\u2022 Updated the pathfinding package."
+      localized:
+        m_TableReference:
+          m_TableCollectionName: Wiki
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: help.patchnotes.details
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    illustrations: []
+    referenceColumns: []
+    referenceRows: []
     expanded: 0
     visibility: []
   references:
     version: 2
     RefIds: []
+--- !u!213 &2895363419561144551
+Sprite:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: LibraryAnvil
+  m_Rect:
+    serializedVersion: 2
+    x: 2
+    y: 7
+    width: 14
+    height: 14
+  m_Offset: {x: 0, y: 0}
+  m_Border: {x: 0, y: 0, z: 0, w: 0}
+  m_PixelsToUnits: 16
+  m_Pivot: {x: 0.5, y: 0.5}
+  m_Extrude: 0
+  m_PackingTag:
+  m_RenderDataKey:
+    73f87e8c547f8be4a80627b37a1f4c5b: 2895363419561144551
+  m_AtlasTags: []
+  m_SpriteAtlas: {fileID: 0}
+  m_RD:
+    serializedVersion: 4
+    texture: {fileID: 2800000, guid: 52ace75bf0b7f894d97b20a21000e1c8, type: 3}
+    alphaTexture: {fileID: 0}
+    secondaryTextures: []
+    m_SubMeshes:
+    - serializedVersion: 2
+      firstByte: 0
+      indexCount: 6
+      topology: 0
+      baseVertex: 0
+      firstVertex: 0
+      vertexCount: 4
+      localAABB:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
+    m_IndexBuffer: 000001000200020001000300y
+    m_VertexData:
+      serializedVersion: 3
+      m_VertexCount: 4
+      m_Channels:
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 3
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 1
+        offset: 0
+        format: 0
+        dimension: 2
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      m_DataSize: 80
+      _typelessdata: 0000e0be0000e03e000000000000e03e0000e03e000000000000e0be0000e0be000000000000e03e0000e0be00000000398ee33d3333333f398e633f3333333f398ee33defee6e3e398e633fefee6e3e
+    m_Bindpose: []
+    m_BlendShapes:
+      vertices: []
+      shapes: []
+      channels: []
+      fullWeights: []
+    textureRect:
+      serializedVersion: 2
+      x: 2
+      y: 7
+      width: 14
+      height: 14
+    textureRectOffset: {x: 0, y: 0}
+    atlasRectOffset: {x: -1, y: -1}
+    settingsRaw: 3072
+    uvTransform: {x: 16, y: 9, z: 16, w: 14}
+    downscaleMultiplier: 1
+  m_AtlasRD:
+    serializedVersion: 4
+    texture: {fileID: 2800000, guid: 52ace75bf0b7f894d97b20a21000e1c8, type: 3}
+    alphaTexture: {fileID: 0}
+    secondaryTextures: []
+    m_SubMeshes:
+    - serializedVersion: 2
+      firstByte: 0
+      indexCount: 6
+      topology: 0
+      baseVertex: 0
+      firstVertex: 0
+      vertexCount: 4
+      localAABB:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
+    m_IndexBuffer: 000001000200020001000300y
+    m_VertexData:
+      serializedVersion: 3
+      m_VertexCount: 4
+      m_Channels:
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 3
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 1
+        offset: 0
+        format: 0
+        dimension: 2
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      m_DataSize: 80
+      _typelessdata: 0000e0be0000e03e000000000000e03e0000e03e000000000000e0be0000e0be000000000000e03e0000e0be00000000398ee33d3333333f398e633f3333333f398ee33defee6e3e398e633fefee6e3e
+    m_Bindpose: []
+    m_BlendShapes:
+      vertices: []
+      shapes: []
+      channels: []
+      fullWeights: []
+    textureRect:
+      serializedVersion: 2
+      x: 2
+      y: 7
+      width: 14
+      height: 14
+    textureRectOffset: {x: 0, y: 0}
+    atlasRectOffset: {x: -1, y: -1}
+    settingsRaw: 3072
+    uvTransform: {x: 16, y: 9, z: 16, w: 14}
+    downscaleMultiplier: 1
+  m_PhysicsShape: []
+  m_Bones: []
+  m_ScriptableObjects: []
+  m_SpriteID:
+--- !u!213 &5850598286787540372
+Sprite:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: LibraryCarl
+  m_Rect:
+    serializedVersion: 2
+    x: 16
+    y: 791
+    width: 31
+    height: 27
+  m_Offset: {x: 0, y: 0}
+  m_Border: {x: 0, y: 0, z: 0, w: 0}
+  m_PixelsToUnits: 16
+  m_Pivot: {x: 0.5, y: 0.5}
+  m_Extrude: 0
+  m_PackingTag:
+  m_RenderDataKey:
+    73f87e8c547f8be4a80627b37a1f4c5b: 5850598286787540372
+  m_AtlasTags: []
+  m_SpriteAtlas: {fileID: 0}
+  m_RD:
+    serializedVersion: 4
+    texture: {fileID: 2800000, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+    alphaTexture: {fileID: 0}
+    secondaryTextures: []
+    m_SubMeshes:
+    - serializedVersion: 2
+      firstByte: 0
+      indexCount: 6
+      topology: 0
+      baseVertex: 0
+      firstVertex: 0
+      vertexCount: 4
+      localAABB:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
+    m_IndexBuffer: 000001000200020001000300y
+    m_VertexData:
+      serializedVersion: 3
+      m_VertexCount: 4
+      m_Channels:
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 3
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 1
+        offset: 0
+        format: 0
+        dimension: 2
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      m_DataSize: 80
+      _typelessdata: 000078bf0000583f000000000000783f0000583f00000000000078bf000058bf000000000000783f000058bf000000000000003d3bb17b3f0000bc3d3bb17b3f0000003d7662733f0000bc3d7662733f
+    m_Bindpose: []
+    m_BlendShapes:
+      vertices: []
+      shapes: []
+      channels: []
+      fullWeights: []
+    textureRect:
+      serializedVersion: 2
+      x: 16
+      y: 791
+      width: 31
+      height: 27
+    textureRectOffset: {x: 0, y: 0}
+    atlasRectOffset: {x: -1, y: -1}
+    settingsRaw: 3072
+    uvTransform: {x: 16, y: 31.5, z: 16, w: 804.5}
+    downscaleMultiplier: 1
+  m_AtlasRD:
+    serializedVersion: 4
+    texture: {fileID: 2800000, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+    alphaTexture: {fileID: 0}
+    secondaryTextures: []
+    m_SubMeshes:
+    - serializedVersion: 2
+      firstByte: 0
+      indexCount: 6
+      topology: 0
+      baseVertex: 0
+      firstVertex: 0
+      vertexCount: 4
+      localAABB:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
+    m_IndexBuffer: 000001000200020001000300y
+    m_VertexData:
+      serializedVersion: 3
+      m_VertexCount: 4
+      m_Channels:
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 3
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 1
+        offset: 0
+        format: 0
+        dimension: 2
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      m_DataSize: 80
+      _typelessdata: 000078bf0000583f000000000000783f0000583f00000000000078bf000058bf000000000000783f000058bf000000000000003d3bb17b3f0000bc3d3bb17b3f0000003d7662733f0000bc3d7662733f
+    m_Bindpose: []
+    m_BlendShapes:
+      vertices: []
+      shapes: []
+      channels: []
+      fullWeights: []
+    textureRect:
+      serializedVersion: 2
+      x: 16
+      y: 791
+      width: 31
+      height: 27
+    textureRectOffset: {x: 0, y: 0}
+    atlasRectOffset: {x: -1, y: -1}
+    settingsRaw: 3072
+    uvTransform: {x: 16, y: 31.5, z: 16, w: 804.5}
+    downscaleMultiplier: 1
+  m_PhysicsShape: []
+  m_Bones: []
+  m_ScriptableObjects: []
+  m_SpriteID:

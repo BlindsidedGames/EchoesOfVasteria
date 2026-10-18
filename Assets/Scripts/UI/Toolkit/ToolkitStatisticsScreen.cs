@@ -173,6 +173,8 @@ namespace TimelessEchoes.UI.Toolkit
         private void Layout() => windowLayout.Centered(root, theme);
         public void Hide()
         {
+            if (IsOpen && MapStatisticsGuidance.Stage == 7)
+                Blindsided.Oracle.oracle.saveData.General.MapStatisticsTutorialStage = 8;
             ToolkitLocalization.Changed -= LocalizationChanged;
             if (tracker) { tracker.OnRunEnded -= RunEnded; tracker.OnDistanceAdded -= DistanceChanged; tracker.OnTaskCompletedEvent -= TaskCompleted; tracker.OnMaxRunDistanceChanged -= MaximumDistanceChanged; }
             if (resourceManager) { resourceManager.OnInventoryChanged -= InventoryChanged; resourceManager.OnResourceAdded -= ResourceChanged; resourceManager.OnResourceTierUpgraded -= ResourceTierChanged; }

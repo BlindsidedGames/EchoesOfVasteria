@@ -682,7 +682,7 @@ namespace TimelessEchoes.UI
                     $"Enemies damage | {CalcUtils.FormatTime(StaticReferences.PlayerDamageTextDuration, true, shortForm: true)}";
             if (enemyDamageDurationText != null)
                 enemyDamageDurationText.text =
-                    $"Caleb's damage | {CalcUtils.FormatTime(StaticReferences.EnemyDamageTextDuration, true, shortForm: true)}";
+                    $"Your character's damage | {CalcUtils.FormatTime(StaticReferences.EnemyDamageTextDuration, true, shortForm: true)}";
         }
 
         private void UpdateButtonVisual(Image img, bool on)

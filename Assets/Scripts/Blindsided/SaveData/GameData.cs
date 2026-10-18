@@ -48,7 +48,7 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Buffs")]
         public int ProspectorTaskId = -1;
 
-        public List<string> BuffSlots = new() { "Echo Tasks", null, null, null, null };
+        public List<string> BuffSlots = new() { null, null, null, null, null };
 
         [TabGroup("GameDataTabs", "Buffs")] public int UnlockedBuffSlots = 1;
         [TabGroup("GameDataTabs", "Buffs")] public int UnlockedAutoBuffSlots;
@@ -378,6 +378,7 @@ namespace Blindsided.SaveData
             public float MaxRunDistance = 50f;
             public bool ForgeIntroductionSeen;
             public int HubTutorialStage;
+            public int BuffTutorialStage;
             public string HubTutorialSkill;
             public bool FirstReapTownVisited;
             public int TaskBoostTutorialStage;

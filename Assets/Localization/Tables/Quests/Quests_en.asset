@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
   m_Name: Quests_en
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   m_LocaleId:
     m_Code: en
   m_SharedData: {fileID: 11400000, guid: f47e1bc3466d50a44a1f557a2552b815, type: 2}
@@ -336,14 +336,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7955986563392
-    m_Localized: '"As you use these buffs more often, my power will feel more natural to you and echoes from your past will cast them for you" - Orin
-
-
-      <b>Echo Casting = Auto Casting, toggle it on by holding down the button or clicking while not assigning in the buff tab.</b>'
+    m_Localized: Cast buffs 10 times to unlock autocasting for your first buff slot and the Bonus Experience buff.
     m_Metadata:
       m_Items: []
   - m_Id: 7955987563392
-    m_Localized: Autocast buff slot 1 is now togglable.
+    m_Localized: Unlocks autocasting for your first buff slot and the Bonus Experience buff.
     m_Metadata:
       m_Items: []
   - m_Id: 7956029563392
@@ -455,15 +452,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956060563392
-    m_Localized: 
+    m_Localized:
     m_Metadata:
       m_Items: []
   - m_Id: 7956061563392
-    m_Localized: 
+    m_Localized:
     m_Metadata:
       m_Items: []
   - m_Id: 7956062563392
-    m_Localized: 
+    m_Localized:
     m_Metadata:
       m_Items: []
   - m_Id: 7956063563392
@@ -1412,6 +1409,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 159890707558567938
     m_Localized: Materials for your first ingot and a basic core.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 160252005534273536
+    m_Localized: Bring Mildred 5 Flippy Floppys to unlock your first Echo buffs. Choose a Task Echo to gather resources or a Combat Echo to fight enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 160252005576216576
+    m_Localized: "Task Echo and Combat Echo buffs. Assign one in Hub \u2192 Buffs."
     m_Metadata:
       m_Items: []
   references:

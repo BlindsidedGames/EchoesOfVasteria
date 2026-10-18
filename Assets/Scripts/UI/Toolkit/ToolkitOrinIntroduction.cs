@@ -62,12 +62,23 @@ namespace TimelessEchoes.UI.Toolkit
                     runScreen?.HasOpenDetails == true ||
                     Blindsided.SaveData.StaticReferences.ActiveNpcMeetings.Count > 0 || (gm && gm.RunLoadingActive))
                 { yield return null; continue; }
+                // Closing the maps tour releases later lessons; the farewell waits for all of them.
+                if ((!gm || gm.IsInTown) && data.General.MapStatisticsTutorialStage == 7)
+                    data.General.MapStatisticsTutorialStage = 8;
                 // Finish one guided interaction before introducing the next system.
+                if ((!gm || gm.IsInTown) && BuffIntroductionGuidance.Active)
+                { yield return null; continue; }
                 if ((!gm || gm.IsInTown) &&
                     ((hubIntroduction && hubIntroduction.HasBeenCompleted && data.General.InventoryTutorialStage >= 3 && ToolkitVisibilityRule.HasLevelledSkill() && data.General.HubTutorialStage < 3) ||
                      (data.General.InventoryTutorialStage > 0 && data.General.InventoryTutorialStage < 3) || GraphStatisticsGuidance.Active))
                 { yield return null; continue; }
-                if (gm && gm.FirstReapReturnPending && !Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Contains("FirstReapIntroduction"))
+                if ((!gm || gm.IsInTown) && BuffIntroductionGuidance.Eligible)
+                {
+                    yield return Explain("BuffIntroduction", "You can now summon an Echo to help on your adventures. Choose one to gather resources or fight by your side.");
+                    data.General.BuffTutorialStage = 1;
+                    Blindsided.EventHandler.SaveData();
+                }
+                else if (gm && gm.FirstReapReturnPending && !Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Contains("FirstReapIntroduction"))
                     yield return Explain("FirstReapIntroduction", "Being reaped ends this run, but you keep your loot and skill progress. Return to town to turn in your quests.");
                 else if ((!gm || gm.IsInTown) && data.General.ReturnedFromFarmlands && QuestUtils.QuestCompleted("The names Gill") && data.General.InventoryTutorialStage == 0)
                 {
@@ -82,6 +93,12 @@ namespace TimelessEchoes.UI.Toolkit
                 {
                     yield return Explain("MapStatisticsIntroduction", "Different maps give different resources.");
                     data.General.MapStatisticsTutorialStage = 2;
+                }
+                else if ((!gm || gm.IsInTown) && data.General.MapStatisticsTutorialStage == 8 &&
+                         data.General.TaskBoostTutorialStage >= 2 && data.General.GraphsViewed)
+                {
+                    yield return Explain("OpeningTutorialComplete", "You’re ready to explore on your own! If you’d like to learn more, you’ll find helpful information in the Library.");
+                    data.General.MapStatisticsTutorialStage = 9;
                 }
                 else if ((!gm || gm.IsInTown) && GraphStatisticsGuidance.Eligible &&
                          !Gear.ForgeFirstLesson.Active && !MapStatisticsGuidance.Active && data.General.TaskBoostTutorialStage != 1 &&

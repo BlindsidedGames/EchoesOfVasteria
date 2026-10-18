@@ -27,6 +27,8 @@ namespace TimelessEchoes.UI.Toolkit
         private Label deathTitle, detailTitle, tooltipText;
         private Button retreat, returnOnDeath, restart, deathReturn, deathSummary, breakdown, joke;
         private Image ivanReturnPointer;
+        private Image firstEchoArrow;
+        private BuffManager guidedBuffManager;
         private DadJokeManager jokes;
         private VisualElement jokeBubble, jokeCountdown;
         private const float JokeDisplaySeconds = 3f;
@@ -55,6 +57,11 @@ namespace TimelessEchoes.UI.Toolkit
             abilityBar=E(hud,"row abilities");abilityBar.name="run-abilities";for(int i=0;i<5;i++)BuildBuff(abilityBar,i);
             SetVisible(abilityBar, false);
             BuildHeroHud();
+            StatIconLookup.TryGetIcon(StatIconLookup.StatKey.UpArrow, out var echoArrow);
+            firstEchoArrow = new Image { name = "first-echo-arrow", sprite = echoArrow, pickingMode = PickingMode.Ignore };
+            firstEchoArrow.style.position = Position.Absolute; firstEchoArrow.style.width = firstEchoArrow.style.height = 12;
+            firstEchoArrow.style.rotate = new Rotate(new Angle(180, AngleUnit.Degree));
+            root.Add(firstEchoArrow); SetVisible(firstEchoArrow, false);
             returnControls = new VisualElement(); returnControls.AddToClassList("eov-run-return"); root.Add(returnControls);
             retreat = Button(returnControls, "run-return", ToolkitLocalization.Text("run.return-town-title", "Return To Town"), () => GameManager.Instance?.RequestRetreat());
             returnOnDeath = Button(returnControls, "run-return-on-death", ToolkitLocalization.Text("run.return-on-death-title", "Return On Death"), () => GameManager.Instance?.RequestReturnOnDeath());
@@ -107,6 +114,33 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (!resources && ResourceManager.Instance) { resources = ResourceManager.Instance; resources.OnResourceAdded += ResourceAdded; }
             if (!tracker && GameplayStatTracker.Instance) { tracker = GameplayStatTracker.Instance; tracker.OnRunEnded += RunEnded; }
+            if (!guidedBuffManager && BuffManager.Instance) { guidedBuffManager = BuffManager.Instance; guidedBuffManager.OnBuffCast += FirstEchoCast; }
+        }
+        private void FirstEchoCast(BuffRecipe recipe, bool automatic)
+        {
+            if (automatic || BuffIntroductionGuidance.Stage != 3 || !BuffIntroductionGuidance.IsFirstEcho(recipe) ||
+                !GameManager.Instance || !GameManager.Instance.CurrentMap) return;
+            Blindsided.Oracle.oracle.saveData.General.BuffTutorialStage = 4;
+            SetVisible(firstEchoArrow, false);
+            Blindsided.EventHandler.SaveData();
+        }
+        private void RefreshFirstEchoArrow()
+        {
+            var gm = GameManager.Instance;
+            var visible = BuffIntroductionGuidance.Stage == 3 && gm && gm.CurrentMap && !gm.HeroIsDead &&
+                !HasOpenDetails && !(TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow) &&
+                Blindsided.SaveData.StaticReferences.ActiveNpcMeetings.Count == 0 && guidedBuffManager;
+            Button target = null;
+            if (visible)
+                for (var i = 0; i < slots.Count; i++)
+                    if (guidedBuffManager.IsSlotUnlocked(i) && BuffIntroductionGuidance.IsFirstEcho(guidedBuffManager.GetAssigned(i)))
+                    { target = slots[i].button; break; }
+            SetVisible(firstEchoArrow, target != null && firstEchoArrow.sprite);
+            if (target == null) return;
+            var point = root.WorldToLocal(new Vector2(target.worldBound.center.x, target.worldBound.yMin));
+            firstEchoArrow.style.left = Mathf.Round(point.x - 6);
+            firstEchoArrow.style.top = Mathf.Round(point.y - 18 - 4 * (1 + Mathf.Cos(Time.unscaledTime * 5)));
+            firstEchoArrow.BringToFront();
         }
         private VisualElement Panel(VisualElement parent, string style, Sprite sprite = null)
         { var element = new VisualElement(); element.AddToClassList(style); element.AddToClassList("surface"); parent.Add(element); return element; }
@@ -158,7 +192,8 @@ namespace TimelessEchoes.UI.Toolkit
                 else jokeCountdown.style.width = Length.Percent(remaining / JokeDisplaySeconds * 100);
             }
             HandleBuffHotkeys();
-            var guideReturn = GameManager.Instance && GameManager.Instance.CurrentMap && (GameManager.Instance.IvanReturnPending || GameManager.Instance.FirstReapReturnPending) && !(TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow);
+            RefreshFirstEchoArrow();
+            var guideReturn = GameManager.Instance && GameManager.Instance.CurrentMap && !GameManager.Instance.FirstReapDialoguePending && (GameManager.Instance.IvanReturnPending || GameManager.Instance.FirstReapReturnPending) && !(TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow);
             SetVisible(ivanReturnPointer, guideReturn);
             if (guideReturn)
             {
@@ -182,7 +217,8 @@ namespace TimelessEchoes.UI.Toolkit
         private void Refresh()
         {
             var gm = GameManager.Instance; bool inRun = gm && gm.CurrentMap;
-            SetVisible(hud, inRun); SetVisible(returnControls, inRun&&!(TownWindowManager.Instance&&TownWindowManager.Instance.HasOpenWindow)); SetVisible(breakdown, inRun); SetVisible(death, inRun && gm.DeathPromptVisible);
+            var waitingForReapDialogue = gm && gm.FirstReapDialoguePending;
+            SetVisible(hud, inRun); SetVisible(returnControls, inRun&&!waitingForReapDialogue&&!(TownWindowManager.Instance&&TownWindowManager.Instance.HasOpenWindow)); SetVisible(breakdown, inRun&&!waitingForReapDialogue); SetVisible(death, inRun && gm.DeathPromptVisible && !waitingForReapDialogue);
             SetVisible(joke, !inRun && jokes && !(TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow));
             if (inRun || (TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow)) DismissJoke();
             if (!inRun) { SetHeroStatsOpen(false); return; }
@@ -190,10 +226,10 @@ namespace TimelessEchoes.UI.Toolkit
             RefreshHeroHud(hero, health);
             retreat.text = gm.RetreatQueued ? ToolkitLocalization.Text("run.retreating", "Retreating...") : ToolkitLocalization.Text("run.return-town", "Return To Town"); retreat.SetEnabled(!gm.HeroIsDead);
             returnOnDeath.text = gm.ReturnOnDeathQueued ? ToolkitLocalization.Text("run.queued", "Queued") : ToolkitLocalization.Text("run.return-on-death", "Return On Death"); returnOnDeath.SetEnabled(!gm.HeroIsDead);
-            deathReturn.SetEnabled(true);
-            restart.SetEnabled(true);
-            deathSummary.SetEnabled(true);
-            breakdown.SetEnabled(true);
+            deathReturn.SetEnabled(!waitingForReapDialogue);
+            restart.SetEnabled(!waitingForReapDialogue);
+            deathSummary.SetEnabled(!waitingForReapDialogue);
+            breakdown.SetEnabled(!waitingForReapDialogue);
             breakdown.text = ToolkitLocalization.Text("run.breakdown-bonus", "Run breakdown\n<size=75%>+{0:0}% Resources</size>", (tracker ? tracker.CurrentRunKills : 0) * gm.BonusPercentPerKill);
             deathTitle.text = gm.IvanReturnPending ? ToolkitLocalization.Text("run.return-ivan", "Return to town to meet Ivan") : gm.RunEndedByReaper ? ToolkitLocalization.Text("run.reaped-prompt", "You were reaped...") : ToolkitLocalization.Text("run.died-prompt", "You have Died...");
             SetVisible(deathFill.parent, !gm.IvanReturnPending && !gm.FirstReapReturnPending);
@@ -263,6 +299,8 @@ namespace TimelessEchoes.UI.Toolkit
             Blindsided.EventHandler.OnRunStarted -= RunStarted;
             if (resources) resources.OnResourceAdded -= ResourceAdded;
             if (tracker) tracker.OnRunEnded -= RunEnded;
+            if (guidedBuffManager) guidedBuffManager.OnBuffCast -= FirstEchoCast;
+            guidedBuffManager = null;
             heroStatValues.Clear();
             resources = null; tracker = null; root?.RemoveFromHierarchy(); root = null; slots.Clear(); resourceRows.Clear();
             if (settings) Destroy(settings); settings = null;

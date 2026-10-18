@@ -935,6 +935,41 @@
 .gameplay.book-reviewed .eov-chapter {margin-bottom:var(--space-control);}
 .gameplay.book-reviewed .eov-chapter-content {padding:var(--space-section);}
 .gameplay.book-reviewed .eov-chapter-body {font-size:8px;-unity-font-style:normal;}
+.gameplay.library-reader .library-layout {flex-direction:row;flex-grow:1;min-height:0;}
+.gameplay.library-reader .library-topics {width:160px;min-width:160px;flex-shrink:0;margin-right:var(--space-panel);padding-right:var(--space-control);border-right-width:.5px;border-right-color:var(--line);}
+.gameplay.library-reader .library-topic-group {flex-shrink:0;margin-bottom:var(--space-section);}
+.gameplay.library-reader .library-group-title {font-size:7px;color:var(--muted);margin:3px 0 4px 4px;}
+.gameplay.library-reader .library-topic {flex-direction:row;align-items:center;min-height:22px;margin:0 0 2px 0;padding:3px 5px;border-width:0;border-left-width:1px;border-left-color:rgba(0,0,0,0);border-radius:0;background-color:rgba(0,0,0,0);}
+.gameplay.library-reader .library-topic:hover {background-color:var(--hover);}
+.gameplay.library-reader .library-topic.active {background-color:var(--control);border-left-color:var(--text);}
+.gameplay.library-reader .library-topic .icon {margin-right:5px;flex-shrink:0;}
+.gameplay.library-reader .library-topic-title {font-size:8px;white-space:normal;flex-shrink:1;margin:0;padding:0;color:var(--text);}
+.gameplay.library-reader .library-article {flex-grow:1;flex-basis:0;min-width:0;min-height:0;}
+.gameplay.library-reader .library-title-row {flex-direction:row;align-items:center;flex-shrink:0;margin-bottom:var(--space-section);}
+.gameplay.library-reader .library-title-row .icon {margin-right:8px;flex-shrink:0;}
+.gameplay.library-reader .library-article-title {font-size:12px;-unity-font-style:bold;white-space:normal;flex-shrink:1;margin:0;}
+.gameplay.library-reader .library-tabs {flex-direction:row;flex-shrink:0;margin-bottom:var(--space-section);border-bottom-width:.5px;border-bottom-color:var(--line);}
+.gameplay.library-reader .library-tab {background-color:rgba(0,0,0,0);border-width:0;border-bottom-width:1px;border-bottom-color:rgba(0,0,0,0);border-radius:0;margin:0 12px 0 0;padding:0 0 5px 0;font-size:8px;color:var(--muted);}
+.gameplay.library-reader .library-tab.active {color:var(--text);border-bottom-color:var(--text);}
+.gameplay.library-reader .library-article-scroll {flex-grow:1;min-height:0;}
+.gameplay.library-reader .library-prose {font-size:8px;white-space:normal;flex-shrink:0;margin:0;padding:0;}
+.gameplay.library-reader .library-illustrations {flex-direction:row;flex-wrap:wrap;flex-shrink:0;margin-bottom:var(--space-section);padding-bottom:var(--space-section);border-bottom-width:.5px;border-bottom-color:var(--line);}
+.gameplay.library-reader .library-figure {width:88px;min-width:68px;margin:0 8px 4px 0;padding:4px 2px;border-width:0;border-bottom-width:1px;border-bottom-color:rgba(0,0,0,0);border-radius:0;background-color:rgba(0,0,0,0);flex-grow:0;flex-shrink:0;align-items:center;}
+.gameplay.library-reader .library-figure:hover {background-color:var(--hover);}
+.gameplay.library-reader .library-figure.active {background-color:var(--control);border-bottom-color:var(--text);}
+.gameplay.library-reader .library-illustration-description {font-size:8px;white-space:normal;flex-shrink:0;margin:0 0 var(--space-section) 0;padding:0;}
+.gameplay.library-reader .library-figure-art {width:64px;height:24px;flex-shrink:0;}
+.gameplay.library-reader .library-figure-caption {font-size:7px;color:var(--muted);white-space:normal;-unity-text-align:upper-center;margin-top:4px;}
+.gameplay.library-reader .library-table {flex-shrink:0;margin-top:var(--space-section);}
+.gameplay.library-reader .library-table-row {flex-direction:row;flex-shrink:0;border-bottom-width:.5px;border-bottom-color:var(--line);padding:6px 0;}
+.gameplay.library-reader .library-table-cell {flex-grow:1;flex-basis:0;min-width:0;font-size:8px;white-space:normal;padding:0 6px 0 0;margin:0;}
+.gameplay.library-reader .library-table-header .library-table-cell {color:var(--muted);font-size:7px;}
+.gameplay.library-reader .library-table-identity {flex-direction:row;align-items:flex-start;}
+.gameplay.library-reader .library-table-identity .icon {margin-right:5px;flex-shrink:0;}
+.gameplay.library-reader .library-table-label {font-size:8px;white-space:normal;flex-shrink:1;margin:0;padding:0;}
+.gameplay.library-reader.library-narrow .library-topics {width:124px;min-width:124px;margin-right:8px;}
+.gameplay.library-reader.library-narrow .library-topic-title {font-size:7px;}
+.gameplay.library-reader.library-narrow .library-figure-art {height:20px;}
 .gameplay.book-reviewed .eov-credit {flex-direction:row;align-items:flex-start;padding:var(--space-panel) 0;margin:0;border-bottom-width:.5px;border-bottom-color:var(--line);}
 .gameplay.book-reviewed .eov-credit .eov-chapter-title {width:176px;flex-grow:0;flex-shrink:0;margin-right:var(--space-panel);-unity-text-align:upper-left;}
 .gameplay.book-reviewed .eov-credit .eov-chapter-body {flex-grow:1;flex-basis:0;min-width:0;-unity-text-align:upper-left;color:var(--muted);}
