@@ -392,3 +392,43 @@ build/source fingerprints and preservation reports. The Organizer archive copy i
 `/Users/matthewrushworth/Library/Developer/Xcode/Archives/2026-10-19/Echoes-1.4.8-165.xcarchive`.
 A longer isolated soak is the next overnight validation step; no additional
 runtime changes have been made after the consolidated upload.
+
+## Deferred lossless character-packing experiment
+
+Temporary copies of Hands_1_Bare, Player_Base_animations and Hair_1_Brown were
+packed independently into non-rotating, rectangular, Point-filtered RGBA32 atlases
+with four-pixel padding. Original source images and their metadata were untouched;
+all temporary Assets entries were removed after each experiment. This was an
+Editor-only prototype, absent from runtime 9ca330359 and internal build 165.
+
+Each original texture is 576 x 3584 (7.875 MiB RGBA32). Packed pages were 2 MiB
+(Hands), 1 MiB (Body) and 0.5 MiB (Hair): 23.625 to 3.5 MiB combined. These are
+calculated texture-page bytes, not measured native process savings. All 921
+frames retained rect size, pivot, PPU, vertices, triangles and bounds. Reconstructing
+3,772,416 source pixels produced zero alpha or visible-RGB differences; RGB
+under fully transparent pixels differs and is not claimed byte-identical.
+
+An isolated GPU blit probe tested affine atlas UVs plus per-frame trim clipping.
+At 64- and 128-pixel output sizes, all 18,862,080 compared pixels retained alpha
+and visible RGB exactly. At 96 pixels (fractional 1.5x scale), the same technique
+failed parity: across 64/96 outputs, Hands had 3,425 alpha / 3,313 visible-RGB
+differences; Body 14,933 / 18,873; Hair 7,600 / 14,028. Integer-texel and quantized
+sampling experiments also failed to preserve those fractional-scale results.
+The sampling-boundary cause remains a hypothesis, not a verified Metal diagnosis.
+
+Consequently packing is deferred, with no production shader, atlas, appearance,
+or texture-import changes. The current echo compositor assumes untrimmed canvas
+UVs and would also require validated atlas-aware sampling. Any future integration
+must preserve fractional-scale UI/world/echo output, keep per-part lazy loading,
+and demonstrate native memory savings; source-pixel preservation alone is not
+sufficient. Local reproducible scripts and JSON are retained under
+`Artifacts/StartupInvestigation/LosslessCharacterPackingProbe*` and
+`Artifacts/StartupInvestigation/lossless-character-packing-probe*.json`.
+
+A separate two-hour native soak of unchanged 9ca330359 started at 00:28:15 Sydney
+on 20 October, with a guarded 02:28:15 deadline. It uses an independent background
+collector and retains its disposable container. After Mines/Options warmup, the
+unattended phase runs Spooky with normal death/restart behavior; the existing
+probe cannot automate town/menu returns or app background/foreground transitions.
+Results are pending under the Mac evidence folder
+`overnight-soak-9ca-20261020`; this launch is not yet counted as completed coverage.
