@@ -432,3 +432,30 @@ unattended phase runs Spooky with normal death/restart behavior; the existing
 probe cannot automate town/menu returns or app background/foreground transitions.
 Results are pending under the Mac evidence folder
 `overnight-soak-9ca-20261020`; this launch is not yet counted as completed coverage.
+
+## World-space enemy health labels
+
+After the consolidated upload, profiling the public ToolkitWorldAnchor.Text path
+found that every visible enemy-health label reformatted an unchanged pair of
+integers every frame. In an isolated Editor probe (no Play mode or save access),
+100,000 stable-health calls took 48.767 ms, returned 100,000 distinct string
+instances and increased retained managed memory by 8,536,064 bytes while those
+outputs were held. This includes formatting/boxing overhead and is not a native
+allocation-rate or overall frame-time measurement.
+
+Cache the formatted label by its displayed current/max integers and the current
+number format's negative sign. Health is still read on every request; fractional
+rounding, healing, initialization, replacement health components, missing health,
+static text and in-place number-format changes preserve their existing output.
+The cache retains no extra actor, asset or save references. The same probe after
+this change took 6.7757 ms, returned one reused string for unchanged health and
+reported zero additional retained managed bytes for the warm calls. Treat these
+single samples as a local diagnostic, not a precise player CPU/FPS speedup.
+
+The focused WorldHealthTextTests EditMode behavior check passes (1/1), exercising
+fractional damage/healing, the minimum-one display for living enemies, zero HP,
+new maximums on reuse, rebinding, fallback text and mutable number formatting.
+Probe and test evidence are under
+`Artifacts/StartupInvestigation/WorldHealthTextProbe.cs` and
+`Artifacts/StartupInvestigation/world-health-label-tests.json`. This follow-up
+is not included in TestFlight 1.4.8 (165); native verification is still pending.
