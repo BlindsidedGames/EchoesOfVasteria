@@ -1089,3 +1089,31 @@ built/working Fields and physical iPhone validation remain outstanding.
 Raw native evidence stays under `native-retention-20261020/evidence/advanced-save-profile`
 on the Mac; `Artifacts/StandaloneMemory/native-advanced-summary-transcribed.json`
 is explicitly a transcription of the Mac task's results, not copied raw evidence.
+
+
+Native final evidence/configuration: `summary.json`, `handoff.json`,
+`clean-window-bounds.json`, `events.json`, Advanced/Fresh `native-memory.csv`,
+per-window `every-frame-*.csv`, and final-idle snapshot/analysis files under the
+Mac evidence directory above. Advanced clean town is realtime 50.862223–61.098130 s;
+fresh is 87.637300–97.851079 s, the last ten seconds of each fifteen-second settle.
+No inventory, readback or snapshot occurs inside those clean windows. Separate
+cold first-five-second transition captures have wall/main maxima: Forge
+31.989/29.689 ms, Cauldron 48.384/46.758 ms, Fields 31.880/29.407 ms. These include
+deferred UI work and must not be confused with the smaller synchronous Show calls.
+
+The requested build is Unity BuildOptions.None / Xcode Release / arm64 IL2CPP,
+but engine stderr still identifies Development. This remains an unresolved build
+configuration caveat, not a shipping-device benchmark. Both controls use the same
+binary, EOV_STARTUP_DIAGNOSTICS plus EOV_MEMORY_PROFILE observer definitions,
+frame-timing stats, quality level two and nonpersistent upload buffers. Services
+are normal, player identity is disposable, and no font flush is present.
+
+Final Mac preservation checks pass: all 62 original save hashes and mtimes are
+unchanged, all 18 checks across six checkouts are unchanged, source remains f882
+with PNG/import/quality diffs empty, the original reference framework hash matches,
+owned profiling PIDs have ended and the dedicated Simulator is shut down. There
+is no native push, merge or upload. Windows final verification also rechecks all
+239 original save/profile hashes unchanged. The bounded startup CPU trace further
+places a 1091.727 ms PrepareShaping sample beneath the large first layout pass;
+that is the specific remaining text-initialization lead, not evidence for changing
+font coverage or enabling the rejected font flush.
