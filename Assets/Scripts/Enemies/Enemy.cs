@@ -44,6 +44,7 @@ namespace TimelessEchoes.Enemies
         [SerializeField] private TMP_Text levelText;
         [SerializeField] private bool randomizeSpriteLibraryOnSpawn = false;
         [SerializeField] private List<SpriteLibraryAsset> spriteLibraryVariants = new List<SpriteLibraryAsset>();
+        [SerializeField] private List<string> spriteLibraryVariantPaths = new List<string>();
         [SerializeField, Tooltip("Weight of the regular (uniform) variants section when choosing between sections. If the weighted section has no valid entries, this is ignored.")]
         private float regularSectionWeight = 1f;
 
@@ -51,7 +52,19 @@ namespace TimelessEchoes.Enemies
         private class WeightedSpriteLibraryEntry
         {
             public SpriteLibraryAsset asset = null;
+            public string resourcePath;
             public float weight = 1f;
+
+            public bool HasAsset => asset || !string.IsNullOrEmpty(resourcePath);
+            public SpriteLibraryAsset Resolve() => asset ? asset : Resources.Load<SpriteLibraryAsset>(resourcePath);
+        }
+
+        private readonly struct SpriteLibraryChoice
+        {
+            private readonly SpriteLibraryAsset asset;
+            private readonly string resourcePath;
+            public SpriteLibraryChoice(SpriteLibraryAsset asset, string resourcePath) { this.asset = asset; this.resourcePath = resourcePath; }
+            public SpriteLibraryAsset Resolve() => asset ? asset : Resources.Load<SpriteLibraryAsset>(resourcePath);
         }
 
         [SerializeField, Tooltip("Per-entry weighted sprite library variants. If empty or all invalid, the regular section is used (uniform selection).")]
@@ -201,19 +214,26 @@ namespace TimelessEchoes.Enemies
             if (targetSpriteLibrary == null) return;
 
             // Build valid lists
-            var validRegular = spriteLibraryVariants != null
-                ? spriteLibraryVariants.Where(a => a != null).ToList()
-                : new List<SpriteLibraryAsset>();
+            // Keep the authored order (and random rolls) while leaving unchosen art on disk.
+            // Direct references remain supported for existing/custom prefabs.
+            var validRegular = new List<SpriteLibraryChoice>();
+            var count = Mathf.Max(spriteLibraryVariants?.Count ?? 0, spriteLibraryVariantPaths?.Count ?? 0);
+            for (var i = 0; i < count; i++)
+            {
+                var asset = i < (spriteLibraryVariants?.Count ?? 0) ? spriteLibraryVariants[i] : null;
+                var path = i < (spriteLibraryVariantPaths?.Count ?? 0) ? spriteLibraryVariantPaths[i] : null;
+                if (asset || !string.IsNullOrEmpty(path)) validRegular.Add(new SpriteLibraryChoice(asset, path));
+            }
 
             var validWeighted = weightedSpriteLibraryVariants != null
-                ? weightedSpriteLibraryVariants.Where(e => e != null && e.asset != null && e.weight > 0f).ToList()
+                ? weightedSpriteLibraryVariants.Where(e => e != null && e.HasAsset && e.weight > 0f).ToList()
                 : new List<WeightedSpriteLibraryEntry>();
 
             // If no valid weighted entries, ignore weights altogether and use existing uniform behavior
             if (validWeighted.Count == 0)
             {
                 if (validRegular.Count == 0) return;
-                var chosenUniform = validRegular[Random.Range(0, validRegular.Count)];
+                var chosenUniform = validRegular[Random.Range(0, validRegular.Count)].Resolve();
                 if (chosenUniform == null) return;
 
                 if (targetSpriteLibrary.spriteLibraryAsset != chosenUniform)
@@ -248,11 +268,11 @@ namespace TimelessEchoes.Enemies
                     acc += Mathf.Max(0f, validWeighted[i].weight);
                     if (rollW <= acc)
                     {
-                        chosen = validWeighted[i].asset;
+                        chosen = validWeighted[i].Resolve();
                         break;
                     }
                 }
-                chosen ??= validWeighted[validWeighted.Count - 1].asset;
+                chosen ??= validWeighted[validWeighted.Count - 1].Resolve();
             }
             else
             {
@@ -263,7 +283,7 @@ namespace TimelessEchoes.Enemies
 
                 if (chooseRegular)
                 {
-                    chosen = validRegular[Random.Range(0, validRegular.Count)];
+                    chosen = validRegular[Random.Range(0, validRegular.Count)].Resolve();
                 }
                 else
                 {
@@ -274,12 +294,12 @@ namespace TimelessEchoes.Enemies
                         acc += Mathf.Max(0f, validWeighted[i].weight);
                         if (rollW <= acc)
                         {
-                            chosen = validWeighted[i].asset;
+                            chosen = validWeighted[i].Resolve();
                             break;
                         }
                     }
                     if (chosen == null)
-                        chosen = validWeighted[validWeighted.Count - 1].asset;
+                        chosen = validWeighted[validWeighted.Count - 1].Resolve();
                 }
             }
 
