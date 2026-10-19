@@ -258,7 +258,11 @@ namespace Blindsided
             // First autosave occurs shortly after load, then at a modest interval. Lifecycle saves
             // cover focus/pause/quit without continually forcing durable writes to the user's SSD.
             StartAutosaveLoop(FirstAutosaveDelaySeconds);
-            if (StartupDiagnostics.Enabled) yield return null;
+            if (StartupDiagnostics.Enabled)
+            {
+                StartupDiagnostics.SetPhase("Rendering first town frames", 0.95f);
+                yield return new WaitForSecondsRealtime(3f);
+            }
             StartupDiagnostics.Complete();
         }
 
