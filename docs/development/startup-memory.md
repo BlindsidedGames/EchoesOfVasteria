@@ -160,3 +160,26 @@ footprint was 601.47/600.39/612.18 MiB with probe/history drift. Restoration
 pixel differences are still being investigated for unscaled UI animation;
 Mines and Haloween lighting comparisons remain pending. Pipeline flags are
 not yet changed in the production candidate.
+
+### Optional render copies adopted after map comparisons
+
+The final Mines and Haloween (Spooky) comparisons both had zero changed pixels
+across original/control/copy-off/restored/post-restore-control captures, with
+matching UI sprite states. Mines covered a run-end cave state; Spooky covered
+a live authored state immediately after entry. These are isolated rendering
+fixtures using the production BeginAdventure entry point, not quest-unlock tests.
+Both removed three sampled depth copies (14.65 MiB): total render targets
+changed from 70.05 to 55.40 MiB and back to 70.05 MiB after restoration. Driver
+allocations fell by approximately 13.15 MiB; process footprint drift during
+probing prevents claiming the same physical-memory reduction.
+
+GPU median samples were 0.564/0.486/0.572 ms in Mines and 0.666/0.569/0.640 ms
+in Spooky (original/off/restored); frame rate remained capped at 60 Hz.
+These are small Simulator GPU-work reductions, not demonstrated phone FPS gains.
+
+UniversalRP now disables only Require Depth Texture and Require Opaque Texture.
+No authored shader/script samples these optional copies; Renderer2D has no
+custom renderer features and the volume's depth-of-field mode is Off. Required
+depth/stencil attachments, lighting, HDR, render scale, MSAA and art are retained.
+Future shaders that sample scene depth or colour must explicitly request the
+appropriate copy. Native CPU sampling is the next FPS investigation step.
