@@ -47,11 +47,13 @@ namespace TimelessEchoes.Platform
         private void Start()
         {
 #if UNITY_ANDROID || UNITY_IOS
+            StartupDiagnostics.SetGameServicesStatus("Checking authentication");
             if (!GameServices.IsAuthenticated)
             {
                 // Preferred silent auth (debounced)
                 MobileAuthDebouncer.RequestSilentAuth("AutoSignIn.Start");
             }
+            else StartupDiagnostics.SetGameServicesStatus("Authenticated");
 #endif
         }
 
