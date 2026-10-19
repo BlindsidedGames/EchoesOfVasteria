@@ -575,3 +575,50 @@ all three apps and host collectors were absent. Evidence is under
 including reviewed-results.json, final-report.json, completion.json,
 post-completion-verification.json, per-run raw data and bundle manifests.
 An 8/4/8 MiB confirmation is pending; no allocator project setting is adopted yet.
+
+## Final allocator decision: keep production defaults
+
+The final 8/4/8 MiB comparison completed at 05:20:01 Sydney on 20 October, with
+exactly the same four boot keys varied and the remaining 27 startup parameters
+verified unchanged. Each run restored the initial disposable state and used the
+same Town/Spooky timing. No additional export or production setting was changed.
+
+| Native measurement | First 8 MiB | Trial 4 MiB | Repeated 8 MiB |
+| --- | ---: | ---: | ---: |
+| Town median footprint (MiB) | 538.941 | 533.175 | 546.738 |
+| Settled Spooky median footprint (MiB) | 615.707 | 612.566 | 621.519 |
+| Kernel lifetime peak (MiB) | 617.910 | 616.113 | 625.691 |
+| Final Unity allocated (MiB) | 390.827 | 389.909 | 391.303 |
+| Final Unity reserved (MiB) | 527.969 | 514.781 | 529.969 |
+| Map wall median / p95 (ms) | 16.6612 / 17.6752 | 16.6675 / 17.6924 | 16.6573 / 16.7138 |
+| Map main median / p95 (ms) | 3.7844 / 4.6470 | 3.7438 / 4.4424 | 3.5678 / 4.3566 |
+| Map GPU median / p95 (ms) | 0.4996 / 0.7711 | 0.5577 / 0.8045 | 0.5660 / 0.9339 |
+
+The 4 MiB map median is only 3.141 MiB below the first 8 MiB control, versus
+5.812 MiB drift between the 8 MiB controls. Its 6.047 MiB mean-control difference
+is inconclusive. Final listed assets matched (456 textures, 6,683 sprites,
+10 panels, 7 character parts and 25 documents), but intermediate states did not:
+at 180 seconds the last control had 455 textures/8 panels versus 456/10, matching
+again by 240 seconds. Normal RNG, restart and host/driver states are not identical.
+There is no demonstrated overall FPS benefit or causal allocator regression.
+All runs had the same nine known warnings and no new crash/error/exception.
+
+The allocator Simulator executable identifies Unity Development IL2CPP despite
+its Xcode Release configuration. These are distinct build settings. Its
+main-mimalloc-enabled=1 log is configuration evidence, not proof of the actual
+per-allocator backend or utilization. The uploaded device165 uses BuildOptions.None
+and has no allocator overrides in its archived boot.config. No physical-device
+startup/backend log establishes comparable allocator behavior; Unity export logs
+are host Editor evidence. Consequently neither trial is adopted. Project memory
+settings remain original, and the entire reserved/allocated gap is not claimed
+as reclaimable memory.
+
+Read-only verification at 05:32–05:33 confirmed all experiment helpers/apps were
+absent, the host lock released, both owned devices shut down and the full installed
+16 MiB configuration restored to both the reference and attempt4 baseline manifests.
+Reference bundles, six checkout fingerprints and retained container metadata matched.
+Evidence is under the sibling `allocator-ab-20261020/attempt5/` folder, including
+reviewed-results.json, post-completion-verification.json, final-report.json,
+completion.json and all run data/manifests. The reviewed inconclusive decision
+supersedes the automated report's earlier interpretation. No more variants or
+builds are requested for this sizing experiment.
