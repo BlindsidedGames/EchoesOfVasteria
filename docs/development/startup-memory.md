@@ -851,3 +851,43 @@ Development-player snapshots remain the allocation evidence. All owned Windows
 players and their process samplers exited; the user's Editor and saves remain
 untouched. Local artifacts include release environment/stage/frame/process CSVs,
 command-result.json and the observer sources under Artifacts/StandaloneMemory.
+
+## Release idle upload buffers (adopted)
+
+The native true / false / true control isolates AsyncUploadManager allocation:
+16,822,080 -> 44,824 -> 16,822,080 bytes in the settled map snapshot. This is
+16 MiB of retained upload capacity reclaimed, independently of aggregate process
+counter drift. Set asyncUploadPersistentBuffer=false in all six quality presets;
+retain the existing 16 MiB upload capacity, time slice, render scale, textures,
+lighting, HDR and required depth/stencil. The setting allows the upload buffer
+to be released when idle rather than permanently retaining its high-water size.
+The open Editor confirms false at quality level five with capacity still 16 MiB.
+
+Matching 45-second capture-free Spooky windows have 675 timing samples each
+(every fourth frame, Simulator capped at 60 Hz):
+
+| Native timing (ms) | True control | False candidate | True repeat |
+| --- | ---: | ---: | ---: |
+| Main median / p95 | 3.478 / 4.321 | 3.446 / 4.428 | 3.490 / 4.398 |
+| Render median / p95 | 1.489 / 2.208 | 1.517 / 2.069 | 1.434 / 2.128 |
+| GPU median / p95 | 0.605 / 0.958 | 0.597 / 0.898 | 0.597 / 0.936 |
+| Wall median / p95 | 16.667 / 17.879 | 16.665 / 18.103 | 16.667 / 16.713 |
+
+No sampled interval exceeds 25 ms in those windows, and no sustained slowdown
+is observed with false. This does not establish a physical-device FPS gain or
+certify every individual upload spike. Resolving all 52 animal libraries succeeds
+in all three runs, but the unmarked tail has only 14/15/14 timing samples and no
+post-resolution allocation-owner snapshot, so it is not treated as a rigorous
+upload-stutter benchmark. Exact immediate release time is also not established;
+reclamation is proven by the settled map capture. Native evidence:
+`native-retention-20261020/evidence/cache-experiment/upload-performance-gate.json`.
+Windows true / false / true results separately show no steady capped-frame
+regression, with their aggregate-memory drift retained rather than hidden.
+
+All nine native experimental snapshots completed analysis. The corrected Windows
+baseline and candidate snapshots also complete full PostProcess and clean disposal;
+the earlier baseline reader-only disposal warning was an analysis-tool issue,
+not an exception in either player. Font-face cleanup remains separate: native
+Layout Tables fall from 81,770,376 bytes to eight, but immediate process-footprint
+reduction is about 14 MiB. No production font change is adopted without corrected
+visible-text, new-glyph and locale/panel-reentry comparisons.
