@@ -491,3 +491,37 @@ Final report, completion receipt, endpoints, native memory CSV and sample are
 retained under the Mac evidence folder `overnight-soak-9ca-20261020` described
 above. A separate disposable native build of 20999d37e is compiling for the health-
 label follow-up; it is not part of the completed soak or uploaded build 165.
+
+## Native health-label follow-up
+
+The disposable arm64 Release Simulator build of 20999d37e compiled through Unity
+and Xcode with zero Unity errors and reached Ready. Its sampled startup kernel
+peak was 577.58 MiB; the difference from the earlier 583.504 MiB run is not
+attributed to this small text cache because process baselines vary.
+
+The final bounded observer checked actual Toolkit Label.text values after public
+health operations: Init(137), damage, heal and Init(251) produced `137 / 137`,
+`136 / 137`, `137 / 137` and `251 / 251`. Earlier observer attempts lost their
+selected enemy to a queued restart or missed initially hidden bars; those are
+retained observer failures, not product bug reports. The authorized correction
+used the existing world viewport, public health/bar activation, completed run
+loading and a local pause. Screenshot glyph verification remains incomplete:
+the selected label appeared under the simulated notch in the captured views.
+Property assertions are therefore not described as pixel/glyph verification.
+
+Five native batches of 100,000 unchanged calls had a median of 2.149 ms for the
+cache versus 16.0103 ms for a copied 9ca formatter. This is an isolated method
+comparison, not an overall CPU or game FPS result. The IL2CPP allocation counter
+returned zero for both versions including the allocating legacy control, so native
+allocation measurement is unavailable rather than reported as zero allocations.
+
+A fresh 15-second Spooky wall sample had 1,137 main observations: Mach wait 739,
+EnemyActivator 2, ToolkitWorldScreen 5, AIBase 14, AIPath 3, Pathfinding 12 and
+UITKTextHandle 10 inclusive; Anchor.Text had no resolved samples. Counts remain
+sparse and inclusive, with no overall improvement inferred. The disposable app
+was stopped, its container retained, and all six protected checkout fingerprints
+were unchanged. No further rebuild or upload was performed. Evidence is retained
+at `/Users/matthewrushworth/Documents/Codex/2026-10-19/task/healthtext-20261020/evidence/`,
+including native-validation-report.json, visual-observation.json, health-*.json,
+native-cpu-15s.txt, completion.json and preservation-after.json. Uploaded build
+165 still contains 9ca330359, not this follow-up.
