@@ -654,3 +654,72 @@ export logs are not device startup measurements.
 Exact paths, excerpts and hashes are retained at
 `/Users/matthewrushworth/Documents/Codex/2026-10-19/task/build-provenance-clarification-20261020.json`.
 This clarification required no build, launch or settings/source change.
+
+## Matched pre-optimization Unity startup profile (20 October 2026)
+
+This comparison supersedes any claim that the earlier 734 MiB Simulator result
+and later 583.504 MiB result establish a matched total reduction. The original
+734.050720 MiB capture really used pre-optimization source `8a6bd24c`, but it
+sampled at 500 ms until Ready, with the fresh-save character creator open.
+The later native capture sampled externally at 100 ms through Ready plus
+35 seconds with a created character. Those are different states and windows.
+Neither reproduces the physical iPhone's 2,097.984 MiB Jetsam footprint, and the
+cause of that Simulator/device gap remains unestablished.
+
+### Controlled Editor comparison
+
+The baseline was checked out and actually launched, rather than estimated from
+current code. Separate fresh Unity 6000.6.0f1 processes ran source
+`8a6bd24c473d5a109324707a5168b9c481db48cd` and optimized source
+`472eb7ad53e356a9bd994c30449dc5b4fb9c0c20` in an isolated managed worktree.
+Both used Loading.unity, full domain/scene reload, fresh isolated saves and
+PlayerPrefs, a 1080 x 2340 GameView, deep profiling disabled, and byte-identical
+observer code. A single identical AssetCache.GetAll profiler scope was added
+to both sources. Real player saves and the user's primary Editor were preserved.
+
+Both matched runs started with zero loaded CharacterPartFrames, 281 sprites and
+974 textures. Their first captured Total Used Memory differed by only 0.709 MiB.
+CPU binary capture continued to Main data ready plus 5 seconds; memory sampling
+continued to ready plus 35 seconds. Native/managed memory snapshots were taken
+after that measurement window, so snapshot capture does not inflate its peak.
+An initial baseline pilot had a different preloaded Editor asset cache and was
+excluded; the reported pair is before-fresh-02 / after-fresh-02.
+
+| Startup measurement | Before | After | Difference |
+| --- | ---: | ---: | ---: |
+| Profiler Total Used Memory peak, including Editor (MiB) | 2,321.560 | 2,063.208 | -258.353 (-11.13%) |
+| Unity allocated peak (MiB) | 1,515.791 | 1,299.436 | -216.356 |
+| Profiler's own used-memory peak (MiB) | 137.937 | 134.936 | -3.002 |
+| BeforeSceneLoad to Main data ready (seconds) | 4.411 | 2.777 | -1.635 (-37.05%) |
+| AssetCache.GetAll inclusive time, 149 calls (ms) | 2,278.849 | 14.726 | -2,264.123 |
+| Loaded character-part assets after startup | 198 | 7 | -191 |
+| Loaded sprites after startup | 61,255 | 6,702 | -54,553 |
+| Loaded textures after startup | 1,575 | 1,493 | -82 |
+| Audio clip memory peak (MiB) | 23.584 | 0.201 | -23.383 |
+| Texture memory peak (MiB) | 619.270 | 588.678 | -30.593 |
+
+The CPU trace places the major removed work in synchronous bulk resource loading
+inside AssetCache.GetAll. Before optimization, CauldronManager.Awake alone takes
+1,379.663 ms inclusive. LoadSceneOperation.CompleteAwakeSequence falls from
+2,160.184 to 533.642 ms inclusive. These nested timings overlap; they must not be
+summed or treated as separate additive savings. The object counts independently
+confirm that startup no longer brings in almost the entire character wardrobe.
+
+The figures are Windows Editor measurements with Editor, graphics and profiler
+overhead. They are not standalone iOS resident footprint, and crossing 2 GiB in
+this Editor trace is not a reproduction of the phone's Jetsam event. The main
+runtime startup interval excludes Editor domain reload. No overall FPS gain is
+claimed from a startup-only trace. Two matching UnityEditor.Search indexing
+exceptions occurred in the cloned project; no game exception was observed.
+
+Retained local evidence under `Artifacts/StartupComparison/` includes
+`matched-results.json`, the comparison chart `matched-startup-memory.png`, the
+observer and analysis sources, and per-run raw CPU profiles, memory-counter CSVs,
+50 ms external process samples, object inventories, completion records and full
+post-startup `.snap` files. The matched raw profiles are 369,691,590 and
+345,237,902 bytes; snapshots are 462,283,120 and 431,495,831 bytes respectively.
+The Memory Profiler package was installed only in the disposable analysis Editor
+after all four captures; it was not part of either measurement configuration.
+Native snapshots are retained for allocation/reference inspection; their file
+sizes are not presented as runtime memory savings. Physical iPhone 13 mini
+validation of the updated build remains the required hardware check.
