@@ -125,3 +125,27 @@ checks whether the pipeline's sampled depth/opaque textures can be disabled
 with identical rendered pixels; required depth/stencil attachments, lighting,
 HDR, resolution and MSAA are retained. Do not apply those pipeline changes
 until the comparison establishes presentation parity.
+
+### Original-texture candidate
+
+Commit 08b072 reached diagnostic Ready in 4.79 seconds at 572.13 MiB on the
+same Simulator setup. The external 100 ms kernel sampler observed a 581.91 MiB
+peak through Ready +35 seconds, with settled samples of 579.77–581.85 MiB.
+No character-part assets were resident in the initial town snapshot. This is
+an original-texture measurement; the earlier ASTC candidate is retained above
+only as intermediate investigation evidence.
+
+Settled town frame timing reported a 16.67 ms wall median and 17.29 ms p99,
+3.33 ms main-thread median, 0.70 ms GPU median and 13.4 ms present wait. This
+is a 60 Hz-capped Simulator run, not a performance measurement on an A15 phone.
+
+In a reversible town experiment, disabling only optional depth/opaque copies
+removed two R32 1080x2339 sampled depth textures (19.27 MiB). Render-target
+allocations changed from 65.18 to 45.90 MiB and returned to 65.18 MiB when the
+original pipeline was restored. The D32 depth/stencil attachment remained.
+Paused whole-screen pixel comparisons found zero differences for both the
+disabled-copy state and restoration against their respective frozen controls.
+Two control states differed by 955 pixels due to unscaled UI animation.
+Process footprint drifted upward during probing, so the allocation reduction
+must not be described as a measured 19.27 MiB physical-footprint drop. Run-map
+comparisons remain pending before adopting these pipeline flags.
