@@ -16,11 +16,13 @@ with fixed post-warmup texture/sprite/panel/character-part counts. The later
 it remains outside uploaded build 165. Its isolated method benchmark is not an
 overall FPS measurement.
 
-The retained 9ca Simulator executable identifies Unity Development IL2CPP and
-uses Xcode Release configuration; those are different build settings. Historical
-Release descriptions below must not be read as proof of a Unity non-development
-player. Uploaded device build 165 uses BuildOptions.None. Physical-phone timings
-and footprint still require measurement on that build.
+All three retained export helpers use BuildOptions.None. Bee configuration records
+Development=false, arm64 IL2CPP Release and disabled debugging/deep profiling;
+Xcode logs also use Release. Nevertheless both native Simulator startup banners
+say Development; that discrepancy remains unexplained and is not proof that
+BuildOptions.Development was selected. Simulator builds include local memory/
+frame-timing instrumentation, while uploaded device165 excludes it. Physical-phone
+timings and footprint still require measurement; its runtime banner is unknown.
 
 ## Confirmed failure
 
@@ -609,8 +611,9 @@ again by 240 seconds. Normal RNG, restart and host/driver states are not identic
 There is no demonstrated overall FPS benefit or causal allocator regression.
 All runs had the same nine known warnings and no new crash/error/exception.
 
-The allocator Simulator executable identifies Unity Development IL2CPP despite
-its Xcode Release configuration. These are distinct build settings. Its
+The allocator Simulator native engine banner says Development despite the retained
+BuildOptions.None, Development=false and IL2CPP/Xcode Release configuration.
+The reason is unestablished; explicit BuildOptions.Development was not selected. Its
 main-mimalloc-enabled=1 log is configuration evidence, not proof of the actual
 per-allocator backend or utilization. The uploaded device165 uses BuildOptions.None
 and has no allocator overrides in its archived boot.config. No physical-device
@@ -628,3 +631,26 @@ reviewed-results.json, post-completion-verification.json, final-report.json,
 completion.json and all run data/manifests. The reviewed inconclusive decision
 supersedes the automated report's earlier interpretation. No more variants or
 builds are requested for this sizing experiment.
+
+
+## Retained build provenance clarification
+
+Read-only inspection of all three export helpers confirms BuildOptions.None. Their
+Bee Player input configurations record Development=false, iOSDebugConfig=false,
+arm64, IL2CPP ConfigurationName=Release, AllowDebugging=false, deep profiling
+disabled and Full LTO. Simulator=true for 9ca and 20999; false for device165. All
+three Xcode commands use Release. Compact result JSONs omit final BuildReport.options,
+so that field is not invented. Incremental Bee files are associated by matching
+destination/app ID/variant, rather than claimed as immutable per-source snapshots.
+
+Both actual Simulator stderr logs nevertheless print Build type Development. The
+reason for this engine banner/configuration discrepancy is unestablished. The
+accurate measurement description retains both facts, plus local EOV_MEMORY_PROFILE
+and frame-timing instrumentation in Simulator exports. Device165 enables startup
+diagnostics but not those profiling hooks/frame timing. Its native player banner
+and actual allocator backend remain unknown without a device log. Host Editor
+export logs are not device startup measurements.
+
+Exact paths, excerpts and hashes are retained at
+`/Users/matthewrushworth/Documents/Codex/2026-10-19/task/build-provenance-clarification-20261020.json`.
+This clarification required no build, launch or settings/source change.
