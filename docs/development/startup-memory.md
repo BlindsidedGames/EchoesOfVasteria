@@ -891,3 +891,36 @@ not an exception in either player. Font-face cleanup remains separate: native
 Layout Tables fall from 81,770,376 bytes to eight, but immediate process-footprint
 reduction is about 14 MiB. No production font change is adopted without corrected
 visible-text, new-glyph and locale/panel-reentry comparisons.
+
+## Font-cache trial: pixel-safe, rejected for an in-run hitch
+
+The corrected native font controls use an opaque, visibly rendered 1080 x 1080
+fixture. Cached text, genuinely new Latin/SC/JP text and a TextField value, ja /
+zh-CN / en / ja reentry, and panel reconstruction all have zero changed pixels
+between control and unload runs. Setup-to-new-text changes 24,682 pixels in both
+runs, and dark-pixel counts rise from 16,038 to 20,358: this is a positive
+visibility check, not equality between blank/covered panels. Serialized font
+feature hashes and getFontFeatures=true remain unchanged. Legacy character-table
+inspection is ATG-limited and is not used as glyph-count proof; the TextField
+check uses its value API, not OS IME input or exhaustive script coverage.
+
+All six snapshots parse and dispose cleanly. Layout Tables remain at eight bytes
+in the unload run after the new text, locale reentry and panel recreation; the
+control retains about 81,776,520 bytes. The immediate native footprint reduction
+in this corrected capture is about 9.67 MiB, separately from the ~78 MiB root
+allocation reduction. Readback/snapshot history perturbs totals. Evidence:
+`native-retention-20261020/evidence/font-verify/{summary.json,pixel-comparison.json,reader-results.json}`.
+
+A concrete one-time production integration was then trialled in e7b3439dc: an
+independent coroutine waits 30 seconds after the first map/HUD initializes, then
+calls the public API at end of frame, with an exact profiler marker and internal
+diagnostic clock. The scheduled call takes 29.498 ms natively and produces a
+34.643 ms next-frame wall interval; the corresponding delayed main-thread timing
+is 34.442 ms. The clean same-binary control tops out at 18.319 ms. Every-frame
+records and a capture-free call window confirm this is not a missed sampled
+frame or PNG/snapshot overhead. Windows independently records 12.1532 ms for the
+same scheduled marker. Therefore the in-run one-shot is rejected and removed;
+no font-cache flushing policy remains in production. The original source fonts,
+features and rendering caches remain. Any future cleanup at a loading boundary
+would require its own integration timing validation rather than reusing the
+pixel-only result. The lazy appearance and idle upload-buffer changes are kept.

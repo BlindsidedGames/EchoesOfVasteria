@@ -41,9 +41,6 @@ namespace TimelessEchoes
     public class GameManager : Singleton<GameManager>
     {
         public static MapGenerationConfig CurrentGenerationConfig { get; private set; }
-        private static readonly Unity.Profiling.ProfilerMarker ReleaseFontFacesMarker =
-            new("Memory.ReleaseStartupFontFaces");
-        private bool startupFontCacheReleaseScheduled;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => CurrentGenerationConfig = null;
@@ -762,12 +759,6 @@ namespace TimelessEchoes
 
             BuffManager.Instance?.Resume();
 
-            if (!startupFontCacheReleaseScheduled)
-            {
-                startupFontCacheReleaseScheduled = true;
-                StartCoroutine(ReleaseStartupFontFaces());
-            }
-
             // Start monitoring for stalled distance after run begins
             if (stallMonitorCoroutine != null)
             {
@@ -785,28 +776,6 @@ namespace TimelessEchoes
                 if (CurrentMap == null) yield break;
             }
 
-        }
-
-        private IEnumerator ReleaseStartupFontFaces()
-        {
-            // The first map warms font layout data that is no longer needed after
-            // glyph generation. Release it once, after warmup and the render jobs;
-            // later text still uses the original fonts and their feature tables.
-            // This coroutine never blocks run initialization or NPC dialogue.
-            yield return new WaitForSecondsRealtime(30f);
-            yield return new WaitForEndOfFrame();
-#if EOV_STARTUP_DIAGNOSTICS
-            var started = System.Diagnostics.Stopwatch.GetTimestamp();
-#endif
-            UnityEngine.TextCore.LowLevel.FontEngineError result;
-            using (ReleaseFontFacesMarker.Auto())
-                result = UnityEngine.TextCore.LowLevel.FontEngine.UnloadAllFontFaces();
-#if EOV_STARTUP_DIAGNOSTICS
-            var elapsedMs = (System.Diagnostics.Stopwatch.GetTimestamp() - started) * 1000d /
-                System.Diagnostics.Stopwatch.Frequency;
-            Debug.Log($"[Memory] Startup font-face cleanup: {result}; " +
-                elapsedMs.ToString("F3", System.Globalization.CultureInfo.InvariantCulture) + " ms");
-#endif
         }
 
         private IEnumerator FastForwardStart()
