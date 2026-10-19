@@ -352,3 +352,43 @@ symbol file, UUID 5BDEE174-216F-35FB-9C77-BF4D20DD244A. No matching symbols were
 installed locally; the upload still completed. Archive, exact IPA, export
 options, receipt and source fingerprints are retained on the Mac. No production
 release, external tester-group changes or main-branch merge were performed.
+
+## Retention soak
+
+A 20-minute isolated Simulator soak of 9ca330359 completed ten authored map/return
+cycles (Farmlands four, Mines three, Spooky three) and ten Options open/close
+cycles in one process, with no new build or GPU readbacks. The external sampler
+captured 11,577 points; observed peak was 653.488 MiB and kernel lifetime peak
+653.629 MiB. Initial town was approximately 593.35 MiB, rising to 634.05 MiB
+after first visits to the three maps. Repeated town medians for cycles 4–10 were
+641.29, 636.68, 643.32, 651.74, 643.91, 652.58 and 643.19 MiB. Post-cycle idle
+was 643.426 MiB.
+
+Texture count 458, sprite count 6,806, PanelSettings count 10 and loaded character
+parts 8 were stable after warmup. Options had no assigned panel after closing.
+Unity reserved memory stayed at 548.953 MiB from cycle 4 onward. Allocated memory
+rose from 385.48 to 387.832 MiB between cycles 3 and 10 (+2.350 MiB), then fell
+slightly to 387.777 MiB during idle; managed memory declined 4.133 MiB over cycles
+3–10. Texture runtime bytes changed by exactly zero; town/map render targets
+were 45.904/55.398 MiB. This is bounded short-soak evidence with a small residual
+allocation drift, not proof of zero growth or absence of long-session leaks.
+
+Farmlands was tutorial-dialogue paused, so its coverage is construction/cleanup.
+Mines and Spooky advanced normally, including deaths/reaping and one automatic
+restart. No crash or managed exception was found; known Simulator texture-fallback
+and shadow warnings remain. The startup checkpoint stops at Ready and its warning
+counter is not continuous soak evidence. Direct pool counts and an unused-asset
+sweep command were unavailable in the retained probe; neither a new production
+seam nor a new profiling build was added solely to obtain them. All six protected
+checkout fingerprints remained unchanged.
+
+The raw report, endpoint CSV, native memory sampler, logs and preservation checks
+are retained on the Mac under
+`/Users/matthewrushworth/Documents/Codex/2026-10-19/task/memory-20261019/evidence/lifecycle-soak-9ca/`.
+Consolidated deployment artifacts are under
+`/Users/matthewrushworth/Documents/Codex/2026-10-19/task/consolidated-20261019/`,
+including the archive, Export-1.4.8-165 IPA/options/summary, successful upload receipt,
+build/source fingerprints and preservation reports. The Organizer archive copy is
+`/Users/matthewrushworth/Library/Developer/Xcode/Archives/2026-10-19/Echoes-1.4.8-165.xcarchive`.
+A longer isolated soak is the next overnight validation step; no additional
+runtime changes have been made after the consolidated upload.
