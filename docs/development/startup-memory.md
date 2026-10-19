@@ -97,3 +97,31 @@ as launch, so that a lower startup peak does not hide a later loading spike.
 Further work should be based on measured resident allocations;
 do not add forced garbage collections or repeated unused-asset unloads to
 mask assets retained by broad searches.
+
+## Native Simulator observations (intermediate)
+
+The Release iPhone 13 mini Simulator on iOS 18.5 reached Ready with a sampled
+native startup footprint peak of 598.50 MiB and steady footprint of roughly
+596–599 MiB, versus approximately 734 MiB in the earlier diagnostic run.
+This candidate still used the subsequently rejected ASTC imports; the Simulator
+reported ASTC unsupported and expanded those textures to RGBA. It is useful
+profiling evidence, not a final original-texture result or an iOS 27 device
+measurement. Peak RSS was 992.72 MiB; RSS and physical footprint are different
+metrics and must not be interchanged.
+
+Lifecycle checks covered changing hair/clothes, completing character creation,
+quests, inventory/equipment, statistics, repeated options visits, and entering
+and leaving Farmlands. Character-part assets fell from 11 during preview to 7
+in the map and after return. Streaming music changed from TownAmbient (199,731
+bytes loaded) to TimelessOST (204,719 bytes loaded, TownAmbient unloaded), then
+back to TownAmbient with the OST unloaded. Later footprint snapshots were
+623.94 MiB in preview, 633.69 MiB in the map and 627.44 MiB after returning;
+these include earlier readback and allocator history, unlike the cleaner startup
+measurement. Closed quests/inventory/statistics/options documents no longer
+had assigned panels. No crash or broken menu was observed in this sequence.
+
+Final profiling uses restored original textures. A separate reversible experiment
+checks whether the pipeline's sampled depth/opaque textures can be disabled
+with identical rendered pixels; required depth/stencil attachments, lighting,
+HDR, resolution and MSAA are retained. Do not apply those pipeline changes
+until the comparison establishes presentation parity.
