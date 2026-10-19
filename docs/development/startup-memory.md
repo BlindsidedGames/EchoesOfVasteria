@@ -2,7 +2,7 @@
 
 ## Current result
 
-The latest natively profiled candidate, 9ca330359, has a sampled startup peak
+The consolidated candidate uploaded in internal build 165, 9ca330359, has a sampled startup peak
 of 583.504 MiB on the arm64 Release iPhone 13 mini Simulator (iOS 18.5), with
 original character pixels preserved. The portrait-frame guard also passed native
 character editing, animation, clearing and restoration checks. The affected physical iPhone
@@ -10,6 +10,11 @@ character editing, animation, clearing and restoration checks. The affected phys
 at 60 Hz; repeated loading/text-shaping work was eliminated, but no overall
 phone FPS gain is claimed. Measurements below distinguish process footprint,
 Unity counters and render-target allocations rather than adding overlapping totals.
+The completed two-hour run peaked at 660.332 MiB and finished at 657.379 MiB,
+with fixed post-warmup texture/sprite/panel/character-part counts. The later
+20999d37e health-label cache also compiles and passes native label-value checks;
+it remains outside uploaded build 165. Its isolated method benchmark is not an
+overall FPS measurement.
 
 ## Confirmed failure
 
