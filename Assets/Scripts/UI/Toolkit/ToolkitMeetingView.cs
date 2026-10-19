@@ -19,6 +19,11 @@ namespace TimelessEchoes.UI.Toolkit
         private bool? portraitLayout;
         private int index = -1;
         private bool completed, disposed;
+        private bool hasTextMeasurement;
+        private float measuredTextHeight;
+        private (string text, float width, float size, Font font, FontDefinition definition,
+            FontStyle weight, float letters, float words, float paragraphs, WhiteSpace whitespace,
+            bool richText, float scale) textMeasurementKey;
         public VisualElement Root { get; }
         public Button AdvanceButton { get; }
         public bool AwaitingMeet => index < 0;
@@ -128,12 +133,28 @@ namespace TimelessEchoes.UI.Toolkit
             // determine the card height. Long entries scroll above a fixed action.
             var width = dialogue.resolvedStyle.width;
             if (!float.IsFinite(width) || width <= 0) return;
-            var textHeight = dialogue.MeasureTextSize(dialogue.text, width, VisualElement.MeasureMode.Exactly,
-                0, VisualElement.MeasureMode.Undefined).y;
+            var textHeight = MeasureDialogueHeight(width);
             var minimum = noPortrait ? 76 : 96;
             height = Mathf.RoundToInt(Mathf.Clamp(Mathf.Ceil(textHeight) + 64, minimum, availableHeight));
             Root.style.height = height;
             Root.style.top = safe.yMax - ToolkitResponsiveLayout.WindowBottom - height - 8;
+        }
+
+        private float MeasureDialogueHeight(float width)
+        {
+            var style = dialogue.resolvedStyle;
+            var scale = ToolkitResponsiveLayout.Scale(new Vector2Int(UnityEngine.Device.Screen.width, UnityEngine.Device.Screen.height));
+            var key = (dialogue.text, width, style.fontSize, style.unityFont, style.unityFontDefinition,
+                style.unityFontStyleAndWeight, style.letterSpacing, style.wordSpacing,
+                style.unityParagraphSpacing, style.whiteSpace, dialogue.enableRichText, scale);
+            if (!hasTextMeasurement || !key.Equals(textMeasurementKey))
+            {
+                measuredTextHeight = dialogue.MeasureTextSize(dialogue.text, width, VisualElement.MeasureMode.Exactly,
+                    0, VisualElement.MeasureMode.Undefined).y;
+                textMeasurementKey = key;
+                hasTextMeasurement = true;
+            }
+            return measuredTextHeight;
         }
 
         public void Advance()
@@ -153,6 +174,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void Refresh()
         {
+            hasTextMeasurement = false; // Locale/font fallback refreshes can change metrics without changing the text.
             var started = index >= 0;
             Root.EnableInClassList("meeting-awaiting", !started);
             if (dialogueScroll != null) dialogueScroll.scrollOffset = Vector2.zero;

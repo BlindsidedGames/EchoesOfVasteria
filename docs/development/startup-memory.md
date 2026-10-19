@@ -210,3 +210,40 @@ cache; a text/width-only cache is insufficient when font/style/locale changes.
 No incomplete dialogue cache is included in this candidate. Instruments Time
 Profiler stalled while attaching, so the successful Apple sample fallback is
 the source of the stack evidence above.
+
+### Consolidated native follow-up
+
+The c831dd89f original-texture candidate (runtime cleanup, optional camera
+copies disabled, Fields lookup cached) exported and built successfully in
+native arm64 Release. Its external sampled startup peak was 580.488 MiB;
+settled samples were 579.379–580.488 MiB. In-app Ready was 5.44 seconds and
+host-observed Ready 11.909 seconds on this first post-install launch. These
+startup timings are not controlled speedup comparisons. UGS signed in; Game
+Center authentication was requested. Optional sampled depth copies were absent
+and the required D32S8 attachment remained.
+
+Farmlands timing over 1,200 frames had wall median 16.666 ms, p95 17.199 ms,
+p99 17.260 ms; main-thread median 3.596 ms, p95 4.196 ms; GPU median 0.525 ms,
+p95 0.813 ms; present-wait median 13.096 ms. The run remained 60 Hz-capped.
+A second 20-second Apple sample captured 1,558 main-thread wall observations:
+zero Resources_Load, ResourcesAPIInternal_Load or native ResourceManager
+PreloadDependencies samples, versus 32 in the earlier capture. Navigation
+Refresh appeared once. Dialogue FitPortrait appeared 15 times (previously 12),
+while main-runloop waiting accounted for 1,099 observations. This supports
+removing repeated loader work, not a controlled overall FPS improvement.
+
+### Portrait dialogue measurement cache
+
+FitPortrait now reuses the text-height measurement when the exact text,
+resolved width, font/font definition/style/size, spacing, whitespace/rich-text
+settings and screen scale are unchanged. Dialogue and locale refreshes also
+invalidate it. Placement and available-height clamping still run normally;
+animations, scrolling and action buttons are unchanged.
+
+A new rendering-boundary PlayMode check passed for advancing to a longer line,
+changing font size, narrowing/restoring the text viewport, and limiting card
+height. An initial letter-spacing assertion was removed because it assumed
+this font's MeasureTextSize must grow for that setting; it did not establish
+a cache regression. The final check verifies observable fitting behavior.
+The test used isolated saves and restored rendering/Play settings. Native
+sampling of the dialogue-cache candidate remains pending.
