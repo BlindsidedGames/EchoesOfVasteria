@@ -1,9 +1,11 @@
 # Startup memory
+
 ## Current result
 
 The latest natively profiled candidate, 9ca330359, has a sampled startup peak
 of 583.504 MiB on the arm64 Release iPhone 13 mini Simulator (iOS 18.5), with
-original character pixels preserved. The portrait-frame guard also passed native character editing, animation, clearing and restoration checks. The affected physical iPhone
+original character pixels preserved. The portrait-frame guard also passed native
+character editing, animation, clearing and restoration checks. The affected physical iPhone
 13 mini on iOS 27 still needs confirmation. Simulator frame rate remains capped
 at 60 Hz; repeated loading/text-shaping work was eliminated, but no overall
 phone FPS gain is claimed. Measurements below distinguish process footprint,
@@ -326,3 +328,27 @@ with the original textures and normal app ID. The local profiling hooks and
 disposable app identity are excluded; internal startup diagnostics are retained
 so a nondeveloper can choose Normal and screenshot the completed check's native
 peak/headroom. Production publishing and merging remain out of scope.
+
+## Internal TestFlight delivery
+
+Apple accepted one consolidated internal-only upload of **1.4.8 (165)** on
+2026-10-19 at 12:50:25 UTC / 23:50:25 Australia/Sydney. Runtime source is
+9ca3303593492b2a6504d66ddb8eabeb238b39e4. Xcode distribution receipt:
+`d439c8f4-a32b-4d31-b72d-320dd17a5ef7`. This is an upload receipt, not an ASC
+build-resource ID. Apple processing and actual internal tester availability
+remain unverified.
+
+The exported IPA has the normal `com.blindsidedgames.echoesofvasteria` app ID,
+team AVX7SUF8Y6, version/build 1.4.8/165, Game Center enabled, get-task-allow
+false and beta-reports true. ExportOptions has testFlightInternalTestingOnly
+true. Xcode validation succeeded; no duplicate version/build rejection occurred.
+The original 214 character texture metadata tree is
+`9fcfd259d004db7ea158c76f952c04dd32d1934a`. The normal save implementation is
+unchanged; local profiling code, metadata and disposable identity are excluded.
+Six protected checkout fingerprints were unchanged.
+
+A nonfatal upload warning reports a missing prebuilt UnityRuntime.framework
+symbol file, UUID 5BDEE174-216F-35FB-9C77-BF4D20DD244A. No matching symbols were
+installed locally; the upload still completed. Archive, exact IPA, export
+options, receipt and source fingerprints are retained on the Mac. No production
+release, external tester-group changes or main-branch merge were performed.
