@@ -314,7 +314,7 @@ namespace TimelessEchoes.UI.Toolkit
             deathTitle.text = gm.IvanReturnPending ? ToolkitLocalization.Text("run.return-ivan", "Return to town to meet Ivan") : gm.RunEndedByReaper ? ToolkitLocalization.Text("run.reaped-prompt", "You were reaped...") : ToolkitLocalization.Text("run.died-prompt", "You have Died...");
             SetVisible(deathFill.parent, !gm.IvanReturnPending && !gm.FirstReapReturnPending);
             deathFill.style.width = Length.Percent(gm.DeathPromptProgress * 100);
-            RefreshBuffs(health && health.CurrentHealth > 0 && health.gameObject.activeInHierarchy);
+            RefreshBuffs(!gm.HeroIsDead && health && health.CurrentHealth > 0 && health.gameObject.activeInHierarchy);
             if (showingBreakdown) RefreshBreakdown();
         }
         private void RefreshBuffs(bool alive)
@@ -327,7 +327,7 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 var row = slots[i]; var recipe = manager.GetAssigned(i); row.icon.sprite = recipe ? recipe.buffIcon : null;
                 SetVisible(row.auto, manager.IsSlotAutoCasting(i)); ((ToolkitBorderProgress)row.fill).Value=0; row.text.text = "";
-                bool unlocked = i < manager.UnlockedSlots; row.button.SetEnabled(unlocked && recipe); row.icon.tintColor = Color.white;
+                bool unlocked = i < manager.UnlockedSlots; row.button.SetEnabled(alive && unlocked && recipe); row.icon.tintColor = Color.white;
                 row.button.EnableInClassList("ability-locked", !unlocked);
                 SetVisible(row.icon, unlocked && recipe);
                 if (!unlocked) { row.text.text = ToolkitLocalization.Text("common.locked", "Locked"); continue; } if (!recipe) continue;
@@ -365,6 +365,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (!resourceRows.TryGetValue(resource, out var row)) { row = E(detailRows,"row ledger-entry");row.tooltip=ToolkitLocalization.Name(resource);ToolkitGameplay.Icon(row,resource.icon,18);L(row,"","small").name="amount"; resourceRows.Add(resource, row); }
             row.Q<Label>("amount").text = value;
         }
+        public bool HasOpenHeroStats => heroStatsOpen;
         public bool HasOpenDetails => overlay != null && overlay.style.display.value != DisplayStyle.None;
         public void HideDetails() { if(detail!=null)detail.Q(className: "breakdown-rate").style.display=DisplayStyle.None; showingBreakdown = false; ClearSummary();if(runTime!=null)runTime.text="";if(runRatesLeft!=null)runRatesLeft.text="";if(runRatesRight!=null)runRatesRight.text="";SetVisible(overlay, false); detailRows?.Clear(); resourceRows.Clear(); }
         private static void SetVisible(VisualElement element, bool value) { if (element != null) element.style.display = value ? DisplayStyle.Flex : DisplayStyle.None; }

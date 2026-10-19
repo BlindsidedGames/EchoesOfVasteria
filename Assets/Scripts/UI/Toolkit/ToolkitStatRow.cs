@@ -47,7 +47,10 @@ namespace TimelessEchoes.UI.Toolkit
                     {
                         var index = col * 2 + line;
                         var metric = ToolkitGameplay.E(column, "enemy-stat-metric"); metric.tooltip = names[index];
-                        if (keys[index].HasValue && StatIconLookup.TryGetIcon(keys[index].Value, out var sprite))
+                        Sprite sprite = null;
+                        if (index == 5) sprite = Resources.Load<Sprite>("UI/Icons/VisibilityShown");
+                        else if (keys[index].HasValue) StatIconLookup.TryGetIcon(keys[index].Value, out sprite);
+                        if (sprite)
                         {
                             var symbolCrop = ToolkitGameplay.E(metric, "enemy-stat-symbol");
                             var image = new Image { sprite = sprite, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
@@ -55,7 +58,7 @@ namespace TimelessEchoes.UI.Toolkit
                             image.style.height = sprite.rect.height * 16 / sprite.pixelsPerUnit;
                             image.style.flexShrink = 0; symbolCrop.Add(image);
                         }
-                        if (!keys[index].HasValue || index == 7) ToolkitGameplay.L(metric, index == 7 ? "Bonus" : names[index], "enemy-stat-name");
+                        if (!sprite || index == 7) ToolkitGameplay.L(metric, index == 7 ? "Bonus" : names[index], "enemy-stat-name");
                         EnemyValues[index] = ToolkitGameplay.L(metric, "", "enemy-stat-value");
                     }
                 }

@@ -115,7 +115,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var noPortrait = Root.ClassListContains("meeting-no-portrait");
             var safe = ToolkitResponsiveLayout.SafeScreenArea;
-            Root.style.width = AwaitingMeet ? (noPortrait ? 100 : 164) : safe.width - 16;
+            Root.style.width = safe.width - 16;
             Root.style.left = safe.xMin + 8;
             var height = noPortrait ? 76 : 96;
             if (AwaitingMeet)
@@ -156,7 +156,8 @@ namespace TimelessEchoes.UI.Toolkit
             var started = index >= 0;
             Root.EnableInClassList("meeting-awaiting", !started);
             if (dialogueScroll != null) dialogueScroll.scrollOffset = Vector2.zero;
-            dialogueFrame.style.display = started ? DisplayStyle.Flex : DisplayStyle.None;
+            // Reserve the dialogue space before meeting so the action stays at bottom-right.
+            dialogueFrame.style.display = started || portraitLayout == true ? DisplayStyle.Flex : DisplayStyle.None;
             var text = started && index < lines.Count ? (index < lineKeys.Count && !string.IsNullOrEmpty(lineKeys[index])
                 ? ToolkitLocalization.Text(lineKeys[index], lines[index]) : lines[index]) : string.Empty;
             dialogue.text = ToolkitResponsiveLayout.IsPortrait ? text : "<b><smallcaps>" + text + "</smallcaps></b>";

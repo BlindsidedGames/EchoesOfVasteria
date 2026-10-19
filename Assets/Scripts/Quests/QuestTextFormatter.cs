@@ -10,6 +10,9 @@ namespace TimelessEchoes.Quests
 {
 	public static class QuestTextFormatter
 	{
+		// Keep inline resource icons separated from their counts in both quest views.
+		public const string ResourceIconSpacing = "\u00a0\u00a0";
+
 		public static string BuildGoalText(QuestData data, GameData.QuestRecord rec, bool includeTitleLine)
 		{
 			if (data == null || data.requirements == null)
@@ -113,7 +116,7 @@ namespace TimelessEchoes.Quests
 
 					var fallbackName = req.resource ? req.resource.name : string.Empty;
 					var label = string.IsNullOrEmpty(iconTag) ? fallbackName : iconTag;
-					var separator = string.IsNullOrEmpty(iconTag) ? ": " : string.Empty;
+					var separator = string.IsNullOrEmpty(iconTag) ? ": " : ResourceIconSpacing;
 
 					if (target <= 0)
 						sb.AppendLine($"<size=90%>{label}{separator}{FormatValue(data, current)}</size>");

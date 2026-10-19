@@ -31,7 +31,7 @@ namespace TimelessEchoes.UI.Toolkit
             }
             boostHand.style.display = target != null ? DisplayStyle.Flex : DisplayStyle.None;
             if (target == null) return;
-            PositionStatisticsHand(boostHand, target);
+            PositionStatisticsHand(boostHand, target, selectedTab != 4 ? TabTitle(4) : null);
         }
     }
 }

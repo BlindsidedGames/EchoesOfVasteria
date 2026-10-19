@@ -13,7 +13,34 @@ namespace TimelessEchoes.Gear
         public static int Stage => Oracle.oracle?.saveData?.General.ForgeFirstLessonStage ?? 0;
         public static bool Accepted => Oracle.oracle?.saveData?.Quests != null &&
             Oracle.oracle.saveData.Quests.TryGetValue(QuestId, out var record) && (record.Accepted || record.Completed);
-        public static bool Active => Accepted && Stage < 5;
+        public static bool HasAdvancedSword
+        {
+            get
+            {
+                var data = Oracle.oracle?.saveData;
+                if (data?.EquipmentBySlot == null || !data.EquipmentBySlot.TryGetValue("Weapon", out var weapon) || weapon == null)
+                    return false;
+                var rarity = Blindsided.Utilities.AssetCache.GetAll<RaritySO>("").FirstOrDefault(r => r && r.name == weapon.rarity);
+                return rarity && rarity.tierIndex > 0;
+            }
+        }
+        public static bool Active => Accepted && Stage < 5 && !HasAdvancedSword;
+
+        public static bool ReconcileExistingWeapon()
+        {
+            var data = Oracle.oracle?.saveData;
+            if (data == null || Stage >= 5 || !HasAdvancedSword) return false;
+            data.General.ForgeFirstLessonStage = 5;
+            data.General.ForgeFirstLessonItem = null;
+            data.General.ForgeIntroductionSeen = true;
+            data.Quests ??= new System.Collections.Generic.Dictionary<string, GameData.QuestRecord>();
+            if (!data.Quests.TryGetValue(QuestId, out var record))
+                data.Quests[QuestId] = record = new GameData.QuestRecord();
+            record.Accepted = record.Completed = true;
+            if (record.CompletedTimestamp == 0) record.CompletedTimestamp = System.DateTime.UtcNow.Ticks;
+            data.PinnedQuests?.Remove(QuestId);
+            return true;
+        }
         public static void Advance(int stage) => Oracle.oracle.saveData.General.ForgeFirstLessonStage = stage;
 
         public static GearItemRecord Record(GearItem item) => new GearItemRecord

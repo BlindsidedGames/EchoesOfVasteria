@@ -61,7 +61,12 @@ namespace TimelessEchoes.UI.Toolkit
             if (lessonStage != stage)
             {
                 lessonStage = stage; lessonStarted = Time.unscaledTime;
-                if (lessonTarget != null) ((ScrollView)main).ScrollTo(lessonTarget);
+                var nextTarget = lessonTarget;
+                root.schedule.Execute(() =>
+                {
+                    if (ForgeFirstLesson.Active && lessonTarget == nextTarget && nextTarget?.panel != null)
+                        ((ScrollView)main).ScrollTo(nextTarget);
+                }).StartingIn(1);
             }
         }
         private void PositionFirstLessonHand()
@@ -69,9 +74,10 @@ namespace TimelessEchoes.UI.Toolkit
             if (lessonTarget == null || !ForgeFirstLesson.Active) return;
             main.style.marginTop = FirstLessonMargin;
             if (!((ScrollView)main).contentViewport.worldBound.Contains(lessonTarget.worldBound.center))
-                ((ScrollView)main).ScrollTo(lessonTarget);
+            { lessonPointer.style.display = DisplayStyle.None; return; }
+            lessonPointer.style.display = DisplayStyle.Flex;
             var anchor = root.WorldToLocal(new Vector2(lessonTarget.worldBound.center.x, lessonTarget.worldBound.yMax));
-            var bob = 4 * (1 + Mathf.Cos((Time.unscaledTime - lessonStarted) * Mathf.PI * 2 / 1.2f));
+            var bob = 1.5f * (1 + Mathf.Cos((Time.unscaledTime - lessonStarted) * Mathf.PI * 2 / 1.5f));
             var above = anchor.y + 2 + bob + 24 > root.layout.height;
             lessonPointer.style.rotate = new Rotate(Angle.Degrees(above ? 180 : 0));
             lessonPointer.style.left = Mathf.Round(anchor.x - 12);

@@ -15,11 +15,35 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly Dictionary<string, (Button button, Image icon)> gearSlots = new();
         private readonly Dictionary<string, (Button button, ToolkitVisibilityIcon icon)> visibilityControls = new();
         private CharacterImage equipmentPreview;
-        private Label equipmentCharacterName;
+        private Label equipmentCharacterName, equipmentHeading;
         private int previewDirection;
         private float nextPreviewFrame;
         private VisualElement portraitInventoryTabs;
         private bool portraitEquipmentSelected;
+        private Button portraitEquipmentTab;
+        private Image equipmentTutorialHand;
+        private void RefreshEquipmentTutorial()
+        {
+            if (equipmentTutorialHand == null) return;
+            var general = Blindsided.Oracle.oracle?.saveData?.General;
+            var active = ToolkitResponsiveLayout.IsPortrait && !embedded && general != null &&
+                general.InventoryTutorialStage > 0 && general.InventoryTutorialStage < 3 &&
+                (!GameManager.Instance || GameManager.Instance.IsInTown);
+            if (active && portraitEquipmentSelected)
+            {
+                general.InventoryTutorialStage = 3;
+                active = false;
+            }
+            equipmentTutorialHand.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
+            if (!active || portraitEquipmentTab?.panel == null) return;
+            var point = root.WorldToLocal(new Vector2(portraitEquipmentTab.worldBound.center.x, portraitEquipmentTab.worldBound.yMin));
+            var bounce = Mathf.Round(1.5f * (1 + Mathf.Cos(Time.unscaledTime * 4)));
+            equipmentTutorialHand.style.left = Mathf.Round(point.x - 12);
+            equipmentTutorialHand.style.top = Mathf.Round(point.y - 26 - bounce);
+            equipmentTutorialHand.style.rotate = new Rotate(Angle.Degrees(180));
+            if (root.IndexOf(equipmentTutorialHand) != root.childCount - 1) equipmentTutorialHand.BringToFront();
+        }
+
         private void BuildEquipment(VisualElement frame)
         {
             equipmentController = EquipmentController.Instance;
@@ -35,10 +59,17 @@ namespace TimelessEchoes.UI.Toolkit
             var resourcesTab = ToolkitGameplay.B(portraitInventoryTabs, "Resources", () => { portraitEquipmentSelected = false; FitEquipmentColumns(); });
             ToolkitLocalization.Bind(resourcesTab, "inventory.resources", "Resources");
             var equipmentTab = ToolkitGameplay.B(portraitInventoryTabs, "Equipment", () => { portraitEquipmentSelected = true; FitEquipmentColumns(); });
+            equipmentTab.name = "inventory-equipment-tab";
+            portraitEquipmentTab = equipmentTab;
             ToolkitLocalization.Bind(equipmentTab, "inventory.equipment", "Equipment");
+            equipmentTutorialHand = new Image { name = "inventory-equipment-tutorial-hand", sprite = definition.equipmentArt.tutorialHand, pickingMode = PickingMode.Ignore };
+            equipmentTutorialHand.style.position = Position.Absolute;
+            equipmentTutorialHand.style.width = equipmentTutorialHand.style.height = 24;
+            equipmentTutorialHand.style.display = DisplayStyle.None;
+            root.Add(equipmentTutorialHand);
             frame.RegisterCallback<GeometryChangedEvent>(_ => FitEquipmentColumns());
             var header = ToolkitGameplay.E(column, "inventory-equipment-header");
-            ToolkitGameplay.L(header, ToolkitLocalization.Text("inventory.equipped", "Equipped items"), "heading");
+            equipmentHeading = ToolkitGameplay.L(header, ToolkitLocalization.Text("inventory.equipped", "Equipped items"), "heading");
             equipmentCharacterName = ToolkitGameplay.L(header, "", "inventory-character-name"); equipmentCharacterName.enableRichText = false;
             var details = new ScrollView(ScrollViewMode.Vertical) { name = "inventory-equipment-scroll" };
             details.style.flexGrow = 1; details.style.minHeight = 0;
@@ -77,6 +108,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void FitEquipmentColumns()
         {
+            if (equipmentHeading != null) equipmentHeading.style.display = ToolkitResponsiveLayout.IsPortrait ? DisplayStyle.None : DisplayStyle.Flex;
             if (equipmentColumn == null || grid == null) return;
             var portrait = ToolkitResponsiveLayout.IsPortrait;
             selectedName.style.visibility = portrait && portraitEquipmentSelected ? Visibility.Hidden : Visibility.Visible;

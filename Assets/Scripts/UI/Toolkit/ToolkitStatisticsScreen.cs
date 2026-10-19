@@ -67,6 +67,8 @@ namespace TimelessEchoes.UI.Toolkit
             Blindsided.EventHandler.OnLoadData += Changed;
             resourceManager = TimelessEchoes.Upgrades.ResourceManager.Instance;
             if (resourceManager) { resourceManager.OnInventoryChanged += InventoryChanged; resourceManager.OnResourceAdded += ResourceChanged; resourceManager.OnResourceTierUpgraded += ResourceTierChanged; }
+            // Keep the section selector in a stable hierarchy while its popup is open.
+            root.Add(portraitSection);
             SelectTab(selectedTab); Layout(); return true;
         }
         public void SelectTab(int index)
@@ -187,10 +189,31 @@ namespace TimelessEchoes.UI.Toolkit
         private void DistanceChanged(float _) { if (selectedTab == 0) dirty = true; }
         private void Update() { if (!IsOpen) return; Layout(); RefreshJournalAccess(); RefreshMapTutorial(); RefreshGraphGuidance(); RefreshBoostGuidance(); if (localizationDirty) { localizationDirty = false; RefreshLocalization(); } if (dirty || selectedTab == 6 && Time.unscaledTime >= nextForgeRefresh) Refresh(); }
         private VisualElement StatisticsSectionTarget(int tab) => ToolkitResponsiveLayout.IsPortrait ? portraitSection : tabButtons[tab];
-        private void PositionStatisticsHand(Image hand, VisualElement target)
+        private void PositionStatisticsHand(Image hand, VisualElement target, string option = null)
         {
             if (target == null || target.resolvedStyle.display == DisplayStyle.None || target.worldBound.width <= 0)
             { hand.style.display = DisplayStyle.None; return; }
+            if (target is DropdownField && !string.IsNullOrEmpty(option))
+            {
+                var overlay = root.panel?.visualTree;
+                var item = overlay?.Query(className: "unity-base-dropdown__item").ToList().Find(row =>
+                    row.worldBound.height > 0 && row.resolvedStyle.display != DisplayStyle.None &&
+                    row.Q<Label>(className: "unity-base-dropdown__label")?.text == option);
+                if (item != null)
+                {
+                    // Native dropdowns are above the screen tree. Keep the guide in
+                    // that overlay too, with space beside the option's label.
+                    item.style.paddingRight = 36;
+                    if (hand.parent != overlay) overlay.Add(hand);
+                    var choicePoint = overlay.WorldToLocal(new Vector2(item.worldBound.xMax - 30, item.worldBound.center.y));
+                    hand.style.left = Mathf.Round(choicePoint.x + 1.5f * (1 + Mathf.Cos(Time.unscaledTime * 4)));
+                    hand.style.top = Mathf.Round(choicePoint.y - 12);
+                    hand.style.rotate = new Rotate(Angle.Degrees(270));
+                    if (overlay.IndexOf(hand) != overlay.childCount - 1) hand.BringToFront();
+                    return;
+                }
+            }
+            if (hand.parent != root) root.Add(hand);
             // A labelled dropdown includes its caption. Point at its actual input.
             var input = target is DropdownField ? target.Q(className: "unity-base-popup-field__input") : null;
             var rect = (input ?? target).worldBound;
@@ -200,24 +223,28 @@ namespace TimelessEchoes.UI.Toolkit
             var above = below.y + 38 > root.contentRect.height ||
                 ToolkitResponsiveLayout.IsPortrait && target is DropdownField && top.y >= 34;
             var point = above ? top : below;
-            var bounce = Mathf.Round(4 * (1 + Mathf.Cos(Time.unscaledTime * 5)));
+            var bounce = Mathf.Round(1.5f * (1 + Mathf.Cos(Time.unscaledTime * 4)));
             hand.style.left = Mathf.Clamp(Mathf.Round(point.x - 12), 0, Mathf.Max(0, root.contentRect.width - 24));
             hand.style.top = Mathf.Round(above ? point.y - 26 - bounce : point.y + 2 + bounce);
             hand.style.rotate = new Rotate(Angle.Degrees(above ? 180 : 0));
-            hand.BringToFront();
+            if (root.IndexOf(hand) != root.childCount - 1) hand.BringToFront();
         }
         private readonly ToolkitWindowLayout windowLayout = new();
         private void Layout()
         {
             windowLayout.Centered(root, theme);
             var portrait = ToolkitResponsiveLayout.IsPortrait;
-            if (previousPortraitLayout.HasValue && previousPortraitLayout.Value != portrait && selectedTab == 0) SelectTab(0);
+            if (previousPortraitLayout.HasValue && previousPortraitLayout.Value != portrait)
+            {
+                if (selectedTab == 0) SelectTab(0);
+                else runGraph?.Refresh();
+            }
             previousPortraitLayout = portrait;
             syncingPortraitSelectors = true;
             portraitSection.style.display = portrait ? DisplayStyle.Flex : DisplayStyle.None;
-            if (portrait && root.IndexOf(portraitSection) != root.childCount - 1) root.Add(portraitSection);
             footer.style.display = !portrait && selectedTab != 2 ? DisplayStyle.Flex : DisplayStyle.None;
-            portraitSection.SetValueWithoutNotify(TabTitle(selectedTab));
+            var sectionTitle = TabTitle(selectedTab);
+            if (portraitSection.value != sectionTitle) portraitSection.SetValueWithoutNotify(sectionTitle);
             portraitSort.style.display = portrait && portraitSortActions.Count > 0 ? DisplayStyle.Flex : DisplayStyle.None;
             if (portraitSortActions.Count > 0)
             {
@@ -225,8 +252,10 @@ namespace TimelessEchoes.UI.Toolkit
                 if (!portraitSort.choices.SequenceEqual(labels)) portraitSort.choices = labels;
                 var buttons = footer.Query<Button>().ToList();
                 var selected = buttons.FindIndex(b => b.ClassListContains("active"));
-                portraitSort.SetValueWithoutNotify(labels[Mathf.Clamp(selected, 0, labels.Count - 1)]);
-                if (distanceControls != null) distanceControls.PlaceBehind(portraitSort);
+                var sortTitle = labels[Mathf.Clamp(selected, 0, labels.Count - 1)];
+                if (portraitSort.value != sortTitle) portraitSort.SetValueWithoutNotify(sortTitle);
+                if (distanceControls != null && root.IndexOf(distanceControls) != root.IndexOf(portraitSort) - 1)
+                    distanceControls.PlaceBehind(portraitSort);
             }
             syncingPortraitSelectors = false;
         }
@@ -239,6 +268,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (resourceManager) { resourceManager.OnInventoryChanged -= InventoryChanged; resourceManager.OnResourceAdded -= ResourceChanged; resourceManager.OnResourceTierUpgraded -= ResourceTierChanged; }
             if (killTracker) killTracker.OnKillRegistered -= KillChanged;
             TimelessEchoes.Tasks.TaskWeightService.ToggleChanged -= TaskToggleChanged; TimelessEchoes.Tasks.TaskWeightService.WeightsChanged -= TaskWeightsChanged;
+            boostHand?.RemoveFromHierarchy(); graphHand?.RemoveFromHierarchy(); mapTutorialHand?.RemoveFromHierarchy();
             boostHand = null; graphHand = null; boostScrolled = false; mapTutorial = null; mapTutorialText = null; mapTutorialHand = null;
             taskRows.Clear(); enemyRows.Clear(); statSortButtons.Clear(); distanceControls = null; enemyDistance = null;
             itemRows.Clear(); itemSortButtons.Clear(); itemContent = null;

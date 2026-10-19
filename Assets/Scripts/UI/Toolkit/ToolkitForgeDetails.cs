@@ -13,6 +13,9 @@ namespace TimelessEchoes.UI.Toolkit
     public sealed partial class ToolkitForgeScreen
     {
         private string comparisonSignature;
+        private string comparisonSlot;
+        private VisualElement comparisonQuality;
+        private readonly List<(StatDefSO stat, VisualElement row)> comparisonStats = new();
         private static void NativeSize(Image image)
         {
             var sprite = image.sprite;
@@ -45,19 +48,39 @@ namespace TimelessEchoes.UI.Toolkit
             var eq = equipped == null ? 0 : UpgradeEvaluator.ComputeQualityPercent(crafting, equipped, session.Slot);
             var signature = session.Slot + ":" + (pending != null) + ":" + (equipped != null) + ":" + pq + ":" + eq + string.Join(";", p.Concat(e).Select(a => a.stat.name + ":" + a.value));
             if (signature == comparisonSignature) return;
-            comparisonSignature = signature; comparisonRows.Clear();
-            Metric(comparisonRows, session.Slot, null, ToolkitLocalization.Text("forge.new-item", "New item"), ToolkitLocalization.Text("forge.equipped", "Equipped")).AddToClassList("forge-metric-header");
-            StatIconLookup.TryGetIcon(StatIconLookup.StatKey.Quality, out var quality);
-            Metric(comparisonRows, ToolkitLocalization.Text("forge.quality", "Quality"), quality, pending == null ? "—" : pq.ToString("0.#")+"%", equipped == null ? "—" : eq.ToString("0.#")+"%", pending == null ? 0 : Math.Sign(pq-eq));
-            var defs = p.Concat(e).Select(a=>a.stat).GroupBy(s=>s.heroMapping).Select(g=>g.First()).ToList();
-            defs.Sort((a,b)=>StatSortOrder.Compare(a.heroMapping,b.heroMapping));
-            foreach(var def in defs)
+            comparisonSignature = signature;
+            if (comparisonSlot != session.Slot || comparisonRows.childCount == 0)
             {
-                var pa=p.Where(a=>a.stat.heroMapping==def.heroMapping).Sum(a=>a.value); var ea=e.Where(a=>a.stat.heroMapping==def.heroMapping).Sum(a=>a.value);
-                StatIconLookup.TryGetIcon(def.heroMapping,out var icon);
-                Metric(comparisonRows,def.GetName(),icon,pending == null ? "—" : Amount(pa,def.isPercent),equipped == null ? "—" : Amount(ea,def.isPercent),pending == null ? 0 : Math.Sign(pa-ea));
+                comparisonSlot = session.Slot; comparisonRows.Clear(); comparisonStats.Clear();
+                Metric(comparisonRows, session.Slot, null, ToolkitLocalization.Text("forge.new-item", "New item"), ToolkitLocalization.Text("forge.equipped", "Equipped")).AddToClassList("forge-metric-header");
+                StatIconLookup.TryGetIcon(StatIconLookup.StatKey.Quality, out var quality);
+                comparisonQuality = Metric(comparisonRows, ToolkitLocalization.Text("forge.quality", "Quality"), quality, "—", "—");
+                // Keep one row per possible stat so rerolls never resize the page or shift its scroll position.
+                var defs = AssetCache.GetAll<StatDefSO>("").Where(s => s &&
+                    (s.heroMapping != HeroStatMapping.MoveSpeed || session.Slot == "Boots"))
+                    .Concat(p.Concat(e).Select(a => a.stat)).GroupBy(s => s.heroMapping).Select(g => g.First()).ToList();
+                defs.Sort((a, b) => StatSortOrder.Compare(a.heroMapping, b.heroMapping));
+                foreach (var def in defs)
+                {
+                    StatIconLookup.TryGetIcon(def.heroMapping, out var icon);
+                    comparisonStats.Add((def, Metric(comparisonRows, def.GetName(), icon, "—", "—")));
+                }
             }
-            if(pending==null) Label(comparisonRows,ToolkitLocalization.Text("forge.compare-hint", "Craft an item to compare it with your equipment."),ToolkitControls.TextRole.Caption).AddToClassList("forge-empty-result");
+            UpdateComparisonMetric(comparisonQuality, pending == null ? "—" : pq.ToString("0.#") + "%", equipped == null ? "—" : eq.ToString("0.#") + "%", pending == null ? 0 : Math.Sign(pq - eq));
+            foreach (var entry in comparisonStats)
+            {
+                var def = entry.stat;
+                var pa=p.Where(a=>a.stat.heroMapping==def.heroMapping).Sum(a=>a.value); var ea=e.Where(a=>a.stat.heroMapping==def.heroMapping).Sum(a=>a.value);
+                UpdateComparisonMetric(entry.row, p.Any(a => a.stat.heroMapping == def.heroMapping) ? Amount(pa, def.isPercent) : "—",
+                    e.Any(a => a.stat.heroMapping == def.heroMapping) ? Amount(ea, def.isPercent) : "—", pending == null ? 0 : Math.Sign(pa - ea));
+            }
+        }
+        private static void UpdateComparisonMetric(VisualElement row, string pending, string equipped, int change)
+        {
+            var values = row.Query<Label>(className: "forge-metric-value").ToList();
+            values[0].text = pending; values[1].text = equipped;
+            values[0].EnableInClassList("forge-gain", change > 0);
+            values[0].EnableInClassList("forge-loss", change < 0);
         }
     }
 }

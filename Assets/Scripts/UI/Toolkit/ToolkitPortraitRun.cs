@@ -27,7 +27,7 @@ namespace TimelessEchoes.UI.Toolkit
             SetVisible(portraitResources, visible);
             if (!visible) return;
             portraitResources.style.left = portraitResources.style.right = 12;
-            portraitResources.style.top = portraitDashboard.worldBound.yMax - root.worldBound.yMin + 12;
+            portraitResources.style.top = Mathf.Max(portraitDashboard.worldBound.yMax, ToolkitPinnedGoals.PortraitBottom) - root.worldBound.yMin + 12;
             portraitResources.style.bottom = ToolkitResponsiveLayout.WindowBottom + 12;
             if (!portraitResourcesDirty) return;
             portraitResourcesDirty = false;

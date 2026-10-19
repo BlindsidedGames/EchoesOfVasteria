@@ -153,8 +153,10 @@ namespace TimelessEchoes.Gear
         }
         public void Replace()
         {
+            if (ForgeFirstLesson.ReconcileExistingWeapon()) { Notify(); return; }
+            var completingFirstLesson = ForgeFirstLesson.Active;
             if (!CanReplace || !equipment.Equip(lastCrafted)) return;
-            if (ForgeFirstLesson.Active)
+            if (completingFirstLesson)
             {
                 ForgeFirstLesson.Advance(5);
                 Oracle.oracle.saveData.General.ForgeFirstLessonItem = null;

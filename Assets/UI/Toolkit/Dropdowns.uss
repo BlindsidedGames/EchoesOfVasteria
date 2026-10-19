@@ -1,0 +1,17 @@
+/* Native popup menus live outside the screen root, so they need panel-level styling. */
+.unity-base-dropdown__container-outer {
+    background-color: #3c3032;
+    border-width: 1px;
+    border-color: #74514a;
+    border-radius: 0;
+}
+.unity-base-dropdown__container-inner { padding: 2px; }
+.unity-base-dropdown__item {
+    min-height: 32px;
+    padding: 4px 8px;
+    background-color: #3c3032;
+}
+.unity-base-dropdown__item:hover,
+.unity-base-dropdown__item:checked { background-color: #514042; }
+.unity-base-dropdown__label { color: #f5e4d6; font-size: 10px; }
+.unity-base-dropdown__checkmark { -unity-background-image-tint-color: #efb984; }

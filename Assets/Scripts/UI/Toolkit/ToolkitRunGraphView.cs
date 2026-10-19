@@ -100,6 +100,9 @@ namespace TimelessEchoes.UI.Toolkit
             var all=history();var key=map<0?null:definition.maps[map].config.name;
             var filtered=all.Where(r=>key==null||r.MapType==key).ToList();
             visible=filtered.Where(r=>!perMinute||r.Duration>0).ToList();
+            var omitted = filtered.Count - visible.Count;
+            if (ToolkitResponsiveLayout.IsPortrait && visible.Count > 10)
+                visible = visible.Skip(visible.Count - 10).ToList();
             var values=visible.Select(r=>Value(r,metric,perMinute)).ToArray();
             double max=values.Length>0?values.Max():0,avg=values.Length>0?values.Average():0;
             for(int i=0;i<metrics.Count;i++)metrics[i].EnableInClassList("active",i==(int)metric);
@@ -107,7 +110,10 @@ namespace TimelessEchoes.UI.Toolkit
             rates.SetEnabled(SupportsRate); rates.EnableInClassList("active",perMinute);totals.EnableInClassList("active",!perMinute);
             var suffix=perMinute?ToolkitLocalization.Text("graph.rate-suffix", " / min"):"";
             summary.text=values.Length==0?ToolkitLocalization.Text("graph.no-data", "No recent data"):ToolkitLocalization.Text("graph.average-best", "Average {0}{1}   ·   {2} {3}{1}", Format(avg), suffix, metric==Metric.Duration?ToolkitLocalization.Text("graph.longest", "Longest"):ToolkitLocalization.Text("graph.best", "Best"), Format(max));
-            sample.text=ToolkitLocalization.Text("graph.sample", "{0} of last {1} saved runs{2}", visible.Count, all.Count, filtered.Count!=visible.Count?ToolkitLocalization.Text("graph.omitted", " · {0} without duration omitted", filtered.Count-visible.Count):"");
+            var omittedText = omitted > 0 ? ToolkitLocalization.Text("graph.omitted", " · {0} without duration omitted", omitted) : "";
+            sample.text = ToolkitResponsiveLayout.IsPortrait
+                ? ToolkitLocalization.Text("graph.recent-sample", "Latest {0} runs{1}", visible.Count, omittedText)
+                : ToolkitLocalization.Text("graph.sample", "{0} of last {1} saved runs{2}", visible.Count, all.Count, omittedText);
             var ceiling=max>0?NiceCeiling(max):1;
             for(int i=0;i<5;i++)ticks[i].text=Format(ceiling*i/4);
             barHost.Clear();var slots=Math.Max(10,visible.Count);

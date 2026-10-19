@@ -103,10 +103,13 @@ namespace TimelessEchoes.UI.Toolkit
                 meetHand.style.display = view.AwaitingMeet && definition.tutorialHand ? DisplayStyle.Flex : DisplayStyle.None;
                 if (view.AwaitingMeet)
                 {
-                    var anchor = view.Root.WorldToLocal(new Vector2(view.AdvanceButton.worldBound.center.x, view.AdvanceButton.worldBound.yMax));
+                    var aboveButton = ToolkitResponsiveLayout.IsPortrait;
+                    var buttonBounds = view.AdvanceButton.worldBound;
+                    var anchor = view.Root.WorldToLocal(new Vector2(buttonBounds.center.x, aboveButton ? buttonBounds.yMin : buttonBounds.yMax));
                     var bob = 4 * (1 + Mathf.Cos(Time.unscaledTime * Mathf.PI * 2 / 1.2f));
                     meetHand.style.left = Mathf.Round(anchor.x - 12);
-                    meetHand.style.top = Mathf.Round(anchor.y + 2 + bob);
+                    meetHand.style.top = Mathf.Round(aboveButton ? anchor.y - 26 - bob : anchor.y + 2 + bob);
+                    meetHand.style.rotate = new Rotate(Angle.Degrees(aboveButton ? 180 : 0));
                 }
             }
             if (animatedPortrait != null && portraitFrames != null && portraitFrames.Count > 0)

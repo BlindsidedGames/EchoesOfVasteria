@@ -41,7 +41,7 @@ namespace TimelessEchoes.UI.Toolkit
             graphHand.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
             if (!active) return;
             var target = StatisticsSectionTarget(2);
-            PositionStatisticsHand(graphHand, target);
+            PositionStatisticsHand(graphHand, target, TabTitle(2));
         }
     }
 }

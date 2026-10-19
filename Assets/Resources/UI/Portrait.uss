@@ -145,16 +145,31 @@
 .gameplay.portrait.fields-ui .portrait-page {flex-grow:0;flex-shrink:0;}
 .gameplay.portrait.eov-skills .eov-skills-header {width:100%;flex-shrink:0;max-height:none;}
 .gameplay.portrait.eov-skills .eov-skills-right {min-height:0;width:100%;}
-.gameplay.portrait.eov-forge .eov-forge-selections {width:100%;margin:0;}
-.gameplay.portrait.eov-forge .eov-forge-slot {width:44px;height:36px;}
-.gameplay.portrait.eov-forge .eov-forge-actions {width:100%;margin:12px 0 0 0;}
-.gameplay.portrait.eov-forge .forge-craft-controls {flex-direction:column-reverse;align-items:stretch;}
-.gameplay.portrait.eov-forge .forge-craft-controls > Button {width:100%;height:38px;font-size:13px;margin:8px 0 0 0;}
-.gameplay.portrait.eov-forge .forge-craft-recipe {height:48px;flex-grow:0;justify-content:center;}
+.gameplay.portrait.eov-forge .eov-forge-selections {width:100%;margin:0;flex-direction:row;align-items:flex-start;}
+.gameplay.portrait.eov-forge .forge-equipment-selector {width:104px;flex-shrink:0;margin-right:12px;}
+.gameplay.portrait.eov-forge .forge-core-selector {flex-grow:1;min-width:0;}
+.gameplay.portrait.eov-forge .forge-equipment-selector > .eov-text,
+.gameplay.portrait.eov-forge .forge-core-selector > .eov-text {font-size:12px;margin-bottom:6px;}
+.gameplay.portrait.eov-forge .forge-equipment-grid {flex-wrap:wrap;justify-content:flex-start;}
+.gameplay.portrait.eov-forge .eov-forge-slot-column {width:44px;flex-grow:0;flex-shrink:0;margin:0 6px 6px 0;}
+.gameplay.portrait.eov-forge .eov-forge-slot-column > .eov-text {font-size:9px;margin-top:2px;}
+.gameplay.portrait.eov-forge .eov-forge-slot {width:44px;height:40px;min-height:40px;}
+.gameplay.portrait.eov-forge .eov-forge-core-grid {justify-content:flex-start;}
+.gameplay.portrait.eov-forge .eov-forge-core {width:44px;height:54px;min-height:54px;flex-grow:0;flex-shrink:0;margin:0 6px 6px 0;}
+.gameplay.portrait.eov-forge .eov-forge-core-frame {width:40px;height:40px;margin-bottom:2px;}
+.gameplay.portrait.eov-forge .eov-forge-core .eov-text {font-size:9px;}
+.gameplay.portrait.eov-forge .eov-forge-actions {width:100%;margin:8px 0 0 0;}
+.gameplay.portrait.eov-forge .forge-craft-controls {flex-direction:row;align-items:center;}
+.gameplay.portrait.eov-forge .forge-craft-controls > Button {width:96px;height:34px;min-height:34px;font-size:12px;margin:0 12px 0 0;}
+.gameplay.portrait.eov-forge .forge-craft-recipe {height:44px;flex-grow:1;justify-content:flex-start;}
+.gameplay.portrait.eov-forge .forge-comparison-heading Button {width:72px;height:30px;min-height:30px;font-size:11px;}
+.gameplay.portrait.eov-forge .forge-rarity-section {margin-top:12px;padding-top:8px;border-top-width:1px;border-top-color:var(--line);}
+.gameplay.portrait.eov-forge .forge-odds-legend > .eov-text--heading {font-size:12px;margin-bottom:6px;}
+.gameplay.portrait.eov-forge .forge-odds-row {height:20px;}
+.gameplay.portrait.eov-forge .forge-odds-row .eov-text {font-size:9px;}
+.gameplay.portrait.eov-forge .forge-odds-value {width:44px;}
 .gameplay.portrait.eov-forge .forge-comparison-section {margin:0;}
 .gameplay.portrait.eov-forge .eov-forge-conversions {margin:0;padding-top:0;border-top-width:0;}
-.gameplay .portrait-odds-toggle {display:none;}
-.gameplay.portrait .portrait-odds-toggle {display:flex;min-height:32px;margin-top:10px;justify-content:space-between;background-color:transparent;border-top-width:1px;border-top-color:var(--line);}
 .gameplay .portrait-topic-picker {display:none;}
 .gameplay.portrait .portrait-topic-picker {display:flex;min-height:34px;flex-shrink:0;margin:0 0 10px 0;font-size:11px;justify-content:flex-start;}
 .gameplay.portrait.library-reader .library-topics {height:auto;max-height:none;flex-grow:1;min-height:0;}
@@ -173,10 +188,10 @@
 .gameplay.portrait .eov-stat-tabs .eov-stat-tab {flex-basis:30%;min-height:32px;font-size:10px;}
 .gameplay .portrait-navigation-title {display:none;}
 .gameplay.portrait .portrait-navigation-title {display:flex;font-size:18px;margin-bottom:16px;}
-.gameplay.portrait.eov-navigation .eov-navigation-popup {padding:14px 12px;border-width:0;background-color:var(--surface);}
-.gameplay.portrait.eov-navigation .eov-navigation-popup .eov-navigation-row {width:100%;margin:0 0 8px 0;}
-.gameplay.portrait.eov-navigation .eov-navigation-popup .eov-navigation-button {width:100%;min-height:40px;justify-content:flex-start;padding:8px 12px;}
-.gameplay.portrait.eov-navigation .eov-navigation-popup .eov-navigation-label {font-size:13px;}
+.gameplay.portrait.eov-navigation .eov-navigation-popup {padding:6px;border-width:1px;background-color:var(--surface);}
+.gameplay.portrait.eov-navigation .eov-navigation-popup .eov-navigation-row {width:100%;height:36px;margin:2px 0;}
+.gameplay.portrait.eov-navigation .eov-navigation-popup .eov-navigation-button {width:100%;height:36px;min-height:36px;justify-content:flex-start;padding:6px 10px;}
+.gameplay.portrait.eov-navigation .eov-navigation-popup .eov-navigation-label {font-size:12px;}
 .gameplay.portrait.eov-navigation .eov-navigation-popup #portrait-menu-label {font-size:13px;margin-left:28px;}
 .gameplay.portrait .portrait-map-abilities {width:196px;height:36px;margin:0;justify-content:center;}
 .gameplay.portrait .portrait-map-abilities .button.ability {width:36px;height:36px;min-height:36px;min-width:36px;flex-grow:0;flex-shrink:0;margin:0 4px 0 0;padding:2px;background-color:var(--surface);border-width:1px;border-color:var(--line);}
@@ -276,8 +291,8 @@
 .gameplay.portrait .general-metric-value {font-size:12px;}
 .gameplay.portrait .eov-stat-entry {padding:8px 0;}
 .gameplay.portrait .eov-stat-entry-fields {flex-direction:row;flex-wrap:wrap;height:auto;}
-.gameplay.portrait .enemy-stat-column {width:50%;flex-basis:50%;min-width:0;margin:0 0 4px 0;}
-.gameplay.portrait .enemy-stat-metric {height:18px;min-height:18px;}
+.gameplay.portrait .enemy-stat-column {width:100%;flex-basis:100%;min-width:0;flex-direction:row;margin:0;}
+.gameplay.portrait .enemy-stat-metric {width:50%;flex-basis:50%;min-width:0;flex-shrink:0;height:18px;min-height:18px;}
 .gameplay.portrait .enemy-stat-value {font-size:10px;}
 .gameplay.portrait .eov-stat-entry-field {width:50%;flex-basis:50%;margin:4px 0;font-size:10px;}
 .gameplay.portrait .eov-task-entry {position:relative;min-height:96px;}
@@ -346,3 +361,7 @@
 .gameplay.portrait.eov-navigation .portrait-icon-tab .eov-navigation-button {width:34px;min-width:34px;height:34px;padding:7px;border-width:0;background-color:transparent;justify-content:center;}
 .gameplay.portrait.eov-navigation .portrait-icon-tab .eov-navigation-icon {width:18px;height:18px;}
 .gameplay.portrait.eov-navigation .portrait-icon-tab .eov-navigation-button.active {color:var(--text);border-top-width:2px;border-top-color:var(--accent);}
+
+.gameplay.portrait .portrait-pinned-card { flex-direction:row; align-items:center; min-height:48px; padding:8px 10px; background-color:var(--surface); border-width:1px; border-color:var(--line); }
+.gameplay.portrait .portrait-pinned-text { flex-grow:1; flex-shrink:1; min-width:0; margin:0; padding:0; font-size:11px; white-space:normal; color:var(--text); }
+.gameplay.portrait .portrait-pinned-page { flex-shrink:0; margin-left:10px; font-size:10px; color:var(--muted); }
