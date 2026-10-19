@@ -1,4 +1,14 @@
 # Startup memory
+## Current result
+
+The latest natively profiled candidate, 8cfe5ed75, has a sampled startup peak
+of 580.566 MiB on the arm64 Release iPhone 13 mini Simulator (iOS 18.5), with
+original character pixels preserved. The additional portrait-frame guard is
+locally validated and awaiting native profiling. The affected physical iPhone
+13 mini on iOS 27 still needs confirmation. Simulator frame rate remains capped
+at 60 Hz; repeated loading/text-shaping work was eliminated, but no overall
+phone FPS gain is claimed. Measurements below distinguish process footprint,
+Unity counters and render-target allocations rather than adding overlapping totals.
 
 ## Confirmed failure
 
@@ -247,3 +257,48 @@ this font's MeasureTextSize must grow for that setting; it did not establish
 a cache regression. The final check verifies observable fitting behavior.
 The test used isolated saves and restored rendering/Play settings. Native
 sampling of the dialogue-cache candidate remains pending.
+
+### Native dialogue-cache follow-up
+
+8cfe5ed75 built in native arm64 Release and reached Ready with a 580.566 MiB
+external sampled peak and settled 577.754–580.535 MiB. In-app Ready was 4.91
+seconds; host-observed Ready was 8.347 seconds. The matching Farmlands/two-line
+dialogue remained visibly fitted with its Close button and no clipping.
+
+Of 1,543 main-thread wall observations in a 20-second sample, FitPortrait
+appeared twice (previously 15); the measurement helper and native text-shaping
+chains appeared zero times (previously 15). Resource-loader/dependency traversal
+also remained at zero. Typed tuple/font comparers were not sampled as hotspots;
+generated typed comparison code has no direct boxing/new-object calls, but
+warm GC bytes were not instrumented, so this is not a strict zero-allocation
+claim. Overall main median was 3.677 ms (prior 3.596), p95 4.161 ms (prior 4.196),
+wall median 16.669 ms/p95 17.208 ms and GPU median 0.543 ms/p95 0.864 ms. No
+controlled overall FPS or CPU-time gain is established beyond removing the
+sampled repeated shaping work.
+
+The pre-readback map inventory reported Unity allocated/reserved 311.544/485.922
+MiB, driver 233.351 MiB and managed 69.625 MiB. Texture2D objects totalled 157.986
+MiB, render targets 55.398 MiB and audio 0.225 MiB. Render targets overlap the
+all-texture total of 213.388 MiB and must not be added again. The largest items
+include the retained mandatory depth/stencil attachment (24.092 MiB), UI_ALL
+(12.797 MiB), Simulator-decoded Unity splash (10.667 MiB), two colour targets
+(9.637 MiB each), world atlas (8 MiB), and original character sheets (7.875 MiB
+each). No further lossless artwork reduction has been demonstrated from this
+inventory; required buffers and original pixels remain intact.
+
+### Unchanged character portrait frames
+
+CharacterImage now compares the six appearance IDs, catalogue, frame and tool
+visibility before rewriting its eight layers/reordering the tool/scanning the
+wardrobe cache. It compares values because creator profiles mutate in place;
+clearing the portrait also clears the cached state and all sprite references.
+The UI remains responsive to a changed style, animation frame or tool visibility.
+
+Five warm Editor samples of 1,000 unchanged-frame calls had median 5.7136 ms
+before and 0.3868 ms after. This is an isolated unattached-portrait workload,
+not a native frame-time or phone FPS claim. The new boundary test passed for
+same-object hairstyle edits, tool toggling, releasing all layers and restoring
+the same frame after clearing. All four existing character PlayMode checks
+also passed after this change, covering creation/presets, equipment visibility,
+player/Echo pooling/appearance and preset validation. Native validation of this
+latest portrait-frame guard is pending.

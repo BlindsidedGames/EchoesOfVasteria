@@ -8,6 +8,9 @@ namespace TimelessEchoes.Characters
     {
         private readonly Image[] images = new Image[8];
         private readonly VisualElement root;
+        private bool hasFrame;
+        private (CharacterCatalog catalog, string head, string chest, string legs, string feet,
+            string accessory, string tool, int frame, bool showTool) lastFrame;
         public CharacterImage(VisualElement parent, float zoom = 1)
         {
             root = new VisualElement { name = "character-image", pickingMode = PickingMode.Ignore };
@@ -27,7 +30,18 @@ namespace TimelessEchoes.Characters
         {
             var catalog = CharacterCatalog.Load(); if (!catalog) return;
             root.style.display = profile == null ? DisplayStyle.None : DisplayStyle.Flex;
-            if (profile == null) { foreach (var image in images) image.sprite = null; return; }
+            if (profile == null) {
+                foreach (var image in images) image.sprite = null;
+                hasFrame = false; lastFrame = default;
+                return;
+            }
+            // Creator profiles are edited in place, so compare the appearance values,
+            // not just the profile reference. HUD calls between animation frames can
+            // then avoid redundant layer writes, reordering and wardrobe-cache scans.
+            var key = (catalog, profile.Head, profile.Chest, profile.Legs, profile.Feet,
+                profile.Accessory, profile.Tool, frame, showTool);
+            if (hasFrame && key.Equals(lastFrame)) return;
+            hasFrame = true; lastFrame = key;
             for (var i = 0; i < images.Length; i++)
                 images[i].sprite = !showTool && i == (int)CharacterSlot.Tool ? null : catalog.SpriteFor(profile, (CharacterSlot)i, frame);
             var tool = images[(int)CharacterSlot.Tool];
