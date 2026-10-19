@@ -530,3 +530,48 @@ at `/Users/matthewrushworth/Documents/Codex/2026-10-19/task/healthtext-20261020/
 including native-validation-report.json, visual-observation.json, health-*.json,
 native-cpu-15s.txt, completion.json and preservation-after.json. Uploaded build
 165 still contains 9ca330359, not this follow-up.
+
+## Allocator sizing experiment (not adopted)
+
+Existing logs expose configuration but no allocator utilization/overflow/block-use
+summaries: 24 inspected logs contained 31 startup entries and no usable closure
+reports. The approximately 157.5 MiB reserved/allocated gap is not demonstrated
+reclaimable physical memory. Unity's [allocator customization documentation](https://docs.unity.com/en-us/engine/6000.0/manual/analysis/performance-memory/native-memory/memory-allocator-customization)
+requires comparing application measurements; project overrides are still absent.
+
+A copied 9ca Simulator bundle on a new disposable iPhone 13 mini/iOS 18.5 device
+ran three 300-second Town (60 seconds) / Spooky (240 seconds) sequences. The exact
+initial disposable Saves were restored between runs. Only four boot.config block
+sizes changed: main, shared thread, graphics main and graphics shared thread,
+16 to 8 to 16 MiB. Startup logs verified each setting and all other allocator
+configuration remained unchanged. No export, source, texture or gameplay changes
+were involved. Earlier host-driver preflights are retained as observer failures.
+
+| Native measurement | Default 16 MiB | Trial 8 MiB | Restored 16 MiB |
+| --- | ---: | ---: | ---: |
+| Settled Spooky median footprint (MiB) | 625.410 | 612.894 | 624.285 |
+| Kernel peak footprint (MiB) | 626.504 | 615.269 | 626.238 |
+| Town median footprint (MiB) | 556.722 | 536.496 | 556.941 |
+| Final Unity reserved (MiB) | 553.953 | 527.969 | 551.953 |
+| Final Unity allocated (MiB) | 390.901 | 390.794 | 390.953 |
+| Map wall median (ms) | 16.6677 | 16.6712 | 16.6687 |
+| Map wall p95 (ms) | 17.2585 | 17.3533 | 17.1881 |
+| Main-thread median (ms) | 3.7807 | 3.9037 | 3.7584 |
+| GPU median (ms) | 0.5642 | 0.5607 | 0.4930 |
+
+The trial's map median is 11.953 MiB below the mean of the default runs, compared
+with 1.125 MiB default-repeat drift. Town is 20.336 MiB lower and reserved memory
+24.984 MiB lower. Late counts matched: 456 textures, 6,683 sprites, 10 panels,
+7 character parts and 25 UIDocuments; texture bytes 215.384 MiB include ten render
+targets totalling 55.398 MiB. Meshes (94/95/88) and normal RNG/restart states differ,
+so these are promising Simulator observations, not hardware or per-allocator
+attribution. No FPS improvement is established. There were nine matching known
+warnings per run and no new errors; overflow statistics remain unavailable.
+
+The reference manifest, full installed default manifest and six protected checkout
+fingerprints matched after completion. Both experimental devices were shut down;
+all three apps and host collectors were absent. Evidence is under
+`/Users/matthewrushworth/Documents/Codex/2026-10-19/task/allocator-ab-20261020/attempt4/`,
+including reviewed-results.json, final-report.json, completion.json,
+post-completion-verification.json, per-run raw data and bundle manifests.
+An 8/4/8 MiB confirmation is pending; no allocator project setting is adopted yet.
