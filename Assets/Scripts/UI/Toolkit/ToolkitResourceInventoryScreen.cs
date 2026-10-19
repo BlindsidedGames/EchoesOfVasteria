@@ -19,7 +19,7 @@ namespace TimelessEchoes.UI.Toolkit
         private VisualElement root;
         private ToolkitGrid grid;
         private ScrollView scroll;
-        private Label selectedName, selectedTier;
+        private Label selectedName, selectedTier, inventoryHeading;
         private VisualElement selectedRarity;
         private ResourceManager manager;
         private readonly List<(Button button, VisualElement background, Image icon, VisualElement selection, Label count)> slots = new();
@@ -75,9 +75,8 @@ namespace TimelessEchoes.UI.Toolkit
             if (!embedded)
             {
                 labels = new VisualElement(); labels.AddToClassList("inventory-title-labels"); title.Add(labels);
-                var heading = ToolkitGameplay.L(labels, string.Empty, "heading");
-                ToolkitLocalization.Bind(heading, "forge.inventory", "Inventory");
-                heading.style.flexShrink = 0;
+                inventoryHeading = ToolkitGameplay.L(labels, string.Empty, "heading");
+                inventoryHeading.style.flexShrink = 0;
             }
             selectedName = new Label { name = "selected-resource", pickingMode = PickingMode.Ignore }; selectedName.AddToClassList("eov-resource-name"); labels.Add(selectedName);
             selectedName.text = ToolkitLocalization.Text("inventory.select-resource", "Select a resource");
@@ -225,11 +224,23 @@ namespace TimelessEchoes.UI.Toolkit
             }
         }
         private readonly ToolkitWindowLayout windowLayout = new();
-        private void Layout() { if (equipmentColumn != null) FitEquipmentColumns(); if (!embedded) windowLayout.Apply(root, new Rect(Bounds.x + 4, Bounds.y, Mathf.Max(0, Bounds.width - 4), Bounds.height)); }
+        private void Layout()
+        {
+            if (equipmentColumn != null) FitEquipmentColumns();
+            if (!embedded)
+            {
+                var equipmentPage = ToolkitResponsiveLayout.IsPortrait && portraitEquipmentSelected;
+                inventoryHeading.text = ToolkitResponsiveLayout.IsPortrait
+                    ? equipmentPage ? ToolkitLocalization.Text("inventory.equipped", "Equipped items") : ToolkitLocalization.Text("inventory.owned-resources", "Owned resources")
+                    : ToolkitLocalization.Text("forge.inventory", "Inventory");
+                selectedName.style.display = equipmentPage ? DisplayStyle.None : DisplayStyle.Flex;
+                windowLayout.Apply(root, new Rect(Bounds.x + 4, Bounds.y, Mathf.Max(0, Bounds.width - 4), Bounds.height));
+            }
+        }
         private void Update()
         {
             if (!IsOpen) return; Layout();
-            if (!embedded) UpdateEquipmentPreview();
+            if (!embedded) { UpdateEquipmentPreview(); RefreshEquipmentTutorial(); }
             if (pendingScroll >= 0 && grid.layout.height > 0 && scroll.contentViewport.layout.height > 0)
             {
                 var y = slots[pendingScroll].button.layout.y;
@@ -244,6 +255,8 @@ namespace TimelessEchoes.UI.Toolkit
             if (equipmentController) equipmentController.OnEquipmentChanged -= Changed;
             equipmentController = null; equipmentContent = null; equipmentColumn = null; gearSlots.Clear();
             equipmentPreview = null; equipmentCharacterName = null; visibilityControls.Clear(); previewDirection = 0;
+            equipmentTutorialHand = null; portraitEquipmentTab = null;
+            inventoryHeading = null; equipmentHeading = null;
             ToolkitLocalization.Changed -= LocaleChanged;
             if (manager) manager.OnInventoryChanged -= Changed;
             Blindsided.EventHandler.OnLoadData -= Changed; root?.RemoveFromHierarchy(); root = null; embedded = false; slots.Clear(); resourceOrder.Clear(); selected = -1; pendingScroll = -1; deselectAt = -1; dirty = false;

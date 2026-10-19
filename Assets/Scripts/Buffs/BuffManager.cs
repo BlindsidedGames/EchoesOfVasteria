@@ -260,6 +260,7 @@ namespace TimelessEchoes.Buffs
         public bool CanActivate(BuffRecipe recipe)
         {
             if (recipe == null || recipe.IsRetired) return false;
+            if (GameManager.Instance && GameManager.Instance.HeroIsDead) return false;
             if (GetRemaining(recipe) > 0f) return false;
             if (cooldowns.TryGetValue(recipe, out var cd) && cd > 0f) return false;
 

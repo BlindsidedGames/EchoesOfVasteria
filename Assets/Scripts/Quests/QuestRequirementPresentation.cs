@@ -66,7 +66,7 @@ namespace TimelessEchoes.Quests
                         var fallbackName = req.resource ? req.resource.name : string.Empty;
                         var labelText = string.IsNullOrEmpty(iconTag) ? fallbackName : iconTag;
                         // Keep the count clear of the icon, including in native text layout.
-                        var separator = string.IsNullOrEmpty(iconTag) ? ": " : "\u00a0\u00a0";
+                        var separator = string.IsNullOrEmpty(iconTag) ? ": " : QuestTextFormatter.ResourceIconSpacing;
                         label = $"<size=90%>{labelText}{separator}";
                         // Resource rows include their own separator; do not auto-append an extra space
                         appendSpace = false;

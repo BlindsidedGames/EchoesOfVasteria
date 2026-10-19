@@ -26,6 +26,7 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly Dictionary<Entry, Button> buttons = new();
         private PanelSettings panel;
         private VisualElement root, popup, autoPinGroup;
+        private VisualElement menuDismiss;
         private Button autoPin, discord, moreButton;
         private Label portraitMenuTitle;
         private VisualElement portraitMenuHeader, portraitMoreHeader;
@@ -72,6 +73,11 @@ namespace TimelessEchoes.UI.Toolkit
             root.pickingMode = PickingMode.Ignore;
             theme.Apply(root);ToolkitGameplay.Apply(root,theme);
             root.Q("navigation-bar").pickingMode = PickingMode.Ignore;
+            menuDismiss = new VisualElement { name = "navigation-menu-dismiss" };
+            menuDismiss.style.position = Position.Absolute;
+            menuDismiss.style.display = DisplayStyle.None;
+            menuDismiss.RegisterCallback<PointerDownEvent>(evt => { CloseMenu(); Refresh(); evt.StopPropagation(); });
+            root.Insert(0, menuDismiss);
             popup = root.Q("navigation-popup");
             portraitMenuHeader = CreatePortraitHeader(popup);
             portraitMenuTitle = ToolkitGameplay.L(portraitMenuHeader, "", "portrait-navigation-title heading");
@@ -335,6 +341,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (windows != null && windows.IsWindowOpen(TownWindowManager.Window.Quests))
                 highlightQuestsUntilOpened = false;
             root.EnableInClassList("eov-navigation--window-open", openGroup != Group.Toolbar || (windows != null && windows.HasOpenWindow));
+            SetVisible(menuDismiss, ToolkitResponsiveLayout.IsPortrait && HasOpenMenu);
             foreach (var entry in definition.entries)
             {
                 var visible = ToolkitVisibilityRule.All(entry.visibility) && (entry.group == Group.Toolbar || entry.group == openGroup);
@@ -404,7 +411,7 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 if (data.General.InventoryTutorialStage == 1 && windows.IsWindowOpen(TownWindowManager.Window.Inventory))
                     data.General.InventoryTutorialStage = 2;
-                if (data.General.InventoryTutorialStage == 2 && !windows.IsWindowOpen(TownWindowManager.Window.Inventory))
+                if (data.General.InventoryTutorialStage == 2 && !ToolkitResponsiveLayout.IsPortrait && !windows.IsWindowOpen(TownWindowManager.Window.Inventory))
                     data.General.InventoryTutorialStage = 3;
                 inventoryTutorial = data.General.InventoryTutorialStage < 3;
             }
@@ -417,7 +424,8 @@ namespace TimelessEchoes.UI.Toolkit
             else if (hubTutorial)
                 desired = windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Hub ? "skills" : "hub";
             else if (inventoryTutorial)
-                desired = windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Hub ? "inventory" : "hub";
+                desired = ToolkitResponsiveLayout.IsPortrait && windows != null && windows.IsWindowOpen(TownWindowManager.Window.Inventory)
+                    ? null : windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Hub ? "inventory" : "hub";
             else if (data != null && inTown && data.CompletedNpcTasks.Contains("Gill1") && !QuestUtils.QuestCompleted("The names Gill"))
                 desired = windows != null && windows.IsWindowOpen(TownWindowManager.Window.Quests) ? null : windows != null && windows.HasOpenWindow ? "close" : "quests";
             else if (data != null && inTown && QuestUtils.QuestCompleted("You get this one for free!") &&
@@ -468,8 +476,18 @@ namespace TimelessEchoes.UI.Toolkit
                         entry.group == Group.Toolbar && openGroup != Group.Townsfolk
                         ? buttons[System.Array.Find(definition.entries, e => e.id == "townsfolk")] : buttons[entry];
                     var anchor = root.WorldToLocal(new Vector2(target.worldBound.center.x, (ToolkitResponsiveLayout.IsPortrait ? target.worldBound.yMin : target.worldBound.yMax)));
+                    if (ToolkitResponsiveLayout.IsPortrait && target.worldBound.yMax < root.worldBound.yMin)
+                    {
+                        var right = root.WorldToLocal(new Vector2(target.worldBound.xMax, target.worldBound.center.y));
+                        var left = root.WorldToLocal(new Vector2(target.worldBound.xMin, target.worldBound.center.y));
+                        var fromRight = right.x + 28 <= root.layout.width;
+                        pair.Value.style.left = Mathf.Round(fromRight ? right.x + 3 + 3 * approach : left.x - 27 - 3 * approach);
+                        pair.Value.style.top = Mathf.Round(right.y - 12);
+                        pair.Value.style.rotate = new Rotate(Angle.Degrees(fromRight ? 270 : 90));
+                        break;
+                    }
                     pair.Value.style.left = Mathf.Round(anchor.x - 12);
-                    pair.Value.style.top = Mathf.Round(ToolkitResponsiveLayout.IsPortrait ? anchor.y - 22 - 8 * (1 - approach) : anchor.y - 6 + 8 * (1 - approach));
+                    pair.Value.style.top = Mathf.Round(ToolkitResponsiveLayout.IsPortrait ? anchor.y - 22 - 4 * (1 - approach) : anchor.y - 6 + 4 * (1 - approach));
                     pair.Value.style.rotate = new Rotate(new Angle(ToolkitResponsiveLayout.IsPortrait ? 180 : 0, AngleUnit.Degree));
                     break;
                 }
@@ -574,8 +592,8 @@ namespace TimelessEchoes.UI.Toolkit
             // Continue the same navigation surface through the home-indicator inset.
             root.style.height = ToolkitResponsiveLayout.IsPortrait ? ToolkitResponsiveLayout.Size.y - (area.yMax - 44) : 36;
             ConfigurePortraitNavigation();
-            portraitMenuHeader.style.display = ToolkitResponsiveLayout.IsPortrait ? DisplayStyle.Flex : DisplayStyle.None;
-            portraitMoreHeader.style.display = ToolkitResponsiveLayout.IsPortrait ? DisplayStyle.Flex : DisplayStyle.None;
+            portraitMenuHeader.style.display = DisplayStyle.None;
+            portraitMoreHeader.style.display = DisplayStyle.None;
             var context = root.Q("navigation-context");
             context.style.display = ToolkitResponsiveLayout.IsPortrait && !(GameManager.Instance && GameManager.Instance.CurrentMap) ? DisplayStyle.None : DisplayStyle.Flex;
             context.style.top = ToolkitResponsiveLayout.IsPortrait ?
@@ -589,12 +607,19 @@ namespace TimelessEchoes.UI.Toolkit
                 foreach (var entry in definition.entries) buttons[entry].style.minWidth = entry.width;
             if (ToolkitResponsiveLayout.IsPortrait)
             {
-                var top = area.y + ToolkitResponsiveLayout.MenuTop - root.resolvedStyle.top;
-                foreach (var menu in new[] { popup, morePopup })
-                {
-                    menu.style.left = 0; menu.style.top = top; menu.style.width = area.width;
-                    menu.style.height = Mathf.Max(0, area.height - ToolkitResponsiveLayout.MenuTop - ToolkitResponsiveLayout.WindowBottom);
-                }
+                menuDismiss.style.left = 0; menuDismiss.style.top = -root.resolvedStyle.top;
+                menuDismiss.style.width = area.width; menuDismiss.style.height = root.resolvedStyle.top;
+                var visibleRows = 0;
+                foreach (var entry in definition.entries)
+                    if ((entry.group != Group.Toolbar || !PortraitBottomEntry(entry)) && rows[entry].style.display.value == DisplayStyle.Flex)
+                        visibleRows++;
+                var width = Mathf.Min(176, area.width - 16);
+                var height = Mathf.Min(visibleRows * 40 + 14, area.height - 58);
+                var anchor = menuAnchor != null ? root.WorldToLocal(menuAnchor.worldBound.position) : Vector2.zero;
+                popup.style.left = Mathf.Clamp(anchor.x, 8, area.width - width - 8);
+                popup.style.top = anchor.y - height - 6;
+                popup.style.width = width;
+                popup.style.height = height;
             }
             else
             {
@@ -614,6 +639,7 @@ namespace TimelessEchoes.UI.Toolkit
             foreach (var binding in bindings) binding.Dispose();
             bindings.Clear(); rows.Clear(); buttons.Clear();
             root?.RemoveFromHierarchy(); root = null; popup = null; menuAnchor = null; morePopup = null; moreButton = null; portraitGroupScroll = null; portraitMoreScroll = null; portraitNavigation = null;
+            menuDismiss = null;
             characterPortrait = null;
             tutorialPrompts.Clear(); highlightedEntryId = null;
             openGroup = Group.Toolbar;

@@ -130,6 +130,7 @@ namespace TimelessEchoes.Quests
         {
             if (oracle == null) return;
             oracle.saveData.Quests ??= new Dictionary<string, GameData.QuestRecord>();
+            TimelessEchoes.Gear.ForgeFirstLesson.ReconcileExistingWeapon();
             // Keep the retired quest record for previously earned buff access, but stop tracking it.
             oracle.saveData.PinnedQuests?.RemoveAll(id => id == "Into The Multiverse");
             active.Clear();
@@ -731,6 +732,9 @@ namespace TimelessEchoes.Quests
         private void TryStartQuest(QuestData quest)
         {
             if (quest == null) return;
+            if (quest.questId == TimelessEchoes.Gear.ForgeFirstLesson.QuestId &&
+                TimelessEchoes.Gear.ForgeFirstLesson.ReconcileExistingWeapon())
+                active.Remove(quest.questId);
             if (!string.IsNullOrEmpty(quest.npcId) && !CompletedNpcTasks.Contains(quest.npcId))
                 return;
             if (!AreRequirementsMet(quest))

@@ -56,6 +56,13 @@ namespace TimelessEchoes.UI
             }
         }
 
+        public void OpenQuest(string questId)
+        {
+            if (!CanOpenWindow(Window.Quests) || toolkitQuests == null || !toolkitQuests.IsConfigured) return;
+            if (!toolkitQuests.IsOpen) OpenWindow(Window.Quests);
+            toolkitQuests.RevealQuest(questId);
+        }
+
         public bool IsWindowOpen(Window window)
         {
             if (window == Window.Farm && toolkitFarm != null) return toolkitFarm.IsOpen;

@@ -49,7 +49,7 @@ namespace TimelessEchoes.UI.Toolkit
             var (level, current, needed) = crafting.GetIvanXpState(); ivan.text = ToolkitLocalization.Text("forge.ivan-level", "Ivan | Level {0}", Math.Max(0, level)); xp.text = $"{current:N0}/{needed:N0}"; xpFill.style.width = Length.Percent(needed > 0 ? Mathf.Clamp01(current / needed) * 100 : 0);
             foreach (var entry in gearSlots)
             {
-                var item = equipment.GetEquipped(entry.Key); entry.Value.icon.sprite = definition.GearSprite(item, entry.Key); entry.Value.selected.style.display = session.Slot == entry.Key ? DisplayStyle.Flex : DisplayStyle.None; entry.Value.tier.text = item?.rarity ? ToolkitLocalization.Text("inventory.tier", "Tier {0}", Mathf.Clamp(item.rarity.tierIndex + 1, 1, 8)) : "";
+                var item = equipment.GetEquipped(entry.Key); entry.Value.icon.sprite = definition.GearSprite(item, entry.Key); entry.Value.selected.style.display = session.Slot == entry.Key ? DisplayStyle.Flex : DisplayStyle.None; entry.Value.tier.text = item?.rarity ? ToolkitLocalization.Text("inventory.tier", "Tier {0}", Mathf.Clamp(item.rarity.tierIndex + 1, 1, 8)) : "—";
             }
             var hasLockedCore = false;
             for (var i = 0; i < coreSlots.Count; i++)
@@ -76,7 +76,7 @@ namespace TimelessEchoes.UI.Toolkit
             automationLock.text = ToolkitLocalization.Text("forge.automation-locked", "Automation unlocks at Ivan level {0}.", ForgeSession.AutomationUnlockLevel);
             var pending = session.HasResult ? session.Pending : null;
             RefreshComparison(pending, equipment.GetEquipped(session.Slot));
-            resultIcon.sprite = definition.GearSprite(pending, session.Slot); resultTier.text = pending?.rarity ? ToolkitLocalization.Text("inventory.tier", "Tier {0}", Mathf.Clamp(pending.rarity.tierIndex + 1, 1, 8)) : "";
+            resultIcon.sprite = definition.GearSprite(pending, session.Slot); resultTier.text = pending?.rarity ? ToolkitLocalization.Text("inventory.tier", "Tier {0}", Mathf.Clamp(pending.rarity.tierIndex + 1, 1, 8)) : "—";
             ToolkitGameplay.SetToggle(stopIcon,StopAutocraftOnVastium);ToolkitGameplay.SetToggle(lockIcon,LockAutocraftStatSet);ToolkitGameplay.SetToggle(repeatIcon,repeatCraft);
             var weights = RarityOddsCalculator.BuildRarityWeightInfo(core).weights;
             odds.SetWeights(weights, RarityColour); RefreshOddsLegend(weights);

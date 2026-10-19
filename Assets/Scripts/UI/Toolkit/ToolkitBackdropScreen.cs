@@ -39,8 +39,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (root == null) return;
             if (!navigation) navigation = FindAnyObjectByType<ToolkitNavigationScreen>();
             var portrait = ToolkitResponsiveLayout.IsPortrait;
-            root.style.display = (TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow) ||
-                (portrait && navigation && navigation.HasOpenMenu) ? DisplayStyle.Flex : DisplayStyle.None;
+            root.style.display = TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow ? DisplayStyle.Flex : DisplayStyle.None;
             root.style.backdropFilter = portrait ? StyleKeyword.None : desktopBlur;
             root.style.backgroundColor = portrait && ToolkitResponsiveLayout.TownView ?
                 (Color)new Color32(41, 36, 38, 255) : new Color(0, 0, 0, .6f);

@@ -44,9 +44,7 @@ namespace TimelessEchoes.UI.Toolkit
         private VisualElement comparisonRows;
         private ToolkitPortraitPages portraitPages;
         private GearItem portraitPending;
-        private VisualElement portraitOdds;
-        private Button portraitOddsToggle;
-        private bool portraitOddsOpen;
+        private VisualElement rarityOddsSection;
 
         public bool IsOpen => root != null;
         public bool IsConfigured => definition && definition.catalog && theme && runtimeTheme && textSettings;
@@ -71,7 +69,7 @@ namespace TimelessEchoes.UI.Toolkit
             var content = mainScroll.contentContainer;
             portraitPages = new ToolkitPortraitPages(content, null, new[] { root.Q(className: "eov-forge-work") }, mainScroll,
                 new ToolkitPortraitPages.Page("Craft", root.Q(className: "eov-forge-selections"), root.Q(className: "eov-forge-actions"), root.Q(className: "forge-comparison-section")),
-                new ToolkitPortraitPages.Page("Materials", root.Q(className: "eov-forge-conversions")));
+                new ToolkitPortraitPages.Page("Materials", root.Q(className: "eov-forge-conversions"), rarityOddsSection));
             ToolkitLocalization.Changed += LocalizationChanged;
             resources.OnInventoryChanged += MarkDirty; equipment.OnEquipmentChanged += MarkDirty; crafting.OnIvanXpChanged += XpChanged; session.Changed += MarkDirty;
             nextRefresh = 0; comparisonSignature = null; Refresh(); Layout();
@@ -92,8 +90,9 @@ namespace TimelessEchoes.UI.Toolkit
             var work = Panel(main, "eov-forge-work");
             var columns = Row(work); columns.AddToClassList("eov-forge-columns");
             var selections = new VisualElement(); selections.AddToClassList("eov-forge-selections"); columns.Add(selections);
-            LocalizedLabel(selections, "forge.equipment", "Equipment", ToolkitControls.TextRole.Heading);
-            var gear = Row(selections);
+            var equipmentSelection = new VisualElement(); equipmentSelection.AddToClassList("forge-equipment-selector"); selections.Add(equipmentSelection);
+            LocalizedLabel(equipmentSelection, "forge.equipment", "Equipment", ToolkitControls.TextRole.Heading);
+            var gear = Row(equipmentSelection); gear.AddToClassList("forge-equipment-grid");
             foreach (var entry in definition.gear)
             {
                 var column = new VisualElement(); column.AddToClassList("eov-forge-slot-column"); gear.Add(column);
@@ -101,8 +100,9 @@ namespace TimelessEchoes.UI.Toolkit
                 var icon = FramedIcon(button, entry.unknown);
                 var selected = Selection(button); var tier = Label(column, "", ToolkitControls.TextRole.Caption); gearSlots.Add(entry.slot, (icon, selected, tier));
             }
-            LocalizedLabel(selections, "forge.cores", "Cores", ToolkitControls.TextRole.Heading);
-            var coreGrid = new VisualElement(); coreGrid.AddToClassList("eov-forge-core-grid"); selections.Add(coreGrid);
+            var coreSelection = new VisualElement(); coreSelection.AddToClassList("forge-core-selector"); selections.Add(coreSelection);
+            LocalizedLabel(coreSelection, "forge.cores", "Cores", ToolkitControls.TextRole.Heading);
+            var coreGrid = new VisualElement(); coreGrid.AddToClassList("eov-forge-core-grid"); coreSelection.Add(coreGrid);
             for (var i = 0; i < definition.catalog.cores.Length; i++)
             {
                 var binding = definition.catalog.cores[i];
@@ -134,8 +134,8 @@ namespace TimelessEchoes.UI.Toolkit
             automationLock.style.left = automationLock.style.right = automationLock.style.top = automationLock.style.bottom = 0;
             automationLock.style.unityTextAlign = TextAnchor.MiddleCenter;
             automationLock.style.whiteSpace = WhiteSpace.Normal;
-            portraitOddsToggle = ToolkitGameplay.B(actions, "Rarity odds", () => { portraitOddsOpen = !portraitOddsOpen; RefreshPortraitForge(); }, "portrait-odds-toggle");
-            var oddsSummary = portraitOdds = Row(actions); oddsSummary.AddToClassList("forge-odds-summary");
+            rarityOddsSection = new VisualElement(); rarityOddsSection.AddToClassList("forge-rarity-section"); actions.Add(rarityOddsSection);
+            var oddsSummary = Row(rarityOddsSection); oddsSummary.AddToClassList("forge-odds-summary");
             odds = new ToolkitForgeOdds { name = "forge-odds", pickingMode = PickingMode.Ignore }; oddsSummary.Add(odds);
             BuildOddsLegend(oddsSummary);
             var results = new VisualElement(); results.AddToClassList("forge-comparison-section"); columns.Add(results);
@@ -161,7 +161,7 @@ namespace TimelessEchoes.UI.Toolkit
         private Button LocalizedButton(VisualElement parent, string name, string key, string english, Action action)
         { var button = Button(parent, name, "", action); ToolkitLocalization.Bind(button, key, english); return button; }
         private void LocalizationChanged()
-        { comparisonSignature = null; nextRefresh = 0; MarkDirty(); }
+        { comparisonSignature = null; comparisonSlot = null; nextRefresh = 0; MarkDirty(); }
         private void MarkDirty() { dirty = true; }
         private void XpChanged(int _, float __, float ___) => MarkDirty();
         private void AutomationStopped() { FindAnyObjectByType<TaskbarFlasher>()?.FlashNow(); if (!IsOpen) TownWindowManager.ShowForgeAttention(); }
@@ -178,12 +178,8 @@ namespace TimelessEchoes.UI.Toolkit
         private void RefreshPortraitForge()
         {
             portraitPages?.Update();
-            if (portraitOdds == null) return;
-            portraitOddsToggle.style.display = ToolkitResponsiveLayout.IsPortrait ? DisplayStyle.Flex : DisplayStyle.None;
-            portraitOdds.style.display = !ToolkitResponsiveLayout.IsPortrait || portraitOddsOpen ? DisplayStyle.Flex : DisplayStyle.None;
-            portraitOddsToggle.text = portraitOddsOpen ? "Hide rarity odds" : "Rarity odds";
             if (!ToolkitResponsiveLayout.IsPortrait) return;
-            if (session.Pending != null && session.Pending != portraitPending) portraitPages.Select(0);
+            if (!session.IsAutoCrafting && session.Pending != null && portraitPending == null) portraitPages.Select(0);
             portraitPending = session.Pending;
             if (TimelessEchoes.Gear.ForgeFirstLesson.Active)
                 portraitPages.Select(TimelessEchoes.Gear.ForgeFirstLesson.Stage == 0 ? 1 : 0);

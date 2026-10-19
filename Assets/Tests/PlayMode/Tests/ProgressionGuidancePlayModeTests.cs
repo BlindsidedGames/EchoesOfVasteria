@@ -993,16 +993,21 @@ namespace Tests.PlayMode
                 FieldsClick(ui.Q<Button>("stats-tab-0")); yield return new WaitForSecondsRealtime(.1f);
                 Assert.AreEqual(4, oracle.saveData.General.MapStatisticsTutorialStage);
                 FieldsClick(ui.Q<Button>("journal-map-1")); yield return new WaitForSecondsRealtime(.1f);
-                Assert.AreEqual(5, oracle.saveData.General.MapStatisticsTutorialStage);
+                Assert.AreEqual(7, oracle.saveData.General.MapStatisticsTutorialStage, "Viewing one map should finish the map-selection lesson.");
                 Assert.NotNull(ui.Q(className: "journal-collection"));
                 Blindsided.EventHandler.SaveData(); Blindsided.EventHandler.LoadData();
-                Assert.AreEqual(5, oracle.saveData.General.MapStatisticsTutorialStage);
+                Assert.AreEqual(7, oracle.saveData.General.MapStatisticsTutorialStage);
+                foreach (var legacyStage in new[] { 5, 6 })
+                {
+                    oracle.saveData.General.MapStatisticsTutorialStage = legacyStage;
+                    yield return null; yield return null;
+                    Assert.AreEqual(7, oracle.saveData.General.MapStatisticsTutorialStage, "Existing comparison steps should skip to closing Statistics.");
+                }
                 FieldsClick(ui.Q<Button>("journal-map-2")); yield return new WaitForSecondsRealtime(.1f);
                 var art = ui.Q<Button>("journal-map-2").Q<Image>();
                 Assert.AreEqual(ScaleMode.ScaleToFit, art.scaleMode);
                 Assert.LessOrEqual(art.worldBound.width, art.parent.worldBound.width + 1);
                 CaptureFeedback("map-statistics-river.png"); yield return null; yield return null;
-                FieldsClick(ui.Q<Button>("journal-map-3")); yield return new WaitForSecondsRealtime(.1f);
                 Assert.AreEqual(7, oracle.saveData.General.MapStatisticsTutorialStage);
                 Assert.AreEqual(DisplayStyle.None, ui.Q("map-statistics-hand").style.display.value);
                 nav.Refresh();
