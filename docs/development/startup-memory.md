@@ -924,3 +924,123 @@ no font-cache flushing policy remains in production. The original source fonts,
 features and rendering caches remain. Any future cleanup at a loading boundary
 would require its own integration timing validation rather than reusing the
 pixel-only result. The lazy appearance and idle upload-buffer changes are kept.
+
+
+## Advanced-save coverage added after review
+
+The earlier standalone runs used fresh progress (plus the map soak), not a late-game
+save. A read-only discovery located Beta2Save1: actual SaveManager decode verifies
+419,339 seconds played (116.48 hours), 94.12% completion, 95 completed quests of 97,
+158,195 crafts, mastery level 193, Eva level 513, and 1,566,080 copies across 91 card
+entries. Skills are Combat 96, Mining 80, Woodcutting 106, Fishing 103, Farming 234
+and Looting 62. This is an advanced forge/cauldron fixture, but its Fields state is
+only level four with one unlocked unplanted garden bed and zero orchard capacity;
+it cannot certify a fully developed/automated farm.
+
+239 save/profile files (16,018,222 bytes) were copied to an ignored local artifact
+folder, each copy SHA-256 verified and original source hashes checked unchanged.
+SaveManager loads the copied Beta2Save1 with integrity verified, then imports its
+GameData as Save1 into a new isolated profiling root through ReplaceSlotDetailedAsync.
+Authority files are not renamed by hand. Saved progress, quit time and offline state
+are retained; no resources or levels are granted. The original has a null Character
+field, to be handled by the normal legacy migration rather than a fixture patch.
+No save contents are committed or uploaded. A dedicated standalone observer will
+verify the actually loaded progression, then use normal TownWindowManager routes
+for Forge, Cauldron and Fields, measuring startup, first open, close and reentry.
+
+The later scheduled font timing trial has three differing Japanese pixels (maximum
+channel difference 2/255) in ja and ja reentry; the earlier dedicated font fixture
+has zero differences in all eight stages. These are separate runs. The scheduled
+placement remains rejected for its measured 29.498 ms cleanup / 34.643 ms frame.
+
+
+### Advanced-save standalone panel baseline (Windows, f882be5a0)
+
+A new Windows IL2CPP Release-compiler Development player, Unity 6000.6.0f1,
+D3D12 / RTX 4080 SUPER, 1080 x 2160, loads the isolated imported Save1 normally.
+Actually loaded levels/crafts match the decoded source. Normal migration restores
+legacy Character.Created=true without showing character creation. Current completion
+recalculates to 94.02985%; the source metadata's 94.117645% is not treated as a fixed
+runtime invariant. Runtime scripts match the primary checkout after normalizing
+BOM/line endings, except the existing isolated DISABLESTEAMWORKS achievement guard
+and the separate profiling observer. Original 239 save/profile hashes remain unchanged.
+
+No memory snapshots or screenshots occur during this clean run. Object inventories
+at phase boundaries are excluded from steady frame windows, as are first-five-second
+layout work. The run lasts 237.53 seconds with first open, close and reopen of each
+panel through public TownWindowManager routes; no crafting, tasting or farming
+commands are artificially issued. This therefore does not test active autocrafting,
+automated tasting, or a fully developed farm.
+
+| Stage | Unity allocated median MiB | Driver graphics median MiB | First Show call ms |
+| --- | ---: | ---: | ---: |
+| Advanced town | 345.40 | 312.52 | n/a |
+| Forge open | 347.98 | 313.19 | 6.151 |
+| Cauldron open | 349.12 | 313.19 | 6.172 |
+| Fields open | 351.17 | 313.19 | 4.747 |
+| Final town after all reentries | 350.86 | 312.93 | n/a |
+
+The synchronous Show duration excludes subsequent UI layout/render work. Steady
+wall median is about 8.333 ms, p95 about 8.342 ms at the 120 Hz cap; this is no FPS
+gain claim. A closed-Cauldron window contains a 25.009 ms maximum, so not every
+frame is perfect. Windows process working-set medians are 945.57 MiB initially and
+1007.90 MiB finally; full-run lifetime peaks are 1019.21 MiB working set and
+1819.88 MiB private commit. Those Windows counters are distinct from Unity native
+allocated bytes, graphics accounting and native iOS physical footprint. Do not add
+them or interpret Windows private commit as the tester's Jetsam footprint.
+
+Town Texture2D allocation is 72.771 MiB. Forge/Cauldron close release their panel:
+PanelSettings count returns from 11 to 10 and textures settle to 72.897 MiB. Fields
+keeps its PanelSettings (11) and another approximately 128 KiB atlas, settling to
+73.022 MiB. That is a small lifecycle inconsistency, not evidence explaining a
+multi-gigabyte startup termination. No production change has been made for it yet.
+Artifacts: `Artifacts/StandaloneMemory/advanced-panels-01/{summary.json,
+loaded-progression.json,panel-calls.jsonl,frames.csv,memory.csv,process-memory.csv}`.
+Same-executable fresh control and a separate CPU-profiler trace are subsequent
+runs; profiler-overhead results must not replace these clean memory/timing windows.
+
+
+The same executable fresh control completes creator confirmation, town and 90 seconds
+in Farmlands in 161.77 seconds. Fresh town medians are 349.19 MiB
+Unity allocated, 360.84 MiB driver graphics, 994.67
+MiB working set. Advanced town is 345.40 / 312.52 /
+945.57 MiB respectively. The fresh character path has roughly
+50 MiB more texture allocation due to modular appearance; this fixture's advanced
+progression does not reproduce an extra startup memory spike. This comparison is
+within this Windows executable, not a comparison against native iPhone footprint.
+The fresh control's full-run peaks are 1025.99 MiB working
+set and 1968.27 MiB private commit, including its later
+Farmlands phase. These are not comparable to a startup-only peak on another platform.
+Artifacts: `Artifacts/StandaloneMemory/advanced-build-fresh-01/summary.json`.
+
+
+### Bounded standalone CPU trace and automation cross-check
+
+The full advanced panel CPU recording completes (5,215,387,371 bytes), but importing
+all of it expands analyzer memory excessively. The owned analysis process was stopped;
+this is tooling overhead, not a player failure or a game footprint measurement.
+A separate short startup recording is imported successfully: actual parsed frames
+0 through 1205 inclusive (1206 valid frames, about 15 seconds), 247,771,699 bytes.
+The requested command-line frame cap is not assumed to equal the actual extent.
+The owned player was closed normally after 15 seconds; no user player was closed.
+
+This instrumented trace attributes 56.327 ms inclusive to CauldronManager.Awake,
+8.757 ms to FieldsWorldView.Start, and 8.807 ms across two main-thread
+Oracle.LoadCurrentSlot coroutine resumptions. The last figure excludes background
+save reading/decoding and must not be called total save-load time. Startup UI is
+larger: ToolkitLoadingScreen.OnEnable is 210.627 ms inclusive, and the largest
+UIElements.UpdateLayout sample is 1094.287 ms. These are heavily instrumented
+cold startup samples, not the clean run's launch/frame-time benchmark, and nested
+markers must not be added together. Across 1137 town update calls, FarmService
+uses 9.140 ms inclusive (2.812 ms maximum, including first bind) and
+FieldsWorldView.Update uses 4.944 ms (0.139 ms maximum). No giant ongoing Fields
+CPU loop is observed in this one-bed fixture. Startup UI/font initialization is
+a more promising remaining CPU investigation than micro-optimizing that farm loop.
+
+SaveManager read-only decode of both completed advanced run outputs verifies
+350,186 total tastings, 1,566,080 card copies, 158,195 crafts and zero planted beds
+remain unchanged from the input. Stew remains 2.16721147345379. Thus these runs
+concretely did not exercise active crafting/tasting; the coverage gap is verified,
+not guessed from the panels being idle. All output slots pass integrity checks.
+Artifacts: `Artifacts/StandaloneMemory/advanced-startup-cpu-02/{cpu-analysis.json,
+raw-counters.csv,player.raw}`, `Artifacts/StandaloneMemory/advanced-save-outcomes.json`.
