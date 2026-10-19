@@ -149,3 +149,14 @@ Two control states differed by 955 pixels due to unscaled UI animation.
 Process footprint drifted upward during probing, so the allocation reduction
 must not be described as a measured 19.27 MiB physical-footprint drop. Run-map
 comparisons remain pending before adopting these pipeline flags.
+
+The Farmlands run also matched the frozen original and control exactly with
+optional copies disabled (zero changed pixels). Its render-target allocations
+changed from 70.05 to 55.40 MiB and back to 70.05 MiB when restored, removing
+three sampled depth copies totalling 14.65 MiB at that viewport. GPU medians
+were 0.682/0.574/0.708 ms for original/off/restored, while wall timing remained
+60 Hz-capped. Driver allocations were 251.26/238.11/254.26 MiB; physical
+footprint was 601.47/600.39/612.18 MiB with probe/history drift. Restoration
+pixel differences are still being investigated for unscaled UI animation;
+Mines and Haloween lighting comparisons remain pending. Pipeline flags are
+not yet changed in the production candidate.
