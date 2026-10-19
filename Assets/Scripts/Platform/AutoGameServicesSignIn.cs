@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 #if UNITY_ANDROID || UNITY_IOS
 using VoxelBusters.EssentialKit;
 #endif
@@ -44,8 +45,10 @@ namespace TimelessEchoes.Platform
                 instance = null;
         }
 
-        private void Start()
+        private IEnumerator Start()
         {
+            while (StartupDiagnostics.Enabled && !StartupDiagnostics.ChoiceReady) yield return null;
+            if (StartupDiagnostics.SkipGameCenter) { StartupDiagnostics.SetGameServicesStatus("Skipped by selected check"); yield break; }
 #if UNITY_ANDROID || UNITY_IOS
             StartupDiagnostics.SetGameServicesStatus("Checking authentication");
             if (!GameServices.IsAuthenticated)
@@ -55,6 +58,7 @@ namespace TimelessEchoes.Platform
             }
             else StartupDiagnostics.SetGameServicesStatus("Authenticated");
 #endif
+            yield break;
         }
 
         /// <summary>
@@ -63,6 +67,7 @@ namespace TimelessEchoes.Platform
         /// </summary>
         public void PromptLoginIfNeeded()
         {
+            if (StartupDiagnostics.SkipGameCenter) return;
 #if UNITY_ANDROID || UNITY_IOS
             if (interactiveFallback && !GameServices.IsAuthenticated)
             {

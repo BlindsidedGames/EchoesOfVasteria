@@ -39,6 +39,7 @@ namespace TimelessEchoes.UI.Toolkit
         public bool IsConfigured=>definition&&theme&&runtimeTheme&&textSettings;
         public bool Show()
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return false;
             if(IsOpen)return true;if(!IsConfigured||!BuffManager.Instance)return false;
             if(!panel){panel=ToolkitPanel.CreateSettings(runtimeTheme,textSettings);panel.sortingOrder=100;}
             var doc=GetComponent<UIDocument>();doc.panelSettings=panel;doc.rootVisualElement.pickingMode=PickingMode.Ignore;

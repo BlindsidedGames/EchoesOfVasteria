@@ -53,6 +53,7 @@ namespace TimelessEchoes.Platform
         /// </summary>
         public static bool RequestAuth(bool interactive, string reason = null)
         {
+            if (StartupDiagnostics.SkipGameCenter) return false;
             EnsureSubscribed();
 
             // If already authenticated, do not attempt
@@ -123,7 +124,7 @@ namespace TimelessEchoes.Platform
         private static void ResetStatics()
         {
 #if UNITY_ANDROID || UNITY_IOS
-            GameServices.OnAuthStatusChange -= HandleAuthStatusChange;
+            if (_subscribed) GameServices.OnAuthStatusChange -= HandleAuthStatusChange;
             _subscribed = false;
             _inFlight = false;
             _lastAttemptTime = -9999f;

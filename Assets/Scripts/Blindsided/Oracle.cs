@@ -188,6 +188,7 @@ namespace Blindsided
 
         private IEnumerator Start()
         {
+            while (StartupDiagnostics.Enabled && !StartupDiagnostics.ChoiceReady) yield return null;
             StartupDiagnostics.SetPhase("Opening loading screen", 0.05f);
             // Normal builds and Editor Play both start in Loading. This fallback protects a
             // misordered build or direct scene launch without allowing Main to reach a null tree.
@@ -224,6 +225,22 @@ namespace Blindsided
             // methods begin spawning NPC tasks after any Loading -> Main transition.
             StaticReferences.ActiveNpcMeetings.Clear();
             var async = SceneManager.LoadSceneAsync(MainSceneName, LoadSceneMode.Single);
+            if (StartupDiagnostics.Enabled)
+            {
+                async.allowSceneActivation = false;
+                while (async.progress < 0.9f) yield return null;
+                StartupDiagnostics.SetPhase("Activating town objects (Awake/OnEnable)", 0.8f);
+                yield return null; // Render and persist the boundary before activation can block.
+                if (StartupDiagnostics.Mode == StartupDiagnostics.TestMode.PauseBeforeActivation)
+                {
+                    StartupDiagnostics.SetPhase("Town assets loaded; activation paused", 0.75f);
+                    StartupDiagnostics.AwaitingActivation = true;
+                    while (StartupDiagnostics.AwaitingActivation) yield return null;
+                    StartupDiagnostics.SetPhase("Activating town objects (Awake/OnEnable)", 0.8f);
+                    yield return null;
+                }
+                async.allowSceneActivation = true;
+            }
             while (!async.isDone)
                 yield return null;
 

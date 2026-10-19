@@ -23,6 +23,7 @@ namespace TimelessEchoes.UI.Toolkit
         private List<FilterFunction> desktopBlur;
         private void OnEnable()
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
             if (!theme || !runtimeTheme || !textSettings) return;
             settings = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); settings.sortingOrder = 85;
             var document = GetComponent<UIDocument>(); document.panelSettings = settings; document.rootVisualElement.pickingMode = PickingMode.Ignore;

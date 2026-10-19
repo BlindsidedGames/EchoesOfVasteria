@@ -56,6 +56,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         public bool Show()
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return false;
             if (IsOpen) return true;
             if (!IsConfigured || !(manager = CauldronManager.Instance) || !(resources = ResourceManager.Instance)) return false;
             if (!settings) { settings = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); settings.sortingOrder = 100; }

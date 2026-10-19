@@ -64,6 +64,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void Create()
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
             if (!panel) { panel = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); panel.sortingOrder = 150; }
             var document = GetComponent<UIDocument>();
             document.panelSettings = panel;

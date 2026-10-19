@@ -7,6 +7,10 @@ namespace TimelessEchoes.UI.Toolkit
     {
         public static PanelSettings CreateSettings(ThemeStyleSheet theme, PanelTextSettings textSettings)
         {
+#if EOV_STARTUP_DIAGNOSTICS
+            var owner = new System.Diagnostics.StackTrace().GetFrame(1)?.GetMethod()?.DeclaringType?.Name;
+            TimelessEchoes.Platform.StartupDiagnostics.Operation("Create UI panel: " + owner);
+#endif
             // Keep an authored asset in the build so Unity includes runtime UI shaders and
             // ICU text data. Runtime-only PanelSettings work in Editor but omit those assets
             // from a player. Clone it so each view owns its sorting/lifetime independently.

@@ -1,25 +1,20 @@
 # Internal startup diagnostic build
 
-Add `EOV_STARTUP_DIAGNOSTICS` to the build's extra scripting defines (or the iOS
-scripting define symbols). Do not enable it for general releases.
+Enable `EOV_STARTUP_DIAGNOSTICS` only for internal builds. The startup menu offers:
 
-This build retains the normal save, networking and Game Center behaviour. It
-adds startup phase labels and stage-based progress, plus a separate Game Center
-status. The percentage identifies stages; it is not a time estimate.
+1. Normal startup: original services and UI.
+2. Pause before town activation: load scene assets, then wait for an explicit Continue before Awake/OnEnable.
+3. Skip Game Center sign-in: suppress authentication requests and achievement reporting. This does not remove the native SDK.
+4. Skip online services: skip UGS initialization/sign-in. Game Center remains independent.
+5. Skip main UI Toolkit screens: keep scene/game initialization, omit main Toolkit screen construction. The independent diagnostic overlay remains available.
+6. Minimal: combine checks 3, 4 and 5. A successful combined check alone cannot identify which subsystem matters.
 
-Startup checkpoints are written to `startup-diagnostics.json` in the app's
-persistent data directory, separate from save slots. They contain the app
-version, UTC time, phase, Game Center status, Unity allocated memory and whether
-startup completed. They contain no save contents and are not uploaded. Failure
-to read or write diagnostics does not prevent startup.
+Close and reopen the app between checks so initialized services cannot leak into the next comparison. No reinstall or new build is required. Each check uses the existing selected save; diagnostics never reset or replace it. Ordinary gameplay save behavior remains enabled.
 
-Ask the affected tester to launch twice and screenshot the loading screen on the
-second launch. It shows the last incomplete launch's checkpoint even if the
-current attempt stops earlier. A checkpoint shows the last reached stage, not a
-proven cause: a native callback or memory termination can happen asynchronously.
-A user closing the app during startup also leaves an incomplete checkpoint.
+The independent overlay shows elapsed startup time, the latest operation, Game Center status, memory warnings and managed exceptions. On iOS it also reports native physical footprint and current memory headroom using `task_info` and `os_proc_available_memory`. A worker samples every 500 ms, including while the main thread is blocked. Peaks are sampled values, not guaranteed instantaneous maxima. The main-thread gap is an observation, not proof of a deadlock; backgrounding the app can also increase it.
 
-The diagnostic overlay remains visible through town initialization and applying
-the loaded progress. Successful startup marks the checkpoint complete and hides
-the overlay. Removing the define restores the normal loading screen and removes
-diagnostic calls from call sites; no player-save migration is required.
+`startup-diagnostics.json` preserves the last attempt and `startup-results.json` the latest result per mode. Both live beside, not inside, save slots. Writes use temporary files and replacement; failure to write diagnostics never blocks gameplay. The next launch displays the last incomplete attempt before a new selection overwrites it. No diagnostic records are transmitted.
+
+The native sampler cannot identify a crash cause by itself, intercept native crashes, or replace Apple crash/jetsam reports. A last operation is a breadcrumb, not proof that operation caused termination. Simulator headroom is not the physical device's budget.
+
+For isolated automation, pass `-eovDiagnosticMode=Normal` (or another enum name from `StartupDiagnostics.TestMode`) to bypass the selector. Verify normal, paused activation and omission modes with disposable simulator data before upload. Keep the release save format and authentication behavior unchanged when the define is absent.

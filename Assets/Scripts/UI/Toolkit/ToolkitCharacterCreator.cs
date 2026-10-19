@@ -65,6 +65,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         public bool Show(bool allowCancel = false)
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return false;
             if (IsOpen) return true;
             var catalog = CharacterCatalog.Load();
             if (!theme || !runtimeTheme || !textSettings || !catalog || !Oracle.oracle || !Oracle.oracle.HasLoadedCurrentSlotData) return false;

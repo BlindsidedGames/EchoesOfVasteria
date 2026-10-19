@@ -62,6 +62,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private bool Show(bool inForge, bool inQuests = false)
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return false;
             if (IsOpen) return true;
             if (!IsConfigured || !(manager = ResourceManager.Instance)) return false;
             embedded = inForge || inQuests;

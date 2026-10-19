@@ -36,10 +36,11 @@ namespace TimelessEchoes.UI.Toolkit
             Refresh();
         }
         private void RefreshText(){if(loadingLabel!=null)loadingLabel.text=ToolkitLocalization.Text("loading.title", "Loading...");}
-        private void Update()=>Refresh();
+        private void Update(){StartupDiagnostics.Heartbeat();Refresh();}
         private void Refresh()
         {
             if (root == null) return;
+            if (StartupDiagnostics.Enabled) { root.style.display = DisplayStyle.None; return; }
             root.style.width = ToolkitResponsiveLayout.Size.x;
             root.style.height = ToolkitResponsiveLayout.Size.y;
             var manager = GameManager.Instance;
@@ -52,7 +53,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (startup)
             {
                 loadingLabel.text = StartupDiagnostics.Phase;
-                diagnosticLabel.text = $"Internal startup diagnostics • {Application.version}\nGame Center: {StartupDiagnostics.GameServicesStatus}";
+                diagnosticLabel.text = $"Internal startup diagnostics • {Application.version}\n" + StartupDiagnostics.CurrentDetails;
                 if (!string.IsNullOrEmpty(StartupDiagnostics.PreviousAttempt))
                     diagnosticLabel.text += "\n\n" + StartupDiagnostics.PreviousAttempt;
             }

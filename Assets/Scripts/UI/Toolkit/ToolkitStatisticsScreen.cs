@@ -39,6 +39,7 @@ namespace TimelessEchoes.UI.Toolkit
         public bool IsConfigured => definition && theme && runtimeTheme && textSettings;
         public bool Show()
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return false;
             if (IsOpen) return true;
             if (!IsConfigured || !(tracker = GameplayStatTracker.Instance)) return false;
             if (!settings) { settings = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); settings.sortingOrder = 100; }

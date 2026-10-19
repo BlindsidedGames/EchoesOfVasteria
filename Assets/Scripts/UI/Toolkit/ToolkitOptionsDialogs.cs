@@ -29,6 +29,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         public void Open(string requested)
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
             Hide(); mode = requested;
             if (!panel) { panel = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); panel.sortingOrder = 300; }
             var document = GetComponent<UIDocument>(); document.panelSettings = panel; document.rootVisualElement.pickingMode = PickingMode.Ignore;

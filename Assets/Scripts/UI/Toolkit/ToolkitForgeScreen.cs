@@ -50,6 +50,7 @@ namespace TimelessEchoes.UI.Toolkit
         public bool IsConfigured => definition && definition.catalog && theme && runtimeTheme && textSettings;
         public bool Show()
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return false;
             if (IsOpen) return true;
             if (!IsConfigured) return false;
             if (!session)

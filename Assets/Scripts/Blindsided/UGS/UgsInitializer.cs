@@ -34,6 +34,8 @@ namespace Blindsided.UGS
 
         private static async Task InitializeAndSignInAsync()
         {
+            await TimelessEchoes.Platform.StartupDiagnostics.WaitForSelection();
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipOnlineServices) return;
             if (UnityServices.State != ServicesInitializationState.Initialized)
             {
                 await UnityServices.InitializeAsync();

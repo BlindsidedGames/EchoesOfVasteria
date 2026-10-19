@@ -21,6 +21,7 @@ namespace Blindsided.Utilities
         /// </summary>
         public static T[] GetAll<T>(string resourcesPath = "") where T : Object
         {
+            TimelessEchoes.Platform.StartupDiagnostics.Operation("Load resource category: " + typeof(T).Name);
             var type = typeof(T);
             // Avoid repeated string allocations on hot paths
             if (resourcesPath == null) resourcesPath = string.Empty;

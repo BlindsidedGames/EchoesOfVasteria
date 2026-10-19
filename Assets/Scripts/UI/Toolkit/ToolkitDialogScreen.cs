@@ -63,6 +63,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void Create()
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
             if (!theme || !template || !runtimeTheme || !textSettings || !frame || !primarySprite)
                 throw new InvalidOperationException("Native dialog assets are not configured.");
             if (!panel)

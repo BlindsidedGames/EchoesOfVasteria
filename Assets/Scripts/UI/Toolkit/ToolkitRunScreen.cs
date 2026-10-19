@@ -47,6 +47,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void OnEnable()
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
             if (!IsConfigured) return;
             settings = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); settings.sortingOrder = 80;
             var document = GetComponent<UIDocument>(); document.panelSettings = settings;

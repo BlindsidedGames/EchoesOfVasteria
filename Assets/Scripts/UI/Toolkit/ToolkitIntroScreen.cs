@@ -32,6 +32,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         public void Show()
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
             if (root != null) return;
             if (!definition || !theme || !template || !runtimeTheme || !textSettings)
             {

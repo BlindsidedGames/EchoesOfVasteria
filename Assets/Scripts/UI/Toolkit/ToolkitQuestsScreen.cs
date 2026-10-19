@@ -42,6 +42,7 @@ namespace TimelessEchoes.UI.Toolkit
         public bool Show() => Show(null);
         public bool Show(ToolkitResourceInventoryScreen inventoryTemplate)
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return false;
             if (IsOpen) return true;
             if (!IsConfigured || !(manager = QuestManager.Instance)) return false;
             if (!settings) { settings = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); settings.sortingOrder = 100; }

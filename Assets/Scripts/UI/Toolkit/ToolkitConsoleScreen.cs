@@ -43,6 +43,7 @@ namespace TimelessEchoes.UI.Toolkit
         public void Toggle() { if (IsActive) Hide(); else Show(); }
         public void Show()
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
             if (IsActive || !theme || !runtimeTheme || !textSettings) return;
             if (!QuantumConsoleProcessor.TableGenerated) QuantumConsoleProcessor.GenerateCommandTable();
             commands = QuantumConsoleProcessor.GetAllCommands().Select(c => c.CommandName).Distinct().OrderBy(c => c).ToArray();
