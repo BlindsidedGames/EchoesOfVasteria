@@ -1,10 +1,9 @@
 # Startup memory
 ## Current result
 
-The latest natively profiled candidate, 8cfe5ed75, has a sampled startup peak
-of 580.566 MiB on the arm64 Release iPhone 13 mini Simulator (iOS 18.5), with
-original character pixels preserved. The additional portrait-frame guard is
-locally validated and awaiting native profiling. The affected physical iPhone
+The latest natively profiled candidate, 9ca330359, has a sampled startup peak
+of 583.504 MiB on the arm64 Release iPhone 13 mini Simulator (iOS 18.5), with
+original character pixels preserved. The portrait-frame guard also passed native character editing, animation, clearing and restoration checks. The affected physical iPhone
 13 mini on iOS 27 still needs confirmation. Simulator frame rate remains capped
 at 60 Hz; repeated loading/text-shaping work was eliminated, but no overall
 phone FPS gain is claimed. Measurements below distinguish process footprint,
@@ -302,3 +301,28 @@ the same frame after clearing. All four existing character PlayMode checks
 also passed after this change, covering creation/presets, equipment visibility,
 player/Echo pooling/appearance and preset validation. Native validation of this
 latest portrait-frame guard is pending.
+
+### Final portrait-guard native validation
+
+9ca330359 built successfully in native arm64 Release (Unity export zero errors,
+72 warnings; Xcode BUILD SUCCEEDED). Its sampled startup peak was 583.504 MiB
+and settled footprint 581.019–583.504 MiB. An isolated creator check in an empty
+second slot changed Hair 1/2/3 and Farmer/Lumberjack shirts on the same draft,
+advanced Run frames, turned and showed the fishing rod, cleared hair with None
+and restored Hair 1. The original disposable first slot was restored afterward;
+real saves and checkouts were untouched.
+
+The 20-second sample had 1,571 main-thread wall observations: resource-loading
+and text-shaping chains remained at zero, CharacterImage.Set appeared twice
+(previously three), wardrobe trimming had no resolved frame, progress actor
+animation appeared four times (previously five), and one ValueTuple.Equals
+frame was sampled. Counts overlap callers; zero may reflect inlining or
+unsampled work. Main median/p95 were 3.563/4.090 ms, wall median/p95
+16.667/17.227 ms and GPU median 0.631 ms. These do not establish a precise
+CPU-time or phone FPS gain.
+
+One consolidated internal TestFlight archive is being prepared from this source
+with the original textures and normal app ID. The local profiling hooks and
+disposable app identity are excluded; internal startup diagnostics are retained
+so a nondeveloper can choose Normal and screenshot the completed check's native
+peak/headroom. Production publishing and merging remain out of scope.
