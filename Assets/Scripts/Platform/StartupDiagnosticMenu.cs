@@ -5,6 +5,10 @@ namespace TimelessEchoes.Platform
     // Independent of UI Toolkit so its creation can be isolated by the same build.
     public sealed class StartupDiagnosticMenu : MonoBehaviour
     {
+#if UNITY_IOS && !UNITY_EDITOR && EOV_STARTUP_DIAGNOSTICS
+        [System.Runtime.InteropServices.DllImport("__Internal")]
+        private static extern int EovReadStartupDiagnosticMode([System.Runtime.InteropServices.Out] byte[] buffer, int capacity);
+#endif
         private Vector2 scroll;
         private bool hidden;
         private void Start()
@@ -12,6 +16,15 @@ namespace TimelessEchoes.Platform
             foreach (var arg in System.Environment.GetCommandLineArgs())
                 if (arg.StartsWith("-eovDiagnosticMode=") && System.Enum.TryParse<StartupDiagnostics.TestMode>(arg.Substring(19), out var mode))
                     StartupDiagnostics.Choose(mode);
+#if UNITY_IOS && !UNITY_EDITOR && EOV_STARTUP_DIAGNOSTICS
+            if (!StartupDiagnostics.ChoiceReady)
+            {
+                var buffer = new byte[64];
+                var count = EovReadStartupDiagnosticMode(buffer, buffer.Length);
+                if (count > 0 && count < buffer.Length && System.Enum.TryParse<StartupDiagnostics.TestMode>(System.Text.Encoding.UTF8.GetString(buffer, 0, count), out var nativeMode))
+                    StartupDiagnostics.Choose(nativeMode);
+            }
+#endif
         }
         private void OnDestroy() => StartupDiagnostics.EndSession();
         private void Update() => StartupDiagnostics.Heartbeat();
@@ -25,12 +38,17 @@ namespace TimelessEchoes.Platform
             var height = Screen.height / scale;
             var style = new GUIStyle(GUI.skin.label) { fontSize = 16, wordWrap = true };
             var button = new GUIStyle(GUI.skin.button) { fontSize = 17, wordWrap = true };
-            GUILayout.BeginArea(new Rect(10, Mathf.Max(20, height * .07f), width - 20, height * .86f), GUI.skin.box);
+            var area = new Rect(10, Mathf.Max(20, height * .07f), width - 20, height * .86f);
+            var previousColor = GUI.color;
+            GUI.color = new Color(.08f, .07f, .065f, 1f);
+            GUI.DrawTexture(area, Texture2D.whiteTexture);
+            GUI.color = previousColor;
+            GUILayout.BeginArea(area, GUI.skin.box);
             scroll = GUILayout.BeginScrollView(scroll);
             GUILayout.Label("Startup diagnostics", new GUIStyle(style) { fontSize = 23, fontStyle = FontStyle.Bold });
             if (!StartupDiagnostics.ChoiceReady)
             {
-                GUILayout.Label("Choose one check per launch. Close and reopen the app to try another. Your saves stay in place.", style);
+                GUILayout.Label("Choose one check per launch. Swipe the app away, then reopen it to try another check. Your saves stay in place.", style);
                 Option("1. Normal startup", StartupDiagnostics.TestMode.Normal, button);
                 Option("2. Pause before town activation", StartupDiagnostics.TestMode.PauseBeforeActivation, button);
                 Option("3. Skip Game Center sign-in", StartupDiagnostics.TestMode.NoGameCenterSignIn, button);
@@ -49,7 +67,7 @@ namespace TimelessEchoes.Platform
                 GUILayout.Label(StartupDiagnostics.PreviousAttempt ?? "", style);
                 if (!StartupDiagnostics.Active)
                 {
-                    GUILayout.Label("Check complete. Close and reopen the app for another check.", style);
+                    GUILayout.Label("Check complete. Swipe the app away, then reopen it to try another check.", style);
                     if (GUILayout.Button("Hide diagnostics", button, GUILayout.MinHeight(44))) hidden = true;
                 }
             }

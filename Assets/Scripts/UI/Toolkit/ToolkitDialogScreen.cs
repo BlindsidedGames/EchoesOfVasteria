@@ -29,6 +29,7 @@ namespace TimelessEchoes.UI.Toolkit
         public void Show(string title, string body, string primaryText, string secondaryText,
             Action onPrimary, Action onSecondary, bool enabled = true)
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
             ClearBindings();
             if (root == null) Create();
             titleLabel.text = "<b><smallcaps>" + title + "</smallcaps></b>";
@@ -47,6 +48,7 @@ namespace TimelessEchoes.UI.Toolkit
             ToolkitBookDefinition.Text primaryText, ToolkitBookDefinition.Text secondaryText,
             Action onPrimary, Action onSecondary, bool enabled = true)
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
             Show(title?.fallback, body?.fallback, primaryText?.fallback, secondaryText?.fallback,
                 onPrimary, onSecondary, enabled);
             bindings.Add(new ToolkitTextBinding(titleLabel, title));

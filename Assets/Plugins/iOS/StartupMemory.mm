@@ -1,8 +1,30 @@
 #include <TargetConditionals.h>
 #if TARGET_OS_IOS
+#import <Foundation/Foundation.h>
 #include <mach/mach.h>
 #include <os/proc.h>
 #include <stdint.h>
+#include <string.h>
+
+// IL2CPP does not expose the Simulator launch arguments through Environment on
+// every Unity iOS runtime. Copy into caller-owned storage without transferring
+// an NSString or native allocation across the managed boundary.
+extern "C" int EovReadStartupDiagnosticMode(uint8_t* buffer, int capacity)
+{
+    if (buffer == nullptr || capacity <= 0) return 0;
+    buffer[0] = 0;
+    NSString* prefix = @"-eovDiagnosticMode=";
+    for (NSString* argument in [[NSProcessInfo processInfo] arguments])
+    {
+        if (![argument hasPrefix:prefix]) continue;
+        NSData* value = [[argument substringFromIndex:[prefix length]] dataUsingEncoding:NSUTF8StringEncoding];
+        if ([value length] == 0 || [value length] >= static_cast<NSUInteger>(capacity)) return 0;
+        memcpy(buffer, [value bytes], [value length]);
+        buffer[[value length]] = 0;
+        return static_cast<int>([value length]);
+    }
+    return 0;
+}
 
 // Read-only diagnostics. No entitlements, allocation-limit changes or exception handlers.
 extern "C" int EovReadStartupMemory(uint64_t* footprint, uint64_t* available)

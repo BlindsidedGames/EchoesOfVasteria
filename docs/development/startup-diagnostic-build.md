@@ -9,7 +9,7 @@ Enable `EOV_STARTUP_DIAGNOSTICS` only for internal builds. The startup menu offe
 5. Skip main UI Toolkit screens: keep scene/game initialization, omit main Toolkit screen construction. The independent diagnostic overlay remains available.
 6. Minimal: combine checks 3, 4 and 5. A successful combined check alone cannot identify which subsystem matters.
 
-Close and reopen the app between checks so initialized services cannot leak into the next comparison. No reinstall or new build is required. Each check uses the existing selected save; diagnostics never reset or replace it. Ordinary gameplay save behavior remains enabled.
+On iOS, swipe the app away, then reopen it to try another check, so initialized services cannot leak into the next comparison. Merely going Home and resuming does not restart the process. No reinstall or new build is required. Each check uses the existing selected save; diagnostics never reset or replace it. Ordinary gameplay save behavior remains enabled.
 
 The independent overlay shows elapsed startup time, the latest operation, Game Center status, memory warnings and managed exceptions. On iOS it also reports native physical footprint and current memory headroom using `task_info` and `os_proc_available_memory`. A worker samples every 500 ms, including while the main thread is blocked. Peaks are sampled values, not guaranteed instantaneous maxima. The main-thread gap is an observation, not proof of a deadlock; backgrounding the app can also increase it.
 

@@ -238,11 +238,11 @@ namespace TimelessEchoes.Platform
 
         private static void OnLog(string message, string stack, LogType type)
         {
-            if (type != LogType.Exception && type != LogType.Assert) return;
+            if (type != LogType.Exception && type != LogType.Assert && type != LogType.Error) return;
             lock (Gate)
             {
                 if (!Active || current == null) return;
-                var detail = message + "\n" + stack;
+                var detail = type + ": " + message + "\n" + stack;
                 current.lastException = detail.Substring(0, Math.Min(detail.Length, 4000));
                 SampleLocked();
             }
@@ -263,7 +263,7 @@ namespace TimelessEchoes.Platform
             text += $"Memory warnings {value.memoryWarnings} · Game Center: {value.gameServices}";
             if (!string.IsNullOrEmpty(value.operation)) text += "\nLast operation: " + value.operation;
             if (!string.IsNullOrEmpty(value.lastException))
-                text += "\nException: " + value.lastException.Split('\n')[0];
+                text += "\nIssue: " + value.lastException.Split('\n')[0];
             return text;
         }
 
