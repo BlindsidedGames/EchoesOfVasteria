@@ -72,6 +72,31 @@ These changes target both peak launch memory and growth after visiting menus,
 trying outfits and travelling through different maps. They do not lower map
 density, remove animation frames, change progression or discard player history.
 
+## Audited systems retained
+
+The segmented map generator already recycles its oldest segment as the player
+advances; its live map window was not reduced. Sound effects share one source
+and keep their immediate playback settings. Echo appearance compositing shares
+the character sheets through material property blocks rather than allocating a
+render texture per echo. Locale font bindings already unsubscribe on detach.
+These systems were not replaced simply to increase the change count.
+
+Focused PlayMode checks cover closed-book panel release/reopening, live-object
+safety during pool cleanup, character creation/presets, and character/equipment
+appearance across pooling. The iOS build comparison remains separate from
+Editor validation: Editor memory is not the device's physical footprint.
+
+The eight focused checks passed. The book-panel regression was also run with
+the original `Hide` implementation and failed for the expected reason: five
+transient panels remained (four closed menus and the shared dock), exceeding
+the allowed one. Restoring the optimized implementation passed again.
+
+An Editor stress probe cycled 136 non-armour appearance variants through the
+production cache policy. Cached parts peaked at 20; 13 parts remained cached
+and resident after the final unused-asset sweep. This validates the cache bound,
+not a physical-device memory estimate. Test-only render/Play settings were
+restored after validation, and the tests used isolated save directories.
+
 ## Device verification
 
 Use a new internal build on the affected iPhone 13 mini. Run normal startup,
