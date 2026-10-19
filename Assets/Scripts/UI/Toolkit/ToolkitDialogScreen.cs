@@ -130,6 +130,7 @@ namespace TimelessEchoes.UI.Toolkit
             root = null;
             primary = secondary = null;
             interactable = false;
+            ToolkitPanel.Release(GetComponent<UIDocument>(), ref panel);
         }
 
         private void OnDisable() => Hide();

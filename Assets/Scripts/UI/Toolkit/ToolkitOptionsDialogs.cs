@@ -171,6 +171,7 @@ namespace TimelessEchoes.UI.Toolkit
             statusKey = statusEnglish = null; statusArguments = Array.Empty<object>();
             foreach (var binding in bindings) binding.Dispose(); bindings.Clear();
             root?.RemoveFromHierarchy(); root = null; frame = null; input = null; status = null;
+            ToolkitPanel.Release(GetComponent<UIDocument>(), ref panel);
         }
         private void OnDisable() => Hide();
         private void OnDestroy() { if (panel) Destroy(panel); }

@@ -106,6 +106,7 @@ namespace TimelessEchoes.UI.Toolkit
             root?.RemoveFromHierarchy();
             root = null;
             close = null;
+            ToolkitPanel.Release(GetComponent<UIDocument>(), ref panel);
         }
 
         private void OnDisable() => Hide();

@@ -40,12 +40,37 @@ with high-quality encoding on iOS. It preserves the effective maximum size,
 sprite IDs, slicing, point filtering and other platform settings. The policy
 also applies to newly generated hair and gear colours. Existing imports can
 be updated with **Tools > Characters > Apply iOS Texture Compression**.
+The check runs when rebuilding the character catalogue and before iOS builds,
+rather than through a global texture postprocessor that would invalidate
+unrelated imports whenever editor scripts change.
 
 The 214 source PNGs contain approximately 1,437 MiB of RGBA32 pixel data in
 total. ASTC 4x4 stores eight bits per pixel instead of 32, but only the sheets
 actually resident in memory contribute to runtime savings. Do not describe
 the entire source total as measured resident memory or claim a measured
 device saving from the compression ratio.
+
+## Runtime retention
+
+- Music uses streaming with the existing compression quality, sample rate and
+  channels. The short sound effects retain their original low-latency settings.
+- Closed menus detach and release their own `PanelSettings`, so native render
+  panels and dynamic atlases do not remain allocated for every visited window.
+  View state such as the library's article and scroll position remains in its
+  existing fields and is restored when reopened.
+- The character catalogue bounds cached, previously viewed parts. It keeps the
+  preview and current outfit, drops unused catalogue references after the cache
+  grows past 20 parts, and coalesces unused-asset unloads. Hidden portraits and
+  disabled world/echo renderers also release their old sprite/texture references.
+- Map cleanup discards inactive pools once no instances from that pool are live.
+  Within-run pooling and live objects are unchanged; the next run can create
+  instances through the same pool.
+- The world sprite atlas no longer keeps a readable CPU copy. Runtime consumers
+  render the sprites; none read the atlas's pixels.
+
+These changes target both peak launch memory and growth after visiting menus,
+trying outfits and travelling through different maps. They do not lower map
+density, remove animation frames, change progression or discard player history.
 
 ## Device verification
 

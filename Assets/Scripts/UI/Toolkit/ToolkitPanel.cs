@@ -27,5 +27,18 @@ namespace TimelessEchoes.UI.Toolkit
             ToolkitResponsiveLayout.Register(panel);
             return panel;
         }
+
+        public static void Release(UIDocument document, ref PanelSettings settings)
+        {
+            if (settings)
+            {
+                // A detached visual tree alone leaves the panel and its GPU atlases alive.
+                if (document && document.panelSettings == settings)
+                    document.panelSettings = null;
+                if (Application.isPlaying) Object.Destroy(settings);
+                else Object.DestroyImmediate(settings);
+            }
+            settings = null;
+        }
     }
 }

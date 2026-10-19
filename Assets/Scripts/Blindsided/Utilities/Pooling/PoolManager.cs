@@ -109,6 +109,23 @@ namespace Blindsided.Utilities.Pooling
         private static readonly Dictionary<string, PoolInfo> poolsByName = new();
         private const int InactiveWarningThreshold = 100;
 
+        /// <summary>Discard completed-run instances without touching any active objects.</summary>
+        public static void TrimInactive()
+        {
+            foreach (var info in poolsByPrefabId.Values)
+            {
+                if (info.active != 0) continue;
+                info.pool.Clear();
+                info.inactive = 0;
+            }
+            foreach (var info in poolsByName.Values)
+            {
+                if (info.active != 0) continue;
+                info.pool.Clear();
+                info.inactive = 0;
+            }
+        }
+
         /// <summary>
         /// Create a pool for the given prefab and optionally prewarm it.
         /// </summary>

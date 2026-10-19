@@ -63,6 +63,7 @@ namespace TimelessEchoes.UI.Toolkit
             }
             view?.Dispose();
             view = null;
+            ToolkitPanel.Release(GetComponent<UIDocument>(), ref panel);
         }
 
         private void OnEnable()

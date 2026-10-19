@@ -1263,6 +1263,10 @@ namespace TimelessEchoes
                 Destroy(CurrentMap); // safe to destroy AstarPath now
                 CurrentMap = null;
             }
+
+            // Reuse instances while travelling within a run, but do not retain
+            // the high-water population of every previously visited map.
+            Blindsided.Utilities.Pooling.PoolManager.TrimInactive();
         }
 
         /// <summary>

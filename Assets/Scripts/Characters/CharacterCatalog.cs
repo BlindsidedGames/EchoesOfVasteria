@@ -29,6 +29,7 @@ namespace TimelessEchoes.Characters
                 Style.EndsWith("_1", StringComparison.Ordinal) ? Style.Substring(0, Style.Length - 2) : Style).Replace('_', ' ');
             public bool IsArmour => Style.StartsWith("Plate_", StringComparison.Ordinal) || Style.StartsWith("Heavy_Plate_", StringComparison.Ordinal);
             [NonSerialized] private CharacterPartFrames loaded;
+            internal bool IsLoaded => loaded;
             public Sprite At(int index) {
                 if (!loaded) loaded = Resources.Load<CharacterPartFrames>(resourcePath);
                 return loaded && loaded.frames != null && index >= 0 && index < loaded.frames.Length ? loaded.frames[index] : null;
@@ -49,6 +50,7 @@ namespace TimelessEchoes.Characters
         private Dictionary<Sprite, int> frames;
         private Dictionary<string, Pose> byPose;
         private static CharacterCatalog cached;
+        [NonSerialized] private AsyncOperation unusedAssetUnload;
         public static CharacterCatalog Load() => cached ? cached : cached = Resources.Load<CharacterCatalog>("Characters/Catalog");
         private void OnEnable() { byId = null; frames = null; byPose = null; }
         private void Prepare()
@@ -85,12 +87,26 @@ namespace TimelessEchoes.Characters
         {
             var profile = defaults.Copy(); profile.Created = false; profile.Modular = true; profile.Name = ""; return profile;
         }
-        public void ReleaseUnused(CharacterProfile profile)
+        public void TrimAppearanceCache(CharacterProfile preview, CharacterProfile character)
+        {
+            // Browsing styles must not retain an entire wardrobe until the creator closes.
+            // Keep room for the visible outfit, the world outfit and recently viewed parts.
+            var count = 0;
+            foreach (var part in parts) if (part.IsLoaded) count++;
+            if (count > 20) ReleaseUnused(preview, character);
+        }
+
+        public void ReleaseUnused(params CharacterProfile[] profiles)
         {
             var selected = new HashSet<Part>();
-            for (var i = 0; i < 8; i++) { var part = PartFor(profile, (CharacterSlot)i); if (part != null) selected.Add(part); }
+            foreach (var profile in profiles)
+            {
+                if (profile == null) continue;
+                for (var i = 0; i < 8; i++) { var part = PartFor(profile, (CharacterSlot)i); if (part != null) selected.Add(part); }
+            }
             foreach (var part in parts) if (!selected.Contains(part)) part.Release();
-            Resources.UnloadUnusedAssets();
+            if (unusedAssetUnload == null || unusedAssetUnload.isDone)
+                unusedAssetUnload = Resources.UnloadUnusedAssets();
         }
     }
 }

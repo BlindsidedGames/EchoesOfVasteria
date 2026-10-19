@@ -27,11 +27,12 @@ namespace TimelessEchoes.Characters
         {
             var catalog = CharacterCatalog.Load(); if (!catalog) return;
             root.style.display = profile == null ? DisplayStyle.None : DisplayStyle.Flex;
-            if (profile == null) return;
+            if (profile == null) { foreach (var image in images) image.sprite = null; return; }
             for (var i = 0; i < images.Length; i++)
                 images[i].sprite = !showTool && i == (int)CharacterSlot.Tool ? null : catalog.SpriteFor(profile, (CharacterSlot)i, frame);
             var tool = images[(int)CharacterSlot.Tool];
             if (frame < catalog.toolBehind.Length && catalog.toolBehind[frame]) tool.SendToBack(); else tool.BringToFront();
+            catalog.TrimAppearanceCache(profile, CharacterEquipmentAppearance.Resolve(CharacterCreation.Current));
         }
     }
 }

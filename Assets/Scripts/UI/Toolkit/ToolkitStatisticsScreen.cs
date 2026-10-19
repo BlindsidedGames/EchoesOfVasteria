@@ -275,6 +275,7 @@ namespace TimelessEchoes.UI.Toolkit
             itemRows.Clear(); itemSortButtons.Clear(); itemContent = null;
             journalSelectors.Clear(); journalDiscoveries.Clear(); journalContent = journalRecent = journalCollection = null; journalDiscoveryCount = null;
             Blindsided.EventHandler.OnLoadData -= Changed; root?.RemoveFromHierarchy(); root = null; tracker = null; runGraph = null; forgingView = null; tabButtons.Clear(); summaries.Clear();
+            ToolkitPanel.Release(GetComponent<UIDocument>(), ref settings);
         }
         private void OnDisable() => Hide();
         private void OnDestroy() { Hide(); if (settings) Destroy(settings); }

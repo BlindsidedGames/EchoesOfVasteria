@@ -298,6 +298,7 @@ namespace TimelessEchoes.UI.Toolkit
             foreach (var binding in bindings) binding.Dispose(); bindings.Clear(); buttons.Clear(); sliders.Clear(); labels.Clear();
             dialogs?.Hide(); Array.Clear(safety,0,safety.Length);
             root?.RemoveFromHierarchy(); widthPreview?.RemoveFromHierarchy(); root = null; widthPreview = null; scroll = null;
+            ToolkitPanel.Release(GetComponent<UIDocument>(), ref panel);
         }
         private void OnDisable() => Hide();
         private void OnDestroy() { if (panel) Destroy(panel); if (dialogs) Destroy(dialogs.gameObject); }

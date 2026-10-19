@@ -140,6 +140,7 @@ namespace TimelessEchoes.Editor.Characters
             catalog.sourceFrames = bindings.Select(p => new CharacterCatalog.SourceFrame { sprite = p.Key, frame = p.Value }).ToArray();
             EditorUtility.SetDirty(catalog); AssetDatabase.SaveAssetIfDirty(catalog);
             InstallCreator();
+            CharacterTextureImportPolicy.ApplyExisting();
             return new { parts = parts.Count, frames = count, sourceFrames = bindings.Count };
         }
         private static List<CharacterCatalog.Pose> Rows(string path)

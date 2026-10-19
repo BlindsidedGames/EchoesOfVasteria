@@ -135,7 +135,7 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly ToolkitWindowLayout windowLayout=new();
         private void Layout(){var area=ToolkitWindowLayout.SafeArea;var width=Mathf.Min(744,area.width-24);windowLayout.Apply(root,new Rect(area.center.x-width/2,area.y+ToolkitResponsiveLayout.WindowTop,width,Mathf.Max(0,area.height-ToolkitResponsiveLayout.WindowTop-ToolkitResponsiveLayout.WindowBottom)));}
         private void Update(){if(!IsOpen)return;Layout();if(rebuild){rebuild=false;BuildRows();Refresh();}if(Time.unscaledTime>=nextRefresh){nextRefresh=Time.unscaledTime+.25f;Refresh();}}
-        public void Hide(){ToolkitLocalization.Changed-=LocalizationChanged;Blindsided.EventHandler.OnLoadData-=Loaded;Blindsided.EventHandler.OnQuestHandin-=QuestChanged;Blindsided.EventHandler.OnRunStarted-=RunStarted;Blindsided.EventHandler.OnRunEnded-=RunEnded;root?.RemoveFromHierarchy();root=null;scroll=null;selected=null;rows.Clear();}
+        public void Hide(){ToolkitLocalization.Changed-=LocalizationChanged;Blindsided.EventHandler.OnLoadData-=Loaded;Blindsided.EventHandler.OnQuestHandin-=QuestChanged;Blindsided.EventHandler.OnRunStarted-=RunStarted;Blindsided.EventHandler.OnRunEnded-=RunEnded;root?.RemoveFromHierarchy();root=null;scroll=null;selected=null;rows.Clear();ToolkitPanel.Release(GetComponent<UIDocument>(), ref panel);}
         private void OnDisable()=>Hide();
         private void OnDestroy(){Hide();if(panel)Destroy(panel);}
     }

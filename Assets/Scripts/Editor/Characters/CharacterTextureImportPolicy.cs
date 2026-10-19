@@ -1,18 +1,23 @@
 using System;
 using UnityEditor;
+using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 namespace TimelessEchoes.Editor.Characters
 {
     /// <summary>Keep the modular wardrobe compressed on iOS without reducing its pixel dimensions.</summary>
-    public sealed class CharacterTextureImportPolicy : AssetPostprocessor
+    public sealed class CharacterTextureImportPolicy : IPreprocessBuildWithReport
     {
         private const string ArtRoot = "Assets/Art/Character/Modular/";
 
-        private void OnPreprocessTexture()
+        public int callbackOrder => 0;
+
+        public void OnPreprocessBuild(BuildReport report)
         {
-            if (assetPath.StartsWith(ArtRoot, StringComparison.Ordinal))
-                Configure((TextureImporter)assetImporter);
+            // Do not install a global texture postprocessor: changing editor code
+            // would invalidate unrelated texture imports throughout the project.
+            if (report.summary.platform == BuildTarget.iOS) ApplyExisting();
         }
 
         private static bool Configure(TextureImporter importer)
