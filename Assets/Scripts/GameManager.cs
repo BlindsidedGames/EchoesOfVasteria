@@ -41,6 +41,9 @@ namespace TimelessEchoes
     public class GameManager : Singleton<GameManager>
     {
         public static MapGenerationConfig CurrentGenerationConfig { get; private set; }
+        private static readonly Unity.Profiling.ProfilerMarker ReleaseFontFacesMarker =
+            new("Memory.ReleaseStartupFontFaces");
+        private bool startupFontCacheReleaseScheduled;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => CurrentGenerationConfig = null;
@@ -759,6 +762,12 @@ namespace TimelessEchoes
 
             BuffManager.Instance?.Resume();
 
+            if (!startupFontCacheReleaseScheduled)
+            {
+                startupFontCacheReleaseScheduled = true;
+                StartCoroutine(ReleaseStartupFontFaces());
+            }
+
             // Start monitoring for stalled distance after run begins
             if (stallMonitorCoroutine != null)
             {
@@ -776,6 +785,18 @@ namespace TimelessEchoes
                 if (CurrentMap == null) yield break;
             }
 
+        }
+
+        private IEnumerator ReleaseStartupFontFaces()
+        {
+            // The first map warms font layout data that is no longer needed after
+            // glyph generation. Release it once, after warmup and the render jobs;
+            // later text still uses the original fonts and their feature tables.
+            // This coroutine never blocks run initialization or NPC dialogue.
+            yield return new WaitForSecondsRealtime(30f);
+            yield return new WaitForEndOfFrame();
+            using (ReleaseFontFacesMarker.Auto())
+                UnityEngine.TextCore.LowLevel.FontEngine.UnloadAllFontFaces();
         }
 
         private IEnumerator FastForwardStart()
