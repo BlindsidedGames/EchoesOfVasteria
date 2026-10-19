@@ -795,8 +795,18 @@ namespace TimelessEchoes
             // This coroutine never blocks run initialization or NPC dialogue.
             yield return new WaitForSecondsRealtime(30f);
             yield return new WaitForEndOfFrame();
+#if EOV_STARTUP_DIAGNOSTICS
+            var started = System.Diagnostics.Stopwatch.GetTimestamp();
+#endif
+            UnityEngine.TextCore.LowLevel.FontEngineError result;
             using (ReleaseFontFacesMarker.Auto())
-                UnityEngine.TextCore.LowLevel.FontEngine.UnloadAllFontFaces();
+                result = UnityEngine.TextCore.LowLevel.FontEngine.UnloadAllFontFaces();
+#if EOV_STARTUP_DIAGNOSTICS
+            var elapsedMs = (System.Diagnostics.Stopwatch.GetTimestamp() - started) * 1000d /
+                System.Diagnostics.Stopwatch.Frequency;
+            Debug.Log($"[Memory] Startup font-face cleanup: {result}; " +
+                elapsedMs.ToString("F3", System.Globalization.CultureInfo.InvariantCulture) + " ms");
+#endif
         }
 
         private IEnumerator FastForwardStart()
