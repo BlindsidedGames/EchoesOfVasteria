@@ -794,3 +794,60 @@ lifetime experiments are underway. No font features, glyphs or quality settings
 are removed on the strength of the category totals alone. The physical iPhone
 13 mini still requires validation; the earlier 2,098 MiB Jetsam is not equated
 to a development-player or Simulator total.
+
+## Matched original standalone control and release confirmation
+
+The Mac reran original source 8a6bd24c473d5a109324707a5168b9c481db48cd
+with the same observer, isolated fresh save, normal character confirmation and
+100 ms external sampling as candidate 41ef12454. Through Ready + 35 seconds,
+the kernel lifetime footprint peak falls from 751,308,736 bytes (716.50 MiB)
+to 578,473,776 bytes (551.68 MiB): 164.82 MiB, or 23.0%. This is a matched
+native iOS Simulator host measurement, not the physical iPhone's footprint.
+The original retains 198 character-part definitions and 61,253 sprites until
+normal character confirmation; no transient unload before Ready was observed.
+After confirmation it drops to seven parts. The original engine-reported
+creator Texture2D size is 1,629,316,950 bytes, while the host footprint remains
+about 716 MiB. Those counters have different accounting and must not be added.
+The reason for the remaining difference from the physical 2,098 MiB Jetsam
+has not been established. The original whole-run 815.72 MiB peak includes later
+map and snapshot work and is not substituted for the startup window.
+
+Native evidence is retained on the Mac under
+`/Users/matthewrushworth/Documents/Codex/2026-10-19/task/original-native-20261020/evidence/`
+and the exact comparison under
+`/Users/matthewrushworth/Documents/Codex/2026-10-19/task/native-retention-20261020/evidence/matched-original-current-startup.json`.
+
+A separate Windows IL2CPP standalone build explicitly uses BuildOptions.None
+and confirms Debug.isDebugBuild=false at runtime. It runs the same fresh creator,
+normal confirmation, town and Farmlands sequence. Three sequential runs of this
+identical binary test upload-buffer persistence true / false / true, without any
+production setting change. All measured steady windows have a wall-frame median
+around 8.3334 ms and p95 around 8.3418 ms, at this desktop's 120 Hz cap. These
+are capped frame intervals, not an uncapped CPU benchmark or a phone FPS claim.
+The first control's cold startup differs from the later warm runs, and map
+encounters are not forced to identical RNG. Release profiling APIs report
+incomplete object sizes and zero graphics-driver memory, so their totals are
+not compared to the Development-player totals as an optimization result.
+
+The second true control drifts from the first (Farmlands allocated medians
+986.41 to 968.94 MiB); the intervening false run is 964.25 MiB. Therefore those
+aggregate counters alone do not establish an exact 16 MiB upload-buffer saving.
+The native owner-level true / false / true test remains the decision gate.
+`release-buffer-comparison.json` records exact windows and sample counts.
+
+An observer-only end-of-frame FontEngine.UnloadAllFontFaces experiment returns
+Success and allocated bytes fall from 1,011,156,223 to 901,513,926 after five
+seconds (104.56 MiB). Cached rendering continues, but that does not establish
+new-glyph, text-input or CJK shaping safety. Native new-glyph/locale/panel-reentry
+checks are required before adoption. No font features, source fonts, fallback
+coverage or font-face lifetime policy have been changed in production. A
+read-only comparison also finds that baked feature tables do not cover all
+source ligature/mark records, so blindly disabling feature discovery is rejected.
+
+The non-development snapshot request never calls back, although Update/rendering
+continue; the bounded observer exits at 240 seconds. This is an unsupported
+capture path in this configuration, not reported as a game hang. Both matched
+Development-player snapshots remain the allocation evidence. All owned Windows
+players and their process samplers exited; the user's Editor and saves remain
+untouched. Local artifacts include release environment/stage/frame/process CSVs,
+command-result.json and the observer sources under Artifacts/StandaloneMemory.
