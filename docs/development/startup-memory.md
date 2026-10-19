@@ -183,3 +183,30 @@ custom renderer features and the volume's depth-of-field mode is Off. Required
 depth/stencil attachments, lighting, HDR, render scale, MSAA and art are retained.
 Future shaders that sample scene depth or colour must explicitly request the
 appropriate copy. Native CPU sampling is the next FPS investigation step.
+
+## Measured CPU follow-up
+
+A 20-second Apple `sample` capture of the disposable native Simulator process
+resolved IL2CPP and native symbols. Of 1,505 main-thread wall-stack observations,
+1,081 were waiting in mach_msg. Thirty-two observations included navigation
+Refresh -> Resources.Load -> Unity's native ResourceManager.PreloadDependencies;
+these are inclusive wall samples, not CPU percentages. Release inlining did
+not expose FarmContent.Load as a separate sampled frame. Its direct call is
+present in the generated Refresh source, and the production navigation code
+polls FarmContent.Load for the Fields label every 0.1 seconds.
+
+FarmContent.Load now reuses the authored object, checks Unity object lifetime,
+and resets its reference on subsystem registration. DisplayName remains evaluated
+normally, including locale changes; recipes, growth sprites and costs are not
+cached separately or changed. Five warm Editor samples of 1,000 lookups had
+median 0.2675 ms before and 0.0201 ms after, returning the same content (21 recipes,
+9 builds). This isolates lookup overhead and is not an overall FPS gain.
+All four existing FieldsContentTests passed after explicit refresh/compilation,
+covering authored construction, localization, recipes, outputs and growth sprites.
+
+Another 12 wall samples included portrait dialogue MeasureTextSize from
+FitPortrait. That remains a candidate for a correctly invalidated measurement
+cache; a text/width-only cache is insufficient when font/style/locale changes.
+No incomplete dialogue cache is included in this candidate. Instruments Time
+Profiler stalled while attaching, so the successful Apple sample fallback is
+the source of the stack evidence above.
