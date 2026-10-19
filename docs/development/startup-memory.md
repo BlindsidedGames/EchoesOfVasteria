@@ -991,7 +991,7 @@ them or interpret Windows private commit as the tester's Jetsam footprint.
 
 Town Texture2D allocation is 72.771 MiB. Forge/Cauldron close release their panel:
 PanelSettings count returns from 11 to 10 and textures settle to 72.897 MiB. Fields
-keeps its PanelSettings (11) and another approximately 128 KiB atlas, settling to
+keeps its PanelSettings (11) and another approximately 128 KiB UI shader-info texture, settling to
 73.022 MiB. That is a small lifecycle inconsistency, not evidence explaining a
 multi-gigabyte startup termination. No production change has been made for it yet.
 Artifacts: `Artifacts/StandaloneMemory/advanced-panels-01/{summary.json,
@@ -1044,3 +1044,48 @@ concretely did not exercise active crafting/tasting; the coverage gap is verifie
 not guessed from the panels being idle. All output slots pass integrity checks.
 Artifacts: `Artifacts/StandaloneMemory/advanced-startup-cpu-02/{cpu-analysis.json,
 raw-counters.csv,player.raw}`, `Artifacts/StandaloneMemory/advanced-save-outcomes.json`.
+
+
+### Native advanced-save and fresh control (same f882 observer binary)
+
+The authorized Mac task completes normal panel first-open/close and final snapshot
+for the explicit verified generation-2023 benchmark payload, followed by a fresh
+control in the same binary and dedicated iPhone 13 mini Simulator on iOS 18.5.
+The tester's physical device is on iOS 27; this is not a reproduction of that hardware
+or OS. The Mac source copy lacks the Windows slot authority state and normal load
+correctly reports Conflict. No original lineage is selected/repaired: ReadSnapshot
+verifies an explicitly chosen copied payload, then ReplaceSlotDetailedAsync creates
+a new private Save1. Round-trip GameData equality and timestamp/offline-state checks
+pass. Actual loaded progress matches the advanced fixture; normal migration changes
+quest count/completion as expected without observer grants.
+
+| Native measurement | Advanced legacy town | Fresh control |
+| --- | ---: | ---: |
+| Kernel startup peak through Ready + 35 s, MiB | 535.832 | 538.801 (creator) |
+| Steady town physical footprint, MiB | 535.832 | 562.160 (after Confirm) |
+| Steady town Unity allocated, MiB | 282.336 | 285.334 |
+| Town Texture2D reported allocation, MiB | 85.172 | 132.428 |
+
+This is a save/state comparison, not an optimization A/B. Do not subtract this
+new observer's 535.832 MiB from the original comparison's 716.504 MiB and call
+it a matched cumulative saving. First Show calls are Forge 13.246 ms, Cauldron
+13.137 ms and Fields 9.671 ms, all successful. Closed Forge/Cauldron textures
+settle at 85.298 MiB, Fields at 85.424 MiB. The retained Fields item is specifically
+`UIR Shader Info 35`, a 64 x 64 Texture2D reporting 131,880 bytes, plus one
+PanelSettings/runtime panel (10 to 11). Dynamic image-atlas pages remain unallocated.
+Windows independently identifies `UIR Shader Info 41`, 64 x 64 readable RGBAFloat,
+131,864 bytes. The earlier generic atlas description is corrected; this is not a
+large dynamic image-atlas leak.
+
+Capture-free steady native main-thread medians range 3.25–3.48 ms, p95 4.09–4.79 ms
+at a 60 Hz cap; no physical-device FPS improvement is claimed. Physical footprint
+drifts 535.8 to 581.1 MiB over eight inventories and panel traversal, while Unity
+allocated drifts 282.3 to 286.4 MiB with reserved constant at 479.906 MiB and managed
+usage oscillating 63–89 MiB. Capture/history effects prevent attributing the roughly
+44 MiB footprint drift solely to panels or asserting leak freedom. No 2 GiB startup
+spike occurs within this bounded idle-panel coverage. Active automation, fully
+built/working Fields and physical iPhone validation remain outstanding.
+
+Raw native evidence stays under `native-retention-20261020/evidence/advanced-save-profile`
+on the Mac; `Artifacts/StandaloneMemory/native-advanced-summary-transcribed.json`
+is explicitly a transcription of the Mac task's results, not copied raw evidence.
