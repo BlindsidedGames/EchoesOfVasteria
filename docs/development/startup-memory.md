@@ -459,3 +459,35 @@ Probe and test evidence are under
 `Artifacts/StartupInvestigation/WorldHealthTextProbe.cs` and
 `Artifacts/StartupInvestigation/world-health-label-tests.json`. This follow-up
 is not included in TestFlight 1.4.8 (165); native verification is still pending.
+
+## Completed two-hour native soak
+
+The isolated 9ca330359 process completed normally at 02:28:04 Sydney on 20 October
+2026 (about 7,189 seconds), then shut down under the guarded collector. Across
+67,304 native samples, kernel peak was 660.332 MiB and the final ten-second median
+was 657.379 MiB. Endpoint medians after the first fifteen minutes ranged from
+650.316 to 660.207 MiB; Unity allocated memory ranged from 390.681 to 395.565 MiB,
+while reserved memory stayed at 552.953 MiB. This bounds observed long-session
+retention; it does not prove that every gameplay path is leak-free.
+
+After warmup, textures 461, sprites 6,806, panels 10, loaded character parts 8,
+materials 106 and documents 26 stayed fixed. Texture bytes were 217.483 MiB and
+render-target bytes 55.398 MiB (overlapping counters, not additive totals).
+Meshes varied between 12 and 94 with run state rather than increasing monotonically.
+No managed exception or error was logged; known Simulator warnings remain.
+The initial Mines summary explicitly showed four automatic reaps and 300 steps;
+Spooky continued normal reaping/restart behavior, but its total restart count was
+not exposed and is not inferred. Town/menu and background/foreground limitations
+remain those documented above. All six protected checkout fingerprints matched.
+
+A separate 15-second native wall sample at 02:24:51 collected 776 main-thread
+observations: EnemyActivator.LateUpdate 5, ToolkitWorldScreen.LateUpdate 5,
+AIBase 7 and AIPath 1 inclusive, with 562 Mach-wait observations. No resolved
+ToolkitWorldAnchor.Text or text-shaping frame was sampled. These sparse inclusive
+counts are neither CPU percentages nor evidence that an unsampled method costs
+nothing; no extra activation/AI changes were made on their basis.
+
+Final report, completion receipt, endpoints, native memory CSV and sample are
+retained under the Mac evidence folder `overnight-soak-9ca-20261020` described
+above. A separate disposable native build of 20999d37e is compiling for the health-
+label follow-up; it is not part of the completed soak or uploaded build 165.
