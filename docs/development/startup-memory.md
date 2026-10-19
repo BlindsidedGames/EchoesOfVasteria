@@ -723,3 +723,74 @@ after all four captures; it was not part of either measurement configuration.
 Native snapshots are retained for allocation/reference inspection; their file
 sizes are not presented as runtime memory savings. Physical iPhone 13 mini
 validation of the updated build remains the required hardware check.
+
+## Standalone player attribution and lazy enemy appearances (20 October 2026)
+
+The next pass uses actual standalone players, not Editor totals. Windows controls
+are Unity 6000.6.0f1, IL2CPP Release compiler configuration with an explicitly
+Development player for snapshots. Baseline runtime is 9632d780d; the animal
+candidate is 41ef12454. Both use the same compiled observer, isolated company/
+product/save roots and fresh PlayerPrefs, Steam disabled for isolation, identical
+startup/normal character confirmation/Farmlands timings, and 100 ms Unity plus
+50 ms external process sampling. The requested 1080 x 2340 window is clamped by
+Windows to 1080 x 2160 in both captures; that actual viewport is recorded.
+Snapshots are taken after the steady measurements. The Memory Profiler analysis
+package was installed only after baseline capture and removed before candidate
+build, so it is not part of either measured player. Raw files are retained under
+`Artifacts/StandaloneMemory/{baseline-dev-01,animal-lazy-dev-01}/`.
+
+The player snapshot identifies additional memory beyond artwork: font source
+objects total 34.273 MiB, native Font Engine/Layout Tables total 81,770,376 bytes
+(~78 MiB) after map play, and AsyncUploadManager retains 16,824,960 bytes. These
+root/native-object/GPU categories overlap and must not be summed as a process
+footprint. Per-panel ownership does not support a large UI-image atlas leak:
+the creator has one 64 x 32 atlas, and it is released after confirmation. Thus
+panel sharing is not adopted for hypothetical atlas savings.
+
+Farm enemy prefabs did retain all 52 animal appearance libraries before any
+adventure. Their references are now lazy Resources paths; only the selected
+library is resolved, with direct references still supported for existing/custom
+prefabs. All 52 original library files and metadata are exact renames with the
+same GUIDs. Original image bytes, sprite bindings, geometry, texture imports,
+shaders, audio and save schema are unchanged. The authored order and Sheep's
+regular/weighted section probabilities remain intact.
+
+| Windows player steady inventory | Before | Animal candidate |
+| --- | ---: | ---: |
+| Creator Texture2D allocations (MiB) | 149.175 | 124.655 |
+| Creator sprite count | 6,703 | 4,958 |
+| Town Texture2D allocations (MiB) | 146.549 | 122.091 |
+| Town sprite count | 6,562 | 4,817 |
+| Farmlands Texture2D allocations (MiB) | 148.680 | 127.851 |
+| Farmlands sprite count | 6,685 | 5,225 |
+
+The clear startup/town texture saving is about 24.5 MiB. Farmlands retains the
+skins actually selected by that run; world RNG is not forced in these memory
+captures, so it is not a deterministic whole-game timing comparison. Unity
+allocated CPU memory is only about 2-3 MiB lower while reported graphics memory
+is about 24 MiB lower in town; Windows has dedicated VRAM. Neither is described
+as the physical iPhone saving. Full-run external peaks include snapshot overhead
+and are retained for diagnostics, not used as the optimization result.
+
+Native iOS Simulator fresh-creator inventories independently show animal textures
+52 to 5, 25.8972 to 2.4357 MiB. Total Texture2D allocations change from
+166,117,028 to 141,515,876 bytes. The fifth retained appearance is a separate
+Cow_04 reference; no visible/default decoration is removed. Native process and
+map measurements remain separately attributable to the Mac run, rather than
+extrapolated from Windows GPU counters.
+
+The four prefab-dependency regression cases fail on the original source for the
+intended reason (16/18/9/9 libraries), then pass with one base library each and
+all alternate libraries resolvable with usable animation sprites. An independent
+probe of the original Enemy.InitForSpawn entry point captured 1,024 selected
+library GUIDs and following random values. The candidate matches all 1,024,
+including authored selection, uniform, mixed and weighted-only branches and
+Resources-based weighted entries. Evidence includes `enemy-memory-before.xml`,
+`enemy-memory-after.xml`, `enemy-selection-{before,after}.csv`, the migration
+byte/GUID manifest and `animal-lazy-comparison.json`.
+
+A non-development Windows confirmation and bounded native font-face/upload-buffer
+lifetime experiments are underway. No font features, glyphs or quality settings
+are removed on the strength of the category totals alone. The physical iPhone
+13 mini still requires validation; the earlier 2,098 MiB Jetsam is not equated
+to a development-player or Simulator total.
