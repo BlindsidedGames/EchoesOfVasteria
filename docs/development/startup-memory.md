@@ -25,30 +25,19 @@ definition inside its registered folder; no content was removed.
 After clearing transient Editor assets, loading all ten categories through the
 updated cache returned counts of 100 resources, 53 tasks, 22 enemies, 101 quests,
 12 buffs, 8 cores, 8 rarities, 8 gear stats, 7 infinity stats and 9 base stats.
-Loaded `CharacterPartFrames` stayed at zero throughout. All 214 texture overrides
-were applied; running the import policy again required zero changes.
+Loaded `CharacterPartFrames` stayed at zero throughout.
 
 When adding a data category, use an explicit Resources path or register its
 folder in `AssetCache`. Avoid a root search, even when supplying a type filter.
 Diagnostic builds record both the beginning and successful end of each real
 category load; cache hits no longer replace the operation breadcrumb.
 
-## iOS character textures
+## Character texture fidelity
 
-`CharacterTextureImportPolicy` sets the modular character sheets to ASTC 4x4
-with high-quality encoding on iOS. It preserves the effective maximum size,
-sprite IDs, slicing, point filtering and other platform settings. The policy
-also applies to newly generated hair and gear colours. Existing imports can
-be updated with **Tools > Characters > Apply iOS Texture Compression**.
-The check runs when rebuilding the character catalogue and before iOS builds,
-rather than through a global texture postprocessor that would invalidate
-unrelated imports whenever editor scripts change.
-
-The 214 source PNGs contain approximately 1,437 MiB of RGBA32 pixel data in
-total. ASTC 4x4 stores eight bits per pixel instead of 32, but only the sheets
-actually resident in memory contribute to runtime savings. Do not describe
-the entire source total as measured resident memory or claim a measured
-device saving from the compression ratio.
+A trial of ASTC 4x4 compression was rejected after decoded pixel comparisons
+showed visible edge/colour errors in tools, hair and skin. All 214 character
+texture imports retain their original settings. No source pixels, sprite slices,
+resolution or animation frames are changed by this memory pass.
 
 ## Runtime retention
 
@@ -105,7 +94,6 @@ town. Check character creation, equipped armour, tools and transparent echoes
 for colour/alpha artifacts. Test entering maps and returning to town as well
 as launch, so that a lower startup peak does not hide a later loading spike.
 
-The loading correction is independently useful if compression needs visual
-adjustments. Further work should be based on measured resident allocations;
+Further work should be based on measured resident allocations;
 do not add forced garbage collections or repeated unused-asset unloads to
 mask assets retained by broad searches.
