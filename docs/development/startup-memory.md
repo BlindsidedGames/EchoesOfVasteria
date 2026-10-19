@@ -3,7 +3,7 @@
 ## Current result
 
 The consolidated candidate uploaded in internal build 165, 9ca330359, has a sampled startup peak
-of 583.504 MiB on the arm64 Release iPhone 13 mini Simulator (iOS 18.5), with
+of 583.504 MiB on the arm64 iPhone 13 mini Simulator (iOS 18.5), with
 original character pixels preserved. The portrait-frame guard also passed native
 character editing, animation, clearing and restoration checks. The affected physical iPhone
 13 mini on iOS 27 still needs confirmation. Simulator frame rate remains capped
@@ -15,6 +15,12 @@ with fixed post-warmup texture/sprite/panel/character-part counts. The later
 20999d37e health-label cache also compiles and passes native label-value checks;
 it remains outside uploaded build 165. Its isolated method benchmark is not an
 overall FPS measurement.
+
+The retained 9ca Simulator executable identifies Unity Development IL2CPP and
+uses Xcode Release configuration; those are different build settings. Historical
+Release descriptions below must not be read as proof of a Unity non-development
+player. Uploaded device build 165 uses BuildOptions.None. Physical-phone timings
+and footprint still require measurement on that build.
 
 ## Confirmed failure
 
