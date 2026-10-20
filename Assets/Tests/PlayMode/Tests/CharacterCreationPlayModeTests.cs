@@ -65,6 +65,7 @@ namespace Tests.PlayMode
                     Assert.AreSame(expected, echo.transform.Find("Character appearance/Tool").GetComponent<SpriteRenderer>().sprite);
                     // Reopening must show the matching saved/current level in the actual Skills selector.
                     skillsScreen.Hide(); Assert.True(skillsScreen.Show());
+                    skillsUi = skillsScreenObject.GetComponent<UIDocument>().rootVisualElement;
                     var icon = skillsUi.Q<Button>("skill-Mining").Q<Image>(className: "skill-selector-icon");
                     var expectedRow = new[] { 8, 0, 1, 2, 3, 4, 5, 6, 7 }[tiers[i] + 1];
                     Assert.AreEqual(208 - (expectedRow + 1) * 16, icon.sprite.rect.y);
@@ -398,6 +399,7 @@ namespace Tests.PlayMode
                 yield return null; yield return null;
                 Assert.True(ui.Q<Button>("inventory-visibility-Helmet").ClassListContains("shown")); Assert.False(ui.Q<Button>("inventory-visibility-Chest").ClassListContains("shown"));
                 screen.Hide(); Assert.True(screen.Show()); yield return null; yield return null;
+                ui = view.GetComponent<UIDocument>().rootVisualElement;
                 Assert.True(ui.Q<Button>("inventory-visibility-Helmet").ClassListContains("shown"));
             }
             finally { if (view) Object.DestroyImmediate(view); Object.DestroyImmediate(owner); }

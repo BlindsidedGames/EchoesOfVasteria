@@ -89,9 +89,7 @@ namespace TimelessEchoes.Upgrades
             if (cachedStats != null)
                 return;
 
-            var stats = Resources.LoadAll<BaseStat>("StatUpgrades");
-            if (stats == null || stats.Length == 0)
-                stats = Resources.LoadAll<BaseStat>(string.Empty);
+            var stats = Blindsided.Utilities.AssetCache.GetAll<BaseStat>();
 
             cachedStats = stats != null && stats.Length > 0 ? stats : Array.Empty<BaseStat>();
         }

@@ -62,6 +62,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private bool Show(bool inForge, bool inQuests = false)
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return false;
             if (IsOpen) return true;
             if (!IsConfigured || !(manager = ResourceManager.Instance)) return false;
             embedded = inForge || inQuests;
@@ -254,12 +255,14 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (equipmentController) equipmentController.OnEquipmentChanged -= Changed;
             equipmentController = null; equipmentContent = null; equipmentColumn = null; gearSlots.Clear();
+            equipmentPreview?.Set(null, 0);
             equipmentPreview = null; equipmentCharacterName = null; visibilityControls.Clear(); previewDirection = 0;
             equipmentTutorialHand = null; portraitEquipmentTab = null;
             inventoryHeading = null; equipmentHeading = null;
             ToolkitLocalization.Changed -= LocaleChanged;
             if (manager) manager.OnInventoryChanged -= Changed;
             Blindsided.EventHandler.OnLoadData -= Changed; root?.RemoveFromHierarchy(); root = null; embedded = false; slots.Clear(); resourceOrder.Clear(); selected = -1; pendingScroll = -1; deselectAt = -1; dirty = false;
+            ToolkitPanel.Release(GetComponent<UIDocument>(), ref settings);
         }
         private void OnDisable() => Hide();
         private void OnDestroy() { Hide(); if (settings) Destroy(settings); }

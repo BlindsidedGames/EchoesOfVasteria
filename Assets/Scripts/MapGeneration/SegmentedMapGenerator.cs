@@ -60,6 +60,7 @@ namespace TimelessEchoes.MapGeneration
             chunkGenerator = GetComponent<TilemapChunkGenerator>();
             taskGenerator = GetComponent<ProceduralTaskGenerator>();
             controller = GetComponent<TaskController>();
+            controller.BeginInitialGeneration();
             ApplyConfig(GameManager.CurrentGenerationConfig);
             if (segmentParent == null)
                 segmentParent = transform;
@@ -104,6 +105,7 @@ namespace TimelessEchoes.MapGeneration
             if (initialGenerationComplete)
                 return;
 
+            controller?.EndInitialGeneration();
             initialGenerationComplete = true;
             initialGenerationProgressValue = 1f;
             InitialGenerationProgressed?.Invoke(initialGenerationProgressValue);
@@ -112,6 +114,8 @@ namespace TimelessEchoes.MapGeneration
 
         private IEnumerator Start()
         {
+            // AstarPath's automatic scan is disabled on the prefab. The one scan
+            // below must see the completed terrain and colliders.
             var warmupCount = Mathf.Max(1, warmupSegmentCount);
             for (var i = 0; i < warmupCount; i++)
             {
@@ -208,7 +212,7 @@ namespace TimelessEchoes.MapGeneration
             decorRoot.transform.SetParent(decorParent, false);
             // Async tile/decor generation to avoid long main-thread spikes
             if (chunkGenerator != null)
-                yield return chunkGenerator.GenerateSegmentAsync(offset, segmentSize, decorRoot.transform, 8);
+                yield return chunkGenerator.GenerateSegmentAsync(offset, segmentSize, decorRoot.transform);
             else
                 yield return null;
 
@@ -221,7 +225,7 @@ namespace TimelessEchoes.MapGeneration
             if (maxX > minX)
             {
                 if (taskGenerator != null)
-                    yield return taskGenerator.GenerateSegmentAsync(minX, maxX, tasksRoot.transform, 10);
+                    yield return taskGenerator.GenerateSegmentAsync(minX, maxX, tasksRoot.transform);
                 else
                     yield return null;
 

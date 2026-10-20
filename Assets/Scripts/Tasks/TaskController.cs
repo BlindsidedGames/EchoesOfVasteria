@@ -52,6 +52,14 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private bool debounceSortPerFrame = true;
         private bool pendingSort;
         private int lastSortedFrame = -1;
+        private bool initialGenerationPending;
+
+        public void BeginInitialGeneration() => initialGenerationPending = true;
+        public void EndInitialGeneration()
+        {
+            initialGenerationPending = false;
+            ForceResortNow();
+        }
 
         private void OnTaskCompleted(ITask task)
         {
@@ -136,6 +144,7 @@ namespace TimelessEchoes.Tasks
 
         private void Update()
         {
+            if (initialGenerationPending) return;
             if (Time.time >= nextPruneTime)
             {
                 PruneTasks();
@@ -145,7 +154,7 @@ namespace TimelessEchoes.Tasks
 
         private void LateUpdate()
         {
-            if (!debounceSortPerFrame)
+            if (initialGenerationPending || !debounceSortPerFrame)
                 return;
 
             if (pendingSort && lastSortedFrame != Time.frameCount)
@@ -158,6 +167,7 @@ namespace TimelessEchoes.Tasks
 
         private void RequestSort()
         {
+            if (initialGenerationPending) { pendingSort = true; return; }
             if (debounceSortPerFrame)
             {
                 pendingSort = true;

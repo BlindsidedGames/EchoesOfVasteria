@@ -8,6 +8,7 @@ using Blindsided.SaveData.Migrations;
 using System.Linq;
 using Blindsided.Utilities;
 using TimelessEchoes.Gear;
+using TimelessEchoes.Platform;
 using TimelessEchoes.UI.Toolkit;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -187,6 +188,8 @@ namespace Blindsided
 
         private IEnumerator Start()
         {
+            while (StartupDiagnostics.Enabled && !StartupDiagnostics.ChoiceReady) yield return null;
+            StartupDiagnostics.SetPhase("Opening loading screen", 0.05f);
             // Normal builds and Editor Play both start in Loading. This fallback protects a
             // misordered build or direct scene launch without allowing Main to reach a null tree.
             List<GameObject> suspendedRoots = null;
@@ -216,14 +219,35 @@ namespace Blindsided
 
         private IEnumerator LoadMainScene(string durableOperation = null)
         {
+            StartupDiagnostics.SetPhase("Loading town assets", 0.6f);
+            if (StartupDiagnostics.Enabled) yield return null;
             // This set refers to scene objects, so it must be empty before Main's Awake/Start
             // methods begin spawning NPC tasks after any Loading -> Main transition.
             StaticReferences.ActiveNpcMeetings.Clear();
             var async = SceneManager.LoadSceneAsync(MainSceneName, LoadSceneMode.Single);
+            if (StartupDiagnostics.Enabled)
+            {
+                async.allowSceneActivation = false;
+                while (async.progress < 0.9f) yield return null;
+                StartupDiagnostics.SetPhase("Activating town objects (Awake/OnEnable)", 0.8f);
+                yield return null; // Render and persist the boundary before activation can block.
+                if (StartupDiagnostics.Mode == StartupDiagnostics.TestMode.PauseBeforeActivation)
+                {
+                    StartupDiagnostics.SetPhase("Town assets loaded; activation paused", 0.75f);
+                    StartupDiagnostics.AwaitingActivation = true;
+                    while (StartupDiagnostics.AwaitingActivation) yield return null;
+                    StartupDiagnostics.SetPhase("Activating town objects (Awake/OnEnable)", 0.8f);
+                    yield return null;
+                }
+                async.allowSceneActivation = true;
+            }
             while (!async.isDone)
                 yield return null;
 
+            StartupDiagnostics.SetPhase("Initializing town", 0.85f);
             yield return null; // wait one frame for scene initialization
+            StartupDiagnostics.SetPhase("Applying player progress", 0.9f);
+            if (StartupDiagnostics.Enabled) yield return null;
             if (!TryReloadRuntimeData(
                     resetFirst: false,
                     clearTransientState: false,
@@ -234,6 +258,12 @@ namespace Blindsided
             // First autosave occurs shortly after load, then at a modest interval. Lifecycle saves
             // cover focus/pause/quit without continually forcing durable writes to the user's SSD.
             StartAutosaveLoop(FirstAutosaveDelaySeconds);
+            if (StartupDiagnostics.Enabled)
+            {
+                StartupDiagnostics.SetPhase("Rendering first town frames", 0.95f);
+                yield return new WaitForSecondsRealtime(3f);
+            }
+            StartupDiagnostics.Complete();
         }
 
         private static bool IsLoadingSceneActive()
@@ -760,6 +790,8 @@ namespace Blindsided
 
         private IEnumerator LoadCurrentSlot()
         {
+            StartupDiagnostics.SetPhase("Preparing save storage", 0.1f);
+            if (StartupDiagnostics.Enabled) yield return null;
             PrepareForSlotLoad();
 
             var index = Mathf.Clamp(CurrentSlot, 0, 2);
@@ -768,6 +800,8 @@ namespace Blindsided
             SaveLoadResult loadResult = null;
             for (var attempt = 1; attempt <= MaxLoadAttempts; attempt++)
             {
+                StartupDiagnostics.SetPhase($"Reading save (attempt {attempt})", 0.2f);
+                if (StartupDiagnostics.Enabled) yield return null;
                 var loadTask = SaveManager.Instance.LoadDetailedAsync(slotName);
                 while (!loadTask.IsCompleted)
                     yield return null;
@@ -801,6 +835,8 @@ namespace Blindsided
 
             if (loadResult.Status == SaveLoadStatus.NotFound)
             {
+                StartupDiagnostics.SetPhase("Creating new character data", 0.45f);
+                if (StartupDiagnostics.Enabled) yield return null;
                 PublishLoadedData(new GameData
                 {
                     Character = TimelessEchoes.Characters.CharacterProfile.Fresh(),
@@ -811,6 +847,8 @@ namespace Blindsided
 
             if (loadResult.Status == SaveLoadStatus.Deleted)
             {
+                StartupDiagnostics.SetPhase("Preparing a fresh save slot", 0.4f);
+                if (StartupDiagnostics.Enabled) yield return null;
                 var freshData = new GameData
                 {
                     Character = TimelessEchoes.Characters.CharacterProfile.Fresh(),
@@ -840,6 +878,8 @@ namespace Blindsided
                 yield break;
             }
 
+            StartupDiagnostics.SetPhase("Checking save version", 0.35f);
+            if (StartupDiagnostics.Enabled) yield return null;
             var migration = SaveMigrationRunner.TryMigrate(loadResult.Data, Application.version);
             foreach (var warning in migration.Warnings) Debug.LogWarning(warning);
             if (!migration.Succeeded || migration.Data == null)
@@ -856,6 +896,8 @@ namespace Blindsided
                              !loadResult.IntegrityVerified;
             if (mustCommit)
             {
+                StartupDiagnostics.SetPhase("Saving verified migration", 0.4f);
+                if (StartupDiagnostics.Enabled) yield return null;
                 var migrationSave = SaveManager.Instance.SaveDetailedAsync(candidate, slotName);
                 while (!migrationSave.IsCompleted)
                     yield return null;
@@ -870,6 +912,8 @@ namespace Blindsided
                 }
             }
 
+            StartupDiagnostics.SetPhase("Preparing player data", 0.5f);
+            if (StartupDiagnostics.Enabled) yield return null;
             PublishLoadedData(candidate);
             PersistSlotMetadataToPlayerPrefs();
 
@@ -898,6 +942,7 @@ namespace Blindsided
 
         private void RequireRecovery(SaveLoadStatus status, string diagnostic)
         {
+            StartupDiagnostics.SetPhase("Save recovery required", StartupDiagnostics.Progress);
             loaded = false;
             _recoveryRequired = true;
             _recoveryStatus = status;

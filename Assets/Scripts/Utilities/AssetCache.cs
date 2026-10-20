@@ -15,20 +15,40 @@ namespace Blindsided.Utilities
         // Track which Resources paths have been loaded per type so we don't repeatedly call LoadAll
         private static readonly Dictionary<System.Type, HashSet<string>> loadedPathsPerType = new();
 
+        // A typed LoadAll at the Resources root can still load unrelated assets while
+        // Unity searches it. In particular, it eagerly loads the modular wardrobe.
+        // Keep game-data queries inside their authored folders instead.
+        private static readonly Dictionary<System.Type, string> categoryPaths = new()
+        {
+            { typeof(TimelessEchoes.Upgrades.Resource), "Resource Items" },
+            { typeof(TimelessEchoes.Tasks.TaskData), "Tasks" },
+            { typeof(TimelessEchoes.Enemies.EnemyData), "Enemies" },
+            { typeof(TimelessEchoes.Quests.QuestData), "Quests" },
+            { typeof(TimelessEchoes.Buffs.BuffRecipe), "Buffs" },
+            { typeof(TimelessEchoes.Gear.CoreSO), "Gear/Cores" },
+            { typeof(TimelessEchoes.Gear.RaritySO), "Gear/Rarity Assets" },
+            { typeof(TimelessEchoes.Gear.StatDefSO), "Gear/StatDef" },
+            { typeof(TimelessEchoes.Upgrades.InfinityCauldronStatSO), "Infinity" },
+            { typeof(TimelessEchoes.Upgrades.BaseStat), "StatUpgrades" }
+        };
+
         /// <summary>
         /// Returns cached array of all assets of type T under an optional Resources path.
-        /// Empty or null path searches entire Resources.
+        /// Empty or null path uses the registered game-data folder for known types.
+        /// Other types retain the root-search behavior; prefer an explicit path.
         /// </summary>
         public static T[] GetAll<T>(string resourcesPath = "") where T : Object
         {
             var type = typeof(T);
             // Avoid repeated string allocations on hot paths
             if (resourcesPath == null) resourcesPath = string.Empty;
+            if (resourcesPath.Length == 0 && categoryPaths.TryGetValue(type, out var categoryPath))
+                resourcesPath = categoryPath;
             if (resourcesPath.Length == 0)
             {
                 if (!allCache.TryGetValue(type, out var boxedAll))
                 {
-                    var loadedAll = Resources.LoadAll<T>(string.Empty);
+                    var loadedAll = LoadCategory<T>(string.Empty);
                     allCache[type] = loadedAll;
                     if (!loadedPathsPerType.TryGetValue(type, out var setAll))
                     {
@@ -44,7 +64,7 @@ namespace Blindsided.Utilities
 
             if (!allCache.TryGetValue(type, out var boxed))
             {
-                var loaded = Resources.LoadAll<T>(pathKey);
+                var loaded = LoadCategory<T>(pathKey);
                 allCache[type] = loaded;
                 if (!loadedPathsPerType.TryGetValue(type, out var set))
                 {
@@ -70,7 +90,7 @@ namespace Blindsided.Utilities
             // If caller requests full scan now and we haven't done it yet, do it once
             if (string.IsNullOrEmpty(pathKey) && !pathsLoaded.Contains(string.Empty))
             {
-                var newlyLoadedAll = Resources.LoadAll<T>(string.Empty);
+                var newlyLoadedAll = LoadCategory<T>(string.Empty);
                 if (newlyLoadedAll != null && newlyLoadedAll.Length > 0)
                 {
                     var set = new HashSet<T>(arr);
@@ -88,7 +108,7 @@ namespace Blindsided.Utilities
             // For non-empty paths: if this specific path hasn't been loaded yet, load and merge once
             if (!string.IsNullOrEmpty(pathKey) && !pathsLoaded.Contains(pathKey))
             {
-                var newlyLoaded = Resources.LoadAll<T>(pathKey);
+                var newlyLoaded = LoadCategory<T>(pathKey);
                 if (newlyLoaded != null && newlyLoaded.Length > 0)
                 {
                     var set = new HashSet<T>(arr);
@@ -103,6 +123,14 @@ namespace Blindsided.Utilities
             }
 
             return arr;
+        }
+
+        private static T[] LoadCategory<T>(string path) where T : Object
+        {
+            TimelessEchoes.Platform.StartupDiagnostics.Operation("Loading " + typeof(T).Name + ": " + path);
+            var assets = Resources.LoadAll<T>(path);
+            TimelessEchoes.Platform.StartupDiagnostics.Operation("Loaded " + typeof(T).Name + ": " + path + " (" + assets.Length + ")");
+            return assets;
         }
 
         /// <summary>

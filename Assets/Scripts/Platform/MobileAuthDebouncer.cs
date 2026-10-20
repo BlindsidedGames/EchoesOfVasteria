@@ -35,6 +35,7 @@ namespace TimelessEchoes.Platform
 
         private static void HandleAuthStatusChange(GameServicesAuthStatusChangeResult result, VoxelBusters.CoreLibrary.Error _)
         {
+            StartupDiagnostics.SetGameServicesStatus(result.AuthStatus.ToString());
             // Clear in-flight and start cooldown on any auth state update
             _inFlight = false;
             _inFlightStartTime = -9999f;
@@ -52,6 +53,7 @@ namespace TimelessEchoes.Platform
         /// </summary>
         public static bool RequestAuth(bool interactive, string reason = null)
         {
+            if (StartupDiagnostics.SkipGameCenter) return false;
             EnsureSubscribed();
 
             // If already authenticated, do not attempt
@@ -99,6 +101,7 @@ namespace TimelessEchoes.Platform
             if (EnableDebugLogs)
                 Debug.Log($"[AuthDebounce] Authenticate(interactive={interactive}) reason={reason}");
 
+            StartupDiagnostics.SetGameServicesStatus("Authentication requested");
             GameServices.Authenticate(interactive: interactive);
             return true;
         }
@@ -121,7 +124,7 @@ namespace TimelessEchoes.Platform
         private static void ResetStatics()
         {
 #if UNITY_ANDROID || UNITY_IOS
-            GameServices.OnAuthStatusChange -= HandleAuthStatusChange;
+            if (_subscribed) GameServices.OnAuthStatusChange -= HandleAuthStatusChange;
             _subscribed = false;
             _inFlight = false;
             _lastAttemptTime = -9999f;

@@ -29,6 +29,7 @@ namespace TimelessEchoes.UI.Toolkit
         public void Show(string title, string body, string primaryText, string secondaryText,
             Action onPrimary, Action onSecondary, bool enabled = true)
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
             ClearBindings();
             if (root == null) Create();
             titleLabel.text = "<b><smallcaps>" + title + "</smallcaps></b>";
@@ -47,6 +48,7 @@ namespace TimelessEchoes.UI.Toolkit
             ToolkitBookDefinition.Text primaryText, ToolkitBookDefinition.Text secondaryText,
             Action onPrimary, Action onSecondary, bool enabled = true)
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
             Show(title?.fallback, body?.fallback, primaryText?.fallback, secondaryText?.fallback,
                 onPrimary, onSecondary, enabled);
             bindings.Add(new ToolkitTextBinding(titleLabel, title));
@@ -63,6 +65,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void Create()
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
             if (!theme || !template || !runtimeTheme || !textSettings || !frame || !primarySprite)
                 throw new InvalidOperationException("Native dialog assets are not configured.");
             if (!panel)
@@ -127,6 +130,7 @@ namespace TimelessEchoes.UI.Toolkit
             root = null;
             primary = secondary = null;
             interactable = false;
+            ToolkitPanel.Release(GetComponent<UIDocument>(), ref panel);
         }
 
         private void OnDisable() => Hide();

@@ -29,6 +29,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         public void Open(string requested)
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
             Hide(); mode = requested;
             if (!panel) { panel = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); panel.sortingOrder = 300; }
             var document = GetComponent<UIDocument>(); document.panelSettings = panel; document.rootVisualElement.pickingMode = PickingMode.Ignore;
@@ -170,6 +171,7 @@ namespace TimelessEchoes.UI.Toolkit
             statusKey = statusEnglish = null; statusArguments = Array.Empty<object>();
             foreach (var binding in bindings) binding.Dispose(); bindings.Clear();
             root?.RemoveFromHierarchy(); root = null; frame = null; input = null; status = null;
+            ToolkitPanel.Release(GetComponent<UIDocument>(), ref panel);
         }
         private void OnDisable() => Hide();
         private void OnDestroy() { if (panel) Destroy(panel); }

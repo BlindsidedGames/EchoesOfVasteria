@@ -56,6 +56,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         public bool Show()
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return false;
             if (IsOpen) return true;
             if (!IsConfigured || !(manager = CauldronManager.Instance) || !(resources = ResourceManager.Instance)) return false;
             if (!settings) { settings = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); settings.sortingOrder = 100; }
@@ -292,6 +293,7 @@ namespace TimelessEchoes.UI.Toolkit
             UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocaleChanged -= LocaleChanged;
             ToolkitLocalization.Changed -= LocalizationChanged;
             CloseModal();root?.RemoveFromHierarchy(); root = null; collections = null; foodSlots.Clear();oddsValues.Clear(); dirty = membershipDirty = false;
+            ToolkitPanel.Release(GetComponent<UIDocument>(), ref settings);
         }
         private void OnDisable() => Hide();
         private void OnDestroy() { Hide(); if (settings) Destroy(settings); }

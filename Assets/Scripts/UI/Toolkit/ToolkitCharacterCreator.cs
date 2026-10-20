@@ -65,6 +65,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         public bool Show(bool allowCancel = false)
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return false;
             if (IsOpen) return true;
             var catalog = CharacterCatalog.Load();
             if (!theme || !runtimeTheme || !textSettings || !catalog || !Oracle.oracle || !Oracle.oracle.HasLoadedCurrentSlotData) return false;
@@ -216,16 +217,20 @@ namespace TimelessEchoes.UI.Toolkit
                 status.text = "Your character could not be saved. Please try again."; return;
             }
             Hide();
-            CharacterCatalog.Load().ReleaseUnused(Oracle.oracle.saveData.Character);
         }
         public void Hide()
         {
+            var wasOpen = root != null;
             if (root != null) BlocksWorldInput = false;
             CloseColourPicker();
+            preview?.Set(null, 0);
             root?.RemoveFromHierarchy(); root = null; preview = null; owner = null;
             refreshChoices.Clear();
+            sheet = null; nameInput = null; status = null; draft = null;
+            Array.Clear(presetLoad, 0, presetLoad.Length);
             if (panelObject) Destroy(panelObject); panelObject = null;
             if (panel) Destroy(panel); panel = null;
+            if (wasOpen) CharacterCatalog.Load().ReleaseUnused(CharacterEquipmentAppearance.Resolve(CharacterCreation.Current));
         }
         private void OnDisable() => Hide();
 

@@ -19,6 +19,7 @@ namespace TimelessEchoes.UI.Toolkit
         public bool IsConfigured => theme && runtimeTheme && textSettings;
         public void Show(Sprite sprite, string message, Sprite background, float seconds)
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
             if (!IsConfigured) return;
             if (root == null)
             {

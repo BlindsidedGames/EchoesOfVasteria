@@ -29,6 +29,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         public bool Show()
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return false;
             if (IsOpen) return true;
             if (!IsConfigured) return false;
             document = GetComponent<UIDocument>();
@@ -62,6 +63,7 @@ namespace TimelessEchoes.UI.Toolkit
             }
             view?.Dispose();
             view = null;
+            ToolkitPanel.Release(GetComponent<UIDocument>(), ref panel);
         }
 
         private void OnEnable()

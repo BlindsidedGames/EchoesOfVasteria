@@ -42,6 +42,7 @@ namespace TimelessEchoes.UI.Toolkit
         public bool Show() => Show(null);
         public bool Show(ToolkitResourceInventoryScreen inventoryTemplate)
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return false;
             if (IsOpen) return true;
             if (!IsConfigured || !(manager = QuestManager.Instance)) return false;
             if (!settings) { settings = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); settings.sortingOrder = 100; }
@@ -343,6 +344,7 @@ namespace TimelessEchoes.UI.Toolkit
             ToolkitLocalization.Changed -= LocalizationChanged;
             acceptHand = null; lessonAccept = null;
             instructionBinding?.Dispose(); instructionBinding = null; root?.RemoveFromHierarchy(); root = null; inventoryHost = null; inventoryToggle = null; progress.Clear(); dirtyProgress.Clear(); dirty = false;
+            ToolkitPanel.Release(GetComponent<UIDocument>(), ref settings);
         }
         private void OnDisable() => Hide();
         private void OnDestroy() { Hide(); if (settings) Destroy(settings); }

@@ -8,6 +8,8 @@ namespace Blindsided.UGS
     {
         async void Awake()
         {
+            await TimelessEchoes.Platform.StartupDiagnostics.WaitForSelection();
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipOnlineServices) return;
             await UnityServices.InitializeAsync();
 
             if (!AuthenticationService.Instance.IsSignedIn)

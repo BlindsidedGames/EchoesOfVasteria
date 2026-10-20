@@ -26,7 +26,12 @@ namespace TimelessEchoes.Farming
         public float seedChance = .1f;
         public List<FarmRecipe> recipes = new();
         public List<FarmBuild> builds = new();
-        public static FarmContent Load() => Resources.Load<FarmContent>("Farming/FarmContent");
+        private static FarmContent cached;
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetCache() => cached = null;
+        // Navigation polls the display name even when Fields is closed. Reuse the
+        // authored object instead of asking Unity to preload its graph every poll.
+        public static FarmContent Load() => cached ? cached : cached = Resources.Load<FarmContent>("Farming/FarmContent");
         public FarmRecipe Recipe(string id) => recipes?.FirstOrDefault(r => r != null && r.id == id);
         public FarmBuild Build(string id) => builds?.FirstOrDefault(b => b != null && b.questId == id);
         public static int SkillLevel(GameData data, string key)

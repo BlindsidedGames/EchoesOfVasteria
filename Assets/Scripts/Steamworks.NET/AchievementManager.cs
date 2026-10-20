@@ -89,8 +89,11 @@ namespace TimelessEchoes
             }
 
             // Subscribe to auth changes to flush queued unlocks
-            GameServices.OnAuthStatusChange -= OnAuthStatusChange;
-            GameServices.OnAuthStatusChange += OnAuthStatusChange;
+            if (!TimelessEchoes.Platform.StartupDiagnostics.SkipGameCenter)
+            {
+                GameServices.OnAuthStatusChange -= OnAuthStatusChange;
+                GameServices.OnAuthStatusChange += OnAuthStatusChange;
+            }
 #endif
         }
 
@@ -249,6 +252,7 @@ namespace TimelessEchoes
 
         private void OnAuthStatusChange(GameServicesAuthStatusChangeResult result, VoxelBusters.CoreLibrary.Error error)
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipGameCenter) return;
             if (result.AuthStatus != LocalPlayerAuthStatus.Authenticated) return;
 
             // Flush queued unlocks
@@ -264,6 +268,7 @@ namespace TimelessEchoes
 
         private void TryUnlockMobile(string apiName)
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipGameCenter) return;
             // Per-session de-duplication: once an achievement has been unlocked (or queued) this session,
             // avoid re-reporting.
             if (unlockedMobileThisSession.Contains(apiName))

@@ -23,6 +23,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void OnEnable()
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
             if (!definition || !theme || !runtimeTheme || !textSettings) return;
             if (!panel) { panel = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); panel.sortingOrder = 150; }
             var document = GetComponent<UIDocument>();

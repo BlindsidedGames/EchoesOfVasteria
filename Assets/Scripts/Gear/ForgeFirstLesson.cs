@@ -52,8 +52,8 @@ namespace TimelessEchoes.Gear
         {
             var record = Oracle.oracle?.saveData?.General.ForgeFirstLessonItem;
             if (record == null) return null;
-            var stats = Resources.LoadAll<StatDefSO>("");
-            var item = new GearItem { slot = record.slot, core = core, rarity = Resources.LoadAll<RaritySO>("").FirstOrDefault(r => r.name == record.rarity) };
+            var stats = Blindsided.Utilities.AssetCache.GetAll<StatDefSO>();
+            var item = new GearItem { slot = record.slot, core = core, rarity = Blindsided.Utilities.AssetCache.GetAll<RaritySO>().FirstOrDefault(r => r.name == record.rarity) };
             foreach (var affix in record.affixes)
             {
                 var stat = stats.FirstOrDefault(s => (s.id ?? s.name) == affix.statId);

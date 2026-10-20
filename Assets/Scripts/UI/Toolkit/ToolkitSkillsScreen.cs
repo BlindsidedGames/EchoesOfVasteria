@@ -68,6 +68,7 @@ namespace TimelessEchoes.UI.Toolkit
         public bool Show()
 
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return false;
 
             if (IsOpen) return true;
 
@@ -519,6 +520,7 @@ namespace TimelessEchoes.UI.Toolkit
 
             titleBinding?.Dispose(); titleBinding = null; root?.RemoveFromHierarchy(); root = null; selectorLevels.Clear(); selectorIcons.Clear(); selections.Clear(); highlights.Clear();
 
+            ToolkitPanel.Release(GetComponent<UIDocument>(), ref settings);
         }
 
         private void OnDisable() => Hide();

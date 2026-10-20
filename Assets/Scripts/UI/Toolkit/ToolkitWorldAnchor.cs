@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.Hero;
 using TimelessEchoes.Tasks;
@@ -31,6 +32,8 @@ namespace TimelessEchoes.UI.Toolkit
         public Enemy enemy;
         public ContinuousTask task;
         public EchoController echo;
+        private string healthText, healthNegativeSign;
+        private int displayedHealth, displayedMaxHealth;
         public static readonly HashSet<ToolkitWorldAnchor> Active = new();
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => Active.Clear();
@@ -54,7 +57,19 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (e.value == Value.EnemyTitle && enemy) return enemy.DisplayTitle;
             if (e.value == Value.EnemyHealth && health)
-                return $"{(health.CurrentHealth > 0 ? Mathf.Max(1, Mathf.FloorToInt(health.CurrentHealth)) : 0)} / {Mathf.FloorToInt(health.MaxHealth)}";
+            {
+                var current = health.CurrentHealth > 0 ? Mathf.Max(1, Mathf.FloorToInt(health.CurrentHealth)) : 0;
+                var maximum = Mathf.FloorToInt(health.MaxHealth);
+                // Visible anchors refresh every frame. Only format when the displayed integers
+                // change, including after pooled enemies are healed or initialized again.
+                var negativeSign = CultureInfo.CurrentCulture.NumberFormat.NegativeSign;
+                if (healthText == null || displayedHealth != current || displayedMaxHealth != maximum || healthNegativeSign != negativeSign)
+                {
+                    displayedHealth = current; displayedMaxHealth = maximum; healthNegativeSign = negativeSign;
+                    healthText = $"{current} / {maximum}";
+                }
+                return healthText;
+            }
             return e.text;
         }
     }

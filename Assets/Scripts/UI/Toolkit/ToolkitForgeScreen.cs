@@ -50,6 +50,7 @@ namespace TimelessEchoes.UI.Toolkit
         public bool IsConfigured => definition && definition.catalog && theme && runtimeTheme && textSettings;
         public bool Show()
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return false;
             if (IsOpen) return true;
             if (!IsConfigured) return false;
             if (!session)
@@ -192,6 +193,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (crafting) crafting.OnIvanXpChanged -= XpChanged;
             if (session) session.Changed -= MarkDirty;
             oddsRows = null; oddsLabels.Clear(); root?.RemoveFromHierarchy(); root = null; gearSlots.Clear(); coreSlots.Clear(); conversions.Clear();
+            ToolkitPanel.Release(GetComponent<UIDocument>(), ref settings);
         }
         private void OnDisable() => Hide();
         private void OnDestroy() { Hide(); if (session) session.AutomationStopped -= AutomationStopped; if (settings) Destroy(settings); }

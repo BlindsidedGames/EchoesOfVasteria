@@ -39,7 +39,7 @@ namespace TimelessEchoes.Characters
             var active = current is { Created: true, Modular: true } && source && source.enabled && (catalog || (catalog = CharacterCatalog.Load()));
             if (source) source.forceRenderingOff = active;
             if (group) group.gameObject.SetActive(active);
-            if (!active) { profile = null; lastFrame = -1; return; }
+            if (!active) { ClearAppearanceReferences(); return; }
             if (!group) Build();
             var changed = profile != current;
             profile = current;
@@ -78,6 +78,7 @@ namespace TimelessEchoes.Characters
             }
             wasComposited = composited;
             lastFrame = frame;
+            if (changed) catalog.TrimAppearanceCache(profile, CharacterCreation.Current);
         }
         private bool BuildComposite()
         {
@@ -112,7 +113,18 @@ namespace TimelessEchoes.Characters
                 layers[i].sharedMaterial = source.sharedMaterial;
             }
         }
-        private void OnDisable() { if (source) source.forceRenderingOff = false; if (group) group.gameObject.SetActive(false); profile = null; lastFrame = -1; }
+        private void ClearAppearanceReferences()
+        {
+            if (layers != null && (profile != null || lastFrame >= 0))
+            {
+                foreach (var layer in layers) if (layer) layer.sprite = null;
+                compositeProperties?.Clear();
+                if (composite) composite.SetPropertyBlock(null);
+            }
+            profile = null;
+            lastFrame = -1;
+        }
+        private void OnDisable() { if (source) source.forceRenderingOff = false; if (group) group.gameObject.SetActive(false); ClearAppearanceReferences(); }
         private void OnDestroy() { if (group) Destroy(group.gameObject); if (source) source.forceRenderingOff = false; }
     }
 }
