@@ -34,10 +34,12 @@
 .gameplay.fields-ui .fields-level-requirement {font-size:8px;white-space:normal;-unity-text-align:middle-center;color:var(--muted);}
 .gameplay.fields-ui .fields-level-requirement.fields-shortfall {color:#d99084;}
 .gameplay.fields-ui .fields-selected > .fields-level-requirement {-unity-text-align:middle-left;margin-bottom:8px;}
-.gameplay.fields-ui .fields-orchard-pair {flex-direction:column;}
+.gameplay.fields-ui .fields-orchard-pair,.gameplay.fields-ui .fields-orchard-pair.selected {flex-direction:column;padding:0;border-width:0;background-color:transparent;}
+.gameplay.fields-ui .fields-orchard-pair.fields-locked {padding:3px;border-width:.5px;border-color:var(--line);background-color:var(--field);}
+.gameplay.fields-ui .fields-orchard-pair.fields-locked.selected {border-color:var(--accent);}
 .gameplay.fields-ui .fields-pair-slots {flex-grow:1;min-height:0;align-items:stretch;}
-.gameplay.fields-ui .fields-orchard-slot {width:50%;flex-shrink:0;padding:0 3px;border-width:.5px;border-color:transparent;}
-.gameplay.fields-ui .fields-orchard-slot.selected {border-color:var(--accent);}
+.gameplay.fields-ui .fields-orchard-slot {width:50%;flex-shrink:0;padding:0 3px;border-width:.5px;border-color:var(--line);background-color:var(--control);}
+.gameplay.fields-ui .fields-orchard-slot.selected {border-color:var(--accent);background-color:var(--selected);}
 .gameplay.fields-ui .fields-orchard-slot .fields-plot-heading {display:none;}
 .gameplay.fields-ui .fields-orchard-pair .fields-plot-art {margin-bottom:4px;}
 .gameplay.fields-ui .fields-pair-lock {flex-grow:1;border-width:0;background-color:transparent;margin:0;padding:0;}
@@ -82,6 +84,8 @@
 .gameplay.fields-ui.fields-narrow .fields-selector-grid {width:100%;flex-grow:0;flex-basis:auto;margin-bottom:8px;}
 .gameplay.fields-ui.fields-narrow .fields-drawer {width:100%;flex-grow:0;flex-basis:auto;margin-right:0;}
 .gameplay.portrait.fields-ui .fields-selector-tile {height:61px;min-height:61px;padding:3px;}
+.gameplay.portrait.fields-ui .fields-orchard-pair {padding:0;}
+.gameplay.portrait.fields-ui .fields-orchard-pair.fields-locked {padding:3px;}
 .gameplay.portrait.fields-ui .fields-plot-art {margin-bottom:4px;}
 .gameplay.portrait.fields-ui .fields-orchard-pair .fields-plot-art {margin-bottom:4px;}
 .gameplay.portrait.fields-ui .fields-primary-actions > .button {height:32px;min-height:32px;font-size:11px;}
