@@ -51,6 +51,7 @@ namespace TimelessEchoes.UI.Toolkit
             public Button Select, Action;
             public Label Title, Status, Requirement;
             public Image[] Soil, Plants;
+            public Image WetSoil;
             public CostStrip Costs;
             public bool Orchard;
         }
@@ -200,15 +201,18 @@ namespace TimelessEchoes.UI.Toolkit
             tile.Title = L(plotHeader, "", "fields-plot-title");
             tile.Requirement = L(plotHeader, "", "fields-level-requirement");
             var body = E(tile.Select, "row fields-plot-body"); tile.Art = E(body, "fields-plot-art"); tile.Art.name = "bed-art";
-            tile.Soil = new Image[bed.Orchard ? 4 : 9]; tile.Plants = new Image[1];
+            tile.Soil = new Image[bed.Orchard ? 4 : 1]; tile.Plants = new Image[1];
+            if (!bed.Orchard) { tile.Art.style.width = 16; tile.Art.style.minWidth = 16; }
             for (var i = 0; i < tile.Soil.Length; i++)
             {
                 var spot = new VisualElement { pickingMode = PickingMode.Ignore }; tile.Art.Add(spot); spot.style.position = Position.Absolute;
-                spot.style.left = bed.Orchard ? 4 + i % 2 * 8 : i % 3 * 8; spot.style.top = bed.Orchard ? 16 + i / 2 * 8 : 8 + i / 3 * 8;
+                spot.style.left = bed.Orchard ? 4 + i % 2 * 8 : 4; spot.style.top = bed.Orchard ? 16 + i / 2 * 8 : 16;
                 spot.style.width = 8; spot.style.height = 8;
                 tile.Soil[i] = new Image { scaleMode = ScaleMode.StretchToFill, pickingMode = PickingMode.Ignore };
                 tile.Soil[i].style.position = Position.Absolute; tile.Soil[i].style.width = 8; tile.Soil[i].style.height = 8; tile.Soil[i].style.bottom = 0; spot.Add(tile.Soil[i]);
-                if (bed.Orchard || i != 4) continue;
+                if (bed.Orchard) continue;
+                tile.WetSoil = new Image { scaleMode = ScaleMode.StretchToFill, pickingMode = PickingMode.Ignore };
+                tile.WetSoil.style.position = Position.Absolute; tile.WetSoil.style.width = 8; tile.WetSoil.style.height = 8; tile.WetSoil.style.bottom = 0; spot.Add(tile.WetSoil);
                 tile.Plants[0] = new Image { scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
                 tile.Plants[0].style.position = Position.Absolute; tile.Plants[0].style.width = 8; tile.Plants[0].style.height = 16; tile.Plants[0].style.bottom = 0; spot.Add(tile.Plants[0]);
             }
@@ -408,11 +412,11 @@ namespace TimelessEchoes.UI.Toolkit
             var sprite = !bed.Planted ? null : bed.Orchard && stage < 3 && appearance ? appearance.treeStages[stage] : recipe?.stages?.Length == 4 ? recipe.stages[stage] : bed.Icon;
             for (var i = 0; i < tile.Soil.Length; i++)
             {
-                var size = bed.Orchard ? 2 : 3; var x = i % size; var y = i / size;
-                var index = bed.Orchard ? 0 : x != 1 ? y != 1 ? 0 : 2 : y != 1 ? 1 : 3;
-                tile.Soil[i].sprite = appearance ? (bed.Watered ? appearance.wet : appearance.dry)[index] : null;
-                tile.Soil[i].style.scale = new Scale(new Vector3(x == size - 1 ? -1 : 1, y == size - 1 ? -1 : 1, 1));
+                var x = i % 2; var y = i / 2;
+                tile.Soil[i].sprite = !appearance ? null : bed.Orchard ? (bed.Watered ? appearance.wet : appearance.dry)[0] : appearance.cropPreviewDry;
+                tile.Soil[i].style.scale = new Scale(new Vector3(bed.Orchard && x == 1 ? -1 : 1, bed.Orchard && y == 1 ? -1 : 1, 1));
             }
+            if (tile.WetSoil != null) { tile.WetSoil.sprite = appearance ? appearance.cropPreviewWet : null; Visible(tile.WetSoil, bed.Watered); }
             for (var i = 0; i < tile.Plants.Length; i++)
             {
                 tile.Plants[i].sprite = sprite; Visible(tile.Plants[i], sprite);
