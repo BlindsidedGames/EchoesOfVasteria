@@ -33,6 +33,40 @@ termination, rather than inferring it from the last startup breadcrumb.
 
 ## Root resource searches
 
+### Physical-mini crash attribution: source budget checked 20 October
+
+The affected 1.4.7 screenshots consistently end at town activation, with the last
+operation `Load resource category: Resource`, including when Game Center, online
+services and main UI are skipped. The original ResourceManager calls
+`AssetCache.GetAll<Resource>("")`; the original cache calls
+`Resources.LoadAll<Resource>(string.Empty)`. The original-player comparison
+actually loads all 198 character-part definitions and 61,253 sprites.
+
+`tools/profiling/audit_character_texture_budget.py` traces the 198 authored part
+definitions to 208 unique modular PNG sheets and 57,533 sprite-frame references.
+Those images total 5,890,592 bytes (5.618 MiB) on disk, but one RGBA32 copy of their
+full dimensions totals 1,504,051,200 bytes (1,434.375 MiB). There are 179 sheets at
+576 x 3584, each 7.875 MiB. All 208 use default uncompressed imports at maximum
+4096; their iOS overrides are disabled. None are readable or mipmapped, so no
+extra CPU pixel copy or mip overhead is assumed. Git diff against original
+8a6bd24c modular art is empty. Audit output:
+`Artifacts/StartupInvestigation/wardrobe-texture-budget.json`.
+
+This explains how a few MiB of PNGs can cause GiB-scale allocations. It agrees
+with the original native player's 1,629,316,950 reported Texture2D bytes
+(1,553.838 MiB), reduced to 141,515,876 bytes after scoped/lazy loading. Those are
+allocation counters, not physical-footprint deltas. The physical Jetsam kill is
+established at 2,097.984 MiB; its report has no per-asset breakdown. Eager wardrobe
+loading is the strongest evidenced owner of the startup spike. Attributing every
+physical byte or claiming the host/device accounting gap is solved would exceed
+the evidence. Active late-game production tests answer a separate question.
+
+Scoped loading is already fixed in 3741ba5ca and descendants. Repeating simulator
+soaks cannot establish whether the affected phone now launches. The decisive
+remaining validation is that physical mini running the fixed build, with the
+existing startup footprint/operation checkpoints if it still fails. Further Mac
+profiling was stopped at the user's request; no new deployment was initiated.
+
 A controlled Editor comparison returned the same 100 Resource definitions
 from `Resources.LoadAll<Resource>("Resource Items")` and the root search.
 The scoped search left loaded `CharacterPartFrames` assets at 8; the root
