@@ -2,6 +2,13 @@
 
 ## Current result
 
+The latest combined internal delivery is **1.4.9 (166)**, source **f16bac76d**,
+accepted by Apple on 20 October at 11:49 Sydney. It loads normally without the
+startup diagnostic choices or overlay and includes all retained memory fixes.
+TestFlight processing/tester availability and the affected physical mini's startup
+result remain unverified. See the build-166 delivery record at the end of this report.
+The build-165 and Simulator measurements below remain historical evidence.
+
 The consolidated candidate uploaded in internal build 165, 9ca330359, has a sampled startup peak
 of 583.504 MiB on the arm64 iPhone 13 mini Simulator (iOS 18.5), with
 original character pixels preserved. The portrait-frame guard also passed native
@@ -1230,3 +1237,43 @@ preserved. Local evidence is under `Artifacts/StandaloneMemory/stress-{eternal,
 ordinary}-01/`: stress-contract/completion/summary JSON, activity, memory, frames
 and external process-memory CSVs. Final verification finds all 239 original
 save/profile hashes unchanged. Both owned Windows profiling players have exited.
+
+
+## Combined normal-launch internal build 166
+
+Apple accepted internal-only TestFlight 1.4.9 (166), pinned source
+f16bac76dcb628d89a3d9183b650436a2862af63, at 2026-10-20 11:49:28 Australia/Sydney.
+Receipt: aee3b49b-ca52-481d-9fe6-88b2142ec679; app 6749265146,
+com.blindsidedgames.echoesofvasteria. Exactly one upload is recorded, with
+`testFlightInternalTestingOnly=true`. Apple/TestFlight processing and tester
+availability remain unverified; upload acceptance is not asserted as availability.
+
+This combines all retained runtime memory fixes through f882be5a0, including the
+later lazy farm-enemy appearances and nonpersistent upload buffers absent from
+build 165. Original modular art/imports are preserved; rejected ASTC, lossless
+packing, allocator-sizing and font-flush trials remain excluded. No gameplay,
+progression, save-schema, appearance or audio-quality change is introduced for
+this delivery.
+
+Normal startup is achieved by excluding EOV_STARTUP_DIAGNOSTICS and all local
+memory/profiling definitions and observer scripts from the isolated device build.
+Generated iOS code has Enabled=false and an empty diagnostic Initialize; no scene
+or prefab instantiates the dormant menu type, and no plist/scheme diagnostic-mode
+override exists. The normal loading screen, Game Center, UGS and UI remain active.
+There is no chooser, diagnostic overlay or selection wait. Original SaveManager
+matches the pinned source and normal application/save identity is retained.
+
+Unity export succeeds with zero errors and 73 warnings, BuildOptions.None,
+extraDefines empty, debugging/profiling/frame timing disabled. Signed arm64 Xcode
+Release archive and authenticated Apple validation both succeed. The known
+nonfatal missing UnityRuntime.framework dSYM warning remains; it is not a
+validation/upload failure. All 214 modular PNGs and 214 import files match the
+pinned source (aggregate SHA256
+1900db5f682f433a47a488363b0a6c51a6039152e530faee58bab211ff6af6d1).
+
+Raw archive, IPA, normal-startup proof, upload receipt and compatibility/vendor
+repair manifests remain on the Mac under `normal-internal-20261020/`. The local
+receipt JSON under Artifacts/StartupInvestigation is an explicitly labelled
+transcription. No new Simulator work, external-group change, main merge or
+production release was performed. Actual startup on the affected iPhone 13 mini
+remains the next physical-device validation.
