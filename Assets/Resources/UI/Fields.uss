@@ -42,7 +42,7 @@
 .gameplay.fields-ui .fields-orchard-slot .fields-plot-heading {display:none;}
 .gameplay.fields-ui .fields-orchard-pair .fields-plot-art {margin-bottom:4px;}
 .gameplay.fields-ui .fields-pair-lock {flex-grow:1;border-width:0;background-color:transparent;margin:0;padding:0;}
-.gameplay.fields-ui .fields-preview {width:100%;height:50px;min-height:50px;padding:0;margin-bottom:4px;border-width:0;background-color:transparent;}
+.gameplay.fields-ui .fields-preview {width:100%;height:47px;min-height:47px;padding:0;margin-bottom:0;border-width:0;background-color:transparent;}
 .gameplay.fields-ui .fields-preview .fields-plot-heading {display:none;}
 .gameplay.fields-ui .fields-preview .fields-plot-body {flex-direction:row;align-items:flex-start;justify-content:flex-start;}
 .gameplay.fields-ui .fields-preview .fields-plot-art {scale:1.5 1.5;transform-origin:left top;margin:0 24px 0 0;}
@@ -63,7 +63,7 @@
 .gameplay.fields-ui .fields-yield-xp {font-size:9px;margin-left:14px;}
 .gameplay.fields-ui .fields-primary-actions {flex-wrap:wrap;margin-top:4px;}
 .gameplay.fields-ui .fields-primary-actions > .button {width:100%;flex-grow:0;flex-shrink:0;min-width:0;height:26px;min-height:26px;font-size:9px;margin-bottom:4px;padding:3px;}
-.gameplay.fields-ui .fields-harvest-actions {align-items:stretch;margin-top:4px;}
+.gameplay.fields-ui .fields-harvest-actions {align-items:stretch;margin-top:0;}
 .gameplay.fields-ui .fields-harvest-actions > .button {height:26px;min-height:26px;font-size:9px;padding:3px;min-width:0;}
 .gameplay.fields-ui #fields-repeat-selected {width:80px;flex-shrink:0;margin-right:4px;}
 .gameplay.fields-ui #fields-harvest-selected {flex-grow:1;flex-basis:0;}
