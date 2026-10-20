@@ -10,6 +10,7 @@ namespace TimelessEchoes.Characters
     {
         private static readonly int[] Levels = { 1, 7, 14, 20, 27, 36, 46, 56, 68 };
         private static readonly string[] Names = { "Woodcutting", "Mining", "Farming", "Fishing" };
+        private static readonly string[] SupportNames = { "Looting", "Combat" };
         private static readonly Skill[] Skills = new Skill[4];
         private static CharacterCatalog lastCatalog;
         private static SkillController lastController;
@@ -26,10 +27,14 @@ namespace TimelessEchoes.Characters
         {
             if (!skill) return fallback;
             var index = Array.FindIndex(Names, name => string.Equals(name, skill.name, StringComparison.OrdinalIgnoreCase));
-            if (index < 0) return fallback;
+            var supportIndex = Array.FindIndex(SupportNames, name => string.Equals(name, skill.name, StringComparison.OrdinalIgnoreCase));
+            if (index < 0 && supportIndex < 0) return fallback;
             var catalog = CharacterCatalog.Load();
-            var offset = (TierForLevel(level) + 1) * Names.Length + index;
-            return catalog && offset < catalog.skillToolIcons.Length && catalog.skillToolIcons[offset] ? catalog.skillToolIcons[offset] : fallback;
+            if (!catalog) return fallback;
+            var icons = index >= 0 ? catalog.skillToolIcons : catalog.skillSupportIcons;
+            var stride = index >= 0 ? Names.Length : SupportNames.Length;
+            var offset = (TierForLevel(level) + 1) * stride + (index >= 0 ? index : supportIndex);
+            return offset < icons.Length && icons[offset] ? icons[offset] : fallback;
         }
 
         public static Sprite SpriteFor(CharacterCatalog catalog, CharacterProfile profile, int frame)

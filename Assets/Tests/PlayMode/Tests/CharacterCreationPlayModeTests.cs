@@ -36,7 +36,7 @@ namespace Tests.PlayMode
                 oracle.saveData.Character = catalog.NewProfile(); oracle.saveData.Character.Created = true;
                 var skills = owner.AddComponent<TimelessEchoes.Skills.SkillController>();
                 var settings = new SerializedObject(skills); var list = settings.FindProperty("skills");
-                var names = new[] { "Woodcutting", "Mining", "Farming", "Fishing" };
+                var names = new[] { "Woodcutting", "Mining", "Farming", "Fishing", "Looting", "Combat" };
                 var definitions = names.Select(name => AssetDatabase.LoadAssetAtPath<TimelessEchoes.Skills.Skill>("Assets/Scriptables/Skills/" + name + ".asset")).ToArray();
                 list.arraySize = definitions.Length;
                 for (var i = 0; i < definitions.Length; i++) list.GetArrayElementAtIndex(i).objectReferenceValue = definitions[i];
@@ -69,6 +69,31 @@ namespace Tests.PlayMode
                     var icon = skillsUi.Q<Button>("skill-Mining").Q<Image>(className: "skill-selector-icon");
                     var expectedRow = new[] { 8, 0, 1, 2, 3, 4, 5, 6, 7 }[tiers[i] + 1];
                     Assert.AreEqual(208 - (expectedRow + 1) * 16, icon.sprite.rect.y);
+                }
+                // Support skill icons use the same authored metal palette without changing animations.
+                foreach (var viewport in new[] { new Vector2Int(1170, 2532), new Vector2Int(1920, 1080) })
+                {
+                    PlayModeWindow.SetCustomRenderingResolution((uint)viewport.x, (uint)viewport.y, "Support skill tiers");
+                    foreach (var level in new[] { 1, 7, 14, 20, 27, 36, 46, 56, 68 })
+                    {
+                        for (var skillIndex = 4; skillIndex < 6; skillIndex++) skills.GetProgress(definitions[skillIndex]).Level = level;
+                        skillsScreen.Hide(); Assert.True(skillsScreen.Show());
+                        yield return null; yield return null;
+                        skillsUi = skillsScreenObject.GetComponent<UIDocument>().rootVisualElement;
+                        for (var skillIndex = 4; skillIndex < 6; skillIndex++)
+                        {
+                            var icon = skillsUi.Q<Button>("skill-" + names[skillIndex]).Q<Image>(className: "skill-selector-icon").sprite;
+                            if (level == 1) Assert.AreSame(AssetDatabase.LoadAssetAtPath<ToolkitSkillsDefinition>("Assets/UI/Toolkit/Skills.asset").icons[skillIndex == 4 ? 5 : 0], icon);
+                            else
+                            {
+                                var tierIndex = System.Array.IndexOf(new[] { 7, 14, 20, 27, 36, 46, 56, 68 }, level);
+                                Assert.AreEqual(192 - tierIndex * 16, icon.rect.y);
+                                Assert.AreEqual(skillIndex == 4 ? 144 : 96, icon.rect.x);
+                            }
+                        }
+                    }
+                    CaptureFeedback(viewport.x < viewport.y ? "support-skill-tiers-portrait.png" : "support-skill-tiers-landscape.png");
+                    yield return null;
                 }
                 // Other skills remain brown even though Mining is now at the final tier.
                 foreach (var pose in new[] { "Chop_Down", "Watering_Down", "Fishing_Cast_Down" }) {
