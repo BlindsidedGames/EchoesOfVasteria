@@ -23,6 +23,7 @@ namespace TimelessEchoes.Farming
             Enumerable.Range(1, 3).Any(i => id == "Farm.Orchard.Build" + i.ToString("D2") + ".v1");
         public static bool KnownBed(string id) => GardenBeds.Contains(id) || OrchardBeds.Contains(id);
         public static string PlantFingerprint(string bedId, string recipeId) => "plant:" + bedId + ":" + recipeId;
+        public static string ReplaceTreeFingerprint(string bedId, string recipeId) => "replace-tree:" + bedId + ":" + recipeId;
         public static FarmCommandResult BuildFields(GameData owner, string questId, string operationId, DateTime now, FarmContent content)
         {
             if (!content || owner?.Farm == null) return Reject("MissingFarmContent");
@@ -73,6 +74,21 @@ namespace TimelessEchoes.Farming
             var result = Begin(owner.Farm, operationId, PlantFingerprint(id, recipeId), now);
             if (!result.Accepted) return result;
             var error = PlantInto(result, owner, id, content.Recipe(recipeId), operationId, content);
+            return error == null ? result : Reject(error);
+        }
+        public static FarmCommandResult ReplaceTree(GameData owner, string id, string recipeId, string expectedBatchId, string operationId, DateTime now, FarmContent content)
+        {
+            if (owner?.Farm == null || !content || !KnownRecipe(recipeId)) return Reject("MissingFarmContent");
+            var result = Begin(owner.Farm, operationId, ReplaceTreeFingerprint(id, recipeId), now);
+            if (!result.Accepted) return result;
+            if (!OrchardBeds.Contains(id) || !AccessibleBed(result.Candidate, id) ||
+                !result.Candidate.Beds.TryGetValue(id, out var bed) || bed?.IsPlanted != true) return Reject("CannotReplaceTree");
+            if (string.IsNullOrEmpty(expectedBatchId) || bed.BatchId != expectedBatchId) return Reject("TreeChanged");
+            var recipe = content.Recipe(recipeId);
+            if (recipe?.orchard != true || recipeId == bed.RecipeId) return Reject("CannotReplaceTree");
+            // Clear only the unpublished candidate. Failed payment or validation leaves the old tree intact.
+            bed.BatchId = null;
+            var error = PlantInto(result, owner, id, recipe, operationId, content);
             return error == null ? result : Reject(error);
         }
         private static string PlantInto(FarmCommandResult result, GameData owner, string id, FarmRecipe recipe, string operationId, FarmContent content, bool regrowingTree = false)
@@ -187,7 +203,7 @@ namespace TimelessEchoes.Farming
             var token = bed.BatchId.Substring(7, bed.BatchId.Length - 7 - id.Length - 1);
             if (!FarmJournal.TrySequence(state, token, out var plantSequence, out var fingerprint) || plantSequence != bed.PlantSequence ||
                 FarmJournal.Inspect(state, token, fingerprint, out _) != FarmCommandStatus.AlreadyApplied) return false;
-            if (fingerprint != PlantFingerprint(id, bed.RecipeId) && fingerprint != "harvest-auto" && fingerprint != "harvest-fields" && fingerprint != "harvest-bed:" + id) return false;
+            if (fingerprint != PlantFingerprint(id, bed.RecipeId) && fingerprint != ReplaceTreeFingerprint(id, bed.RecipeId) && fingerprint != "harvest-auto" && fingerprint != "harvest-fields" && fingerprint != "harvest-bed:" + id) return false;
             return !state.CompletedSequences.TryGetValue(plantSequence, out var receipt) || receipt.BatchIds?.Contains(bed.BatchId) == true;
         }
 

@@ -107,6 +107,8 @@ namespace TimelessEchoes.Farming
             "NoMatchingSapling" => ToolkitLocalization.Text("fields.error.NoMatchingSapling", "Find a matching sapling on an adventure first."),
             "NoRadishSeeds" => ToolkitLocalization.Text("fields.error.NoRadishSeeds", "Find a Radish seed pack on an adventure first."),
             "BedOccupied" => ToolkitLocalization.Text("fields.error.BedOccupied", "This bed already has a crop growing."),
+            "TreeChanged" => ToolkitLocalization.Text("fields.error.TreeChanged", "The tree has changed. Select the replacement again."),
+            "CannotReplaceTree" => ToolkitLocalization.Text("fields.error.CannotReplaceTree", "Select a different sapling to replace this tree."),
             "BedLocked" => ToolkitLocalization.Text("fields.error.BedLocked", "Prepare the beds before planting."),
             _ => ToolkitLocalization.Text("fields.error.unavailable", "This Fields action is unavailable ({0}).", code)
         };
@@ -143,6 +145,8 @@ namespace TimelessEchoes.Farming
             FarmJournal.NextOperation(state, FarmCommands.PlantFingerprint(bedId, recipeId)), DateTime.UtcNow, Content));
         public bool Water(string bedId) => Execute(state => FarmCommands.Water(state, bedId,
             FarmJournal.NextOperation(state, "water:" + bedId), DateTime.UtcNow));
+        public bool ReplaceTree(string bedId, string recipeId, string expectedBatchId) => Execute(state => FarmCommands.ReplaceTree(Oracle.oracle.saveData,
+            bedId, recipeId, expectedBatchId, FarmJournal.NextOperation(state, FarmCommands.ReplaceTreeFingerprint(bedId, recipeId)), DateTime.UtcNow, Content));
         public bool SetRepeat(string bedId, bool repeat) => Execute(state => FarmCommands.SetRepeat(state, bedId, repeat,
             FarmJournal.NextOperation(state, "repeat:" + bedId + ":" + (repeat ? "1" : "0")), DateTime.UtcNow));
         public bool HarvestReady() => Execute(state => FarmCommands.HarvestFields(Oracle.oracle.saveData,

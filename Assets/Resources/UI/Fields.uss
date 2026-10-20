@@ -48,6 +48,12 @@
 .gameplay.fields-ui .fields-preview .fields-plot-art {scale:1.5 1.5;transform-origin:left top;margin:0 24px 0 0;}
 .gameplay.fields-ui .fields-preview.fields-plot .fields-plot-art {overflow:hidden;}
 .gameplay.fields-ui .fields-preview.fields-orchard-slot .fields-plot-art {translate:0 -8px;}
+.gameplay.fields-ui .fields-replace-description {white-space:normal;font-size:10px;}
+.gameplay.fields-ui .fields-replace-actions {margin-top:8px;}
+.gameplay.fields-ui .fields-replace-actions > .button {flex-grow:1;flex-basis:0;min-width:0;height:30px;font-size:10px;}
+.gameplay.fields-ui #fields-replace-cancel {margin-right:4px;}
+.gameplay.portrait.fields-ui .fields-replace-description {font-size:12px;}
+.gameplay.portrait.fields-ui .fields-replace-actions > .button {height:36px;font-size:12px;}
 .gameplay.fields-ui .fields-preview .fields-plot-info {width:auto;flex-grow:1;flex-basis:0;}
 .gameplay.fields-ui .fields-preview .fields-plot-status {display:flex;font-size:10px;white-space:normal;margin:0;flex-grow:1;-unity-text-align:upper-left;}
 .gameplay.fields-ui .fields-preview-heading {align-items:flex-start;justify-content:space-between;margin-bottom:5px;}

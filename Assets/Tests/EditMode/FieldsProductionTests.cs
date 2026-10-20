@@ -319,6 +319,39 @@ namespace Tests.EditMode
             Assert.IsFalse(FarmCommands.HarvestFields(data, Op(data, "harvest-fields"), Now.AddYears(1), content, false).Accepted);
             Assert.IsFalse(FarmCommands.PlantRecipe(data, bedId, recipe.id, Op(data, FarmCommands.PlantFingerprint(bedId, recipe.id)), Now, content).Accepted);
         }
+        [Test] public void TreeReplacementIsAtomicRetainsAutoAndCanHarvestAfterReload()
+        {
+            var data = Garden(0, 150);
+            var apple = content.Recipe("recipe.apple.v1"); var pear = content.Recipe("recipe.pear.v1");
+            var bedId = FarmCommands.OrchardBeds[0];
+            data.Farm.OrchardCapacity = 1; data.Farm.Beds[bedId] = new FarmBedState { Unlocked = true, Repeat = true };
+            foreach (var recipe in new[] { apple, pear })
+            {
+                data.SkillData[recipe.source.associatedSkill.name] = new GameData.SkillProgress { Level = 10000 };
+                data.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 1, Earned = true };
+            }
+            data = Commit(data, FarmCommands.PlantRecipe(data, bedId, apple.id, Op(data, FarmCommands.PlantFingerprint(bedId, apple.id)), Now, content));
+            FarmCommands.TickFields(data.Farm, 100000);
+            var oldBatch = data.Farm.Beds[bedId].BatchId;
+            var fingerprint = FarmCommands.ReplaceTreeFingerprint(bedId, pear.id);
+            var operation = Op(data, fingerprint);
+            Assert.False(FarmCommands.ReplaceTree(data, bedId, pear.id, "stale-batch", operation, Now, content).Accepted);
+            data.Resources[pear.paidInput.name].Amount = 0;
+            Assert.False(FarmCommands.ReplaceTree(data, bedId, pear.id, oldBatch, operation, Now, content).Accepted);
+            Assert.AreEqual(oldBatch, data.Farm.Beds[bedId].BatchId, "A failed replacement must preserve the ready fruit.");
+            data.Resources[pear.paidInput.name].Amount = 1;
+            data = Commit(data, FarmCommands.ReplaceTree(data, bedId, pear.id, oldBatch, operation, Now, content));
+            var replaced = data.Farm.Beds[bedId];
+            Assert.AreEqual(pear.id, replaced.RecipeId); Assert.AreEqual(0, replaced.ElapsedSeconds);
+            Assert.False(replaced.EstablishedTree); Assert.False(replaced.Watered); Assert.True(replaced.Repeat);
+            Assert.AreEqual(0, data.Resources[pear.paidInput.name].Amount);
+            Assert.False(data.Resources.TryGetValue(apple.output.name, out var apples) && apples.Amount > 0, "Replacement discards fruit without awarding a harvest.");
+            Assert.AreEqual(FarmCommandStatus.AlreadyApplied, FarmCommands.ReplaceTree(data, bedId, pear.id, oldBatch, operation, Now, content).Status);
+            FarmCommands.TickFields(data.Farm, 100000); data = Harvest(data);
+            Assert.Greater(data.Resources[pear.output.name].Amount, 0);
+            Assert.True(data.Farm.Beds[bedId].EstablishedTree);
+            Assert.AreEqual(0, data.Resources[pear.paidInput.name].Amount, "Regrowth does not consume another sapling.");
+        }
         [Test] public void SeedMissIsDurableAndCannotBeRerolledAfterReload()
         {
             var data = Fresh(); var id = FarmJournal.StageSeed(data.Farm, "seed.corn", false, Now);

@@ -23,7 +23,7 @@ namespace TimelessEchoes.UI.Toolkit
         private PanelSettings settings;
         private FieldsWorldAppearance appearance;
         private Sprite wateringCan;
-        private VisualElement root, board, bedList, drawer, seedColumn, seedGrid, xpBar, yieldRow;
+        private VisualElement root, board, bedList, drawer, seedColumn, seedGrid, xpBar, yieldRow, replacementModal;
         private VisualElement[] selectorTiles;
         private ScrollView workspace, seedScroll;
         private Image floraPortrait, tillmanPortrait;
@@ -273,14 +273,14 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var snapshot = source.CapturePresentation();
             var target = snapshot.Beds.FirstOrDefault(b => b.Id == selectedBed);
-            if (target?.Planted == true) return;
+            if (target?.Planted == true && !target.Orchard) return;
             selectedRecipe = id; var recipe = snapshot.Recipes.FirstOrDefault(r => r.Id == id);
             if (recipe != null && (target == null || target.Orchard != recipe.Orchard))
                 selectedBed = snapshot.Beds.FirstOrDefault(b => b.Unlocked && !b.Planted && b.Orchard == recipe.Orchard)?.Id
                     ?? snapshot.Beds.FirstOrDefault(b => b.Orchard == recipe.Orchard)?.Id;
             Refresh();
         }
-        private void Execute(Func<bool> command)
+        private void Execute(Func<bool> command, bool harvestFeedback = true)
         {
             if (source?.Ready != true) return;
             var before = source.CapturePresentation();
@@ -288,7 +288,7 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 var after = source.CapturePresentation();
                 var harvested = before.Beds.Where(b => b.Ready && after.Beds.Any(a => a.Id == b.Id && !a.Ready)).ToArray();
-                if (harvested.Length > 0)
+                if (harvestFeedback && harvested.Length > 0)
                 {
                     feedback = string.Join(" · ", harvested.Select(b => "+" + Compact(b.ExpectedYield) + " " + b.RecipeTitle)) +
                         " · +" + harvested.Sum(b => b.HarvestXp) + " Fields XP";
@@ -309,7 +309,40 @@ namespace TimelessEchoes.UI.Toolkit
         private void PlantSelected()
         {
             if (!plant.enabledInHierarchy || source is not FarmService service || selectedBed == null) return;
+            var bed = source.CapturePresentation().Beds.FirstOrDefault(b => b.Id == selectedBed);
+            if (bed?.Orchard == true && bed.Planted)
+            {
+                ConfirmReplacement(service, bed);
+                return;
+            }
             if (selectedRecipe != null) Execute(() => service.Plant(selectedBed, selectedRecipe));
+        }
+        private void CloseReplacement()
+        {
+            replacementModal?.RemoveFromHierarchy(); replacementModal = null;
+            workspace?.SetEnabled(true);
+        }
+        private void ConfirmReplacement(FarmService service, FarmBedPresentation bed)
+        {
+            var recipe = source.CapturePresentation().Recipes.FirstOrDefault(r => r.Id == selectedRecipe);
+            if (recipe == null || !service.State.Beds.TryGetValue(bed.Id, out var state)) return;
+            var bedId = bed.Id; var recipeId = recipe.Id; var batchId = state.BatchId;
+            CloseReplacement(); workspace.SetEnabled(false);
+            replacementModal = E(root, "modal"); replacementModal.name = "fields-replace-confirmation";
+            var dialog = E(replacementModal, "surface dialog fields-replace-dialog");
+            L(dialog, T("fields.replace-title", "Replace tree?"), "heading");
+            L(dialog, ToolkitLocalization.Text("fields.replace-description", "Replace {0} with {1}? This uses 1 sapling and discards the current tree, growth and unharvested fruit.", bed.RecipeTitle, recipe.CropTitle), "fields-replace-description");
+            var actions = E(dialog, "row fields-replace-actions");
+            var cancel = Button(actions, T("common.cancel", "Cancel"), CloseReplacement); cancel.name = "fields-replace-cancel";
+            var confirm = Button(actions, T("fields.replace-tree", "Replace tree"), () =>
+            {
+                CloseReplacement();
+                Execute(() => service.ReplaceTree(bedId, recipeId, batchId), harvestFeedback: false);
+                SelectBed(bedId);
+            });
+            confirm.name = "fields-replace-confirm";
+            replacementModal.RegisterCallback<KeyDownEvent>(e => { if (e.keyCode == KeyCode.Escape) { CloseReplacement(); e.StopPropagation(); } });
+            cancel.Focus();
         }
         private void ToggleRepeat()
         {
@@ -364,7 +397,7 @@ namespace TimelessEchoes.UI.Toolkit
             var seedContent = (source as FarmService)?.Content ?? FarmContent.Load();
             var selectedDefinition = seedContent.Recipe(selected?.Id);
             var dryTime = selectedDefinition == null ? 0 : seedContent.GrowthDuration(selectedDefinition, snapshot.TwinsLevel);
-            var growthTime = target?.Planted == true && target.GrowthSeconds > 0 ? target.GrowthSeconds : dryTime;
+            var growthTime = target?.Planted == true && target.RecipeId == selected?.Id && target.GrowthSeconds > 0 ? target.GrowthSeconds : dryTime;
             seedHeading.text = selected == null ? "" : selected.CropTitle + " • " + FormatTime(growthTime, mspace: false, shortForm: true);
             seedHeading.tooltip = selected == null ? "" : "Dry: " + FormatTime(dryTime, mspace: false, shortForm: true) + " · Watered: " + FormatTime(dryTime / 2, mspace: false, shortForm: true);
             var columns = narrow ? 4 : 5;
@@ -377,7 +410,7 @@ namespace TimelessEchoes.UI.Toolkit
                 if (!seeds.TryGetValue(recipe.Id, out var card)) continue;
                 var show = recipe.Orchard == orchard && recipe.Discovered;
                 Visible(card.Button, show);
-                card.Button.SetEnabled(target?.Planted != true);
+                card.Button.SetEnabled(target?.Planted != true || orchard);
                 card.Button.style.width = cardWidth > 0 ? new Length(cardWidth) : Length.Percent(100f / columns - 1.1f);
                 card.Button.style.marginRight = show && ++seedIndex % columns != 0 ? 4 : 0;
                 card.Icon.sprite = recipe.Discovered ? recipe.Icon : recipe.UnknownIcon ? recipe.UnknownIcon : unknownPack;
@@ -392,7 +425,8 @@ namespace TimelessEchoes.UI.Toolkit
             seedScroll.parent.style.height = seedHeight; seedScroll.parent.style.maxHeight = seedHeight;
             var selectedBuild = target?.Unlocked == false ? FindBuild(snapshot, target.Id) : null;
             var matches = target != null && selected != null && target.Orchard == selected.Orchard;
-            var canPlant = snapshot.TownActionsAllowed && target?.Unlocked == true && !target.Planted && matches && selected.Discovered && selected.Eligible && selected.SeedQuantity >= FarmContent.PlantingCost(orchard);
+            var replacingTree = orchard && target.Planted && selected?.Id != target.RecipeId;
+            var canPlant = snapshot.TownActionsAllowed && target?.Unlocked == true && (!target.Planted || replacingTree) && matches && selected.Discovered && selected.Eligible && selected.SeedQuantity >= FarmContent.PlantingCost(orchard);
             RefreshCosts(selectedCosts, selectedBuild);
             // Costs remain visible here even when the player's Fields level is too low.
             for (var i = 0; i < selectedCosts.Counts.Length; i++)
@@ -411,9 +445,9 @@ namespace TimelessEchoes.UI.Toolkit
             Visible(detail, detail.text.Length > 0);
             Visible(buildSelected, selectedBuild != null); buildSelected.name = "fields-build-selected";
             buildSelected.text = T("fields.construct", "Construct"); buildSelected.SetEnabled(selectedBuild?.CanTurnIn == true);
-            Visible(plant, selectedBuild == null && target?.Planted != true);
+            Visible(plant, selectedBuild == null && (target?.Planted != true || replacingTree));
             plant.SetEnabled(canPlant);
-            plant.text = T("fields.action.plant", "Plant");
+            plant.text = replacingTree ? T("fields.replace-tree", "Replace tree") : T("fields.action.plant", "Plant");
             Visible(water, target?.Unlocked == true && target.Planted && !target.Ready && !target.Watered);
             water.SetEnabled(snapshot.TownActionsAllowed && target?.Watered == false);
             SetWaterLabel(water, T("fields.action.water-once", "Water"), true);
@@ -521,6 +555,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         public void Hide()
         {
+            CloseReplacement();
             if (source != null) source.Changed -= Refresh; ToolkitLocalization.Changed -= Refresh;
             root?.RemoveFromHierarchy(); root = null; seeds.Clear(); beds.Clear(); orchardPairs.Clear();
         }

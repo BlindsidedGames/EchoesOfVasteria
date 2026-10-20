@@ -252,6 +252,38 @@ namespace Tests.PlayMode
                 Assert.False(service.State.Beds[FarmCommands.WestBedId].IsPlanted);
                 Assert.False(service.State.Beds[FarmCommands.EastBedId].IsPlanted);
                 Assert.Greater(oracle.saveData.Resources[apple.output.name].Amount, 0);
+                var pear = content.Recipe("recipe.pear.v1");
+                oracle.saveData.SkillData[pear.source.associatedSkill.name] = new GameData.SkillProgress { Level = pear.source.requiredSkillLevel };
+                yield return new WaitForSecondsRealtime(.3f);
+                var pearQuantity = oracle.saveData.Resources[pear.paidInput.name].Amount;
+                foreach (var resolution in new[] { new Vector2Int(1920, 1080), new Vector2Int(960, 2078) })
+                {
+                    UnityEditor.PlayModeWindow.SetCustomRenderingResolution((uint)resolution.x, (uint)resolution.y, "Tree replacement review");
+                    yield return null; yield return null;
+                    FieldsClick(ui.Q<Button>("fields-seed-" + pear.id));
+                    yield return null;
+                    Assert.That(ui.Q<Button>("fields-plant-selected").text, Is.EqualTo("Replace tree"));
+                    FieldsClick(ui.Q<Button>("fields-plant-selected"));
+                    yield return null;
+                    var dialog = ui.Q<VisualElement>("fields-replace-confirmation");
+                    Assert.NotNull(dialog);
+                    var confirm = ui.Q<Button>("fields-replace-confirm");
+                    Assert.True(confirm.enabledInHierarchy);
+                    Assert.True(dialog.worldBound.Contains(confirm.worldBound.center), "Confirmation stays inside the visible modal in both orientations.");
+                    FieldsClick(ui.Q<Button>("fields-replace-cancel"));
+                    Assert.IsNull(ui.Q("fields-replace-confirmation"));
+                    Assert.AreEqual(apple.id, service.State.Beds[orchardId].RecipeId);
+                    Assert.AreEqual(pearQuantity, oracle.saveData.Resources[pear.paidInput.name].Amount, "Cancel must not spend the sapling.");
+                }
+                yield return null;
+                FieldsClick(ui.Q<Button>("fields-plant-selected"));
+                yield return null;
+                ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-replace-confirmation.png"));
+                yield return null;
+                FieldsClick(ui.Q<Button>("fields-replace-confirm"));
+                Assert.AreEqual(pear.id, service.State.Beds[orchardId].RecipeId);
+                Assert.AreEqual(pearQuantity - 1, oracle.saveData.Resources[pear.paidInput.name].Amount);
+                Assert.IsNull(ui.Q("fields-replace-confirmation"));
             }
             finally { Object.DestroyImmediate(screenObject); Object.DestroyImmediate(resourceObject); Object.DestroyImmediate(gameObject); }
         }
