@@ -7,6 +7,7 @@ namespace Blindsided.SaveData
 {
     public class GameData
     {
+        public TimelessEchoes.Shop.ShopProgress Shop = new();
         // Short-lived candidate for a synchronous in-memory economic mutation. Unrelated
         // state is read-only; every collection/record these commands may write is
         // detached. This is not a background-save snapshot.

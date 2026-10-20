@@ -22,14 +22,15 @@ namespace TimelessEchoes.UI
     {
         public static TownWindowManager Instance { get; private set; }
 
-        public enum Window { Upgrades = 0, Buffs = 1, Quests = 2, Credits = 3, Stats = 5, Skills = 6, Library = 7, Cauldron = 8, Forge = 9, Inventory = 10, Options = 11, Farm = 12 } // 4 is retired
+        public enum Window { Upgrades = 0, Buffs = 1, Quests = 2, Credits = 3, Stats = 5, Skills = 6, Library = 7, Cauldron = 8, Forge = 9, Inventory = 10, Options = 11, Farm = 12, Shop = 13 } // 4 is retired
         public event Action CloseRequested;
         public event Action WindowsChanged;
         public bool HasOpenWindow => AnyWindowOpen();
         public bool ForgeNeedsAttention { get; private set; }
         public bool CauldronNeedsAttention { get; private set; }
         private readonly System.Collections.Generic.HashSet<Window> tutorialLockedRoutes = new();
-        public bool CanOpenWindow(Window window) => Enum.IsDefined(typeof(Window), window) && !tutorialLockedRoutes.Contains(window);
+        public bool CanOpenWindow(Window window) => Enum.IsDefined(typeof(Window), window) && !tutorialLockedRoutes.Contains(window) &&
+            (window != Window.Shop || TimelessEchoes.Shop.ShopRules.IntroComplete(Oracle.oracle?.saveData));
 
         /// <summary>UI-independent routes shared by native and legacy navigation during migration.</summary>
         public void OpenWindow(Window window)
@@ -53,6 +54,7 @@ namespace TimelessEchoes.UI
                 case Window.Inventory: OpenInventory(); break;
                 case Window.Options: OpenOptions(); break;
                 case Window.Farm: OpenFarm(); break;
+                case Window.Shop: OpenShop(); break;
             }
         }
 
@@ -65,6 +67,7 @@ namespace TimelessEchoes.UI
 
         public bool IsWindowOpen(Window window)
         {
+            if (window == Window.Shop && toolkitShop != null) return toolkitShop.IsOpen;
             if (window == Window.Farm && toolkitFarm != null) return toolkitFarm.IsOpen;
             if (window == Window.Forge && toolkitForge != null && toolkitForge.IsConfigured) return toolkitForge.IsOpen;
             if (window == Window.Stats && toolkitStatistics != null && toolkitStatistics.IsConfigured) return toolkitStatistics.IsOpen;
@@ -209,6 +212,16 @@ namespace TimelessEchoes.UI
         [SerializeField] private Toolkit.ToolkitCauldronScreen toolkitCauldron;
         [SerializeField] private Toolkit.ToolkitFarmScreen toolkitFarm;
         public void ConfigureFarm(Toolkit.ToolkitFarmScreen screen) => toolkitFarm = screen;
+        private Toolkit.ToolkitShopScreen toolkitShop;
+        public void ConfigureShop(Toolkit.ToolkitShopScreen screen) => toolkitShop = screen;
+        private void OpenShop()
+        {
+            if (toolkitShop == null || !toolkitShop.IsConfigured || !CanOpenWindow(Window.Shop)) return;
+            var wasOpen = toolkitShop.IsOpen;
+            CloseAllWindows();
+            if (!wasOpen) toolkitShop.Show();
+            UpdateTownButtonsVisibility();
+        }
         private void OpenFarm()
         {
             if (toolkitFarm == null || !toolkitFarm.IsConfigured) return;
@@ -686,6 +699,7 @@ namespace TimelessEchoes.UI
         public void CloseAllWindows()
         {
             CloseRequested?.Invoke();
+            if (toolkitShop != null) toolkitShop.Hide();
             if (toolkitLibrary != null) toolkitLibrary.Hide();
             if (toolkitCredits != null) toolkitCredits.Hide();
             if (toolkitOptions != null) toolkitOptions.Hide();
@@ -763,7 +777,8 @@ namespace TimelessEchoes.UI
 
         private bool AnyWindowOpen()
         {
-            return (toolkitFarm != null && toolkitFarm.IsOpen)
+            return (toolkitShop != null && toolkitShop.IsOpen)
+                   || (toolkitFarm != null && toolkitFarm.IsOpen)
                    || (toolkitForge != null && toolkitForge.IsOpen)
                    || (toolkitStatistics != null && toolkitStatistics.IsOpen)
                    || (toolkitCauldron != null && toolkitCauldron.IsOpen)
