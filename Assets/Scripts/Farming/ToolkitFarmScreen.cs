@@ -147,11 +147,10 @@ namespace TimelessEchoes.UI.Toolkit
                 if (recipe == null) continue;
                 var id = recipe.Id; var button = Button(seedGrid, "", () => SelectRecipe(id)); button.name = "fields-seed-" + id;
                 button.AddToClassList("fields-seed-card");
+                var title = L(button, "", "fields-seed-caption"); title.name = "seed-caption";
                 var icon = new Image { scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
                 icon.AddToClassList("icon"); button.Add(icon);
-                var labels = E(button, "column fields-seed-labels");
-                var title = L(labels, "", "fields-seed-caption"); title.name = "seed-caption";
-                var count = L(labels, "", "fields-seed-count"); count.name = "seed-quantity";
+                var count = L(button, "", "fields-seed-count"); count.name = "seed-quantity";
                 seeds[id] = new SeedCard { Button = button, Title = title, Count = count, Icon = icon };
             }
             undiscovered = L(seedColumn, "", "muted fields-undiscovered-count");
@@ -384,7 +383,7 @@ namespace TimelessEchoes.UI.Toolkit
             }
             undiscovered.text = ToolkitLocalization.Text("fields.hidden-seeds", "{0} undiscovered", available.Length - discovered); Visible(undiscovered, discovered < available.Length);
             var seedRows = (available.Count(r => r.Discovered) + columns - 1) / columns;
-            var seedHeight = seedRows * (ToolkitResponsiveLayout.IsPortrait ? 47 : 39) + 4;
+            var seedHeight = seedRows * (ToolkitResponsiveLayout.IsPortrait ? 55 : 45) + 4;
             seedScroll.style.height = seedHeight; seedScroll.style.maxHeight = seedHeight;
             seedScroll.parent.style.height = seedHeight; seedScroll.parent.style.maxHeight = seedHeight;
             var selectedBuild = target?.Unlocked == false ? FindBuild(snapshot, target.Id) : null;
