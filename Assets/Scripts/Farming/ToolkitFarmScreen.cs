@@ -133,12 +133,10 @@ namespace TimelessEchoes.UI.Toolkit
             plant = Button(primaryActions, "", PlantSelected); plant.name = "fields-plant-selected"; plant.AddToClassList("primary");
             buildSelected = Button(primaryActions, "", () => Build(FindBuild(source.CapturePresentation(), selectedBed), selectedBed)); buildSelected.AddToClassList("primary");
             water = Button(primaryActions, "", () => { if (source is FarmService service) Execute(() => service.Water(selectedBed)); }); water.name = "fields-water-selected";
-            var tending = E(controls, "row fields-actions");
+            var tending = E(controls, "row fields-harvest-actions");
             repeat = Button(tending, "", ToggleRepeat); repeat.name = "fields-repeat-selected";
-            L(repeat, T("fields.auto-harvest", "Auto harvest"), "fields-repeat-label").pickingMode = PickingMode.Ignore;
-            E(controls, "fields-details-spacer");
-            var bulkActions = E(controls, "row fields-primary-actions fields-bulk-actions");
-            harvest = Button(bulkActions, "", () => Execute(source.HarvestReady)); harvest.name = "farm-harvest-ready";
+            harvest = Button(tending, "", () => { if (source is FarmService service) Execute(() => service.Harvest(selectedBed)); });
+            harvest.name = "fields-harvest-selected"; harvest.AddToClassList("primary");
             seedColumn = E(workspace, "column fields-seeds-column"); seedHeading = L(seedColumn, "", "heading");
             seedScroll = ToolkitControls.RecessedScroll(seedColumn, "fields-seeds", theme, compact: true);
             seedGrid = E(seedScroll, "row fields-seed-grid");
@@ -311,9 +309,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void PlantSelected()
         {
             if (!plant.enabledInHierarchy || source is not FarmService service || selectedBed == null) return;
-            var bed = source.CapturePresentation().Beds.FirstOrDefault(b => b.Id == selectedBed);
-            if (bed?.Ready == true) Execute(() => service.Harvest(selectedBed));
-            else if (selectedRecipe != null) Execute(() => service.Plant(selectedBed, selectedRecipe));
+            if (selectedRecipe != null) Execute(() => service.Plant(selectedBed, selectedRecipe));
         }
         private void ToggleRepeat()
         {
@@ -410,15 +406,15 @@ namespace TimelessEchoes.UI.Toolkit
             Visible(detail, detail.text.Length > 0);
             Visible(buildSelected, selectedBuild != null); buildSelected.name = "fields-build-selected";
             buildSelected.text = T("fields.construct", "Construct"); buildSelected.SetEnabled(selectedBuild?.CanTurnIn == true);
-            Visible(plant, selectedBuild == null && target?.Planted != true || target?.Ready == true);
-            plant.SetEnabled(canPlant || snapshot.TownActionsAllowed && target?.Ready == true);
-            plant.text = target?.Ready == true ? T("fields.action.harvest", "Harvest") : T("fields.action.plant", "Plant");
+            Visible(plant, selectedBuild == null && target?.Planted != true);
+            plant.SetEnabled(canPlant);
+            plant.text = T("fields.action.plant", "Plant");
             Visible(water, target?.Unlocked == true && target.Planted && !target.Ready && !target.Watered);
             water.SetEnabled(snapshot.TownActionsAllowed && target?.Watered == false);
             SetWaterLabel(water, T("fields.action.water-once", "Water"), true);
-            Visible(repeat, target?.Unlocked == true && snapshot.TwinsLevel >= 20); repeat.SetEnabled(snapshot.TownActionsAllowed);
-            ToolkitGameplay.SetToggle(repeat, target?.Repeat == true, false);
-            repeat.Q<Label>().text = T("fields.auto-harvest", "Auto harvest");
+            repeat.SetEnabled(snapshot.TownActionsAllowed && target?.Unlocked == true && snapshot.TwinsLevel >= 20);
+            repeat.EnableInClassList("primary", target?.Repeat == true);
+            repeat.text = T("fields.auto", "Auto") + " • " + (target?.Repeat == true ? T("common.on", "On") : T("common.off", "Off"));
             repeat.tooltip = T("fields.repeat-help-regrowth", "Fields level 20: harvest automatically. Crops use one seed pack to replant; trees regrow fruit without another sapling.");
             Visible(preview.Root, !orchard && selectedBuild == null); Visible(orchardPreview.Root, orchard && selectedBuild == null);
             if (target != null)
@@ -436,9 +432,8 @@ namespace TimelessEchoes.UI.Toolkit
                 selectedPreview.Root.EnableInClassList("fields-ready", target.Ready);
             }
             Visible(seedColumn, target?.Unlocked == true);
-            var ready = snapshot.Beds.Count(b => b.Unlocked && b.Ready);
-            harvest.SetEnabled(snapshot.TownActionsAllowed && ready > 0);
-            harvest.text = T("fields.action.harvest-all", "Harvest All");
+            harvest.SetEnabled(snapshot.TownActionsAllowed && target?.Ready == true);
+            harvest.text = T("fields.action.harvest", "Harvest");
         }
         private void RefreshArt(BedTile tile, FarmBedPresentation bed)
         {
