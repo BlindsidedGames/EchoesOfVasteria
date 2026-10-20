@@ -76,22 +76,7 @@ namespace TimelessEchoes.Farming
             var error = PlantInto(result, owner, id, content.Recipe(recipeId), operationId, content);
             return error == null ? result : Reject(error);
         }
-        public static FarmCommandResult ReplaceTree(GameData owner, string id, string recipeId, string expectedBatchId, string operationId, DateTime now, FarmContent content)
-        {
-            if (owner?.Farm == null || !content || !KnownRecipe(recipeId)) return Reject("MissingFarmContent");
-            var result = Begin(owner.Farm, operationId, ReplaceTreeFingerprint(id, recipeId), now);
-            if (!result.Accepted) return result;
-            if (!OrchardBeds.Contains(id) || !AccessibleBed(result.Candidate, id) ||
-                !result.Candidate.Beds.TryGetValue(id, out var bed) || bed?.IsPlanted != true) return Reject("CannotReplaceTree");
-            if (string.IsNullOrEmpty(expectedBatchId) || bed.BatchId != expectedBatchId) return Reject("TreeChanged");
-            var recipe = content.Recipe(recipeId);
-            if (recipe?.orchard != true || recipeId == bed.RecipeId) return Reject("CannotReplaceTree");
-            // Clear only the unpublished candidate. Failed payment or validation leaves the old tree intact.
-            bed.BatchId = null;
-            var error = PlantInto(result, owner, id, recipe, operationId, content);
-            return error == null ? result : Reject(error);
-        }
-        private static string PlantInto(FarmCommandResult result, GameData owner, string id, FarmRecipe recipe, string operationId, FarmContent content, bool replantTree = false)
+        private static string PlantInto(FarmCommandResult result, GameData owner, string id, FarmRecipe recipe, string operationId, FarmContent content)
         {
             var state = result.Candidate;
             if (!KnownBed(id) || !AccessibleBed(state, id) || !state.Beds.TryGetValue(id, out var bed) || bed == null) return "BedLocked";
@@ -105,9 +90,9 @@ namespace TimelessEchoes.Farming
             owner.Resources.TryGetValue(recipe.paidInput.name, out var input);
             result.ResourceDeltas.TryGetValue(recipe.paidInput.name, out var staged);
             var cost = FarmContent.PlantingCost(recipe.orchard);
-            if (!replantTree && (input == null || !Finite(input.Amount) || input.Amount + staged < cost))
+            if ((input == null || !Finite(input.Amount) || input.Amount + staged < cost))
                 return recipe.orchard ? "NoMatchingSapling" : "NoMatchingSeeds";
-            if (!replantTree) result.ResourceDeltas[recipe.paidInput.name] = staged - cost;
+            result.ResourceDeltas[recipe.paidInput.name] = staged - cost;
             if (!FarmJournal.TrySequence(state, operationId, out var sequence, out _)) return "InvalidPlantReceipt";
             bed.PlantSequence = sequence;
             bed.BatchId = "fields:" + operationId + ":" + id;
@@ -186,10 +171,10 @@ namespace TimelessEchoes.Farming
                     result.Candidate.FirstHarvestCompleted = true;
                 }
                 bed.BatchId = null; bed.RecipeId = null; bed.DurationSeconds = bed.ElapsedSeconds = bed.FrozenYield = bed.FrozenSecondaryYield = 0; bed.HarvestXp = 0; bed.HarvestYield = 0; bed.LastGrowthUtcTicks = 0; bed.Watered = false;
-                if (recipe.orchard || bed.Repeat && result.Candidate.TwinsLevel >= 20)
+                if (bed.Repeat && result.Candidate.TwinsLevel >= 20)
                 {
                     // Begin one new cycle; never carry elapsed time or watering into it.
-                    var error = PlantInto(result, owner, id, content.Recipe(bed.SelectedRecipeId), operationId, content, recipe.orchard);
+                    var error = PlantInto(result, owner, id, content.Recipe(bed.SelectedRecipeId), operationId, content);
                     if (error != null) bed.Repeat = false;
                 }
             }

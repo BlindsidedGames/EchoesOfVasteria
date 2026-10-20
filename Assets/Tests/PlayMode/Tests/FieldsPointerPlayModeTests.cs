@@ -39,6 +39,10 @@ namespace Tests.PlayMode
                 Assert.True(screen.Show());
                 var ui = screenObject.GetComponent<UIDocument>().rootVisualElement;
                 yield return null; yield return null;
+                var unknownCorn = ui.Q<Button>("fields-seed-recipe.corn.v1");
+                Assert.AreEqual(DisplayStyle.Flex, unknownCorn.resolvedStyle.display, "Undiscovered seeds occupy their own visible cards.");
+                Assert.False(unknownCorn.enabledInHierarchy);
+                Assert.AreSame(content.Recipe("recipe.corn.v1").unknownIcon, unknownCorn.Q<Image>().sprite);
                 var buildPlot = ui.Q<Button>("fields-build-selected");
                 Assert.True(buildPlot.enabledInHierarchy);
                 FieldsClick(buildPlot);
@@ -247,51 +251,18 @@ namespace Tests.PlayMode
                 FieldsClick(ui.Q<Button>("fields-select-" + orchardId));
                 yield return null;
                 FieldsClick(ui.Q<Button>("fields-harvest-selected"));
-                Assert.True(service.State.Beds[orchardId].IsPlanted);
-                Assert.False(service.State.Beds[orchardId].EstablishedTree);
+                Assert.False(service.State.Beds[orchardId].IsPlanted);
                 Assert.False(service.State.Beds[FarmCommands.WestBedId].IsPlanted);
                 Assert.False(service.State.Beds[FarmCommands.EastBedId].IsPlanted);
                 Assert.Greater(oracle.saveData.Resources[apple.output.name].Amount, 0);
-                var pear = content.Recipe("recipe.pear.v1");
-                oracle.saveData.SkillData[pear.source.associatedSkill.name] = new GameData.SkillProgress { Level = pear.source.requiredSkillLevel };
-                yield return new WaitForSecondsRealtime(.3f);
-                var pearQuantity = oracle.saveData.Resources[pear.paidInput.name].Amount;
-                foreach (var resolution in new[] { new Vector2Int(1920, 1080), new Vector2Int(960, 2078) })
-                {
-                    UnityEditor.PlayModeWindow.SetCustomRenderingResolution((uint)resolution.x, (uint)resolution.y, "Tree replacement review");
-                    yield return null; yield return null;
-                    FieldsClick(ui.Q<Button>("fields-seed-" + pear.id));
-                    yield return null;
-                    Assert.That(ui.Q<Button>("fields-plant-selected").text, Is.EqualTo("Replace tree"));
-                    FieldsClick(ui.Q<Button>("fields-plant-selected"));
-                    yield return null;
-                    var dialog = ui.Q<VisualElement>("fields-replace-confirmation");
-                    Assert.NotNull(dialog);
-                    var confirm = ui.Q<Button>("fields-replace-confirm");
-                    Assert.True(confirm.enabledInHierarchy);
-                    Assert.True(dialog.worldBound.Contains(confirm.worldBound.center), "Confirmation stays inside the visible modal in both orientations.");
-                    FieldsClick(ui.Q<Button>("fields-replace-cancel"));
-                    Assert.IsNull(ui.Q("fields-replace-confirmation"));
-                    Assert.AreEqual(apple.id, service.State.Beds[orchardId].RecipeId);
-                    Assert.AreEqual(pearQuantity, oracle.saveData.Resources[pear.paidInput.name].Amount, "Cancel must not spend the sapling.");
-                }
-                yield return null;
-                FieldsClick(ui.Q<Button>("fields-plant-selected"));
-                yield return null;
-                ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-replace-confirmation.png"));
-                yield return null;
-                FieldsClick(ui.Q<Button>("fields-replace-confirm"));
-                Assert.AreEqual(pear.id, service.State.Beds[orchardId].RecipeId);
-                Assert.AreEqual(pearQuantity - 1, oracle.saveData.Resources[pear.paidInput.name].Amount);
-                Assert.IsNull(ui.Q("fields-replace-confirmation"));
                 var oak = content.Recipe("recipe.oak.v1");
                 yield return null; yield return null;
                 FieldsClick(ui.Q<Button>("fields-seed-" + oak.id));
                 yield return null;
-                Assert.True(ui.Q<Button>("fields-plant-selected").enabledInHierarchy, "An owned eligible oak sapling can replace the fruit tree.");
+                Assert.True(ui.Q<Button>("fields-plant-selected").enabledInHierarchy);
                 FieldsClick(ui.Q<Button>("fields-plant-selected"));
-                yield return null;
-                FieldsClick(ui.Q<Button>("fields-replace-confirm"));
+                Assert.AreEqual(oak.id, service.State.Beds[orchardId].RecipeId);
+                Assert.False(ui.Q<Button>("fields-seed-recipe.birch.v1").enabledInHierarchy, "Growing trees lock selection just like crops.");
                 FarmCommands.TickFields(service.State, 100000);
                 yield return new WaitForSecondsRealtime(.3f);
                 foreach (var resolution in new[] { new Vector2Int(1920, 1080), new Vector2Int(960, 2078) })
@@ -309,8 +280,13 @@ namespace Tests.PlayMode
                 Assert.Greater(oracle.saveData.Resources[oak.output.name].Amount, 0);
                 Assert.Greater(oracle.saveData.Resources[oak.secondaryOutput.name].Amount, 0);
                 Assert.AreEqual(saplingsBeforeChop, oracle.saveData.Resources[oak.paidInput.name].Amount);
-                Assert.False(service.State.Beds[orchardId].EstablishedTree);
-                Assert.Less(service.State.Beds[orchardId].ElapsedSeconds, 1);
+                Assert.False(service.State.Beds[orchardId].IsPlanted);
+                yield return null;
+                FieldsClick(ui.Q<Button>("fields-seed-recipe.birch.v1"));
+                yield return null;
+                FieldsClick(ui.Q<Button>("fields-plant-selected"));
+                Assert.AreEqual("recipe.birch.v1", service.State.Beds[orchardId].RecipeId);
+                Assert.IsNull(ui.Q("fields-replace-confirmation"));
             }
             finally { Object.DestroyImmediate(screenObject); Object.DestroyImmediate(resourceObject); Object.DestroyImmediate(gameObject); }
         }

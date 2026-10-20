@@ -313,20 +313,20 @@ namespace Tests.EditMode
             Assert.AreEqual(1, data.Resources[recipe.paidInput.name].Amount);
             data = Commit(data, proposal); Assert.AreEqual(0, data.Resources[recipe.paidInput.name].Amount);
             FarmCommands.TickFields(data.Farm, 100000); data = Harvest(data);
-            Assert.IsTrue(data.Farm.Beds[bedId].IsPlanted);
+            Assert.IsFalse(data.Farm.Beds[bedId].IsPlanted);
             Assert.IsFalse(data.Farm.Beds[bedId].EstablishedTree);
             Assert.AreEqual(24.9, data.Resources[recipe.output.name].Amount, .000001);
             Assert.IsFalse(FarmCommands.HarvestFields(data, Op(data, "harvest-fields"), Now.AddYears(1), content, false).Accepted);
             Assert.IsFalse(FarmCommands.PlantRecipe(data, bedId, recipe.id, Op(data, FarmCommands.PlantFingerprint(bedId, recipe.id)), Now, content).Accepted);
         }
         [TestCase("oak")] [TestCase("birch")] [TestCase("spruce")]
-        public void TimberPaysBothResourcesAndRestartsFromSaplingWithoutAnotherPayment(string species)
+        public void TimberPaysBothResourcesAndAutoReplantsUntilSaplingsRunOut(string species)
         {
             var data = Garden(0, 150); var recipe = content.Recipe("recipe." + species + ".v1");
             var id = FarmCommands.OrchardBeds[0]; data.Farm.OrchardCapacity = 1;
             data.Farm.Beds[id] = new FarmBedState { Unlocked = true, Repeat = true };
             data.SkillData[recipe.source.associatedSkill.name] = new GameData.SkillProgress { Level = recipe.source.requiredSkillLevel };
-            data.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 1, Earned = true };
+            data.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 2, Earned = true };
             data.CauldronCardCounts[recipe.output.CardId] = 10000;
             data.CauldronCardCounts[recipe.secondaryOutput.CardId] = 100;
             var logBonus = TimelessEchoes.Upgrades.CauldronResourceYield.BonusPercent(data, recipe.output);
@@ -344,46 +344,13 @@ namespace Tests.EditMode
             var next = data.Farm.Beds[id];
             Assert.True(next.IsPlanted); Assert.False(next.Watered); Assert.False(next.EstablishedTree);
             Assert.AreEqual(0, next.ElapsedSeconds);
-            Assert.AreEqual(0, FarmView.GrowthStage(0, false));
             Assert.AreEqual(FarmCommandStatus.AlreadyApplied, FarmCommands.HarvestFields(data, harvest, Now, content, false, id).Status);
             FarmCommands.TickFields(data.Farm, 100000); data = Harvest(data, true);
             Assert.Greater(data.Resources[recipe.output.name].Amount, 24.9 * (1 + logBonus / 100d));
             Assert.Greater(data.Resources[recipe.secondaryOutput.name].Amount, 12.45 * (1 + stickBonus / 100d));
             Assert.AreEqual(0, data.Resources[recipe.paidInput.name].Amount);
-            Assert.AreEqual(0, data.Farm.Beds[id].ElapsedSeconds);
-        }
-        [Test] public void TreeReplacementIsAtomicRetainsAutoAndCanHarvestAfterReload()
-        {
-            var data = Garden(0, 150);
-            var apple = content.Recipe("recipe.apple.v1"); var pear = content.Recipe("recipe.pear.v1");
-            var bedId = FarmCommands.OrchardBeds[0];
-            data.Farm.OrchardCapacity = 1; data.Farm.Beds[bedId] = new FarmBedState { Unlocked = true, Repeat = true };
-            foreach (var recipe in new[] { apple, pear })
-            {
-                data.SkillData[recipe.source.associatedSkill.name] = new GameData.SkillProgress { Level = 10000 };
-                data.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 1, Earned = true };
-            }
-            data = Commit(data, FarmCommands.PlantRecipe(data, bedId, apple.id, Op(data, FarmCommands.PlantFingerprint(bedId, apple.id)), Now, content));
-            FarmCommands.TickFields(data.Farm, 100000);
-            var oldBatch = data.Farm.Beds[bedId].BatchId;
-            var fingerprint = FarmCommands.ReplaceTreeFingerprint(bedId, pear.id);
-            var operation = Op(data, fingerprint);
-            Assert.False(FarmCommands.ReplaceTree(data, bedId, pear.id, "stale-batch", operation, Now, content).Accepted);
-            data.Resources[pear.paidInput.name].Amount = 0;
-            Assert.False(FarmCommands.ReplaceTree(data, bedId, pear.id, oldBatch, operation, Now, content).Accepted);
-            Assert.AreEqual(oldBatch, data.Farm.Beds[bedId].BatchId, "A failed replacement must preserve the ready fruit.");
-            data.Resources[pear.paidInput.name].Amount = 1;
-            data = Commit(data, FarmCommands.ReplaceTree(data, bedId, pear.id, oldBatch, operation, Now, content));
-            var replaced = data.Farm.Beds[bedId];
-            Assert.AreEqual(pear.id, replaced.RecipeId); Assert.AreEqual(0, replaced.ElapsedSeconds);
-            Assert.False(replaced.EstablishedTree); Assert.False(replaced.Watered); Assert.True(replaced.Repeat);
-            Assert.AreEqual(0, data.Resources[pear.paidInput.name].Amount);
-            Assert.False(data.Resources.TryGetValue(apple.output.name, out var apples) && apples.Amount > 0, "Replacement discards fruit without awarding a harvest.");
-            Assert.AreEqual(FarmCommandStatus.AlreadyApplied, FarmCommands.ReplaceTree(data, bedId, pear.id, oldBatch, operation, Now, content).Status);
-            FarmCommands.TickFields(data.Farm, 100000); data = Harvest(data);
-            Assert.Greater(data.Resources[pear.output.name].Amount, 0);
-            Assert.False(data.Farm.Beds[bedId].EstablishedTree);
-            Assert.AreEqual(0, data.Resources[pear.paidInput.name].Amount, "Regrowth does not consume another sapling.");
+            Assert.False(data.Farm.Beds[id].IsPlanted);
+            Assert.False(data.Farm.Beds[id].Repeat);
         }
         [Test] public void SeedMissIsDurableAndCannotBeRerolledAfterReload()
         {
@@ -519,18 +486,19 @@ namespace Tests.EditMode
                 }
             }
         }
-        [Test] public void OrchardRegrowsAfterReloadWithoutAnotherSaplingOrDuplicateHarvest()
+        [Test] public void OrchardAutoReplantPaysForEachSaplingAfterReloadWithoutDuplicateHarvest()
         {
             var data = Garden(1, 150);
             var recipe = content.Recipe("recipe.apple.v1"); var bedId = FarmCommands.OrchardBeds[0];
             data.Farm.OrchardCapacity = 1; data.Farm.Beds[bedId] = new FarmBedState { Unlocked = true };
             data.SkillData[recipe.source.associatedSkill.name] = new GameData.SkillProgress { Level = recipe.source.requiredSkillLevel };
-            data.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 1, Earned = true };
+            data.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 3, Earned = true };
             data = Commit(data, FarmCommands.PlantRecipe(data, bedId, recipe.id, Op(data, FarmCommands.PlantFingerprint(bedId, recipe.id)), Now, content));
+            data.Farm.Beds[bedId].Repeat = true;
             FarmCommands.TickFields(data.Farm, 100000);
             var token = Op(data, "harvest-bed:" + bedId);
             data = Commit(data, FarmCommands.HarvestFields(data, token, Now, content, false, bedId));
-            Assert.AreEqual(0, data.Resources[recipe.paidInput.name].Amount);
+            Assert.AreEqual(1, data.Resources[recipe.paidInput.name].Amount);
             Assert.True(data.Farm.Beds[bedId].IsPlanted); Assert.False(data.Farm.Beds[bedId].EstablishedTree);
             Assert.AreEqual(0, data.Farm.Beds[bedId].ElapsedSeconds);
             var fruit = data.Resources[recipe.output.name].Amount;

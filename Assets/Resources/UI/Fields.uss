@@ -48,12 +48,6 @@
 .gameplay.fields-ui .fields-preview .fields-plot-art {scale:1.5 1.5;transform-origin:left top;margin:0 24px 0 0;}
 .gameplay.fields-ui .fields-preview.fields-plot .fields-plot-art {overflow:hidden;}
 .gameplay.fields-ui .fields-preview.fields-orchard-slot .fields-plot-art {translate:0 -8px;}
-.gameplay.fields-ui .fields-replace-description {white-space:normal;font-size:10px;}
-.gameplay.fields-ui .fields-replace-actions {margin-top:8px;}
-.gameplay.fields-ui .fields-replace-actions > .button {flex-grow:1;flex-basis:0;min-width:0;height:30px;font-size:10px;}
-.gameplay.fields-ui #fields-replace-cancel {margin-right:4px;}
-.gameplay.portrait.fields-ui .fields-replace-description {font-size:12px;}
-.gameplay.portrait.fields-ui .fields-replace-actions > .button {height:36px;font-size:12px;}
 .gameplay.fields-ui .fields-preview .fields-plot-info {width:auto;flex-grow:1;flex-basis:0;}
 .gameplay.fields-ui .fields-preview .fields-plot-status {display:flex;font-size:10px;white-space:normal;margin:0;flex-grow:1;-unity-text-align:upper-left;}
 .gameplay.fields-ui .fields-preview-heading {align-items:flex-start;justify-content:space-between;margin-bottom:5px;}
@@ -91,7 +85,6 @@
 .gameplay.fields-ui .fields-seed-card .icon {width:26px;height:26px;margin:0 3px 0 0;flex-shrink:0;}
 .gameplay.fields-ui .fields-seed-count {font-size:10.5px;-unity-text-align:middle-left;flex-shrink:0;}
 .gameplay.fields-ui .fields-seed-card.primary {background-color:var(--selected);border-color:var(--accent);}
-.gameplay.fields-ui .fields-undiscovered-count {font-size:7px;margin-top:4px;}
 .gameplay.fields-ui .fields-feedback {font-size:8px;white-space:normal;min-height:12px;margin-bottom:4px;}
 .gameplay.fields-ui.fields-narrow .fields-board {flex-direction:column;}
 .gameplay.fields-ui.fields-narrow .fields-selector-grid {width:100%;flex-grow:0;flex-basis:auto;margin-bottom:8px;}
