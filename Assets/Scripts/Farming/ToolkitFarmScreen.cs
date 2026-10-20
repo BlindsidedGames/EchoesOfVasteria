@@ -202,25 +202,24 @@ namespace TimelessEchoes.UI.Toolkit
             tile.Requirement = L(plotHeader, "", "fields-level-requirement");
             var body = E(tile.Select, "row fields-plot-body"); tile.Art = E(body, "fields-plot-art"); tile.Art.name = "bed-art";
             tile.Soil = new Image[bed.Orchard ? 4 : 1]; tile.Plants = new Image[1];
-            if (!bed.Orchard) { tile.Art.style.width = 16; tile.Art.style.minWidth = 16; }
-            for (var i = 0; i < tile.Soil.Length; i++)
-            {
-                var spot = new VisualElement { pickingMode = PickingMode.Ignore }; tile.Art.Add(spot); spot.style.position = Position.Absolute;
-                spot.style.left = bed.Orchard ? 4 + i % 2 * 8 : 4; spot.style.top = bed.Orchard ? 16 + i / 2 * 8 : 16;
-                spot.style.width = 8; spot.style.height = 8;
-                tile.Soil[i] = new Image { scaleMode = ScaleMode.StretchToFill, pickingMode = PickingMode.Ignore };
-                tile.Soil[i].style.position = Position.Absolute; tile.Soil[i].style.width = 8; tile.Soil[i].style.height = 8; tile.Soil[i].style.bottom = 0; spot.Add(tile.Soil[i]);
-                if (bed.Orchard) continue;
-                tile.WetSoil = new Image { scaleMode = ScaleMode.StretchToFill, pickingMode = PickingMode.Ignore };
-                tile.WetSoil.style.position = Position.Absolute; tile.WetSoil.style.width = 8; tile.WetSoil.style.height = 8; tile.WetSoil.style.bottom = 0; spot.Add(tile.WetSoil);
-                tile.Plants[0] = new Image { scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
-                tile.Plants[0].style.position = Position.Absolute; tile.Plants[0].style.width = 8; tile.Plants[0].style.height = 16; tile.Plants[0].style.bottom = 0; spot.Add(tile.Plants[0]);
-            }
             if (bed.Orchard)
             {
-                // One tree on a rounded 2x2 patch, at the same half-scale pixels as crop soil.
-                var tree = new Image { scaleMode = ScaleMode.StretchToFill, pickingMode = PickingMode.Ignore };
-                tree.style.position = Position.Absolute; tile.Art.Add(tree); tile.Plants[0] = tree;
+                for (var i = 0; i < tile.Soil.Length; i++)
+                {
+                    var spot = new VisualElement { pickingMode = PickingMode.Ignore }; tile.Art.Add(spot);
+                    spot.style.position = Position.Absolute;
+                    spot.style.left = 4 + i % 2 * 8; spot.style.top = 16 + i / 2 * 8;
+                    spot.style.width = 8; spot.style.height = 8;
+                    tile.Soil[i] = CreateArtImage(spot);
+                    tile.Soil[i].style.width = 8; tile.Soil[i].style.height = 8; tile.Soil[i].style.bottom = 0;
+                }
+                tile.Plants[0] = CreateArtImage(tile.Art);
+            }
+            else
+            {
+                tile.Soil[0] = CreateArtImage(tile.Art);
+                tile.WetSoil = CreateArtImage(tile.Art);
+                tile.Plants[0] = CreateArtImage(tile.Art);
             }
             var info = E(body, "column fields-plot-info"); tile.Status = L(info, "", "fields-plot-status"); tile.Status.name = "bed-status";
             tile.Fill = ToolkitGameplay.Bar(info); tile.Fill.name = "bed-progress";
@@ -232,6 +231,23 @@ namespace TimelessEchoes.UI.Toolkit
             if (register) beds[id] = tile;
             else { tile.Root.name = "fields-selected-preview"; tile.Select.pickingMode = PickingMode.Ignore; }
             return tile;
+        }
+        private static Image CreateArtImage(VisualElement parent)
+        {
+            var image = new Image { scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
+            image.style.position = Position.Absolute; parent.Add(image); return image;
+        }
+        private static void PlaceCropSprite(Image image, Sprite sprite)
+        {
+            image.sprite = sprite;
+            if (!sprite) return;
+            // Shared UI convention: one world unit occupies 16 reference UI pixels.
+            // Align all layers by their authored pivot, not by their sprite rectangle.
+            var scale = 16f / sprite.pixelsPerUnit;
+            image.style.width = sprite.rect.width * scale;
+            image.style.height = sprite.rect.height * scale;
+            image.style.left = 12 - sprite.pivot.x * scale;
+            image.style.top = 24 - (sprite.rect.height - sprite.pivot.y) * scale;
         }
         private FarmBuildPresentation FindBuild(FarmPresentationSnapshot snapshot, string id)
         {
@@ -410,13 +426,20 @@ namespace TimelessEchoes.UI.Toolkit
             var recipe = (source as FarmService)?.Content.Recipe(bed.RecipeId); var stage = FarmView.GrowthStage(bed.Progress01, bed.Ready);
             if (bed.EstablishedTree && !bed.Ready) stage = 2;
             var sprite = !bed.Planted ? null : bed.Orchard && stage < 3 && appearance ? appearance.treeStages[stage] : recipe?.stages?.Length == 4 ? recipe.stages[stage] : bed.Icon;
+            if (!bed.Orchard)
+            {
+                PlaceCropSprite(tile.Soil[0], appearance ? appearance.cropPreviewDry : null);
+                PlaceCropSprite(tile.WetSoil, appearance ? appearance.cropPreviewWet : null);
+                PlaceCropSprite(tile.Plants[0], sprite);
+                Visible(tile.WetSoil, bed.Watered); Visible(tile.Plants[0], sprite);
+                return;
+            }
             for (var i = 0; i < tile.Soil.Length; i++)
             {
                 var x = i % 2; var y = i / 2;
-                tile.Soil[i].sprite = !appearance ? null : bed.Orchard ? (bed.Watered ? appearance.wet : appearance.dry)[0] : appearance.cropPreviewDry;
-                tile.Soil[i].style.scale = new Scale(new Vector3(bed.Orchard && x == 1 ? -1 : 1, bed.Orchard && y == 1 ? -1 : 1, 1));
+                tile.Soil[i].sprite = appearance ? (bed.Watered ? appearance.wet : appearance.dry)[0] : null;
+                tile.Soil[i].style.scale = new Scale(new Vector3(x == 1 ? -1 : 1, y == 1 ? -1 : 1, 1));
             }
-            if (tile.WetSoil != null) { tile.WetSoil.sprite = appearance ? appearance.cropPreviewWet : null; Visible(tile.WetSoil, bed.Watered); }
             for (var i = 0; i < tile.Plants.Length; i++)
             {
                 tile.Plants[i].sprite = sprite; Visible(tile.Plants[i], sprite);
