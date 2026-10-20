@@ -381,9 +381,9 @@ namespace Tests.EditMode
             Assert.IsFalse(FarmCommands.HarvestFields(data, Op(data, "harvest-fields"), Now.AddYears(1), content, false).Accepted);
         }
         [TestCase("recipe.radish.v1", 1, 600d)]
-        [TestCase("recipe.corn.v1", 10, 702d)]
-        [TestCase("recipe.turnip.v1", 30, 2616d)]
-        [TestCase("recipe.apple.v1", 60, 609d)]
+        [TestCase("recipe.corn.v1", 10, 608.1277064025601d)]
+        [TestCase("recipe.turnip.v1", 30, 2796.7685300260973d)]
+        [TestCase("recipe.apple.v1", 60, 501.93887882137057d)]
         public void GrowthScalesWithCropLevelAndFieldsSpeedAndWaterHalvesIt(string recipeId, int fieldsLevel, double seconds)
         {
             var data = Garden(2, fieldsLevel);

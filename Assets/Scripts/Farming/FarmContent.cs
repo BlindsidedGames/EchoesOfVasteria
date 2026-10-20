@@ -21,7 +21,7 @@ namespace TimelessEchoes.Farming
         public LocalizedString localizedDisplayName = new("TownUI", "farm.display-name");
         public string DisplayName => localizedDisplayName == null || localizedDisplayName.IsEmpty ? displayName : localizedDisplayName.GetLocalizedString();
         public double baseDurationSeconds = 600;
-        public double durationPerCropLevelSeconds = 30;
+        public double durationMultiplierPerCropLevel = 1.02;
         public double baseYield = 10;
         public int harvestXp = 10;
         public float seedChance = .1f;
@@ -45,7 +45,7 @@ namespace TimelessEchoes.Farming
         public static double YieldMultiplier(int level) => 1 + .01 * (Math.Max(1, level) - 1d);
         public static double SpeedFactor(int level) => level >= 60 ? .7 : level >= 30 ? .8 : level >= 10 ? .9 : 1;
         public double GrowthDuration(FarmRecipe recipe, int fieldsLevel) =>
-            (baseDurationSeconds + (Math.Max(1, recipe.source.requiredSkillLevel) - 1) * durationPerCropLevelSeconds) * SpeedFactor(fieldsLevel);
+            baseDurationSeconds * Math.Pow(durationMultiplierPerCropLevel, Math.Max(1, recipe.source.requiredSkillLevel) - 1) * SpeedFactor(fieldsLevel);
         public static int XpRequired(int level) => checked(5 + Math.Max(1, level) / 2);
         public static void AddXp(FarmState state, int amount)
         {

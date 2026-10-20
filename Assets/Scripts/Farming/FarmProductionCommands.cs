@@ -81,7 +81,9 @@ namespace TimelessEchoes.Farming
             if (!KnownBed(id) || !AccessibleBed(state, id) || !state.Beds.TryGetValue(id, out var bed) || bed == null) return "BedLocked";
             if (bed.IsPlanted) return "BedOccupied";
             if (!content.CanPlant(owner, recipe) || recipe.orchard != OrchardBeds.Contains(id) || !recipe.output) return "RecipeLocked";
-            if (!Finite(content.baseDurationSeconds) || content.baseDurationSeconds <= 0 || !Finite(content.durationPerCropLevelSeconds) || content.durationPerCropLevelSeconds < 0 || !Finite(content.baseYield) || content.baseYield <= 0 || content.harvestXp <= 0) return "InvalidRecipeTuning";
+            if (!Finite(content.baseDurationSeconds) || content.baseDurationSeconds <= 0 || !Finite(content.durationMultiplierPerCropLevel) || content.durationMultiplierPerCropLevel < 1 || !Finite(content.baseYield) || content.baseYield <= 0 || content.harvestXp <= 0) return "InvalidRecipeTuning";
+            var duration = content.GrowthDuration(recipe, state.TwinsLevel);
+            if (!Finite(duration) || duration <= 0) return "InvalidRecipeTuning";
             if (!recipe.paidInput || !recipe.orchard && recipe.paidInput.name != SeedResourceName(recipe.seedId)) return "MissingPaidInput";
             owner.Resources.TryGetValue(recipe.paidInput.name, out var input);
             result.ResourceDeltas.TryGetValue(recipe.paidInput.name, out var staged);
@@ -93,7 +95,7 @@ namespace TimelessEchoes.Farming
             bed.PlantSequence = sequence;
             bed.BatchId = "fields:" + operationId + ":" + id;
             bed.SelectedRecipeId = bed.RecipeId = recipe.id;
-            bed.DurationSeconds = content.GrowthDuration(recipe, state.TwinsLevel);
+            bed.DurationSeconds = duration;
             bed.EstablishedTree = regrowingTree;
             bed.FrozenYield = content.baseYield * FarmContent.YieldMultiplier(state.TwinsLevel);
             bed.HarvestXp = content.harvestXp;
