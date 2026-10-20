@@ -813,7 +813,7 @@
 .gameplay.eov-forge .forge-history-section .eov-disclosure-content {padding:0;}
 .gameplay.eov-forge .forge-history-section .forge-metric-value {width:auto;max-width:115px;flex-shrink:1;margin-left:var(--space-control);}
 .gameplay.eov-forge .forge-history-subtitle {margin-top:var(--space-control);color:var(--muted);}
-.gameplay.eov-forge .eov-forge-conversions {border-top-width:.5px;border-top-color:var(--line);padding-top:var(--space-section);}
+.gameplay.eov-forge .eov-forge-conversions {border-top-width:0;padding-top:0;}
 .gameplay.eov-forge .eov-forge-conversion {width:100%;height:auto;min-height:40px;margin-bottom:var(--space-control);padding:0;align-items:center;}
 .gameplay.eov-forge .eov-forge-conversion > .eov-forge-row {width:180px;}
 .gameplay.eov-forge .eov-forge-conversion-control {flex-direction:row;align-items:center;flex-wrap:wrap;}
