@@ -271,8 +271,9 @@ namespace TimelessEchoes.UI.Toolkit
         {
             selectedRecipe = id; var snapshot = source.CapturePresentation(); var recipe = snapshot.Recipes.FirstOrDefault(r => r.Id == id);
             var target = snapshot.Beds.FirstOrDefault(b => b.Id == selectedBed);
-            if (recipe != null && (target == null || !target.Unlocked || target.Planted || target.Orchard != recipe.Orchard))
-                selectedBed = snapshot.Beds.FirstOrDefault(b => b.Unlocked && !b.Planted && b.Orchard == recipe.Orchard)?.Id;
+            if (recipe != null && (target == null || target.Orchard != recipe.Orchard))
+                selectedBed = snapshot.Beds.FirstOrDefault(b => b.Unlocked && !b.Planted && b.Orchard == recipe.Orchard)?.Id
+                    ?? snapshot.Beds.FirstOrDefault(b => b.Orchard == recipe.Orchard)?.Id;
             Refresh();
         }
         private void Execute(Func<bool> command)
