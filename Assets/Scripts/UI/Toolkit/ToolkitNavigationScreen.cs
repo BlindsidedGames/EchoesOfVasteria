@@ -535,15 +535,6 @@ namespace TimelessEchoes.UI.Toolkit
                     if (entry != null) bar.Add(rows[entry]);
                 }
             }
-            else
-            {
-                var right = root.Q("navigation-close");
-                foreach (var id in new[] { "stats", "options" })
-                {
-                    var entry = System.Array.Find(definition.entries, e => e.id == id);
-                    if (entry != null) right.Insert(Mathf.Min(id == "stats" ? 0 : 1, right.childCount), rows[entry]);
-                }
-            }
             moreButton.style.display = DisplayStyle.None;
         }
 

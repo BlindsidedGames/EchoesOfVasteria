@@ -526,6 +526,11 @@ namespace TimelessEchoes.Hero
         public void SetTask(TimelessEchoes.Tasks.ITask task)
         {
             if (IsInNpcConversation && task != null && task != CurrentTask) return;
+            // Retargeting must leave the previous work pose before movement resumes.
+            // In particular, Fishing only exits its held cast through interruption
+            // or completion; releasing a claim alone leaves a walking actor casted.
+            if (CurrentTask != null && CurrentTask != task && !CurrentTask.IsComplete())
+                CurrentTask.OnInterrupt(this);
             if (CurrentTask is TimelessEchoes.Tasks.BaseTask oldBase)
                 oldBase.ReleaseClaim(this);
 

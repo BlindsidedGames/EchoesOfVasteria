@@ -66,7 +66,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (!panel)
             {
                 panel = ToolkitPanel.CreateSettings(runtimeTheme, textSettings);
-                panel.sortingOrder = 90;
+                panel.sortingOrder = 180;
             }
             var document = GetComponent<UIDocument>();
             document.panelSettings = panel;
@@ -128,9 +128,9 @@ namespace TimelessEchoes.UI.Toolkit
                 ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height),
                     Screen.safeArea, UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);
             var index = Visible.IndexOf(this);
-            // Queue simultaneous portrait conversations instead of stacking their
-            // cards and action buttons on top of one another.
-            view.Root.style.display = !portraitMode || index == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            // A single active conversation owns the action in every orientation.
+            // Stacked desktop cards can cover the earlier Meet/Next button.
+            view.Root.style.display = index == 0 ? DisplayStyle.Flex : DisplayStyle.None;
             if (area == lastArea && index == lastIndex && lastPortrait == portraitMode) return;
             lastArea = area; lastIndex = index; lastPortrait = portraitMode;
             view.LayoutPortrait(portraitMode);
