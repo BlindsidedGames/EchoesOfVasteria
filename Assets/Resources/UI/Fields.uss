@@ -75,9 +75,9 @@
 .gameplay.fields-ui .fields-seed-grid {flex-wrap:wrap;align-content:flex-start;}
 .gameplay.fields-ui .fields-seed-card {position:relative;flex-shrink:0;min-width:0;height:41px;min-height:41px;margin-bottom:4px;padding:2px;flex-direction:column;align-items:center;justify-content:space-between;}
 .gameplay.fields-ui .fields-seed-content {flex-grow:1;min-height:0;width:100%;justify-content:flex-start;align-items:center;}
-.gameplay.fields-ui .fields-seed-card .icon {width:24px;height:24px;margin:0 4px 0 0;flex-shrink:0;}
-.gameplay.fields-ui .fields-seed-count {font-size:12px;-unity-text-align:middle-left;flex-shrink:0;}
-.gameplay.fields-ui .fields-seed-caption {width:100%;font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-unity-text-align:middle-center;flex-shrink:0;}
+.gameplay.fields-ui .fields-seed-card .icon {width:26px;height:26px;margin:0 3px 0 0;flex-shrink:0;}
+.gameplay.fields-ui .fields-seed-count {font-size:10.5px;-unity-text-align:middle-left;flex-shrink:0;}
+.gameplay.fields-ui .fields-seed-caption {width:100%;font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-unity-text-align:middle-left;flex-shrink:0;}
 .gameplay.fields-ui .fields-seed-card.primary {background-color:var(--selected);border-color:var(--accent);}
 .gameplay.fields-ui .fields-undiscovered-count {font-size:7px;margin-top:4px;}
 .gameplay.fields-ui .fields-feedback {font-size:8px;white-space:normal;min-height:12px;margin-bottom:4px;}
@@ -94,6 +94,6 @@
 .gameplay.portrait.fields-ui .fields-repeat-label {font-size:10px;}
 .gameplay.portrait.fields-ui .fields-water-label {font-size:10px;}
 .gameplay.portrait.fields-ui .fields-seed-card {height:51px;min-height:51px;padding:3px;}
-.gameplay.portrait.fields-ui .fields-seed-card .icon {width:30px;height:30px;}
+.gameplay.portrait.fields-ui .fields-seed-card .icon {width:32px;height:32px;}
 .gameplay.portrait.fields-ui .fields-seed-caption {font-size:8px;}
-.gameplay.portrait.fields-ui .fields-seed-count {font-size:14px;}
+.gameplay.portrait.fields-ui .fields-seed-count {font-size:12px;}
