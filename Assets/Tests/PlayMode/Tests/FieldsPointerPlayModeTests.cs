@@ -39,10 +39,10 @@ namespace Tests.PlayMode
                 Assert.True(screen.Show());
                 var ui = screenObject.GetComponent<UIDocument>().rootVisualElement;
                 yield return null; yield return null;
-                var buildPlot = ui.Q<Button>("fields-action-" + FarmCommands.WestBedId);
+                var buildPlot = ui.Q<Button>("fields-build-selected");
                 Assert.True(buildPlot.enabledInHierarchy);
                 FieldsClick(buildPlot);
-                Assert.AreEqual(1, service.State.GardenCapacity, "The plot's build action must purchase the correct plot.");
+                Assert.AreEqual(1, service.State.GardenCapacity, "The selected plot construction action must purchase the correct plot.");
                 Assert.AreEqual(0, oracle.saveData.Resources["Log"].Amount);
                 Assert.AreEqual(0, oracle.saveData.Resources["Stick"].Amount);
                 FieldsClick(buildPlot);
@@ -86,20 +86,17 @@ namespace Tests.PlayMode
                 var viewport = ui.Q<ScrollView>("fields-workspace");
                 Assert.LessOrEqual(viewport.verticalScroller.highValue, .5f, "The desktop Fields grid and controls fit without an unnecessary outer scrollbar.");
                 Assert.IsNull(ui.Q<Foldout>("fields-construction-foldout"), "Construction lives on its plot, rather than in a separate quest list.");
-                foreach (var slot in ui.Query<VisualElement>(className: "fields-plot").ToList())
-                {
-                    var art = slot.Q("bed-art"); var action = slot.Q<Button>(className: "fields-plot-action");
-                    if (art.resolvedStyle.display == DisplayStyle.None || action.resolvedStyle.display == DisplayStyle.None) continue;
-                    Assert.GreaterOrEqual(action.worldBound.yMin, art.worldBound.yMax + 1, "Plot actions must not overlap the sprites.");
-                }
+                Assert.AreEqual(9, ui.Query<VisualElement>(className: "fields-selector-tile").ToList().Count,
+                    "Six crop selectors and three grouped orchard selectors share one 3x3 grid.");
+                Assert.IsNull(ui.Q<Button>(className: "fields-plot-action"), "Economic actions belong only to the selected plot panel.");
                 var evidence = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "fields-grid-review");
                 System.IO.Directory.CreateDirectory(evidence);
                 ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-growing-watered.png"));
                 yield return null; yield return null;
                 FarmCommands.TickFields(service.State, content.baseDurationSeconds);
                 yield return new WaitForSecondsRealtime(.3f);
-                Assert.True(ui.Q<Button>("farm-harvest-ready").enabledInHierarchy);
-                FieldsClick(ui.Q<Button>("farm-harvest-ready"));
+                Assert.True(ui.Q<Button>("fields-plant-selected").enabledInHierarchy);
+                FieldsClick(ui.Q<Button>("fields-plant-selected"));
                 Assert.False(service.State.Beds[FarmCommands.WestBedId].IsPlanted);
                 yield return null;
                 Assert.True(ui.Q<Button>("fields-plant-selected").enabledInHierarchy, ui.Q<Label>("fields-selected-status").text);
@@ -165,7 +162,7 @@ namespace Tests.PlayMode
                 yield return null; yield return null;
                 ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-and-orchard-growing.png"));
                 yield return null; yield return null;
-                FarmCommands.TickFields(service.State, content.baseDurationSeconds);
+                FarmCommands.TickFields(service.State, service.State.Beds[orchardId].DurationSeconds);
                 yield return new WaitForSecondsRealtime(.3f);
                 Assert.That(ui.Q<Button>("fields-select-" + orchardId).Q<Label>("bed-status").text, Does.Contain("Ready"));
                 ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-and-orchard-ready.png"));
@@ -190,12 +187,6 @@ namespace Tests.PlayMode
                 Assert.AreEqual(17, ui.Query<Button>(className: "fields-seed-card").ToList().Count(b => b.resolvedStyle.display != DisplayStyle.None));
                 Assert.LessOrEqual(ui.Q<ScrollView>("fields-workspace").verticalScroller.highValue, .5f, "The full twelve-plot overview and 17 seed choices must fit the desktop viewport.");
                 Assert.LessOrEqual(ui.Q<ScrollView>("fields-seeds").verticalScroller.highValue, .5f, "Both seed rows must remain visible.");
-                foreach (var slot in ui.Query<VisualElement>(className: "fields-plot").ToList())
-                {
-                    var art = slot.Q("bed-art"); var action = slot.Q<Button>(className: "fields-plot-action");
-                    if (action.resolvedStyle.display != DisplayStyle.None)
-                        Assert.GreaterOrEqual(action.worldBound.yMin, art.worldBound.yMax + 1);
-                }
                 ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-whole-farm.png"));
                 yield return null; yield return null;
                 FieldsClick(ui.Q<Button>("fields-select-" + orchardId));
@@ -205,10 +196,22 @@ namespace Tests.PlayMode
                 yield return null; yield return null;
                 screen.CompanionWidth = 400;
                 yield return null; yield return null;
-                Assert.GreaterOrEqual(ui.Q("fields-orchard-grid").worldBound.y, ui.Q("fields-bed-grid").worldBound.yMax - 1, "Narrow layouts stack both grids without overlap.");
-                Assert.Greater(ui.Q("fields-orchard-grid").worldBound.height, 100);
+                Assert.AreEqual(9, ui.Query<VisualElement>(className: "fields-selector-tile").ToList().Count);
+                UnityEditor.PlayModeWindow.SetCustomRenderingResolution(960, 2078, "Portrait Fields selector");
+                yield return null; yield return null; yield return null;
+                screen.CompanionWidth = 0;
+                FieldsClick(ui.Q<Button>("fields-select-" + FarmCommands.WestBedId));
+                yield return null;
+                Assert.True(ui.Q<VisualElement>("fields-plot-" + FarmCommands.WestBedId).ClassListContains("selected"));
+                Assert.AreEqual(9, ui.Query<VisualElement>(className: "fields-selector-tile").ToList().Count);
+                ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-selector-portrait.png"));
+                yield return null;
+                UnityEditor.PlayModeWindow.SetCustomRenderingResolution(1920, 1080, "Desktop Fields selector");
+                yield return null; yield return null;
                 screen.CompanionWidth = 0;
                 yield return null; yield return null;
+                FarmCommands.TickFields(service.State, service.State.Beds.Values.Max(b => b.DurationSeconds));
+                yield return new WaitForSecondsRealtime(.3f);
                 FieldsClick(ui.Q<Button>("farm-harvest-ready"));
                 Assert.True(service.State.Beds[orchardId].IsPlanted);
                 Assert.True(service.State.Beds[orchardId].EstablishedTree);

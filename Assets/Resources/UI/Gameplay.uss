@@ -1034,84 +1034,6 @@
 .quests-embedded-inventory .eov-resource-slot.resource-selected,
 .inventory-standalone .eov-resource-slot.resource-selected { border-color: var(--accent); border-bottom-width: .5px; }
 
-/* Fields: whole-farm overview with actions below the plot art. */
-.gameplay.fields-ui { padding:8px; }
-.gameplay.fields-ui .fields-header { align-items:center;min-height:22px;padding-bottom:5px;margin-bottom:5px;border-bottom-width:.5px;border-bottom-color:var(--line);flex-shrink:0; }
-.gameplay.fields-ui .fields-header .quests-heading { font-size:12px;margin-bottom:0; }
-.gameplay.fields-ui .fields-xp { align-items:center;width:190px;flex-shrink:0; }
-.gameplay.fields-ui .fields-xp Label { font-size:7px;margin-right:8px; }
-.gameplay.fields-ui .fields-xp .track { height:2px;flex-grow:1; }
-.gameplay.fields-ui #fields-workspace-frame { flex-grow:1;min-height:0;padding:0; }
-.gameplay.fields-ui #fields-workspace { flex-grow:1;min-height:0; }
-.gameplay.fields-ui .fields-board { align-items:flex-start;flex-shrink:0; }
-.gameplay.fields-ui .fields-crops { flex-grow:2;flex-basis:0;min-width:0;margin-right:10px; }
-.gameplay.fields-ui .fields-orchard { flex-grow:1;flex-basis:0;min-width:0; }
-.gameplay.fields-ui .heading { font-size:9px;margin-bottom:5px; }
-.gameplay.fields-ui .fields-bed-grid { flex-wrap:wrap;align-content:flex-start; }
-.gameplay.fields-ui .fields-plot { width:31%;flex-grow:1;flex-shrink:0;flex-basis:30%;height:84px;min-height:84px;margin-right:3px;margin-bottom:4px;padding:3px;border-width:.5px;border-color:var(--line);background-color:var(--control); }
-.gameplay.fields-ui .fields-plot-select { flex-direction:column;align-items:stretch;justify-content:flex-start;padding:0;margin:0;min-width:0;min-height:0;background-color:transparent;border-width:0;flex-grow:1; }
-.gameplay.fields-ui .fields-plot-select:hover { background-color:transparent; }
-.gameplay.fields-ui .fields-plot-select:focus { border-width:0;background-color:transparent; }
-.gameplay.fields-ui.keyboard .fields-plot-select:focus { border-width:.5px;border-color:var(--accent); }
-.gameplay.fields-ui .fields-plot-title { height:11px;font-size:8px;-unity-font-style:bold;-unity-text-align:middle-left; }
-.gameplay.fields-ui .fields-plot-body { height:34px;min-height:34px;align-items:center;margin-top:2px; }
-.gameplay.fields-ui .fields-plot-art { position:relative;width:24px;height:32px;min-width:24px;flex-shrink:0;margin-right:7px; }
-.gameplay.fields-ui .fields-plot-info { flex-grow:1;flex-basis:0;min-width:0; }
-.gameplay.fields-ui .fields-plot-status { white-space:normal;font-size:7px;-unity-font-style:normal;-unity-text-align:middle-left; }
-.gameplay.fields-ui .fields-plot-info .track { height:2px;margin-top:3px;width:100%; }
-.gameplay.fields-ui .fields-plot-action { min-height:18px;height:18px;padding:1px 3px;margin:5px 0 0;font-size:7px;flex-shrink:0; }
-.gameplay.fields-ui .fields-plot.selected,.gameplay.fields-ui .fields-orchard-slot.selected { border-color:var(--accent);background-color:var(--selected); }
-.gameplay.fields-ui .fields-locked { background-color:var(--field); }
-.gameplay.fields-ui .fields-locked .fields-plot-art { opacity:.3; }
-.gameplay.fields-ui .fields-locked .fields-plot-status { color:var(--muted); }
-.gameplay.fields-ui .fields-ready .fields-plot-status { color:#a5dc99; }
-.gameplay.fields-ui .fields-unbuilt .fields-plot-select { flex-grow:0;height:27px; }
-.gameplay.fields-ui .fields-unbuilt .fields-plot-body { height:11px;min-height:11px; }
-.gameplay.fields-ui .fields-unbuilt .fields-plot-art { display:none; }
-.gameplay.fields-ui .fields-unbuilt .fields-costs { flex-grow:1;align-items:center; }
-.gameplay.fields-ui .fields-costs { flex-direction:row;flex-wrap:wrap;min-height:12px;flex-shrink:0; }
-.gameplay.fields-ui .fields-cost { align-items:center;margin-right:4px;min-width:0; }
-.gameplay.fields-ui .fields-cost .icon { margin-right:3px;flex-shrink:0; }
-.gameplay.fields-ui .fields-cost-count { font-size:6.5px;color:#a5dc99;white-space:nowrap; }
-.gameplay.fields-ui .fields-cost-count.fields-shortfall { color:#d99084; }
-.gameplay.fields-ui .fields-orchard-pair { padding:3px;border-width:.5px;border-color:var(--line);background-color:var(--control);margin-bottom:4px;min-height:52px; }
-.gameplay.fields-ui .fields-pair-title { font-size:7.5px;-unity-font-style:bold;margin-bottom:2px; }
-.gameplay.fields-ui .fields-pair-slots { flex-shrink:0; }
-.gameplay.fields-ui .fields-orchard-slot { width:50%;padding:1px 3px;border-width:.5px;border-color:transparent; }
-.gameplay.fields-ui .fields-orchard-slot .fields-plot-title { display:none; }
-.gameplay.fields-ui .fields-orchard-slot .fields-plot-body { height:32px;min-height:32px;margin-top:0; }
-.gameplay.fields-ui .fields-orchard-slot .fields-plot-status { font-size:6px; }
-.gameplay.fields-ui .fields-orchard-slot .fields-plot-art { margin-right:3px; }
-.gameplay.fields-ui .fields-pair-status { font-size:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px; }
-.gameplay.fields-ui .fields-pair-build { min-height:17px;height:17px;padding:0 3px;font-size:7px;margin-top:2px; }
-.gameplay.fields-ui .fields-pair-locked .fields-pair-slots { display:none; }
-.gameplay.fields-ui .fields-drawer { padding:6px;margin-top:5px;border-width:.5px;border-color:var(--line);background-color:var(--control);flex-shrink:0;min-height:100px; }
-.gameplay.fields-ui .fields-selected { width:31%;min-width:0;margin-right:12px;flex-shrink:0; }
-.gameplay.fields-ui .fields-selection { font-size:9px;-unity-font-style:bold;margin-bottom:5px;white-space:normal; }
-.gameplay.fields-ui .fields-selection-detail { font-size:7px;white-space:normal;margin-bottom:6px; }
-.gameplay.fields-ui .fields-selected > .button { min-height:20px;font-size:8px;margin-top:3px;padding:2px 4px; }
-.gameplay.fields-ui .fields-actions { flex-wrap:wrap; }
-.gameplay.fields-ui .fields-actions .button { min-height:18px;font-size:7px;padding:1px 3px;margin-right:3px;margin-top:3px; }
-.gameplay.fields-ui .fields-seeds-column { flex-grow:1;flex-basis:0;min-width:0; }
-.gameplay.fields-ui #fields-seeds-frame { padding:0;max-height:82px;min-height:38px; }
-.gameplay.fields-ui #fields-seeds { max-height:82px;min-height:38px; }
-.gameplay.fields-ui .fields-seed-grid { flex-wrap:wrap;align-content:flex-start; }
-.gameplay.fields-ui .fields-seed-card { position:relative;min-width:0;min-height:36px;height:36px;flex-shrink:0;margin:0 2px 2px 0;padding:3px 2px 2px;flex-direction:column;align-items:flex-start;border-width:.5px;border-color:var(--line); }
-.gameplay.fields-ui .fields-seed-card .icon { margin:0 0 1px 2px; }
-.gameplay.fields-ui .fields-seed-caption { width:100%;height:14px;font-size:5.5px;-unity-text-align:middle-center;white-space:normal; }
-.gameplay.fields-ui .fields-seed-count { position:absolute;right:2px;top:3px;font-size:6px; }
-.gameplay.fields-ui .fields-seed-card.primary { background-color:var(--selected);border-color:var(--accent); }
-.gameplay.fields-ui .fields-seed-card.primary Label { color:var(--text); }
-.gameplay.fields-ui .fields-undiscovered Label { color:var(--muted); }
-.gameplay.fields-ui .fields-undiscovered-count { font-size:6px;margin-top:3px; }
-.gameplay.fields-ui.fields-narrow .fields-board,.gameplay.fields-ui.fields-narrow .fields-drawer { flex-direction:column; }
-.gameplay.fields-ui.fields-narrow .fields-crops,.gameplay.fields-ui.fields-narrow .fields-orchard { flex-grow:0;flex-basis:auto;width:100%;margin-right:0; }
-.gameplay.fields-ui.fields-narrow .fields-orchard { margin-top:6px; }
-.gameplay.fields-ui.fields-narrow .fields-selected { width:100%;margin-right:0;margin-bottom:8px; }
-.gameplay.fields-ui.fields-narrow .fields-xp { width:100px; }
-.gameplay.fields-ui.fields-narrow .fields-header .quests-heading { font-size:9px;white-space:normal;flex-shrink:1; }
-.gameplay.fields-ui.fields-narrow #fields-seeds-frame,.gameplay.fields-ui.fields-narrow #fields-seeds { max-height:160px; }
-
 .gameplay .journal-selector > .journal-art {width:100%;}
 .gameplay .journal-selector.map-locked {opacity:.65;}
 .gameplay .journal-tutorial {padding:4px;margin-bottom:4px;flex-shrink:0;border-bottom-width:.5px;border-bottom-color:var(--line);}
@@ -1235,50 +1157,6 @@
 .gameplay .forging-statistics-name {flex-grow:1;flex-shrink:1;white-space:normal;}
 .gameplay .forging-statistics-value {max-width:60%;margin-left:12px;white-space:normal;-unity-text-align:middle-right;}
 
-/* Fields: selected plot and seeds remain together in both orientations. */
-.gameplay.fields-ui .fields-feedback {font-size:8px;color:#a5dc99;min-height:14px;flex-shrink:0;}
-.gameplay.fields-ui .fields-preview {width:100%;flex-basis:auto;height:54px;min-height:54px;margin:0 0 5px 0;border-width:0;background-color:transparent;padding:0;}
-.gameplay.fields-ui .fields-preview .fields-plot-title {display:none;}
-.gameplay.fields-ui .fields-preview .fields-plot-body {height:48px;min-height:48px;}
-.gameplay.fields-ui .fields-preview .fields-plot-art {scale:1.5 1.5;transform-origin:left center;margin-right:23px;}
-.gameplay.fields-ui .fields-selection {margin-bottom:3px;}
-.gameplay.fields-ui .fields-selected {width:32%;}
-.gameplay.fields-ui .fields-seeds-column {flex-shrink:0;flex-basis:auto;}
-.gameplay.fields-ui #fields-seeds-frame {height:auto;max-height:none;min-height:0;flex-shrink:0;flex-grow:0;}
-.gameplay.fields-ui #fields-seeds {height:auto;max-height:none;min-height:0;flex-shrink:0;flex-grow:0;}
-.gameplay.fields-ui #fields-seeds .unity-scroll-view__content-viewport {flex-grow:0;flex-shrink:0;overflow:visible;}
-.gameplay.fields-ui .fields-seed-grid {flex-grow:0;flex-shrink:0;}
-.gameplay.fields-ui .fields-seed-card {height:40px;min-height:40px;justify-content:space-between;}
-.gameplay.fields-ui .fields-seed-caption {height:17px;flex-shrink:0;}
-.gameplay.fields-ui .fields-future {height:53px;min-height:53px;background-color:transparent;}
-.gameplay.fields-ui .fields-future .fields-costs {display:none;}
-.gameplay.fields-ui .fields-future .fields-plot-select {height:25px;}
-.gameplay.fields-ui .fields-future .fields-plot-action {margin-top:2px;}
-.gameplay.fields-ui .fields-actions {flex-wrap:nowrap;}
-.gameplay.fields-ui .fields-actions .button {flex-grow:1;flex-basis:0;}
-.gameplay.fields-ui .fields-preview {height:44px;min-height:44px;}
-.gameplay.fields-ui .fields-preview .fields-plot-title {display:flex;}
-.gameplay.fields-ui .fields-preview .fields-plot-body {height:32px;min-height:32px;}
-.gameplay.fields-ui .fields-preview .fields-plot-art {scale:1 1; margin-right:8px;}
-.gameplay.fields-ui .fields-selection {display:none;}
-.gameplay.fields-ui .fields-future {height:60px;min-height:60px;}
-.gameplay.fields-ui #fields-seeds .unity-scroll-view__content-viewport {flex-grow:1;align-self:stretch;}
-.gameplay.fields-ui #fields-seeds .unity-scroll-view__content-container,
-.gameplay.fields-ui .fields-seed-grid {width:100%;}
-.gameplay.fields-ui .fields-orchard-pair {min-height:44px;}
-.gameplay.fields-ui .fields-future {height:35px;min-height:35px;}
-.gameplay.fields-ui .fields-plot {height:74px;min-height:74px;}
-.gameplay.fields-ui .fields-seed-card {height:34px;min-height:34px;padding-top:1px;padding-bottom:1px;}
-
-.gameplay.fields-ui .fields-preview {height:44px;min-height:44px;}
-.gameplay.fields-ui .fields-future {height:35px;min-height:35px;}
-.gameplay.fields-ui .fields-seed-caption {white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-
-.gameplay.fields-ui .fields-header {height:32px;min-height:32px;flex-shrink:0;align-items:center;justify-content:flex-start;margin-bottom:2px;padding-bottom:0;border-bottom-width:0;}
-.gameplay.fields-ui .fields-portraits {width:46px;flex-shrink:0;margin-left:-8px;margin-right:0;align-items:center;justify-content:center;}
-.gameplay.fields-ui .fields-header-progress {flex-grow:1;}
-.gameplay.fields-ui .fields-header-progress .track {height:3px;margin-top:4px;}
-
 /* The recipe sets its natural width; the remaining width belongs to the controls. */
 .gameplay.eov-forge .eov-forge-conversion > .forge-conversion-body {height:auto;min-height:48px;align-items:center;min-width:0;flex-shrink:0;}
 .gameplay.eov-forge .forge-conversion-recipe-column {flex-grow:0;flex-shrink:1;min-width:0;}
@@ -1291,19 +1169,3 @@
 
 .gameplay.eov-forge .forge-conversion-result {align-items:center;flex-shrink:0;}
 .gameplay.eov-forge .forge-conversion-result .eov-text {-unity-text-align:middle-center;}
-
-.gameplay.fields-ui .fields-plot-heading {align-items:center;justify-content:space-between;flex-shrink:0;}
-.gameplay.fields-ui .fields-level-requirement {font-size:6.5px;color:var(--muted);white-space:nowrap;margin-left:4px;}
-.gameplay.fields-ui .fields-level-requirement.fields-shortfall {color:#d99084;}
-.gameplay.fields-ui .fields-unbuilt .fields-plot-select {height:auto;min-height:11px;}
-.gameplay.fields-ui .fields-unbuilt .fields-plot-body {display:none;}
-.gameplay.fields-ui .fields-orchard-slot .fields-level-requirement {display:none;}
-
-.gameplay.fields-ui .fields-portraits > .icon {margin:0;}
-.gameplay.fields-ui .fields-portraits > .fields-portrait-leading {margin-right:-8px;}
-
-.gameplay.fields-ui .fields-water-content {align-items:center;justify-content:center;}
-.gameplay.fields-ui .fields-water-icon {width:10px;height:10px;margin-right:3px;flex-shrink:0;}
-.gameplay.fields-ui .fields-water-label {font-size:7px;color:var(--text);}
-
-.gameplay.fields-ui .button:disabled .fields-water-label {color:var(--muted);}

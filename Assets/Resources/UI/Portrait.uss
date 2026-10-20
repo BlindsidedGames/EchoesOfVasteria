@@ -72,7 +72,6 @@
 .gameplay.portrait .eov-buffs-header {flex-direction:column;align-items:stretch;}
 .gameplay.portrait .eov-buffs-instructions {margin:6px 0 0 0;}
 .gameplay.portrait .eov-pinned-text {white-space:normal;}
-.gameplay.portrait.fields-ui .fields-cost {flex-wrap:wrap;}
 .gameplay.portrait .eov-stat-tab {flex-grow:1;flex-basis:auto;}
 .gameplay.portrait.quests-reviewed .quests-columns {flex-direction:column;}
 .gameplay.portrait.quests-reviewed .quests-content {min-height:100px;}
@@ -100,9 +99,6 @@
 .gameplay.portrait.eov-forge .eov-forge-columns {height:auto;min-height:0;}
 .gameplay.portrait.eov-forge .eov-forge-header {flex-shrink:0;}
 .gameplay.portrait.eov-forge .eov-forge-conversions {flex-shrink:0;margin-top:12px;}
-.gameplay.portrait.fields-ui .fields-plot {width:48%;flex-basis:48%;height:auto;min-height:96px;}
-.gameplay.portrait.fields-ui .fields-bed-grid {align-items:stretch;}
-.gameplay.portrait.fields-ui .fields-plot > .button {flex-shrink:0;}
 .gameplay.portrait .journal-run {height:auto;min-height:32px;flex-wrap:wrap;}
 .gameplay.portrait .journal-run Label {margin-right:4px;}
 .gameplay.portrait .eov-forge-work > .eov-forge-columns {align-items:stretch;}
@@ -140,9 +136,7 @@
 .gameplay.portrait .portrait-pages-content {flex-grow:1;min-height:0;}
 .gameplay.portrait .portrait-page {flex-grow:1;min-height:0;}
 .gameplay.portrait.eov-forge .portrait-pages-content,
-.gameplay.portrait.eov-forge .portrait-page,
-.gameplay.portrait.fields-ui .portrait-pages-content,
-.gameplay.portrait.fields-ui .portrait-page {flex-grow:0;flex-shrink:0;}
+.gameplay.portrait.eov-forge .portrait-page {flex-grow:0;flex-shrink:0;}
 .gameplay.portrait.eov-skills .eov-skills-header {width:100%;flex-shrink:0;max-height:none;}
 .gameplay.portrait.eov-skills .eov-skills-right {min-height:0;width:100%;}
 .gameplay.portrait.eov-forge .eov-forge-selections {width:100%;margin:0;flex-direction:row;align-items:flex-start;}
@@ -176,15 +170,6 @@
 .gameplay.portrait.library-reader .library-topic {min-height:36px;margin-bottom:2px;}
 .gameplay.portrait.library-reader .library-article-title {font-size:16px;}
 .gameplay.portrait.library-reader .library-prose {font-size:11px;}
-.gameplay.portrait.fields-ui .fields-crops, .gameplay.portrait.fields-ui .fields-orchard {width:100%;margin:0;}
-.gameplay.portrait.fields-ui .fields-drawer {margin:0;padding:0;border-width:0;background-color:transparent;}
-.gameplay.portrait.fields-ui .fields-selected {margin-bottom:12px;}
-.gameplay.portrait.fields-ui .fields-selected > .button {min-height:36px;font-size:12px;}
-.gameplay.portrait.fields-ui .fields-actions > .button {min-height:32px;font-size:10px;}
-.gameplay.portrait.fields-ui .fields-seed-card {height:60px;min-height:60px;}
-.gameplay.portrait.fields-ui .fields-seed-caption {font-size:9px;height:22px;}
-.gameplay.portrait.fields-ui .fields-seed-count {font-size:9px;}
-.gameplay.portrait.fields-ui #fields-seeds, .gameplay.portrait.fields-ui #fields-seeds-frame {max-height:none;}
 .gameplay.portrait .eov-stat-tabs .eov-stat-tab {flex-basis:30%;min-height:32px;font-size:10px;}
 .gameplay .portrait-navigation-title {display:none;}
 .gameplay.portrait .portrait-navigation-title {display:flex;font-size:18px;margin-bottom:16px;}
@@ -219,8 +204,6 @@
 .gameplay.portrait .portrait-graph-pickers > .portrait-picker {flex-grow:1;flex-basis:0;margin-right:4px;}
 .gameplay.portrait .graph-controls > .graph-choice, .gameplay.portrait .graph-map-filters {display:none;}
 .gameplay.portrait .graph-units {margin-top:0;}
-.gameplay.portrait.fields-ui .fields-locked .fields-plot-body {height:auto;min-height:0;}
-.gameplay.portrait.fields-ui .fields-locked {min-height:78px;}
 .gameplay.portrait.eov-navigation .portrait-more.active {color:var(--text);border-top-width:2px;border-top-color:var(--accent);}
 .gameplay.portrait .portrait-navigation-title {flex-shrink:0;}
 .gameplay.portrait #portrait-navigation-list, .gameplay.portrait #portrait-more-list {flex-grow:1;min-height:0;width:100%;}
@@ -366,35 +349,6 @@
 .gameplay.portrait .portrait-pinned-text { flex-grow:1; flex-shrink:1; min-width:0; margin:0; padding:0; font-size:11px; white-space:normal; color:var(--text); }
 .gameplay.portrait .portrait-pinned-page { flex-shrink:0; margin-left:10px; font-size:10px; color:var(--muted); }
 
-/* Fields uses one continuous page per area, including the selected plot. */
-.gameplay.portrait.fields-ui .fields-board {flex-shrink:0;}
-.gameplay.portrait.fields-ui .fields-drawer {flex-direction:column;min-height:0;margin-top:12px;flex-shrink:0;}
-.gameplay.portrait.fields-ui .fields-selected {width:100%;margin:0 0 12px 0;}
-.gameplay.portrait.fields-ui .fields-preview {height:58px;min-height:58px;}
-.gameplay.portrait.fields-ui .fields-preview .fields-plot-status {font-size:11px;}
-.gameplay.portrait.fields-ui .fields-selection {font-size:12px;}
-.gameplay.portrait.fields-ui .fields-selection-detail {font-size:10px;}
-.gameplay.portrait.fields-ui .fields-seeds-column {width:100%;flex-grow:0;flex-shrink:0;flex-basis:auto;}
-.gameplay.portrait.fields-ui #fields-seeds-frame,
-.gameplay.portrait.fields-ui #fields-seeds {height:auto;min-height:0;max-height:none;flex-grow:0;flex-shrink:0;}
-.gameplay.portrait.fields-ui .fields-seed-card {height:60px;min-height:60px;flex-shrink:0;}
-.gameplay.portrait.fields-ui .fields-seed-caption {height:26px;font-size:9px;}
-.gameplay.portrait.fields-ui .fields-future {height:55px;min-height:55px;}
-.gameplay.portrait.fields-ui .fields-plot-action {min-height:30px;height:30px;font-size:10px;}
-.gameplay.portrait.fields-ui .fields-feedback {font-size:10px;min-height:16px;}
-.gameplay.portrait.fields-ui .fields-xp {width:110px;}
-.gameplay.portrait.fields-ui .fields-preview {height:58px;min-height:58px;}
-.gameplay.portrait.fields-ui .fields-preview .fields-plot-body {height:42px;min-height:42px;}
-.gameplay.portrait.fields-ui .fields-preview .fields-plot-art {scale:1.25 1.25;margin-right:16px;}
-.gameplay.portrait.fields-ui .fields-future {height:78px;min-height:78px;}
-.gameplay.portrait.fields-ui .fields-future {height:44px;min-height:44px;}
-.gameplay.portrait.fields-ui .fields-future .fields-plot-select {height:36px;}
-.gameplay.portrait.fields-ui .fields-plot {height:auto;min-height:96px;}
-.gameplay.portrait.fields-ui .fields-seed-card {height:60px;min-height:60px;padding-top:3px;padding-bottom:2px;}
-
-.gameplay.portrait.fields-ui .fields-preview {height:58px;min-height:58px;}
-.gameplay.portrait.fields-ui .fields-future {height:44px;min-height:44px;}
-
 /* Keep material cards in two columns even on narrow portrait screens. */
 .gameplay.portrait.eov-forge .eov-forge-conversions {width:100%;min-width:0;flex-direction:row;flex-wrap:wrap;align-items:stretch;}
 .gameplay.portrait.eov-forge .eov-forge-conversion {height:auto;min-height:0;max-height:none;padding:6px;}
@@ -406,8 +360,3 @@
 .gameplay.portrait.eov-forge .forge-conversion-body .eov-number-field {width:auto;min-width:0;max-width:none;height:30px;flex-grow:0;flex-shrink:0;margin:0 0 4px 0;}
 .gameplay.portrait.eov-forge .eov-forge-conversion-control {min-width:44px;min-height:64px;flex-basis:0;flex-grow:1;flex-direction:column;flex-wrap:nowrap;margin:0 0 0 4px;align-items:stretch;}
 .gameplay.portrait.eov-forge .eov-forge-conversion-control .eov-forge-button {width:auto;min-width:0;height:30px;min-height:30px;margin:0;}
-
-.gameplay.portrait.fields-ui .fields-level-requirement {font-size:9px;}
-
-.gameplay.portrait.fields-ui .fields-water-icon {width:14px;height:14px;margin-right:4px;}
-.gameplay.portrait.fields-ui .fields-water-label {font-size:10px;}
