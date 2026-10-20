@@ -39,3 +39,21 @@ Move world icons and bars with UI Toolkit render transforms and DynamicTransform
 A subsequent capture with six combat echoes measured 1.49 ms UI repaint, but the enemy/echo mix and procedural map differed. This is evidence of the remaining workload, not a controlled claim of total-FPS improvement from the transform change. Further performance work should measure world UI/rendering and Editor repaint costs, not reduce echo targeting frequency without evidence.
 
 Ignored evidence: combat-frame-profile.csv, combat-max-profile.csv, combat-after-profile.csv, combat-compare.json, combat-ui-transform-breakdown.json, world-alignment.txt and world-ui-1920.png/world-ui-1170.png under Artifacts/UIRegression. Very large outliers adjacent to CLI compilation/profile extraction are diagnostic overhead and are not attributed to combat spawns. Population comparisons are observational, not deterministic replays.
+
+## Controlled follow-up: appearance and world-bar work
+
+The earlier changes did not establish a sufficient real-world FPS improvement. This follow-up isolates two avoidable costs and keeps their claims bounded:
+
+- Translucent actors now retain eight sprites as data for the existing composite shader, without building eight unused SpriteRenderers. Opaque actors still lazily create their layered renderers; transparency changes, pooling and equipment updates preserve the original behavior. Appearance properties are reapplied when source frame, outfit/tool, tint, facing or sorting changes, rather than on every unchanged frame.
+- World health/duration bars no longer call Background again for an unchanged sprite. That helper temporarily resets the slice scale to 1; restoring its actual scale caused avoidable repaint invalidation every frame.
+
+Evidence:
+
+1. Original and current appearance components ran side by side in one process against the same source sprite/profile. Seven paired rounds of 20,000 unchanged-frame updates: original 72.50-73.13 ms, improved 28.76-31.67 ms (median 72.80 versus 28.87 ms; about 60% less CPU in this operation). This is not a total-game FPS percentage.
+2. A 20-pose opaque/translucent/mirrored render comparison was byte-for-byte identical (zero different pixels). SpriteRenderer count fell from 190 to 110; ten translucent actors account for the 80 removed renderers. The existing Play Mode character appearance test passed, including GPU transparency checks, pooling, equipment changes and facing. A separate skill-tool test selection returned zero tests and is not counted as passing.
+3. Same frozen scene, old/new world panel code alternated twice. World render-data rebuild time: 1.074/1.122 ms old, 0.653/0.678 ms new. Average full frame: 16.085/16.568 ms old, 15.325/16.019 ms new. This stationary-scene A/B isolates redundant redraws; it does not predict the exact gain during every moving fight.
+4. Final projection checks in landscape and portrait and their screenshots were inspected. All before/after experiments used a copied save root. Original progression and preferences are restored for normal Editor use.
+
+A candidate to remove the apparently empty UI camera was rejected: it changed output pixels slightly. The camera remains enabled. The moving-world appearance A/B also had changing combat populations, so it is retained as diagnostic data rather than a claimed whole-game speedup.
+
+Evidence in ignored Artifacts/UIRegression: appearance-before.png, appearance-after.png, appearance-ab-result.json, appearance-tests-after.json, actor-runtime-ab.txt, subsystem-cost.txt, world-ab.txt, world-alignment.txt. No gameplay timing, targeting, spawn limits or art were reduced.

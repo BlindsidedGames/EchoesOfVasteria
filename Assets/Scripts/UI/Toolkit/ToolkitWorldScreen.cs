@@ -89,7 +89,10 @@ namespace TimelessEchoes.UI.Toolkit
                     else if ((data.value == ToolkitWorldAnchor.Value.HealthFill && anchor.health) || (data.value == ToolkitWorldAnchor.Value.EchoFill && anchor.echo))
                     {
                         var sprite = data.value == ToolkitWorldAnchor.Value.EchoFill ? anchor.echo.LifetimeSprite : anchor.health.GetHealthBarSprite(data.sprite);
-                        if (node is Image image) image.sprite = sprite; else ToolkitTheme.Background(node, sprite);
+                        if (node is Image image) image.sprite = sprite;
+                        // Background also resets slice scale. Reapplying it every frame
+                        // dirties each unchanged bar before restoring its projected scale.
+                        else if (node.style.backgroundImage.value.sprite != sprite) ToolkitTheme.Background(node, sprite);
                     }
                     if (data.sliced && data.sliceReferencePixelsPerUnit > 0 && data.anchor.rect.height > 0)
                     {

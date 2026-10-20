@@ -62,7 +62,7 @@ namespace Tests.PlayMode
                     var expected = catalog.Find(tiers[i] < 0 ? "Tool/SkillBrown" : "Tool/SkillMetal" + tiers[i]).At(frame);
                     Assert.NotNull(expected);
                     Assert.AreSame(expected, player.transform.Find("Character appearance/Tool").GetComponent<SpriteRenderer>().sprite);
-                    Assert.AreSame(expected, echo.transform.Find("Character appearance/Tool").GetComponent<SpriteRenderer>().sprite);
+                    AssertRenderedPart(echo, CharacterSlot.Tool, expected);
                     // Reopening must show the matching saved/current level in the actual Skills selector.
                     skillsScreen.Hide(); Assert.True(skillsScreen.Show());
                     skillsUi = skillsScreenObject.GetComponent<UIDocument>().rootVisualElement;
@@ -290,8 +290,8 @@ namespace Tests.PlayMode
                     var echoLayers = echoSource.GetComponent<CharacterAppearance>().GetComponentsInChildren<SpriteRenderer>();
                     foreach (var slot in new[] { "Body", "Head", "Chest", "Legs", "Feet", "Hands", "Tool" })
                     {
-                        var a = playerLayers.Single(s => s.gameObject.name == slot); var b = echoLayers.Single(s => s.gameObject.name == slot);
-                        Assert.AreEqual(a.sprite, b.sprite, action + " / " + slot);
+                        var a = playerLayers.Single(s => s.gameObject.name == slot); var b = VisibleAppearanceRenderer(echoSource, slot);
+                        AssertRenderedPart(echoSource, (CharacterSlot)System.Enum.Parse(typeof(CharacterSlot), slot), a.sprite);
                         Assert.That(b.color.a, Is.EqualTo(.7f).Within(.001f));
                         if (slot != "Tool") Assert.NotNull(a.sprite, action + " / " + slot);
                     }
@@ -345,9 +345,9 @@ namespace Tests.PlayMode
                 yield return null; yield return null;
                 var newHead = source.transform.Find("Character appearance/Head").GetComponent<SpriteRenderer>().sprite;
                 Assert.AreNotEqual(oldHead, newHead);
-                Assert.AreEqual(newHead, echoSource.transform.Find("Character appearance/Head").GetComponent<SpriteRenderer>().sprite);
+                AssertRenderedPart(echoSource, CharacterSlot.Head, newHead);
                 source.flipX = echoSource.flipX = true; yield return null;
-                Assert.True(echoSource.transform.Find("Character appearance/Chest").GetComponent<SpriteRenderer>().flipX);
+                Assert.True(VisibleAppearanceRenderer(echoSource, "Chest").flipX);
                 var gear = owner.AddComponent<EquipmentController>();
                 var rarities = Resources.LoadAll<RaritySO>("").OrderBy(r => r.tierIndex).ToArray();
                 var visibility = CharacterEquipmentAppearance.Visibility;
@@ -362,8 +362,7 @@ namespace Tests.PlayMode
                     foreach (var slot in new[] { CharacterSlot.Chest, CharacterSlot.Legs, CharacterSlot.Feet }) {
                         Assert.NotNull(catalog.SpriteFor(look, slot, 0), rarity.GetName() + " / " + slot);
                         var a = source.transform.Find("Character appearance/" + slot).GetComponent<SpriteRenderer>();
-                        var b = echoSource.transform.Find("Character appearance/" + slot).GetComponent<SpriteRenderer>();
-                        Assert.AreEqual(a.sprite, b.sprite, "Equipping gear updates both actors without changing animation frame.");
+                        AssertRenderedPart(echoSource, slot, a.sprite);
                     }
                     Assert.NotNull(catalog.SpriteFor(look, CharacterSlot.Tool, catalog.Frame("SwordAttack_1_Down", 0)));
                 }
@@ -446,6 +445,24 @@ namespace Tests.PlayMode
             Assert.True(new GameData().Character.Created, "Legacy deserialization must preserve existing characters without restarting onboarding.");
         }
 
+        private static SpriteRenderer VisibleAppearanceRenderer(SpriteRenderer actor, string slot)
+        {
+            var composite = actor.transform.Find("Character appearance/Composite")?.GetComponent<SpriteRenderer>();
+            return composite && composite.enabled ? composite : actor.transform.Find("Character appearance/" + slot).GetComponent<SpriteRenderer>();
+        }
+
+        private static void AssertRenderedPart(SpriteRenderer actor, CharacterSlot slot, Sprite expected)
+        {
+            var visible = VisibleAppearanceRenderer(actor, slot.ToString());
+            if (visible.name != "Composite") { Assert.AreEqual(expected, visible.sprite); return; }
+            var properties = new MaterialPropertyBlock(); visible.GetPropertyBlock(properties);
+            var rect = properties.GetVector("_LayerRect" + (int)slot);
+            if (!expected) { Assert.AreEqual(Vector4.zero, rect); return; }
+            Assert.AreEqual(expected.texture, properties.GetTexture("_Layer" + (int)slot));
+            Assert.AreEqual(new Vector4(expected.rect.x / expected.texture.width, expected.rect.y / expected.texture.height,
+                expected.rect.width / expected.texture.width, expected.rect.height / expected.texture.height), rect);
+        }
+
         // Observe real GPU output at a hair/body overlap, rather than reasserting renderer tint values.
         private static IEnumerator VerifyEchoTransparencyPixels(SpriteRenderer player, SpriteRenderer echo, GameObject owner)
         {
@@ -474,7 +491,7 @@ namespace Tests.PlayMode
                 }
                 var originalFeet = player.transform.TransformPoint(new Vector3(0, FootY(player.sprite, originalPixels)));
                 foreach (var actor in new[] { player, echo }) {
-                    var bodyLayer = actor.transform.Find("Character appearance/Body");
+                    var bodyLayer = actor.transform.Find("Character appearance");
                     var modularFeet = bodyLayer.TransformPoint(new Vector3(0, FootY(body, bodyPixels)));
                     Assert.That(modularFeet.y - actor.transform.position.y,
                         Is.EqualTo(originalFeet.y - player.transform.position.y).Within(.001f),
@@ -496,7 +513,7 @@ namespace Tests.PlayMode
                     RenderTexture.active = target; readback.ReadPixels(new Rect(0, 0, 640, 320), 0, 0); readback.Apply(); RenderTexture.active = previousTarget;
                     var local = new Vector3(overlap.Value.x * (flipped ? -1 : 1), overlap.Value.y);
                     Color Sample(SpriteRenderer actor) {
-                        var point = camera.WorldToViewportPoint(actor.transform.Find("Character appearance/Head").TransformPoint(local));
+                        var point = camera.WorldToViewportPoint(actor.transform.Find("Character appearance").TransformPoint(local));
                         return readback.GetPixel(Mathf.FloorToInt(point.x * 640), Mathf.FloorToInt(point.y * 320));
                     }
                     var expected = Color.Lerp(readback.GetPixel(0, 0), Sample(player), alpha);
