@@ -213,7 +213,12 @@ namespace Blindsided
 
             if (StaticReferences.TargetFps <= 0)
                 StaticReferences.TargetFps = (int)Screen.currentResolution.refreshRateRatio.value;
-            Application.targetFrameRate = StaticReferences.TargetFps;
+            // Match the settings screen: VSync owns desktop landscape pacing;
+            // mobile/portrait uses the explicit FPS preference instead.
+            var sync = StaticReferences.VSyncEnabled && !UnityEngine.Device.Application.isMobilePlatform &&
+                       !ToolkitResponsiveLayout.IsPortrait;
+            QualitySettings.vSyncCount = sync ? 1 : 0;
+            Application.targetFrameRate = sync ? -1 : StaticReferences.TargetFps;
             yield return LoadMainScene();
         }
 

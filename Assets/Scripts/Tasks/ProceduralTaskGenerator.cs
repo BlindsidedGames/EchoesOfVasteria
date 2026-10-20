@@ -177,6 +177,13 @@ namespace TimelessEchoes.Tasks
             if (terrainMap == null)
                 return;
 
+            // A disabled overlay must not walk the entire generated map on every
+            // Scene/Game view repaint. Large runs make even GetTile alone costly.
+            if (!(bottomTerrain != null && bottomTerrain.showValidationGizmos) &&
+                !(middleTerrain != null && middleTerrain.showValidationGizmos) &&
+                !(topTerrain != null && topTerrain.showValidationGizmos))
+                return;
+
             foreach (var cell in terrainMap.cellBounds.allPositionsWithin)
             {
                 var tile = terrainMap.GetTile(cell);
