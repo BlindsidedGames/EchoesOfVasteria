@@ -103,7 +103,7 @@ namespace TimelessEchoes.Farming
             if (!Finite(recipe.secondaryYieldRatio) || recipe.secondaryYieldRatio < 0) return "InvalidRecipeTuning";
             bed.FrozenSecondaryYield = recipe.secondaryOutput ? bed.FrozenYield * recipe.secondaryYieldRatio : 0;
             bed.HarvestXp = content.HarvestExperience(recipe);
-            bed.ElapsedSeconds = 0; bed.Watered = bed.Repeat && state.TwinsLevel >= FarmContent.AutoWaterLevel; bed.LastGrowthUtcTicks = 0;
+            bed.ElapsedSeconds = 0; bed.Watered = state.TwinsLevel >= FarmContent.AutoWaterLevel; bed.LastGrowthUtcTicks = 0;
             result.OperationReceipt.BatchIds.Add(bed.BatchId);
             return null;
         }
@@ -115,7 +115,6 @@ namespace TimelessEchoes.Farming
                 var bed = pair.Value;
                 if (!KnownBed(pair.Key) || !AccessibleBed(state, pair.Key) || bed == null || !bed.IsPlanted || bed.IsReady) continue;
                 if (!Finite(bed.DurationSeconds) || bed.DurationSeconds <= 0 || !Finite(bed.ElapsedSeconds) || bed.ElapsedSeconds < 0) throw new InvalidOperationException("Invalid growth state.");
-                if (bed.Repeat && state.TwinsLevel >= FarmContent.AutoWaterLevel) bed.Watered = true;
                 bed.ElapsedSeconds = Math.Min(bed.ReadyAfterSeconds, bed.ElapsedSeconds + seconds);
             }
         }

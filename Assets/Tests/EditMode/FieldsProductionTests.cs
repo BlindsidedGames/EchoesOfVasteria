@@ -274,24 +274,22 @@ namespace Tests.EditMode
             data = Commit(data, FarmCommands.SetRepeat(data.Farm, bed, true, Op(data, "repeat:" + bed + ":1"), Now));
             Assert.AreEqual(1, data.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount); Assert.IsFalse(data.Farm.Beds[bed].IsPlanted);
         }
-        [Test] public void AutoWaterUnlocksAtFiftyOnlyForEnabledPlotsAndContinuesAfterReplanting()
+        [TestCase(49, false)]
+        [TestCase(49, true)]
+        [TestCase(50, false)]
+        [TestCase(50, true)]
+        public void PlantingWatersAtFiftyIndependentlyOfAutoReplant(int level, bool repeat)
         {
-            var data = Plant(Garden(3, 49));
+            var data = Garden(3, level);
             var id = FarmCommands.WestBedId;
-            data = Commit(data, FarmCommands.SetRepeat(data.Farm, id, true, Op(data, "repeat:" + id + ":1"), Now));
-            FarmCommands.TickFields(data.Farm, 1);
-            Assert.False(data.Farm.Beds[id].Watered, "Level 49 still needs manual watering.");
-            data = Commit(data, FarmCommands.SetRepeat(data.Farm, id, false, Op(data, "repeat:" + id + ":0"), Now));
-            data.Farm.TwinsLevel = 50;
-            FarmCommands.TickFields(data.Farm, 1);
-            Assert.False(data.Farm.Beds[id].Watered, "Auto off must preserve manual watering.");
-            data = Commit(data, FarmCommands.SetRepeat(data.Farm, id, true, Op(data, "repeat:" + id + ":1"), Now));
-            FarmCommands.TickFields(data.Farm, 0);
-            Assert.True(data.Farm.Beds[id].Watered, "Enabling Auto at level 50 waters an existing crop.");
+            if (repeat) data = Commit(data, FarmCommands.SetRepeat(data.Farm, id, true, Op(data, "repeat:" + id + ":1"), Now));
+            data = Plant(data);
+            Assert.AreEqual(level >= 50, data.Farm.Beds[id].Watered, "Planting waters at level 50 even with Auto off.");
             FarmCommands.TickFields(data.Farm, 100000);
-            data = Harvest(data, true);
+            data = Harvest(data, repeat);
+            if (!repeat) data = Plant(data);
             Assert.True(data.Farm.Beds[id].IsPlanted);
-            Assert.True(data.Farm.Beds[id].Watered, "Each paid replacement receives automatic watering.");
+            Assert.AreEqual(data.Farm.TwinsLevel >= 50, data.Farm.Beds[id].Watered, "Both manual and automatic replacements use the unlock.");
             Assert.AreEqual(1, data.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount);
         }
         [Test] public void PendingSeedSelectionSurvivesRetryCannotChangeRollAndCreditsOnce()
@@ -453,7 +451,8 @@ namespace Tests.EditMode
             data.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 2, Earned = true };
             data = Commit(data, FarmCommands.PlantRecipe(data, bedId, recipeId, Op(data, FarmCommands.PlantFingerprint(bedId, recipeId)), Now, content));
             Assert.AreEqual(seconds, data.Farm.Beds[bedId].DurationSeconds, .000001);
-            data = Commit(data, FarmCommands.Water(data.Farm, bedId, Op(data, "water:" + bedId), Now));
+            Assert.AreEqual(fieldsLevel >= 50, data.Farm.Beds[bedId].Watered);
+            if (fieldsLevel < 50) data = Commit(data, FarmCommands.Water(data.Farm, bedId, Op(data, "water:" + bedId), Now));
             FarmCommands.TickFields(data.Farm, seconds / 2 - 1);
             Assert.IsFalse(data.Farm.Beds[bedId].IsReady);
             FarmCommands.TickFields(data.Farm, 1);
@@ -474,7 +473,7 @@ namespace Tests.EditMode
             data.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 2, Earned = true };
             data = Commit(data, FarmCommands.PlantRecipe(data, bedId, recipeId, Op(data, FarmCommands.PlantFingerprint(bedId, recipeId)), Now, content));
             Assert.AreEqual(expectedXp, data.Farm.Beds[bedId].HarvestXp);
-            data = Commit(data, FarmCommands.Water(data.Farm, bedId, Op(data, "water:" + bedId), Now));
+            if (fieldsLevel < 50) data = Commit(data, FarmCommands.Water(data.Farm, bedId, Op(data, "water:" + bedId), Now));
             FarmCommands.TickFields(data.Farm, data.Farm.Beds[bedId].ReadyAfterSeconds);
             var beforeLevel = data.Farm.TwinsLevel;
             var beforeXp = data.Farm.TwinsXp;

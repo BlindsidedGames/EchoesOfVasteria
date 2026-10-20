@@ -23,12 +23,12 @@ namespace TimelessEchoes.UI.Toolkit
         private PanelSettings settings;
         private FieldsWorldAppearance appearance;
         private Sprite wateringCan;
-        private VisualElement root, board, bedList, drawer, seedColumn, seedGrid, xpBar, yieldRow;
+        private VisualElement root, board, bedList, selectorColumn, automation, drawer, seedColumn, seedGrid, xpBar, yieldRow;
         private VisualElement[] selectorTiles;
         private ScrollView workspace, seedScroll;
         private Image floraPortrait, tillmanPortrait;
         private Label heading, xp, error, seedHeading, detail;
-        private Label buildRequirement, yieldAmount, yieldXp, secondaryAmount;
+        private Label buildRequirement, yieldAmount, yieldXp, secondaryAmount, replantRequirement, waterRequirement;
         private Image yieldIcon, secondaryIcon;
         private VisualElement secondaryReward;
         private CostStrip selectedCosts;
@@ -99,7 +99,8 @@ namespace TimelessEchoes.UI.Toolkit
             workspace = ToolkitControls.RecessedScroll(root, "fields-workspace", theme, compact: true);
             board = E(workspace, "row fields-board");
             drawer = E(board, "column fields-drawer");
-            bedList = E(board, "row fields-selector-grid"); bedList.name = "fields-bed-grid";
+            selectorColumn = E(board, "column fields-selector-column");
+            bedList = E(selectorColumn, "row fields-selector-grid"); bedList.name = "fields-bed-grid";
             var snapshot = source.CapturePresentation();
             foreach (var bed in snapshot.Beds.Where(b => b != null && !b.Orchard)) CreateBed(bed, bedList);
             var orchardBeds = snapshot.Beds.Where(b => b?.Orchard == true).ToArray();
@@ -158,9 +159,9 @@ namespace TimelessEchoes.UI.Toolkit
                 var count = L(content, "", "fields-seed-count"); count.name = "seed-quantity";
                 seeds[id] = new SeedCard { Button = button, Count = count, Icon = icon };
             }
-            var automation = E(seedColumn, "column fields-automation");
-            L(automation, ToolkitLocalization.Text("fields.automation.replant-level", "Auto-replant: Fields lvl {0}", FarmContent.AutoReplantLevel), "muted");
-            L(automation, ToolkitLocalization.Text("fields.automation.water-level", "Auto-water: Fields lvl {0}", FarmContent.AutoWaterLevel), "muted");
+            automation = E(selectorColumn, "row fields-automation");
+            replantRequirement = L(automation, "", "muted fields-auto-replant");
+            waterRequirement = L(automation, "", "muted fields-auto-water");
             selectorTiles = bedList.Children().ToArray();
             source.Changed += Refresh; ToolkitLocalization.Changed += Refresh;
             layout.Fill(root, theme, CompanionWidth); ApplyLayout(); Refresh(); return true;
@@ -335,6 +336,12 @@ namespace TimelessEchoes.UI.Toolkit
             if (snapshot == null) { plant.SetEnabled(false); harvest.SetEnabled(false); water.SetEnabled(false); repeat.SetEnabled(false); buildSelected.SetEnabled(false); return; }
             feedbackLabel.text = feedback ?? "";
             feedbackLabel.style.visibility = Time.unscaledTime < feedbackUntil ? Visibility.Visible : Visibility.Hidden;
+            replantRequirement.text = ToolkitLocalization.Text("fields.automation.replant-short", "Auto-replant: lvl {0}", FarmContent.AutoReplantLevel);
+            waterRequirement.text = ToolkitLocalization.Text("fields.automation.water-short", "Auto-water: lvl {0}", FarmContent.AutoWaterLevel);
+            Visible(replantRequirement, snapshot.TwinsLevel < FarmContent.AutoReplantLevel);
+            Visible(waterRequirement, snapshot.TwinsLevel < FarmContent.AutoWaterLevel);
+            Visible(automation, snapshot.TwinsLevel < FarmContent.AutoWaterLevel);
+            root.EnableInClassList("fields-automation-locked", snapshot.TwinsLevel < FarmContent.AutoWaterLevel);
             selectedBed ??= snapshot.Beds.FirstOrDefault(b => b.Unlocked)?.Id ?? snapshot.Beds.FirstOrDefault()?.Id;
             var target = snapshot.Beds.FirstOrDefault(b => b.Id == selectedBed); var orchard = target?.Orchard == true;
             selectedRecipe ??= snapshot.Recipes.FirstOrDefault(r => r.Orchard == orchard && r.Discovered && r.Eligible)?.Id;
@@ -375,9 +382,14 @@ namespace TimelessEchoes.UI.Toolkit
             var seedContent = (source as FarmService)?.Content ?? FarmContent.Load();
             var selectedDefinition = seedContent.Recipe(selected?.Id);
             var dryTime = selectedDefinition == null ? 0 : seedContent.GrowthDuration(selectedDefinition, snapshot.TwinsLevel);
-            var growthTime = target?.Planted == true && target.RecipeId == selected?.Id && target.GrowthSeconds > 0 ? target.GrowthSeconds : dryTime;
+            var autoWater = snapshot.TwinsLevel >= FarmContent.AutoWaterLevel;
+            var growthTime = target?.Planted == true && target.RecipeId == selected?.Id && target.GrowthSeconds > 0
+                ? target.GrowthSeconds / (autoWater && !target.Watered ? 2 : 1)
+                : dryTime / (autoWater ? 2 : 1);
             seedHeading.text = selected == null ? "" : selected.CropTitle + " • " + FormatTime(growthTime, mspace: false, shortForm: true);
-            seedHeading.tooltip = selected == null ? "" : "Dry: " + FormatTime(dryTime, mspace: false, shortForm: true) + " · Watered: " + FormatTime(dryTime / 2, mspace: false, shortForm: true);
+            seedHeading.tooltip = selected == null ? "" : autoWater
+                ? "Watered: " + FormatTime(growthTime, mspace: false, shortForm: true)
+                : "Dry: " + FormatTime(dryTime, mspace: false, shortForm: true) + " · Watered: " + FormatTime(dryTime / 2, mspace: false, shortForm: true);
             var columns = narrow ? 4 : 5;
             var seedIndex = 0;
             // Leave a pixel for the button border and fractional layout rounding,
@@ -437,7 +449,7 @@ namespace TimelessEchoes.UI.Toolkit
             repeat.SetEnabled(snapshot.TownActionsAllowed && target?.Unlocked == true && snapshot.TwinsLevel >= FarmContent.AutoReplantLevel);
             repeat.EnableInClassList("primary", target?.Repeat == true);
             repeat.text = T("fields.auto", "Auto") + " • " + (target?.Repeat == true ? T("common.on", "On") : T("common.off", "Off"));
-            repeat.tooltip = ToolkitLocalization.Text("fields.repeat-help-water", "Fields level {0}: harvest and replant using one matching seed pack or sapling. Fields level {1}: water automatically. Stops when you run out.", FarmContent.AutoReplantLevel, FarmContent.AutoWaterLevel);
+            repeat.tooltip = ToolkitLocalization.Text("fields.repeat-help-water-on-plant", "Fields level {0}: harvest and replant using one matching seed pack or sapling. Stops when you run out. From Fields level {1}, every new planting is watered automatically, even with Auto off.", FarmContent.AutoReplantLevel, FarmContent.AutoWaterLevel);
             Visible(preview.Root, !orchard && selectedBuild == null); Visible(orchardPreview.Root, orchard && selectedBuild == null);
             if (target != null)
             {
@@ -519,8 +531,10 @@ namespace TimelessEchoes.UI.Toolkit
             narrow = ToolkitResponsiveLayout.IsPortrait || ToolkitWindowLayout.SafeArea.width - CompanionWidth < 500;
             root.EnableInClassList("fields-narrow", narrow);
             // The selector stays visible first on phones; desktop keeps details on the left.
-            var first = narrow ? bedList : drawer;
+            var first = narrow ? selectorColumn : drawer;
             if (board.IndexOf(first) != 0) board.Insert(0, first);
+            var automationParent = ToolkitResponsiveLayout.IsPortrait ? root : selectorColumn;
+            if (automation.parent != automationParent) automationParent.Add(automation);
             for (var i = 0; i < selectorTiles.Length; i++)
             {
                 selectorTiles[i].style.marginRight = i % 3 == 2 ? 0 : 4;

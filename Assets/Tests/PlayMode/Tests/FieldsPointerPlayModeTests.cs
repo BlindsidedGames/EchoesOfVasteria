@@ -79,8 +79,8 @@ namespace Tests.PlayMode
                 Assert.AreEqual(DisplayStyle.None, ui.Q<Button>("fields-harvest-selected").resolvedStyle.display, "Water occupies the harvest action while the crop is dry.");
                 Assert.False(ui.Q<Button>("fields-harvest-selected").enabledInHierarchy);
                 yield return null;
-                FieldsClick(ui.Q<Button>("fields-plant-selected"));
-                Assert.AreEqual(1, oracle.saveData.Resources[seedName].Amount, "A second click cannot charge a growing bed.");
+                Assert.AreEqual(DisplayStyle.None, ui.Q<Button>("fields-plant-selected").resolvedStyle.display,
+                    "Plant is replaced by the watering action after planting.");
                 Assert.True((bool)typeof(Blindsided.Oracle).GetMethod("SaveNowBlocking", Private).Invoke(oracle, new object[] { oracle.CurrentSlot, false }));
                 var loaded = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
                 Assert.True(loaded.Succeeded, loaded.Diagnostic);
@@ -265,7 +265,9 @@ namespace Tests.PlayMode
                 Assert.False(ui.Q<Button>("fields-seed-recipe.birch.v1").enabledInHierarchy, "Growing trees lock selection just like crops.");
                 UnityEditor.PlayModeWindow.SetCustomRenderingResolution(960, 2078, "Portrait water action");
                 yield return new WaitForSecondsRealtime(.3f);
-                yield return FieldsWaterWithoutMovement(ui);
+                Assert.True(service.State.Beds[orchardId].Watered, "Level 50 automatically waters newly planted trees.");
+                Assert.AreEqual(DisplayStyle.None, ui.Q<Button>("fields-water-selected").resolvedStyle.display);
+                Assert.AreEqual(DisplayStyle.Flex, ui.Q<Button>("fields-harvest-selected").resolvedStyle.display);
                 FarmCommands.TickFields(service.State, 100000);
                 yield return new WaitForSecondsRealtime(.3f);
                 foreach (var resolution in new[] { new Vector2Int(1920, 1080), new Vector2Int(960, 2078) })
