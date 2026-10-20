@@ -23,14 +23,14 @@ namespace TimelessEchoes.UI.Toolkit
         private PanelSettings settings;
         private FieldsWorldAppearance appearance;
         private Sprite wateringCan;
-        private VisualElement root, board, bedList, drawer, seedColumn, seedGrid, xpBar, yieldRow, inputRow, primaryActions;
+        private VisualElement root, board, bedList, drawer, seedColumn, seedGrid, xpBar, yieldRow, primaryActions;
         private VisualElement[] selectorTiles;
         private Button[] primaryButtons;
         private ScrollView workspace, seedScroll;
         private Image floraPortrait, tillmanPortrait;
         private Label heading, xp, error, seedHeading, undiscovered, selection, detail;
-        private Label buildRequirement, yieldAmount, yieldXp, inputAmount;
-        private Image yieldIcon, inputIcon;
+        private Label buildRequirement, yieldAmount, yieldXp;
+        private Image yieldIcon;
         private CostStrip selectedCosts;
         private Button plant, harvest, water, repeat, buildSelected;
         private readonly ToolkitWindowLayout layout = new();
@@ -47,7 +47,7 @@ namespace TimelessEchoes.UI.Toolkit
         public float CompanionWidth { get; set; }
         public bool IsOpen => root != null;
         public bool IsConfigured => theme && runtimeTheme && textSettings && (source != null || sourceBehaviour is IFarmPresentationSource);
-        private sealed class SeedCard { public Button Button; public Label Title, Count; public Image Icon; }
+        private sealed class SeedCard { public Button Button; public Label Count; public Image Icon; }
         private sealed class BedTile
         {
             public VisualElement Root, Art, Fill;
@@ -127,8 +127,6 @@ namespace TimelessEchoes.UI.Toolkit
             selectedCosts = CreateCosts(controls);
             yieldRow = E(controls, "row fields-yield"); yieldIcon = ToolkitGameplay.Icon(yieldRow, null, 14);
             yieldAmount = L(yieldRow, "", "fields-yield-amount"); yieldXp = L(yieldRow, "", "muted fields-yield-xp");
-            inputRow = E(controls, "row fields-input"); inputIcon = ToolkitGameplay.Icon(inputRow, null, 14);
-            inputAmount = L(inputRow, "", "fields-input-amount");
             detail = L(controls, "", "muted fields-selection-detail"); detail.name = "fields-selected-status";
             primaryActions = E(controls, "row fields-primary-actions");
             plant = Button(primaryActions, "", PlantSelected); plant.name = "fields-plant-selected"; plant.AddToClassList("primary");
@@ -147,12 +145,11 @@ namespace TimelessEchoes.UI.Toolkit
                 if (recipe == null) continue;
                 var id = recipe.Id; var button = Button(seedGrid, "", () => SelectRecipe(id)); button.name = "fields-seed-" + id;
                 button.AddToClassList("fields-seed-card");
-                var title = L(button, "", "fields-seed-caption"); title.name = "seed-caption";
                 var content = E(button, "row fields-seed-content");
                 var icon = new Image { scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
                 icon.AddToClassList("icon"); content.Add(icon);
                 var count = L(content, "", "fields-seed-count"); count.name = "seed-quantity";
-                seeds[id] = new SeedCard { Button = button, Title = title, Count = count, Icon = icon };
+                seeds[id] = new SeedCard { Button = button, Count = count, Icon = icon };
             }
             undiscovered = L(seedColumn, "", "muted fields-undiscovered-count");
             selectorTiles = bedList.Children().ToArray();
@@ -378,7 +375,7 @@ namespace TimelessEchoes.UI.Toolkit
                 card.Button.style.width = cardWidth > 0 ? new Length(cardWidth) : Length.Percent(100f / columns - 1.1f);
                 card.Button.style.marginRight = show && ++seedIndex % columns != 0 ? 4 : 0;
                 card.Icon.sprite = recipe.Discovered ? recipe.Icon : recipe.UnknownIcon ? recipe.UnknownIcon : unknownPack;
-                card.Title.text = recipe.Discovered ? recipe.CropTitle ?? recipe.Title : "???"; card.Count.text = recipe.Discovered ? Compact(recipe.SeedQuantity) : "—";
+                card.Count.text = recipe.Discovered ? Compact(recipe.SeedQuantity) : "—";
                 card.Button.EnableInClassList("primary", selectedRecipe == recipe.Id); card.Button.EnableInClassList("fields-undiscovered", !recipe.Discovered);
                 card.Button.tooltip = recipe.Discovered ? ToolkitLocalization.Text("fields.recipe-level-required", "{0} · Farming {1} required", recipe.Title, recipe.RequiredHeroLevel) + "\n" + PlantCost(orchard) : T("fields.discover-first", "Discover this seed or sapling first.");
             }
@@ -404,10 +401,6 @@ namespace TimelessEchoes.UI.Toolkit
             yieldAmount.text = target == null ? "" : Compact(target.ExpectedYield);
             yieldXp.text = target == null ? "" : "+" + target.HarvestXp + " XP";
             yieldRow.tooltip = target?.RecipeTitle;
-            Visible(inputRow, selectedBuild == null && target?.Planted != true && matches && selected.Discovered);
-            inputIcon.sprite = selected?.Icon;
-            inputAmount.text = selected == null ? "" : Compact(selected.SeedQuantity) + " / " + FarmContent.PlantingCost(orchard);
-            inputRow.tooltip = selected?.Title;
             detail.text = selectedBuild != null || target?.Planted == true ? "" : !matches ? T("fields.find-seeds", "Find seed packs by completing crop tasks on adventures.") : !selected.Discovered ? T("fields.discover-first", "Discover this seed or sapling first.") : !selected.Eligible ?
                 ToolkitLocalization.Text("fields.recipe-level-required", "{0} · Farming {1} required", selected.CropTitle, selected.RequiredHeroLevel) : "";
             Visible(detail, detail.text.Length > 0);
