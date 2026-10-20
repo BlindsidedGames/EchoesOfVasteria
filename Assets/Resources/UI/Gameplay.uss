@@ -1274,8 +1274,8 @@
 .gameplay.fields-ui .fields-future {height:35px;min-height:35px;}
 .gameplay.fields-ui .fields-seed-caption {white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-.gameplay.fields-ui .fields-header {height:32px;min-height:32px;flex-shrink:0;align-items:center;justify-content:flex-start;margin-bottom:2px;padding-bottom:2px;}
-.gameplay.fields-ui .fields-portraits {flex-shrink:0;margin-right:6px;align-items:center;}
+.gameplay.fields-ui .fields-header {height:32px;min-height:32px;flex-shrink:0;align-items:center;justify-content:flex-start;margin-bottom:2px;padding-bottom:0;border-bottom-width:0;}
+.gameplay.fields-ui .fields-portraits {width:46px;flex-shrink:0;margin-left:-8px;margin-right:0;align-items:center;justify-content:center;}
 .gameplay.fields-ui .fields-header-progress {flex-grow:1;}
 .gameplay.fields-ui .fields-header-progress .track {height:3px;margin-top:4px;}
 
@@ -1299,4 +1299,5 @@
 .gameplay.fields-ui .fields-unbuilt .fields-plot-body {display:none;}
 .gameplay.fields-ui .fields-orchard-slot .fields-level-requirement {display:none;}
 
-.gameplay.fields-ui .fields-portraits > .icon {margin-right:-8px;}
+.gameplay.fields-ui .fields-portraits > .icon {margin:0;}
+.gameplay.fields-ui .fields-portraits > .fields-portrait-leading {margin-right:-8px;}

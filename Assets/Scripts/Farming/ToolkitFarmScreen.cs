@@ -81,6 +81,7 @@ namespace TimelessEchoes.UI.Toolkit
             var header = E(root, "row fields-header");
             var portraits = E(header, "row fields-portraits");
             floraPortrait = ToolkitGameplay.Icon(portraits, null, 24);
+            floraPortrait.AddToClassList("fields-portrait-leading");
             tillmanPortrait = ToolkitGameplay.Icon(portraits, null, 24);
             var progress = E(header, "column fields-header-progress");
             var levelLine = E(progress, "row between"); heading = L(levelLine, "", "heading");
