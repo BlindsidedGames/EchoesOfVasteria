@@ -9,6 +9,58 @@ namespace Blindsided
     {
         private bool _economicTransactionActive;
 
+        // Task rewards follow the normal checkpoint policy. Validate and publish the
+        // complete credit in memory; interval/town/lifecycle saves persist its receipt.
+        public bool TryApplyFarmCredit(string operationId)
+        {
+            if (!CanBeginSaveMutation || !CanSave() || operationId == null) return false;
+            var state = saveData.Farm;
+            if (state?.PendingCredits?.TryGetValue(operationId, out var pending) != true || pending == null)
+                return state != null && FarmJournal.IsCommittedCredit(state, operationId);
+            var now = new DateTime(pending.CompletedAtUtcTicks, DateTimeKind.Utc);
+            return TryApplyFarmProgress(current => !string.IsNullOrEmpty(pending.SeedId)
+                ? FarmCommands.CreditSeed(current, operationId, now, pending.SeedId, pending.Rolled)
+                : FarmCommands.RecordRadishAdventureCompletion(current, operationId, now, true, pending.Rolled));
+        }
+
+        internal bool TryApplyFarmProgress(Func<FarmState, FarmCommandResult> command)
+        {
+            if (!CanBeginSaveMutation || !CanSave()) return false;
+            _economicTransactionActive = true;
+            try
+            {
+                // ResourceManager owns live amounts between checkpoints. Copy only its
+                // records, not every save contributor, before validating a harvest/credit.
+                ResourceManager.Instance?.SaveState();
+                var proposal = command(saveData.Farm);
+                if (proposal.Status == FarmCommandStatus.AlreadyApplied) return true;
+                if (!FarmTransaction.TryPrepareProgress(saveData, proposal, out var candidate, out _)) return false;
+                saveData.Farm = candidate.Farm;
+                saveData.SchemaVersion = candidate.SchemaVersion;
+                saveData.AppliedMigrationIds = candidate.AppliedMigrationIds;
+                var manager = ResourceManager.Instance;
+                manager?.BeginBatch();
+                try
+                {
+                    foreach (var delta in proposal.ResourceDeltas)
+                    {
+                        saveData.Resources[delta.Key] = candidate.Resources[delta.Key];
+                        saveData.ResourceStats[delta.Key] = candidate.ResourceStats[delta.Key];
+                        manager?.PublishCommittedResource(delta.Key, saveData.Resources[delta.Key], saveData.ResourceStats[delta.Key]);
+                    }
+                }
+                finally { manager?.EndBatch(); }
+                return true;
+            }
+            finally
+            {
+                _economicTransactionActive = false;
+                // A reward callback can return to town and request a checkpoint.
+                // Honor that request after publication, without saving every task.
+                if (_savePending && CanSave()) { _savePending = false; RequestSave(); }
+            }
+        }
+
         /// <summary>
         /// First-slice main-thread lane: drain older saves, capture contributors, synchronously
         /// commit, then patch touched fields/caches before releasing the barrier. The disk payload

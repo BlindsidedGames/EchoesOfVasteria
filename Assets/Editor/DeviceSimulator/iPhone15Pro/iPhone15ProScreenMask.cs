@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -14,6 +15,8 @@ namespace TimelessEchoes.Editor
         private const string OverlayPath = "Assets/Editor/DeviceSimulator/iPhone15Pro/Overlays/iPhone 15 Pro.png";
         private const BindingFlags Fields = BindingFlags.Instance | BindingFlags.NonPublic;
         private static double nextCheck;
+        private static double nextDiscovery;
+        private static readonly List<EditorWindow> simulators = new();
 
         static iPhone15ProScreenMask() => EditorApplication.update += Update;
 
@@ -21,9 +24,21 @@ namespace TimelessEchoes.Editor
         {
             if (EditorApplication.timeSinceStartup < nextCheck) return;
             nextCheck = EditorApplication.timeSinceStartup + .1;
-            foreach (var window in Resources.FindObjectsOfTypeAll<EditorWindow>())
+            // Discover windows infrequently; scanning all loaded objects ten times
+            // per second costs time even when no simulator is open.
+            if (EditorApplication.timeSinceStartup >= nextDiscovery)
             {
-                if (window.GetType().FullName != "UnityEditor.DeviceSimulation.SimulatorWindow") continue;
+                nextDiscovery = EditorApplication.timeSinceStartup + 2;
+                simulators.Clear();
+                foreach (var window in Resources.FindObjectsOfTypeAll<EditorWindow>())
+                    if (window.GetType().FullName == "UnityEditor.DeviceSimulation.SimulatorWindow") simulators.Add(window);
+            }
+            var focused = EditorWindow.focusedWindow;
+            if (focused && focused.GetType().FullName == "UnityEditor.DeviceSimulation.SimulatorWindow" && !simulators.Contains(focused))
+                simulators.Add(focused);
+            foreach (var window in simulators)
+            {
+                if (!window) continue;
                 window.rootVisualElement.Query<VisualElement>().ForEach(view =>
                 {
                     var type = view.GetType();
@@ -34,6 +49,8 @@ namespace TimelessEchoes.Editor
                     var dirtyField = type.GetField("m_ScreenMeshDirty", Fields);
                     var create = type.GetMethod("CreateScreenMesh", Fields);
                     if (meshField == null || dirtyField == null || create == null) return;
+                    var existingMesh = meshField.GetValue(view) as Mesh;
+                    if (existingMesh && existingMesh.vertexCount != 4 && !(bool)dirtyField.GetValue(view)) return;
                     // Retain Unity's orientation-dependent UVs and screen insets.
                     create.Invoke(view, null);
                     var mesh = meshField.GetValue(view) as Mesh;

@@ -87,6 +87,8 @@ namespace Tests.PlayMode
         [TearDown]
         public void TearDown()
         {
+            if (oracle)
+                typeof(Oracle).GetMethod("CompleteActiveSaveBlocking", Private).Invoke(oracle, null);
             if (oracle) SetOracle("loaded", false); // Teardown must not perform a lifecycle save.
             if (serviceObject) UnityEngine.Object.DestroyImmediate(serviceObject);
             if (oracleObject) UnityEngine.Object.DestroyImmediate(oracleObject);
@@ -170,6 +172,12 @@ namespace Tests.PlayMode
             Assert.AreEqual(before + 21.9, oracle.saveData.Resources["Radish"].Amount, 1e-9, "The repeated batch froze the existing 19% level-20 yield bonus.");
             var loaded = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
             Assert.True(loaded.Succeeded, loaded.Diagnostic);
+            Assert.True(loaded.Data.Farm.Beds[FarmCommands.WestBedId].IsPlanted,
+                "Automatic harvest must not write a per-harvest snapshot.");
+            Assert.True((bool)typeof(Oracle).GetMethod("SaveNowBlocking", Private)
+                .Invoke(oracle, new object[] { oracle.CurrentSlot, false }));
+            loaded = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
+            Assert.True(loaded.Succeeded, loaded.Diagnostic);
             Assert.False(loaded.Data.Farm.Beds[FarmCommands.WestBedId].IsPlanted);
             Assert.False(loaded.Data.Farm.Beds[FarmCommands.WestBedId].Repeat);
         }
@@ -214,6 +222,10 @@ namespace Tests.PlayMode
                 Assert.False(geometry.Find(FarmCommands.EastBedId).gameObject.activeSelf);
                 Assert.False(geometry.Find(FarmCommands.OrchardBeds[0]).gameObject.activeSelf);
                 Assert.False(oldCrop.enabled); Assert.True(retained.enabled);
+                oldCrop.enabled = true; oldFence.enabled = true; oldDecoration.enabled = true;
+                view.Refresh();
+                Assert.False(oldCrop.enabled); Assert.False(oldFence.enabled); Assert.False(oldDecoration.enabled);
+                Assert.True(collider.enabled, "Cached art suppression must not disable task colliders.");
             }
             finally { UnityEngine.Object.DestroyImmediate(town); }
         }

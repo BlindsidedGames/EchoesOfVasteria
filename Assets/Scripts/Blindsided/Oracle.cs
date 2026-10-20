@@ -538,6 +538,8 @@ namespace Blindsided
             StartAutosaveLoop(initialDelaySeconds);
         }
 
+        public void RequestCheckpointSave() => RequestSave();
+
         private void RequestSave()
         {
             if (_economicTransactionActive) { _savePending = true; return; }

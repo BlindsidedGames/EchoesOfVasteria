@@ -7,6 +7,20 @@ namespace Blindsided.SaveData
 {
     public class GameData
     {
+        // Short-lived candidate for a synchronous in-memory farm mutation. Unrelated
+        // state is read-only; every collection/record the farm command may write is
+        // detached. This is not a background-save snapshot.
+        internal GameData CopyFarmMutationInputs()
+        {
+            var copy = (GameData)MemberwiseClone();
+            copy.Resources = new Dictionary<string, ResourceEntry>(Resources.Comparer);
+            foreach (var pair in Resources) copy.Resources.Add(pair.Key, pair.Value?.Copy());
+            copy.ResourceStats = new Dictionary<string, ResourceRecord>(ResourceStats.Comparer);
+            foreach (var pair in ResourceStats) copy.ResourceStats.Add(pair.Key, pair.Value?.Copy());
+            copy.Quests = new Dictionary<string, QuestRecord>(Quests, Quests.Comparer);
+            copy.AppliedMigrationIds = new HashSet<string>(AppliedMigrationIds);
+            return copy;
+        }
         public const int CurrentSchemaVersion = 7;
 
         public int SchemaVersion = CurrentSchemaVersion;
@@ -132,6 +146,7 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker]
         public class ResourceEntry
         {
+            internal ResourceEntry Copy() => (ResourceEntry)MemberwiseClone();
             public double Amount;
             public bool Earned;
             public double BestPerMinute;
@@ -268,6 +283,7 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker]
         public class ResourceRecord
         {
+            internal ResourceRecord Copy() => (ResourceRecord)MemberwiseClone();
             public double TotalReceived;
             public double TotalSpent;
         }

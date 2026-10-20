@@ -19,6 +19,8 @@ namespace TimelessEchoes.Farming
         private readonly List<Plot> plots = new();
         private readonly List<GameObject> enclosures = new();
         private readonly Dictionary<SpriteRenderer, bool> hidden = new();
+        private readonly List<SpriteRenderer> legacyFarmArt = new();
+        private bool legacyFarmArtCached;
         private readonly Dictionary<Vector3Int, TileBase> changedPath = new();
         private readonly Dictionary<Vector3Int, Matrix4x4> pathMatrices = new();
         private readonly Dictionary<Vector3Int, TileFlags> pathFlags = new();
@@ -153,12 +155,25 @@ namespace TimelessEchoes.Farming
         { if (!hidden.ContainsKey(sr)) hidden.Add(sr,sr.enabled); sr.enabled=false; }
         private void HideLegacyFarmArt()
         {
-            foreach(var part in new[]{"Farmers/FarmingTasks","Farmers/Fence"})
-            { var root=town.Find(part); if(root) foreach(var sr in root.GetComponentsInChildren<SpriteRenderer>(true)) Hide(sr); }
-            // Crops below the farmer property only: unrelated crop decoration elsewhere is retained.
-            var farmers=town.Find("Farmers");
-            if(farmers) foreach(var child in farmers.GetComponentsInChildren<Transform>(true).Where(t=>t.name=="Crops"))
-                foreach(var sr in child.GetComponentsInChildren<SpriteRenderer>(true)) Hide(sr);
+            if (!legacyFarmArtCached)
+            {
+                // These are authored town objects, including inactive quest stages.
+                // Discover them once; quest visibility may re-enable their renderers,
+                // but does not change which objects belong to the legacy farm.
+                var unique = new HashSet<SpriteRenderer>();
+                foreach (var part in new[] { "Farmers/FarmingTasks", "Farmers/Fence" })
+                {
+                    var root = town.Find(part);
+                    if (root) foreach (var sr in root.GetComponentsInChildren<SpriteRenderer>(true)) unique.Add(sr);
+                }
+                var farmers = town.Find("Farmers");
+                if (farmers) foreach (var child in farmers.GetComponentsInChildren<Transform>(true))
+                    if (child.name == "Crops")
+                        foreach (var sr in child.GetComponentsInChildren<SpriteRenderer>(true)) unique.Add(sr);
+                legacyFarmArt.AddRange(unique);
+                legacyFarmArtCached = true;
+            }
+            foreach (var sr in legacyFarmArt) if (sr) Hide(sr);
         }
         private void RestoreScenery()
         {

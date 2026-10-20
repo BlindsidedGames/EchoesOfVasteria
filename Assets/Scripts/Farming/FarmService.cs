@@ -28,6 +28,7 @@ namespace TimelessEchoes.Farming
         private bool applicationPaused;
         private bool applicationFocused = true;
         private double nextCreditRetry;
+        private double nextAutomaticHarvestRetry;
         public FarmTuning Tuning => tuning;
         public FarmState State => Oracle.oracle?.saveData?.Farm;
         public bool Ready => Oracle.oracle != null && Oracle.oracle.HasLoadedCurrentSlotData;
@@ -49,6 +50,7 @@ namespace TimelessEchoes.Farming
             // Fresh slots bypass migration; initialize the revision without importing old construction.
             owner.Farm.ProductionRevision = 1;
             gateSignature = int.MinValue;
+            nextAutomaticHarvestRetry = 0;
             skipGrowthFrame = true;
             lastMonotonic = Time.realtimeSinceStartupAsDouble;
             Changed?.Invoke();
@@ -60,8 +62,11 @@ namespace TimelessEchoes.Farming
             var seconds = Time.unscaledDeltaTime;
             if (skipGrowthFrame) skipGrowthFrame = false;
             else if (seconds >= 0 && seconds <= Time.maximumDeltaTime) FarmCommands.TickFields(owner.Farm, seconds);
-            if (owner.Farm.TwinsLevel >= 20 && owner.Farm.Beds.Any(b => FarmCommands.KnownBed(b.Key) && b.Value?.Repeat == true && b.Value.IsReady))
-                Execute(state => FarmCommands.HarvestFields(owner, FarmJournal.NextOperation(state, "harvest-auto"), DateTime.UtcNow, Content, true), false);
+            if (Time.realtimeSinceStartupAsDouble >= nextAutomaticHarvestRetry && owner.Farm.TwinsLevel >= 20 && owner.Farm.Beds.Any(b => FarmCommands.KnownBed(b.Key) && b.Value?.Repeat == true && b.Value.IsReady))
+            {
+                if (!Execute(state => FarmCommands.HarvestFields(owner, FarmJournal.NextOperation(state, "harvest-auto"), DateTime.UtcNow, Content, true), false, checkpoint: false))
+                    nextAutomaticHarvestRetry = Time.realtimeSinceStartupAsDouble + 1;
+            }
             if (Time.realtimeSinceStartupAsDouble >= nextCreditRetry)
             {
                 nextCreditRetry = Time.realtimeSinceStartupAsDouble + 1;
@@ -102,12 +107,13 @@ namespace TimelessEchoes.Farming
             "BedLocked" => ToolkitLocalization.Text("fields.error.BedLocked", "Prepare the beds before planting."),
             _ => ToolkitLocalization.Text("fields.error.unavailable", "This Fields action is unavailable ({0}).", code)
         };
-        private bool Execute(Func<FarmState, FarmCommandResult> command, bool townRequired)
+        private bool Execute(Func<FarmState, FarmCommandResult> command, bool townRequired, bool checkpoint = true)
         {
             if (!Ready || (townRequired && !InTown))
             { lastError = "TownRequired"; Changed?.Invoke(); return false; }
             CaptureGrowth();
-            var ok = Oracle.oracle.TryCommitFarmCommand(command, out var error);
+            string error = null;
+            var ok = checkpoint ? Oracle.oracle.TryCommitFarmCommand(command, out error) : Oracle.oracle.TryApplyFarmProgress(command);
             lastError = ok ? null : error;
             owner = Oracle.oracle.saveData;
             if (ok) RefreshProgression();
@@ -184,11 +190,9 @@ namespace TimelessEchoes.Farming
         private bool CommitPendingCredit(string operationId, FarmPendingCredit pending)
         {
             if (!Ready || pending == null) return false;
-            if (!string.IsNullOrEmpty(pending.SeedId))
-                return Execute(state => FarmCommands.CreditSeed(state, operationId,
-                    new DateTime(pending.CompletedAtUtcTicks, DateTimeKind.Utc), pending.SeedId, pending.Rolled), false);
-            return Execute(state => FarmCommands.RecordRadishAdventureCompletion(state, operationId,
-                new DateTime(pending.CompletedAtUtcTicks, DateTimeKind.Utc), true, pending.Rolled), false);
+            var applied = Oracle.oracle.TryApplyFarmCredit(operationId);
+            if (applied) { lastError = null; RefreshProgression(); Changed?.Invoke(); }
+            return applied;
         }
         private void RetryPendingCredit()
         {

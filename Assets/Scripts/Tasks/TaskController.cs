@@ -40,6 +40,8 @@ namespace TimelessEchoes.Tasks
         [SerializeField] public float pruneInterval = 0.5f;
         private float nextPruneTime;
         [SerializeField] private CinemachineCamera mapCamera;
+        private Camera visibilityCamera;
+        private int visibilityCameraFrame = -1;
         [SerializeField] private string currentTaskName;
         [SerializeField] private MonoBehaviour currentTaskObject;
         private readonly Dictionary<ITask, MonoBehaviour> taskMap = new();
@@ -80,9 +82,15 @@ namespace TimelessEchoes.Tasks
             if (task == null || mapCamera == null)
                 return true;
 
-            var cam = mapCamera.GetComponent<Camera>();
-            if (cam == null)
-                cam = Camera.main;
+            // Cinemachine cameras normally have no Camera component. Resolve the
+            // output camera once per frame, without allocating missing-component
+            // wrappers for every candidate task and every echo in the Editor.
+            if (visibilityCameraFrame != Time.frameCount)
+            {
+                visibilityCameraFrame = Time.frameCount;
+                if (!mapCamera.TryGetComponent(out visibilityCamera)) visibilityCamera = Camera.main;
+            }
+            var cam = visibilityCamera;
 
             if (cam == null || task.Target == null)
                 return true;
@@ -109,7 +117,8 @@ namespace TimelessEchoes.Tasks
             if (hero == null)
                 return HasVisibleTasks();
 
-            var echo = hero as EchoController ?? hero.GetComponent<EchoController>();
+            var echo = hero as EchoController;
+            if (!echo) hero.TryGetComponent(out echo);
             IList<Skill> skills = echo != null ? echo.capableSkills : null;
 
             bool restrictToVisible = hero.IsEcho;
@@ -484,7 +493,8 @@ namespace TimelessEchoes.Tasks
 
         public void SelectEarliestTask(HeroBase targetHero)
         {
-            var echo = targetHero != null ? targetHero.GetComponent<EchoController>() : null;
+            var echo = targetHero as EchoController;
+            if (!echo && targetHero) targetHero.TryGetComponent(out echo);
             if (echo != null && echo.capableSkills != null && echo.capableSkills.Count > 0)
             {
                 if (echo.capableSkills.Count == 1)

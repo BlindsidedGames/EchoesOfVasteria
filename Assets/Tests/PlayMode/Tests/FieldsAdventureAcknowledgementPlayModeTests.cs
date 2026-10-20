@@ -86,15 +86,23 @@ namespace Tests.PlayMode
                 var loaded = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
                 Assert.True(loaded.Succeeded, loaded.Diagnostic);
                 Assert.True(FarmContent.Completed(loaded.Data, FarmContent.IntroductionId));
+                // A live reward since the last snapshot must survive the task credit.
+                resources.Add(recipe.paidInput, 2, trackStats: false, eligibleForTierRoll: false);
                 crop.StartTask(); Random.state = winning;
                 for (var tick = 0; !crop.IsComplete() && tick < 10000; tick++) crop.Tick(hero);
                 Assert.True(crop.IsComplete());
-                Assert.AreEqual(1, resources.GetAmount(recipe.paidInput), "Real ContinuousTask completion must publish exactly one canonical pack.");
+                Assert.AreEqual(3, resources.GetAmount(recipe.paidInput), "The new pack must preserve the two unsaved live packs.");
                 crop.Tick(hero);
-                Assert.AreEqual(1, resources.GetAmount(recipe.paidInput));
+                Assert.AreEqual(3, resources.GetAmount(recipe.paidInput));
                 loaded = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
                 Assert.True(loaded.Succeeded, loaded.Diagnostic);
-                Assert.AreEqual(1, loaded.Data.Resources[recipe.paidInput.name].Amount);
+                Assert.AreEqual(0, loaded.Data.Resources.TryGetValue(recipe.paidInput.name, out var unsaved) ? unsaved.Amount : 0,
+                    "Task completion must not write a checkpoint of its own.");
+                Assert.True((bool)typeof(Blindsided.Oracle).GetMethod("SaveNowBlocking", Private)
+                    .Invoke(oracle, new object[] { oracle.CurrentSlot, false }));
+                loaded = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
+                Assert.True(loaded.Succeeded, loaded.Diagnostic);
+                Assert.AreEqual(3, loaded.Data.Resources[recipe.paidInput.name].Amount);
             }
             finally
             {

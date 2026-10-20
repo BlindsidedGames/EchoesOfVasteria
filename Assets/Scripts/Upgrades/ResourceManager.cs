@@ -249,7 +249,7 @@ namespace TimelessEchoes.Upgrades
             else InvokeInventoryChanged();
         }
 
-        private void SaveState()
+        internal void SaveState()
         {
             if (oracle == null) return;
             var existing = oracle.saveData.Resources ?? new Dictionary<string, GameData.ResourceEntry>();
