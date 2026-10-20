@@ -83,6 +83,8 @@ namespace Tests.PlayMode
                 typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(game, false);
                 Assert.False(service.BuildQuest("Farm.Garden.Build01.v1"), "Construction still requires town.");
                 Assert.AreEqual(0, service.State.GardenCapacity);
+                Assert.True((bool)typeof(Blindsided.Oracle).GetMethod("SaveNowBlocking", Private)
+                    .Invoke(oracle, new object[] { oracle.CurrentSlot, false }));
                 var loaded = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
                 Assert.True(loaded.Succeeded, loaded.Diagnostic);
                 Assert.True(FarmContent.Completed(loaded.Data, FarmContent.IntroductionId));

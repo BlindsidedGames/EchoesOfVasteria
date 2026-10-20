@@ -72,9 +72,24 @@ namespace Tests.PlayMode
                 input.value = "973.9";
                 var before = inventory.GetAmount(food);
                 var stewBefore = oracle.saveData.CauldronStew;
+                Assert.IsTrue((bool)typeof(Blindsided.Oracle).GetMethod("SaveNowBlocking", Private)
+                    .Invoke(oracle, new object[] { oracle.CurrentSlot, false }));
                 add.Focus(); add.SendEvent(NavigationSubmitEvent.GetPooled());
                 Assert.AreEqual(before - 973, inventory.GetAmount(food), 1e-6, "The native action spends the same floored quantity it previews.");
                 Assert.AreEqual(stewBefore + 38.92, oracle.saveData.CauldronStew, 1e-8, "Formatting must not round conversion math.");
+                var disk = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
+                Assert.IsTrue(disk.Succeeded, disk.Diagnostic);
+                Assert.AreEqual(stewBefore, disk.Data.CauldronStew, "Mixing must wait for the next checkpoint.");
+                var receipt = oracle.saveData.LastCauldronConversion;
+                Assert.IsTrue(cauldron.TryAddToCauldron(food, 973, receipt.Sequence, out _, out _));
+                Assert.AreEqual(before - 973, inventory.GetAmount(food), 1e-6, "Replaying a conversion must not spend twice.");
+                Assert.IsTrue((bool)typeof(Blindsided.Oracle).GetMethod("SaveNowBlocking", Private)
+                    .Invoke(oracle, new object[] { oracle.CurrentSlot, false }));
+                disk = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
+                Assert.IsTrue(disk.Succeeded, disk.Diagnostic);
+                Assert.AreEqual(stewBefore + 38.92, disk.Data.CauldronStew, 1e-8);
+                Assert.AreEqual(before - 973, disk.Data.Resources[food.name].Amount, 1e-6);
+                Assert.AreEqual(receipt.Sequence, disk.Data.CauldronConversionSequence);
             }
             finally
             {

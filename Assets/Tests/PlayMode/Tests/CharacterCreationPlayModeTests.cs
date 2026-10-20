@@ -408,6 +408,8 @@ namespace Tests.PlayMode
                 Assert.IsNull(ui.Q("inventory-character-preview").Q<Image>("appearance-Tool").sprite,
                     "The inventory portrait omits the equipped sword while world appearance still uses it.");
                 CaptureFeedback("inventory-character-equipment.png"); yield return null; yield return null;
+                Assert.True((bool)typeof(Blindsided.Oracle).GetMethod("SaveNowBlocking", Private)
+                    .Invoke(oracle, new object[] { oracle.CurrentSlot, false }));
                 FieldsClick(ui.Q<Button>("inventory-visibility-Helmet"));
                 yield return null; yield return null;
                 Assert.AreNotEqual(hair, head.sprite);
@@ -417,6 +419,12 @@ namespace Tests.PlayMode
                 Assert.AreEqual(100, equipment.GetTotalForMapping(HeroStatMapping.MaxHealth), "Visibility changes do not unequip items or change bonuses.");
                 var load = SaveManager.Instance.LoadDetailedAsync("Save" + (oracle.CurrentSlot + 1));
                 while (!load.IsCompleted) yield return null;
+                Assert.True(load.Result.Succeeded); Assert.False(load.Result.Data.EquipmentVisibility.Helmet);
+                Assert.True(load.Result.Data.EquipmentVisibility.Chest, "Visibility toggles wait for the normal checkpoint.");
+                Assert.True((bool)typeof(Blindsided.Oracle).GetMethod("SaveNowBlocking", Private)
+                    .Invoke(oracle, new object[] { oracle.CurrentSlot, false }));
+                load = SaveManager.Instance.LoadDetailedAsync("Save" + (oracle.CurrentSlot + 1));
+                while (!load.IsCompleted) yield return null;
                 Assert.True(load.Result.Succeeded); Assert.True(load.Result.Data.EquipmentVisibility.Helmet); Assert.False(load.Result.Data.EquipmentVisibility.Chest);
                 oracle.saveData = load.Result.Data;
                 Blindsided.EventHandler.LoadData();
@@ -425,6 +433,19 @@ namespace Tests.PlayMode
                 screen.Hide(); Assert.True(screen.Show()); yield return null; yield return null;
                 ui = view.GetComponent<UIDocument>().rootVisualElement;
                 Assert.True(ui.Q<Button>("inventory-visibility-Helmet").ClassListContains("shown"));
+                UnityEditor.PlayModeWindow.SetCustomRenderingResolution(1179, 2556, "Portrait visibility checkpoint");
+                screen.Bounds = new Rect(0, 0, 600, 1200);
+                yield return null; yield return null;
+                FieldsClick(ui.Q<Button>("inventory-equipment-tab"));
+                yield return null; yield return null;
+                var boots = ui.Q<Button>("inventory-visibility-Boots");
+                Assert.Greater(boots.worldBound.width, 0);
+                FieldsClick(boots); yield return null; yield return null;
+                Assert.False(CharacterEquipmentAppearance.Visibility.Boots);
+                Assert.AreEqual(100, equipment.GetTotalForMapping(HeroStatMapping.MaxHealth));
+                load = SaveManager.Instance.LoadDetailedAsync("Save" + (oracle.CurrentSlot + 1));
+                while (!load.IsCompleted) yield return null;
+                Assert.True(load.Result.Succeeded); Assert.True(load.Result.Data.EquipmentVisibility.Boots);
             }
             finally { if (view) Object.DestroyImmediate(view); Object.DestroyImmediate(owner); }
         }

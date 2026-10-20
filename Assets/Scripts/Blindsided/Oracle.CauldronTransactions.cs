@@ -20,19 +20,13 @@ namespace Blindsided
             _economicTransactionActive = true;
             try
             {
-                StopSaveCoordinatorMonitoring(); CompleteActiveSaveBlocking(); _savePending = false;
-                if (!TryPrepareSnapshot(out error)) return false;
-                var owner = saveData; var slot = CurrentSlot;
+                // Capture live resource balances without collecting or writing a full save.
+                ResourceManager.Instance?.SaveState();
+                var owner = saveData;
                 var questIds = QuestManager.Instance?.GetActiveCauldronQuestIds() ?? new List<string>();
                 if (!CauldronConversion.TryPrepare(owner, food.name, quantity, expectedUnitValue, sequence,
                     questIds, out var candidate, out var replay, out error)) return false;
                 if (replay) return true;
-                var result = GetSaveResult(SaveManager.Instance.SaveDetailedAsync(candidate,
-                    GetSlotDirectoryName(slot)), slot, waitForCompletion: true);
-                HandleSaveResult(result, slot);
-                if (!result.Succeeded) { error = result.Error; return false; }
-                if (!ReferenceEquals(owner, saveData) || CurrentSlot != slot)
-                { RequireRuntimeReloadRecovery("The food conversion committed", new InvalidOperationException("Save ownership changed before publication")); error = "Committed conversion requires reload."; return false; }
                 try
                 {
                     owner.Resources[food.name] = candidate.Resources[food.name];
@@ -49,8 +43,8 @@ namespace Blindsided
                 }
                 catch (Exception ex)
                 {
-                    RequireRuntimeReloadRecovery("The food conversion committed", ex);
-                    error = "Conversion committed; reload is required: " + ex.Message; return false;
+                    RequireRuntimeReloadRecovery("A food conversion failed during publication", ex, checkpointCommitted: false);
+                    error = "Conversion publication failed; reload is required: " + ex.Message; return false;
                 }
             }
             catch (Exception ex) { error = ex.Message; return false; }

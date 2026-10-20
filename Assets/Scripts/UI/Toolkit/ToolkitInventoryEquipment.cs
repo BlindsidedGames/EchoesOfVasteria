@@ -94,10 +94,9 @@ namespace TimelessEchoes.UI.Toolkit
                 gearSlots.Add(slot, (button, gearIcon));
                 if (slot == "Weapon") continue;
                 var control = ToolkitGameplay.B(row, "", () => {
-                    var settings = CharacterEquipmentAppearance.Visibility; var previous = settings.Get(slot);
-                    settings.Set(slot, !previous);
-                    Blindsided.EventHandler.SaveData();
-                    if (Blindsided.Oracle.oracle && !Blindsided.Oracle.oracle.SaveToSlot(Blindsided.Oracle.oracle.CurrentSlot)) settings.Set(slot, previous);
+                    if (Blindsided.Oracle.oracle && !Blindsided.Oracle.oracle.CanBeginSaveMutation) return;
+                    var settings = CharacterEquipmentAppearance.Visibility;
+                    settings.Set(slot, !settings.Get(slot));
                     RefreshEquipment();
                 }, "inventory-visibility-button");
                 control.name = "inventory-visibility-" + slot;

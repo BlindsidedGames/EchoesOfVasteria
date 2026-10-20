@@ -7,10 +7,10 @@ namespace Blindsided.SaveData
 {
     public class GameData
     {
-        // Short-lived candidate for a synchronous in-memory farm mutation. Unrelated
-        // state is read-only; every collection/record the farm command may write is
+        // Short-lived candidate for a synchronous in-memory economic mutation. Unrelated
+        // state is read-only; every collection/record these commands may write is
         // detached. This is not a background-save snapshot.
-        internal GameData CopyFarmMutationInputs()
+        internal GameData CopyEconomicMutationInputs()
         {
             var copy = (GameData)MemberwiseClone();
             copy.Resources = new Dictionary<string, ResourceEntry>(Resources.Comparer);
@@ -300,6 +300,7 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker]
         public class QuestRecord
         {
+            internal QuestRecord Copy() => (QuestRecord)MemberwiseClone();
             public bool Accepted;
             public bool Completed;
             public Dictionary<string, double> KillProgress; // enemy name -> count; may be null until used

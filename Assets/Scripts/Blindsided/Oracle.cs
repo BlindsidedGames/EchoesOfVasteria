@@ -1275,16 +1275,18 @@ namespace Blindsided
             }
         }
 
-        private void RequireRuntimeReloadRecovery(string durableOperation, Exception exception)
+        private void RequireRuntimeReloadRecovery(string durableOperation, Exception exception, bool checkpointCommitted = true)
         {
             loaded = false;
             _recoveryRequired = true;
             _recoveryStatus = SaveLoadStatus.Failed;
             StopAutosaveLoop();
-            _recoveryDiagnostic =
+            _recoveryDiagnostic = checkpointCommitted ?
                 $"{durableOperation}, but reloading it into the running game failed. " +
                 "The disk commit is safe and no recovery files were removed. Restart the game or Retry. " +
-                exception;
+                exception :
+                $"{durableOperation}. Further saves have been blocked to preserve the last checkpoint. " +
+                "Restart the game or Retry; changes since that checkpoint may be lost. " + exception;
             Debug.LogError(_recoveryDiagnostic);
             try { FeedbackForm.Submit("Save.RuntimeReloadFailed", _recoveryDiagnostic); }
             catch { }

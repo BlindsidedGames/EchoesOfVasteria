@@ -34,6 +34,8 @@ namespace Tests.EditMode
             Assert.AreEqual(10.35, next.CauldronStew, 1e-12); Assert.AreEqual(32, next.Quests["active"].CauldronMixProgress);
             Assert.AreEqual(100, next.Quests["completed"].CauldronMixProgress); Assert.AreEqual(3, next.Quests["inactive"].CauldronMixProgress);
             Assert.AreEqual(100, source.Resources["Food"].Amount); Assert.AreEqual(10, source.CauldronStew);
+            Assert.AreEqual(7, source.Quests["active"].CauldronMixProgress);
+            Assert.AreEqual(0, source.ResourceStats["Food"].TotalSpent);
             Assert.AreEqual(25, next.ResourceStats["Food"].TotalSpent); Assert.AreEqual(3, next.Resources["Food"].Tier);
         }
         [Test] public void MaxBillionsAndFractionalRemainderDoNotUseIntOrFloat()

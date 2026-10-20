@@ -19,7 +19,7 @@ namespace TimelessEchoes.Farming
             candidate = null; error = null;
             if (proposal == null || !proposal.Accepted || proposal.Candidate == null)
             { error = proposal?.Reason ?? "No farm proposal."; return false; }
-            candidate = inMemoryCredit ? captured.CopyFarmMutationInputs() : CurrentSaveCodec.Clone(captured);
+            candidate = inMemoryCredit ? captured.CopyEconomicMutationInputs() : CurrentSaveCodec.Clone(captured);
             candidate.Farm = proposal.Candidate.DeepClone();
             HashSet<string> migrated;
             try { migrated = FarmSeedResources.Upgrade(candidate); }

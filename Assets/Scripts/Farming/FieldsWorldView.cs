@@ -28,7 +28,7 @@ namespace TimelessEchoes.Farming
         private readonly List<GameObject> retainedTrees = new();
         private Tilemap path, decor;
         private Transform geometry;
-        private FarmState renderedState;
+        private Blindsided.SaveData.GameData renderedOwner;
         private int garden = -1, orchard = -1;
         private float nextRefresh;
         public int ClearedStumps { get; private set; }
@@ -79,10 +79,13 @@ namespace TimelessEchoes.Farming
         {
             if (!appearance || !town || !service) return;
             var state = service.Ready ? service.State : null;
+            var owner = service.Ready ? Blindsided.Oracle.oracle?.saveData : null;
             int capacity = Mathf.Clamp(state?.GardenCapacity ?? 0,0,6), trees = Mathf.Clamp(state?.OrchardCapacity ?? 0,0,6);
-            if (!ReferenceEquals(renderedState,state) || garden != capacity || orchard != trees)
+            // Credits and harvests replace the farm candidate, but do not change
+            // the scenery. Rebuild only for a new save owner or plot layout.
+            if (!ReferenceEquals(renderedOwner,owner) || garden != capacity || orchard != trees)
             {
-                RestoreScenery(); renderedState = state; garden = capacity; orchard = trees;
+                RestoreScenery(); renderedOwner = owner; garden = capacity; orchard = trees;
                 ApplyScenery(capacity >= 5 ? 3 : capacity >= 3 ? 2 : capacity >= 1 ? 1 : 0);
                 for (int i=0;i<enclosures.Count;i++) enclosures[i].SetActive(capacity >= i*2+1);
             }

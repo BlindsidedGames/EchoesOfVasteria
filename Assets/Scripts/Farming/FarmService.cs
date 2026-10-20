@@ -64,7 +64,7 @@ namespace TimelessEchoes.Farming
             else if (seconds >= 0 && seconds <= Time.maximumDeltaTime) FarmCommands.TickFields(owner.Farm, seconds);
             if (Time.realtimeSinceStartupAsDouble >= nextAutomaticHarvestRetry && owner.Farm.TwinsLevel >= 20 && owner.Farm.Beds.Any(b => FarmCommands.KnownBed(b.Key) && b.Value?.Repeat == true && b.Value.IsReady))
             {
-                if (!Execute(state => FarmCommands.HarvestFields(owner, FarmJournal.NextOperation(state, "harvest-auto"), DateTime.UtcNow, Content, true), false, checkpoint: false))
+                if (!Execute(state => FarmCommands.HarvestFields(owner, FarmJournal.NextOperation(state, "harvest-auto"), DateTime.UtcNow, Content, true), false))
                     nextAutomaticHarvestRetry = Time.realtimeSinceStartupAsDouble + 1;
             }
             if (Time.realtimeSinceStartupAsDouble >= nextCreditRetry)
@@ -107,13 +107,12 @@ namespace TimelessEchoes.Farming
             "BedLocked" => ToolkitLocalization.Text("fields.error.BedLocked", "Prepare the beds before planting."),
             _ => ToolkitLocalization.Text("fields.error.unavailable", "This Fields action is unavailable ({0}).", code)
         };
-        private bool Execute(Func<FarmState, FarmCommandResult> command, bool townRequired, bool checkpoint = true)
+        private bool Execute(Func<FarmState, FarmCommandResult> command, bool townRequired)
         {
             if (!Ready || (townRequired && !InTown))
             { lastError = "TownRequired"; Changed?.Invoke(); return false; }
             CaptureGrowth();
-            string error = null;
-            var ok = checkpoint ? Oracle.oracle.TryCommitFarmCommand(command, out error) : Oracle.oracle.TryApplyFarmProgress(command);
+            var ok = Oracle.oracle.TryCommitFarmCommand(command, out var error);
             lastError = ok ? null : error;
             owner = Oracle.oracle.saveData;
             if (ok) RefreshProgression();
