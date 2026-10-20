@@ -66,13 +66,14 @@
 .gameplay.fields-ui .fields-primary-actions {flex-wrap:wrap;margin-top:4px;}
 .gameplay.fields-ui .fields-primary-actions > .button {width:100%;flex-grow:0;flex-shrink:0;min-width:0;height:26px;min-height:26px;font-size:9px;margin-bottom:4px;padding:3px;}
 .gameplay.fields-ui .fields-harvest-actions {align-items:stretch;margin-top:0;}
-.gameplay.fields-ui .fields-harvest-actions > .button {height:26px;min-height:26px;font-size:9px;padding:3px;min-width:0;}
+.gameplay.fields-ui .fields-harvest-actions > .button,.gameplay.fields-ui .fields-main-action > .button {height:26px;min-height:26px;font-size:9px;padding:3px;min-width:0;}
 .gameplay.fields-ui #fields-repeat-selected {width:80px;flex-shrink:0;margin-right:4px;}
-.gameplay.fields-ui #fields-harvest-selected {flex-grow:1;flex-basis:0;}
+.gameplay.fields-ui .fields-main-action {position:relative;flex-grow:1;flex-basis:0;min-width:0;height:26px;min-height:26px;}
+.gameplay.fields-ui .fields-main-action > .button {position:absolute;left:0;right:0;top:0;bottom:0;}
 .gameplay.fields-ui #fields-harvest-selected:disabled {background-color:var(--control);color:var(--muted);border-color:var(--button-edge);border-top-color:var(--button-light);opacity:1;}
 .gameplay.fields-ui .fields-water-content {align-items:center;justify-content:center;}
 .gameplay.fields-ui .fields-water-icon {width:12px;height:12px;margin-right:4px;flex-shrink:0;}
-.gameplay.fields-ui .fields-water-label {font-size:8px;color:var(--text);}
+.gameplay.fields-ui .fields-water-label {font-size:9px;color:var(--text);}
 .gameplay.fields-ui .button:disabled .fields-water-label {color:var(--muted);}
 .gameplay.fields-ui .fields-seeds-column {flex-shrink:0;min-width:0;margin-top:8px;}
 .gameplay.fields-ui .fields-seeds-column .heading {font-size:10px;margin:0 0 4px;}
@@ -95,8 +96,9 @@
 .gameplay.portrait.fields-ui .fields-plot-art {margin-bottom:4px;}
 .gameplay.portrait.fields-ui .fields-orchard-pair .fields-plot-art {margin-bottom:4px;}
 .gameplay.portrait.fields-ui .fields-primary-actions > .button {height:32px;min-height:32px;font-size:11px;}
-.gameplay.portrait.fields-ui .fields-harvest-actions > .button {height:32px;min-height:32px;font-size:11px;}
-.gameplay.portrait.fields-ui .fields-water-label {font-size:10px;}
+.gameplay.portrait.fields-ui .fields-harvest-actions > .button,.gameplay.portrait.fields-ui .fields-main-action > .button {height:32px;min-height:32px;font-size:11px;}
+.gameplay.portrait.fields-ui .fields-main-action {height:32px;min-height:32px;}
+.gameplay.portrait.fields-ui .fields-water-label {font-size:11px;}
 .gameplay.portrait.fields-ui .fields-seed-card {height:43px;min-height:43px;padding:3px;}
 .gameplay.portrait.fields-ui .fields-seed-card .icon {width:32px;height:32px;}
 .gameplay.portrait.fields-ui .fields-seed-count {font-size:12px;}

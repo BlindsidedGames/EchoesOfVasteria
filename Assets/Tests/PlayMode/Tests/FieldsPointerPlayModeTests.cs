@@ -76,7 +76,7 @@ namespace Tests.PlayMode
                 Assert.That(ui.Q<Button>("fields-select-" + FarmCommands.WestBedId).Q<Label>("bed-status").text, Does.Contain("Radish"));
                 Assert.NotNull(ui.Q<Button>("fields-select-" + FarmCommands.WestBedId).Q("bed-progress"));
                 Assert.False(ui.Q<Button>("fields-plant-selected").enabledInHierarchy);
-                Assert.AreEqual(DisplayStyle.Flex, ui.Q<Button>("fields-harvest-selected").resolvedStyle.display, "Harvest stays visible during growth.");
+                Assert.AreEqual(DisplayStyle.None, ui.Q<Button>("fields-harvest-selected").resolvedStyle.display, "Water occupies the harvest action while the crop is dry.");
                 Assert.False(ui.Q<Button>("fields-harvest-selected").enabledInHierarchy);
                 yield return null;
                 FieldsClick(ui.Q<Button>("fields-plant-selected"));
@@ -86,9 +86,8 @@ namespace Tests.PlayMode
                 Assert.True(loaded.Succeeded, loaded.Diagnostic);
                 Assert.AreEqual(1, loaded.Data.Resources[seedName].Amount);
                 Assert.True(loaded.Data.Farm.Beds[FarmCommands.WestBedId].IsPlanted);
-                FieldsClick(ui.Q<Button>("fields-water-selected"));
+                yield return FieldsWaterWithoutMovement(ui);
                 Assert.True(service.State.Beds[FarmCommands.WestBedId].Watered);
-                yield return null; yield return null;
                 var viewport = ui.Q<ScrollView>("fields-workspace");
                 Assert.LessOrEqual(viewport.verticalScroller.highValue, .5f, "The desktop Fields grid and controls fit without an unnecessary outer scrollbar.");
                 Assert.IsNull(ui.Q<Foldout>("fields-construction-foldout"), "Construction lives on its plot, rather than in a separate quest list.");
@@ -136,6 +135,7 @@ namespace Tests.PlayMode
                 Build(nextBuild.questId);
                 yield return new WaitForSecondsRealtime(.3f);
                 FieldsClick(ui.Q<Button>("fields-select-" + FarmCommands.EastBedId));
+                yield return null;
                 FieldsClick(ui.Q<Button>("fields-seed-" + otherRecipe.id));
                 Assert.True(ui.Q<Button>("fields-plant-selected").enabledInHierarchy, ui.Q<Label>("fields-selected-status").text);
                 yield return null; // The newly revealed planting action needs its rendered bounds before the next pointer click.
@@ -263,6 +263,9 @@ namespace Tests.PlayMode
                 FieldsClick(ui.Q<Button>("fields-plant-selected"));
                 Assert.AreEqual(oak.id, service.State.Beds[orchardId].RecipeId);
                 Assert.False(ui.Q<Button>("fields-seed-recipe.birch.v1").enabledInHierarchy, "Growing trees lock selection just like crops.");
+                UnityEditor.PlayModeWindow.SetCustomRenderingResolution(960, 2078, "Portrait water action");
+                yield return new WaitForSecondsRealtime(.3f);
+                yield return FieldsWaterWithoutMovement(ui);
                 FarmCommands.TickFields(service.State, 100000);
                 yield return new WaitForSecondsRealtime(.3f);
                 foreach (var resolution in new[] { new Vector2Int(1920, 1080), new Vector2Int(960, 2078) })
@@ -289,6 +292,22 @@ namespace Tests.PlayMode
                 Assert.IsNull(ui.Q("fields-replace-confirmation"));
             }
             finally { Object.DestroyImmediate(screenObject); Object.DestroyImmediate(resourceObject); Object.DestroyImmediate(gameObject); }
+        }
+        private static IEnumerator FieldsWaterWithoutMovement(VisualElement ui)
+        {
+            var water = ui.Q<Button>("fields-water-selected");
+            var before = water.worldBound;
+            var seedTop = ui.Q("fields-seeds-frame").worldBound.y;
+            Assert.True(water.enabledInHierarchy);
+            FieldsClick(water);
+            yield return null; yield return null;
+            var harvest = ui.Q<Button>("fields-harvest-selected");
+            Assert.Less(Vector2.Distance(before.position, harvest.worldBound.position), 1, "Water and Harvest share the same position.");
+            Assert.Less(Vector2.Distance(before.size, harvest.worldBound.size), 1, "Water and Harvest share the same size.");
+            Assert.AreEqual(seedTop, ui.Q("fields-seeds-frame").worldBound.y, 1, "Watering must not move the seed cards.");
+            Assert.AreEqual(DisplayStyle.None, water.resolvedStyle.display);
+            Assert.AreEqual(DisplayStyle.Flex, harvest.resolvedStyle.display);
+            Assert.False(harvest.enabledInHierarchy, "Harvest stays disabled until the watered crop is ready.");
         }
         private static void FieldsClick(Button button)
         {
