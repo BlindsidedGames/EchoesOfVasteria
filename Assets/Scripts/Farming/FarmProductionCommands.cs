@@ -103,7 +103,7 @@ namespace TimelessEchoes.Farming
             if (!Finite(recipe.secondaryYieldRatio) || recipe.secondaryYieldRatio < 0) return "InvalidRecipeTuning";
             bed.FrozenSecondaryYield = recipe.secondaryOutput ? bed.FrozenYield * recipe.secondaryYieldRatio : 0;
             bed.HarvestXp = content.HarvestExperience(recipe);
-            bed.ElapsedSeconds = 0; bed.Watered = false; bed.LastGrowthUtcTicks = 0;
+            bed.ElapsedSeconds = 0; bed.Watered = bed.Repeat && state.TwinsLevel >= FarmContent.AutoWaterLevel; bed.LastGrowthUtcTicks = 0;
             result.OperationReceipt.BatchIds.Add(bed.BatchId);
             return null;
         }
@@ -115,6 +115,7 @@ namespace TimelessEchoes.Farming
                 var bed = pair.Value;
                 if (!KnownBed(pair.Key) || !AccessibleBed(state, pair.Key) || bed == null || !bed.IsPlanted || bed.IsReady) continue;
                 if (!Finite(bed.DurationSeconds) || bed.DurationSeconds <= 0 || !Finite(bed.ElapsedSeconds) || bed.ElapsedSeconds < 0) throw new InvalidOperationException("Invalid growth state.");
+                if (bed.Repeat && state.TwinsLevel >= FarmContent.AutoWaterLevel) bed.Watered = true;
                 bed.ElapsedSeconds = Math.Min(bed.ReadyAfterSeconds, bed.ElapsedSeconds + seconds);
             }
         }
@@ -129,14 +130,14 @@ namespace TimelessEchoes.Farming
         {
             var result = Begin(state, operationId, "repeat:" + id + ":" + (repeat ? "1" : "0"), now);
             if (!result.Accepted) return result;
-            if (!KnownBed(id) || !AccessibleBed(state, id) || repeat && state.TwinsLevel < 20 || !result.Candidate.Beds.TryGetValue(id, out var bed) || bed == null) return Reject("RepeatLocked");
+            if (!KnownBed(id) || !AccessibleBed(state, id) || repeat && state.TwinsLevel < FarmContent.AutoReplantLevel || !result.Candidate.Beds.TryGetValue(id, out var bed) || bed == null) return Reject("RepeatLocked");
             bed.Repeat = repeat; return result;
         }
         public static FarmCommandResult HarvestFields(GameData owner, string operationId, DateTime now, FarmContent content, bool automatic, string bedId = null)
         {
             if (owner?.Farm == null || !content) return Reject("MissingFarmContent");
             if (bedId != null && (!KnownBed(bedId) || automatic)) return Reject("UnknownBed");
-            if (automatic && owner.Farm.TwinsLevel < 20) return Reject("RepeatLocked");
+            if (automatic && owner.Farm.TwinsLevel < FarmContent.AutoReplantLevel) return Reject("RepeatLocked");
             var result = Begin(owner.Farm, operationId, bedId != null ? "harvest-bed:" + bedId : automatic ? "harvest-auto" : "harvest-fields", now);
             if (!result.Accepted) return result;
             foreach (var id in GardenBeds.Concat(OrchardBeds))
@@ -171,7 +172,7 @@ namespace TimelessEchoes.Farming
                     result.Candidate.FirstHarvestCompleted = true;
                 }
                 bed.BatchId = null; bed.RecipeId = null; bed.DurationSeconds = bed.ElapsedSeconds = bed.FrozenYield = bed.FrozenSecondaryYield = 0; bed.HarvestXp = 0; bed.HarvestYield = 0; bed.LastGrowthUtcTicks = 0; bed.Watered = false;
-                if (bed.Repeat && result.Candidate.TwinsLevel >= 20)
+                if (bed.Repeat && result.Candidate.TwinsLevel >= FarmContent.AutoReplantLevel)
                 {
                     // Begin one new cycle; never carry elapsed time or watering into it.
                     var error = PlantInto(result, owner, id, content.Recipe(bed.SelectedRecipeId), operationId, content);

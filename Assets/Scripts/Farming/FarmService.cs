@@ -65,7 +65,7 @@ namespace TimelessEchoes.Farming
             var seconds = Time.unscaledDeltaTime;
             if (skipGrowthFrame) skipGrowthFrame = false;
             else if (seconds >= 0 && seconds <= Time.maximumDeltaTime) FarmCommands.TickFields(owner.Farm, seconds);
-            if (Time.realtimeSinceStartupAsDouble >= nextAutomaticHarvestRetry && owner.Farm.TwinsLevel >= 20 && owner.Farm.Beds.Any(b => FarmCommands.KnownBed(b.Key) && b.Value?.Repeat == true && b.Value.IsReady))
+            if (Time.realtimeSinceStartupAsDouble >= nextAutomaticHarvestRetry && owner.Farm.TwinsLevel >= FarmContent.AutoReplantLevel && owner.Farm.Beds.Any(b => FarmCommands.KnownBed(b.Key) && b.Value?.Repeat == true && b.Value.IsReady))
             {
                 if (!Execute(state => FarmCommands.HarvestFields(owner, FarmJournal.NextOperation(state, "harvest-auto"), DateTime.UtcNow, Content, true)))
                     nextAutomaticHarvestRetry = Time.realtimeSinceStartupAsDouble + 1;

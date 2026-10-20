@@ -77,6 +77,8 @@
 .gameplay.fields-ui .button:disabled .fields-water-label {color:var(--muted);}
 .gameplay.fields-ui .fields-seeds-column {flex-shrink:0;min-width:0;margin-top:8px;}
 .gameplay.fields-ui .fields-seeds-column .heading {font-size:10px;margin:0 0 4px;}
+.gameplay.fields-ui .fields-automation {margin-top:4px;flex-shrink:0;}
+.gameplay.fields-ui .fields-automation Label {font-size:9px;white-space:normal;margin-bottom:2px;}
 .gameplay.fields-ui #fields-seeds-frame,.gameplay.fields-ui #fields-seeds {padding:0;min-height:0;flex-grow:0;flex-shrink:0;}
 .gameplay.fields-ui #fields-seeds .unity-scroll-view__content-viewport {flex-grow:1;align-self:stretch;}
 .gameplay.fields-ui #fields-seeds .unity-scroll-view__content-container,.gameplay.fields-ui .fields-seed-grid {width:100%;}
@@ -99,6 +101,7 @@
 .gameplay.portrait.fields-ui .fields-harvest-actions > .button,.gameplay.portrait.fields-ui .fields-main-action > .button {height:32px;min-height:32px;font-size:11px;}
 .gameplay.portrait.fields-ui .fields-main-action {height:32px;min-height:32px;}
 .gameplay.portrait.fields-ui .fields-water-label {font-size:11px;}
+.gameplay.portrait.fields-ui .fields-automation Label {font-size:11px;}
 .gameplay.portrait.fields-ui .fields-seed-card {height:43px;min-height:43px;padding:3px;}
 .gameplay.portrait.fields-ui .fields-seed-card .icon {width:32px;height:32px;}
 .gameplay.portrait.fields-ui .fields-seed-count {font-size:12px;}

@@ -15,6 +15,8 @@ namespace TimelessEchoes.Farming
     public sealed class FarmContent : ScriptableObject
     {
         public const string IntroductionId = "Farm.Garden.Introduction.v1";
+        public const int AutoReplantLevel = 20;
+        public const int AutoWaterLevel = 50;
         public static int PlantingCost(bool orchard) => 1;
         public string displayNameKey = "farm.display-name";
         public string displayName = "Fields";

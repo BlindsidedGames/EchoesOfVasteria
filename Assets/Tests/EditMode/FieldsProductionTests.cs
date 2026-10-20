@@ -274,6 +274,26 @@ namespace Tests.EditMode
             data = Commit(data, FarmCommands.SetRepeat(data.Farm, bed, true, Op(data, "repeat:" + bed + ":1"), Now));
             Assert.AreEqual(1, data.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount); Assert.IsFalse(data.Farm.Beds[bed].IsPlanted);
         }
+        [Test] public void AutoWaterUnlocksAtFiftyOnlyForEnabledPlotsAndContinuesAfterReplanting()
+        {
+            var data = Plant(Garden(3, 49));
+            var id = FarmCommands.WestBedId;
+            data = Commit(data, FarmCommands.SetRepeat(data.Farm, id, true, Op(data, "repeat:" + id + ":1"), Now));
+            FarmCommands.TickFields(data.Farm, 1);
+            Assert.False(data.Farm.Beds[id].Watered, "Level 49 still needs manual watering.");
+            data = Commit(data, FarmCommands.SetRepeat(data.Farm, id, false, Op(data, "repeat:" + id + ":0"), Now));
+            data.Farm.TwinsLevel = 50;
+            FarmCommands.TickFields(data.Farm, 1);
+            Assert.False(data.Farm.Beds[id].Watered, "Auto off must preserve manual watering.");
+            data = Commit(data, FarmCommands.SetRepeat(data.Farm, id, true, Op(data, "repeat:" + id + ":1"), Now));
+            FarmCommands.TickFields(data.Farm, 0);
+            Assert.True(data.Farm.Beds[id].Watered, "Enabling Auto at level 50 waters an existing crop.");
+            FarmCommands.TickFields(data.Farm, 100000);
+            data = Harvest(data, true);
+            Assert.True(data.Farm.Beds[id].IsPlanted);
+            Assert.True(data.Farm.Beds[id].Watered, "Each paid replacement receives automatic watering.");
+            Assert.AreEqual(1, data.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount);
+        }
         [Test] public void PendingSeedSelectionSurvivesRetryCannotChangeRollAndCreditsOnce()
         {
             var data = Fresh(); var id = FarmJournal.StageSeed(data.Farm, "seed.radish", true, Now);
@@ -334,7 +354,7 @@ namespace Tests.EditMode
             data = Commit(data, FarmCommands.PlantRecipe(data, id, recipe.id, Op(data, FarmCommands.PlantFingerprint(id, recipe.id)), Now, content));
             Assert.AreEqual(24.9, data.Farm.Beds[id].FrozenYield, .000001);
             Assert.AreEqual(12.45, data.Farm.Beds[id].FrozenSecondaryYield, .000001);
-            data = Commit(data, FarmCommands.Water(data.Farm, id, Op(data, "water:" + id), Now));
+            Assert.True(data.Farm.Beds[id].Watered, "High-level Auto waters timber plots too.");
             FarmCommands.TickFields(data.Farm, 100000);
             var harvest = Op(data, "harvest-bed:" + id);
             data = Commit(data, FarmCommands.HarvestFields(data, harvest, Now, content, false, id));
@@ -342,7 +362,7 @@ namespace Tests.EditMode
             Assert.AreEqual(12.45 * (1 + stickBonus / 100d), data.Resources[recipe.secondaryOutput.name].Amount, .000001);
             Assert.AreEqual(0, data.Resources[recipe.paidInput.name].Amount);
             var next = data.Farm.Beds[id];
-            Assert.True(next.IsPlanted); Assert.False(next.Watered); Assert.False(next.EstablishedTree);
+            Assert.True(next.IsPlanted); Assert.True(next.Watered); Assert.False(next.EstablishedTree);
             Assert.AreEqual(0, next.ElapsedSeconds);
             Assert.AreEqual(FarmCommandStatus.AlreadyApplied, FarmCommands.HarvestFields(data, harvest, Now, content, false, id).Status);
             FarmCommands.TickFields(data.Farm, 100000); data = Harvest(data, true);

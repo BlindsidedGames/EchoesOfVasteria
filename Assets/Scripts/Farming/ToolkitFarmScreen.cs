@@ -158,6 +158,9 @@ namespace TimelessEchoes.UI.Toolkit
                 var count = L(content, "", "fields-seed-count"); count.name = "seed-quantity";
                 seeds[id] = new SeedCard { Button = button, Count = count, Icon = icon };
             }
+            var automation = E(seedColumn, "column fields-automation");
+            L(automation, ToolkitLocalization.Text("fields.automation.replant-level", "Auto-replant: Fields lvl {0}", FarmContent.AutoReplantLevel), "muted");
+            L(automation, ToolkitLocalization.Text("fields.automation.water-level", "Auto-water: Fields lvl {0}", FarmContent.AutoWaterLevel), "muted");
             selectorTiles = bedList.Children().ToArray();
             source.Changed += Refresh; ToolkitLocalization.Changed += Refresh;
             layout.Fill(root, theme, CompanionWidth); ApplyLayout(); Refresh(); return true;
@@ -430,10 +433,10 @@ namespace TimelessEchoes.UI.Toolkit
             Visible(harvest, !needsWater);
             water.SetEnabled(snapshot.TownActionsAllowed && target?.Watered == false);
             SetWaterLabel(water, T("fields.action.water-once", "Water"), true);
-            repeat.SetEnabled(snapshot.TownActionsAllowed && target?.Unlocked == true && snapshot.TwinsLevel >= 20);
+            repeat.SetEnabled(snapshot.TownActionsAllowed && target?.Unlocked == true && snapshot.TwinsLevel >= FarmContent.AutoReplantLevel);
             repeat.EnableInClassList("primary", target?.Repeat == true);
             repeat.text = T("fields.auto", "Auto") + " • " + (target?.Repeat == true ? T("common.on", "On") : T("common.off", "Off"));
-            repeat.tooltip = T("fields.repeat-help-paid-trees", "Fields level 20: harvest automatically, then replant using one matching seed pack or sapling. Stops when you run out.");
+            repeat.tooltip = ToolkitLocalization.Text("fields.repeat-help-water", "Fields level {0}: harvest and replant using one matching seed pack or sapling. Fields level {1}: water automatically. Stops when you run out.", FarmContent.AutoReplantLevel, FarmContent.AutoWaterLevel);
             Visible(preview.Root, !orchard && selectedBuild == null); Visible(orchardPreview.Root, orchard && selectedBuild == null);
             if (target != null)
             {
