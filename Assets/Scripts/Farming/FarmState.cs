@@ -69,6 +69,7 @@ namespace TimelessEchoes.Farming
         public bool Watered;
         public bool EstablishedTree;
         public double FrozenYield;
+        public double FrozenSecondaryYield;
         public long PlantSequence;
         public int HarvestXp;
         public string BatchId;

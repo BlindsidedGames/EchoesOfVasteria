@@ -277,6 +277,24 @@ namespace Tests.PlayMode
                 view.Refresh();
                 Assert.False(oldCrop.enabled); Assert.False(oldFence.enabled); Assert.False(oldDecoration.enabled);
                 Assert.True(collider.enabled, "Cached art suppression must not disable task colliders.");
+                // Rendering fixture: constructed orchard slots with one fruit tree and each timber species.
+                oracle.saveData.Farm.OrchardCapacity = 4;
+                var treeRecipes = new[] { "recipe.apple.v1", "recipe.oak.v1", "recipe.birch.v1", "recipe.spruce.v1" };
+                for (var i = 0; i < treeRecipes.Length; i++)
+                {
+                    var recipe = content.Recipe(treeRecipes[i]); var bedId = FarmCommands.OrchardBeds[i];
+                    oracle.saveData.Farm.Beds[bedId] = new FarmBedState { Unlocked = true };
+                    oracle.saveData.SkillData[recipe.source.associatedSkill.name] = new GameData.SkillProgress { Level = 500 };
+                    oracle.saveData.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 1, Earned = true };
+                    Assert.True(service.Plant(bedId, recipe.id));
+                    view.Refresh();
+                    var tree = geometry.Find(bedId).GetComponentsInChildren<SpriteRenderer>().Single(r => r.name == "Finite orchard growth");
+                    Assert.AreSame(recipe.stages[0], tree.sprite, "New trees start from their own sapling stage.");
+                    FarmCommands.TickFields(service.State, 100000); view.Refresh();
+                    Assert.AreSame(recipe.stages[3], tree.sprite);
+                    Assert.True(service.Harvest(bedId)); view.Refresh();
+                    Assert.AreSame(recipe.stages[0], tree.sprite, "Harvest must restart the world tree from a sapling, including older fruit trees.");
+                }
             }
             finally { UnityEngine.Object.DestroyImmediate(town); }
         }

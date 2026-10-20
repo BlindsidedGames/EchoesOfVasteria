@@ -193,7 +193,7 @@ namespace Tests.PlayMode
                 yield return null; yield return null;
                 FieldsClick(ui.Q<Button>("fields-select-" + orchardId));
                 yield return null; yield return null;
-                Assert.AreEqual(4, ui.Query<Button>(className: "fields-seed-card").ToList().Count(b => b.resolvedStyle.display != DisplayStyle.None));
+                Assert.AreEqual(7, ui.Query<Button>(className: "fields-seed-card").ToList().Count(b => b.resolvedStyle.display != DisplayStyle.None));
                 ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-whole-orchard.png"));
                 yield return null; yield return null;
                 screen.CompanionWidth = 400;
@@ -248,7 +248,7 @@ namespace Tests.PlayMode
                 yield return null;
                 FieldsClick(ui.Q<Button>("fields-harvest-selected"));
                 Assert.True(service.State.Beds[orchardId].IsPlanted);
-                Assert.True(service.State.Beds[orchardId].EstablishedTree);
+                Assert.False(service.State.Beds[orchardId].EstablishedTree);
                 Assert.False(service.State.Beds[FarmCommands.WestBedId].IsPlanted);
                 Assert.False(service.State.Beds[FarmCommands.EastBedId].IsPlanted);
                 Assert.Greater(oracle.saveData.Resources[apple.output.name].Amount, 0);
@@ -284,6 +284,33 @@ namespace Tests.PlayMode
                 Assert.AreEqual(pear.id, service.State.Beds[orchardId].RecipeId);
                 Assert.AreEqual(pearQuantity - 1, oracle.saveData.Resources[pear.paidInput.name].Amount);
                 Assert.IsNull(ui.Q("fields-replace-confirmation"));
+                var oak = content.Recipe("recipe.oak.v1");
+                yield return null; yield return null;
+                FieldsClick(ui.Q<Button>("fields-seed-" + oak.id));
+                yield return null;
+                Assert.True(ui.Q<Button>("fields-plant-selected").enabledInHierarchy, "An owned eligible oak sapling can replace the fruit tree.");
+                FieldsClick(ui.Q<Button>("fields-plant-selected"));
+                yield return null;
+                FieldsClick(ui.Q<Button>("fields-replace-confirm"));
+                FarmCommands.TickFields(service.State, 100000);
+                yield return new WaitForSecondsRealtime(.3f);
+                foreach (var resolution in new[] { new Vector2Int(1920, 1080), new Vector2Int(960, 2078) })
+                {
+                    UnityEditor.PlayModeWindow.SetCustomRenderingResolution((uint)resolution.x, (uint)resolution.y, "Timber Fields review");
+                    yield return null; yield return null;
+                    Assert.AreEqual("Chop", ui.Q<Button>("fields-harvest-selected").text);
+                    Assert.AreEqual(DisplayStyle.Flex, ui.Q("fields-secondary-reward").resolvedStyle.display);
+                    Assert.LessOrEqual(ui.Q<ScrollView>("fields-workspace").verticalScroller.highValue, .5f);
+                    ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-timber-" + resolution.x + ".png"));
+                    yield return null;
+                }
+                var saplingsBeforeChop = oracle.saveData.Resources[oak.paidInput.name].Amount;
+                FieldsClick(ui.Q<Button>("fields-harvest-selected"));
+                Assert.Greater(oracle.saveData.Resources[oak.output.name].Amount, 0);
+                Assert.Greater(oracle.saveData.Resources[oak.secondaryOutput.name].Amount, 0);
+                Assert.AreEqual(saplingsBeforeChop, oracle.saveData.Resources[oak.paidInput.name].Amount);
+                Assert.False(service.State.Beds[orchardId].EstablishedTree);
+                Assert.Less(service.State.Beds[orchardId].ElapsedSeconds, 1);
             }
             finally { Object.DestroyImmediate(screenObject); Object.DestroyImmediate(resourceObject); Object.DestroyImmediate(gameObject); }
         }

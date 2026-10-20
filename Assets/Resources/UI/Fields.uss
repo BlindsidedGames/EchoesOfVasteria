@@ -8,7 +8,7 @@
 .gameplay.fields-ui .fields-header .heading {font-size:12px;margin:0;}
 .gameplay.fields-ui #fields-workspace-frame {flex-grow:1;min-height:0;padding:0;}
 .gameplay.fields-ui #fields-workspace {flex-grow:1;min-height:0;}
-.gameplay.fields-ui .fields-board {align-items:stretch;flex-shrink:0;}
+.gameplay.fields-ui .fields-board {align-items:stretch;flex-shrink:0;padding-top:8px;}
 .gameplay.fields-ui .fields-drawer {flex-grow:1;flex-basis:0;min-width:0;margin-right:12px;}
 .gameplay.fields-ui .fields-selected {width:100%;min-width:0;flex-shrink:0;flex-grow:0;}
 .gameplay.fields-ui .fields-selection-detail {font-size:8px;white-space:normal;margin:5px 0;}
@@ -65,6 +65,7 @@
 .gameplay.fields-ui .fields-cost-count.fields-shortfall {color:#d99084;}
 .gameplay.fields-ui .fields-yield {align-items:center;justify-content:space-between;min-height:24px;margin:3px 0 0;}
 .gameplay.fields-ui .fields-yield-output {align-items:center;}
+.gameplay.fields-ui .fields-yield-secondary {align-items:center;margin-left:10px;}
 .gameplay.fields-ui .fields-yield .icon {margin-right:6px;}
 .gameplay.fields-ui .fields-yield-amount {font-size:10px;}
 .gameplay.fields-ui .fields-yield-xp {font-size:9px;margin-left:14px;}

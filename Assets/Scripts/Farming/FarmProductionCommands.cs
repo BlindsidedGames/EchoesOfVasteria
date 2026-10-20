@@ -17,7 +17,7 @@ namespace TimelessEchoes.Farming
             var crop = id.Substring(5);
             return char.ToUpperInvariant(crop[0]) + crop.Substring(1) + " Seed Pack";
         }
-        public static bool KnownRecipe(string id) => id != null && CropNames.Concat(new[] { "apple", "pear", "peach", "cherry" }).Any(n => id == "recipe." + n + ".v1");
+        public static bool KnownRecipe(string id) => id != null && CropNames.Concat(new[] { "apple", "pear", "peach", "cherry", "oak", "birch", "spruce" }).Any(n => id == "recipe." + n + ".v1");
         public static bool KnownBuild(string id) => id == FarmContent.IntroductionId ||
             Enumerable.Range(1, 6).Any(i => id == "Farm.Garden.Build" + i.ToString("D2") + ".v1") ||
             Enumerable.Range(1, 3).Any(i => id == "Farm.Orchard.Build" + i.ToString("D2") + ".v1");
@@ -91,7 +91,7 @@ namespace TimelessEchoes.Farming
             var error = PlantInto(result, owner, id, recipe, operationId, content);
             return error == null ? result : Reject(error);
         }
-        private static string PlantInto(FarmCommandResult result, GameData owner, string id, FarmRecipe recipe, string operationId, FarmContent content, bool regrowingTree = false)
+        private static string PlantInto(FarmCommandResult result, GameData owner, string id, FarmRecipe recipe, string operationId, FarmContent content, bool replantTree = false)
         {
             var state = result.Candidate;
             if (!KnownBed(id) || !AccessibleBed(state, id) || !state.Beds.TryGetValue(id, out var bed) || bed == null) return "BedLocked";
@@ -105,16 +105,18 @@ namespace TimelessEchoes.Farming
             owner.Resources.TryGetValue(recipe.paidInput.name, out var input);
             result.ResourceDeltas.TryGetValue(recipe.paidInput.name, out var staged);
             var cost = FarmContent.PlantingCost(recipe.orchard);
-            if (!regrowingTree && (input == null || !Finite(input.Amount) || input.Amount + staged < cost))
+            if (!replantTree && (input == null || !Finite(input.Amount) || input.Amount + staged < cost))
                 return recipe.orchard ? "NoMatchingSapling" : "NoMatchingSeeds";
-            if (!regrowingTree) result.ResourceDeltas[recipe.paidInput.name] = staged - cost;
+            if (!replantTree) result.ResourceDeltas[recipe.paidInput.name] = staged - cost;
             if (!FarmJournal.TrySequence(state, operationId, out var sequence, out _)) return "InvalidPlantReceipt";
             bed.PlantSequence = sequence;
             bed.BatchId = "fields:" + operationId + ":" + id;
             bed.SelectedRecipeId = bed.RecipeId = recipe.id;
             bed.DurationSeconds = duration;
-            bed.EstablishedTree = regrowingTree;
+            bed.EstablishedTree = false;
             bed.FrozenYield = content.baseYield * FarmContent.YieldMultiplier(state.TwinsLevel);
+            if (!Finite(recipe.secondaryYieldRatio) || recipe.secondaryYieldRatio < 0) return "InvalidRecipeTuning";
+            bed.FrozenSecondaryYield = recipe.secondaryOutput ? bed.FrozenYield * recipe.secondaryYieldRatio : 0;
             bed.HarvestXp = content.HarvestExperience(recipe);
             bed.ElapsedSeconds = 0; bed.Watered = false; bed.LastGrowthUtcTicks = 0;
             result.OperationReceipt.BatchIds.Add(bed.BatchId);
@@ -163,6 +165,12 @@ namespace TimelessEchoes.Farming
                 result.ResourceDeltas.TryGetValue(recipe.output.name, out var total);
                 var bonus = CauldronResourceYield.BonusPercent(owner, recipe.output);
                 result.ResourceDeltas[recipe.output.name] = total + (legacy ? bed.HarvestYield : bed.FrozenYield) * (1 + bonus / 100d);
+                if (recipe.secondaryOutput && bed.FrozenSecondaryYield > 0)
+                {
+                    result.ResourceDeltas.TryGetValue(recipe.secondaryOutput.name, out var secondary);
+                    var secondaryBonus = CauldronResourceYield.BonusPercent(owner, recipe.secondaryOutput);
+                    result.ResourceDeltas[recipe.secondaryOutput.name] = secondary + bed.FrozenSecondaryYield * (1 + secondaryBonus / 100d);
+                }
                 result.OperationReceipt.BatchIds.Add(bed.BatchId); result.HarvestedBeds.Add(id);
                 if (legacy)
                 {
@@ -177,7 +185,7 @@ namespace TimelessEchoes.Farming
                     FarmContent.AddXp(result.Candidate, bed.HarvestXp);
                     result.Candidate.FirstHarvestCompleted = true;
                 }
-                bed.BatchId = null; bed.RecipeId = null; bed.DurationSeconds = bed.ElapsedSeconds = bed.FrozenYield = 0; bed.HarvestXp = 0; bed.HarvestYield = 0; bed.LastGrowthUtcTicks = 0; bed.Watered = false;
+                bed.BatchId = null; bed.RecipeId = null; bed.DurationSeconds = bed.ElapsedSeconds = bed.FrozenYield = bed.FrozenSecondaryYield = 0; bed.HarvestXp = 0; bed.HarvestYield = 0; bed.LastGrowthUtcTicks = 0; bed.Watered = false;
                 if (recipe.orchard || bed.Repeat && result.Candidate.TwinsLevel >= 20)
                 {
                     // Begin one new cycle; never carry elapsed time or watering into it.
@@ -198,7 +206,7 @@ namespace TimelessEchoes.Farming
                 return bed.BatchId == bed.LegacyBatchId;
             }
             if (bed.PlantSequence <= bed.LastHarvestedPlantSequence || bed.PlantSequence > state.LastIssuedSequence ||
-                !Finite(bed.FrozenYield) || bed.FrozenYield <= 0 || bed.HarvestXp <= 0 || !bed.BatchId.StartsWith("fields:", StringComparison.Ordinal) ||
+                !Finite(bed.FrozenYield) || bed.FrozenYield <= 0 || !Finite(bed.FrozenSecondaryYield) || bed.FrozenSecondaryYield < 0 || bed.HarvestXp <= 0 || !bed.BatchId.StartsWith("fields:", StringComparison.Ordinal) ||
                 (!bed.BatchId.EndsWith(":" + id, StringComparison.Ordinal) || bed.BatchId.Length <= 8 + id.Length)) return false;
             var token = bed.BatchId.Substring(7, bed.BatchId.Length - 7 - id.Length - 1);
             if (!FarmJournal.TrySequence(state, token, out var plantSequence, out var fingerprint) || plantSequence != bed.PlantSequence ||

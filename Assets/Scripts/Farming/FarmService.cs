@@ -257,8 +257,8 @@ namespace TimelessEchoes.Farming
                 var discovered = r.paidInput ? ResourceManager.Instance ? ResourceManager.Instance.IsUnlocked(r.paidInput, data) :
                     data?.Resources?.TryGetValue(r.paidInput.name, out var input) == true && input.Earned : false;
                 return new FarmRecipePresentation { Id=r.id, Title=r.paidInput ? ToolkitLocalization.Name(r.paidInput) : ToolkitLocalization.Text("fields.recipe-seeds", "{0} seeds", ToolkitLocalization.Name(r.output)),
-                    CropTitle=ToolkitLocalization.Name(r.output),SeedQuantity=quantity, Discovered=discovered, Eligible=config.CanPlant(data,r), Orchard=r.orchard,
-                    Icon=r.packIcon, UnknownIcon=r.unknownIcon, RequiredHeroLevel=r.source ? r.source.requiredSkillLevel : 1 };
+                    CropTitle=r.DisplayName,SeedQuantity=quantity, Discovered=discovered, Eligible=config.CanPlant(data,r), Orchard=r.orchard,
+                    Icon=r.packIcon, UnknownIcon=r.unknownIcon, RequiredSkill=r.source?.associatedSkill?.name ?? "Farming", RequiredHeroLevel=r.source ? r.source.requiredSkillLevel : 1 };
             }).ToArray();
             var builds = new List<FarmBuildPresentation>();
             var introComplete = FarmContent.Completed(data,FarmContent.IntroductionId);
@@ -292,8 +292,10 @@ namespace TimelessEchoes.Farming
                     var recipe=config.Recipe(bed?.RecipeId ?? bed?.SelectedRecipeId);
                     var orchard=index>=6;
                     return new FarmBedPresentation { Id=id,Title=orchard ? ToolkitLocalization.Text("fields.orchard-number", "Orchard plot {0}", index-5) : ToolkitLocalization.Text("fields.plot-number", "Plot {0}", index+1),
-                        Unlocked=FarmCommands.AccessibleBed(state,id),Orchard=orchard,RecipeId=recipe?.id,RecipeTitle=ToolkitLocalization.Name(recipe?.output),
+                        Unlocked=FarmCommands.AccessibleBed(state,id),Orchard=orchard,RecipeId=recipe?.id,RecipeTitle=recipe?.DisplayName,YieldTitle=ToolkitLocalization.Name(recipe?.output),
                         ExpectedYield=bed?.IsPlanted==true ? bed.FrozenYield * (1 + PreviewBonus(recipe?.output) / 100d) : 0,
+                        SecondaryExpectedYield=bed?.IsPlanted==true ? bed.FrozenSecondaryYield * (1 + PreviewBonus(recipe?.secondaryOutput) / 100d) : 0,
+                        SecondaryIcon=recipe?.secondaryOutput?.icon,SecondaryTitle=ToolkitLocalization.Name(recipe?.secondaryOutput),Timber=recipe?.secondaryOutput,
                         HarvestXp=bed?.HarvestXp ?? 0, EstablishedTree=bed?.EstablishedTree==true,
                         Icon=bed?.IsPlanted==true?recipe?.output?.icon:null,Watered=bed?.Watered==true,Repeat=bed?.Repeat==true,Planted=bed?.IsPlanted==true,Ready=bed?.IsReady==true,
                         Progress01=bed?.IsPlanted==true && bed.ReadyAfterSeconds>0?Mathf.Clamp01((float)(bed.ElapsedSeconds/bed.ReadyAfterSeconds)):0,

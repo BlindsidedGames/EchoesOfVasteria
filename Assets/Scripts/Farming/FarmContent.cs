@@ -107,13 +107,17 @@ namespace TimelessEchoes.Farming
     [Serializable] public sealed class FarmRecipe
     {
         public string id;
+        public string displayName;
         public Resource output;
+        public Resource secondaryOutput;
+        public double secondaryYieldRatio;
         public TaskData source;
         public string seedId;
         public Resource paidInput;
         public bool orchard;
         public Sprite packIcon, unknownIcon;
         public Sprite[] stages = Array.Empty<Sprite>();
+        public string DisplayName => string.IsNullOrEmpty(displayName) ? ToolkitLocalization.Name(output) : ToolkitLocalization.Text("fields.tree." + id, displayName);
     }
     [Serializable] public sealed class FarmBuild
     {

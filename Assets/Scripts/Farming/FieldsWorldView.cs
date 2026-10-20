@@ -98,10 +98,9 @@ namespace TimelessEchoes.Farming
                 var recipe = bed?.IsPlanted == true ? service.Content?.Recipe(bed.RecipeId) : null;
                 float progress = bed?.ReadyAfterSeconds > 0 ? (float)(bed.ElapsedSeconds / bed.ReadyAfterSeconds) : 0;
                 int stage = FarmView.GrowthStage(progress,bed?.IsReady == true);
-                if (bed?.EstablishedTree == true && !bed.IsReady) stage = 2;
                 Sprite sprite = null;
                 if (recipe != null)
-                    sprite = plot.orchard && stage < 3 ? appearance.treeStages[stage] : recipe.stages?.Length == 4 ? recipe.stages[stage] : null;
+                    sprite = recipe.stages?.Length == 4 ? recipe.stages[stage] : plot.orchard && stage < 3 ? appearance.treeStages[stage] : null;
                 foreach(var wet in plot.wet) wet.enabled = bed?.IsPlanted == true && bed.Watered;
                 foreach(var plant in plot.plants) { plant.sprite = sprite; plant.enabled = sprite; }
                 // Retain the imported pivot relative to the ground sorting anchor.
