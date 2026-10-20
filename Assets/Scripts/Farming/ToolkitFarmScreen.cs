@@ -132,11 +132,13 @@ namespace TimelessEchoes.UI.Toolkit
             plant = Button(primaryActions, "", PlantSelected); plant.name = "fields-plant-selected"; plant.AddToClassList("primary");
             buildSelected = Button(primaryActions, "", () => Build(FindBuild(source.CapturePresentation(), selectedBed), selectedBed)); buildSelected.AddToClassList("primary");
             water = Button(primaryActions, "", () => { if (source is FarmService service) Execute(() => service.Water(selectedBed)); }); water.name = "fields-water-selected";
-            harvest = Button(primaryActions, "", () => Execute(source.HarvestReady)); harvest.name = "farm-harvest-ready";
-            primaryButtons = new[] { plant, buildSelected, water, harvest };
+            primaryButtons = new[] { plant, buildSelected, water };
             var tending = E(controls, "row fields-actions");
             repeat = Button(tending, "", ToggleRepeat); repeat.name = "fields-repeat-selected";
             L(repeat, T("fields.auto-harvest", "Auto harvest"), "fields-repeat-label").pickingMode = PickingMode.Ignore;
+            E(controls, "fields-details-spacer");
+            var bulkActions = E(controls, "row fields-primary-actions fields-bulk-actions");
+            harvest = Button(bulkActions, "", () => Execute(source.HarvestReady)); harvest.name = "farm-harvest-ready";
             seedColumn = E(workspace, "column fields-seeds-column"); seedHeading = L(seedColumn, "", "heading");
             seedScroll = ToolkitControls.RecessedScroll(seedColumn, "fields-seeds", theme, compact: true);
             seedGrid = E(seedScroll, "row fields-seed-grid");
@@ -381,7 +383,7 @@ namespace TimelessEchoes.UI.Toolkit
             }
             undiscovered.text = ToolkitLocalization.Text("fields.hidden-seeds", "{0} undiscovered", available.Length - discovered); Visible(undiscovered, discovered < available.Length);
             var seedRows = (available.Count(r => r.Discovered) + columns - 1) / columns;
-            var seedHeight = seedRows * (ToolkitResponsiveLayout.IsPortrait ? 55 : 45) + 4;
+            var seedHeight = seedRows * (ToolkitResponsiveLayout.IsPortrait ? 47 : 35) + 4;
             seedScroll.style.height = seedHeight; seedScroll.style.maxHeight = seedHeight;
             seedScroll.parent.style.height = seedHeight; seedScroll.parent.style.maxHeight = seedHeight;
             var selectedBuild = target?.Unlocked == false ? FindBuild(snapshot, target.Id) : null;
@@ -428,7 +430,9 @@ namespace TimelessEchoes.UI.Toolkit
                 selectedPreview.Root.EnableInClassList("fields-ready", target.Ready);
             }
             Visible(seedColumn, target?.Unlocked == true);
-            var ready = snapshot.Beds.Count(b => b.Unlocked && b.Ready); Visible(harvest, ready > (target?.Ready == true ? 1 : 0)); harvest.SetEnabled(snapshot.TownActionsAllowed && ready > 0); harvest.text = T("fields.action.harvest-ready", "Harvest ready");
+            var ready = snapshot.Beds.Count(b => b.Unlocked && b.Ready);
+            harvest.SetEnabled(snapshot.TownActionsAllowed && ready > 0);
+            harvest.text = T("fields.action.harvest-all", "Harvest All");
         }
         private void RefreshArt(BedTile tile, FarmBedPresentation bed)
         {
@@ -477,6 +481,7 @@ namespace TimelessEchoes.UI.Toolkit
                 selectorTiles[i].style.marginRight = i % 3 == 2 ? 0 : 4;
             }
             var controlWidth = Mathf.Floor((primaryActions.contentRect.width - 4) / 2) - 1;
+            harvest.style.width = controlWidth > 0 ? new Length(controlWidth) : Length.Percent(49);
             var visibleIndex = 0;
             foreach (var button in primaryButtons)
             {

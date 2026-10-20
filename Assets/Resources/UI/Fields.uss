@@ -8,9 +8,10 @@
 .gameplay.fields-ui .fields-header .heading {font-size:12px;margin:0;}
 .gameplay.fields-ui #fields-workspace-frame {flex-grow:1;min-height:0;padding:0;}
 .gameplay.fields-ui #fields-workspace {flex-grow:1;min-height:0;}
-.gameplay.fields-ui .fields-board {align-items:flex-start;flex-shrink:0;}
+.gameplay.fields-ui .fields-board {align-items:stretch;flex-shrink:0;}
 .gameplay.fields-ui .fields-drawer {flex-grow:1;flex-basis:0;min-width:0;margin-right:12px;}
-.gameplay.fields-ui .fields-selected {width:100%;min-width:0;flex-shrink:0;}
+.gameplay.fields-ui .fields-selected {width:100%;min-width:0;flex-shrink:0;flex-grow:1;}
+.gameplay.fields-ui .fields-details-spacer {flex-grow:1;min-height:4px;}
 .gameplay.fields-ui .fields-selection {font-size:12px;-unity-font-style:bold;margin-bottom:4px;}
 .gameplay.fields-ui .fields-selection-detail {font-size:8px;white-space:normal;margin:5px 0;}
 .gameplay.fields-ui .fields-selector-grid {flex-grow:1;flex-basis:0;min-width:0;flex-wrap:wrap;align-content:flex-start;}
@@ -73,7 +74,7 @@
 .gameplay.fields-ui #fields-seeds .unity-scroll-view__content-viewport {flex-grow:1;align-self:stretch;}
 .gameplay.fields-ui #fields-seeds .unity-scroll-view__content-container,.gameplay.fields-ui .fields-seed-grid {width:100%;}
 .gameplay.fields-ui .fields-seed-grid {flex-wrap:wrap;align-content:flex-start;}
-.gameplay.fields-ui .fields-seed-card {position:relative;flex-shrink:0;min-width:0;height:41px;min-height:41px;margin-bottom:4px;padding:2px;flex-direction:column;align-items:center;justify-content:space-between;}
+.gameplay.fields-ui .fields-seed-card {position:relative;flex-shrink:0;min-width:0;height:31px;min-height:31px;margin-bottom:4px;padding:2px;flex-direction:column;align-items:center;justify-content:space-between;}
 .gameplay.fields-ui .fields-seed-content {flex-grow:1;min-height:0;width:100%;justify-content:flex-start;align-items:center;}
 .gameplay.fields-ui .fields-seed-card .icon {width:26px;height:26px;margin:0 3px 0 0;flex-shrink:0;}
 .gameplay.fields-ui .fields-seed-count {font-size:10.5px;-unity-text-align:middle-left;flex-shrink:0;}
@@ -92,6 +93,6 @@
 .gameplay.portrait.fields-ui .fields-actions > .check-control {min-height:28px;}
 .gameplay.portrait.fields-ui .fields-repeat-label {font-size:10px;}
 .gameplay.portrait.fields-ui .fields-water-label {font-size:10px;}
-.gameplay.portrait.fields-ui .fields-seed-card {height:51px;min-height:51px;padding:3px;}
+.gameplay.portrait.fields-ui .fields-seed-card {height:43px;min-height:43px;padding:3px;}
 .gameplay.portrait.fields-ui .fields-seed-card .icon {width:32px;height:32px;}
 .gameplay.portrait.fields-ui .fields-seed-count {font-size:12px;}

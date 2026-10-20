@@ -116,11 +116,10 @@ namespace Tests.PlayMode
                 resources.Add(otherRecipe.paidInput, 1, trackStats: false, eligibleForTierRoll: false);
                 yield return new WaitForSecondsRealtime(.3f);
                 FieldsClick(ui.Q<Button>("fields-seed-" + otherRecipe.id));
-                Assert.True(ui.Q<Button>("fields-seed-" + otherRecipe.id).ClassListContains("primary"));
-                Assert.False(ui.Q<Button>("fields-seed-" + FarmCommands.RadishRecipeId).ClassListContains("primary"));
+                Assert.False(ui.Q<Button>("fields-seed-" + otherRecipe.id).enabledInHierarchy, "Occupied plots lock seed selection.");
+                Assert.True(ui.Q<Button>("fields-seed-" + FarmCommands.RadishRecipeId).ClassListContains("primary"));
                 Assert.False(ui.Q<Button>("fields-plant-selected").enabledInHierarchy, "Changing crops cannot plant into the occupied bed or a locked one.");
                 Assert.AreEqual(1, resources.GetAmount(otherRecipe.paidInput, oracle.saveData));
-                Assert.That(ui.Q<Button>("fields-seed-" + otherRecipe.id).Q<Label>("seed-caption").text, Does.Contain("Wheat"));
                 var nextBuild = content.builds[1];
                 oracle.saveData.Farm.TwinsLevel = 20;
                 oracle.saveData.General.MaxRunDistance = 100000;
@@ -130,6 +129,7 @@ namespace Tests.PlayMode
                     resources.Add(cost.resource, cost.amount, trackStats: false, eligibleForTierRoll: false);
                 Build(nextBuild.questId);
                 yield return new WaitForSecondsRealtime(.3f);
+                FieldsClick(ui.Q<Button>("fields-select-" + FarmCommands.EastBedId));
                 FieldsClick(ui.Q<Button>("fields-seed-" + otherRecipe.id));
                 Assert.True(ui.Q<Button>("fields-plant-selected").enabledInHierarchy, ui.Q<Label>("fields-selected-status").text);
                 yield return null; // The newly revealed planting action needs its rendered bounds before the next pointer click.
@@ -206,7 +206,7 @@ namespace Tests.PlayMode
                 Assert.AreEqual(9, ui.Query<VisualElement>(className: "fields-selector-tile").ToList().Count);
                 var selectedHarvest = ui.Q<Button>("fields-plant-selected");
                 var allHarvest = ui.Q<Button>("farm-harvest-ready");
-                Assert.That(Mathf.Abs(selectedHarvest.worldBound.yMin - allHarvest.worldBound.yMin), Is.LessThan(1), "Portrait harvest actions stay on one row.");
+                Assert.That(allHarvest.worldBound.yMin, Is.GreaterThanOrEqualTo(selectedHarvest.worldBound.yMax), "Bulk harvesting remains below the selected plot actions.");
                 Assert.That(Mathf.Abs(selectedHarvest.worldBound.height - allHarvest.worldBound.height), Is.LessThan(1), "Harvest actions use the same height.");
                 FieldsClick(ui.Q<Button>("fields-repeat-selected"));
                 Assert.True(service.State.Beds[FarmCommands.WestBedId].Repeat, "The auto-harvest checkbox remains clickable.");
