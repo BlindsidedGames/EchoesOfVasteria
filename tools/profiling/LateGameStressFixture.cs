@@ -37,7 +37,7 @@ public static class LateGameStressFixture
    if(!loaded.Succeeded)throw new Exception(loaded.Diagnostic);
    var d=loaded.Data;
    // These are explicit synthetic starting conditions, never claimed as earned player progress.
-   d.Character=CharacterProfile.Legacy();d.CraftingMasteryLevel=1000;d.CraftingMasteryXP=0;d.CauldronEvaLevel=1000;d.CauldronEvaXp=0;d.CauldronStew=Balance;
+   d.Character=CharacterCatalog.Load().NewProfile();d.Character.Created=true;d.Character.Name="Stress Probe";d.EquipmentVisibility=new EquipmentVisibility{Helmet=true,Chest=true,Boots=true};d.CraftingMasteryLevel=1000;d.CraftingMasteryXP=0;d.CauldronEvaLevel=1000;d.CauldronEvaXp=0;d.CauldronStew=Balance;
    foreach(var r in resources)d.Resources[r.name]=new GameData.ResourceEntry{Amount=Balance,Earned=true,Tier=8};
    foreach(var q in quests)if(q)d.Quests[q.name]=new GameData.QuestRecord{Accepted=true,Completed=true};
    d.SkillData.Clear();foreach(var skill in skills) {

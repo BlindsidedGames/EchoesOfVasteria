@@ -10,7 +10,8 @@ new, explicitly synthetic Save1 roots under a new Artifacts destination. Inputs:
 
 Both states have 1e12 finite units per resource and stew, skill/mastery/Eva levels
 1000, all authored quest gates, highest tier-7 Vastium core, and legitimate maximum
-quality tier-7/five-affix equipped items. All finite authored skill unlocks are below
+quality tier-7/five-affix equipped items. A normal modular character with helmet,
+chest/trousers and boots visibility enabled exercises the full top-tier appearance. All finite authored skill unlocks are below
 level 1000 (current last manual tier is 400). Level-based infinite systems have no
 absolute maximum: these are high-progression stress cases, not an invented cap.
 Tasting Turmoil's highest passive and active bonuses are selected using the normal
