@@ -98,6 +98,7 @@ namespace TimelessEchoes.Farming
                 var recipe = bed?.IsPlanted == true ? service.Content?.Recipe(bed.RecipeId) : null;
                 float progress = bed?.ReadyAfterSeconds > 0 ? (float)(bed.ElapsedSeconds / bed.ReadyAfterSeconds) : 0;
                 int stage = FarmView.GrowthStage(progress,bed?.IsReady == true);
+                if (bed?.EstablishedTree == true && !bed.IsReady) stage = 2;
                 Sprite sprite = null;
                 if (recipe != null)
                     sprite = plot.orchard && stage < 3 ? appearance.treeStages[stage] : recipe.stages?.Length == 4 ? recipe.stages[stage] : null;

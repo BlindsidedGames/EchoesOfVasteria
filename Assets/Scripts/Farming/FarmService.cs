@@ -33,6 +33,9 @@ namespace TimelessEchoes.Farming
         public FarmState State => Oracle.oracle?.saveData?.Farm;
         public bool Ready => Oracle.oracle != null && Oracle.oracle.HasLoadedCurrentSlotData;
         private string lastError;
+        private GameData yieldPreviewOwner;
+        private double nextYieldPreview;
+        private readonly Dictionary<Resource, float> yieldPreviewBonuses = new();
         public string LastError => lastError == null ? null : ErrorText(lastError);
         public event Action Changed;
         private bool InTown => Ready && GameManager.Instance != null && GameManager.Instance.IsInTown;
@@ -227,6 +230,18 @@ namespace TimelessEchoes.Farming
             var data = Oracle.oracle?.saveData;
             var state = State ?? new FarmState();
             var config = Content;
+            if (!ReferenceEquals(yieldPreviewOwner, data) || Time.realtimeSinceStartupAsDouble >= nextYieldPreview)
+            {
+                yieldPreviewOwner = data; nextYieldPreview = Time.realtimeSinceStartupAsDouble + 1;
+                yieldPreviewBonuses.Clear();
+            }
+            float PreviewBonus(Resource resource)
+            {
+                if (!resource) return 0;
+                if (!yieldPreviewBonuses.TryGetValue(resource, out var bonus))
+                    yieldPreviewBonuses[resource] = bonus = CauldronResourceYield.BonusPercent(data, resource);
+                return bonus;
+            }
             if (!config) return new FarmPresentationSnapshot();
             double Amount(Resource resource) => ResourceManager.Instance ? ResourceManager.Instance.GetAmount(resource, data) :
                 data?.Resources?.TryGetValue(resource.name, out var entry) == true ? entry.Amount : 0;
@@ -274,6 +289,8 @@ namespace TimelessEchoes.Farming
                     var orchard=index>=6;
                     return new FarmBedPresentation { Id=id,Title=orchard ? ToolkitLocalization.Text("fields.orchard-number", "Orchard plot {0}", index-5) : ToolkitLocalization.Text("fields.plot-number", "Plot {0}", index+1),
                         Unlocked=FarmCommands.AccessibleBed(state,id),Orchard=orchard,RecipeId=recipe?.id,RecipeTitle=ToolkitLocalization.Name(recipe?.output),
+                        ExpectedYield=bed?.IsPlanted==true ? bed.FrozenYield * (1 + PreviewBonus(recipe?.output) / 100d) : 0,
+                        HarvestXp=bed?.HarvestXp ?? 0, EstablishedTree=bed?.EstablishedTree==true,
                         Icon=bed?.IsPlanted==true?recipe?.output?.icon:null,Watered=bed?.Watered==true,Repeat=bed?.Repeat==true,Planted=bed?.IsPlanted==true,Ready=bed?.IsReady==true,
                         Progress01=bed?.IsPlanted==true && bed.ReadyAfterSeconds>0?Mathf.Clamp01((float)(bed.ElapsedSeconds/bed.ReadyAfterSeconds)):0,
                         RemainingSeconds=bed?.IsPlanted==true?Math.Max(0,bed.ReadyAfterSeconds-bed.ElapsedSeconds):0 };

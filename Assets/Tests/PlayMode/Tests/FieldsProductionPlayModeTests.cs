@@ -176,6 +176,7 @@ namespace Tests.PlayMode
         [Test]
         public void RealServiceResumeAndOwnerReloadNeverSettleUtcGrowth()
         {
+            service.State.FirstHarvestCompleted = true;
             PreparePaidCrop();
             FarmCommands.TickFields(service.State, 120);
             var bed = service.State.Beds[FarmCommands.WestBedId];

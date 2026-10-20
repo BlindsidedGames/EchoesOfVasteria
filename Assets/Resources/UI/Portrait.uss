@@ -365,3 +365,32 @@
 .gameplay.portrait .portrait-pinned-card { flex-direction:row; align-items:center; min-height:48px; padding:8px 10px; background-color:var(--surface); border-width:1px; border-color:var(--line); }
 .gameplay.portrait .portrait-pinned-text { flex-grow:1; flex-shrink:1; min-width:0; margin:0; padding:0; font-size:11px; white-space:normal; color:var(--text); }
 .gameplay.portrait .portrait-pinned-page { flex-shrink:0; margin-left:10px; font-size:10px; color:var(--muted); }
+
+/* Fields uses one continuous page per area, including the selected plot. */
+.gameplay.portrait.fields-ui .fields-board {flex-shrink:0;}
+.gameplay.portrait.fields-ui .fields-drawer {flex-direction:column;min-height:0;margin-top:12px;flex-shrink:0;}
+.gameplay.portrait.fields-ui .fields-selected {width:100%;margin:0 0 12px 0;}
+.gameplay.portrait.fields-ui .fields-preview {height:58px;min-height:58px;}
+.gameplay.portrait.fields-ui .fields-preview .fields-plot-status {font-size:11px;}
+.gameplay.portrait.fields-ui .fields-selection {font-size:12px;}
+.gameplay.portrait.fields-ui .fields-selection-detail {font-size:10px;}
+.gameplay.portrait.fields-ui .fields-seeds-column {width:100%;flex-grow:0;flex-shrink:0;flex-basis:auto;}
+.gameplay.portrait.fields-ui #fields-seeds-frame,
+.gameplay.portrait.fields-ui #fields-seeds {height:auto;min-height:0;max-height:none;flex-grow:0;flex-shrink:0;}
+.gameplay.portrait.fields-ui .fields-seed-card {height:60px;min-height:60px;flex-shrink:0;}
+.gameplay.portrait.fields-ui .fields-seed-caption {height:26px;font-size:9px;}
+.gameplay.portrait.fields-ui .fields-future {height:55px;min-height:55px;}
+.gameplay.portrait.fields-ui .fields-plot-action {min-height:30px;height:30px;font-size:10px;}
+.gameplay.portrait.fields-ui .fields-feedback {font-size:10px;min-height:16px;}
+.gameplay.portrait.fields-ui .fields-xp {width:110px;}
+.gameplay.portrait.fields-ui .fields-preview {height:58px;min-height:58px;}
+.gameplay.portrait.fields-ui .fields-preview .fields-plot-body {height:42px;min-height:42px;}
+.gameplay.portrait.fields-ui .fields-preview .fields-plot-art {scale:1.25 1.25;margin-right:16px;}
+.gameplay.portrait.fields-ui .fields-future {height:78px;min-height:78px;}
+.gameplay.portrait.fields-ui .fields-future {height:44px;min-height:44px;}
+.gameplay.portrait.fields-ui .fields-future .fields-plot-select {height:36px;}
+.gameplay.portrait.fields-ui .fields-plot {height:auto;min-height:96px;}
+.gameplay.portrait.fields-ui .fields-seed-card {height:60px;min-height:60px;padding-top:3px;padding-bottom:2px;}
+
+.gameplay.portrait.fields-ui .fields-preview {height:58px;min-height:58px;}
+.gameplay.portrait.fields-ui .fields-future {height:44px;min-height:44px;}

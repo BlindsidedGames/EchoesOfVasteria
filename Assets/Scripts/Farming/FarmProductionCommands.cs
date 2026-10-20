@@ -32,6 +32,7 @@ namespace TimelessEchoes.Farming
             if (questId == FarmContent.IntroductionId)
             {
                 if (owner.CompletedNpcTasks?.Contains("Farmers1") != true) return Reject("MeetFarmersFirst");
+                result.ResourceDeltas[SeedResourceName(RadishSeedId)] = 1;
                 result.CompletedQuests.Add(questId); return result;
             }
             var build = content.Build(questId);
@@ -72,7 +73,7 @@ namespace TimelessEchoes.Farming
             var error = PlantInto(result, owner, id, content.Recipe(recipeId), operationId, content);
             return error == null ? result : Reject(error);
         }
-        private static string PlantInto(FarmCommandResult result, GameData owner, string id, FarmRecipe recipe, string operationId, FarmContent content)
+        private static string PlantInto(FarmCommandResult result, GameData owner, string id, FarmRecipe recipe, string operationId, FarmContent content, bool regrowingTree = false)
         {
             var state = result.Candidate;
             if (!KnownBed(id) || !AccessibleBed(state, id) || !state.Beds.TryGetValue(id, out var bed) || bed == null) return "BedLocked";
@@ -83,14 +84,17 @@ namespace TimelessEchoes.Farming
             owner.Resources.TryGetValue(recipe.paidInput.name, out var input);
             result.ResourceDeltas.TryGetValue(recipe.paidInput.name, out var staged);
             var cost = FarmContent.PlantingCost(recipe.orchard);
-            if (input == null || !Finite(input.Amount) || input.Amount + staged < cost)
+            if (!regrowingTree && (input == null || !Finite(input.Amount) || input.Amount + staged < cost))
                 return recipe.orchard ? "NoMatchingSapling" : "NoMatchingSeeds";
-            result.ResourceDeltas[recipe.paidInput.name] = staged - cost;
+            if (!regrowingTree) result.ResourceDeltas[recipe.paidInput.name] = staged - cost;
             if (!FarmJournal.TrySequence(state, operationId, out var sequence, out _)) return "InvalidPlantReceipt";
             bed.PlantSequence = sequence;
             bed.BatchId = "fields:" + operationId + ":" + id;
             bed.SelectedRecipeId = bed.RecipeId = recipe.id;
-            bed.DurationSeconds = content.baseDurationSeconds * FarmContent.SpeedFactor(state.TwinsLevel);
+            bed.DurationSeconds = !recipe.orchard && !state.FirstHarvestCompleted && state.TwinsLevel == 1
+                ? Math.Min(120, content.baseDurationSeconds)
+                : content.baseDurationSeconds * FarmContent.SpeedFactor(state.TwinsLevel);
+            bed.EstablishedTree = regrowingTree;
             bed.FrozenYield = content.baseYield * FarmContent.YieldMultiplier(state.TwinsLevel);
             bed.HarvestXp = content.harvestXp;
             bed.ElapsedSeconds = 0; bed.Watered = false; bed.LastGrowthUtcTicks = 0;
@@ -152,12 +156,13 @@ namespace TimelessEchoes.Farming
                 {
                     bed.LastHarvestedPlantSequence = bed.PlantSequence;
                     FarmContent.AddXp(result.Candidate, bed.HarvestXp);
+                    result.Candidate.FirstHarvestCompleted = true;
                 }
                 bed.BatchId = null; bed.RecipeId = null; bed.DurationSeconds = bed.ElapsedSeconds = bed.FrozenYield = 0; bed.HarvestXp = 0; bed.HarvestYield = 0; bed.LastGrowthUtcTicks = 0; bed.Watered = false;
-                if (bed.Repeat && result.Candidate.TwinsLevel >= 20)
+                if (recipe.orchard || bed.Repeat && result.Candidate.TwinsLevel >= 20)
                 {
-                    // One current-frame paid batch only; never transfer elapsed time or water into it.
-                    var error = PlantInto(result, owner, id, content.Recipe(bed.SelectedRecipeId), operationId, content);
+                    // Begin one new cycle; never carry elapsed time or watering into it.
+                    var error = PlantInto(result, owner, id, content.Recipe(bed.SelectedRecipeId), operationId, content, recipe.orchard);
                     if (error != null) bed.Repeat = false;
                 }
             }

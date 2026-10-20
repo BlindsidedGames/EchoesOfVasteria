@@ -32,6 +32,11 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly List<OrchardPair> orchardPairs = new();
         private string selectedRecipe, selectedBed;
         private float nextRefresh;
+        private BedTile preview, orchardPreview;
+        private int selectedPage = -1;
+        private string feedback;
+        private float feedbackUntil;
+        private Label feedbackLabel;
         private bool narrow;
         private ToolkitPortraitPages portraitPages;
         public float CompanionWidth { get; set; }
@@ -75,6 +80,7 @@ namespace TimelessEchoes.UI.Toolkit
             var header = E(root, "row between fields-header"); heading = L(header, "", "quests-heading");
             var progress = E(header, "row fields-xp"); xp = L(progress, "", "muted"); xpBar = ToolkitGameplay.Bar(progress);
             error = L(root, "", "status");
+            feedbackLabel = L(root, "", "fields-feedback");
             workspace = ToolkitControls.RecessedScroll(root, "fields-workspace", theme, compact: true);
             board = E(workspace, "row fields-board");
             cropSection = E(board, "column fields-crops"); cropHeading = L(cropSection, "", "heading");
@@ -97,14 +103,17 @@ namespace TimelessEchoes.UI.Toolkit
                 pair.Build.name = "fields-build-" + first; pair.Build.AddToClassList("fields-pair-build"); orchardPairs.Add(pair);
             }
             drawer = E(workspace, "row fields-drawer");
-            var controls = E(drawer, "column fields-selected"); selection = L(controls, "", "fields-selection"); selection.name = "fields-seed-selection";
+            var controls = E(drawer, "column fields-selected");
+            preview = CreateBed(snapshot.Beds.First(), controls, false); preview.Root.AddToClassList("fields-preview");
+            orchardPreview = CreateBed(snapshot.Beds.First(b => b.Orchard), controls, false); orchardPreview.Root.AddToClassList("fields-preview");
+            selection = L(controls, "", "fields-selection"); selection.name = "fields-seed-selection";
             detail = L(controls, "", "muted fields-selection-detail"); detail.name = "fields-selected-status";
             plant = Button(controls, "", PlantSelected); plant.name = "fields-plant-selected"; plant.AddToClassList("primary");
             buildSelected = Button(controls, "", () => Build(FindBuild(source.CapturePresentation(), selectedBed), selectedBed)); buildSelected.AddToClassList("primary");
             var tending = E(controls, "row fields-actions");
             water = Button(tending, "", () => { if (source is FarmService service) Execute(() => service.Water(selectedBed)); }); water.name = "fields-water-selected";
             repeat = Button(tending, "", ToggleRepeat); repeat.name = "fields-repeat-selected";
-            harvest = Button(controls, "", () => Execute(source.HarvestReady)); harvest.name = "farm-harvest-ready";
+            harvest = Button(tending, "", () => Execute(source.HarvestReady)); harvest.name = "farm-harvest-ready";
             seedColumn = E(drawer, "column fields-seeds-column"); seedHeading = L(seedColumn, "", "heading");
             seedScroll = ToolkitControls.RecessedScroll(seedColumn, "fields-seeds", theme, compact: true);
             seedGrid = E(seedScroll, "row fields-seed-grid");
@@ -121,8 +130,7 @@ namespace TimelessEchoes.UI.Toolkit
             undiscovered = L(seedColumn, "", "muted fields-undiscovered-count");
             portraitPages = new ToolkitPortraitPages(workspace.contentContainer, null, new[] { board }, workspace,
                 new ToolkitPortraitPages.Page("Crops", cropSection),
-                new ToolkitPortraitPages.Page("Orchard", orchardSection),
-                new ToolkitPortraitPages.Page("Planting", drawer));
+                new ToolkitPortraitPages.Page("Orchard", orchardSection));
             source.Changed += Refresh; ToolkitLocalization.Changed += Refresh;
             layout.Fill(root, theme, CompanionWidth); ApplyLayout(); Refresh(); return true;
         }
@@ -130,7 +138,7 @@ namespace TimelessEchoes.UI.Toolkit
         private static Label L(VisualElement parent, string text, string classes) => ToolkitGameplay.L(parent, text, classes);
         private static Button Button(VisualElement parent, string text, Action action)
         { var button = ToolkitControls.Button("", action, null); button.text = text; parent.Add(button); return button; }
-        private static void Visible(VisualElement element, bool visible) => element.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+        private static void Visible(VisualElement element, bool visible) { if (element != null) element.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None; }
         private static CostStrip CreateCosts(VisualElement parent)
         {
             var strip = new CostStrip { Root = E(parent, "row fields-costs") };
@@ -153,7 +161,7 @@ namespace TimelessEchoes.UI.Toolkit
                 strip.Counts[i].parent.tooltip = ToolkitLocalization.Text("fields.cost-owned", "{0}: {1:N0} owned / {2:N0} needed", material.Title, material.Owned, material.Required);
             }
         }
-        private void CreateBed(FarmBedPresentation bed, VisualElement parent)
+        private BedTile CreateBed(FarmBedPresentation bed, VisualElement parent, bool register = true)
         {
             var id = bed.Id; var tile = new BedTile { Orchard = bed.Orchard };
             tile.Root = E(parent, bed.Orchard ? "column fields-orchard-slot" : "column fields-plot"); tile.Root.name = "fields-plot-" + id;
@@ -185,7 +193,9 @@ namespace TimelessEchoes.UI.Toolkit
                 tile.Costs = CreateCosts(tile.Root);
                 tile.Action = Button(tile.Root, "", () => ActOnBed(id)); tile.Action.name = "fields-action-" + id; tile.Action.AddToClassList("fields-plot-action");
             }
-            beds[id] = tile;
+            if (register) beds[id] = tile;
+            else { tile.Root.name = "fields-selected-preview"; tile.Select.pickingMode = PickingMode.Ignore; }
+            return tile;
         }
         private FarmBuildPresentation FindBuild(FarmPresentationSnapshot snapshot, string id)
         {
@@ -197,7 +207,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void SelectBed(string id)
         {
             selectedBed = id; var snapshot = source.CapturePresentation(); var bed = snapshot.Beds.FirstOrDefault(b => b.Id == id);
-            if (ToolkitResponsiveLayout.IsPortrait) portraitPages?.Select(2);
+            if (ToolkitResponsiveLayout.IsPortrait) portraitPages?.Select(bed?.Orchard == true ? 1 : 0);
             var recipe = snapshot.Recipes.FirstOrDefault(r => r.Id == selectedRecipe);
             if (bed != null && (bed.Planted || recipe == null || recipe.Orchard != bed.Orchard))
                 selectedRecipe = bed.RecipeId ?? snapshot.Recipes.FirstOrDefault(r => r.Orchard == bed.Orchard && r.Discovered && r.Eligible)?.Id;
@@ -211,7 +221,24 @@ namespace TimelessEchoes.UI.Toolkit
                 selectedBed = snapshot.Beds.FirstOrDefault(b => b.Unlocked && !b.Planted && b.Orchard == recipe.Orchard)?.Id;
             Refresh();
         }
-        private void Execute(Func<bool> command) { if (source?.Ready == true) { command(); Refresh(); } }
+        private void Execute(Func<bool> command)
+        {
+            if (source?.Ready != true) return;
+            var before = source.CapturePresentation();
+            if (command())
+            {
+                var after = source.CapturePresentation();
+                var harvested = before.Beds.Where(b => b.Ready && after.Beds.Any(a => a.Id == b.Id && !a.Ready)).ToArray();
+                if (harvested.Length > 0)
+                {
+                    feedback = string.Join(" · ", harvested.Select(b => "+" + Compact(b.ExpectedYield) + " " + b.RecipeTitle)) +
+                        " · +" + harvested.Sum(b => b.HarvestXp) + " Twins XP";
+                    feedbackUntil = Time.unscaledTime + 6;
+                }
+            }
+            Refresh();
+        }
+        private static string Compact(double value) => System.Text.RegularExpressions.Regex.Replace(FormatNumber(value, hideDecimal: true), "<[^>]+>", "");
         private void Build(FarmBuildPresentation build, string id)
         {
             if (build?.CanTurnIn != true || source is not FarmService service) return;
@@ -230,8 +257,10 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void PlantSelected()
         {
-            if (plant.enabledInHierarchy && source is FarmService service && selectedBed != null && selectedRecipe != null)
-                Execute(() => service.Plant(selectedBed, selectedRecipe));
+            if (!plant.enabledInHierarchy || source is not FarmService service || selectedBed == null) return;
+            var bed = source.CapturePresentation().Beds.FirstOrDefault(b => b.Id == selectedBed);
+            if (bed?.Ready == true) Execute(() => service.Harvest(selectedBed));
+            else if (selectedRecipe != null) Execute(() => service.Plant(selectedBed, selectedRecipe));
         }
         private void ToggleRepeat()
         {
@@ -244,6 +273,17 @@ namespace TimelessEchoes.UI.Toolkit
             var snapshot = source.Ready ? source.CapturePresentation() : null;
             error.text = source.LastError ?? ""; Visible(error, error.text.Length > 0);
             if (snapshot == null) { plant.SetEnabled(false); harvest.SetEnabled(false); water.SetEnabled(false); repeat.SetEnabled(false); buildSelected.SetEnabled(false); return; }
+            if (portraitPages?.Active == true && selectedPage != portraitPages.Selected)
+            {
+                selectedPage = portraitPages.Selected;
+                var sectionOrchard = selectedPage == 1;
+                if (snapshot.Beds.FirstOrDefault(b => b.Id == selectedBed)?.Orchard != sectionOrchard)
+                {
+                    selectedBed = snapshot.Beds.FirstOrDefault(b => b.Orchard == sectionOrchard && b.Unlocked)?.Id ?? snapshot.Beds.First(b => b.Orchard == sectionOrchard).Id;
+                    selectedRecipe = null;
+                }
+            }
+            feedbackLabel.text = feedback ?? ""; Visible(feedbackLabel, Time.unscaledTime < feedbackUntil);
             selectedBed ??= snapshot.Beds.FirstOrDefault(b => b.Unlocked)?.Id ?? snapshot.Beds.FirstOrDefault()?.Id;
             var target = snapshot.Beds.FirstOrDefault(b => b.Id == selectedBed); var orchard = target?.Orchard == true;
             selectedRecipe ??= snapshot.Recipes.FirstOrDefault(r => r.Orchard == orchard && r.Discovered && r.Eligible)?.Id;
@@ -264,12 +304,15 @@ namespace TimelessEchoes.UI.Toolkit
                 Visible(tile.Fill.parent, bed.Planted); tile.Fill.style.width = Length.Percent(Mathf.Clamp01(bed.Progress01) * 100); RefreshArt(tile, bed);
                 if (tile.Action == null) continue;
                 RefreshCosts(tile.Costs, bed.Unlocked ? null : build);
-                Visible(tile.Action, !bed.Unlocked || !bed.Planted || bed.Ready || !bed.Watered);
+                var future = !bed.Unlocked && build?.GardenCapacity > snapshot.Beds.Count(b => b.Unlocked && !b.Orchard) + 1;
+                if (future) Visible(tile.Costs.Root, false);
+                Visible(tile.Action, !future && (!bed.Unlocked || !bed.Planted || bed.Ready || !bed.Watered));
                 tile.Action.text = !bed.Unlocked ? build?.CanTurnIn == true ? T("fields.build-plot", "Build plot") : T("fields.requirements", "Requirements") :
                     bed.Ready ? T("fields.action.harvest", "Harvest") : bed.Planted ? T("fields.action.water-once", "Water once") : T("fields.choose-seeds", "Choose seeds");
                 tile.Action.SetEnabled(!bed.Unlocked || snapshot.TownActionsAllowed);
                 tile.Action.EnableInClassList("primary", bed.Ready || !bed.Unlocked && build?.CanTurnIn == true);
                 tile.Root.EnableInClassList("fields-unbuilt", !bed.Unlocked);
+                tile.Root.EnableInClassList("fields-future", !bed.Unlocked && build?.Status != null && build.GardenCapacity > snapshot.Beds.Count(b => b.Unlocked && !b.Orchard) + 1);
             }
             foreach (var pair in orchardPairs)
             {
@@ -277,44 +320,59 @@ namespace TimelessEchoes.UI.Toolkit
                 var complete = first.Unlocked && second?.Unlocked != false; var build = FindBuild(snapshot, pair.First);
                 pair.Root.EnableInClassList("fields-pair-locked", !first.Unlocked && second?.Unlocked != true);
                 pair.Title.text = ToolkitLocalization.Text("fields.orchard-pair", "Orchard {0}–{1}", Array.IndexOf(FarmCommands.OrchardBeds, pair.First) + 1, Array.IndexOf(FarmCommands.OrchardBeds, pair.Second) + 1);
-                pair.Status.text = build?.Status ?? ""; Visible(pair.Status, !complete && build?.CanTurnIn != true);
+                pair.Status.text = build?.Status ?? ""; Visible(pair.Status, false);
                 RefreshCosts(pair.Costs, complete ? null : build); Visible(pair.Build, !complete);
                 pair.Build.text = build?.CanTurnIn == true ? T("fields.build-orchard-pair", "Build 2 plots") : T("fields.requirements", "Requirements"); pair.Build.SetEnabled(true);
                 pair.Build.EnableInClassList("primary", build?.CanTurnIn == true);
             }
             var available = snapshot.Recipes.Where(r => r.Orchard == orchard).ToArray(); var discovered = available.Count(r => r.Discovered);
-            seedHeading.text = ToolkitLocalization.Text(orchard ? "fields.sapling-count" : "fields.seed-count", orchard ? "Saplings · {0} / {1}" : "Seed packs · {0} / {1}", discovered, available.Length);
-            var columns = orchard ? 4 : narrow ? 4 : 9;
+            seedHeading.text = T(orchard ? "fields.saplings-heading" : "fields.seeds-heading", orchard ? "Saplings" : "Seed packs");
+            var columns = ToolkitResponsiveLayout.IsPortrait ? 4 : orchard ? 4 : narrow ? 4 : 9;
             foreach (var recipe in snapshot.Recipes)
             {
                 if (!seeds.TryGetValue(recipe.Id, out var card)) continue;
-                var show = recipe.Orchard == orchard && (recipe.Discovered || discovered == 0 && recipe == available.FirstOrDefault());
-                Visible(card.Button, show); card.Button.style.width = Length.Percent(100f / columns - .6f);
+                var show = recipe.Orchard == orchard && recipe.Discovered;
+                Visible(card.Button, show); card.Button.style.width = Length.Percent(100f / columns - 3f);
                 card.Icon.sprite = recipe.Discovered ? recipe.Icon : recipe.UnknownIcon ? recipe.UnknownIcon : unknownPack;
                 card.Title.text = recipe.Discovered ? recipe.CropTitle ?? recipe.Title : "???"; card.Count.text = recipe.Discovered ? recipe.SeedQuantity.ToString("0.##", CultureInfo.CurrentCulture) : "—";
                 card.Button.EnableInClassList("primary", selectedRecipe == recipe.Id); card.Button.EnableInClassList("fields-undiscovered", !recipe.Discovered);
                 card.Button.tooltip = recipe.Discovered ? ToolkitLocalization.Text("fields.recipe-level-required", "{0} · Farming {1} required", recipe.Title, recipe.RequiredHeroLevel) + "\n" + PlantCost(orchard) : T("fields.discover-first", "Discover this seed or sapling first.");
             }
             undiscovered.text = ToolkitLocalization.Text("fields.hidden-seeds", "{0} undiscovered", available.Length - discovered); Visible(undiscovered, discovered < available.Length);
+            var seedRows = (available.Count(r => r.Discovered) + columns - 1) / columns;
+            var seedHeight = seedRows * (ToolkitResponsiveLayout.IsPortrait ? 64 : 36) + (seedRows > 0 ? 3 : 0);
+            seedScroll.style.height = seedHeight; seedScroll.style.maxHeight = seedHeight;
+            seedScroll.parent.style.height = seedHeight; seedScroll.parent.style.maxHeight = seedHeight;
             var selectedBuild = target?.Unlocked == false ? FindBuild(snapshot, target.Id) : null;
             selection.text = target == null ? T("fields.select-seeds-bed", "Select seeds and an empty bed") : target.Title + (selected?.Discovered == true ? " · " + (selected.CropTitle ?? selected.Title) : "");
             var matches = target != null && selected != null && target.Orchard == selected.Orchard;
             var canPlant = snapshot.TownActionsAllowed && target?.Unlocked == true && !target.Planted && matches && selected.Discovered && selected.Eligible && selected.SeedQuantity >= FarmContent.PlantingCost(orchard);
-            detail.text = selectedBuild != null ? selectedBuild.Status + "\n" + string.Join("\n", selectedBuild.Materials.Select(m => ToolkitLocalization.Text("fields.cost-owned", "{0}: {1:N0} owned / {2:N0} needed", m.Title, m.Owned, m.Required))) :
-                target?.Planted == true ? BedStatus(target) : !matches ? T("fields.select-seeds-bed", "Select seeds and an empty bed") : !selected.Discovered ? T("fields.discover-first", "Discover this seed or sapling first.") : !selected.Eligible ?
-                ToolkitLocalization.Text("fields.recipe-level-required", "{0} · Farming {1} required", selected.Title, selected.RequiredHeroLevel) : ToolkitLocalization.Text("fields.plant-balance", "{0:N0} owned / {1} needed", selected.SeedQuantity, FarmContent.PlantingCost(orchard));
+            detail.text = selectedBuild != null ? selectedBuild.Status + "\n" + string.Join("\n", selectedBuild.Materials.Select(m => ToolkitLocalization.Text("fields.cost-compact", "{0}: {1} / {2}", m.Title, Compact(m.Owned), Compact(m.Required)))) :
+                target?.Planted == true ? ToolkitLocalization.Text("fields.yield-preview", "Harvest: {0} {1} · +{2} Twins XP", Compact(target.ExpectedYield), target.RecipeTitle, target.HarvestXp) : !matches ? T("fields.find-seeds", "Find seed packs by completing crop tasks on adventures.") : !selected.Discovered ? T("fields.discover-first", "Discover this seed or sapling first.") : !selected.Eligible ?
+                ToolkitLocalization.Text("fields.recipe-level-required", "{0} · Farming {1} required", selected.Title, selected.RequiredHeroLevel) : selected.SeedQuantity < 1 ? ToolkitLocalization.Text("fields.find-matching", "Complete {0} tasks on adventures to find more {1}.", selected.CropTitle, orchard ? "saplings" : "seed packs") : ToolkitLocalization.Text("fields.plant-balance", "{0:N0} owned / {1} needed", selected.SeedQuantity, FarmContent.PlantingCost(orchard));
             Visible(buildSelected, selectedBuild != null); buildSelected.text = orchard ? T("fields.build-orchard-pair", "Build 2 plots") : T("fields.build-plot", "Build plot"); buildSelected.SetEnabled(selectedBuild?.CanTurnIn == true);
-            Visible(plant, selectedBuild == null && target?.Planted != true); plant.SetEnabled(canPlant);
-            plant.text = canPlant ? ToolkitLocalization.Text("fields.plant-target", "Plant in {0}", target.Title) : matches && selected.Discovered && selected.SeedQuantity < FarmContent.PlantingCost(orchard) ? T("fields.need-pack", "Need a matching pack") : T("fields.action.plant", "Plant"); plant.tooltip = detail.text;
-            Visible(water, target?.Planted == true && !target.Ready && !target.Watered); water.SetEnabled(snapshot.TownActionsAllowed); water.text = T("fields.action.water-once", "Water once");
+            Visible(plant, selectedBuild == null); plant.SetEnabled(canPlant || snapshot.TownActionsAllowed && target?.Ready == true);
+            plant.text = target?.Planted == true ? target.Ready ? T("fields.action.harvest", "Harvest") : T("fields.growing", "Growing") : canPlant ? ToolkitLocalization.Text("fields.plant-target", "Plant in {0}", target.Title) : matches && selected.Discovered && selected.SeedQuantity < FarmContent.PlantingCost(orchard) ? T("fields.need-pack", "Need a matching pack") : T("fields.action.plant", "Plant"); plant.tooltip = detail.text;
+            Visible(water, target?.Unlocked == true); water.SetEnabled(snapshot.TownActionsAllowed && target?.Planted == true && !target.Ready && !target.Watered); water.text = target?.Watered == true ? T("fields.watered", "Watered") : T("fields.action.water-once", "Water once");
             Visible(repeat, target?.Unlocked == true && snapshot.TwinsLevel >= 20); repeat.SetEnabled(snapshot.TownActionsAllowed);
             repeat.text = T(target?.Repeat == true ? "fields.action.repeat-on" : "fields.action.repeat-off", target?.Repeat == true ? "Repeat: on" : "Repeat: off");
-            repeat.tooltip = T("fields.repeat-help", "Twins level 20: harvest and replant using 1 matching seed pack or 1 matching sapling. Stops when inputs run out.");
+            repeat.tooltip = T("fields.repeat-help-regrowth", "Twins level 20: harvest automatically. Crops use one seed pack to replant; trees regrow fruit without another sapling.");
+            Visible(preview.Root, !orchard && ToolkitResponsiveLayout.IsPortrait); Visible(orchardPreview.Root, orchard && ToolkitResponsiveLayout.IsPortrait);
+            Visible(selection, !ToolkitResponsiveLayout.IsPortrait);
+            if (target != null)
+            {
+                var selectedPreview = orchard ? orchardPreview : preview;
+                selectedPreview.Title.text = target.Title; selectedPreview.Status.text = BedStatus(target); RefreshArt(selectedPreview, target);
+                Visible(selectedPreview.Fill.parent, target.Planted); selectedPreview.Fill.style.width = Length.Percent(target.Progress01 * 100);
+                Visible(selectedPreview.Action, false); Visible(selectedPreview.Costs?.Root, false);
+                selectedPreview.Root.EnableInClassList("fields-ready", target.Ready);
+            }
             var ready = snapshot.Beds.Count(b => b.Unlocked && b.Ready); Visible(harvest, ready > 0); harvest.SetEnabled(snapshot.TownActionsAllowed && ready > 0); harvest.text = T("fields.action.harvest-ready", "Harvest ready");
         }
         private void RefreshArt(BedTile tile, FarmBedPresentation bed)
         {
             var recipe = (source as FarmService)?.Content.Recipe(bed.RecipeId); var stage = FarmView.GrowthStage(bed.Progress01, bed.Ready);
+            if (bed.EstablishedTree && !bed.Ready) stage = 2;
             var sprite = !bed.Planted ? null : bed.Orchard && stage < 3 && appearance ? appearance.treeStages[stage] : recipe?.stages?.Length == 4 ? recipe.stages[stage] : bed.Icon;
             for (var i = 0; i < tile.Soil.Length; i++)
             {
@@ -338,9 +396,9 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private static string T(string key, string fallback) => ToolkitLocalization.Text(key, fallback);
         private static string PlantCost(bool orchard) => ToolkitLocalization.Text(orchard ? "fields.plant-sapling-cost" : "fields.plant-seed-cost", orchard ? "Requires {0} matching sapling per plot." : "Requires {0} matching seed pack per field.", FarmContent.PlantingCost(orchard));
-        private static string BedStatus(FarmBedPresentation bed) => !bed.Unlocked ? T("fields.locked", "Locked · construction required") : !bed.Planted ? T("fields.empty", "Empty") : bed.RecipeTitle + "\n" + (bed.Ready ? T("fields.ready", "Ready") : FormatTime(Math.Max(0, bed.RemainingSeconds), mspace: false, shortForm: true));
+        private static string BedStatus(FarmBedPresentation bed) => !bed.Unlocked ? T("fields.locked", "Locked · construction required") : !bed.Planted ? T("fields.empty", "Empty") : bed.RecipeTitle + "\n" + (bed.Ready ? T("fields.ready", "Ready") : FormatTime(Math.Max(0, bed.RemainingSeconds), mspace: false, shortForm: true) + (bed.Watered ? " · " + T("fields.watered", "Watered") : "")) + (bed.Repeat ? "\n" + T("fields.auto-harvest", "Auto harvest") : "");
         private void ApplyLayout()
-        { portraitPages?.Update(); narrow = ToolkitWindowLayout.SafeArea.width - CompanionWidth < 640; root.EnableInClassList("fields-narrow", narrow); }
+        { portraitPages?.Update(); if (portraitPages?.Active == true && workspace.contentContainer.IndexOf(drawer) != workspace.contentContainer.childCount - 1) workspace.contentContainer.Add(drawer); narrow = ToolkitWindowLayout.SafeArea.width - CompanionWidth < 640; root.EnableInClassList("fields-narrow", narrow); }
         private void Update()
         {
             if (!IsOpen) return; layout.Fill(root, theme, CompanionWidth); ApplyLayout();

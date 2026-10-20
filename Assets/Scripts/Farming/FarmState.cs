@@ -12,6 +12,7 @@ namespace TimelessEchoes.Farming
         public HashSet<string> MigratedSeedIds = new HashSet<string>();
         public int TwinsLevel = 1;
         public long TwinsXp;
+        public bool FirstHarvestCompleted;
         public int GardenCapacity;
         public int OrchardCapacity;
         public string JournalLineage = Guid.NewGuid().ToString("N");
@@ -37,6 +38,7 @@ namespace TimelessEchoes.Farming
                 SeedResourceRevision = SeedResourceRevision,
                 MigratedSeedIds = MigratedSeedIds == null ? new HashSet<string>() : new HashSet<string>(MigratedSeedIds),
                 ProductionRevision = ProductionRevision, TwinsLevel = TwinsLevel, TwinsXp = TwinsXp,
+                FirstHarvestCompleted = FirstHarvestCompleted,
                 GardenCapacity = GardenCapacity, OrchardCapacity = OrchardCapacity,
                 JournalLineage = JournalLineage,
                 LastIssuedSequence = LastIssuedSequence,
@@ -65,6 +67,7 @@ namespace TimelessEchoes.Farming
         public string SelectedRecipeId;
         public bool Repeat;
         public bool Watered;
+        public bool EstablishedTree;
         public double FrozenYield;
         public long PlantSequence;
         public int HarvestXp;
