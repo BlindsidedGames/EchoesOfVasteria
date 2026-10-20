@@ -38,7 +38,7 @@
 .gameplay.fields-ui .fields-orchard-pair.fields-locked {padding:3px;border-width:.5px;border-color:var(--line);background-color:var(--field);}
 .gameplay.fields-ui .fields-orchard-pair.fields-locked.selected {border-color:var(--accent);}
 .gameplay.fields-ui .fields-pair-slots {flex-grow:1;min-height:0;align-items:stretch;}
-.gameplay.fields-ui .fields-orchard-slot {width:50%;flex-shrink:0;padding:3px;border-width:.5px;border-color:var(--line);background-color:var(--control);}
+.gameplay.fields-ui .fields-orchard-slot {flex-basis:0;flex-grow:1;min-width:0;padding:3px;border-width:.5px;border-color:var(--line);background-color:var(--control);}
 .gameplay.fields-ui .fields-orchard-slot.selected {border-color:var(--accent);background-color:var(--selected);}
 .gameplay.fields-ui .fields-orchard-slot .fields-plot-heading {display:none;}
 .gameplay.fields-ui .fields-orchard-pair .fields-plot-art {margin-bottom:4px;}

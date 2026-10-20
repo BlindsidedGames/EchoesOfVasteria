@@ -107,8 +107,13 @@ namespace TimelessEchoes.UI.Toolkit
                 var pair = new OrchardPair { Root = box, First = orchardBeds[i].Id, Second = i + 1 < orchardBeds.Length ? orchardBeds[i + 1].Id : null };
                 var pairHeader = E(box, "row fields-plot-heading");
                 pair.Title = L(pairHeader, "", "fields-pair-title");
-                var slots = E(box, "row fields-pair-slots"); pair.Slots = slots; CreateBed(orchardBeds[i], slots);
-                if (pair.Second != null) CreateBed(orchardBeds[i + 1], slots);
+                var slots = E(box, "row fields-pair-slots"); pair.Slots = slots;
+                var firstTree = CreateBed(orchardBeds[i], slots);
+                if (pair.Second != null)
+                {
+                    firstTree.Root.style.marginRight = 4;
+                    CreateBed(orchardBeds[i + 1], slots);
+                }
                 var first = pair.First;
                 pair.LockedSelect = Button(box, "", () => SelectBed(first));
                 pair.LockedSelect.AddToClassList("fields-pair-lock");
