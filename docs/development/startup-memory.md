@@ -1191,3 +1191,42 @@ farm publication can restart the cauldron. It is excluded from idle baseline cla
 The old 600-second sampler timeout was replaced by an explicit 1200-second budget
 for each 600-second active run plus setup/recovery. Original saves are copied,
 hashed and isolated; no generated save or capture is committed or uploaded.
+
+
+### Completed Windows active-production cases
+
+Both synthetic cases finish five 120-second active windows plus recovery in the
+same Windows IL2CPP Development player, runtime f882be5a0 with diagnostic helper
+f9a02d6f4, D3D12/RTX 4080 SUPER, actual viewport 1080 x 1896. Each has trillion-unit
+finite balances, level-1000 skill/mastery/Eva state, Vastium crafting, twelve
+planted automated beds and the normal 20 crafts/s / 100 tastes/s configuration.
+Actual counter increments, resource consumption and farm journal progress verify
+work; playtime and active flags alone are not the coverage criterion.
+
+| Case | Actual crafts | Actual tastings | Restarts | Unity allocated first -> last active sample, MiB | Windows lifetime peak working set, MiB |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| eternal | 11,280 | 60,324 | 0 | 346.94 -> 352.29 | 1012.83 |
+| ordinary | 11,336 | 60,331 | 0 | 347.77 -> 351.94 | 1028.26 |
+
+The ordinary case naturally transitions to Eternal Boons during the collection
+window. Farm committed sequence advances by ten and eleven respectively through
+normal automatic production. Every sustained sample has crafting and tasting
+active, with positive actual-work deltas in each UI phase. No gameplay stop rule
+is bypassed. Ordinary collection-window allocations rise by 4.40 MiB while its
+reported graphics counter rises by 3.13 MiB, then both fall during Fields; that
+bounded observation is not asserted to be a leak. Managed memory oscillates.
+
+Steady frame p95 is about 8.34 ms in all phases at this host's 120 Hz pacing;
+individual steady maxima reach 33.38 ms. Statistics omit each UI transition's first
+five seconds, so they do not establish hitch-free transitions or an iPhone FPS
+improvement. No matching unoptimized active-production A/B was run. Process,
+Unity and graphics counters overlap and are never added. These are Windows
+workload checks, not a reproduction of the physical mini's 2,098 MiB startup kill.
+
+Saved appearance is configured, but town does not instantiate the player world
+model: these cases do not establish highest-armour rendering or active-echo map
+coverage. Native sustained work was stopped on user request with partial evidence
+preserved. Local evidence is under `Artifacts/StandaloneMemory/stress-{eternal,
+ordinary}-01/`: stress-contract/completion/summary JSON, activity, memory, frames
+and external process-memory CSVs. Final verification finds all 239 original
+save/profile hashes unchanged. Both owned Windows profiling players have exited.
