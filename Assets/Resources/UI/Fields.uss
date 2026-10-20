@@ -47,6 +47,7 @@
 .gameplay.fields-ui .fields-preview .fields-plot-body {flex-direction:row;align-items:flex-start;justify-content:flex-start;}
 .gameplay.fields-ui .fields-preview .fields-plot-art {scale:1.5 1.5;transform-origin:left top;margin:0 24px 0 0;}
 .gameplay.fields-ui .fields-preview.fields-plot .fields-plot-art {overflow:hidden;}
+.gameplay.fields-ui .fields-preview.fields-orchard-slot .fields-plot-art {translate:0 -8px;}
 .gameplay.fields-ui .fields-preview .fields-plot-info {width:auto;flex-grow:1;flex-basis:0;}
 .gameplay.fields-ui .fields-preview .fields-plot-status {display:flex;font-size:10px;white-space:normal;margin:0;flex-grow:1;-unity-text-align:upper-left;}
 .gameplay.fields-ui .fields-preview-heading {align-items:flex-start;justify-content:space-between;margin-bottom:5px;}
