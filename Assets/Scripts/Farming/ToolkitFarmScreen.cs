@@ -23,9 +23,8 @@ namespace TimelessEchoes.UI.Toolkit
         private PanelSettings settings;
         private FieldsWorldAppearance appearance;
         private Sprite wateringCan;
-        private VisualElement root, board, bedList, drawer, seedColumn, seedGrid, xpBar, yieldRow, primaryActions;
+        private VisualElement root, board, bedList, drawer, seedColumn, seedGrid, xpBar, yieldRow;
         private VisualElement[] selectorTiles;
-        private Button[] primaryButtons;
         private ScrollView workspace, seedScroll;
         private Image floraPortrait, tillmanPortrait;
         private Label heading, xp, error, seedHeading, undiscovered, detail;
@@ -126,14 +125,14 @@ namespace TimelessEchoes.UI.Toolkit
             preview = CreateBed(snapshot.Beds.First(), controls, false); preview.Root.AddToClassList("fields-preview");
             orchardPreview = CreateBed(snapshot.Beds.First(b => b.Orchard), controls, false); orchardPreview.Root.AddToClassList("fields-preview");
             selectedCosts = CreateCosts(controls);
-            yieldRow = E(controls, "row fields-yield"); yieldIcon = ToolkitGameplay.Icon(yieldRow, null, 14);
-            yieldAmount = L(yieldRow, "", "fields-yield-amount"); yieldXp = L(yieldRow, "", "muted fields-yield-xp");
+            yieldRow = E(controls, "row fields-yield");
+            var output = E(yieldRow, "row fields-yield-output"); yieldIcon = ToolkitGameplay.Icon(output, null, 14);
+            yieldAmount = L(output, "", "fields-yield-amount"); yieldXp = L(yieldRow, "", "muted fields-yield-xp");
             detail = L(controls, "", "muted fields-selection-detail"); detail.name = "fields-selected-status";
-            primaryActions = E(controls, "row fields-primary-actions");
+            var primaryActions = E(controls, "row fields-primary-actions");
             plant = Button(primaryActions, "", PlantSelected); plant.name = "fields-plant-selected"; plant.AddToClassList("primary");
             buildSelected = Button(primaryActions, "", () => Build(FindBuild(source.CapturePresentation(), selectedBed), selectedBed)); buildSelected.AddToClassList("primary");
             water = Button(primaryActions, "", () => { if (source is FarmService service) Execute(() => service.Water(selectedBed)); }); water.name = "fields-water-selected";
-            primaryButtons = new[] { plant, buildSelected, water };
             var tending = E(controls, "row fields-actions");
             repeat = Button(tending, "", ToggleRepeat); repeat.name = "fields-repeat-selected";
             L(repeat, T("fields.auto-harvest", "Auto harvest"), "fields-repeat-label").pickingMode = PickingMode.Ignore;
@@ -425,6 +424,8 @@ namespace TimelessEchoes.UI.Toolkit
             if (target != null)
             {
                 var selectedPreview = orchard ? orchardPreview : preview;
+                var previewInfo = selectedPreview.Fill.parent.parent;
+                if (yieldRow.parent != previewInfo) previewInfo.Add(yieldRow);
                 selectedPreview.Title.text = "";
                 selectedPreview.Status.text = target.Planted ? target.RecipeTitle : selected?.CropTitle ?? T("fields.empty", "Empty");
                 selectedPreview.ProgressStatus.text = target.Ready ? T("fields.ready", "Ready") : FormatTime(Math.Max(0, target.RemainingSeconds), mspace: false, shortForm: true);
@@ -506,15 +507,6 @@ namespace TimelessEchoes.UI.Toolkit
             for (var i = 0; i < selectorTiles.Length; i++)
             {
                 selectorTiles[i].style.marginRight = i % 3 == 2 ? 0 : 4;
-            }
-            var controlWidth = Mathf.Floor((primaryActions.contentRect.width - 4) / 2) - 1;
-            harvest.style.width = controlWidth > 0 ? new Length(controlWidth) : Length.Percent(49);
-            var visibleIndex = 0;
-            foreach (var button in primaryButtons)
-            {
-                if (button.style.display.value == DisplayStyle.None) continue;
-                button.style.width = controlWidth > 0 ? new Length(controlWidth) : Length.Percent(49);
-                button.style.marginRight = visibleIndex++ % 2 == 0 ? 4 : 0;
             }
         }
         private void Update()

@@ -215,6 +215,12 @@ namespace Tests.PlayMode
                 var previewTrack = selectedPreview.Q<VisualElement>(className: "track");
                 Assert.That(progressStatus.worldBound.yMax, Is.LessThanOrEqualTo(previewTrack.worldBound.yMin), "Ready state sits above the progress bar.");
                 Assert.That(Mathf.Abs(progressStatus.worldBound.xMax - previewTrack.worldBound.xMax), Is.LessThan(1), "Ready state aligns with the right edge of the bar.");
+                var yieldRow = selectedPreview.Q<VisualElement>(className: "fields-yield");
+                Assert.That(yieldRow.worldBound.yMin, Is.GreaterThanOrEqualTo(previewTrack.worldBound.yMax), "Harvest output sits below the progress bar.");
+                Assert.That(Mathf.Abs(yieldRow.worldBound.xMin - previewTrack.worldBound.xMin), Is.LessThan(1), "Crop amount aligns with the left edge of the bar.");
+                Assert.That(Mathf.Abs(yieldRow.Q<Label>(className: "fields-yield-xp").worldBound.xMax - progressStatus.worldBound.xMax), Is.LessThan(1), "XP aligns under the timer.");
+                Assert.That(Mathf.Abs(selectedHarvest.worldBound.width - selectedPreview.worldBound.width), Is.LessThan(1), "Selected harvest fills the detail panel width.");
+                Assert.That(Mathf.Abs(allHarvest.worldBound.width - selectedPreview.worldBound.width), Is.LessThan(1), "Harvest All fills the detail panel width.");
                 FieldsClick(ui.Q<Button>("fields-repeat-selected"));
                 Assert.True(service.State.Beds[FarmCommands.WestBedId].Repeat, "The auto-harvest checkbox remains clickable.");
                 FieldsClick(ui.Q<Button>("fields-repeat-selected"));

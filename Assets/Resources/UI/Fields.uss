@@ -57,12 +57,13 @@
 .gameplay.fields-ui .fields-cost .icon {width:14px;height:14px;margin-right:6px;}
 .gameplay.fields-ui .fields-cost-count {font-size:10px;}
 .gameplay.fields-ui .fields-cost-count.fields-shortfall {color:#d99084;}
-.gameplay.fields-ui .fields-yield {align-items:center;min-height:24px;margin-bottom:4px;}
+.gameplay.fields-ui .fields-yield {align-items:center;justify-content:space-between;min-height:24px;margin:3px 0 0;}
+.gameplay.fields-ui .fields-yield-output {align-items:center;}
 .gameplay.fields-ui .fields-yield .icon {margin-right:6px;}
 .gameplay.fields-ui .fields-yield-amount {font-size:10px;}
 .gameplay.fields-ui .fields-yield-xp {font-size:9px;margin-left:14px;}
 .gameplay.fields-ui .fields-primary-actions {flex-wrap:wrap;margin-top:4px;}
-.gameplay.fields-ui .fields-primary-actions > .button {flex-grow:0;flex-shrink:0;min-width:0;height:26px;min-height:26px;font-size:9px;margin-bottom:4px;padding:3px;}
+.gameplay.fields-ui .fields-primary-actions > .button {width:100%;flex-grow:0;flex-shrink:0;min-width:0;height:26px;min-height:26px;font-size:9px;margin-bottom:4px;padding:3px;}
 .gameplay.fields-ui .fields-actions {align-items:center;margin-top:4px;}
 .gameplay.fields-ui .fields-actions > .check-control {min-height:20px;background-color:transparent;border-width:0;padding:0;}
 .gameplay.fields-ui .fields-repeat-label {font-size:9px;}
