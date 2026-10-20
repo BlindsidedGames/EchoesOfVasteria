@@ -1301,3 +1301,9 @@
 
 .gameplay.fields-ui .fields-portraits > .icon {margin:0;}
 .gameplay.fields-ui .fields-portraits > .fields-portrait-leading {margin-right:-8px;}
+
+.gameplay.fields-ui .fields-water-content {align-items:center;justify-content:center;}
+.gameplay.fields-ui .fields-water-icon {width:10px;height:10px;margin-right:3px;flex-shrink:0;}
+.gameplay.fields-ui .fields-water-label {font-size:7px;color:var(--text);}
+
+.gameplay.fields-ui .button:disabled .fields-water-label {color:var(--muted);}

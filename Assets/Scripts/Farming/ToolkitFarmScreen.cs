@@ -22,6 +22,7 @@ namespace TimelessEchoes.UI.Toolkit
         private IFarmPresentationSource source;
         private PanelSettings settings;
         private FieldsWorldAppearance appearance;
+        private Sprite wateringCan;
         private VisualElement root, board, cropSection, orchardSection, bedList, orchardList, drawer, seedColumn, seedGrid, xpBar;
         private ScrollView workspace, seedScroll;
         private Image floraPortrait, tillmanPortrait;
@@ -73,6 +74,7 @@ namespace TimelessEchoes.UI.Toolkit
             source ??= sourceBehaviour as IFarmPresentationSource;
             if (!IsConfigured || !source.Ready) return false;
             appearance = Resources.Load<FieldsWorldAppearance>("Farming/FieldsWorldAppearance");
+            wateringCan = TimelessEchoes.Characters.CharacterCatalog.Load()?.skillToolIcons.ElementAtOrDefault(2);
             if (!settings) { settings = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); settings.sortingOrder = 100; }
             var document = GetComponent<UIDocument>(); document.panelSettings = settings;
             document.rootVisualElement.pickingMode = PickingMode.Ignore;
@@ -147,6 +149,19 @@ namespace TimelessEchoes.UI.Toolkit
         private static Label L(VisualElement parent, string text, string classes) => ToolkitGameplay.L(parent, text, classes);
         private static Button Button(VisualElement parent, string text, Action action)
         { var button = ToolkitControls.Button("", action, null); button.text = text; parent.Add(button); return button; }
+        private void SetWaterLabel(Button button, string text, bool showIcon)
+        {
+            var row = button.Q<VisualElement>(className: "fields-water-content");
+            if (!showIcon) { Visible(row, false); button.text = text; return; }
+            if (row == null)
+            {
+                row = E(button, "row fields-water-content"); row.pickingMode = PickingMode.Ignore;
+                var icon = new Image { sprite = wateringCan, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
+                icon.AddToClassList("fields-water-icon"); row.Add(icon);
+                L(row, "", "fields-water-label").pickingMode = PickingMode.Ignore;
+            }
+            button.text = ""; Visible(row, true); row.Q<Label>().text = text;
+        }
         private static void Visible(VisualElement element, bool visible) { if (element != null) element.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None; }
         private static CostStrip CreateCosts(VisualElement parent)
         {
@@ -323,8 +338,9 @@ namespace TimelessEchoes.UI.Toolkit
                 if (tile.Action == null) continue;
                 RefreshCosts(tile.Costs, bed.Unlocked ? null : build);
                 Visible(tile.Action, !bed.Unlocked || !bed.Planted || bed.Ready || !bed.Watered);
-                tile.Action.text = !bed.Unlocked ? T("fields.construct", "Construct") :
+                var actionText = !bed.Unlocked ? T("fields.construct", "Construct") :
                     bed.Ready ? T("fields.action.harvest", "Harvest") : bed.Planted ? T("fields.action.water-once", "Water") : T("fields.choose-seeds", "Choose seeds");
+                SetWaterLabel(tile.Action, actionText, bed.Unlocked && bed.Planted && !bed.Ready);
                 tile.Action.SetEnabled(bed.Unlocked ? snapshot.TownActionsAllowed : build?.CanTurnIn == true);
                 tile.Action.EnableInClassList("primary", bed.Ready || !bed.Unlocked && build?.CanTurnIn == true);
                 tile.Root.EnableInClassList("fields-unbuilt", !bed.Unlocked);
@@ -370,7 +386,7 @@ namespace TimelessEchoes.UI.Toolkit
             Visible(buildSelected, selectedBuild != null); buildSelected.text = T("fields.construct", "Construct"); buildSelected.SetEnabled(selectedBuild?.CanTurnIn == true);
             Visible(plant, selectedBuild == null); plant.SetEnabled(canPlant || snapshot.TownActionsAllowed && target?.Ready == true);
             plant.text = target?.Planted == true ? target.Ready ? T("fields.action.harvest", "Harvest") : T("fields.growing", "Growing") : canPlant ? ToolkitLocalization.Text("fields.plant-target", "Plant in {0}", target.Title) : matches && selected.Discovered && selected.SeedQuantity < FarmContent.PlantingCost(orchard) ? T("fields.need-pack", "Need a matching pack") : T("fields.action.plant", "Plant"); plant.tooltip = detail.text;
-            Visible(water, target?.Unlocked == true); water.SetEnabled(snapshot.TownActionsAllowed && target?.Planted == true && !target.Ready && !target.Watered); water.text = target?.Watered == true ? T("fields.watered", "Watered") : T("fields.action.water-once", "Water");
+            Visible(water, target?.Unlocked == true); water.SetEnabled(snapshot.TownActionsAllowed && target?.Planted == true && !target.Ready && !target.Watered); SetWaterLabel(water, target?.Watered == true ? T("fields.watered", "Watered") : T("fields.action.water-once", "Water"), true);
             Visible(repeat, target?.Unlocked == true && snapshot.TwinsLevel >= 20); repeat.SetEnabled(snapshot.TownActionsAllowed);
             repeat.text = T(target?.Repeat == true ? "fields.action.repeat-on" : "fields.action.repeat-off", target?.Repeat == true ? "Repeat: on" : "Repeat: off");
             repeat.tooltip = T("fields.repeat-help-regrowth", "Fields level 20: harvest automatically. Crops use one seed pack to replant; trees regrow fruit without another sapling.");
