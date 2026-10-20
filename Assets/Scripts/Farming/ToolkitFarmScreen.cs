@@ -148,9 +148,10 @@ namespace TimelessEchoes.UI.Toolkit
                 var id = recipe.Id; var button = Button(seedGrid, "", () => SelectRecipe(id)); button.name = "fields-seed-" + id;
                 button.AddToClassList("fields-seed-card");
                 var title = L(button, "", "fields-seed-caption"); title.name = "seed-caption";
+                var content = E(button, "row fields-seed-content");
                 var icon = new Image { scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
-                icon.AddToClassList("icon"); button.Add(icon);
-                var count = L(button, "", "fields-seed-count"); count.name = "seed-quantity";
+                icon.AddToClassList("icon"); content.Add(icon);
+                var count = L(content, "", "fields-seed-count"); count.name = "seed-quantity";
                 seeds[id] = new SeedCard { Button = button, Title = title, Count = count, Icon = icon };
             }
             undiscovered = L(seedColumn, "", "muted fields-undiscovered-count");
