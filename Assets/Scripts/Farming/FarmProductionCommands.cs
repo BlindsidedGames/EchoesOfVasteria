@@ -38,16 +38,18 @@ namespace TimelessEchoes.Farming
             var build = content.Build(questId);
             var gate = content.BuildGate(owner, build);
             if (gate != null) return Reject(gate);
-            if (build.gardenCapacity < owner.Farm.GardenCapacity || build.gardenCapacity > GardenBeds.Length ||
-                build.orchardCapacity < owner.Farm.OrchardCapacity || build.orchardCapacity > OrchardBeds.Length || build.costs == null || build.costs.Count == 0) return Reject("InvalidConstruction");
+            if (build.gardenCapacity < 0 || build.gardenCapacity > GardenBeds.Length ||
+                build.orchardCapacity < 0 || build.orchardCapacity > OrchardBeds.Length ||
+                build.gardenCapacity + build.orchardCapacity == 0 || build.costs == null || build.costs.Count == 0) return Reject("InvalidConstruction");
             foreach (var cost in build.costs)
             {
                 if (cost == null || !cost.resource || cost.amount <= 0) return Reject("InvalidBuildCost");
                 result.ResourceDeltas.TryGetValue(cost.resource.name, out var total);
                 result.ResourceDeltas[cost.resource.name] = total - cost.amount;
             }
-            result.Candidate.GardenCapacity = build.gardenCapacity;
-            result.Candidate.OrchardCapacity = build.orchardCapacity;
+            // Each expansion adds to its own plots without removing the other kind.
+            result.Candidate.GardenCapacity = Math.Max(owner.Farm.GardenCapacity, build.gardenCapacity);
+            result.Candidate.OrchardCapacity = Math.Max(owner.Farm.OrchardCapacity, build.orchardCapacity);
             for (int i = 0; i < build.gardenCapacity; i++) Unlock(result.Candidate, GardenBeds[i]);
             for (int i = 0; i < build.orchardCapacity; i++) Unlock(result.Candidate, OrchardBeds[i]);
             result.CompletedQuests.Add(questId);

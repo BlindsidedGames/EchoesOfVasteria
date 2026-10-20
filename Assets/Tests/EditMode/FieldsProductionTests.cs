@@ -93,6 +93,46 @@ namespace Tests.EditMode
             Assert.IsTrue(FarmCommands.BuildFields(data, build.questId, id, Now, content).Accepted);
             Assert.AreEqual(1, data.Farm.GardenCapacity, "Gate checks never publish a build.");
         }
+        [Test] public void InterleavedConstructionPreservesBothPlotTypes()
+        {
+            var data = Garden(0);
+            var steps = new[] {
+                ("Farm.Orchard.Build01.v1", 5, 1, 2),
+                ("Farm.Garden.Build02.v1", 10, 2, 2),
+                ("Farm.Garden.Build03.v1", 35, 3, 2),
+                ("Farm.Orchard.Build02.v1", 50, 3, 4),
+                ("Farm.Garden.Build04.v1", 65, 4, 4),
+                ("Farm.Garden.Build05.v1", 95, 5, 4),
+                ("Farm.Orchard.Build03.v1", 110, 5, 6),
+                ("Farm.Garden.Build06.v1", 125, 6, 6)
+            };
+            foreach (var (id, level, fields, orchard) in steps)
+            {
+                var build = content.Build(id);
+                foreach (var source in build.sources)
+                    data.SkillData[source.associatedSkill.name] = new GameData.SkillProgress { Level = source.requiredSkillLevel };
+                foreach (var cost in build.costs)
+                    data.Resources[cost.resource.name] = new GameData.ResourceEntry { Amount = cost.amount, Earned = true };
+                data.Farm.TwinsLevel = level - 1;
+                var op = Op(data, "build:" + id);
+                Assert.False(FarmCommands.BuildFields(data, id, op, Now, content).Accepted, id + " must respect its level gate.");
+                data.Farm.TwinsLevel = level;
+                data = Commit(data, FarmCommands.BuildFields(data, id, op, Now, content));
+                Assert.AreEqual(fields, data.Farm.GardenCapacity, id);
+                Assert.AreEqual(orchard, data.Farm.OrchardCapacity, id);
+            }
+        }
+        [Test] public void EarlyOrchardDoesNotRemovePreviouslyBuiltFields()
+        {
+            var data = Garden(0, 5);
+            data.Farm.GardenCapacity = 6;
+            var build = content.Build("Farm.Orchard.Build01.v1");
+            foreach (var cost in build.costs)
+                data.Resources[cost.resource.name] = new GameData.ResourceEntry { Amount = cost.amount, Earned = true };
+            data = Commit(data, FarmCommands.BuildFields(data, build.questId, Op(data, "build:" + build.questId), Now, content));
+            Assert.AreEqual(6, data.Farm.GardenCapacity);
+            Assert.AreEqual(2, data.Farm.OrchardCapacity);
+        }
         [Test] public void PlantFreezesTwinsYieldAndDurationAndConsumesOnlyMatchingOwnedSeed()
         {
             var data = Garden(2, 30); var original = data;

@@ -14,6 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   displayNameKey: farm.display-name
   displayName: Fields
+  localizedDisplayName:
+    m_TableReference:
+      m_TableCollectionName: TownUI
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: farm.display-name
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   baseDurationSeconds: 1800
   baseYield: 10
   harvestXp: 10
@@ -309,7 +318,7 @@ MonoBehaviour:
   - questId: Farm.Garden.Build02.v1
     previousQuestId: Farm.Garden.Build01.v1
     title: Room to Grow
-    twinsLevel: 5
+    twinsLevel: 10
     gardenCapacity: 2
     orchardCapacity: 0
     sources:
@@ -378,47 +387,50 @@ MonoBehaviour:
     - resource: {fileID: 11400000, guid: 25c8cee6eddf4c4cb20d6d77f390eb56, type: 2}
       amount: 12000
   - questId: Farm.Orchard.Build01.v1
-    previousQuestId: Farm.Garden.Build06.v1
+    previousQuestId: Farm.Garden.Build01.v1
     title: Roots for Tomorrow
-    twinsLevel: 150
-    gardenCapacity: 6
+    twinsLevel: 5
+    gardenCapacity: 0
     orchardCapacity: 2
+    sources:
+    - {fileID: 11400000, guid: 8d93789f09a37544e9dda9870a26098c, type: 2}
+    costs:
+    - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
+      amount: 25
+    - resource: {fileID: 11400000, guid: 024c1162874b64e43be92b8892b40efb, type: 2}
+      amount: 50
+  - questId: Farm.Orchard.Build02.v1
+    previousQuestId: Farm.Orchard.Build01.v1
+    title: Another Pair of Roots
+    twinsLevel: 50
+    gardenCapacity: 0
+    orchardCapacity: 4
+    sources:
+    - {fileID: 11400000, guid: f47cc95a61027c549af94e61a3609e02, type: 2}
+    - {fileID: 11400000, guid: ba3b6a5aed10ba14299ebe98151f3018, type: 2}
+    costs:
+    - resource: {fileID: 11400000, guid: d27f42dac2c64a9fbdaef87b1d68cf83, type: 2}
+      amount: 1500
+    - resource: {fileID: 11400000, guid: 662ac0c8e09545b9a11ae5a1e0ac7125, type: 2}
+      amount: 3000
+    - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
+      amount: 250
+  - questId: Farm.Orchard.Build03.v1
+    previousQuestId: Farm.Orchard.Build02.v1
+    title: The Last Orchard Row
+    twinsLevel: 110
+    gardenCapacity: 0
+    orchardCapacity: 6
     sources:
     - {fileID: 11400000, guid: b64ee94d97b7f3e4d9a2185969b31623, type: 2}
     - {fileID: 11400000, guid: ba3b6a5aed10ba14299ebe98151f3018, type: 2}
     costs:
     - resource: {fileID: 11400000, guid: 46c7f0ba803d4f56acb642a964cbe795, type: 2}
-      amount: 10000
+      amount: 6000
     - resource: {fileID: 11400000, guid: 25c8cee6eddf4c4cb20d6d77f390eb56, type: 2}
-      amount: 15000
+      amount: 9000
     - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
-      amount: 2500
-  - questId: Farm.Orchard.Build02.v1
-    previousQuestId: Farm.Orchard.Build01.v1
-    title: Another Pair of Roots
-    twinsLevel: 185
-    gardenCapacity: 6
-    orchardCapacity: 4
-    sources:
-    - {fileID: 11400000, guid: 30abf53f32318cf418c3f6120c389b1b, type: 2}
-    costs:
-    - resource: {fileID: 11400000, guid: 7b11407c43c740dea10e135bf7e0c061, type: 2}
-      amount: 15000
-    - resource: {fileID: 11400000, guid: 914756acb1d24fb8a64da0ad08e3838f, type: 2}
-      amount: 20000
-  - questId: Farm.Orchard.Build03.v1
-    previousQuestId: Farm.Orchard.Build02.v1
-    title: The Last Orchard Row
-    twinsLevel: 225
-    gardenCapacity: 6
-    orchardCapacity: 6
-    sources:
-    - {fileID: 11400000, guid: 30abf53f32318cf418c3f6120c389b1b, type: 2}
-    - {fileID: 11400000, guid: ba3b6a5aed10ba14299ebe98151f3018, type: 2}
-    costs:
-    - resource: {fileID: 11400000, guid: 7b11407c43c740dea10e135bf7e0c061, type: 2}
-      amount: 25000
-    - resource: {fileID: 11400000, guid: 914756acb1d24fb8a64da0ad08e3838f, type: 2}
-      amount: 35000
-    - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
-      amount: 5000
+      amount: 1500
+  references:
+    version: 2
+    RefIds: []
