@@ -75,6 +75,39 @@ namespace Tests.PlayMode
    } finally {if(actor)Object.DestroyImmediate(actor);Object.DestroyImmediate(owner);}
   }
   [UnityTest]
+  public IEnumerator GuidancePointerAutocastCompletesEchoPromptInBothLayouts()
+  {
+   var owner=new GameObject("Autocast tutorial check"); GameObject run=null;
+   try {
+    owner.AddComponent<TimelessEchoes.Upgrades.ResourceManager>();
+    var tracker=owner.AddComponent<TimelessEchoes.Stats.GameplayStatTracker>(); tracker.enabled=false;
+    var manager=owner.AddComponent<TimelessEchoes.GameManager>(); manager.enabled=false;
+    var map=new GameObject("Protected run"); map.transform.SetParent(owner.transform);
+    typeof(TimelessEchoes.GameManager).GetProperty("CurrentMap").SetValue(manager,map);
+    typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(manager,false);
+    tracker.BeginRun(AssetDatabase.LoadAssetAtPath<TimelessEchoes.MapGeneration.MapGenerationConfig>("Assets/Scriptables/MapSettings/River.asset"),TimelessEchoes.GameManager.MapScalingMode.DistanceBased);
+    var recipe=Resources.Load<TimelessEchoes.Buffs.BuffRecipe>("Buffs/Echo Combat");
+    oracle.saveData.Quests[recipe.requiredQuest.questId]=new Blindsided.SaveData.GameData.QuestRecord {Completed=true};
+    var buffs=owner.AddComponent<TimelessEchoes.Buffs.BuffManager>(); buffs.enabled=false;
+    buffs.AssignBuff(0,recipe); buffs.UnlockAutoSlots(1);
+    run=CreateGuidanceRunView();
+    var arrow=run.GetComponent<UIDocument>().rootVisualElement.Q<Image>("first-echo-arrow");
+    bool automaticObserved=false; buffs.OnBuffCast+=(_,automatic)=>automaticObserved|=automatic;
+    foreach(var size in new[]{new Vector2Int(1170,2532),new Vector2Int(1920,1080)}) {
+     buffs.enabled=false; buffs.ClearActiveBuffs(); automaticObserved=false;
+     oracle.saveData.General.BuffTutorialStage=3;
+     PlayModeWindow.SetCustomRenderingResolution((uint)size.x,(uint)size.y,"Autocast prompt check");
+     yield return null; yield return null;
+     Assert.AreEqual(DisplayStyle.Flex,arrow.style.display.value);
+     buffs.enabled=true;
+     yield return null; yield return null;
+     Assert.True(automaticObserved,"The check must exercise the automatic casting path.");
+     Assert.AreEqual(4,oracle.saveData.General.BuffTutorialStage);
+     Assert.AreEqual(DisplayStyle.None,arrow.style.display.value);
+    }
+   } finally {if(run)Object.DestroyImmediate(run);Object.DestroyImmediate(owner);}
+  }
+  [UnityTest]
   public IEnumerator GuidancePointerLandscapeKeepsUtilityIconsWithNavigation()
   {
    var nav=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Navigation.prefab"));

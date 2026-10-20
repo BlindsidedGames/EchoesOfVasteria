@@ -102,7 +102,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void FirstEchoCast(BuffRecipe recipe, bool automatic)
         {
-            if (automatic || BuffIntroductionGuidance.Stage != 3 || !BuffIntroductionGuidance.IsFirstEcho(recipe) ||
+            if (BuffIntroductionGuidance.Stage != 3 || !BuffIntroductionGuidance.IsFirstEcho(recipe) ||
                 !GameManager.Instance || !GameManager.Instance.CurrentMap) return;
             Blindsided.Oracle.oracle.saveData.General.BuffTutorialStage = 4;
             SetVisible(firstEchoArrow, false);
