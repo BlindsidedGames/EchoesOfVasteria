@@ -70,7 +70,7 @@
 .gameplay.fields-ui #fields-repeat-selected {width:80px;flex-shrink:0;margin-right:4px;}
 .gameplay.fields-ui .fields-main-action {position:relative;flex-grow:1;flex-basis:0;min-width:0;height:26px;min-height:26px;}
 .gameplay.fields-ui .fields-main-action > .button {position:absolute;left:0;right:0;top:0;bottom:0;}
-.gameplay.fields-ui #fields-harvest-selected:disabled {background-color:var(--control);color:var(--muted);border-color:var(--button-edge);border-top-color:var(--button-light);opacity:1;}
+.gameplay.fields-ui .fields-main-action > .button:disabled {background-color:var(--control);color:var(--muted);border-color:var(--button-edge);border-top-color:var(--button-light);opacity:1;}
 .gameplay.fields-ui .fields-water-content {align-items:center;justify-content:center;}
 .gameplay.fields-ui .fields-water-icon {width:12px;height:12px;margin-right:4px;flex-shrink:0;}
 .gameplay.fields-ui .fields-water-label {font-size:9px;color:var(--on-accent);}

@@ -135,11 +135,11 @@ namespace TimelessEchoes.UI.Toolkit
             yieldXp = L(yieldRow, "", "muted fields-yield-xp");
             detail = L(controls, "", "muted fields-selection-detail"); detail.name = "fields-selected-status";
             var primaryActions = E(controls, "row fields-primary-actions");
-            plant = Button(primaryActions, "", PlantSelected); plant.name = "fields-plant-selected"; plant.AddToClassList("primary");
             buildSelected = Button(primaryActions, "", () => Build(FindBuild(source.CapturePresentation(), selectedBed), selectedBed)); buildSelected.AddToClassList("primary");
             var tending = E(controls, "row fields-harvest-actions");
             repeat = Button(tending, "", ToggleRepeat); repeat.name = "fields-repeat-selected";
             var mainAction = E(tending, "fields-main-action");
+            plant = Button(mainAction, "", PlantSelected); plant.name = "fields-plant-selected"; plant.AddToClassList("primary");
             water = Button(mainAction, "", () => { if (source is FarmService service) Execute(() => service.Water(selectedBed)); }); water.name = "fields-water-selected";
             water.AddToClassList("primary");
             harvest = Button(mainAction, "", () => { if (source is FarmService service) Execute(() => service.Harvest(selectedBed)); });
@@ -424,13 +424,14 @@ namespace TimelessEchoes.UI.Toolkit
                 RecipeRequirement(selected) : "";
             Visible(detail, detail.text.Length > 0);
             Visible(buildSelected, selectedBuild != null); buildSelected.name = "fields-build-selected";
+            Visible(buildSelected.parent, selectedBuild != null);
             buildSelected.text = T("fields.construct", "Construct"); buildSelected.SetEnabled(selectedBuild?.CanTurnIn == true);
             Visible(plant, selectedBuild == null && target?.Planted != true);
             plant.SetEnabled(canPlant);
             plant.text = T("fields.action.plant", "Plant");
             var needsWater = target?.Unlocked == true && target.Planted && !target.Ready && !target.Watered;
             Visible(water, needsWater);
-            Visible(harvest, !needsWater);
+            Visible(harvest, target?.Planted == true && !needsWater);
             water.SetEnabled(snapshot.TownActionsAllowed && target?.Watered == false);
             SetWaterLabel(water, T("fields.action.water-once", "Water"), true);
             repeat.SetEnabled(snapshot.TownActionsAllowed && target?.Unlocked == true && snapshot.TwinsLevel >= FarmContent.AutoReplantLevel);
