@@ -147,9 +147,11 @@ namespace TimelessEchoes.UI.Toolkit
                 if (recipe == null) continue;
                 var id = recipe.Id; var button = Button(seedGrid, "", () => SelectRecipe(id)); button.name = "fields-seed-" + id;
                 button.AddToClassList("fields-seed-card");
-                var icon = ToolkitGameplay.Icon(button, null, 14);
-                var title = L(button, "", "fields-seed-caption"); title.name = "seed-caption";
-                var count = L(button, "", "fields-seed-count"); count.name = "seed-quantity";
+                var icon = new Image { scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
+                icon.AddToClassList("icon"); button.Add(icon);
+                var labels = E(button, "column fields-seed-labels");
+                var title = L(labels, "", "fields-seed-caption"); title.name = "seed-caption";
+                var count = L(labels, "", "fields-seed-count"); count.name = "seed-quantity";
                 seeds[id] = new SeedCard { Button = button, Title = title, Count = count, Icon = icon };
             }
             undiscovered = L(seedColumn, "", "muted fields-undiscovered-count");
@@ -269,8 +271,10 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void SelectRecipe(string id)
         {
-            selectedRecipe = id; var snapshot = source.CapturePresentation(); var recipe = snapshot.Recipes.FirstOrDefault(r => r.Id == id);
+            var snapshot = source.CapturePresentation();
             var target = snapshot.Beds.FirstOrDefault(b => b.Id == selectedBed);
+            if (target?.Planted == true) return;
+            selectedRecipe = id; var recipe = snapshot.Recipes.FirstOrDefault(r => r.Id == id);
             if (recipe != null && (target == null || target.Orchard != recipe.Orchard))
                 selectedBed = snapshot.Beds.FirstOrDefault(b => b.Unlocked && !b.Planted && b.Orchard == recipe.Orchard)?.Id
                     ?? snapshot.Beds.FirstOrDefault(b => b.Orchard == recipe.Orchard)?.Id;
@@ -370,6 +374,7 @@ namespace TimelessEchoes.UI.Toolkit
                 if (!seeds.TryGetValue(recipe.Id, out var card)) continue;
                 var show = recipe.Orchard == orchard && recipe.Discovered;
                 Visible(card.Button, show);
+                card.Button.SetEnabled(target?.Planted != true);
                 card.Button.style.width = cardWidth > 0 ? new Length(cardWidth) : Length.Percent(100f / columns - 1.1f);
                 card.Button.style.marginRight = show && ++seedIndex % columns != 0 ? 4 : 0;
                 card.Icon.sprite = recipe.Discovered ? recipe.Icon : recipe.UnknownIcon ? recipe.UnknownIcon : unknownPack;

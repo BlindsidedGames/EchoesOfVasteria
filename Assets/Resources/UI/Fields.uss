@@ -73,10 +73,11 @@
 .gameplay.fields-ui #fields-seeds .unity-scroll-view__content-viewport {flex-grow:1;align-self:stretch;}
 .gameplay.fields-ui #fields-seeds .unity-scroll-view__content-container,.gameplay.fields-ui .fields-seed-grid {width:100%;}
 .gameplay.fields-ui .fields-seed-grid {flex-wrap:wrap;align-content:flex-start;}
-.gameplay.fields-ui .fields-seed-card {position:relative;flex-shrink:0;min-width:0;height:35px;min-height:35px;margin-bottom:4px;padding:3px;flex-direction:column;justify-content:space-between;align-items:flex-start;}
-.gameplay.fields-ui .fields-seed-card .icon {margin:0;}
-.gameplay.fields-ui .fields-seed-count {position:absolute;right:3px;top:2px;font-size:7px;}
-.gameplay.fields-ui .fields-seed-caption {width:100%;font-size:6.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-unity-text-align:middle-center;}
+.gameplay.fields-ui .fields-seed-card {position:relative;flex-shrink:0;min-width:0;height:35px;min-height:35px;margin-bottom:4px;padding:3px;flex-direction:row;align-items:stretch;}
+.gameplay.fields-ui .fields-seed-card .icon {width:28px;height:auto;align-self:stretch;margin:0 3px 0 0;flex-shrink:0;}
+.gameplay.fields-ui .fields-seed-labels {flex-grow:1;flex-basis:0;min-width:0;justify-content:space-between;}
+.gameplay.fields-ui .fields-seed-count {font-size:11px;-unity-text-align:middle-left;}
+.gameplay.fields-ui .fields-seed-caption {width:100%;font-size:6.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-unity-text-align:middle-left;}
 .gameplay.fields-ui .fields-seed-card.primary {background-color:var(--selected);border-color:var(--accent);}
 .gameplay.fields-ui .fields-undiscovered-count {font-size:7px;margin-top:4px;}
 .gameplay.fields-ui .fields-feedback {font-size:8px;white-space:normal;min-height:12px;margin-bottom:4px;}
@@ -93,4 +94,6 @@
 .gameplay.portrait.fields-ui .fields-repeat-label {font-size:10px;}
 .gameplay.portrait.fields-ui .fields-water-label {font-size:10px;}
 .gameplay.portrait.fields-ui .fields-seed-card {height:43px;min-height:43px;}
-.gameplay.portrait.fields-ui .fields-seed-caption,.gameplay.portrait.fields-ui .fields-seed-count {font-size:8px;}
+.gameplay.portrait.fields-ui .fields-seed-card .icon {width:36px;}
+.gameplay.portrait.fields-ui .fields-seed-caption {font-size:8px;}
+.gameplay.portrait.fields-ui .fields-seed-count {font-size:12px;}
