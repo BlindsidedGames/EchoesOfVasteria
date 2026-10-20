@@ -259,7 +259,7 @@ namespace TimelessEchoes.UI.Toolkit
                 windows?.CloseAllWindows(); CloseMenu(); Refresh(); return;
             }
             if (ToolkitResponsiveLayout.IsPortrait) windows?.CloseAllWindows();
-            portraitMenuTitle.text = group == Group.Adventure ? "Adventure" : group == Group.Hub ? "Hub" : ToolkitLocalization.Text("navigation.town", "Town");
+            portraitMenuTitle.text = group == Group.Adventure ? ToolkitLocalization.Text("navigation.adventure", "Adventure") : group == Group.Hub ? ToolkitLocalization.Text("navigation.hub", "Hub") : ToolkitLocalization.Text("navigation.town", "Town");
             openGroup = group; menuAnchor = ToolkitResponsiveLayout.IsPortrait && anchor.parent?.parent == morePopup ? moreButton : anchor; popup.style.display = DisplayStyle.Flex;
             Refresh();
         }
@@ -351,6 +351,8 @@ namespace TimelessEchoes.UI.Toolkit
         public void Refresh()
         {
             if (root == null) return;
+            if (portraitMenuTitle != null && HasOpenMenu)
+                portraitMenuTitle.text = openGroup == Group.Adventure ? ToolkitLocalization.Text("navigation.adventure", "Adventure") : openGroup == Group.Hub ? ToolkitLocalization.Text("navigation.hub", "Hub") : ToolkitLocalization.Text("navigation.town", "Town");
             if (windows != null && windows.IsWindowOpen(TownWindowManager.Window.Quests))
                 highlightQuestsUntilOpened = false;
             root.EnableInClassList("eov-navigation--window-open", openGroup != Group.Toolbar || (windows != null && windows.HasOpenWindow));

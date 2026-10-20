@@ -3209,7 +3209,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003049
-    m_Localized: "Construa os canteiros anteriores primeiro."
+    m_Localized: Construa os canteiros anteriores primeiro.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003048
@@ -3281,7 +3281,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003031
-    m_Localized: Regar uma vez
+    m_Localized: Regar
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003030
@@ -3345,7 +3345,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003015
-    m_Localized: "G\u00eameos no n\u00edvel 20: colhe e replanta usando 1 pacote de sementes do mesmo tipo ou 1 muda do mesmo tipo. Para quando os insumos acabam."
+    m_Localized: "G\xEAmeos no n\xEDvel 20: colhe e replanta usando 1 pacote de sementes do mesmo tipo ou 1 muda do mesmo tipo. Para quando os insumos acabam."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003014
@@ -3361,7 +3361,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003011
-    m_Localized: "Bloqueado \xB7 requer constru\xE7\xE3o"
+    m_Localized: Bloqueado
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003010
@@ -3909,7 +3909,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004019
-    m_Localized: "Voc\u00ea precisa de 1 pacote de sementes do mesmo tipo para semear um canteiro."
+    m_Localized: "Voc\xEA precisa de 1 pacote de sementes do mesmo tipo para semear um canteiro."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004020
@@ -3917,11 +3917,295 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004021
-    m_Localized: "Requer {0} pacote de sementes do mesmo tipo por canteiro."
+    m_Localized: Requer {0} pacote de sementes do mesmo tipo por canteiro.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004022
     m_Localized: Requer {0} muda do mesmo tipo por terreno.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004023
+    m_Localized: Loja
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004024
+    m_Localized: "B\xF4nus de coleta"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004025
+    m_Localized: +50% de recursos nas aventuras
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004026
+    m_Localized: Mais jogos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004027
+    m_Localized: "B\xF4nus de coleta permanente"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004028
+    m_Localized: +50% de recursos de aventuras em todos os jogos salvos. Sem recargas.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004029
+    m_Localized: Apoie o desenvolvedor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004030
+    m_Localized: "Apoio opcional. Sem b\xF4nus adicionais no jogo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004031
+    m_Localized: Um pequeno obrigado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004032
+    m_Localized: Um grande obrigado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004033
+    m_Localized: Um enorme obrigado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004034
+    m_Localized: Restaurar compras
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004035
+    m_Localized: "B\xF4nus permanente ativo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004036
+    m_Localized: "B\xF4nus permanente desativado"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004037
+    m_Localized: "Restam {0} \xB7 Pausa fora das aventuras"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004038
+    m_Localized: "30 minutos por resgate \xB7 Acumule at\xE9 2 horas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004039
+    m_Localized: Adicionar 30 min
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004040
+    m_Localized: "Ativar \xB7 30 min"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004041
+    m_Localized: "Compra original \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004042
+    m_Localized: "Comprado \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004043
+    m_Localized: "Comprar \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004044
+    m_Localized: "Indispon\xEDvel"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004045
+    m_Localized: "Compras dispon\xEDveis no iOS e Android."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004046
+    m_Localized: "Promo\xE7\xE3o de jogo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004047
+    m_Localized: Ver jogo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004048
+    m_Localized: Resgatar 30 min
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004049
+    m_Localized: "Conectando \xE0 loja\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004050
+    m_Localized: "Loja indispon\xEDvel. Tente mais tarde."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004051
+    m_Localized: "Produtos indispon\xEDveis. Tente mais tarde."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004052
+    m_Localized: "Loja de teste do editor \u2014 sem cobran\xE7as"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004053
+    m_Localized: Loja desconectada.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004054
+    m_Localized: "Aguardando a compra\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004055
+    m_Localized: "N\xE3o foi poss\xEDvel iniciar a compra."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004056
+    m_Localized: "Compra recebida, mas n\xE3o foi salva. Restaure as compras para tentar de novo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004057
+    m_Localized: Obrigado pelo apoio!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004058
+    m_Localized: "Compra salva. A confirma\xE7\xE3o ser\xE1 tentada novamente ao restaurar compras."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004059
+    m_Localized: Compra cancelada ou malsucedida. Nada foi desbloqueado.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004060
+    m_Localized: "Compra aguardando aprova\xE7\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004061
+    m_Localized: Compras restauradas.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004062
+    m_Localized: "Restaura\xE7\xE3o indispon\xEDvel. Tente mais tarde."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004063
+    m_Localized: "Restaurando compras\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004064
+    m_Localized: "Conclua primeiro a introdu\xE7\xE3o de Flora e Tillman."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004065
+    m_Localized: "Requer n\xEDvel {0} de Campos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004066
+    m_Localized: "Os Campos ainda est\xE3o carregando."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004067
+    m_Localized: Lote {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004068
+    m_Localized: Requer nv. {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004069
+    m_Localized: "{0}: {1:N0} dispon\xEDveis / {2:N0} necess\xE1rios"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004070
+    m_Localized: 'Replantio auto.: nv. {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004071
+    m_Localized: 'Rega auto.: nv. {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004072
+    m_Localized: "Campos | N\xEDvel {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004073
+    m_Localized: "Lotes {0}\u2013{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004074
+    m_Localized: Encontre pacotes de sementes nas tarefas de cultivo das aventuras.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004075
+    m_Localized: Construir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004076
+    m_Localized: Auto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004077
+    m_Localized: "Campos n\xEDvel {0}: colhe e replanta usando um pacote de sementes ou uma muda correspondente. Para quando acabam. A partir do n\xEDvel {1}, toda nova planta\xE7\xE3o \xE9 regada automaticamente, mesmo com Auto desligado."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004078
+    m_Localized: Cortar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004079
+    m_Localized: Colher
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004080
+    m_Localized: "{0} \xB7 Requer {1} {2}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004081
+    m_Localized: 'Com rega: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004082
+    m_Localized: "Sem rega: {0} \xB7 Com rega: {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004083
+    m_Localized: +{0} EXP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004084
+    m_Localized: +{0} EXP de Campos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004085
+    m_Localized: Carvalho
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004086
+    m_Localized: "B\xE9tula"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004087
+    m_Localized: Abeto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004088
+    m_Localized: Muda de carvalho
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004089
+    m_Localized: "Muda de b\xE9tula"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004090
+    m_Localized: Muda de abeto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004091
+    m_Localized: Vila
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004092
+    m_Localized: "Auto \u2022 Sim"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004093
+    m_Localized: "Auto \u2022 N\xE3o"
     m_Metadata:
       m_Items: []
   references:

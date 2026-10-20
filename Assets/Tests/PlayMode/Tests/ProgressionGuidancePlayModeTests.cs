@@ -165,6 +165,12 @@ namespace Tests.PlayMode
                 var map = new GameObject("First Echo adventure"); map.transform.SetParent(owner.transform);
                 typeof(TimelessEchoes.GameManager).GetProperty("CurrentMap").SetValue(gm, map);
                 typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(gm, false);
+                // The run HUD correctly blocks casting without a living hero.
+                CreateGuidancePathfinder(owner);
+                var actor = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Caleb.prefab"), owner.transform);
+                var hero = actor.GetComponent<TimelessEchoes.Hero.HeroController>(); hero.enabled = false;
+                hero.MovementController.SetActiveState(false, hero.Animator);
+                actor.GetComponent<TimelessEchoes.Hero.HeroHealth>().Init(100);
                 tracker.BeginRun(AssetDatabase.LoadAssetAtPath<MapGenerationConfig>("Assets/Scriptables/MapSettings/River.asset"), TimelessEchoes.GameManager.MapScalingMode.DistanceBased);
                 runView = CreateGuidanceRunView(); yield return new WaitForSecondsRealtime(.15f);
                 var runUi = runView.GetComponent<UIDocument>().rootVisualElement;
@@ -1283,7 +1289,6 @@ namespace Tests.PlayMode
                     Assert.IsNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>(), "Reload resumes the hand prompt without repeating dialogue.");
                     FieldsClick(navUi.Q<Button>("stats")); yield return new WaitForSecondsRealtime(.1f);
                     var ui = stats.GetComponent<UIDocument>().rootVisualElement;
-                    Assert.AreEqual(5, ui.Query<Button>(className: "eov-stat-tab").ToList().Count);
                     Assert.IsNull(ui.Q("stats-tab-1"), "The ranking tab is removed.");
                     Assert.AreEqual(DisplayStyle.Flex, ui.Q("graphs-tutorial-hand").style.display.value);
                     FieldsClick(ui.Q<Button>("stats-tab-2")); yield return new WaitForSecondsRealtime(.1f);

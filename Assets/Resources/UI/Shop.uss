@@ -1,25 +1,25 @@
 .gameplay.shop-ui {padding:10px;}
 .gameplay.shop-ui .shop-header {justify-content:space-between;align-items:center;flex-shrink:0;margin-bottom:8px;}
-.gameplay.shop-ui .shop-header .heading {margin:0;}
+.gameplay.shop-ui .shop-header .heading {margin:0;min-width:0;flex-grow:1;white-space:normal;}
 .gameplay.shop-ui #shop-body-frame,.gameplay.shop-ui #shop-games-frame,.gameplay.shop-ui #shop-promotion-frame {flex-grow:1;min-height:0;padding:0;}
 .gameplay.shop-ui #shop-body,.gameplay.shop-ui #shop-games,.gameplay.shop-ui #shop-promotion {flex-grow:1;min-height:0;}
 .gameplay.shop-ui .shop-card {padding:10px;margin-bottom:8px;background-color:var(--control);border-width:.5px;border-color:var(--line);flex-shrink:0;}
 .gameplay.shop-ui .shop-offers {align-items:stretch;}
 .gameplay.shop-ui .shop-offers > .shop-card {flex-grow:1;flex-basis:0;min-width:0;margin-right:6px;}
-.gameplay.shop-ui .shop-offers > .shop-card:last-child {margin-right:0;}
+.gameplay.shop-ui .shop-offers > .shop-offer-last {margin-right:0;}
 .gameplay.shop-ui .shop-offers > .shop-card > .button {margin-top:auto;}
-.gameplay.shop-ui .shop-card .heading {font-size:13px;margin-bottom:4px;}
+.gameplay.shop-ui .shop-card .heading {font-size:13px;margin-bottom:4px;white-space:normal;}
 .gameplay.shop-ui .shop-description {font-size:10px;white-space:normal;margin-bottom:6px;}
 .gameplay.shop-ui .muted {font-size:9px;white-space:normal;}
 .gameplay.shop-ui .shop-actions {margin-top:8px;flex-shrink:0;}
 .gameplay.shop-ui .shop-actions > .button {flex-grow:1;flex-basis:0;margin-right:6px;}
-.gameplay.shop-ui .shop-actions > .button:last-child {margin-right:0;}
+.gameplay.shop-ui .shop-actions > .shop-action-last {margin-right:0;}
 .gameplay.shop-ui .button {min-height:28px;font-size:10px;}
 .gameplay.shop-ui .button:disabled {background-color:var(--field);color:var(--muted);opacity:1;}
 .gameplay.shop-ui .shop-section-heading {margin-top:6px;margin-bottom:4px;}
 .gameplay.shop-ui .shop-supporters {align-items:stretch;}
 .gameplay.shop-ui .shop-supporter {flex-basis:0;flex-grow:1;min-width:0;margin-right:6px;}
-.gameplay.shop-ui .shop-supporter:last-child {margin-right:0;}
+.gameplay.shop-ui .shop-supporter-last {margin-right:0;}
 .gameplay.shop-ui .shop-product-title {font-size:11px;margin-bottom:8px;}
 .gameplay.shop-ui .shop-status {margin-top:6px;}
 .gameplay.shop-ui .shop-modal {position:absolute;left:0;right:0;top:0;bottom:0;padding:10px;background-color:var(--surface);}

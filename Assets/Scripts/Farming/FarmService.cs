@@ -254,7 +254,7 @@ namespace TimelessEchoes.Farming
                     data?.Resources?.TryGetValue(r.paidInput.name, out var input) == true && input.Earned : false;
                 return new FarmRecipePresentation { Id=r.id, Title=r.paidInput ? ToolkitLocalization.Name(r.paidInput) : ToolkitLocalization.Text("fields.recipe-seeds", "{0} seeds", ToolkitLocalization.Name(r.output)),
                     CropTitle=r.DisplayName,SeedQuantity=quantity, Discovered=discovered, Eligible=config.CanPlant(data,r), Orchard=r.orchard,
-                    Icon=r.packIcon, UnknownIcon=r.unknownIcon, RequiredSkill=r.source?.associatedSkill?.name ?? "Farming", RequiredHeroLevel=r.source ? r.source.requiredSkillLevel : 1 };
+                    Icon=r.packIcon, UnknownIcon=r.unknownIcon, RequiredSkill=r.source?.associatedSkill ? ToolkitLocalization.Name(r.source.associatedSkill, "skill") : ToolkitLocalization.Text("skill.Farming", "Farming"), RequiredHeroLevel=r.source ? r.source.requiredSkillLevel : 1 };
             }).ToArray();
             var builds = new List<FarmBuildPresentation>();
             var introComplete = FarmContent.Completed(data,FarmContent.IntroductionId);
@@ -287,7 +287,7 @@ namespace TimelessEchoes.Farming
                     state.Beds.TryGetValue(id,out var bed);
                     var recipe=config.Recipe(bed?.RecipeId ?? bed?.SelectedRecipeId);
                     var orchard=index>=6;
-                    return new FarmBedPresentation { Id=id,Title=orchard ? ToolkitLocalization.Text("fields.orchard-number", "Orchard plot {0}", index-5) : ToolkitLocalization.Text("fields.plot-number", "Plot {0}", index+1),
+                    return new FarmBedPresentation { Id=id,Title=ToolkitLocalization.Text("fields.plot-number", "Plot {0}", orchard ? index-5 : index+1),
                         Unlocked=FarmCommands.AccessibleBed(state,id),Orchard=orchard,RecipeId=recipe?.id,RecipeTitle=recipe?.DisplayName,YieldTitle=ToolkitLocalization.Name(recipe?.output),
                         ExpectedYield=bed?.IsPlanted==true ? bed.FrozenYield * (1 + PreviewBonus(recipe?.output) / 100d) : 0,
                         SecondaryExpectedYield=bed?.IsPlanted==true ? bed.FrozenSecondaryYield * (1 + PreviewBonus(recipe?.secondaryOutput) / 100d) : 0,
