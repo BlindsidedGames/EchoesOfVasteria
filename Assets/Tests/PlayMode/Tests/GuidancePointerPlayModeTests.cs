@@ -75,6 +75,31 @@ namespace Tests.PlayMode
    } finally {if(actor)Object.DestroyImmediate(actor);Object.DestroyImmediate(owner);}
   }
   [UnityTest]
+  public IEnumerator GuidancePointerEchoWalksAfterFastFishingCompletes()
+  {
+   var owner=new GameObject("Completed fishing locomotion"); GameObject actor=null;
+   try {
+    CreateGuidancePathfinder(owner);
+    actor=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Echo.prefab"),owner.transform);
+    var echo=actor.GetComponent<TimelessEchoes.Hero.EchoController>(); echo.enabled=false;
+    var animator=echo.Animator;
+    // A fast task can complete while the cast clip is still playing. The pulse
+    // used to disappear before Fishing_Idle_Down was able to consume it.
+    animator.Play("Fishing",0,0); animator.Update(.01f);
+    animator.SetTrigger("CatchFish"); animator.Update(.01f); animator.ResetTrigger("CatchFish");
+    TimelessEchoes.Utilities.AnimatorMovementHelper.SetMovement(animator,Vector2.right,5);
+    animator.Update(.02f);
+    Assert.True(animator.GetCurrentAnimatorStateInfo(0).IsName("Run"),"Completed fishing must yield to resumed movement even during the cast clip.");
+    foreach(var pose in new[]{"Fishing_Idle_Down","Fishing_Catch_down"}) {
+     animator.SetFloat("MoveMagnitude",0); animator.Play(pose,0,0); animator.Update(.01f);
+     TimelessEchoes.Utilities.AnimatorMovementHelper.SetMovement(animator,Vector2.right,5);
+     animator.Update(.02f);
+     Assert.True(animator.GetCurrentAnimatorStateInfo(0).IsName("Run"),pose+" must release locomotion when the echo moves.");
+    }
+    yield return null;
+   } finally {if(actor)Object.DestroyImmediate(actor);Object.DestroyImmediate(owner);}
+  }
+  [UnityTest]
   public IEnumerator GuidancePointerAutocastCompletesEchoPromptInBothLayouts()
   {
    var owner=new GameObject("Autocast tutorial check"); GameObject run=null;
