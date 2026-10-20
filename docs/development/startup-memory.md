@@ -1117,3 +1117,43 @@ is no native push, merge or upload. Windows final verification also rechecks all
 places a 1091.727 ms PrepareShaping sample beneath the large first layout pass;
 that is the specific remaining text-initialization lead, not evidence for changing
 font coverage or enabling the rejected font flush.
+
+
+## Corrected late-game workload criteria: active production
+
+The preceding 116-hour save is an **idle progressed-save control**, not evidence
+for the late-game workload. Time played and unlocked features do not establish
+production load. Its near-empty stew, stationary craft count and unplanted single
+bed were explicitly observed. Its startup/panel measurements remain valid within
+that narrower scope; they do not answer the simultaneous high-state workload.
+
+New diagnostic-only sources under `tools/profiling` create isolated synthetic
+states with 1e12 finite balances for every resource and stew; skills, mastery and
+Eva level 1000; all finite authored unlocks; tier-7 Vastium core and legitimate
+maximum-quality five-affix equipment; and a normal modular character with all
+gear visibility enabled. No authored throughput, rarity odds, stop conditions,
+clocks, presentation or production code are changed. Infinite level systems have
+no absolute maximum, so these are explicit high-progression stress states.
+
+Two independently seeded states exercise (1) fully maxed finite collections with
+seven Eternal Boons at one million copies each, and (2) ordinary collections at
+half of their maximum with no Eternal copies, exercising normal tier/pool changes
+and transition. Both grow all twelve fully unlocked/automated beds through normal
+paid, journalled commands. A documented 300-second starting growth age permits a
+normal harvest/replant during the sustained run; subsequent growth is unchanged.
+
+Both Windows functional smokes pass every shared UI phase: 284 real autocrafts
+and 1,520 tastings each, zero restarts, decreasing core/ingot/stew balances, twelve
+planted beds, and the expected different Eternal states. The actual runtime taste
+bonus is five (active replaces passive), costing six stew/taste; the preliminary
+additive bonus assumption was incorrect and is not used. Configured rates remain
+20 crafts/s and 100 tastes/s; actual completion rates are measured independently
+of flags or requested caps. The configured 1000-craft/s cap is not injected as an
+unauthored bonus. Native build and ten-minute-per-variant sustained controls are
+in progress. Short smokes establish function only, not sustained memory/FPS.
+
+The shared legacy stage label `stress-idle-control` is setup/settle only: normal
+farm publication can restart the cauldron. It is excluded from idle baseline claims.
+The old 600-second sampler timeout was replaced by an explicit 1200-second budget
+for each 600-second active run plus setup/recovery. Original saves are copied,
+hashed and isolated; no generated save or capture is committed or uploaded.

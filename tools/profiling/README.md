@@ -44,7 +44,9 @@ harvest/replant logic are unchanged.
 
 The default active run has five 120-second windows: hidden, Forge, Cauldron Tasting,
 Cauldron Collection, and Fields. Both production systems continue throughout all
-windows. A brief idle control precedes them, with recovery afterward. Inventories
+windows. A brief setup/settle band precedes them, with recovery afterward. The legacy
+stage label `stress-idle-control` does not prove idleness: normal farm commands can
+restart tasting. Exclude that band from idle comparisons and use real counters. Inventories
 occur outside the sustained timing windows. Per-window real counter deltas must
 be positive. EOV_STRESS_MODE selects eternal/ordinary. EOV_STRESS_PHASE_SECONDS is
 only a smoke-test duration override; 3-second smoke windows are not sustained data.
