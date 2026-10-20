@@ -564,6 +564,7 @@ namespace TimelessEchoes
         /// <summary>Starts an authored map with the same music and scaling used by its original button.</summary>
         public bool BeginAdventure(MapGenerationConfig config)
         {
+            if (runLoadingActive) return false;
             if (TimelessEchoes.Characters.CharacterCreation.Required) return false;
             if (UI.Toolkit.BuffIntroductionGuidance.Active || UI.Toolkit.BuffIntroductionGuidance.Eligible) return false;
             if (config == null) return false;
@@ -589,6 +590,7 @@ namespace TimelessEchoes
 
         private void StartRun()
         {
+            if (runLoadingActive) return;
             HideTooltip();
             cloudSpawner?.SetAllowClouds(CurrentGenerationConfig == null || CurrentGenerationConfig.allowClouds);
             // Stop any ongoing taskbar flashing when a new run begins
@@ -632,7 +634,10 @@ namespace TimelessEchoes
 
         private IEnumerator StartRunRoutine()
         {
-            yield return StartCoroutine(CleanupMapRoutine());
+            SetRunLoadingVisible(true);
+            UpdateRunLoadingProgress(0f);
+            yield return null; // Present the loading overlay before teardown/instantiation.
+            yield return StartCoroutine(CleanupMapRoutine(true));
 
             if (statTracker == null)
             {
@@ -649,9 +654,13 @@ namespace TimelessEchoes
             }
 
             CurrentMap = Instantiate(mapPrefab);
+            loadedMapConfig = CurrentGenerationConfig;
             taskController = CurrentMap.GetComponentInChildren<TaskController>();
             if (taskController == null)
+            {
+                SetRunLoadingVisible(false);
                 yield break;
+            }
 
             var segmentedGenerator = CurrentMap.GetComponentInChildren<SegmentedMapGenerator>();
 
@@ -739,9 +748,7 @@ namespace TimelessEchoes
             npcObjectStateController?.UpdateObjectStates();
             locationObjectStateController?.UpdateObjectStates();
 
-            SetRunLoadingVisible(true);
             yield return AwaitInitialGeneration(segmentedGenerator);
-            taskController?.ForceResortNow();
 
             yield return StartCoroutine(FastForwardStart());
             SetRunLoadingVisible(false);
@@ -1223,7 +1230,9 @@ namespace TimelessEchoes
             StartCoroutine(CleanupMapRoutine());
         }
 
-        private IEnumerator CleanupMapRoutine()
+        private MapGenerationConfig loadedMapConfig;
+
+        private IEnumerator CleanupMapRoutine(bool preparingRun = false)
         {
             if (stallMonitorCoroutine != null)
             {
@@ -1260,13 +1269,21 @@ namespace TimelessEchoes
 
                 yield return null; // allow release reparenting to settle
 
-                Destroy(CurrentMap); // safe to destroy AstarPath now
+                // Stop the old pathfinder before a replacement map can install
+                // its singleton or allocate a new graph in the same frame.
+                CurrentMap.SetActive(false);
+                Destroy(CurrentMap);
                 CurrentMap = null;
+                yield return null;
             }
 
             // Reuse instances while travelling within a run, but do not retain
             // the high-water population of every previously visited map.
-            Blindsided.Utilities.Pooling.PoolManager.TrimInactive();
+            // Reuse a small population only for an immediate restart of the same
+            // map. Switching maps or returning to town still discards idle pools.
+            var sameMapRestart = preparingRun && loadedMapConfig == CurrentGenerationConfig;
+            Blindsided.Utilities.Pooling.PoolManager.TrimInactive(
+                sameMapRestart ? 2 : 0, sameMapRestart ? 16 : 0);
         }
 
         /// <summary>

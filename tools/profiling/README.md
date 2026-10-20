@@ -58,3 +58,24 @@ frame storage, uses a separate company/product identity and rootPathOverride, an
 samples process counters externally. Native integration must retain its own
 container guard, kernel footprint sampler and clean frame measurement windows.
 No physical iPhone or shipping performance claim follows from Simulator results.
+
+
+## Map entry and generation checks in the Editor
+
+`MapGenerationBaseline.Run(output)` runs via the CLI `run_script` command outside
+Play Mode. It exercises three fixed seeds on each of the six authored map configs,
+including segment clearing and regeneration. Compare hashes against the previous
+runtime in an isolated checkout; the hash covers terrain, decoration tiles,
+transforms and prefab sprite flips. It does not claim deterministic task/enemy
+placement, which uses the game's shared Unity random stream across frames.
+
+`MapEntryProbe` belongs only in an isolated profiling checkout. Set the company to
+`Blindsided Profiling`, copy a fixture to `<output>/isolated-progress`, set
+`EOV_EDITOR_MAP_PROBE=1`, `EOV_PLAYER_PROFILE=<output>` and `EOV_PROFILE_SOURCE=<label>`
+in that Editor process, then enter Play from the normal Loading scene. It uses
+normal map entry for Farmlands, restart, River, Woods, Mines, Halloween and restart.
+The observer records scans, elapsed time, frame count and largest frame, checks
+loading visibility, generated tasks where authored and resumed movement, then
+exits Play. Use a fresh output/fixture copy per pass. Clear the environment variables
+afterward. Never install this observer in the main project or use the player's save
+root. Editor allocations include Editor overhead and are not device memory figures.

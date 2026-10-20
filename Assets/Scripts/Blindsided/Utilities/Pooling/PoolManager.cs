@@ -103,6 +103,7 @@ namespace Blindsided.Utilities.Pooling
             public int active;
             public int inactive;
             public string key; // prefab name or named pool key
+            public bool restartSafe;
         }
 
         private static readonly Dictionary<EntityId, PoolInfo> poolsByPrefabId = new();
@@ -110,17 +111,33 @@ namespace Blindsided.Utilities.Pooling
         private const int InactiveWarningThreshold = 100;
 
         /// <summary>Discard completed-run instances without touching any active objects.</summary>
-        public static void TrimInactive()
+        public static void TrimInactive(int maxRetainedPerPool = 0, int maxRetainedTotal = 0)
         {
-            foreach (var info in poolsByPrefabId.Values)
+            var remaining = Mathf.Max(0, maxRetainedTotal);
+            List<EntityId> retired = null;
+            foreach (var entry in poolsByPrefabId)
             {
+                var info = entry.Value;
                 if (info.active != 0) continue;
+                if (info.restartSafe && info.inactive > 0 && info.inactive <= maxRetainedPerPool && info.inactive <= remaining)
+                {
+                    remaining -= info.inactive;
+                    continue;
+                }
                 info.pool.Clear();
                 info.inactive = 0;
+                (retired ??= new List<EntityId>()).Add(entry.Key);
             }
+            if (retired != null)
+                foreach (var key in retired) poolsByPrefabId.Remove(key);
             foreach (var info in poolsByName.Values)
             {
                 if (info.active != 0) continue;
+                if (info.restartSafe && info.inactive <= maxRetainedPerPool && info.inactive <= remaining)
+                {
+                    remaining -= info.inactive;
+                    continue;
+                }
                 info.pool.Clear();
                 info.inactive = 0;
             }
@@ -208,7 +225,14 @@ namespace Blindsided.Utilities.Pooling
             EntityId id = prefab.GetEntityId();
             if (!poolsByPrefabId.TryGetValue(id, out var info))
             {
-                info = new PoolInfo { key = prefab.name };
+                // Only stateless scenery may survive a run boundary. Tasks,
+                // enemies and animation/effect objects can consume randomness or
+                // carry gameplay state during initialization and must start fresh.
+                bool restartSafe = true;
+                foreach (var component in prefab.GetComponentsInChildren<Component>(true))
+                    if (!(component is Transform) && !(component is SpriteRenderer) && !(component is Collider2D) && !(component is PooledObject))
+                        restartSafe = false;
+                info = new PoolInfo { key = prefab.name, restartSafe = restartSafe };
                 info.pool = new ObjectPool<GameObject>(
                     createFunc: () =>
                     {
@@ -278,7 +302,7 @@ namespace Blindsided.Utilities.Pooling
         {
             if (!poolsByName.TryGetValue(name, out var info))
             {
-                info = new PoolInfo { key = name };
+                info = new PoolInfo { key = name, restartSafe = true };
                 info.pool = new ObjectPool<GameObject>(
                     createFunc: () =>
                     {

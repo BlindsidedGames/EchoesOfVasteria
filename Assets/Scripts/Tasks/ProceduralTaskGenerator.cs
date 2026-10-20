@@ -678,7 +678,7 @@ namespace TimelessEchoes.Tasks
         }
 
         // Asynchronous generation variant to spread work over multiple frames
-        public System.Collections.IEnumerator GenerateSegmentAsync(float localMinX, float localMaxX, Transform parent, int batchSize = 8)
+        public System.Collections.IEnumerator GenerateSegmentAsync(float localMinX, float localMaxX, Transform parent)
         {
             if (Controller == null)
                 Controller = GetComponent<TaskController>();
@@ -696,16 +696,8 @@ namespace TimelessEchoes.Tasks
             var topCount = TerrainTaskCount(localMinX, localMaxX, topTerrain);
             var enemyCount = Mathf.RoundToInt((localMaxX - localMinX) * enemyDensity * taskDensityMultiplier);
 
-            var spawnedThisBatch = 0;
-            System.Func<bool> doYield = () =>
-            {
-                if (spawnedThisBatch >= batchSize)
-                {
-                    spawnedThisBatch = 0;
-                    return true;
-                }
-                return false;
-            };
+            var budget = new GenerationWorkBudget(GameManager.Instance && GameManager.Instance.RunLoadingActive);
+            budget.Restart();
 
             // Tasks by terrain
             for (var i = 0; i < bottomCount; i++)
@@ -713,29 +705,27 @@ namespace TimelessEchoes.Tasks
                 for (var a = 0; a < 10; a++)
                     if (TrySpawnTask(UnityEngine.Random.Range(localMinX, localMaxX), parent, false, true, false, false,
                             scratchSpawnedTasks, scratchTaskPositions, scratchTaskMap)) break;
-                spawnedThisBatch++;
-                if (doYield()) { yield return null; }
+                if (budget.Expired) { yield return null; budget.Restart(); }
             }
             for (var i = 0; i < middleCount; i++)
             {
                 for (var a = 0; a < 10; a++)
                     if (TrySpawnTask(UnityEngine.Random.Range(localMinX, localMaxX), parent, false, false, true, false,
                             scratchSpawnedTasks, scratchTaskPositions, scratchTaskMap)) break;
-                spawnedThisBatch++;
-                if (doYield()) { yield return null; }
+                if (budget.Expired) { yield return null; budget.Restart(); }
             }
             for (var i = 0; i < topCount; i++)
             {
                 for (var a = 0; a < 10; a++)
                     if (TrySpawnTask(UnityEngine.Random.Range(localMinX, localMaxX), parent, false, false, false, true,
                             scratchSpawnedTasks, scratchTaskPositions, scratchTaskMap)) break;
-                spawnedThisBatch++;
-                if (doYield()) { yield return null; }
+                if (budget.Expired) { yield return null; budget.Restart(); }
             }
 
             // Enemies
             for (var i = 0; i < enemyCount; i++)
             {
+                if (budget.Expired) { yield return null; budget.Restart(); }
                 var localX = UnityEngine.Random.Range(localMinX, localMaxX);
                 if (firstRiverRun && localX < 38f) continue;
                 var worldX = transform.position.x + localX;
@@ -761,13 +751,13 @@ namespace TimelessEchoes.Tasks
                 obj.transform.rotation = Quaternion.identity;
                 var enemyComp = obj.GetComponent<TimelessEchoes.Enemies.Enemy>();
                 enemyComp?.InitForSpawn();
-                spawnedThisBatch++;
-                if (doYield()) { yield return null; }
+                if (budget.Expired) { yield return null; budget.Restart(); }
             }
 
             // NPCs
             foreach (var npc in npcTasks)
             {
+                if (budget.Expired) { yield return null; budget.Restart(); }
                 if (npc == null || npc.prefab == null) continue;
                 if (npc.localX < localMinX || npc.localX >= localMaxX) continue;
                 if (npc.spawnOnlyOnce && StaticReferences.CompletedNpcTasks.Contains(npc.id)) continue;
@@ -810,8 +800,7 @@ namespace TimelessEchoes.Tasks
                     scratchTaskMap[pos] = mono;
                 }
 
-                spawnedThisBatch++;
-                if (doYield()) { yield return null; }
+                if (budget.Expired) { yield return null; budget.Restart(); }
             }
         }
 
