@@ -19,7 +19,7 @@ namespace Tests.PlayMode
     public sealed partial class FieldsProductionPlayModeTests
     {
         // The noticeboard is available on adventures, but acknowledgements and
-        // paid construction both wait until the player returns to town.
+        // the introduction waits until the player returns to town.
         [UnityTest]
         public IEnumerator AdventureIntroductionWaitsForTownThenDurablyUnlocksCropCompletion()
         {
@@ -81,7 +81,7 @@ namespace Tests.PlayMode
                     "Returning to town must allow the introduction acknowledgement.");
                 Assert.False(quests.TryTurnInQuest(FarmContent.IntroductionId), "Repeated acknowledgement cannot pay or complete twice.");
                 typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(game, false);
-                Assert.False(service.BuildQuest("Farm.Garden.Build01.v1"), "Construction still requires town.");
+                Assert.False(service.BuildQuest("Farm.Garden.Build01.v1"), "Construction still requires its materials while on an adventure.");
                 Assert.AreEqual(0, service.State.GardenCapacity);
                 Assert.True((bool)typeof(Blindsided.Oracle).GetMethod("SaveNowBlocking", Private)
                     .Invoke(oracle, new object[] { oracle.CurrentSlot, false }));

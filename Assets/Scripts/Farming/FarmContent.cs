@@ -57,7 +57,7 @@ namespace TimelessEchoes.Farming
             if (!Completed(data, build.previousQuestId)) return build.previousQuestId == IntroductionId
                 ? ToolkitLocalization.Text("fields.error.farming-introduction", "Complete Flora and Tillman's introduction first.")
                 : ToolkitLocalization.Text("fields.error.preceding-build", "Build the earlier plots first.");
-            if (data.Farm.TwinsLevel < build.twinsLevel) return ToolkitLocalization.Text("fields.error.twins-level", "Twins level {0} required.", build.twinsLevel);
+            if (data.Farm.TwinsLevel < build.twinsLevel) return ToolkitLocalization.Text("fields.error.fields-level", "Fields level {0} required.", build.twinsLevel);
             if (build.sources == null || build.sources.Count == 0) return ToolkitLocalization.Text("fields.error.missing-source", "Missing gathering sources.");
             foreach (var source in build.sources)
                 if (!source || !source.associatedSkill || SkillLevel(data, source.associatedSkill.name) < source.requiredSkillLevel ||

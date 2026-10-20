@@ -18,13 +18,13 @@ namespace Tests.PlayMode
         [UnityTest]
         public IEnumerator FieldsPointerSelectionPlantAndReloadStayCoherent()
         {
-            var gameObject = new GameObject("Isolated Fields town");
+            var gameObject = new GameObject("Isolated Fields adventure");
             var screenObject = new GameObject("Actual Fields screen", typeof(UIDocument));
             var resourceObject = new GameObject("Fields live resource owner");
             try
             {
                 var game = gameObject.AddComponent<TimelessEchoes.GameManager>(); game.enabled = false;
-                typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(game, true);
+                typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(game, false);
                 oracle.saveData.CompletedNpcTasks.Add("Farmers1");
                 Build(FarmContent.IntroductionId);
                 oracle.saveData.Resources["Log"] = new GameData.ResourceEntry { Amount = 10, Earned = true };
@@ -55,7 +55,7 @@ namespace Tests.PlayMode
                 Assert.NotNull(locked); Assert.True(locked.enabledInHierarchy, "Locked plots remain inspectable.");
                 FieldsClick(locked); yield return null;
                 Assert.False(service.State.Beds.ContainsKey(FarmCommands.EastBedId));
-                Assert.That(ui.Q<Label>("fields-selected-status").text, Does.Contain("Twins"));
+                Assert.That(ui.Q<Label>("fields-selected-status").text, Does.Contain("Fields"));
                 FieldsClick(ui.Q<Button>("fields-select-" + FarmCommands.WestBedId));
                 var plant = ui.Q<Button>("fields-plant-selected");
                 Assert.False(plant.enabledInHierarchy, "Discovered seeds with zero owned packs cannot be planted.");
