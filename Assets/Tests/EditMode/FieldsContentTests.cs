@@ -85,15 +85,16 @@ namespace Tests.EditMode
         [Test] public void AuthoredConstructionChainMatchesApprovedLevelsCapacitiesAndAtomicMaterialCosts()
         {
             var content = FarmContent.Load(); Assert.IsNotNull(content); Assert.AreEqual(9, content.builds.Count);
-            var levels = new[] { 1, 5, 35, 65, 95, 125, 150, 185, 225 };
-            var materialNames = new[] { "Log,Stick", "Log,Stick", "Oak Log,Oak Stick,Stone", "Oak Log,Oak Stick", "Birch Log,Birch Stick,Stone", "Birch Log,Birch Stick", "Birch Log,Birch Stick,Stone", "Spruce Log,Spruce Stick", "Spruce Log,Spruce Stick,Stone" };
-            var amounts = new[] { new[] {10,20}, new[] {40,80}, new[] {750,1500,100}, new[] {2500,5000}, new[] {4000,6000,1000}, new[] {8000,12000}, new[] {10000,15000,2500}, new[] {15000,20000}, new[] {25000,35000,5000} };
+            var levels = new[] { 1, 10, 35, 65, 95, 125, 5, 50, 110 };
+            var materialNames = new[] { "Log,Stick", "Log,Stick", "Oak Log,Oak Stick,Stone", "Oak Log,Oak Stick", "Birch Log,Birch Stick,Stone", "Birch Log,Birch Stick", "Log,Stick", "Oak Log,Oak Stick,Stone", "Birch Log,Birch Stick,Stone" };
+            var amounts = new[] { new[] {10,20}, new[] {40,80}, new[] {750,1500,100}, new[] {2500,5000}, new[] {4000,6000,1000}, new[] {8000,12000}, new[] {25,50}, new[] {1500,3000,250}, new[] {6000,9000,1500} };
             var previous = FarmContent.IntroductionId;
             for (var i = 0; i < content.builds.Count; i++)
             {
                 var build = content.builds[i];
+                if (i == 6) previous = content.builds[0].questId;
                 Assert.AreEqual(previous, build.previousQuestId); Assert.AreEqual(levels[i], build.twinsLevel);
-                Assert.AreEqual(i < 6 ? i + 1 : 6, build.gardenCapacity);
+                Assert.AreEqual(i < 6 ? i + 1 : 0, build.gardenCapacity);
                 Assert.AreEqual(i < 6 ? 0 : (i - 5) * 2, build.orchardCapacity);
                 CollectionAssert.AreEqual(materialNames[i].Split(','), build.costs.Select(cost => cost.resource.name).ToArray());
                 CollectionAssert.AreEqual(amounts[i], build.costs.Select(cost => cost.amount).ToArray());
