@@ -23,7 +23,9 @@ namespace TimelessEchoes.UI.Toolkit
         private PanelSettings settings;
         private FieldsWorldAppearance appearance;
         private Sprite wateringCan;
-        private VisualElement root, board, bedList, drawer, seedColumn, seedGrid, xpBar, yieldRow, inputRow;
+        private VisualElement root, board, bedList, drawer, seedColumn, seedGrid, xpBar, yieldRow, inputRow, primaryActions;
+        private VisualElement[] selectorTiles;
+        private Button[] primaryButtons;
         private ScrollView workspace, seedScroll;
         private Image floraPortrait, tillmanPortrait;
         private Label heading, xp, error, seedHeading, undiscovered, selection, detail;
@@ -123,12 +125,15 @@ namespace TimelessEchoes.UI.Toolkit
             inputRow = E(controls, "row fields-input"); inputIcon = ToolkitGameplay.Icon(inputRow, null, 14);
             inputAmount = L(inputRow, "", "fields-input-amount");
             detail = L(controls, "", "muted fields-selection-detail"); detail.name = "fields-selected-status";
-            plant = Button(controls, "", PlantSelected); plant.name = "fields-plant-selected"; plant.AddToClassList("primary");
-            buildSelected = Button(controls, "", () => Build(FindBuild(source.CapturePresentation(), selectedBed), selectedBed)); buildSelected.AddToClassList("primary");
+            primaryActions = E(controls, "row fields-primary-actions");
+            plant = Button(primaryActions, "", PlantSelected); plant.name = "fields-plant-selected"; plant.AddToClassList("primary");
+            buildSelected = Button(primaryActions, "", () => Build(FindBuild(source.CapturePresentation(), selectedBed), selectedBed)); buildSelected.AddToClassList("primary");
+            water = Button(primaryActions, "", () => { if (source is FarmService service) Execute(() => service.Water(selectedBed)); }); water.name = "fields-water-selected";
+            harvest = Button(primaryActions, "", () => Execute(source.HarvestReady)); harvest.name = "farm-harvest-ready";
+            primaryButtons = new[] { plant, buildSelected, water, harvest };
             var tending = E(controls, "row fields-actions");
-            water = Button(tending, "", () => { if (source is FarmService service) Execute(() => service.Water(selectedBed)); }); water.name = "fields-water-selected";
             repeat = Button(tending, "", ToggleRepeat); repeat.name = "fields-repeat-selected";
-            harvest = Button(tending, "", () => Execute(source.HarvestReady)); harvest.name = "farm-harvest-ready";
+            L(repeat, T("fields.auto-harvest", "Auto harvest"), "fields-repeat-label").pickingMode = PickingMode.Ignore;
             seedColumn = E(workspace, "column fields-seeds-column"); seedHeading = L(seedColumn, "", "heading");
             seedScroll = ToolkitControls.RecessedScroll(seedColumn, "fields-seeds", theme, compact: true);
             seedGrid = E(seedScroll, "row fields-seed-grid");
@@ -143,6 +148,7 @@ namespace TimelessEchoes.UI.Toolkit
                 seeds[id] = new SeedCard { Button = button, Title = title, Count = count, Icon = icon };
             }
             undiscovered = L(seedColumn, "", "muted fields-undiscovered-count");
+            selectorTiles = bedList.Children().ToArray();
             source.Changed += Refresh; ToolkitLocalization.Changed += Refresh;
             layout.Fill(root, theme, CompanionWidth); ApplyLayout(); Refresh(); return true;
         }
@@ -308,7 +314,8 @@ namespace TimelessEchoes.UI.Toolkit
             var snapshot = source.Ready ? source.CapturePresentation() : null;
             error.text = source.LastError ?? ""; Visible(error, error.text.Length > 0);
             if (snapshot == null) { plant.SetEnabled(false); harvest.SetEnabled(false); water.SetEnabled(false); repeat.SetEnabled(false); buildSelected.SetEnabled(false); return; }
-            feedbackLabel.text = feedback ?? ""; Visible(feedbackLabel, Time.unscaledTime < feedbackUntil);
+            feedbackLabel.text = feedback ?? "";
+            feedbackLabel.style.visibility = Time.unscaledTime < feedbackUntil ? Visibility.Visible : Visibility.Hidden;
             selectedBed ??= snapshot.Beds.FirstOrDefault(b => b.Unlocked)?.Id ?? snapshot.Beds.FirstOrDefault()?.Id;
             var target = snapshot.Beds.FirstOrDefault(b => b.Id == selectedBed); var orchard = target?.Orchard == true;
             selectedRecipe ??= snapshot.Recipes.FirstOrDefault(r => r.Orchard == orchard && r.Discovered && r.Eligible)?.Id;
@@ -348,19 +355,25 @@ namespace TimelessEchoes.UI.Toolkit
             var available = snapshot.Recipes.Where(r => r.Orchard == orchard).ToArray(); var discovered = available.Count(r => r.Discovered);
             seedHeading.text = T(orchard ? "fields.saplings-heading" : "fields.seeds-heading", orchard ? "Saplings" : "Seed packs");
             var columns = narrow ? 4 : 9;
+            var seedIndex = 0;
+            // Leave a pixel for the button border and fractional layout rounding,
+            // otherwise the last seed wraps and creates a third row at some scales.
+            var cardWidth = Mathf.Floor((seedGrid.contentRect.width - (columns - 1) * 4) / columns) - 1;
             foreach (var recipe in snapshot.Recipes)
             {
                 if (!seeds.TryGetValue(recipe.Id, out var card)) continue;
                 var show = recipe.Orchard == orchard && recipe.Discovered;
-                Visible(card.Button, show); card.Button.style.width = Length.Percent(100f / columns - 1.1f);
+                Visible(card.Button, show);
+                card.Button.style.width = cardWidth > 0 ? new Length(cardWidth) : Length.Percent(100f / columns - 1.1f);
+                card.Button.style.marginRight = show && ++seedIndex % columns != 0 ? 4 : 0;
                 card.Icon.sprite = recipe.Discovered ? recipe.Icon : recipe.UnknownIcon ? recipe.UnknownIcon : unknownPack;
-                card.Title.text = recipe.Discovered ? recipe.CropTitle ?? recipe.Title : "???"; card.Count.text = recipe.Discovered ? recipe.SeedQuantity.ToString("0.##", CultureInfo.CurrentCulture) : "—";
+                card.Title.text = recipe.Discovered ? recipe.CropTitle ?? recipe.Title : "???"; card.Count.text = recipe.Discovered ? Compact(recipe.SeedQuantity) : "—";
                 card.Button.EnableInClassList("primary", selectedRecipe == recipe.Id); card.Button.EnableInClassList("fields-undiscovered", !recipe.Discovered);
                 card.Button.tooltip = recipe.Discovered ? ToolkitLocalization.Text("fields.recipe-level-required", "{0} · Farming {1} required", recipe.Title, recipe.RequiredHeroLevel) + "\n" + PlantCost(orchard) : T("fields.discover-first", "Discover this seed or sapling first.");
             }
             undiscovered.text = ToolkitLocalization.Text("fields.hidden-seeds", "{0} undiscovered", available.Length - discovered); Visible(undiscovered, discovered < available.Length);
             var seedRows = (available.Count(r => r.Discovered) + columns - 1) / columns;
-            var seedHeight = seedRows * (ToolkitResponsiveLayout.IsPortrait ? 45 : 37) + (seedRows > 0 ? 3 : 0);
+            var seedHeight = seedRows * (ToolkitResponsiveLayout.IsPortrait ? 47 : 39) + 4;
             seedScroll.style.height = seedHeight; seedScroll.style.maxHeight = seedHeight;
             seedScroll.parent.style.height = seedHeight; seedScroll.parent.style.maxHeight = seedHeight;
             var selectedBuild = target?.Unlocked == false ? FindBuild(snapshot, target.Id) : null;
@@ -396,7 +409,8 @@ namespace TimelessEchoes.UI.Toolkit
             water.SetEnabled(snapshot.TownActionsAllowed && target?.Watered == false);
             SetWaterLabel(water, T("fields.action.water-once", "Water"), true);
             Visible(repeat, target?.Unlocked == true && snapshot.TwinsLevel >= 20); repeat.SetEnabled(snapshot.TownActionsAllowed);
-            repeat.text = T(target?.Repeat == true ? "fields.action.repeat-on" : "fields.action.repeat-off", target?.Repeat == true ? "Repeat: on" : "Repeat: off");
+            ToolkitGameplay.SetToggle(repeat, target?.Repeat == true, false);
+            repeat.Q<Label>().text = T("fields.auto-harvest", "Auto harvest");
             repeat.tooltip = T("fields.repeat-help-regrowth", "Fields level 20: harvest automatically. Crops use one seed pack to replant; trees regrow fruit without another sapling.");
             Visible(preview.Root, !orchard && selectedBuild == null); Visible(orchardPreview.Root, orchard && selectedBuild == null);
             if (target != null)
@@ -446,7 +460,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private static string T(string key, string fallback) => ToolkitLocalization.Text(key, fallback);
         private static string PlantCost(bool orchard) => ToolkitLocalization.Text(orchard ? "fields.plant-sapling-cost" : "fields.plant-seed-cost", orchard ? "Requires {0} matching sapling per plot." : "Requires {0} matching seed pack per field.", FarmContent.PlantingCost(orchard));
-        private static string BedStatus(FarmBedPresentation bed) => !bed.Unlocked ? T("fields.locked", "Locked · construction required") : !bed.Planted ? T("fields.empty", "Empty") : bed.RecipeTitle + "\n" + (bed.Ready ? T("fields.ready", "Ready") : FormatTime(Math.Max(0, bed.RemainingSeconds), mspace: false, shortForm: true)) + (bed.Repeat ? "\n" + T("fields.auto-harvest", "Auto harvest") : "");
+        private static string BedStatus(FarmBedPresentation bed) => !bed.Unlocked ? T("fields.locked", "Locked · construction required") : !bed.Planted ? T("fields.empty", "Empty") : bed.RecipeTitle + "\n" + (bed.Ready ? T("fields.ready", "Ready") : FormatTime(Math.Max(0, bed.RemainingSeconds), mspace: false, shortForm: true));
         private void ApplyLayout()
         {
             narrow = ToolkitResponsiveLayout.IsPortrait || ToolkitWindowLayout.SafeArea.width - CompanionWidth < 500;
@@ -454,6 +468,18 @@ namespace TimelessEchoes.UI.Toolkit
             // The selector stays visible first on phones; desktop keeps details on the left.
             var first = narrow ? bedList : drawer;
             if (board.IndexOf(first) != 0) board.Insert(0, first);
+            for (var i = 0; i < selectorTiles.Length; i++)
+            {
+                selectorTiles[i].style.marginRight = i % 3 == 2 ? 0 : 4;
+            }
+            var controlWidth = Mathf.Floor((primaryActions.contentRect.width - 4) / 2) - 1;
+            var visibleIndex = 0;
+            foreach (var button in primaryButtons)
+            {
+                if (button.style.display.value == DisplayStyle.None) continue;
+                button.style.width = controlWidth > 0 ? new Length(controlWidth) : Length.Percent(49);
+                button.style.marginRight = visibleIndex++ % 2 == 0 ? 4 : 0;
+            }
         }
         private void Update()
         {

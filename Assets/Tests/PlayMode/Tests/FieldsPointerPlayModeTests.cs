@@ -172,11 +172,11 @@ namespace Tests.PlayMode
                 service.State.GardenCapacity = service.State.OrchardCapacity = 6;
                 foreach (var bedId in FarmCommands.GardenBeds.Concat(FarmCommands.OrchardBeds))
                     if (!service.State.Beds.ContainsKey(bedId)) service.State.Beds[bedId] = new FarmBedState { Unlocked = true };
-                service.State.TwinsLevel = 225;
+                service.State.TwinsLevel = 5000;
                 foreach (var recipe in content.recipes)
                 {
                     oracle.saveData.SkillData[recipe.source.associatedSkill.name] = new GameData.SkillProgress { Level = 500 };
-                    resources.Add(recipe.paidInput, 1, trackStats: false, eligibleForTierRoll: false);
+                    resources.Add(recipe.paidInput, 1000000, trackStats: false, eligibleForTierRoll: false);
                 }
                 resources.Add(seedResource, 4, trackStats: false, eligibleForTierRoll: false);
                 foreach (var bedId in FarmCommands.GardenBeds.Skip(2)) Assert.True(service.Plant(bedId, FarmCommands.RadishRecipeId));
@@ -204,6 +204,14 @@ namespace Tests.PlayMode
                 yield return null;
                 Assert.True(ui.Q<VisualElement>("fields-plot-" + FarmCommands.WestBedId).ClassListContains("selected"));
                 Assert.AreEqual(9, ui.Query<VisualElement>(className: "fields-selector-tile").ToList().Count);
+                var selectedHarvest = ui.Q<Button>("fields-plant-selected");
+                var allHarvest = ui.Q<Button>("farm-harvest-ready");
+                Assert.That(Mathf.Abs(selectedHarvest.worldBound.yMin - allHarvest.worldBound.yMin), Is.LessThan(1), "Portrait harvest actions stay on one row.");
+                Assert.That(Mathf.Abs(selectedHarvest.worldBound.height - allHarvest.worldBound.height), Is.LessThan(1), "Harvest actions use the same height.");
+                FieldsClick(ui.Q<Button>("fields-repeat-selected"));
+                Assert.True(service.State.Beds[FarmCommands.WestBedId].Repeat, "The auto-harvest checkbox remains clickable.");
+                FieldsClick(ui.Q<Button>("fields-repeat-selected"));
+                Assert.False(service.State.Beds[FarmCommands.WestBedId].Repeat);
                 ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-selector-portrait.png"));
                 yield return null;
                 UnityEditor.PlayModeWindow.SetCustomRenderingResolution(1920, 1080, "Desktop Fields selector");
