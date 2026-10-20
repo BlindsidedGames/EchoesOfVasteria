@@ -394,3 +394,15 @@
 
 .gameplay.portrait.fields-ui .fields-preview {height:58px;min-height:58px;}
 .gameplay.portrait.fields-ui .fields-future {height:44px;min-height:44px;}
+
+/* Keep material cards in two columns even on narrow portrait screens. */
+.gameplay.portrait.eov-forge .eov-forge-conversions {width:100%;min-width:0;flex-direction:row;flex-wrap:wrap;align-items:stretch;}
+.gameplay.portrait.eov-forge .eov-forge-conversion {height:auto;min-height:0;max-height:none;padding:6px;}
+.gameplay.portrait.eov-forge .forge-conversion-body {height:auto;min-height:48px;}
+.gameplay.portrait.eov-forge .forge-conversion-recipe {height:34px;}
+.gameplay.portrait.eov-forge .forge-conversion-recipe .eov-text {font-size:8px;}
+.gameplay.portrait.eov-forge .forge-conversion-recipe .eov-icon {width:14px;height:14px;}
+.gameplay.portrait.eov-forge .forge-conversion-maximum {font-size:8px;}
+.gameplay.portrait.eov-forge .forge-conversion-body .eov-number-field {width:48px;min-width:40px;max-width:64px;height:30px;flex-grow:0;flex-shrink:1;margin-left:4px;}
+.gameplay.portrait.eov-forge .eov-forge-conversion-control {min-height:30px;flex-direction:column;flex-wrap:nowrap;margin-top:4px;align-items:stretch;}
+.gameplay.portrait.eov-forge .eov-forge-conversion-control .eov-forge-button {width:auto;min-width:0;height:30px;min-height:30px;margin:0;}

@@ -1278,3 +1278,13 @@
 .gameplay.fields-ui .fields-portraits {flex-shrink:0;margin-right:8px;align-items:center;}
 .gameplay.fields-ui .fields-header-progress {flex-grow:1;}
 .gameplay.fields-ui .fields-header-progress .track {height:3px;margin-top:4px;}
+
+/* Material recipes and quantity share a row; the action stays underneath. */
+.gameplay.eov-forge .forge-conversion-body {align-items:center;min-width:0;flex-shrink:0;}
+.gameplay.eov-forge .forge-conversion-recipe-column {flex-grow:1;flex-shrink:1;min-width:0;}
+.gameplay.eov-forge .forge-conversion-recipe {height:36px;align-items:center;}
+.gameplay.eov-forge .forge-conversion-maximum {color:var(--muted);white-space:nowrap;}
+.gameplay.eov-forge .forge-conversion-body .eov-number-field {width:72px;min-width:40px;flex-basis:auto;flex-grow:0;flex-shrink:1;margin-left:6px;}
+.gameplay.eov-forge .eov-forge-conversion-control {flex-direction:column;flex-wrap:nowrap;margin-top:4px;align-items:stretch;}
+.gameplay.eov-forge .eov-forge-conversion-control .eov-forge-button {width:auto;min-width:0;margin:0;}
+.gameplay.eov-forge .eov-forge-conversion {margin-bottom:0;}
