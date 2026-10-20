@@ -25,6 +25,9 @@ MonoBehaviour:
     m_LocalVariables: []
   baseDurationSeconds: 600
   durationMultiplierPerCropLevel: 1.02
+  minimumDurationSeconds: 60
+  minimumCropCapLevel: 100
+  lastCropCapLevel: 5000
   baseYield: 10
   harvestXp: 10
   seedChance: 0.1

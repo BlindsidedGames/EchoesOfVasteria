@@ -82,6 +82,7 @@ namespace TimelessEchoes.Farming
             if (bed.IsPlanted) return "BedOccupied";
             if (!content.CanPlant(owner, recipe) || recipe.orchard != OrchardBeds.Contains(id) || !recipe.output) return "RecipeLocked";
             if (!Finite(content.baseDurationSeconds) || content.baseDurationSeconds <= 0 || !Finite(content.durationMultiplierPerCropLevel) || content.durationMultiplierPerCropLevel < 1 || !Finite(content.baseYield) || content.baseYield <= 0 || content.harvestXp <= 0) return "InvalidRecipeTuning";
+            if (!Finite(content.minimumDurationSeconds) || content.minimumDurationSeconds <= 0 || content.minimumCropCapLevel <= 60 || content.lastCropCapLevel < content.minimumCropCapLevel) return "InvalidRecipeTuning";
             var duration = content.GrowthDuration(recipe, state.TwinsLevel);
             if (!Finite(duration) || duration <= 0) return "InvalidRecipeTuning";
             if (!recipe.paidInput || !recipe.orchard && recipe.paidInput.name != SeedResourceName(recipe.seedId)) return "MissingPaidInput";

@@ -277,7 +277,7 @@ namespace TimelessEchoes.Farming
             return new FarmPresentationSnapshot
             {
                 DisplayName=config.DisplayName,TwinsLevel=state.TwinsLevel,TwinsXp=state.TwinsXp,TwinsXpRequired=FarmContent.XpRequired(state.TwinsLevel),
-                YieldMultiplier=FarmContent.YieldMultiplier(state.TwinsLevel),SpeedFactor=FarmContent.SpeedFactor(state.TwinsLevel),Recipes=recipes,Builds=builds.ToArray(),
+                YieldMultiplier=FarmContent.YieldMultiplier(state.TwinsLevel),Recipes=recipes,Builds=builds.ToArray(),
                 Prepared=state.GardenCapacity>0,TownActionsAllowed=Ready,Discovered=radish?.Discovered==true,SeedQuantity=radish?.SeedQuantity >= long.MaxValue ? long.MaxValue : (long)(radish?.SeedQuantity ?? 0),
                 LogQuantity=data?.Resources?.TryGetValue("Log",out var log)==true?log.Amount:0,
                 StickQuantity=data?.Resources?.TryGetValue("Stick",out var stick)==true?stick.Amount:0,

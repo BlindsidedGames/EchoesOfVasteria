@@ -384,6 +384,12 @@ namespace Tests.EditMode
         [TestCase("recipe.corn.v1", 10, 608.1277064025601d)]
         [TestCase("recipe.turnip.v1", 30, 2796.7685300260973d)]
         [TestCase("recipe.apple.v1", 60, 501.93887882137057d)]
+        [TestCase("recipe.corn.v1", 500, 60d)]
+        [TestCase("recipe.turnip.v1", 4000, 127.10601231972099d)]
+        [TestCase("recipe.radish.v1", 238, 60d)]
+        [TestCase("recipe.apple.v1", 714, 60d)]
+        [TestCase("recipe.turnip.v1", 5000, 60d)]
+        [TestCase("recipe.turnip.v1", 10000, 60d)]
         public void GrowthScalesWithCropLevelAndFieldsSpeedAndWaterHalvesIt(string recipeId, int fieldsLevel, double seconds)
         {
             var data = Garden(2, fieldsLevel);
@@ -399,6 +405,29 @@ namespace Tests.EditMode
             Assert.IsFalse(data.Farm.Beds[bedId].IsReady);
             FarmCommands.TickFields(data.Farm, 1);
             Assert.IsTrue(data.Farm.Beds[bedId].IsReady);
+        }
+        [Test] public void EveryCropReachesThirtySecondWateredFloorAtItsEvenlySpacedTier()
+        {
+            var ordered = content.recipes.OrderBy(r => r.source.requiredSkillLevel).ThenBy(r => r.id, StringComparer.Ordinal).ToArray();
+            var caps = new[] { 238, 476, 714, 952, 1190, 1429, 1667, 1905, 2143, 2381, 2619, 2857, 3095, 3333, 3571, 3810, 4048, 4286, 4524, 4762, 5000 };
+            Assert.AreEqual(caps.Length, ordered.Length);
+            for (var i = 0; i < ordered.Length; i++)
+            {
+                var recipe = ordered[i];
+                var cap = caps[i];
+                Assert.AreEqual(cap, content.GrowthCapLevel(recipe), recipe.id);
+                Assert.Greater(content.GrowthDuration(recipe, cap - 1), 60, recipe.id + " must not reach the cap early");
+                Assert.AreEqual(60, content.GrowthDuration(recipe, cap), recipe.id);
+                Assert.AreEqual(60, content.GrowthDuration(recipe, 5000), recipe.id);
+                Assert.AreEqual(60, content.GrowthDuration(recipe, int.MaxValue), recipe.id);
+                var previous = content.GrowthDuration(recipe, 1);
+                for (var level = 2; level <= 5000; level++)
+                {
+                    var duration = content.GrowthDuration(recipe, level);
+                    Assert.LessOrEqual(duration, previous, recipe.id + " at Fields " + level);
+                    previous = duration;
+                }
+            }
         }
         [Test] public void OrchardRegrowsAfterReloadWithoutAnotherSaplingOrDuplicateHarvest()
         {

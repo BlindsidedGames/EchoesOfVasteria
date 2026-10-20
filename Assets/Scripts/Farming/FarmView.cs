@@ -22,7 +22,7 @@ namespace TimelessEchoes.Farming
         public int TwinsLevel = 1;
         public long TwinsXp;
         public int TwinsXpRequired = 5;
-        public double YieldMultiplier = 1, SpeedFactor = 1;
+        public double YieldMultiplier = 1;
         public FarmRecipePresentation[] Recipes = Array.Empty<FarmRecipePresentation>();
         public FarmBuildPresentation[] Builds = Array.Empty<FarmBuildPresentation>();
         public bool Prepared;

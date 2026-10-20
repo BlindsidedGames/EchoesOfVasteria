@@ -22,6 +22,9 @@ namespace TimelessEchoes.Farming
         public string DisplayName => localizedDisplayName == null || localizedDisplayName.IsEmpty ? displayName : localizedDisplayName.GetLocalizedString();
         public double baseDurationSeconds = 600;
         public double durationMultiplierPerCropLevel = 1.02;
+        public double minimumDurationSeconds = 60;
+        public int minimumCropCapLevel = 100;
+        public int lastCropCapLevel = 5000;
         public double baseYield = 10;
         public int harvestXp = 10;
         public float seedChance = .1f;
@@ -44,8 +47,32 @@ namespace TimelessEchoes.Farming
         public static bool Completed(GameData data, string id) => data?.Quests?.TryGetValue(id, out var quest) == true && quest?.Completed == true;
         public static double YieldMultiplier(int level) => 1 + .01 * (Math.Max(1, level) - 1d);
         public static double SpeedFactor(int level) => level >= 60 ? .7 : level >= 30 ? .8 : level >= 10 ? .9 : 1;
-        public double GrowthDuration(FarmRecipe recipe, int fieldsLevel) =>
-            baseDurationSeconds * Math.Pow(durationMultiplierPerCropLevel, Math.Max(1, recipe.source.requiredSkillLevel) - 1) * SpeedFactor(fieldsLevel);
+        public int GrowthCapLevel(FarmRecipe recipe)
+        {
+            var count = 0; var rank = 0;
+            foreach (var candidate in recipes)
+            {
+                if (candidate?.source == null) continue;
+                count++;
+                var comparison = candidate.source.requiredSkillLevel.CompareTo(recipe.source.requiredSkillLevel);
+                if (comparison < 0 || comparison == 0 && string.CompareOrdinal(candidate.id, recipe.id) < 0) rank++;
+            }
+            return Math.Max(minimumCropCapLevel,
+                (int)Math.Round(lastCropCapLevel * (rank + 1d) / Math.Max(1, count)));
+        }
+        public double GrowthDuration(FarmRecipe recipe, int fieldsLevel)
+        {
+            var level = Math.Max(1, fieldsLevel);
+            var baseSeconds = baseDurationSeconds * Math.Pow(durationMultiplierPerCropLevel, Math.Max(1, recipe.source.requiredSkillLevel) - 1);
+            var capLevel = GrowthCapLevel(recipe);
+            if (level >= capLevel) return minimumDurationSeconds;
+            // Retain the early milestones, then keep improving toward each crop's cap.
+            var seconds = baseSeconds * SpeedFactor(level);
+            if (level > 60)
+                seconds *= Math.Pow(minimumDurationSeconds / (baseSeconds * SpeedFactor(60)),
+                    (double)(level - 60) / (capLevel - 60));
+            return Math.Max(minimumDurationSeconds, seconds);
+        }
         public static int XpRequired(int level) => checked(5 + Math.Max(1, level) / 2);
         public static void AddXp(FarmState state, int amount)
         {
