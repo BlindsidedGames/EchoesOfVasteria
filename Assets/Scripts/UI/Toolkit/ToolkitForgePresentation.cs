@@ -26,13 +26,13 @@ namespace TimelessEchoes.UI.Toolkit
                 var recipe = Row(recipeColumn); recipe.AddToClassList("forge-conversion-recipe"); var costs = new VisualElement(); recipe.Add(costs);
                 var first = Row(costs); first.AddToClassList("forge-ingredient"); row.first = ToolkitControls.Icon(null); first.Add(row.first); row.firstCount = Label(first, "", ToolkitControls.TextRole.Caption);
                 var second = Row(costs); second.AddToClassList("forge-ingredient"); row.second = ToolkitControls.Icon(null); second.Add(row.second); row.secondCount = Label(second, "", ToolkitControls.TextRole.Caption);
-                row.arrow = ToolkitControls.Icon(null); recipe.Add(row.arrow); var result = new VisualElement(); recipe.Add(result); row.result = ToolkitControls.Icon(null); result.Add(row.result); row.resultCount = Label(result, "", ToolkitControls.TextRole.Caption);
-                var control = new VisualElement(); control.AddToClassList("eov-forge-conversion-control"); row.root.Add(control);
+                row.arrow = ToolkitControls.Icon(null); recipe.Add(row.arrow); var result = new VisualElement(); result.AddToClassList("forge-conversion-result"); recipe.Add(result); row.result = ToolkitControls.Icon(null); result.Add(row.result); row.resultCount = Label(result, "", ToolkitControls.TextRole.Caption);
+                var control = new VisualElement(); control.AddToClassList("eov-forge-conversion-control"); body.Add(control);
                 row.maximum = Label(recipeColumn, "", ToolkitControls.TextRole.Caption); row.maximum.AddToClassList("forge-conversion-maximum");
                 row.button = LocalizedButton(control, "smelt-" + type, "forge.smelt", "Smelt", () => session.Convert(type));
                 // Keep press-and-hold conversion behavior while using native pointer capture.
                 ToolkitControls.RepeatWhileHeld(row.button, () => session.Convert(type));
-                row.amount = new TextField { name = "amount-" + type, keyboardType = TouchScreenKeyboardType.NumberPad }; row.amount.AddToClassList("eov-number-field"); ToolkitLocalization.BindTooltip(row.amount, "forge.conversion-batch-size", "Conversion batch size"); body.Add(row.amount);
+                row.amount = new TextField { name = "amount-" + type, keyboardType = TouchScreenKeyboardType.NumberPad }; row.amount.AddToClassList("eov-number-field"); ToolkitLocalization.BindTooltip(row.amount, "forge.conversion-batch-size", "Conversion batch size"); control.Insert(0, row.amount);
                 row.amount.SetValueWithoutNotify(session.Desired(type).ToString("0"));
                 row.amount.RegisterValueChangedCallback(e => { session.SetAmount(type, double.TryParse(e.newValue, out var value) ? value : 1); row.amount.SetValueWithoutNotify(session.Desired(type).ToString("0")); }); conversions.Add(type, row);
             }
