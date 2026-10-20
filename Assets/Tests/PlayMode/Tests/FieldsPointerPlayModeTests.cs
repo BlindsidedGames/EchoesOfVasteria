@@ -212,7 +212,9 @@ namespace Tests.PlayMode
                 var progressStatus = selectedPreview.Q<Label>(className: "fields-progress-status");
                 Assert.AreEqual("Radish", selectedPreview.Q<Label>("bed-status").text, "The crop label does not also contain its timer.");
                 Assert.AreEqual("Ready", progressStatus.text);
-                Assert.That(progressStatus.worldBound.xMin, Is.GreaterThanOrEqualTo(selectedPreview.Q<VisualElement>(className: "track").worldBound.xMax), "Ready state sits to the right of the progress bar.");
+                var previewTrack = selectedPreview.Q<VisualElement>(className: "track");
+                Assert.That(progressStatus.worldBound.yMax, Is.LessThanOrEqualTo(previewTrack.worldBound.yMin), "Ready state sits above the progress bar.");
+                Assert.That(Mathf.Abs(progressStatus.worldBound.xMax - previewTrack.worldBound.xMax), Is.LessThan(1), "Ready state aligns with the right edge of the bar.");
                 FieldsClick(ui.Q<Button>("fields-repeat-selected"));
                 Assert.True(service.State.Beds[FarmCommands.WestBedId].Repeat, "The auto-harvest checkbox remains clickable.");
                 FieldsClick(ui.Q<Button>("fields-repeat-selected"));

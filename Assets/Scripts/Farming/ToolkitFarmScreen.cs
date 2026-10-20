@@ -37,6 +37,8 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly Dictionary<string, SeedCard> seeds = new();
         private readonly Dictionary<string, BedTile> beds = new();
         private readonly List<OrchardPair> orchardPairs = new();
+        private readonly Dictionary<Sprite, float> previewCropInsets = new();
+        private readonly List<Vector2> previewOutline = new();
         private string selectedRecipe, selectedBed;
         private float nextRefresh;
         private BedTile preview, orchardPreview;
@@ -55,7 +57,7 @@ namespace TimelessEchoes.UI.Toolkit
             public Label Title, Status, Requirement, ProgressStatus;
             public Image[] Soil, Plants;
             public Image[] WetSoils;
-            public bool Orchard;
+            public bool Orchard, Preview;
         }
         private sealed class OrchardPair { public string First, Second; public VisualElement Root, Slots; public Label Title, Requirement; public Button LockedSelect; }
         private sealed class CostStrip
@@ -205,7 +207,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private BedTile CreateBed(FarmBedPresentation bed, VisualElement parent, bool register = true)
         {
-            var id = bed.Id; var tile = new BedTile { Orchard = bed.Orchard };
+            var id = bed.Id; var tile = new BedTile { Orchard = bed.Orchard, Preview = !register };
             tile.Root = E(parent, bed.Orchard ? "column fields-orchard-slot" : "column fields-plot"); tile.Root.name = "fields-plot-" + id;
             if (register && !bed.Orchard) tile.Root.AddToClassList("fields-selector-tile");
             tile.Select = Button(tile.Root, "", () => SelectBed(id)); tile.Select.name = "fields-select-" + id; tile.Select.AddToClassList("fields-plot-select");
@@ -221,7 +223,7 @@ namespace TimelessEchoes.UI.Toolkit
                 var spot = new VisualElement { pickingMode = PickingMode.Ignore }; tile.Art.Add(spot);
                 spot.style.position = Position.Absolute;
                 spot.style.left = (bed.Orchard ? 4 : 0) + i % size * 8;
-                spot.style.top = (bed.Orchard ? 16 : 8) + i / size * 8;
+                spot.style.top = (bed.Orchard ? 16 : register ? 8 : 0) + i / size * 8;
                 spot.style.width = 8; spot.style.height = 8;
                 tile.Soil[i] = CreateArtImage(spot); tile.WetSoils[i] = CreateArtImage(spot);
                 foreach (var image in new[] { tile.Soil[i], tile.WetSoils[i] })
@@ -229,10 +231,11 @@ namespace TimelessEchoes.UI.Toolkit
                 if (!bed.Orchard) tile.Plants[i] = CreateArtImage(spot);
             }
             if (bed.Orchard) tile.Plants[0] = CreateArtImage(tile.Art);
-            var info = E(body, "column fields-plot-info"); tile.Status = L(info, "", "fields-plot-status"); tile.Status.name = "bed-status";
-            var progress = register ? info : E(info, "row fields-preview-progress");
-            tile.Fill = ToolkitGameplay.Bar(progress); tile.Fill.name = "bed-progress";
-            if (!register) tile.ProgressStatus = L(progress, "", "fields-progress-status");
+            var info = E(body, "column fields-plot-info");
+            var caption = register ? info : E(info, "row fields-preview-heading");
+            tile.Status = L(caption, "", "fields-plot-status"); tile.Status.name = "bed-status";
+            if (!register) tile.ProgressStatus = L(caption, "", "fields-progress-status");
+            tile.Fill = ToolkitGameplay.Bar(info); tile.Fill.name = "bed-progress";
             if (register) beds[id] = tile;
             else { tile.Root.name = "fields-selected-preview"; tile.Select.name = "fields-preview-select-" + id; tile.Select.pickingMode = PickingMode.Ignore; }
             return tile;
@@ -425,9 +428,10 @@ namespace TimelessEchoes.UI.Toolkit
                 selectedPreview.Title.text = "";
                 selectedPreview.Status.text = target.Planted ? target.RecipeTitle : selected?.CropTitle ?? T("fields.empty", "Empty");
                 selectedPreview.ProgressStatus.text = target.Ready ? T("fields.ready", "Ready") : FormatTime(Math.Max(0, target.RemainingSeconds), mspace: false, shortForm: true);
+                Visible(selectedPreview.ProgressStatus, target.Planted);
                 Visible(selectedPreview.Requirement, false);
                 RefreshArt(selectedPreview, target);
-                Visible(selectedPreview.Fill.parent.parent, target.Planted); selectedPreview.Fill.style.width = Length.Percent(target.Progress01 * 100);
+                Visible(selectedPreview.Fill.parent, target.Planted); selectedPreview.Fill.style.width = Length.Percent(target.Progress01 * 100);
                 selectedPreview.Root.EnableInClassList("fields-ready", target.Ready);
             }
             Visible(seedColumn, target?.Unlocked == true);
@@ -441,9 +445,12 @@ namespace TimelessEchoes.UI.Toolkit
             if (bed.EstablishedTree && !bed.Ready) stage = 2;
             var sprite = !bed.Planted ? null : bed.Orchard && stage < 3 && appearance ? appearance.treeStages[stage] : recipe?.stages?.Length == 4 ? recipe.stages[stage] : bed.Icon;
             var size = bed.Orchard ? 2 : 3;
+            var previewCropInset = tile.Preview && !bed.Orchard && sprite ? PreviewCropInset(sprite) : 0;
             for (var i = 0; i < tile.Soil.Length; i++)
             {
                 var x = i % size; var y = i / size;
+                if (tile.Preview && !bed.Orchard)
+                    tile.Soil[i].parent.style.top = previewCropInset + y * 8;
                 var corner = (x == 0 || x == size - 1) && (y == 0 || y == size - 1);
                 var index = corner ? 0 : y == 0 || y == size - 1 ? 1 : x == 0 || x == size - 1 ? 2 : 3;
                 var flip = new Scale(new Vector3((index == 0 || index == 2) && x == size - 1 ? -1 : 1,
@@ -466,6 +473,25 @@ namespace TimelessEchoes.UI.Toolkit
                     tile.Plants[i].style.left = 4; tile.Plants[i].style.top = 32 - height;
                 }
             }
+        }
+        private float PreviewCropInset(Sprite sprite)
+        {
+            if (previewCropInsets.TryGetValue(sprite, out var inset)) return inset;
+            // Use the authored outline to exclude transparent space above the plant.
+            var top = (sprite.rect.height - sprite.pivot.y) / sprite.pixelsPerUnit;
+            if (sprite.GetPhysicsShapeCount() > 0)
+            {
+                top = float.NegativeInfinity;
+                for (var shape = 0; shape < sprite.GetPhysicsShapeCount(); shape++)
+                {
+                    previewOutline.Clear();
+                    sprite.GetPhysicsShape(shape, previewOutline);
+                    foreach (var point in previewOutline) top = Mathf.Max(top, point.y);
+                }
+            }
+            inset = Mathf.Max(0, top * 8 - 4);
+            previewCropInsets[sprite] = inset;
+            return inset;
         }
         private static string T(string key, string fallback) => ToolkitLocalization.Text(key, fallback);
         private static string PlantCost(bool orchard) => ToolkitLocalization.Text(orchard ? "fields.plant-sapling-cost" : "fields.plant-seed-cost", orchard ? "Requires {0} matching sapling per plot." : "Requires {0} matching seed pack per field.", FarmContent.PlantingCost(orchard));
