@@ -22,7 +22,7 @@ namespace TimelessEchoes.Farming
         public int TwinsLevel = 1;
         public long TwinsXp;
         public int TwinsXpRequired = 5;
-        public double YieldMultiplier = 1, SpeedFactor = 1;
+        public double YieldMultiplier = 1;
         public FarmRecipePresentation[] Recipes = Array.Empty<FarmRecipePresentation>();
         public FarmBuildPresentation[] Builds = Array.Empty<FarmBuildPresentation>();
         public bool Prepared;
@@ -42,15 +42,25 @@ namespace TimelessEchoes.Farming
         public string Title;
         public bool Unlocked, Orchard, Watered, Repeat;
         public string RecipeId, RecipeTitle;
+        public string YieldTitle;
         public Sprite Icon;
         public bool Planted;
         public bool Ready;
         public float Progress01;
         public double RemainingSeconds;
+        public double GrowthSeconds;
+        public double ExpectedYield;
+        public double SecondaryExpectedYield;
+        public Sprite SecondaryIcon;
+        public string SecondaryTitle;
+        public bool Timber;
+        public int HarvestXp;
+        public bool EstablishedTree;
     }
 
     public sealed class FarmRecipePresentation
     {
+        public string RequiredSkill;
         public string Id, Title, CropTitle;
         public double SeedQuantity;
         public bool Discovered, Eligible, Orchard;

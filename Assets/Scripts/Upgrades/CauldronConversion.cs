@@ -37,7 +37,7 @@ namespace TimelessEchoes.Upgrades
             if (remaining < 0 || remaining == entry.Amount || !IsFinite(gained) || gained <= 0 ||
                 !IsFinite(captured.CauldronStew) || captured.CauldronStew < 0 || !IsFinite(stew) || stew <= captured.CauldronStew)
             { error = "This amount cannot be represented safely."; return false; }
-            candidate = CurrentSaveCodec.Clone(captured);
+            candidate = captured.CopyEconomicMutationInputs();
             candidate.Resources[resourceName].Amount = remaining;
             candidate.ResourceStats.TryGetValue(resourceName, out var stats);
             stats ??= new GameData.ResourceRecord();
@@ -55,7 +55,9 @@ namespace TimelessEchoes.Upgrades
                         var progress = quest.CauldronMixProgress + quantity;
                         if (!IsFinite(quest.CauldronMixProgress) || quest.CauldronMixProgress < 0 || !IsFinite(progress))
                         { candidate = null; error = "Quest progress is out of range."; return false; }
-                        quest.CauldronMixProgress = progress;
+                        var updated = quest.Copy();
+                        updated.CauldronMixProgress = progress;
+                        candidate.Quests[id] = updated;
                     }
             return true;
         }

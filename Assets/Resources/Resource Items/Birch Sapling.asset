@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8c46105a822e04290ca4001c548df8, type: 3}
+  m_Name: Birch Sapling
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.Upgrades.Resource
+  foodEligibility: 2
+  resourceID: 103
+  icon: {fileID: 21300000, guid: b548490956146ec409e2ee6ec39f37ce, type: 3}
+  UnknownIcon: {fileID: 21300000, guid: 53a228c9c92a0684d967b02a993fc9bc, type: 3}
+  baseValue: 0
+  valueMultiplier: 1
+  DisableAlterEcho: 1
+  cauldronCategory: 4
+  totalReceived: 0
+  totalSpent: 0

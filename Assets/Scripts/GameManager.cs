@@ -1208,6 +1208,7 @@ namespace TimelessEchoes
             try
             {
                 EventHandler.SaveData();
+                Blindsided.Oracle.oracle?.RequestCheckpointSave();
             }
             catch (Exception ex)
             {

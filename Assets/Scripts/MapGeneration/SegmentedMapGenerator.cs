@@ -128,7 +128,7 @@ namespace TimelessEchoes.MapGeneration
             Physics2D.SyncTransforms();
             yield return null; // extra frame for composite/tiles to finish updating
 
-            MoveGraph();
+            yield return MoveGraph(false);
             CompleteInitialGeneration();
         }
 
@@ -199,7 +199,7 @@ namespace TimelessEchoes.MapGeneration
             // One more frame helps when using CompositeCollider2D
             yield return null;
 
-            MoveGraph();
+            yield return MoveGraph(true);
             generating = false;
         }
 
@@ -240,21 +240,21 @@ namespace TimelessEchoes.MapGeneration
             nextSegmentX += segmentSize.x;
         }
 
-        private void MoveGraph()
+        private IEnumerator MoveGraph(bool asynchronous)
         {
             if (pathfinder == null)
-                return;
+                yield break;
             if (!pathfinder.isActiveAndEnabled)
                 pathfinder.enabled = true;
             var astar = AstarPath.active;
             if (astar == null || !astar.isActiveAndEnabled)
-                return;
+                yield break;
             var gg = pathfinder.data != null ? pathfinder.data.gridGraph : null;
             if (gg == null)
-                return;
+                yield break;
 
             if (segments.Count < 3)
-                return;
+                yield break;
 
             // Get first and third segments without allocating arrays
             Segment first = null, third = null; var idx = 0;
@@ -264,7 +264,7 @@ namespace TimelessEchoes.MapGeneration
                 if (idx == 2) { third = s; break; }
                 idx++;
             }
-            if (first == null || third == null) return;
+            if (first == null || third == null) yield break;
 
             // Calculate trimmed bounds inside outer segments
             var left = first.startX + 1;
@@ -287,14 +287,21 @@ namespace TimelessEchoes.MapGeneration
                 lastRightTile = right;
                 lastGraphCenter = newCenter;
                 gridInitialized = true;
-                return;
+                yield break;
             }
 
-            // Option A: Full rescan after shifting segments to avoid stale node data.
-            using (astar.PausePathfinding())
+            // Keep the complete rescan: retained segments can contain changed task
+            // colliders, so moving only the exposed grid strip leaves stale nodes.
+            // A*'s asynchronous scan keeps the old graph valid until publication and
+            // budgets preparation across frames instead of blocking a combat frame.
+            gg.center = newCenter;
+            if (asynchronous)
             {
-                gg.center = newCenter;
-                astar.Scan(gg);
+                foreach (var progress in astar.ScanAsync(gg)) yield return null;
+            }
+            else
+            {
+                using (astar.PausePathfinding()) astar.Scan(gg);
             }
 
             lastLeftTile = left;

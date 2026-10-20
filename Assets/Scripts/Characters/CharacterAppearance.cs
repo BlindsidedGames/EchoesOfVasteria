@@ -10,6 +10,7 @@ namespace TimelessEchoes.Characters
     {
         private SpriteRenderer source;
         private SpriteRenderer[] layers;
+        private readonly Sprite[] sprites = new Sprite[8];
         private SortingGroup group;
         private CharacterCatalog catalog;
         private CharacterProfile profile;
@@ -18,6 +19,9 @@ namespace TimelessEchoes.Characters
         private MaterialPropertyBlock compositeProperties;
         private static Sprite compositeQuad;
         private bool wasComposited;
+        private Color lastTint;
+        private bool lastFlipX, lastFlipY;
+        private int lastSortingLayer, lastSortingOrder;
         private static readonly int[] TextureIds = new int[8], RectIds = new int[8];
         private static readonly int ToolBehindId = Shader.PropertyToID("_ToolBehind");
         static CharacterAppearance() {
@@ -45,25 +49,36 @@ namespace TimelessEchoes.Characters
             profile = current;
             catalog.TrySource(source.sprite, out var frame);
             var toolSprite = CharacterSkillTools.SpriteFor(catalog, profile, frame);
-            changed |= layers[(int)CharacterSlot.Tool].sprite != toolSprite;
+            changed |= sprites[(int)CharacterSlot.Tool] != toolSprite;
+            if (!changed && lastFrame == frame && lastTint == source.color &&
+                lastFlipX == source.flipX && lastFlipY == source.flipY &&
+                lastSortingLayer == source.sortingLayerID && lastSortingOrder == source.sortingOrder)
+                return;
             group.sortingLayerID = source.sortingLayerID; group.sortingOrder = source.sortingOrder;
             var composited = source.color.a < .999f && BuildComposite();
-            for (var i = 0; i < layers.Length; i++)
+            if (changed || lastFrame != frame)
+                for (var i = 0; i < sprites.Length; i++)
+                    sprites[i] = i == (int)CharacterSlot.Tool ? toolSprite : catalog.SpriteFor(profile, (CharacterSlot)i, frame);
+            // Translucent actors are drawn by one composite. Keep its source sprites
+            // as data instead of creating eight disabled renderers for every echo.
+            if (!composited && layers == null) BuildLayers();
+            for (var i = 0; layers != null && i < layers.Length; i++)
             {
                 var renderer = layers[i];
                 renderer.flipX = source.flipX; renderer.flipY = source.flipY;
                 renderer.color = source.color;
-                if (changed || lastFrame != frame) renderer.sprite = i == (int)CharacterSlot.Tool ? toolSprite : catalog.SpriteFor(profile, (CharacterSlot)i, frame);
+                if (renderer.sprite != sprites[i]) renderer.sprite = sprites[i];
                 renderer.enabled = renderer.sprite && !composited;
             }
-            layers[(int)CharacterSlot.Tool].sortingOrder = frame < catalog.toolBehind.Length && catalog.toolBehind[frame] ? -5 : 45;
+            var toolBehind = frame < catalog.toolBehind.Length && catalog.toolBehind[frame];
+            if (layers != null) layers[(int)CharacterSlot.Tool].sortingOrder = toolBehind ? -5 : 45;
             if (composite) {
                 composite.enabled = composited;
                 if (composited) {
                     composite.color = source.color; composite.flipX = source.flipX; composite.flipY = source.flipY;
                     if (changed || lastFrame != frame || !wasComposited) {
-                        for (var i = 0; i < layers.Length; i++) {
-                            var sprite = layers[i].sprite;
+                        for (var i = 0; i < sprites.Length; i++) {
+                            var sprite = sprites[i];
                             compositeProperties.SetTexture(TextureIds[i], sprite ? sprite.texture : Texture2D.blackTexture);
                             // These sheets use tight meshes inside a shared 64px canvas. textureRect
                             // describes the trimmed mesh, not the authored layer alignment.
@@ -71,12 +86,14 @@ namespace TimelessEchoes.Characters
                             compositeProperties.SetVector(RectIds[i], sprite ? new Vector4(rect.x / sprite.texture.width, rect.y / sprite.texture.height,
                                 rect.width / sprite.texture.width, rect.height / sprite.texture.height) : Vector4.zero);
                         }
-                        compositeProperties.SetFloat(ToolBehindId, layers[(int)CharacterSlot.Tool].sortingOrder < 0 ? 1 : 0);
+                        compositeProperties.SetFloat(ToolBehindId, toolBehind ? 1 : 0);
                         composite.SetPropertyBlock(compositeProperties);
                     }
                 }
             }
             wasComposited = composited;
+            lastTint = source.color; lastFlipX = source.flipX; lastFlipY = source.flipY;
+            lastSortingLayer = source.sortingLayerID; lastSortingOrder = source.sortingOrder;
             lastFrame = frame;
             if (changed) catalog.TrimAppearanceCache(profile, CharacterCreation.Current);
         }
@@ -104,20 +121,25 @@ namespace TimelessEchoes.Characters
             // 32px sprite's ground pivot. Keep gameplay targets and world UI anchored
             // to the original position by lifting the complete outfit (including tools).
             root.transform.localPosition = new Vector3(0, 8f / 16f, 0);
-            group = root.AddComponent<SortingGroup>(); layers = new SpriteRenderer[8];
+            group = root.AddComponent<SortingGroup>();
+        }
+        private void BuildLayers()
+        {
+            layers = new SpriteRenderer[8];
             var orders = new[] { 0, 10, 20, 30, 40, 5, 60, 45 };
             for (var i = 0; i < layers.Length; i++)
             {
-                var child = new GameObject(((CharacterSlot)i).ToString()); child.transform.SetParent(root.transform, false);
+                var child = new GameObject(((CharacterSlot)i).ToString()); child.transform.SetParent(group.transform, false);
                 layers[i] = child.AddComponent<SpriteRenderer>(); layers[i].sortingOrder = orders[i];
                 layers[i].sharedMaterial = source.sharedMaterial;
             }
         }
         private void ClearAppearanceReferences()
         {
-            if (layers != null && (profile != null || lastFrame >= 0))
+            if (profile != null || lastFrame >= 0)
             {
-                foreach (var layer in layers) if (layer) layer.sprite = null;
+                System.Array.Clear(sprites, 0, sprites.Length);
+                if (layers != null) foreach (var layer in layers) if (layer) layer.sprite = null;
                 compositeProperties?.Clear();
                 if (composite) composite.SetPropertyBlock(null);
             }

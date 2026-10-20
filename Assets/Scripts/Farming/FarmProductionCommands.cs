@@ -17,12 +17,13 @@ namespace TimelessEchoes.Farming
             var crop = id.Substring(5);
             return char.ToUpperInvariant(crop[0]) + crop.Substring(1) + " Seed Pack";
         }
-        public static bool KnownRecipe(string id) => id != null && CropNames.Concat(new[] { "apple", "pear", "peach", "cherry" }).Any(n => id == "recipe." + n + ".v1");
+        public static bool KnownRecipe(string id) => id != null && CropNames.Concat(new[] { "apple", "pear", "peach", "cherry", "oak", "birch", "spruce" }).Any(n => id == "recipe." + n + ".v1");
         public static bool KnownBuild(string id) => id == FarmContent.IntroductionId ||
             Enumerable.Range(1, 6).Any(i => id == "Farm.Garden.Build" + i.ToString("D2") + ".v1") ||
             Enumerable.Range(1, 3).Any(i => id == "Farm.Orchard.Build" + i.ToString("D2") + ".v1");
         public static bool KnownBed(string id) => GardenBeds.Contains(id) || OrchardBeds.Contains(id);
         public static string PlantFingerprint(string bedId, string recipeId) => "plant:" + bedId + ":" + recipeId;
+        public static string ReplaceTreeFingerprint(string bedId, string recipeId) => "replace-tree:" + bedId + ":" + recipeId;
         public static FarmCommandResult BuildFields(GameData owner, string questId, string operationId, DateTime now, FarmContent content)
         {
             if (!content || owner?.Farm == null) return Reject("MissingFarmContent");
@@ -32,21 +33,24 @@ namespace TimelessEchoes.Farming
             if (questId == FarmContent.IntroductionId)
             {
                 if (owner.CompletedNpcTasks?.Contains("Farmers1") != true) return Reject("MeetFarmersFirst");
+                result.ResourceDeltas[SeedResourceName(RadishSeedId)] = 1;
                 result.CompletedQuests.Add(questId); return result;
             }
             var build = content.Build(questId);
             var gate = content.BuildGate(owner, build);
             if (gate != null) return Reject(gate);
-            if (build.gardenCapacity < owner.Farm.GardenCapacity || build.gardenCapacity > GardenBeds.Length ||
-                build.orchardCapacity < owner.Farm.OrchardCapacity || build.orchardCapacity > OrchardBeds.Length || build.costs == null || build.costs.Count == 0) return Reject("InvalidConstruction");
+            if (build.gardenCapacity < 0 || build.gardenCapacity > GardenBeds.Length ||
+                build.orchardCapacity < 0 || build.orchardCapacity > OrchardBeds.Length ||
+                build.gardenCapacity + build.orchardCapacity == 0 || build.costs == null || build.costs.Count == 0) return Reject("InvalidConstruction");
             foreach (var cost in build.costs)
             {
                 if (cost == null || !cost.resource || cost.amount <= 0) return Reject("InvalidBuildCost");
                 result.ResourceDeltas.TryGetValue(cost.resource.name, out var total);
                 result.ResourceDeltas[cost.resource.name] = total - cost.amount;
             }
-            result.Candidate.GardenCapacity = build.gardenCapacity;
-            result.Candidate.OrchardCapacity = build.orchardCapacity;
+            // Each expansion adds to its own plots without removing the other kind.
+            result.Candidate.GardenCapacity = Math.Max(owner.Farm.GardenCapacity, build.gardenCapacity);
+            result.Candidate.OrchardCapacity = Math.Max(owner.Farm.OrchardCapacity, build.orchardCapacity);
             for (int i = 0; i < build.gardenCapacity; i++) Unlock(result.Candidate, GardenBeds[i]);
             for (int i = 0; i < build.orchardCapacity; i++) Unlock(result.Candidate, OrchardBeds[i]);
             result.CompletedQuests.Add(questId);
@@ -78,22 +82,28 @@ namespace TimelessEchoes.Farming
             if (!KnownBed(id) || !AccessibleBed(state, id) || !state.Beds.TryGetValue(id, out var bed) || bed == null) return "BedLocked";
             if (bed.IsPlanted) return "BedOccupied";
             if (!content.CanPlant(owner, recipe) || recipe.orchard != OrchardBeds.Contains(id) || !recipe.output) return "RecipeLocked";
-            if (!Finite(content.baseDurationSeconds) || content.baseDurationSeconds <= 0 || !Finite(content.baseYield) || content.baseYield <= 0 || content.harvestXp <= 0) return "InvalidRecipeTuning";
+            if (!Finite(content.baseDurationSeconds) || content.baseDurationSeconds <= 0 || !Finite(content.durationMultiplierPerCropLevel) || content.durationMultiplierPerCropLevel < 1 || !Finite(content.baseYield) || content.baseYield <= 0 || content.harvestXp <= 0) return "InvalidRecipeTuning";
+            if (!Finite(content.minimumDurationSeconds) || content.minimumDurationSeconds <= 0 || content.minimumCropCapLevel <= 60 || content.lastCropCapLevel < content.minimumCropCapLevel) return "InvalidRecipeTuning";
+            var duration = content.GrowthDuration(recipe, state.TwinsLevel);
+            if (!Finite(duration) || duration <= 0) return "InvalidRecipeTuning";
             if (!recipe.paidInput || !recipe.orchard && recipe.paidInput.name != SeedResourceName(recipe.seedId)) return "MissingPaidInput";
             owner.Resources.TryGetValue(recipe.paidInput.name, out var input);
             result.ResourceDeltas.TryGetValue(recipe.paidInput.name, out var staged);
             var cost = FarmContent.PlantingCost(recipe.orchard);
-            if (input == null || !Finite(input.Amount) || input.Amount + staged < cost)
+            if ((input == null || !Finite(input.Amount) || input.Amount + staged < cost))
                 return recipe.orchard ? "NoMatchingSapling" : "NoMatchingSeeds";
             result.ResourceDeltas[recipe.paidInput.name] = staged - cost;
             if (!FarmJournal.TrySequence(state, operationId, out var sequence, out _)) return "InvalidPlantReceipt";
             bed.PlantSequence = sequence;
             bed.BatchId = "fields:" + operationId + ":" + id;
             bed.SelectedRecipeId = bed.RecipeId = recipe.id;
-            bed.DurationSeconds = content.baseDurationSeconds * FarmContent.SpeedFactor(state.TwinsLevel);
+            bed.DurationSeconds = duration;
+            bed.EstablishedTree = false;
             bed.FrozenYield = content.baseYield * FarmContent.YieldMultiplier(state.TwinsLevel);
-            bed.HarvestXp = content.harvestXp;
-            bed.ElapsedSeconds = 0; bed.Watered = false; bed.LastGrowthUtcTicks = 0;
+            if (!Finite(recipe.secondaryYieldRatio) || recipe.secondaryYieldRatio < 0) return "InvalidRecipeTuning";
+            bed.FrozenSecondaryYield = recipe.secondaryOutput ? bed.FrozenYield * recipe.secondaryYieldRatio : 0;
+            bed.HarvestXp = content.HarvestExperience(recipe);
+            bed.ElapsedSeconds = 0; bed.Watered = state.TwinsLevel >= FarmContent.AutoWaterLevel; bed.LastGrowthUtcTicks = 0;
             result.OperationReceipt.BatchIds.Add(bed.BatchId);
             return null;
         }
@@ -119,14 +129,14 @@ namespace TimelessEchoes.Farming
         {
             var result = Begin(state, operationId, "repeat:" + id + ":" + (repeat ? "1" : "0"), now);
             if (!result.Accepted) return result;
-            if (!KnownBed(id) || !AccessibleBed(state, id) || repeat && state.TwinsLevel < 20 || !result.Candidate.Beds.TryGetValue(id, out var bed) || bed == null) return Reject("RepeatLocked");
+            if (!KnownBed(id) || !AccessibleBed(state, id) || repeat && state.TwinsLevel < FarmContent.AutoReplantLevel || !result.Candidate.Beds.TryGetValue(id, out var bed) || bed == null) return Reject("RepeatLocked");
             bed.Repeat = repeat; return result;
         }
         public static FarmCommandResult HarvestFields(GameData owner, string operationId, DateTime now, FarmContent content, bool automatic, string bedId = null)
         {
             if (owner?.Farm == null || !content) return Reject("MissingFarmContent");
             if (bedId != null && (!KnownBed(bedId) || automatic)) return Reject("UnknownBed");
-            if (automatic && owner.Farm.TwinsLevel < 20) return Reject("RepeatLocked");
+            if (automatic && owner.Farm.TwinsLevel < FarmContent.AutoReplantLevel) return Reject("RepeatLocked");
             var result = Begin(owner.Farm, operationId, bedId != null ? "harvest-bed:" + bedId : automatic ? "harvest-auto" : "harvest-fields", now);
             if (!result.Accepted) return result;
             foreach (var id in GardenBeds.Concat(OrchardBeds))
@@ -140,6 +150,12 @@ namespace TimelessEchoes.Farming
                 result.ResourceDeltas.TryGetValue(recipe.output.name, out var total);
                 var bonus = CauldronResourceYield.BonusPercent(owner, recipe.output);
                 result.ResourceDeltas[recipe.output.name] = total + (legacy ? bed.HarvestYield : bed.FrozenYield) * (1 + bonus / 100d);
+                if (recipe.secondaryOutput && bed.FrozenSecondaryYield > 0)
+                {
+                    result.ResourceDeltas.TryGetValue(recipe.secondaryOutput.name, out var secondary);
+                    var secondaryBonus = CauldronResourceYield.BonusPercent(owner, recipe.secondaryOutput);
+                    result.ResourceDeltas[recipe.secondaryOutput.name] = secondary + bed.FrozenSecondaryYield * (1 + secondaryBonus / 100d);
+                }
                 result.OperationReceipt.BatchIds.Add(bed.BatchId); result.HarvestedBeds.Add(id);
                 if (legacy)
                 {
@@ -152,11 +168,12 @@ namespace TimelessEchoes.Farming
                 {
                     bed.LastHarvestedPlantSequence = bed.PlantSequence;
                     FarmContent.AddXp(result.Candidate, bed.HarvestXp);
+                    result.Candidate.FirstHarvestCompleted = true;
                 }
-                bed.BatchId = null; bed.RecipeId = null; bed.DurationSeconds = bed.ElapsedSeconds = bed.FrozenYield = 0; bed.HarvestXp = 0; bed.HarvestYield = 0; bed.LastGrowthUtcTicks = 0; bed.Watered = false;
-                if (bed.Repeat && result.Candidate.TwinsLevel >= 20)
+                bed.BatchId = null; bed.RecipeId = null; bed.DurationSeconds = bed.ElapsedSeconds = bed.FrozenYield = bed.FrozenSecondaryYield = 0; bed.HarvestXp = 0; bed.HarvestYield = 0; bed.LastGrowthUtcTicks = 0; bed.Watered = false;
+                if (bed.Repeat && result.Candidate.TwinsLevel >= FarmContent.AutoReplantLevel)
                 {
-                    // One current-frame paid batch only; never transfer elapsed time or water into it.
+                    // Begin one new cycle; never carry elapsed time or watering into it.
                     var error = PlantInto(result, owner, id, content.Recipe(bed.SelectedRecipeId), operationId, content);
                     if (error != null) bed.Repeat = false;
                 }
@@ -174,12 +191,12 @@ namespace TimelessEchoes.Farming
                 return bed.BatchId == bed.LegacyBatchId;
             }
             if (bed.PlantSequence <= bed.LastHarvestedPlantSequence || bed.PlantSequence > state.LastIssuedSequence ||
-                !Finite(bed.FrozenYield) || bed.FrozenYield <= 0 || bed.HarvestXp <= 0 || !bed.BatchId.StartsWith("fields:", StringComparison.Ordinal) ||
+                !Finite(bed.FrozenYield) || bed.FrozenYield <= 0 || !Finite(bed.FrozenSecondaryYield) || bed.FrozenSecondaryYield < 0 || bed.HarvestXp <= 0 || !bed.BatchId.StartsWith("fields:", StringComparison.Ordinal) ||
                 (!bed.BatchId.EndsWith(":" + id, StringComparison.Ordinal) || bed.BatchId.Length <= 8 + id.Length)) return false;
             var token = bed.BatchId.Substring(7, bed.BatchId.Length - 7 - id.Length - 1);
             if (!FarmJournal.TrySequence(state, token, out var plantSequence, out var fingerprint) || plantSequence != bed.PlantSequence ||
                 FarmJournal.Inspect(state, token, fingerprint, out _) != FarmCommandStatus.AlreadyApplied) return false;
-            if (fingerprint != PlantFingerprint(id, bed.RecipeId) && fingerprint != "harvest-auto" && fingerprint != "harvest-fields" && fingerprint != "harvest-bed:" + id) return false;
+            if (fingerprint != PlantFingerprint(id, bed.RecipeId) && fingerprint != ReplaceTreeFingerprint(id, bed.RecipeId) && fingerprint != "harvest-auto" && fingerprint != "harvest-fields" && fingerprint != "harvest-bed:" + id) return false;
             return !state.CompletedSequences.TryGetValue(plantSequence, out var receipt) || receipt.BatchIds?.Contains(bed.BatchId) == true;
         }
 

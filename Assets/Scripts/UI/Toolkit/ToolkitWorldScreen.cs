@@ -51,6 +51,8 @@ namespace TimelessEchoes.UI.Toolkit
                         var data = anchor.elements[i];
                         VisualElement node = data.fontSize > 0 ? ToolkitControls.Text("") : data.sliced ? new VisualElement() : ToolkitControls.Icon(data.sprite);
                         node.style.position = Position.Absolute; node.pickingMode = PickingMode.Ignore;
+                        node.style.left = 0; node.style.top = 0;
+                        node.usageHints |= UsageHints.DynamicTransform;
                         if (node is Image image) image.tintColor = data.color;
                         else if (node is Label label) { label.style.color = data.color; label.style.unityTextAlign = TextAnchor.MiddleCenter; label.style.whiteSpace = WhiteSpace.NoWrap; }
                         else { ToolkitTheme.Background(node, data.sprite); node.style.unityBackgroundImageTintColor = data.color; if (!data.sprite) node.style.backgroundColor = data.color; }
@@ -78,13 +80,19 @@ namespace TimelessEchoes.UI.Toolkit
                     var a = RuntimePanelUtils.ScreenToPanel(root.panel, new Vector2(lower.x, Screen.height - upper.y));
                     var b = RuntimePanelUtils.ScreenToPanel(root.panel, new Vector2(upper.x, Screen.height - lower.y));
                     float width = Mathf.Abs(b.x - a.x), height = Mathf.Abs(b.y - a.y);
-                    node.style.left = Mathf.Min(a.x,b.x) - offset.x; node.style.top = Mathf.Min(a.y,b.y) - offset.y;
+                    // World motion changes placement, not layout. In particular a group of
+                    // moving echoes must not invalidate layout for every icon and bar.
+                    node.style.translate = new Translate(Mathf.Min(a.x,b.x) - offset.x,
+                        Mathf.Min(a.y,b.y) - offset.y, 0);
                     node.style.width = width * anchor.Fill(data.value); node.style.height = height;
                     if (node is Label text) { text.text = anchor.Text(data); text.style.fontSize = data.fontSize * height / Mathf.Max(.01f,data.anchor.rect.height); }
                     else if ((data.value == ToolkitWorldAnchor.Value.HealthFill && anchor.health) || (data.value == ToolkitWorldAnchor.Value.EchoFill && anchor.echo))
                     {
                         var sprite = data.value == ToolkitWorldAnchor.Value.EchoFill ? anchor.echo.LifetimeSprite : anchor.health.GetHealthBarSprite(data.sprite);
-                        if (node is Image image) image.sprite = sprite; else ToolkitTheme.Background(node, sprite);
+                        if (node is Image image) image.sprite = sprite;
+                        // Background also resets slice scale. Reapplying it every frame
+                        // dirties each unchanged bar before restoring its projected scale.
+                        else if (node.style.backgroundImage.value.sprite != sprite) ToolkitTheme.Background(node, sprite);
                     }
                     if (data.sliced && data.sliceReferencePixelsPerUnit > 0 && data.anchor.rect.height > 0)
                     {

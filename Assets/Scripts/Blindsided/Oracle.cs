@@ -213,7 +213,12 @@ namespace Blindsided
 
             if (StaticReferences.TargetFps <= 0)
                 StaticReferences.TargetFps = (int)Screen.currentResolution.refreshRateRatio.value;
-            Application.targetFrameRate = StaticReferences.TargetFps;
+            // Match the settings screen: VSync owns desktop landscape pacing;
+            // mobile/portrait uses the explicit FPS preference instead.
+            var sync = StaticReferences.VSyncEnabled && !UnityEngine.Device.Application.isMobilePlatform &&
+                       !ToolkitResponsiveLayout.IsPortrait;
+            QualitySettings.vSyncCount = sync ? 1 : 0;
+            Application.targetFrameRate = sync ? -1 : StaticReferences.TargetFps;
             yield return LoadMainScene();
         }
 
@@ -532,6 +537,8 @@ namespace Blindsided
         {
             StartAutosaveLoop(initialDelaySeconds);
         }
+
+        public void RequestCheckpointSave() => RequestSave();
 
         private void RequestSave()
         {
@@ -1268,16 +1275,18 @@ namespace Blindsided
             }
         }
 
-        private void RequireRuntimeReloadRecovery(string durableOperation, Exception exception)
+        private void RequireRuntimeReloadRecovery(string durableOperation, Exception exception, bool checkpointCommitted = true)
         {
             loaded = false;
             _recoveryRequired = true;
             _recoveryStatus = SaveLoadStatus.Failed;
             StopAutosaveLoop();
-            _recoveryDiagnostic =
+            _recoveryDiagnostic = checkpointCommitted ?
                 $"{durableOperation}, but reloading it into the running game failed. " +
                 "The disk commit is safe and no recovery files were removed. Restart the game or Retry. " +
-                exception;
+                exception :
+                $"{durableOperation}. Further saves have been blocked to preserve the last checkpoint. " +
+                "Restart the game or Retry; changes since that checkpoint may be lost. " + exception;
             Debug.LogError(_recoveryDiagnostic);
             try { FeedbackForm.Submit("Save.RuntimeReloadFailed", _recoveryDiagnostic); }
             catch { }

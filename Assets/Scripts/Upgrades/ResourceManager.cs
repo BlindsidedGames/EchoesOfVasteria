@@ -249,58 +249,42 @@ namespace TimelessEchoes.Upgrades
             else InvokeInventoryChanged();
         }
 
-        private void SaveState()
+        internal void SaveState()
         {
             if (oracle == null) return;
-            var existing = oracle.saveData.Resources ?? new Dictionary<string, GameData.ResourceEntry>();
-            // Keep records for content that is temporarily unavailable or renamed. Known runtime
-            // resources overwrite their entries below; unknown keys remain recoverable.
-            var dict = new Dictionary<string, GameData.ResourceEntry>(existing);
+            // Snapshot serialization runs on the main thread before immutable bytes
+            // reach the writer. Preserve unknown keys and reuse unchanged records;
+            // there is no need to rebuild every dictionary for each contribution.
+            var dict = oracle.saveData.Resources ??= new Dictionary<string, GameData.ResourceEntry>();
             foreach (var pair in amounts)
             {
                 if (pair.Key == null) continue;
-                existing.TryGetValue(pair.Key.name, out var oldEntry);
+                dict.TryGetValue(pair.Key.name, out var oldEntry);
+                var earned = unlocked.Contains(pair.Key);
+                var tier = GetTier(pair.Key);
+                if (oldEntry != null && oldEntry.Amount == pair.Value && oldEntry.Earned == earned && oldEntry.Tier == tier)
+                    continue;
                 dict[pair.Key.name] = new GameData.ResourceEntry
                 {
-                    Earned = unlocked.Contains(pair.Key),
-                    Amount = pair.Value,
-                    BestPerMinute = oldEntry?.BestPerMinute ?? 0,
-                    Tier = GetTier(pair.Key)
+                    Earned = earned, Amount = pair.Value,
+                    BestPerMinute = oldEntry?.BestPerMinute ?? 0, Tier = tier
                 };
             }
-
             foreach (var res in unlocked)
-            {
-                if (res == null) continue;
-                if (!dict.ContainsKey(res.name))
-                {
-                    existing.TryGetValue(res.name, out var oldEntry);
-                    dict[res.name] = new GameData.ResourceEntry
-                    {
-                        Earned = true,
-                        Amount = 0,
-                        BestPerMinute = oldEntry?.BestPerMinute ?? 0,
-                        Tier = GetTier(res)
-                    };
-                }
-            }
+                if (res != null && !dict.ContainsKey(res.name))
+                    dict[res.name] = new GameData.ResourceEntry { Earned = true, Amount = 0, Tier = GetTier(res) };
 
-            oracle.saveData.Resources = dict;
-
-            var stats = oracle.saveData.ResourceStats != null
-                ? new Dictionary<string, GameData.ResourceRecord>(oracle.saveData.ResourceStats)
-                : new Dictionary<string, GameData.ResourceRecord>();
+            var stats = oracle.saveData.ResourceStats ??= new Dictionary<string, GameData.ResourceRecord>();
             foreach (var res in Blindsided.Utilities.AssetCache.GetAll<Resource>(""))
             {
                 if (res == null) continue;
+                if (stats.TryGetValue(res.name, out var old) && old != null &&
+                    old.TotalReceived == res.totalReceived && old.TotalSpent == res.totalSpent) continue;
                 stats[res.name] = new GameData.ResourceRecord
                 {
-                    TotalReceived = res.totalReceived,
-                    TotalSpent = res.totalSpent
+                    TotalReceived = res.totalReceived, TotalSpent = res.totalSpent
                 };
             }
-
-            oracle.saveData.ResourceStats = stats;
         }
 
         private void LoadState()

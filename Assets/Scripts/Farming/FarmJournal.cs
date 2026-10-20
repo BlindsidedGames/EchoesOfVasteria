@@ -80,6 +80,7 @@ namespace TimelessEchoes.Farming
             var parts = value.Split(':');
             if (parts.Length != 3) return false;
             return parts[0] == "plant" ? FarmCommands.KnownBed(parts[1]) && FarmCommands.KnownRecipe(parts[2]) :
+                parts[0] == "replace-tree" ? FarmCommands.OrchardBeds.Contains(parts[1]) && FarmCommands.KnownRecipe(parts[2]) :
                 parts[0] == "repeat" ? FarmCommands.KnownBed(parts[1]) && (parts[2] == "0" || parts[2] == "1") :
                 parts[0] == "seed" && FarmCommands.KnownSeed(parts[1]) && (parts[2] == "0" || parts[2] == "1");
         }

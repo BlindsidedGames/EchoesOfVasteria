@@ -18,13 +18,13 @@ namespace Tests.PlayMode
         [UnityTest]
         public IEnumerator FieldsPointerSelectionPlantAndReloadStayCoherent()
         {
-            var gameObject = new GameObject("Isolated Fields town");
+            var gameObject = new GameObject("Isolated Fields adventure");
             var screenObject = new GameObject("Actual Fields screen", typeof(UIDocument));
             var resourceObject = new GameObject("Fields live resource owner");
             try
             {
                 var game = gameObject.AddComponent<TimelessEchoes.GameManager>(); game.enabled = false;
-                typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(game, true);
+                typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(game, false);
                 oracle.saveData.CompletedNpcTasks.Add("Farmers1");
                 Build(FarmContent.IntroductionId);
                 oracle.saveData.Resources["Log"] = new GameData.ResourceEntry { Amount = 10, Earned = true };
@@ -39,10 +39,14 @@ namespace Tests.PlayMode
                 Assert.True(screen.Show());
                 var ui = screenObject.GetComponent<UIDocument>().rootVisualElement;
                 yield return null; yield return null;
-                var buildPlot = ui.Q<Button>("fields-action-" + FarmCommands.WestBedId);
+                var unknownCorn = ui.Q<Button>("fields-seed-recipe.corn.v1");
+                Assert.AreEqual(DisplayStyle.Flex, unknownCorn.resolvedStyle.display, "Undiscovered seeds occupy their own visible cards.");
+                Assert.False(unknownCorn.enabledInHierarchy);
+                Assert.AreSame(content.Recipe("recipe.corn.v1").unknownIcon, unknownCorn.Q<Image>().sprite);
+                var buildPlot = ui.Q<Button>("fields-build-selected");
                 Assert.True(buildPlot.enabledInHierarchy);
                 FieldsClick(buildPlot);
-                Assert.AreEqual(1, service.State.GardenCapacity, "The plot's build action must purchase the correct plot.");
+                Assert.AreEqual(1, service.State.GardenCapacity, "The selected plot construction action must purchase the correct plot.");
                 Assert.AreEqual(0, oracle.saveData.Resources["Log"].Amount);
                 Assert.AreEqual(0, oracle.saveData.Resources["Stick"].Amount);
                 FieldsClick(buildPlot);
@@ -55,7 +59,7 @@ namespace Tests.PlayMode
                 Assert.NotNull(locked); Assert.True(locked.enabledInHierarchy, "Locked plots remain inspectable.");
                 FieldsClick(locked); yield return null;
                 Assert.False(service.State.Beds.ContainsKey(FarmCommands.EastBedId));
-                Assert.That(ui.Q<Label>("fields-selected-status").text, Does.Contain("Twins"));
+                Assert.That(ui.Q<VisualElement>("fields-plot-" + FarmCommands.EastBedId).Q<Label>(className: "fields-level-requirement").text, Does.Contain("Requires lvl"));
                 FieldsClick(ui.Q<Button>("fields-select-" + FarmCommands.WestBedId));
                 var plant = ui.Q<Button>("fields-plant-selected");
                 Assert.False(plant.enabledInHierarchy, "Discovered seeds with zero owned packs cannot be planted.");
@@ -72,38 +76,38 @@ namespace Tests.PlayMode
                 Assert.That(ui.Q<Button>("fields-select-" + FarmCommands.WestBedId).Q<Label>("bed-status").text, Does.Contain("Radish"));
                 Assert.NotNull(ui.Q<Button>("fields-select-" + FarmCommands.WestBedId).Q("bed-progress"));
                 Assert.False(ui.Q<Button>("fields-plant-selected").enabledInHierarchy);
+                Assert.AreEqual(DisplayStyle.None, ui.Q<Button>("fields-harvest-selected").resolvedStyle.display, "Water occupies the harvest action while the crop is dry.");
+                Assert.False(ui.Q<Button>("fields-harvest-selected").enabledInHierarchy);
                 yield return null;
-                FieldsClick(ui.Q<Button>("fields-plant-selected"));
-                Assert.AreEqual(1, oracle.saveData.Resources[seedName].Amount, "A second click cannot charge a growing bed.");
+                Assert.AreEqual(DisplayStyle.None, ui.Q<Button>("fields-plant-selected").resolvedStyle.display,
+                    "Plant is replaced by the watering action after planting.");
+                Assert.True((bool)typeof(Blindsided.Oracle).GetMethod("SaveNowBlocking", Private).Invoke(oracle, new object[] { oracle.CurrentSlot, false }));
                 var loaded = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
                 Assert.True(loaded.Succeeded, loaded.Diagnostic);
                 Assert.AreEqual(1, loaded.Data.Resources[seedName].Amount);
                 Assert.True(loaded.Data.Farm.Beds[FarmCommands.WestBedId].IsPlanted);
-                FieldsClick(ui.Q<Button>("fields-water-selected"));
+                yield return FieldsWaterWithoutMovement(ui);
                 Assert.True(service.State.Beds[FarmCommands.WestBedId].Watered);
-                yield return null; yield return null;
                 var viewport = ui.Q<ScrollView>("fields-workspace");
                 Assert.LessOrEqual(viewport.verticalScroller.highValue, .5f, "The desktop Fields grid and controls fit without an unnecessary outer scrollbar.");
                 Assert.IsNull(ui.Q<Foldout>("fields-construction-foldout"), "Construction lives on its plot, rather than in a separate quest list.");
-                foreach (var slot in ui.Query<VisualElement>(className: "fields-plot").ToList())
-                {
-                    var art = slot.Q("bed-art"); var action = slot.Q<Button>(className: "fields-plot-action");
-                    if (art.resolvedStyle.display == DisplayStyle.None || action.resolvedStyle.display == DisplayStyle.None) continue;
-                    Assert.GreaterOrEqual(action.worldBound.yMin, art.worldBound.yMax + 1, "Plot actions must not overlap the sprites.");
-                }
+                Assert.AreEqual(9, ui.Query<VisualElement>(className: "fields-selector-tile").ToList().Count,
+                    "Six crop selectors and three grouped orchard selectors share one 3x3 grid.");
+                Assert.IsNull(ui.Q<Button>(className: "fields-plot-action"), "Economic actions belong only to the selected plot panel.");
                 var evidence = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "fields-grid-review");
                 System.IO.Directory.CreateDirectory(evidence);
                 ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-growing-watered.png"));
                 yield return null; yield return null;
                 FarmCommands.TickFields(service.State, content.baseDurationSeconds);
                 yield return new WaitForSecondsRealtime(.3f);
-                Assert.True(ui.Q<Button>("farm-harvest-ready").enabledInHierarchy);
-                FieldsClick(ui.Q<Button>("farm-harvest-ready"));
+                Assert.True(ui.Q<Button>("fields-harvest-selected").enabledInHierarchy);
+                FieldsClick(ui.Q<Button>("fields-harvest-selected"));
                 Assert.False(service.State.Beds[FarmCommands.WestBedId].IsPlanted);
                 yield return null;
-                Assert.True(ui.Q<Button>("fields-plant-selected").enabledInHierarchy);
+                Assert.True(ui.Q<Button>("fields-plant-selected").enabledInHierarchy, ui.Q<Label>("fields-selected-status").text);
                 FieldsClick(ui.Q<Button>("fields-plant-selected"));
                 Assert.AreEqual(0, oracle.saveData.Resources[seedName].Amount);
+                Assert.True((bool)typeof(Blindsided.Oracle).GetMethod("SaveNowBlocking", Private).Invoke(oracle, new object[] { oracle.CurrentSlot, false }));
                 loaded = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
                 Assert.True(loaded.Succeeded, loaded.Diagnostic);
                 Assert.AreEqual(0, loaded.Data.Resources[seedName].Amount);
@@ -117,11 +121,10 @@ namespace Tests.PlayMode
                 resources.Add(otherRecipe.paidInput, 1, trackStats: false, eligibleForTierRoll: false);
                 yield return new WaitForSecondsRealtime(.3f);
                 FieldsClick(ui.Q<Button>("fields-seed-" + otherRecipe.id));
-                Assert.True(ui.Q<Button>("fields-seed-" + otherRecipe.id).ClassListContains("primary"));
-                Assert.False(ui.Q<Button>("fields-seed-" + FarmCommands.RadishRecipeId).ClassListContains("primary"));
+                Assert.False(ui.Q<Button>("fields-seed-" + otherRecipe.id).enabledInHierarchy, "Occupied plots lock seed selection.");
+                Assert.True(ui.Q<Button>("fields-seed-" + FarmCommands.RadishRecipeId).ClassListContains("primary"));
                 Assert.False(ui.Q<Button>("fields-plant-selected").enabledInHierarchy, "Changing crops cannot plant into the occupied bed or a locked one.");
                 Assert.AreEqual(1, resources.GetAmount(otherRecipe.paidInput, oracle.saveData));
-                Assert.That(ui.Q<Button>("fields-seed-" + otherRecipe.id).Q<Label>("seed-caption").text, Does.Contain("Wheat"));
                 var nextBuild = content.builds[1];
                 oracle.saveData.Farm.TwinsLevel = 20;
                 oracle.saveData.General.MaxRunDistance = 100000;
@@ -131,8 +134,10 @@ namespace Tests.PlayMode
                     resources.Add(cost.resource, cost.amount, trackStats: false, eligibleForTierRoll: false);
                 Build(nextBuild.questId);
                 yield return new WaitForSecondsRealtime(.3f);
+                FieldsClick(ui.Q<Button>("fields-select-" + FarmCommands.EastBedId));
+                yield return null;
                 FieldsClick(ui.Q<Button>("fields-seed-" + otherRecipe.id));
-                Assert.True(ui.Q<Button>("fields-plant-selected").enabledInHierarchy);
+                Assert.True(ui.Q<Button>("fields-plant-selected").enabledInHierarchy, ui.Q<Label>("fields-selected-status").text);
                 yield return null; // The newly revealed planting action needs its rendered bounds before the next pointer click.
                 FieldsClick(ui.Q<Button>("fields-plant-selected"));
                 Assert.True(service.State.Beds[FarmCommands.EastBedId].IsPlanted);
@@ -148,18 +153,22 @@ namespace Tests.PlayMode
                 resources.Add(apple.paidInput, 1, trackStats: false, eligibleForTierRoll: false);
                 yield return new WaitForSecondsRealtime(.3f);
                 var appleCard = ui.Q<Button>("fields-seed-" + apple.id);
-                FieldsClick(ui.Q<Button>("fields-select-" + orchardId));
+                var orchardButton = ui.Q<Button>("fields-select-" + orchardId);
+                ui.Q<ScrollView>("fields-workspace").ScrollTo(orchardButton);
+                yield return null; yield return null;
+                FieldsClick(orchardButton);
+                yield return null; yield return null;
                 ui.Q<ScrollView>("fields-seeds").ScrollTo(appleCard);
                 yield return null; yield return null;
                 FieldsClick(appleCard);
-                Assert.True(ui.Q<Button>("fields-plant-selected").enabledInHierarchy);
+                Assert.True(ui.Q<Button>("fields-plant-selected").enabledInHierarchy, ui.Q<Label>("fields-selected-status").text);
                 FieldsClick(ui.Q<Button>("fields-plant-selected"));
                 Assert.True(service.State.Beds[orchardId].IsPlanted);
                 Assert.AreEqual(0, oracle.saveData.Resources[apple.paidInput.name].Amount, "Orchards still use one matching sapling.");
                 yield return null; yield return null;
                 ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-and-orchard-growing.png"));
                 yield return null; yield return null;
-                FarmCommands.TickFields(service.State, content.baseDurationSeconds);
+                FarmCommands.TickFields(service.State, service.State.Beds[orchardId].DurationSeconds);
                 yield return new WaitForSecondsRealtime(.3f);
                 Assert.That(ui.Q<Button>("fields-select-" + orchardId).Q<Label>("bed-status").text, Does.Contain("Ready"));
                 ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-and-orchard-ready.png"));
@@ -169,45 +178,138 @@ namespace Tests.PlayMode
                 service.State.GardenCapacity = service.State.OrchardCapacity = 6;
                 foreach (var bedId in FarmCommands.GardenBeds.Concat(FarmCommands.OrchardBeds))
                     if (!service.State.Beds.ContainsKey(bedId)) service.State.Beds[bedId] = new FarmBedState { Unlocked = true };
-                service.State.TwinsLevel = 225;
+                service.State.TwinsLevel = 5000;
                 foreach (var recipe in content.recipes)
                 {
                     oracle.saveData.SkillData[recipe.source.associatedSkill.name] = new GameData.SkillProgress { Level = 500 };
-                    resources.Add(recipe.paidInput, 1, trackStats: false, eligibleForTierRoll: false);
+                    resources.Add(recipe.paidInput, 1000000, trackStats: false, eligibleForTierRoll: false);
                 }
                 resources.Add(seedResource, 4, trackStats: false, eligibleForTierRoll: false);
                 foreach (var bedId in FarmCommands.GardenBeds.Skip(2)) Assert.True(service.Plant(bedId, FarmCommands.RadishRecipeId));
                 FieldsClick(ui.Q<Button>("fields-select-" + FarmCommands.WestBedId));
                 yield return new WaitForSecondsRealtime(.3f);
+                ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-whole-farm-layout.png"));
+                yield return null; yield return null;
                 Assert.AreEqual(17, ui.Query<Button>(className: "fields-seed-card").ToList().Count(b => b.resolvedStyle.display != DisplayStyle.None));
                 Assert.LessOrEqual(ui.Q<ScrollView>("fields-workspace").verticalScroller.highValue, .5f, "The full twelve-plot overview and 17 seed choices must fit the desktop viewport.");
                 Assert.LessOrEqual(ui.Q<ScrollView>("fields-seeds").verticalScroller.highValue, .5f, "Both seed rows must remain visible.");
-                foreach (var slot in ui.Query<VisualElement>(className: "fields-plot").ToList())
-                {
-                    var art = slot.Q("bed-art"); var action = slot.Q<Button>(className: "fields-plot-action");
-                    if (action.resolvedStyle.display != DisplayStyle.None)
-                        Assert.GreaterOrEqual(action.worldBound.yMin, art.worldBound.yMax + 1);
-                }
                 ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-whole-farm.png"));
                 yield return null; yield return null;
                 FieldsClick(ui.Q<Button>("fields-select-" + orchardId));
                 yield return null; yield return null;
-                Assert.AreEqual(4, ui.Query<Button>(className: "fields-seed-card").ToList().Count(b => b.resolvedStyle.display != DisplayStyle.None));
+                Assert.AreEqual(7, ui.Query<Button>(className: "fields-seed-card").ToList().Count(b => b.resolvedStyle.display != DisplayStyle.None));
                 ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-whole-orchard.png"));
                 yield return null; yield return null;
                 screen.CompanionWidth = 400;
                 yield return null; yield return null;
-                Assert.GreaterOrEqual(ui.Q("fields-orchard-grid").worldBound.y, ui.Q("fields-bed-grid").worldBound.yMax - 1, "Narrow layouts stack both grids without overlap.");
-                Assert.Greater(ui.Q("fields-orchard-grid").worldBound.height, 100);
+                Assert.AreEqual(9, ui.Query<VisualElement>(className: "fields-selector-tile").ToList().Count);
+                UnityEditor.PlayModeWindow.SetCustomRenderingResolution(960, 2078, "Portrait Fields selector");
+                yield return null; yield return null; yield return null;
+                screen.CompanionWidth = 0;
+                FieldsClick(ui.Q<Button>("fields-select-" + FarmCommands.WestBedId));
+                yield return null;
+                Assert.True(ui.Q<VisualElement>("fields-plot-" + FarmCommands.WestBedId).ClassListContains("selected"));
+                Assert.AreEqual(9, ui.Query<VisualElement>(className: "fields-selector-tile").ToList().Count);
+                var selectedHarvest = ui.Q<Button>("fields-harvest-selected");
+                var autoHarvest = ui.Q<Button>("fields-repeat-selected");
+                Assert.IsNull(ui.Q<Button>("farm-harvest-ready"), "Bulk harvesting is no longer shown.");
+                Assert.That(Mathf.Abs(selectedHarvest.worldBound.yMin - autoHarvest.worldBound.yMin), Is.LessThan(1), "Auto and Harvest share one row.");
+                Assert.That(autoHarvest.worldBound.width, Is.LessThan(selectedHarvest.worldBound.width), "Auto is the smaller action.");
+                var selectedPreview = ui.Q<VisualElement>("fields-selected-preview");
+                var progressStatus = selectedPreview.Q<Label>(className: "fields-progress-status");
+                Assert.AreEqual("Radish", selectedPreview.Q<Label>("bed-status").text, "The crop label does not also contain its timer.");
+                Assert.AreEqual("Ready", progressStatus.text);
+                var previewTrack = selectedPreview.Q<VisualElement>(className: "track");
+                Assert.That(progressStatus.worldBound.yMax, Is.LessThanOrEqualTo(previewTrack.worldBound.yMin), "Ready state sits above the progress bar.");
+                Assert.That(Mathf.Abs(progressStatus.worldBound.xMax - previewTrack.worldBound.xMax), Is.LessThan(1), "Ready state aligns with the right edge of the bar.");
+                var yieldRow = selectedPreview.Q<VisualElement>(className: "fields-yield");
+                Assert.That(yieldRow.worldBound.yMin, Is.GreaterThanOrEqualTo(previewTrack.worldBound.yMax), "Harvest output sits below the progress bar.");
+                Assert.That(Mathf.Abs(yieldRow.worldBound.xMin - previewTrack.worldBound.xMin), Is.LessThan(1), "Crop amount aligns with the left edge of the bar.");
+                Assert.That(Mathf.Abs(yieldRow.Q<Label>(className: "fields-yield-xp").worldBound.xMax - progressStatus.worldBound.xMax), Is.LessThan(1), "XP aligns under the timer.");
+                Assert.That(Mathf.Abs(autoHarvest.worldBound.xMin - selectedPreview.worldBound.xMin), Is.LessThan(1), "Auto starts at the detail panel edge.");
+                Assert.That(Mathf.Abs(selectedHarvest.worldBound.xMax - selectedPreview.worldBound.xMax), Is.LessThan(1), "Harvest fills the rest of the detail row.");
+                FieldsClick(ui.Q<Button>("fields-repeat-selected"));
+                Assert.True(service.State.Beds[FarmCommands.WestBedId].Repeat, "The Auto toggle enables repeating.");
+                Assert.That(autoHarvest.text, Does.EndWith("On"));
+                FieldsClick(ui.Q<Button>("fields-repeat-selected"));
+                Assert.False(service.State.Beds[FarmCommands.WestBedId].Repeat);
+                Assert.That(autoHarvest.text, Does.EndWith("Off"));
+                ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-selector-portrait.png"));
+                yield return null;
+                UnityEditor.PlayModeWindow.SetCustomRenderingResolution(1920, 1080, "Desktop Fields selector");
+                yield return null; yield return null;
                 screen.CompanionWidth = 0;
                 yield return null; yield return null;
-                FieldsClick(ui.Q<Button>("farm-harvest-ready"));
+                FarmCommands.TickFields(service.State, service.State.Beds.Values.Max(b => b.DurationSeconds));
+                yield return new WaitForSecondsRealtime(.3f);
+                FieldsClick(ui.Q<Button>("fields-harvest-selected"));
+                Assert.False(service.State.Beds[FarmCommands.WestBedId].IsPlanted);
+                Assert.True(service.State.Beds[FarmCommands.EastBedId].IsPlanted, "Harvest affects only the selected plot.");
+                FieldsClick(ui.Q<Button>("fields-select-" + FarmCommands.EastBedId));
+                yield return null;
+                FieldsClick(ui.Q<Button>("fields-harvest-selected"));
+                FieldsClick(ui.Q<Button>("fields-select-" + orchardId));
+                yield return null;
+                FieldsClick(ui.Q<Button>("fields-harvest-selected"));
                 Assert.False(service.State.Beds[orchardId].IsPlanted);
                 Assert.False(service.State.Beds[FarmCommands.WestBedId].IsPlanted);
                 Assert.False(service.State.Beds[FarmCommands.EastBedId].IsPlanted);
                 Assert.Greater(oracle.saveData.Resources[apple.output.name].Amount, 0);
+                var oak = content.Recipe("recipe.oak.v1");
+                yield return null; yield return null;
+                FieldsClick(ui.Q<Button>("fields-seed-" + oak.id));
+                yield return null;
+                Assert.True(ui.Q<Button>("fields-plant-selected").enabledInHierarchy);
+                FieldsClick(ui.Q<Button>("fields-plant-selected"));
+                Assert.AreEqual(oak.id, service.State.Beds[orchardId].RecipeId);
+                Assert.False(ui.Q<Button>("fields-seed-recipe.birch.v1").enabledInHierarchy, "Growing trees lock selection just like crops.");
+                UnityEditor.PlayModeWindow.SetCustomRenderingResolution(960, 2078, "Portrait water action");
+                yield return new WaitForSecondsRealtime(.3f);
+                Assert.True(service.State.Beds[orchardId].Watered, "Level 50 automatically waters newly planted trees.");
+                Assert.AreEqual(DisplayStyle.None, ui.Q<Button>("fields-water-selected").resolvedStyle.display);
+                Assert.AreEqual(DisplayStyle.Flex, ui.Q<Button>("fields-harvest-selected").resolvedStyle.display);
+                FarmCommands.TickFields(service.State, 100000);
+                yield return new WaitForSecondsRealtime(.3f);
+                foreach (var resolution in new[] { new Vector2Int(1920, 1080), new Vector2Int(960, 2078) })
+                {
+                    UnityEditor.PlayModeWindow.SetCustomRenderingResolution((uint)resolution.x, (uint)resolution.y, "Timber Fields review");
+                    yield return null; yield return null;
+                    Assert.AreEqual("Chop", ui.Q<Button>("fields-harvest-selected").text);
+                    Assert.AreEqual(DisplayStyle.Flex, ui.Q("fields-secondary-reward").resolvedStyle.display);
+                    Assert.LessOrEqual(ui.Q<ScrollView>("fields-workspace").verticalScroller.highValue, .5f);
+                    ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence, "fields-timber-" + resolution.x + ".png"));
+                    yield return null;
+                }
+                var saplingsBeforeChop = oracle.saveData.Resources[oak.paidInput.name].Amount;
+                FieldsClick(ui.Q<Button>("fields-harvest-selected"));
+                Assert.Greater(oracle.saveData.Resources[oak.output.name].Amount, 0);
+                Assert.Greater(oracle.saveData.Resources[oak.secondaryOutput.name].Amount, 0);
+                Assert.AreEqual(saplingsBeforeChop, oracle.saveData.Resources[oak.paidInput.name].Amount);
+                Assert.False(service.State.Beds[orchardId].IsPlanted);
+                yield return null;
+                FieldsClick(ui.Q<Button>("fields-seed-recipe.birch.v1"));
+                yield return null;
+                FieldsClick(ui.Q<Button>("fields-plant-selected"));
+                Assert.AreEqual("recipe.birch.v1", service.State.Beds[orchardId].RecipeId);
+                Assert.IsNull(ui.Q("fields-replace-confirmation"));
             }
             finally { Object.DestroyImmediate(screenObject); Object.DestroyImmediate(resourceObject); Object.DestroyImmediate(gameObject); }
+        }
+        private static IEnumerator FieldsWaterWithoutMovement(VisualElement ui)
+        {
+            var water = ui.Q<Button>("fields-water-selected");
+            var before = water.worldBound;
+            var seedTop = ui.Q("fields-seeds-frame").worldBound.y;
+            Assert.True(water.enabledInHierarchy);
+            FieldsClick(water);
+            yield return null; yield return null;
+            var harvest = ui.Q<Button>("fields-harvest-selected");
+            Assert.Less(Vector2.Distance(before.position, harvest.worldBound.position), 1, "Water and Harvest share the same position.");
+            Assert.Less(Vector2.Distance(before.size, harvest.worldBound.size), 1, "Water and Harvest share the same size.");
+            Assert.AreEqual(seedTop, ui.Q("fields-seeds-frame").worldBound.y, 1, "Watering must not move the seed cards.");
+            Assert.AreEqual(DisplayStyle.None, water.resolvedStyle.display);
+            Assert.AreEqual(DisplayStyle.Flex, harvest.resolvedStyle.display);
+            Assert.False(harvest.enabledInHierarchy, "Harvest stays disabled until the watered crop is ready.");
         }
         private static void FieldsClick(Button button)
         {

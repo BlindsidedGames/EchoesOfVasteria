@@ -41,7 +41,7 @@ namespace Tests.EditMode
         private GameData Harvest(GameData data, bool automatic = false) => Commit(data,
             FarmCommands.HarvestFields(data, Op(data, automatic ? "harvest-auto" : "harvest-fields"), Now, content, automatic));
 
-        [Test] public void IntroductionRequiresActualFarmerMeetingAndGrantsOnlyCompletion()
+        [Test] public void IntroductionRequiresMeetingAndGrantsStarterPackOnlyOnce()
         {
             var data = Fresh(); var id = Op(data, "build:" + FarmContent.IntroductionId);
             Assert.IsFalse(FarmCommands.BuildFields(data, FarmContent.IntroductionId, id, Now, content).Accepted);
@@ -50,6 +50,9 @@ namespace Tests.EditMode
             Assert.IsTrue(FarmContent.Completed(data, FarmContent.IntroductionId));
             Assert.AreEqual(1, data.Farm.TwinsLevel); Assert.AreEqual(0, data.Farm.TwinsXp);
             Assert.IsEmpty(data.Farm.Seeds); Assert.IsEmpty(data.Farm.Beds);
+            Assert.AreEqual(1, data.Resources["Radish Seed Pack"].Amount);
+            Assert.AreEqual(FarmCommandStatus.AlreadyApplied, FarmCommands.BuildFields(data, FarmContent.IntroductionId, id, Now, content).Status);
+            Assert.AreEqual(1, data.Resources["Radish Seed Pack"].Amount);
             Assert.AreEqual(0, data.Farm.GardenCapacity); Assert.AreEqual(0, data.Farm.OrchardCapacity);
         }
         [Test] public void BuildPaymentAndCapacityAreOneProposalAndRetryCannotDoubleCharge()
@@ -89,6 +92,46 @@ namespace Tests.EditMode
             data.SkillData[sourceTask.associatedSkill.name].Level++;
             Assert.IsTrue(FarmCommands.BuildFields(data, build.questId, id, Now, content).Accepted);
             Assert.AreEqual(1, data.Farm.GardenCapacity, "Gate checks never publish a build.");
+        }
+        [Test] public void InterleavedConstructionPreservesBothPlotTypes()
+        {
+            var data = Garden(0);
+            var steps = new[] {
+                ("Farm.Orchard.Build01.v1", 5, 1, 2),
+                ("Farm.Garden.Build02.v1", 10, 2, 2),
+                ("Farm.Garden.Build03.v1", 35, 3, 2),
+                ("Farm.Orchard.Build02.v1", 50, 3, 4),
+                ("Farm.Garden.Build04.v1", 65, 4, 4),
+                ("Farm.Garden.Build05.v1", 95, 5, 4),
+                ("Farm.Orchard.Build03.v1", 110, 5, 6),
+                ("Farm.Garden.Build06.v1", 125, 6, 6)
+            };
+            foreach (var (id, level, fields, orchard) in steps)
+            {
+                var build = content.Build(id);
+                foreach (var source in build.sources)
+                    data.SkillData[source.associatedSkill.name] = new GameData.SkillProgress { Level = source.requiredSkillLevel };
+                foreach (var cost in build.costs)
+                    data.Resources[cost.resource.name] = new GameData.ResourceEntry { Amount = cost.amount, Earned = true };
+                data.Farm.TwinsLevel = level - 1;
+                var op = Op(data, "build:" + id);
+                Assert.False(FarmCommands.BuildFields(data, id, op, Now, content).Accepted, id + " must respect its level gate.");
+                data.Farm.TwinsLevel = level;
+                data = Commit(data, FarmCommands.BuildFields(data, id, op, Now, content));
+                Assert.AreEqual(fields, data.Farm.GardenCapacity, id);
+                Assert.AreEqual(orchard, data.Farm.OrchardCapacity, id);
+            }
+        }
+        [Test] public void EarlyOrchardDoesNotRemovePreviouslyBuiltFields()
+        {
+            var data = Garden(0, 5);
+            data.Farm.GardenCapacity = 6;
+            var build = content.Build("Farm.Orchard.Build01.v1");
+            foreach (var cost in build.costs)
+                data.Resources[cost.resource.name] = new GameData.ResourceEntry { Amount = cost.amount, Earned = true };
+            data = Commit(data, FarmCommands.BuildFields(data, build.questId, Op(data, "build:" + build.questId), Now, content));
+            Assert.AreEqual(6, data.Farm.GardenCapacity);
+            Assert.AreEqual(2, data.Farm.OrchardCapacity);
         }
         [Test] public void PlantFreezesTwinsYieldAndDurationAndConsumesOnlyMatchingOwnedSeed()
         {
@@ -161,10 +204,11 @@ namespace Tests.EditMode
             Assert.AreEqual(0, data.Farm.Beds[FarmCommands.WestBedId].ElapsedSeconds);
             Assert.AreEqual(yield, data.Resources["Radish"].Amount, .000001);
         }
-        [TestCase(300d, false)] [TestCase(1200d, true)]
+        [TestCase(120d, false)] [TestCase(400d, true)]
         public void WaterIsOncePerBatchPreservesElapsedAndLateWaterIsImmediatelyReady(double elapsed, bool ready)
         {
-            var data = Plant(Garden()); FarmCommands.TickFields(data.Farm, elapsed);
+            var initial = Garden(); initial.Farm.FirstHarvestCompleted = true;
+            var data = Plant(initial); FarmCommands.TickFields(data.Farm, elapsed);
             var id = Op(data, "water:" + FarmCommands.WestBedId);
             data = Commit(data, FarmCommands.Water(data.Farm, FarmCommands.WestBedId, id, Now));
             var bed = data.Farm.Beds[FarmCommands.WestBedId];
@@ -230,6 +274,24 @@ namespace Tests.EditMode
             data = Commit(data, FarmCommands.SetRepeat(data.Farm, bed, true, Op(data, "repeat:" + bed + ":1"), Now));
             Assert.AreEqual(1, data.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount); Assert.IsFalse(data.Farm.Beds[bed].IsPlanted);
         }
+        [TestCase(49, false)]
+        [TestCase(49, true)]
+        [TestCase(50, false)]
+        [TestCase(50, true)]
+        public void PlantingWatersAtFiftyIndependentlyOfAutoReplant(int level, bool repeat)
+        {
+            var data = Garden(3, level);
+            var id = FarmCommands.WestBedId;
+            if (repeat) data = Commit(data, FarmCommands.SetRepeat(data.Farm, id, true, Op(data, "repeat:" + id + ":1"), Now));
+            data = Plant(data);
+            Assert.AreEqual(level >= 50, data.Farm.Beds[id].Watered, "Planting waters at level 50 even with Auto off.");
+            FarmCommands.TickFields(data.Farm, 100000);
+            data = Harvest(data, repeat);
+            if (!repeat) data = Plant(data);
+            Assert.True(data.Farm.Beds[id].IsPlanted);
+            Assert.AreEqual(data.Farm.TwinsLevel >= 50, data.Farm.Beds[id].Watered, "Both manual and automatic replacements use the unlock.");
+            Assert.AreEqual(1, data.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount);
+        }
         [Test] public void PendingSeedSelectionSurvivesRetryCannotChangeRollAndCreditsOnce()
         {
             var data = Fresh(); var id = FarmJournal.StageSeed(data.Farm, "seed.radish", true, Now);
@@ -256,7 +318,7 @@ namespace Tests.EditMode
             Assert.AreEqual(1, data.Resources[FarmCommands.SeedResourceName("seed.radish")].Amount);
             Assert.AreEqual(0, data.Resources[FarmCommands.SeedResourceName(recipe.seedId)].Amount);
         }
-        [Test] public void OrchardSaplingDebitAndFiniteHarvestAreOneDurableContract()
+        [Test] public void OrchardSaplingDebitAndRegrowthAreOneDurableContract()
         {
             var data = Garden(0, 150); var recipe = content.Recipe("recipe.apple.v1");
             // This fixture models an already-built orchard bank; construction is covered separately.
@@ -270,9 +332,43 @@ namespace Tests.EditMode
             data = Commit(data, proposal); Assert.AreEqual(0, data.Resources[recipe.paidInput.name].Amount);
             FarmCommands.TickFields(data.Farm, 100000); data = Harvest(data);
             Assert.IsFalse(data.Farm.Beds[bedId].IsPlanted);
+            Assert.IsFalse(data.Farm.Beds[bedId].EstablishedTree);
             Assert.AreEqual(24.9, data.Resources[recipe.output.name].Amount, .000001);
             Assert.IsFalse(FarmCommands.HarvestFields(data, Op(data, "harvest-fields"), Now.AddYears(1), content, false).Accepted);
             Assert.IsFalse(FarmCommands.PlantRecipe(data, bedId, recipe.id, Op(data, FarmCommands.PlantFingerprint(bedId, recipe.id)), Now, content).Accepted);
+        }
+        [TestCase("oak")] [TestCase("birch")] [TestCase("spruce")]
+        public void TimberPaysBothResourcesAndAutoReplantsUntilSaplingsRunOut(string species)
+        {
+            var data = Garden(0, 150); var recipe = content.Recipe("recipe." + species + ".v1");
+            var id = FarmCommands.OrchardBeds[0]; data.Farm.OrchardCapacity = 1;
+            data.Farm.Beds[id] = new FarmBedState { Unlocked = true, Repeat = true };
+            data.SkillData[recipe.source.associatedSkill.name] = new GameData.SkillProgress { Level = recipe.source.requiredSkillLevel };
+            data.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 2, Earned = true };
+            data.CauldronCardCounts[recipe.output.CardId] = 10000;
+            data.CauldronCardCounts[recipe.secondaryOutput.CardId] = 100;
+            var logBonus = TimelessEchoes.Upgrades.CauldronResourceYield.BonusPercent(data, recipe.output);
+            var stickBonus = TimelessEchoes.Upgrades.CauldronResourceYield.BonusPercent(data, recipe.secondaryOutput);
+            data = Commit(data, FarmCommands.PlantRecipe(data, id, recipe.id, Op(data, FarmCommands.PlantFingerprint(id, recipe.id)), Now, content));
+            Assert.AreEqual(24.9, data.Farm.Beds[id].FrozenYield, .000001);
+            Assert.AreEqual(12.45, data.Farm.Beds[id].FrozenSecondaryYield, .000001);
+            Assert.True(data.Farm.Beds[id].Watered, "High-level Auto waters timber plots too.");
+            FarmCommands.TickFields(data.Farm, 100000);
+            var harvest = Op(data, "harvest-bed:" + id);
+            data = Commit(data, FarmCommands.HarvestFields(data, harvest, Now, content, false, id));
+            Assert.AreEqual(24.9 * (1 + logBonus / 100d), data.Resources[recipe.output.name].Amount, .000001);
+            Assert.AreEqual(12.45 * (1 + stickBonus / 100d), data.Resources[recipe.secondaryOutput.name].Amount, .000001);
+            Assert.AreEqual(0, data.Resources[recipe.paidInput.name].Amount);
+            var next = data.Farm.Beds[id];
+            Assert.True(next.IsPlanted); Assert.True(next.Watered); Assert.False(next.EstablishedTree);
+            Assert.AreEqual(0, next.ElapsedSeconds);
+            Assert.AreEqual(FarmCommandStatus.AlreadyApplied, FarmCommands.HarvestFields(data, harvest, Now, content, false, id).Status);
+            FarmCommands.TickFields(data.Farm, 100000); data = Harvest(data, true);
+            Assert.Greater(data.Resources[recipe.output.name].Amount, 24.9 * (1 + logBonus / 100d));
+            Assert.Greater(data.Resources[recipe.secondaryOutput.name].Amount, 12.45 * (1 + stickBonus / 100d));
+            Assert.AreEqual(0, data.Resources[recipe.paidInput.name].Amount);
+            Assert.False(data.Farm.Beds[id].IsPlanted);
+            Assert.False(data.Farm.Beds[id].Repeat);
         }
         [Test] public void SeedMissIsDurableAndCannotBeRerolledAfterReload()
         {
@@ -334,6 +430,102 @@ namespace Tests.EditMode
             Assert.IsFalse(data.Farm.Beds[FarmCommands.WestBedId].IsPlanted);
             Assert.AreEqual(FarmCommandStatus.AlreadyApplied, FarmCommands.HarvestFields(data, harvestId, Now, content, false).Status);
             Assert.IsFalse(FarmCommands.HarvestFields(data, Op(data, "harvest-fields"), Now.AddYears(1), content, false).Accepted);
+        }
+        [TestCase("recipe.radish.v1", 1, 600d)]
+        [TestCase("recipe.corn.v1", 10, 608.1277064025601d)]
+        [TestCase("recipe.turnip.v1", 30, 2796.7685300260973d)]
+        [TestCase("recipe.apple.v1", 60, 501.93887882137057d)]
+        [TestCase("recipe.corn.v1", 500, 60d)]
+        [TestCase("recipe.turnip.v1", 4000, 127.10601231972099d)]
+        [TestCase("recipe.radish.v1", 238, 60d)]
+        [TestCase("recipe.apple.v1", 714, 60d)]
+        [TestCase("recipe.turnip.v1", 5000, 60d)]
+        [TestCase("recipe.turnip.v1", 10000, 60d)]
+        public void GrowthScalesWithCropLevelAndFieldsSpeedAndWaterHalvesIt(string recipeId, int fieldsLevel, double seconds)
+        {
+            var data = Garden(2, fieldsLevel);
+            var recipe = content.Recipe(recipeId);
+            var bedId = recipe.orchard ? FarmCommands.OrchardBeds[0] : FarmCommands.WestBedId;
+            if (recipe.orchard) { data.Farm.OrchardCapacity = 1; data.Farm.Beds[bedId] = new FarmBedState { Unlocked = true }; }
+            data.SkillData[recipe.source.associatedSkill.name] = new GameData.SkillProgress { Level = recipe.source.requiredSkillLevel };
+            data.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 2, Earned = true };
+            data = Commit(data, FarmCommands.PlantRecipe(data, bedId, recipeId, Op(data, FarmCommands.PlantFingerprint(bedId, recipeId)), Now, content));
+            Assert.AreEqual(seconds, data.Farm.Beds[bedId].DurationSeconds, .000001);
+            Assert.AreEqual(fieldsLevel >= 50, data.Farm.Beds[bedId].Watered);
+            if (fieldsLevel < 50) data = Commit(data, FarmCommands.Water(data.Farm, bedId, Op(data, "water:" + bedId), Now));
+            FarmCommands.TickFields(data.Farm, seconds / 2 - 1);
+            Assert.IsFalse(data.Farm.Beds[bedId].IsReady);
+            FarmCommands.TickFields(data.Farm, 1);
+            Assert.IsTrue(data.Farm.Beds[bedId].IsReady);
+        }
+        [TestCase("recipe.radish.v1", 1, 10)]
+        [TestCase("recipe.corn.v1", 1, 12)]
+        [TestCase("recipe.apple.v1", 1, 14)]
+        [TestCase("recipe.turnip.v1", 1, 141)]
+        [TestCase("recipe.turnip.v1", 5000, 141)]
+        public void HigherTierHarvestXpSurvivesWateringAndSaveReload(string recipeId, int fieldsLevel, int expectedXp)
+        {
+            var data = Garden(2, fieldsLevel);
+            var recipe = content.Recipe(recipeId);
+            var bedId = recipe.orchard ? FarmCommands.OrchardBeds[0] : FarmCommands.WestBedId;
+            if (recipe.orchard) { data.Farm.OrchardCapacity = 1; data.Farm.Beds[bedId] = new FarmBedState { Unlocked = true }; }
+            data.SkillData[recipe.source.associatedSkill.name] = new GameData.SkillProgress { Level = recipe.source.requiredSkillLevel };
+            data.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 2, Earned = true };
+            data = Commit(data, FarmCommands.PlantRecipe(data, bedId, recipeId, Op(data, FarmCommands.PlantFingerprint(bedId, recipeId)), Now, content));
+            Assert.AreEqual(expectedXp, data.Farm.Beds[bedId].HarvestXp);
+            if (fieldsLevel < 50) data = Commit(data, FarmCommands.Water(data.Farm, bedId, Op(data, "water:" + bedId), Now));
+            FarmCommands.TickFields(data.Farm, data.Farm.Beds[bedId].ReadyAfterSeconds);
+            var beforeLevel = data.Farm.TwinsLevel;
+            var beforeXp = data.Farm.TwinsXp;
+            data = Harvest(data);
+            var earned = data.Farm.TwinsXp - beforeXp;
+            for (var level = beforeLevel; level < data.Farm.TwinsLevel; level++) earned += FarmContent.XpRequired(level);
+            Assert.AreEqual(expectedXp, earned, "The saved batch must pay its full XP once, regardless of growth speed.");
+        }
+        [Test] public void EveryCropReachesThirtySecondWateredFloorAtItsEvenlySpacedTier()
+        {
+            var ordered = content.recipes.OrderBy(r => r.source.requiredSkillLevel).ThenBy(r => r.id, StringComparer.Ordinal).ToArray();
+            var caps = new[] { 208, 417, 625, 833, 1042, 1250, 1458, 1667, 1875, 2083, 2292, 2500, 2708, 2917, 3125, 3333, 3542, 3750, 3958, 4167, 4375, 4583, 4792, 5000 };
+            Assert.AreEqual(caps.Length, ordered.Length);
+            for (var i = 0; i < ordered.Length; i++)
+            {
+                var recipe = ordered[i];
+                var cap = caps[i];
+                Assert.AreEqual(cap, content.GrowthCapLevel(recipe), recipe.id);
+                Assert.Greater(content.GrowthDuration(recipe, cap - 1), 60, recipe.id + " must not reach the cap early");
+                Assert.AreEqual(60, content.GrowthDuration(recipe, cap), recipe.id);
+                Assert.AreEqual(60, content.GrowthDuration(recipe, 5000), recipe.id);
+                Assert.AreEqual(60, content.GrowthDuration(recipe, int.MaxValue), recipe.id);
+                var previous = content.GrowthDuration(recipe, 1);
+                for (var level = 2; level <= 5000; level++)
+                {
+                    var duration = content.GrowthDuration(recipe, level);
+                    Assert.LessOrEqual(duration, previous, recipe.id + " at Fields " + level);
+                    previous = duration;
+                }
+            }
+        }
+        [Test] public void OrchardAutoReplantPaysForEachSaplingAfterReloadWithoutDuplicateHarvest()
+        {
+            var data = Garden(1, 150);
+            var recipe = content.Recipe("recipe.apple.v1"); var bedId = FarmCommands.OrchardBeds[0];
+            data.Farm.OrchardCapacity = 1; data.Farm.Beds[bedId] = new FarmBedState { Unlocked = true };
+            data.SkillData[recipe.source.associatedSkill.name] = new GameData.SkillProgress { Level = recipe.source.requiredSkillLevel };
+            data.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 3, Earned = true };
+            data = Commit(data, FarmCommands.PlantRecipe(data, bedId, recipe.id, Op(data, FarmCommands.PlantFingerprint(bedId, recipe.id)), Now, content));
+            data.Farm.Beds[bedId].Repeat = true;
+            FarmCommands.TickFields(data.Farm, 100000);
+            var token = Op(data, "harvest-bed:" + bedId);
+            data = Commit(data, FarmCommands.HarvestFields(data, token, Now, content, false, bedId));
+            Assert.AreEqual(1, data.Resources[recipe.paidInput.name].Amount);
+            Assert.True(data.Farm.Beds[bedId].IsPlanted); Assert.False(data.Farm.Beds[bedId].EstablishedTree);
+            Assert.AreEqual(0, data.Farm.Beds[bedId].ElapsedSeconds);
+            var fruit = data.Resources[recipe.output.name].Amount;
+            Assert.AreEqual(FarmCommandStatus.AlreadyApplied, FarmCommands.HarvestFields(data, token, Now, content, false, bedId).Status);
+            FarmCommands.TickFields(data.Farm, 100000);
+            data = Commit(data, FarmCommands.HarvestFields(data, Op(data, "harvest-bed:" + bedId), Now, content, false, bedId));
+            Assert.Greater(data.Resources[recipe.output.name].Amount, fruit);
+            Assert.AreEqual(0, data.Resources[recipe.paidInput.name].Amount);
         }
         [Test] public void UTCMonthJumpCannotGrowAndOnlyExplicitActiveTimeAdvancesBatch()
         {

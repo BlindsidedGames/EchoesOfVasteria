@@ -800,9 +800,14 @@ namespace TimelessEchoes.Hero
         // ==== Movement Methods (delegate to HeroMovementController) ====
         private void UpdateAnimation()
         {
+            secondaryMovementCallback ??= UpdateSecondaryAnimatorMovement;
+            secondaryFlipCallback ??= UpdateSecondarySpriteFlip;
             movementController?.UpdateAnimation(animator, spriteRenderer, fourDirectional,
-                UpdateSecondaryAnimatorMovement, UpdateSecondarySpriteFlip);
+                secondaryMovementCallback, secondaryFlipCallback);
         }
+
+        private Action<Vector2, float> secondaryMovementCallback;
+        private Action<bool> secondaryFlipCallback;
 
         public void SetActiveState(bool active)
         {

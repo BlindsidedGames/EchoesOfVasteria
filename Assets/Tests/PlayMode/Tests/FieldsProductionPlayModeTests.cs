@@ -87,6 +87,8 @@ namespace Tests.PlayMode
         [TearDown]
         public void TearDown()
         {
+            if (oracle)
+                typeof(Oracle).GetMethod("CompleteActiveSaveBlocking", Private).Invoke(oracle, null);
             if (oracle) SetOracle("loaded", false); // Teardown must not perform a lifecycle save.
             if (serviceObject) UnityEngine.Object.DestroyImmediate(serviceObject);
             if (oracleObject) UnityEngine.Object.DestroyImmediate(oracleObject);
@@ -122,8 +124,59 @@ namespace Tests.PlayMode
         }
 
         [Test]
+        public void ResourceCapturePreservesUnknownRecordsAndCurrentBalances()
+        {
+            const string unknown = "Unavailable future resource";
+            oracle.saveData.Resources[unknown] = new GameData.ResourceEntry { Amount = 88, Tier = 7, Earned = true, BestPerMinute = 42 };
+            oracle.saveData.ResourceStats[unknown] = new GameData.ResourceRecord { TotalReceived = 90, TotalSpent = 2 };
+            var inventoryObject = new GameObject("Protected resource capture");
+            try
+            {
+                var inventory = inventoryObject.AddComponent<TimelessEchoes.Upgrades.ResourceManager>();
+                var radish = Resources.LoadAll<TimelessEchoes.Upgrades.Resource>("").Single(r => r.name == "Radish");
+                inventory.Add(radish, 12, eligibleForTierRoll: false);
+                Blindsided.EventHandler.SaveData(force: true);
+                Blindsided.EventHandler.SaveData(force: true);
+                Assert.True(inventory.Spend(radish, 4));
+                Assert.True((bool)typeof(Oracle).GetMethod("SaveNowBlocking", Private)
+                    .Invoke(oracle, new object[] { oracle.CurrentSlot, false }));
+                var disk = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
+                Assert.True(disk.Succeeded, disk.Diagnostic);
+                Assert.AreEqual(8, disk.Data.Resources[radish.name].Amount);
+                Assert.AreEqual(12, disk.Data.ResourceStats[radish.name].TotalReceived);
+                Assert.AreEqual(4, disk.Data.ResourceStats[radish.name].TotalSpent);
+                Assert.AreEqual(88, disk.Data.Resources[unknown].Amount);
+                Assert.AreEqual(7, disk.Data.Resources[unknown].Tier);
+                Assert.AreEqual(42, disk.Data.Resources[unknown].BestPerMinute);
+                Assert.AreEqual(90, disk.Data.ResourceStats[unknown].TotalReceived);
+                Assert.AreEqual(2, disk.Data.ResourceStats[unknown].TotalSpent);
+            }
+            finally { UnityEngine.Object.DestroyImmediate(inventoryObject); }
+        }
+
+        [Test]
+        public void ManualFarmActionWaitsForCheckpoint()
+        {
+            PreparePaidCrop();
+            var operation = FarmJournal.NextOperation(service.State, "water:" + FarmCommands.WestBedId);
+            Assert.True(oracle.TryCommitFarmCommand(s => FarmCommands.Water(s, FarmCommands.WestBedId, operation, Now), out var error), error);
+            Assert.True(service.State.Beds[FarmCommands.WestBedId].Watered);
+            var disk = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
+            Assert.True(disk.Succeeded, disk.Diagnostic);
+            Assert.False(disk.Data.Farm.Beds[FarmCommands.WestBedId].Watered, "Manual farm actions must wait for a checkpoint.");
+            Assert.True((bool)typeof(Oracle).GetMethod("SaveNowBlocking", Private)
+                .Invoke(oracle, new object[] { oracle.CurrentSlot, false }));
+            disk = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
+            Assert.True(disk.Succeeded, disk.Diagnostic);
+            Assert.True(disk.Data.Farm.Beds[FarmCommands.WestBedId].Watered);
+            Assert.True(oracle.TryCommitFarmCommand(s => FarmCommands.Water(s, FarmCommands.WestBedId, operation, Now), out error), error);
+            Assert.True(service.State.Beds[FarmCommands.WestBedId].Watered);
+        }
+
+        [Test]
         public void RealServiceResumeAndOwnerReloadNeverSettleUtcGrowth()
         {
+            service.State.FirstHarvestCompleted = true;
             PreparePaidCrop();
             FarmCommands.TickFields(service.State, 120);
             var bed = service.State.Beds[FarmCommands.WestBedId];
@@ -170,6 +223,12 @@ namespace Tests.PlayMode
             Assert.AreEqual(before + 21.9, oracle.saveData.Resources["Radish"].Amount, 1e-9, "The repeated batch froze the existing 19% level-20 yield bonus.");
             var loaded = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
             Assert.True(loaded.Succeeded, loaded.Diagnostic);
+            Assert.True(loaded.Data.Farm.Beds[FarmCommands.WestBedId].IsPlanted,
+                "Automatic harvest must not write a per-harvest snapshot.");
+            Assert.True((bool)typeof(Oracle).GetMethod("SaveNowBlocking", Private)
+                .Invoke(oracle, new object[] { oracle.CurrentSlot, false }));
+            loaded = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
+            Assert.True(loaded.Succeeded, loaded.Diagnostic);
             Assert.False(loaded.Data.Farm.Beds[FarmCommands.WestBedId].IsPlanted);
             Assert.False(loaded.Data.Farm.Beds[FarmCommands.WestBedId].Repeat);
         }
@@ -214,6 +273,30 @@ namespace Tests.PlayMode
                 Assert.False(geometry.Find(FarmCommands.EastBedId).gameObject.activeSelf);
                 Assert.False(geometry.Find(FarmCommands.OrchardBeds[0]).gameObject.activeSelf);
                 Assert.False(oldCrop.enabled); Assert.True(retained.enabled);
+                oldCrop.enabled = true; oldFence.enabled = true; oldDecoration.enabled = true;
+                view.Refresh();
+                Assert.False(oldCrop.enabled); Assert.False(oldFence.enabled); Assert.False(oldDecoration.enabled);
+                Assert.True(collider.enabled, "Cached art suppression must not disable task colliders.");
+                // Rendering fixture: constructed orchard slots with one fruit tree and each timber species.
+                oracle.saveData.Farm.OrchardCapacity = 4;
+                oracle.saveData.Farm.TwinsLevel = 20;
+                var treeRecipes = new[] { "recipe.apple.v1", "recipe.oak.v1", "recipe.birch.v1", "recipe.spruce.v1" };
+                for (var i = 0; i < treeRecipes.Length; i++)
+                {
+                    var recipe = content.Recipe(treeRecipes[i]); var bedId = FarmCommands.OrchardBeds[i];
+                    oracle.saveData.Farm.Beds[bedId] = new FarmBedState { Unlocked = true };
+                    oracle.saveData.SkillData[recipe.source.associatedSkill.name] = new GameData.SkillProgress { Level = 500 };
+                    oracle.saveData.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 2, Earned = true };
+                    Assert.True(service.Plant(bedId, recipe.id));
+                    Assert.True(service.SetRepeat(bedId, true));
+                    view.Refresh();
+                    var tree = geometry.Find(bedId).GetComponentsInChildren<SpriteRenderer>().Single(r => r.name == "Finite orchard growth");
+                    Assert.AreSame(recipe.stages[0], tree.sprite, "New trees start from their own sapling stage.");
+                    FarmCommands.TickFields(service.State, 100000); view.Refresh();
+                    Assert.AreSame(recipe.stages[3], tree.sprite);
+                    Assert.True(service.Harvest(bedId)); view.Refresh();
+                    Assert.AreSame(recipe.stages[0], tree.sprite, "Harvest must restart the world tree from a sapling, including older fruit trees.");
+                }
             }
             finally { UnityEngine.Object.DestroyImmediate(town); }
         }
@@ -232,7 +315,12 @@ namespace Tests.PlayMode
         }
         private void Build(string id) => Assert.True(Commit(s => FarmCommands.BuildFields(oracle.saveData, id,
             FarmJournal.NextOperation(s, "build:" + id), Now, content)), id);
-        private bool Commit(Func<FarmState, FarmCommandResult> command) => oracle.TryCommitFarmCommand(command, out _);
+        private bool Commit(Func<FarmState, FarmCommandResult> command)
+        {
+            if (!oracle.TryCommitFarmCommand(command, out _)) return false;
+            return (bool)typeof(Oracle).GetMethod("SaveNowBlocking", Private)
+                .Invoke(oracle, new object[] { oracle.CurrentSlot, false });
+        }
         private void SetOracle(string field, object value) => typeof(Oracle).GetField(field, Private).SetValue(oracle, value);
         private void InvokeService(string method, params object[] args) => typeof(FarmService).GetMethod(method, Private).Invoke(service, args);
     }

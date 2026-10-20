@@ -19,6 +19,8 @@ namespace TimelessEchoes.Farming
         private readonly List<Plot> plots = new();
         private readonly List<GameObject> enclosures = new();
         private readonly Dictionary<SpriteRenderer, bool> hidden = new();
+        private readonly List<SpriteRenderer> legacyFarmArt = new();
+        private bool legacyFarmArtCached;
         private readonly Dictionary<Vector3Int, TileBase> changedPath = new();
         private readonly Dictionary<Vector3Int, Matrix4x4> pathMatrices = new();
         private readonly Dictionary<Vector3Int, TileFlags> pathFlags = new();
@@ -26,7 +28,7 @@ namespace TimelessEchoes.Farming
         private readonly List<GameObject> retainedTrees = new();
         private Tilemap path, decor;
         private Transform geometry;
-        private FarmState renderedState;
+        private Blindsided.SaveData.GameData renderedOwner;
         private int garden = -1, orchard = -1;
         private float nextRefresh;
         public int ClearedStumps { get; private set; }
@@ -77,10 +79,13 @@ namespace TimelessEchoes.Farming
         {
             if (!appearance || !town || !service) return;
             var state = service.Ready ? service.State : null;
+            var owner = service.Ready ? Blindsided.Oracle.oracle?.saveData : null;
             int capacity = Mathf.Clamp(state?.GardenCapacity ?? 0,0,6), trees = Mathf.Clamp(state?.OrchardCapacity ?? 0,0,6);
-            if (!ReferenceEquals(renderedState,state) || garden != capacity || orchard != trees)
+            // Credits and harvests replace the farm candidate, but do not change
+            // the scenery. Rebuild only for a new save owner or plot layout.
+            if (!ReferenceEquals(renderedOwner,owner) || garden != capacity || orchard != trees)
             {
-                RestoreScenery(); renderedState = state; garden = capacity; orchard = trees;
+                RestoreScenery(); renderedOwner = owner; garden = capacity; orchard = trees;
                 ApplyScenery(capacity >= 5 ? 3 : capacity >= 3 ? 2 : capacity >= 1 ? 1 : 0);
                 for (int i=0;i<enclosures.Count;i++) enclosures[i].SetActive(capacity >= i*2+1);
             }
@@ -95,7 +100,7 @@ namespace TimelessEchoes.Farming
                 int stage = FarmView.GrowthStage(progress,bed?.IsReady == true);
                 Sprite sprite = null;
                 if (recipe != null)
-                    sprite = plot.orchard && stage < 3 ? appearance.treeStages[stage] : recipe.stages?.Length == 4 ? recipe.stages[stage] : null;
+                    sprite = recipe.stages?.Length == 4 ? recipe.stages[stage] : plot.orchard && stage < 3 ? appearance.treeStages[stage] : null;
                 foreach(var wet in plot.wet) wet.enabled = bed?.IsPlanted == true && bed.Watered;
                 foreach(var plant in plot.plants) { plant.sprite = sprite; plant.enabled = sprite; }
                 // Retain the imported pivot relative to the ground sorting anchor.
@@ -153,12 +158,25 @@ namespace TimelessEchoes.Farming
         { if (!hidden.ContainsKey(sr)) hidden.Add(sr,sr.enabled); sr.enabled=false; }
         private void HideLegacyFarmArt()
         {
-            foreach(var part in new[]{"Farmers/FarmingTasks","Farmers/Fence"})
-            { var root=town.Find(part); if(root) foreach(var sr in root.GetComponentsInChildren<SpriteRenderer>(true)) Hide(sr); }
-            // Crops below the farmer property only: unrelated crop decoration elsewhere is retained.
-            var farmers=town.Find("Farmers");
-            if(farmers) foreach(var child in farmers.GetComponentsInChildren<Transform>(true).Where(t=>t.name=="Crops"))
-                foreach(var sr in child.GetComponentsInChildren<SpriteRenderer>(true)) Hide(sr);
+            if (!legacyFarmArtCached)
+            {
+                // These are authored town objects, including inactive quest stages.
+                // Discover them once; quest visibility may re-enable their renderers,
+                // but does not change which objects belong to the legacy farm.
+                var unique = new HashSet<SpriteRenderer>();
+                foreach (var part in new[] { "Farmers/FarmingTasks", "Farmers/Fence" })
+                {
+                    var root = town.Find(part);
+                    if (root) foreach (var sr in root.GetComponentsInChildren<SpriteRenderer>(true)) unique.Add(sr);
+                }
+                var farmers = town.Find("Farmers");
+                if (farmers) foreach (var child in farmers.GetComponentsInChildren<Transform>(true))
+                    if (child.name == "Crops")
+                        foreach (var sr in child.GetComponentsInChildren<SpriteRenderer>(true)) unique.Add(sr);
+                legacyFarmArt.AddRange(unique);
+                legacyFarmArtCached = true;
+            }
+            foreach (var sr in legacyFarmArt) if (sr) Hide(sr);
         }
         private void RestoreScenery()
         {

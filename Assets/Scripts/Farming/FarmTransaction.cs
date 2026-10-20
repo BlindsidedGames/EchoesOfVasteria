@@ -9,11 +9,17 @@ namespace TimelessEchoes.Farming
     public static class FarmTransaction
     {
         public static bool TryPrepare(GameData captured, FarmCommandResult proposal, out GameData candidate, out string error)
+            => TryPrepare(captured, proposal, false, out candidate, out error);
+
+        internal static bool TryPrepareProgress(GameData captured, FarmCommandResult proposal, out GameData candidate, out string error)
+            => TryPrepare(captured, proposal, true, out candidate, out error);
+
+        private static bool TryPrepare(GameData captured, FarmCommandResult proposal, bool inMemoryCredit, out GameData candidate, out string error)
         {
             candidate = null; error = null;
             if (proposal == null || !proposal.Accepted || proposal.Candidate == null)
             { error = proposal?.Reason ?? "No farm proposal."; return false; }
-            candidate = CurrentSaveCodec.Clone(captured);
+            candidate = inMemoryCredit ? captured.CopyEconomicMutationInputs() : CurrentSaveCodec.Clone(captured);
             candidate.Farm = proposal.Candidate.DeepClone();
             HashSet<string> migrated;
             try { migrated = FarmSeedResources.Upgrade(candidate); }

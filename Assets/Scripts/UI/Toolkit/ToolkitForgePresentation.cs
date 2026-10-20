@@ -21,16 +21,18 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 var row = new ConversionRow(); row.root = Panel(grid, "eov-forge-conversion"); row.root.name = "conversion-" + type;
                 LocalizedLabel(row.root, "forge.conversion-" + type.ToString().ToLowerInvariant(), ConversionTitle(type), ToolkitControls.TextRole.Heading).AddToClassList("forge-conversion-title");
-                var recipe = Row(row.root); var costs = new VisualElement(); recipe.Add(costs);
+                var body = Row(row.root); body.AddToClassList("forge-conversion-body");
+                var recipeColumn = new VisualElement(); recipeColumn.AddToClassList("forge-conversion-recipe-column"); body.Add(recipeColumn);
+                var recipe = Row(recipeColumn); recipe.AddToClassList("forge-conversion-recipe"); var costs = new VisualElement(); recipe.Add(costs);
                 var first = Row(costs); first.AddToClassList("forge-ingredient"); row.first = ToolkitControls.Icon(null); first.Add(row.first); row.firstCount = Label(first, "", ToolkitControls.TextRole.Caption);
                 var second = Row(costs); second.AddToClassList("forge-ingredient"); row.second = ToolkitControls.Icon(null); second.Add(row.second); row.secondCount = Label(second, "", ToolkitControls.TextRole.Caption);
-                row.arrow = ToolkitControls.Icon(null); recipe.Add(row.arrow); var result = new VisualElement(); recipe.Add(result); row.result = ToolkitControls.Icon(null); result.Add(row.result); row.resultCount = Label(result, "", ToolkitControls.TextRole.Caption);
-                var control = new VisualElement(); control.AddToClassList("eov-forge-conversion-control"); control.style.flexGrow = 1; row.root.Add(control);
-                row.maximum = Label(control, "", ToolkitControls.TextRole.Caption);
+                row.arrow = ToolkitControls.Icon(null); recipe.Add(row.arrow); var result = new VisualElement(); result.AddToClassList("forge-conversion-result"); recipe.Add(result); row.result = ToolkitControls.Icon(null); result.Add(row.result); row.resultCount = Label(result, "", ToolkitControls.TextRole.Caption);
+                var control = new VisualElement(); control.AddToClassList("eov-forge-conversion-control"); body.Add(control);
+                row.maximum = Label(recipeColumn, "", ToolkitControls.TextRole.Caption); row.maximum.AddToClassList("forge-conversion-maximum");
                 row.button = LocalizedButton(control, "smelt-" + type, "forge.smelt", "Smelt", () => session.Convert(type));
                 // Keep press-and-hold conversion behavior while using native pointer capture.
                 ToolkitControls.RepeatWhileHeld(row.button, () => session.Convert(type));
-                row.amount = new TextField { name = "amount-" + type, keyboardType = TouchScreenKeyboardType.NumberPad }; row.amount.AddToClassList("eov-number-field"); ToolkitLocalization.BindTooltip(row.amount, "forge.conversion-batch-size", "Conversion batch size"); control.Insert(1, row.amount);
+                row.amount = new TextField { name = "amount-" + type, keyboardType = TouchScreenKeyboardType.NumberPad }; row.amount.AddToClassList("eov-number-field"); ToolkitLocalization.BindTooltip(row.amount, "forge.conversion-batch-size", "Conversion batch size"); control.Insert(0, row.amount);
                 row.amount.SetValueWithoutNotify(session.Desired(type).ToString("0"));
                 row.amount.RegisterValueChangedCallback(e => { session.SetAmount(type, double.TryParse(e.newValue, out var value) ? value : 1); row.amount.SetValueWithoutNotify(session.Desired(type).ToString("0")); }); conversions.Add(type, row);
             }
@@ -91,13 +93,18 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var visible = conversions.Values.Where(r => r.root.style.display.value != DisplayStyle.None).ToList();
             var phone = ToolkitResponsiveLayout.IsPortrait;
-            var width = Mathf.Max(0, (root.Q(className: "eov-forge-conversions").contentRect.width - 8) * .5f);
+            var grid = root.Q(className: "eov-forge-conversions");
+            // Round down so fractional layout pixels cannot push the second card onto a new row.
+            var width = Mathf.Max(0, Mathf.Floor((grid.contentRect.width - 8) * .5f));
             for (var i = 0; i < visible.Count; i++)
             {
                 var style = visible[i].root.style;
                 style.width = phone ? width : StyleKeyword.Auto;
                 style.flexBasis = phone ? width : StyleKeyword.Null;
                 style.flexGrow = phone ? 0 : 1;
+                style.flexShrink = 0;
+                style.minWidth = 0;
+                style.marginBottom = phone && i < (visible.Count - 1) / 2 * 2 ? 8 : 0;
                 style.marginRight = phone ? (i % 2 == 0 ? 8 : 0) : (i == visible.Count - 1 ? 0 : 6);
             }
         }

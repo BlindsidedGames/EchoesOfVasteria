@@ -44,6 +44,10 @@ MonoBehaviour:
     minX: 0
     maxX: Infinity
     requiredSkillLevel: 0
+  bonusDrops:
+  - resource: {fileID: 11400000, guid: 0ed152a201c35ce4f8d00ad338a2faa5, type: 2}
+    chance: 0.1
+    range: {x: 1, y: 1}
   additionalLootChances:
   - 0.3
   - 0.2
