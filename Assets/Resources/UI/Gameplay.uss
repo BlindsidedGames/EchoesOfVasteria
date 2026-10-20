@@ -1291,3 +1291,10 @@
 
 .gameplay.eov-forge .forge-conversion-result {align-items:center;flex-shrink:0;}
 .gameplay.eov-forge .forge-conversion-result .eov-text {-unity-text-align:middle-center;}
+
+.gameplay.fields-ui .fields-plot-heading {align-items:center;justify-content:space-between;flex-shrink:0;}
+.gameplay.fields-ui .fields-level-requirement {font-size:6.5px;color:var(--muted);white-space:nowrap;margin-left:4px;}
+.gameplay.fields-ui .fields-level-requirement.fields-shortfall {color:#d99084;}
+.gameplay.fields-ui .fields-unbuilt .fields-plot-select {height:auto;min-height:11px;}
+.gameplay.fields-ui .fields-unbuilt .fields-plot-body {display:none;}
+.gameplay.fields-ui .fields-orchard-slot .fields-level-requirement {display:none;}

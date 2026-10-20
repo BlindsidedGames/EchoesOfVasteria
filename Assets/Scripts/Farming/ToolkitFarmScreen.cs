@@ -48,12 +48,12 @@ namespace TimelessEchoes.UI.Toolkit
         {
             public VisualElement Root, Art, Fill;
             public Button Select, Action;
-            public Label Title, Status;
+            public Label Title, Status, Requirement;
             public Image[] Soil, Plants;
             public CostStrip Costs;
             public bool Orchard;
         }
-        private sealed class OrchardPair { public string First, Second; public VisualElement Root; public Label Title, Status; public Button Build; public CostStrip Costs; }
+        private sealed class OrchardPair { public string First, Second; public VisualElement Root; public Label Title, Status, Requirement; public Button Build; public CostStrip Costs; }
         private sealed class CostStrip
         {
             public VisualElement Root;
@@ -100,7 +100,9 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 var box = E(orchardList, "column fields-orchard-pair");
                 var pair = new OrchardPair { Root = box, First = orchardBeds[i].Id, Second = i + 1 < orchardBeds.Length ? orchardBeds[i + 1].Id : null };
-                pair.Title = L(box, "", "fields-pair-title");
+                var pairHeader = E(box, "row fields-plot-heading");
+                pair.Title = L(pairHeader, "", "fields-pair-title");
+                pair.Requirement = L(pairHeader, "", "fields-level-requirement");
                 var slots = E(box, "row fields-pair-slots"); CreateBed(orchardBeds[i], slots);
                 if (pair.Second != null) CreateBed(orchardBeds[i + 1], slots);
                 pair.Status = L(box, "", "muted fields-pair-status"); pair.Costs = CreateCosts(box);
@@ -155,6 +157,12 @@ namespace TimelessEchoes.UI.Toolkit
             }
             return strip;
         }
+        private static void RefreshLevelRequirement(Label label, FarmBuildPresentation build, int level)
+        {
+            Visible(label, build != null && !build.Completed);
+            label.text = build == null ? "" : ToolkitLocalization.Text("fields.requires-lvl", "Requires lvl {0}", build.TwinsLevel);
+            label.EnableInClassList("fields-shortfall", build != null && level < build.TwinsLevel);
+        }
         private static void RefreshCosts(CostStrip strip, FarmBuildPresentation build)
         {
             Visible(strip.Root, build != null && !build.Completed);
@@ -172,7 +180,9 @@ namespace TimelessEchoes.UI.Toolkit
             var id = bed.Id; var tile = new BedTile { Orchard = bed.Orchard };
             tile.Root = E(parent, bed.Orchard ? "column fields-orchard-slot" : "column fields-plot"); tile.Root.name = "fields-plot-" + id;
             tile.Select = Button(tile.Root, "", () => SelectBed(id)); tile.Select.name = "fields-select-" + id; tile.Select.AddToClassList("fields-plot-select");
-            tile.Title = L(tile.Select, "", "fields-plot-title");
+            var plotHeader = E(tile.Select, "row fields-plot-heading");
+            tile.Title = L(plotHeader, "", "fields-plot-title");
+            tile.Requirement = L(plotHeader, "", "fields-level-requirement");
             var body = E(tile.Select, "row fields-plot-body"); tile.Art = E(body, "fields-plot-art"); tile.Art.name = "bed-art";
             tile.Soil = new Image[bed.Orchard ? 4 : 9]; tile.Plants = new Image[bed.Orchard ? 1 : 9];
             for (var i = 0; i < tile.Soil.Length; i++)
@@ -305,20 +315,19 @@ namespace TimelessEchoes.UI.Toolkit
                 var build = FindBuild(snapshot, bed.Id);
                 tile.Root.EnableInClassList("selected", selectedBed == bed.Id); tile.Root.EnableInClassList("fields-locked", !bed.Unlocked);
                 tile.Root.EnableInClassList("fields-ready", bed.Ready); tile.Title.text = bed.Title;
-                tile.Status.text = bed.Unlocked ? BedStatus(bed) : ToolkitLocalization.Text("fields.requires-level", "Fields level {0}", build?.TwinsLevel ?? 1);
+                tile.Status.text = bed.Unlocked ? BedStatus(bed) : "";
+                RefreshLevelRequirement(tile.Requirement, bed.Unlocked ? null : build, snapshot.TwinsLevel);
                 tile.Select.tooltip = bed.Unlocked ? BedStatus(bed) : build?.Status;
                 Visible(tile.Fill.parent, bed.Planted); tile.Fill.style.width = Length.Percent(Mathf.Clamp01(bed.Progress01) * 100); RefreshArt(tile, bed);
                 if (tile.Action == null) continue;
                 RefreshCosts(tile.Costs, bed.Unlocked ? null : build);
-                var future = !bed.Unlocked && build?.GardenCapacity > snapshot.Beds.Count(b => b.Unlocked && !b.Orchard) + 1;
-                if (future) Visible(tile.Costs.Root, false);
-                Visible(tile.Action, !future && (!bed.Unlocked || !bed.Planted || bed.Ready || !bed.Watered));
-                tile.Action.text = !bed.Unlocked ? build?.CanTurnIn == true ? T("fields.build-plot", "Build plot") : T("fields.locked", "Locked") :
+                Visible(tile.Action, !bed.Unlocked || !bed.Planted || bed.Ready || !bed.Watered);
+                tile.Action.text = !bed.Unlocked ? T("fields.construct", "Construct") :
                     bed.Ready ? T("fields.action.harvest", "Harvest") : bed.Planted ? T("fields.action.water-once", "Water once") : T("fields.choose-seeds", "Choose seeds");
                 tile.Action.SetEnabled(bed.Unlocked ? snapshot.TownActionsAllowed : build?.CanTurnIn == true);
                 tile.Action.EnableInClassList("primary", bed.Ready || !bed.Unlocked && build?.CanTurnIn == true);
                 tile.Root.EnableInClassList("fields-unbuilt", !bed.Unlocked);
-                tile.Root.EnableInClassList("fields-future", !bed.Unlocked && build?.Status != null && build.GardenCapacity > snapshot.Beds.Count(b => b.Unlocked && !b.Orchard) + 1);
+
             }
             foreach (var pair in orchardPairs)
             {
@@ -326,9 +335,10 @@ namespace TimelessEchoes.UI.Toolkit
                 var complete = first.Unlocked && second?.Unlocked != false; var build = FindBuild(snapshot, pair.First);
                 pair.Root.EnableInClassList("fields-pair-locked", !first.Unlocked && second?.Unlocked != true);
                 pair.Title.text = ToolkitLocalization.Text("fields.plot-pair", "Plot {0}–{1}", Array.IndexOf(FarmCommands.OrchardBeds, pair.First) + 1, Array.IndexOf(FarmCommands.OrchardBeds, pair.Second) + 1);
+                RefreshLevelRequirement(pair.Requirement, complete ? null : build, snapshot.TwinsLevel);
                 pair.Status.text = build?.Status ?? ""; Visible(pair.Status, false);
                 RefreshCosts(pair.Costs, complete ? null : build); Visible(pair.Build, !complete);
-                pair.Build.text = build?.CanTurnIn == true ? T("fields.build-orchard-pair", "Build 2 plots") : T("fields.locked", "Locked"); pair.Build.SetEnabled(build?.CanTurnIn == true);
+                pair.Build.text = T("fields.construct", "Construct"); pair.Build.SetEnabled(build?.CanTurnIn == true);
                 pair.Build.EnableInClassList("primary", build?.CanTurnIn == true);
             }
             var available = snapshot.Recipes.Where(r => r.Orchard == orchard).ToArray(); var discovered = available.Count(r => r.Discovered);
@@ -353,10 +363,10 @@ namespace TimelessEchoes.UI.Toolkit
             selection.text = target == null ? T("fields.select-seeds-bed", "Select seeds and an empty bed") : target.Title + (selected?.Discovered == true ? " · " + (selected.CropTitle ?? selected.Title) : "");
             var matches = target != null && selected != null && target.Orchard == selected.Orchard;
             var canPlant = snapshot.TownActionsAllowed && target?.Unlocked == true && !target.Planted && matches && selected.Discovered && selected.Eligible && selected.SeedQuantity >= FarmContent.PlantingCost(orchard);
-            detail.text = selectedBuild != null ? selectedBuild.Status + "\n" + string.Join("\n", selectedBuild.Materials.Select(m => ToolkitLocalization.Text("fields.cost-compact", "{0}: {1} / {2}", m.Title, Compact(m.Owned), Compact(m.Required)))) :
+            detail.text = selectedBuild != null ? string.Join("\n", selectedBuild.Materials.Select(m => ToolkitLocalization.Text("fields.cost-compact", "{0}: {1} / {2}", m.Title, Compact(m.Owned), Compact(m.Required)))) :
                 target?.Planted == true ? ToolkitLocalization.Text("fields.yield-preview", "Harvest: {0} {1} · +{2} Fields XP", Compact(target.ExpectedYield), target.RecipeTitle, target.HarvestXp) : !matches ? T("fields.find-seeds", "Find seed packs by completing crop tasks on adventures.") : !selected.Discovered ? T("fields.discover-first", "Discover this seed or sapling first.") : !selected.Eligible ?
                 ToolkitLocalization.Text("fields.recipe-level-required", "{0} · Farming {1} required", selected.Title, selected.RequiredHeroLevel) : selected.SeedQuantity < 1 ? ToolkitLocalization.Text("fields.find-matching", "Complete {0} tasks on adventures to find more {1}.", selected.CropTitle, orchard ? "saplings" : "seed packs") : ToolkitLocalization.Text("fields.plant-balance", "{0:N0} owned / {1} needed", selected.SeedQuantity, FarmContent.PlantingCost(orchard));
-            Visible(buildSelected, selectedBuild != null); buildSelected.text = selectedBuild?.CanTurnIn != true ? T("fields.locked", "Locked") : orchard ? T("fields.build-orchard-pair", "Build 2 plots") : T("fields.build-plot", "Build plot"); buildSelected.SetEnabled(selectedBuild?.CanTurnIn == true);
+            Visible(buildSelected, selectedBuild != null); buildSelected.text = T("fields.construct", "Construct"); buildSelected.SetEnabled(selectedBuild?.CanTurnIn == true);
             Visible(plant, selectedBuild == null); plant.SetEnabled(canPlant || snapshot.TownActionsAllowed && target?.Ready == true);
             plant.text = target?.Planted == true ? target.Ready ? T("fields.action.harvest", "Harvest") : T("fields.growing", "Growing") : canPlant ? ToolkitLocalization.Text("fields.plant-target", "Plant in {0}", target.Title) : matches && selected.Discovered && selected.SeedQuantity < FarmContent.PlantingCost(orchard) ? T("fields.need-pack", "Need a matching pack") : T("fields.action.plant", "Plant"); plant.tooltip = detail.text;
             Visible(water, target?.Unlocked == true); water.SetEnabled(snapshot.TownActionsAllowed && target?.Planted == true && !target.Ready && !target.Watered); water.text = target?.Watered == true ? T("fields.watered", "Watered") : T("fields.action.water-once", "Water once");
@@ -368,7 +378,8 @@ namespace TimelessEchoes.UI.Toolkit
             if (target != null)
             {
                 var selectedPreview = orchard ? orchardPreview : preview;
-                selectedPreview.Title.text = target.Title; selectedPreview.Status.text = BedStatus(target); RefreshArt(selectedPreview, target);
+                selectedPreview.Title.text = target.Title; selectedPreview.Status.text = target.Unlocked ? BedStatus(target) : "";
+                RefreshLevelRequirement(selectedPreview.Requirement, selectedBuild, snapshot.TwinsLevel); RefreshArt(selectedPreview, target);
                 Visible(selectedPreview.Fill.parent, target.Planted); selectedPreview.Fill.style.width = Length.Percent(target.Progress01 * 100);
                 Visible(selectedPreview.Action, false); Visible(selectedPreview.Costs?.Root, false);
                 selectedPreview.Root.EnableInClassList("fields-ready", target.Ready);

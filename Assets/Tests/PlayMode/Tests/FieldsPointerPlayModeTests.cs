@@ -55,7 +55,7 @@ namespace Tests.PlayMode
                 Assert.NotNull(locked); Assert.True(locked.enabledInHierarchy, "Locked plots remain inspectable.");
                 FieldsClick(locked); yield return null;
                 Assert.False(service.State.Beds.ContainsKey(FarmCommands.EastBedId));
-                Assert.That(ui.Q<Label>("fields-selected-status").text, Does.Contain("Fields"));
+                Assert.That(ui.Q<VisualElement>("fields-plot-" + FarmCommands.EastBedId).Q<Label>(className: "fields-level-requirement").text, Does.Contain("Requires lvl"));
                 FieldsClick(ui.Q<Button>("fields-select-" + FarmCommands.WestBedId));
                 var plant = ui.Q<Button>("fields-plant-selected");
                 Assert.False(plant.enabledInHierarchy, "Discovered seeds with zero owned packs cannot be planted.");
