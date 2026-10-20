@@ -137,7 +137,7 @@ namespace TimelessEchoes.UI.Toolkit
             repeat = Button(tending, "", ToggleRepeat); repeat.name = "fields-repeat-selected";
             harvest = Button(tending, "", () => { if (source is FarmService service) Execute(() => service.Harvest(selectedBed)); });
             harvest.name = "fields-harvest-selected"; harvest.AddToClassList("primary");
-            seedColumn = E(workspace, "column fields-seeds-column"); seedHeading = L(seedColumn, "", "heading");
+            seedColumn = E(drawer, "column fields-seeds-column"); seedHeading = L(seedColumn, "", "heading");
             seedScroll = ToolkitControls.RecessedScroll(seedColumn, "fields-seeds", theme, compact: true);
             seedGrid = E(seedScroll, "row fields-seed-grid");
             foreach (var recipe in snapshot.Recipes ?? Array.Empty<FarmRecipePresentation>())
@@ -361,8 +361,13 @@ namespace TimelessEchoes.UI.Toolkit
                 pair.LockedSelect.tooltip = pair.Title.text + "\n" + build?.Status;
             }
             var available = snapshot.Recipes.Where(r => r.Orchard == orchard).ToArray(); var discovered = available.Count(r => r.Discovered);
-            seedHeading.text = T(orchard ? "fields.saplings-heading" : "fields.seeds-heading", orchard ? "Saplings" : "Seed packs");
-            var columns = narrow ? 4 : 9;
+            var seedContent = (source as FarmService)?.Content ?? FarmContent.Load();
+            var selectedDefinition = seedContent.Recipe(selected?.Id);
+            var dryTime = selectedDefinition == null ? 0 : seedContent.GrowthDuration(selectedDefinition, snapshot.TwinsLevel);
+            var growthTime = target?.Planted == true && target.GrowthSeconds > 0 ? target.GrowthSeconds : dryTime;
+            seedHeading.text = selected == null ? "" : selected.CropTitle + " • " + FormatTime(growthTime, mspace: false, shortForm: true);
+            seedHeading.tooltip = selected == null ? "" : "Dry: " + FormatTime(dryTime, mspace: false, shortForm: true) + " · Watered: " + FormatTime(dryTime / 2, mspace: false, shortForm: true);
+            var columns = narrow ? 4 : 5;
             var seedIndex = 0;
             // Leave a pixel for the button border and fractional layout rounding,
             // otherwise the last seed wraps and creates a third row at some scales.

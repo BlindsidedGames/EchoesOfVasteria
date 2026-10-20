@@ -47,6 +47,7 @@ namespace TimelessEchoes.Farming
         public bool Ready;
         public float Progress01;
         public double RemainingSeconds;
+        public double GrowthSeconds;
         public double ExpectedYield;
         public int HarvestXp;
         public bool EstablishedTree;

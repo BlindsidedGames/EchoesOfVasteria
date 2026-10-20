@@ -293,7 +293,8 @@ namespace TimelessEchoes.Farming
                         HarvestXp=bed?.HarvestXp ?? 0, EstablishedTree=bed?.EstablishedTree==true,
                         Icon=bed?.IsPlanted==true?recipe?.output?.icon:null,Watered=bed?.Watered==true,Repeat=bed?.Repeat==true,Planted=bed?.IsPlanted==true,Ready=bed?.IsReady==true,
                         Progress01=bed?.IsPlanted==true && bed.ReadyAfterSeconds>0?Mathf.Clamp01((float)(bed.ElapsedSeconds/bed.ReadyAfterSeconds)):0,
-                        RemainingSeconds=bed?.IsPlanted==true?Math.Max(0,bed.ReadyAfterSeconds-bed.ElapsedSeconds):0 };
+                        RemainingSeconds=bed?.IsPlanted==true?Math.Max(0,bed.ReadyAfterSeconds-bed.ElapsedSeconds):0,
+                        GrowthSeconds=bed?.IsPlanted==true?bed.ReadyAfterSeconds:0 };
                 }).ToArray()
             };
         }
