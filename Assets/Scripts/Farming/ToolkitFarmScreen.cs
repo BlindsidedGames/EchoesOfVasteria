@@ -26,7 +26,7 @@ namespace TimelessEchoes.UI.Toolkit
         private VisualElement root, board, cropSection, orchardSection, bedList, orchardList, drawer, seedColumn, seedGrid, xpBar;
         private ScrollView workspace, seedScroll;
         private Image floraPortrait, tillmanPortrait;
-        private Label heading, xp, error, cropHeading, orchardHeading, seedHeading, undiscovered, selection, detail;
+        private Label heading, xp, error, seedHeading, undiscovered, selection, detail;
         private Button plant, harvest, water, repeat, buildSelected;
         private readonly ToolkitWindowLayout layout = new();
         private readonly Dictionary<string, SeedCard> seeds = new();
@@ -92,9 +92,9 @@ namespace TimelessEchoes.UI.Toolkit
             feedbackLabel = L(root, "", "fields-feedback");
             workspace = ToolkitControls.RecessedScroll(root, "fields-workspace", theme, compact: true);
             board = E(workspace, "row fields-board");
-            cropSection = E(board, "column fields-crops"); cropHeading = L(cropSection, "", "heading");
+            cropSection = E(board, "column fields-crops");
             bedList = E(cropSection, "row fields-bed-grid"); bedList.name = "fields-bed-grid";
-            orchardSection = E(board, "column fields-orchard"); orchardHeading = L(orchardSection, "", "heading");
+            orchardSection = E(board, "column fields-orchard");
             orchardList = E(orchardSection, "column fields-orchard-grid"); orchardList.name = "fields-orchard-grid";
             var snapshot = source.CapturePresentation();
             foreach (var bed in snapshot.Beds.Where(b => b != null && !b.Orchard)) CreateBed(bed, bedList);
@@ -200,7 +200,7 @@ namespace TimelessEchoes.UI.Toolkit
             tile.Title = L(plotHeader, "", "fields-plot-title");
             tile.Requirement = L(plotHeader, "", "fields-level-requirement");
             var body = E(tile.Select, "row fields-plot-body"); tile.Art = E(body, "fields-plot-art"); tile.Art.name = "bed-art";
-            tile.Soil = new Image[bed.Orchard ? 4 : 9]; tile.Plants = new Image[bed.Orchard ? 1 : 9];
+            tile.Soil = new Image[bed.Orchard ? 4 : 9]; tile.Plants = new Image[1];
             for (var i = 0; i < tile.Soil.Length; i++)
             {
                 var spot = new VisualElement { pickingMode = PickingMode.Ignore }; tile.Art.Add(spot); spot.style.position = Position.Absolute;
@@ -208,9 +208,9 @@ namespace TimelessEchoes.UI.Toolkit
                 spot.style.width = 8; spot.style.height = 8;
                 tile.Soil[i] = new Image { scaleMode = ScaleMode.StretchToFill, pickingMode = PickingMode.Ignore };
                 tile.Soil[i].style.position = Position.Absolute; tile.Soil[i].style.width = 8; tile.Soil[i].style.height = 8; tile.Soil[i].style.bottom = 0; spot.Add(tile.Soil[i]);
-                if (bed.Orchard) continue;
-                tile.Plants[i] = new Image { scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
-                tile.Plants[i].style.position = Position.Absolute; tile.Plants[i].style.width = bed.Orchard ? 24 : 8; tile.Plants[i].style.height = bed.Orchard ? 32 : 16; tile.Plants[i].style.bottom = 0; spot.Add(tile.Plants[i]);
+                if (bed.Orchard || i != 4) continue;
+                tile.Plants[0] = new Image { scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
+                tile.Plants[0].style.position = Position.Absolute; tile.Plants[0].style.width = 8; tile.Plants[0].style.height = 16; tile.Plants[0].style.bottom = 0; spot.Add(tile.Plants[0]);
             }
             if (bed.Orchard)
             {
@@ -323,8 +323,6 @@ namespace TimelessEchoes.UI.Toolkit
             heading.text = ToolkitLocalization.Text("fields.level-heading", "Fields | Level {0}", snapshot.TwinsLevel);
             xp.text = ToolkitLocalization.Text("fields.xp", "{0} / {1} XP", snapshot.TwinsXp, snapshot.TwinsXpRequired);
             xpBar.style.width = Length.Percent(Mathf.Clamp01((float)snapshot.TwinsXp / Math.Max(1, snapshot.TwinsXpRequired)) * 100);
-            cropHeading.text = ToolkitLocalization.Text("fields.field-capacity", "Fields · {0} / 6", snapshot.Beds.Count(b => !b.Orchard && b.Unlocked));
-            orchardHeading.text = ToolkitLocalization.Text("fields.orchard-capacity", "Orchard · {0} / 6", snapshot.Beds.Count(b => b.Orchard && b.Unlocked));
             foreach (var bed in snapshot.Beds)
             {
                 if (!beds.TryGetValue(bed.Id, out var tile)) continue;
