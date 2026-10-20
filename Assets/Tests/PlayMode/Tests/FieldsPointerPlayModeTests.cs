@@ -208,6 +208,11 @@ namespace Tests.PlayMode
                 var allHarvest = ui.Q<Button>("farm-harvest-ready");
                 Assert.That(allHarvest.worldBound.yMin, Is.GreaterThanOrEqualTo(selectedHarvest.worldBound.yMax), "Bulk harvesting remains below the selected plot actions.");
                 Assert.That(Mathf.Abs(selectedHarvest.worldBound.height - allHarvest.worldBound.height), Is.LessThan(1), "Harvest actions use the same height.");
+                var selectedPreview = ui.Q<VisualElement>("fields-selected-preview");
+                var progressStatus = selectedPreview.Q<Label>(className: "fields-progress-status");
+                Assert.AreEqual("Radish", selectedPreview.Q<Label>("bed-status").text, "The crop label does not also contain its timer.");
+                Assert.AreEqual("Ready", progressStatus.text);
+                Assert.That(progressStatus.worldBound.xMin, Is.GreaterThanOrEqualTo(selectedPreview.Q<VisualElement>(className: "track").worldBound.xMax), "Ready state sits to the right of the progress bar.");
                 FieldsClick(ui.Q<Button>("fields-repeat-selected"));
                 Assert.True(service.State.Beds[FarmCommands.WestBedId].Repeat, "The auto-harvest checkbox remains clickable.");
                 FieldsClick(ui.Q<Button>("fields-repeat-selected"));

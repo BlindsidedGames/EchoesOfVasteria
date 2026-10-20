@@ -28,7 +28,7 @@ namespace TimelessEchoes.UI.Toolkit
         private Button[] primaryButtons;
         private ScrollView workspace, seedScroll;
         private Image floraPortrait, tillmanPortrait;
-        private Label heading, xp, error, seedHeading, undiscovered, selection, detail;
+        private Label heading, xp, error, seedHeading, undiscovered, detail;
         private Label buildRequirement, yieldAmount, yieldXp;
         private Image yieldIcon;
         private CostStrip selectedCosts;
@@ -52,7 +52,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             public VisualElement Root, Art, Fill;
             public Button Select;
-            public Label Title, Status, Requirement;
+            public Label Title, Status, Requirement, ProgressStatus;
             public Image[] Soil, Plants;
             public Image[] WetSoils;
             public bool Orchard;
@@ -120,7 +120,6 @@ namespace TimelessEchoes.UI.Toolkit
                 pair.Requirement = L(pair.LockedSelect, "", "fields-level-requirement"); orchardPairs.Add(pair);
             }
             var controls = E(drawer, "column fields-selected");
-            selection = L(controls, "", "fields-selection"); selection.name = "fields-seed-selection";
             buildRequirement = L(controls, "", "fields-level-requirement");
             preview = CreateBed(snapshot.Beds.First(), controls, false); preview.Root.AddToClassList("fields-preview");
             orchardPreview = CreateBed(snapshot.Beds.First(b => b.Orchard), controls, false); orchardPreview.Root.AddToClassList("fields-preview");
@@ -231,7 +230,9 @@ namespace TimelessEchoes.UI.Toolkit
             }
             if (bed.Orchard) tile.Plants[0] = CreateArtImage(tile.Art);
             var info = E(body, "column fields-plot-info"); tile.Status = L(info, "", "fields-plot-status"); tile.Status.name = "bed-status";
-            tile.Fill = ToolkitGameplay.Bar(info); tile.Fill.name = "bed-progress";
+            var progress = register ? info : E(info, "row fields-preview-progress");
+            tile.Fill = ToolkitGameplay.Bar(progress); tile.Fill.name = "bed-progress";
+            if (!register) tile.ProgressStatus = L(progress, "", "fields-progress-status");
             if (register) beds[id] = tile;
             else { tile.Root.name = "fields-selected-preview"; tile.Select.name = "fields-preview-select-" + id; tile.Select.pickingMode = PickingMode.Ignore; }
             return tile;
@@ -387,7 +388,6 @@ namespace TimelessEchoes.UI.Toolkit
             seedScroll.style.height = seedHeight; seedScroll.style.maxHeight = seedHeight;
             seedScroll.parent.style.height = seedHeight; seedScroll.parent.style.maxHeight = seedHeight;
             var selectedBuild = target?.Unlocked == false ? FindBuild(snapshot, target.Id) : null;
-            selection.text = target?.Title ?? T("fields.select-seeds-bed", "Select a plot");
             var matches = target != null && selected != null && target.Orchard == selected.Orchard;
             var canPlant = snapshot.TownActionsAllowed && target?.Unlocked == true && !target.Planted && matches && selected.Discovered && selected.Eligible && selected.SeedQuantity >= FarmContent.PlantingCost(orchard);
             RefreshCosts(selectedCosts, selectedBuild);
@@ -423,10 +423,11 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 var selectedPreview = orchard ? orchardPreview : preview;
                 selectedPreview.Title.text = "";
-                selectedPreview.Status.text = target.Planted ? BedStatus(target) : selected?.CropTitle ?? T("fields.empty", "Empty");
+                selectedPreview.Status.text = target.Planted ? target.RecipeTitle : selected?.CropTitle ?? T("fields.empty", "Empty");
+                selectedPreview.ProgressStatus.text = target.Ready ? T("fields.ready", "Ready") : FormatTime(Math.Max(0, target.RemainingSeconds), mspace: false, shortForm: true);
                 Visible(selectedPreview.Requirement, false);
                 RefreshArt(selectedPreview, target);
-                Visible(selectedPreview.Fill.parent, target.Planted); selectedPreview.Fill.style.width = Length.Percent(target.Progress01 * 100);
+                Visible(selectedPreview.Fill.parent.parent, target.Planted); selectedPreview.Fill.style.width = Length.Percent(target.Progress01 * 100);
                 selectedPreview.Root.EnableInClassList("fields-ready", target.Ready);
             }
             Visible(seedColumn, target?.Unlocked == true);

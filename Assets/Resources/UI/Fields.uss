@@ -12,7 +12,6 @@
 .gameplay.fields-ui .fields-drawer {flex-grow:1;flex-basis:0;min-width:0;margin-right:12px;}
 .gameplay.fields-ui .fields-selected {width:100%;min-width:0;flex-shrink:0;flex-grow:1;}
 .gameplay.fields-ui .fields-details-spacer {flex-grow:1;min-height:4px;}
-.gameplay.fields-ui .fields-selection {font-size:12px;-unity-font-style:bold;margin-bottom:4px;}
 .gameplay.fields-ui .fields-selection-detail {font-size:8px;white-space:normal;margin:5px 0;}
 .gameplay.fields-ui .fields-selector-grid {flex-grow:1;flex-basis:0;min-width:0;flex-wrap:wrap;align-content:flex-start;}
 .gameplay.fields-ui .fields-selector-tile {width:30%;flex-basis:30%;flex-grow:1;flex-shrink:0;height:57px;min-height:57px;margin:0 0 4px 0;padding:3px;border-width:.5px;border-color:var(--line);background-color:var(--control);}
@@ -50,6 +49,9 @@
 .gameplay.fields-ui .fields-preview .fields-plot-art {scale:1.5 1.5;transform-origin:left center;margin:0 24px 0 0;}
 .gameplay.fields-ui .fields-preview .fields-plot-info {width:auto;flex-grow:1;flex-basis:0;}
 .gameplay.fields-ui .fields-preview .fields-plot-status {display:flex;font-size:10px;white-space:normal;margin-bottom:5px;-unity-text-align:middle-left;}
+.gameplay.fields-ui .fields-preview-progress {align-items:center;}
+.gameplay.fields-ui .fields-preview-progress .track {flex-grow:1;flex-basis:0;width:auto;}
+.gameplay.fields-ui .fields-progress-status {font-size:9px;margin-left:6px;white-space:nowrap;flex-shrink:0;}
 .gameplay.fields-ui .fields-costs {flex-direction:column;align-items:flex-start;flex-shrink:0;margin:4px 0 8px;}
 .gameplay.fields-ui .fields-cost {align-items:center;min-height:24px;}
 .gameplay.fields-ui .fields-cost .icon {width:14px;height:14px;margin-right:6px;}

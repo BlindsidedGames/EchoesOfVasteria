@@ -406,6 +406,30 @@ namespace Tests.EditMode
             FarmCommands.TickFields(data.Farm, 1);
             Assert.IsTrue(data.Farm.Beds[bedId].IsReady);
         }
+        [TestCase("recipe.radish.v1", 1, 10)]
+        [TestCase("recipe.corn.v1", 1, 12)]
+        [TestCase("recipe.apple.v1", 1, 14)]
+        [TestCase("recipe.turnip.v1", 1, 141)]
+        [TestCase("recipe.turnip.v1", 5000, 141)]
+        public void HigherTierHarvestXpSurvivesWateringAndSaveReload(string recipeId, int fieldsLevel, int expectedXp)
+        {
+            var data = Garden(2, fieldsLevel);
+            var recipe = content.Recipe(recipeId);
+            var bedId = recipe.orchard ? FarmCommands.OrchardBeds[0] : FarmCommands.WestBedId;
+            if (recipe.orchard) { data.Farm.OrchardCapacity = 1; data.Farm.Beds[bedId] = new FarmBedState { Unlocked = true }; }
+            data.SkillData[recipe.source.associatedSkill.name] = new GameData.SkillProgress { Level = recipe.source.requiredSkillLevel };
+            data.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 2, Earned = true };
+            data = Commit(data, FarmCommands.PlantRecipe(data, bedId, recipeId, Op(data, FarmCommands.PlantFingerprint(bedId, recipeId)), Now, content));
+            Assert.AreEqual(expectedXp, data.Farm.Beds[bedId].HarvestXp);
+            data = Commit(data, FarmCommands.Water(data.Farm, bedId, Op(data, "water:" + bedId), Now));
+            FarmCommands.TickFields(data.Farm, data.Farm.Beds[bedId].ReadyAfterSeconds);
+            var beforeLevel = data.Farm.TwinsLevel;
+            var beforeXp = data.Farm.TwinsXp;
+            data = Harvest(data);
+            var earned = data.Farm.TwinsXp - beforeXp;
+            for (var level = beforeLevel; level < data.Farm.TwinsLevel; level++) earned += FarmContent.XpRequired(level);
+            Assert.AreEqual(expectedXp, earned, "The saved batch must pay its full XP once, regardless of growth speed.");
+        }
         [Test] public void EveryCropReachesThirtySecondWateredFloorAtItsEvenlySpacedTier()
         {
             var ordered = content.recipes.OrderBy(r => r.source.requiredSkillLevel).ThenBy(r => r.id, StringComparer.Ordinal).ToArray();

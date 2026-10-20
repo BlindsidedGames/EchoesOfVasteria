@@ -99,7 +99,7 @@ namespace TimelessEchoes.Farming
             bed.DurationSeconds = duration;
             bed.EstablishedTree = regrowingTree;
             bed.FrozenYield = content.baseYield * FarmContent.YieldMultiplier(state.TwinsLevel);
-            bed.HarvestXp = content.harvestXp;
+            bed.HarvestXp = content.HarvestExperience(recipe);
             bed.ElapsedSeconds = 0; bed.Watered = false; bed.LastGrowthUtcTicks = 0;
             result.OperationReceipt.BatchIds.Add(bed.BatchId);
             return null;

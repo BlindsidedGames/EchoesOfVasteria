@@ -73,6 +73,13 @@ namespace TimelessEchoes.Farming
                     (double)(level - 60) / (capLevel - 60));
             return Math.Max(minimumDurationSeconds, seconds);
         }
+        public int HarvestExperience(FarmRecipe recipe)
+        {
+            // Scale faster than base growth time so later seeds improve XP per minute.
+            // Fields speed upgrades and watering shorten the wait without reducing XP.
+            var durationRatio = Math.Pow(durationMultiplierPerCropLevel, Math.Max(1, recipe.source.requiredSkillLevel) - 1);
+            return checked((int)Math.Ceiling(harvestXp * Math.Pow(durationRatio, 1.5)));
+        }
         public static int XpRequired(int level) => checked(5 + Math.Max(1, level) / 2);
         public static void AddXp(FarmState state, int amount)
         {
