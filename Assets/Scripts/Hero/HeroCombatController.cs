@@ -362,11 +362,11 @@ namespace TimelessEchoes.Hero
                 cameraRefreshTime = Time.time + CameraRefreshInterval;
             }
 
-            if (cachedCamera == null) return false;
+            if (!RunActivityArea.TryGetBounds(cachedCamera, out min, out max)) return false;
 
             const float padding = 2f;
-            min = cachedCamera.ViewportToWorldPoint(Vector3.zero) - Vector3.one * padding;
-            max = cachedCamera.ViewportToWorldPoint(Vector3.one) + Vector3.one * padding;
+            min -= Vector3.one * padding;
+            max += Vector3.one * padding;
             return true;
         }
 

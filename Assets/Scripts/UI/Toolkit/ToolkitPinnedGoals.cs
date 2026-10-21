@@ -124,7 +124,7 @@ namespace TimelessEchoes.UI.Toolkit {
    if(previousPortrait != portrait) { previousPortrait = portrait; dirty = true; }
    if(dirty && oracle != null) { dirty = false; Refresh(); }
    var visible = GameManager.Instance && GameManager.Instance.IsMapUIVisible && oracle != null && oracle.saveData.PinnedQuests.Count > 0;
-   if(portrait) visible &= ShowPinnedQuests && portraitIds.Count > 0 &&
+   if(portrait) visible &= !ToolkitResponsiveLayout.FocusView && ShowPinnedQuests && portraitIds.Count > 0 &&
     !(TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow) &&
     !ToolkitMeetingScreen.HasVisibleMeeting && !(runScreen && (runScreen.HasOpenDetails || runScreen.HasOpenHeroStats)) &&
     !GameManager.Instance.HeroIsDead && !GameManager.Instance.FirstReapDialoguePending;

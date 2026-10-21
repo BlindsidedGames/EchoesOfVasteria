@@ -499,6 +499,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void Layout()
 
         {
+            ToolkitResponsiveLayout.ApplyFocusPresentation(root);
 
             portraitPages?.Update();
             var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height), Screen.safeArea, UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);

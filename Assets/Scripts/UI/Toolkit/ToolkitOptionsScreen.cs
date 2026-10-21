@@ -284,6 +284,8 @@ namespace TimelessEchoes.UI.Toolkit
                 buttons["fps"].SetEnabled(true);
                 labels["fps-label"].text = ToolkitLocalization.Text("options.fps", "FPS: {0}", TargetFps == 0 ? 60 : TargetFps);
             }
+            ToolkitResponsiveLayout.ApplyFocusPresentation(root);
+            ToolkitResponsiveLayout.ApplyFocusPresentation(widthPreview);
             var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height), Screen.safeArea, UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);
             widthPreview.style.left = area.x; widthPreview.style.top = area.y; widthPreview.style.width = area.width; widthPreview.style.height = area.height;
             root.style.left = area.center.x; root.style.top = area.y + ToolkitResponsiveLayout.WindowTop; root.style.width = ToolkitResponsiveLayout.IsPortrait ? area.width : Mathf.Min(600, area.width-24); root.style.height = Mathf.Max(0,area.height - ToolkitResponsiveLayout.WindowTop - ToolkitResponsiveLayout.WindowBottom);

@@ -36,6 +36,7 @@ namespace TimelessEchoes.UI.Toolkit
             Action onPrimary, Action onSecondary, bool enabled = true, IEnumerable<Choice> choices = null)
         {
             if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
+            ToolkitResponsiveLayout.SetFocusView(false);
             ClearBindings();
             if (root == null) Create();
             titleLabel.text = "<b><smallcaps>" + title + "</smallcaps></b>";

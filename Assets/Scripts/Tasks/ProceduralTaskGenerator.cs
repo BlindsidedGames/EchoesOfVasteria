@@ -1054,7 +1054,20 @@ namespace TimelessEchoes.Tasks
 
             public float GetWeight(float worldX)
             {
-                return Mathf.Max(0f, weight);
+                // Carry a quarter of the average task boost into its parent category.
+                // Normalize against unboosted weights so merely unlocking more task
+                // varieties does not make that category more common on the map.
+                float baseline = 0f, boosted = 0f;
+                if (tasks != null)
+                    foreach (var task in tasks)
+                    {
+                        var effective = TaskWeightService.GetEffectiveWeight(task, worldX);
+                        if (effective <= 0f) continue;
+                        baseline += effective / TaskWeightService.GetProgressMultiplier(task);
+                        boosted += effective;
+                    }
+                var categoryMultiplier = baseline > 0f ? 1f + .25f * (boosted / baseline - 1f) : 1f;
+                return Mathf.Max(0f, weight) * categoryMultiplier;
             }
         }
     }

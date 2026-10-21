@@ -91,6 +91,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void Update()
         {
             if (!IsOpen) return;
+            ToolkitResponsiveLayout.ApplyFocusPresentation(view.Root);
             var ratio = UnityEngine.Device.Application.isMobilePlatform ? 1f : SafeAreaRatio;
             if (lastSize.x != Screen.width || lastSize.y != Screen.height ||
                 lastSafeArea != Screen.safeArea || !Mathf.Approximately(lastRatio, ratio))

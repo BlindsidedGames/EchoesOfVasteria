@@ -37,7 +37,7 @@ namespace TimelessEchoes.UI.Toolkit
             foreach (var category in new[] { settings.woodcutting, settings.mining, settings.farming, settings.fishing, settings.looting })
             {
                 if (category == null || categoryTotals.ContainsKey(category)) continue;
-                categoryWeightSum += Mathf.Max(0, category.weight); float sum = 0;
+                categoryWeightSum += category.GetWeight(worldX); float sum = 0;
                 if (category.tasks != null) foreach (var task in category.tasks)
                 {
                     if (!task) continue;
@@ -63,7 +63,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (inRun)
             {
                 if (!config || !categories.TryGetValue(task, out var category) || category == null) return true;
-                var categoryWeight = Mathf.Max(0, category.weight);
+                var categoryWeight = category.GetWeight(worldX);
                 if (categoryWeightSum > 0 && categoryWeight > 0 && categoryTotals.TryGetValue(category, out var total) && total > 0)
                     chance = categoryWeight / categoryWeightSum * (TaskWeightService.GetEffectiveWeight(task, worldX) / total);
                 return true;
