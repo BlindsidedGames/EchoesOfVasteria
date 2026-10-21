@@ -1,6 +1,8 @@
 using Screen = UnityEngine.Device.Screen;
 // AspectRatioBox.cs
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// Keeps the camera within a supported aspect ratio range. Adds black bars on
@@ -23,6 +25,7 @@ public class AspectRatioBox : MonoBehaviour
 
     void OnEnable()
     {
+        RenderPipelineManager.beginContextRendering += BeforeRendering;
         if (targetCamera == null) targetCamera = Camera.main;
         if (targetCamera != null)
         {
@@ -33,6 +36,7 @@ public class AspectRatioBox : MonoBehaviour
 
     void OnDisable()
     {
+        RenderPipelineManager.beginContextRendering -= BeforeRendering;
         if (targetCamera != null)
             targetCamera.rect = originalRect;
     }
@@ -44,31 +48,50 @@ public class AspectRatioBox : MonoBehaviour
         UpdateViewport();
     }
 
+    void BeforeRendering(ScriptableRenderContext context, List<Camera> cameras)
+    {
+        // Reconcile the drawable at the render boundary too. A surface/orientation
+        // update after LateUpdate must not leave URP using the previous viewport.
+        if (targetCamera != null)
+            UpdateViewport();
+    }
+
     void UpdateViewport()
     {
-        if (UI.Toolkit.ToolkitResponsiveLayout.IsPortrait)
-        {
-            var pixels = UI.Toolkit.ToolkitResponsiveLayout.WorldPixels(new Vector2Int(Screen.width, Screen.height), Screen.safeArea);
-            targetCamera.rect = new Rect(pixels.x / Screen.width, pixels.y / Screen.height, pixels.width / Screen.width, pixels.height / Screen.height);
+        var size = new Vector2Int(Screen.width, Screen.height);
+        // Keep the last usable viewport while the platform replaces its drawable.
+        if (size.x <= 0 || size.y <= 0)
             return;
-        }
-        float windowAspect = (float)Screen.width / Screen.height;
-        float targetAspect = Mathf.Clamp(windowAspect, minAspect, maxAspect);
-        float scale = windowAspect / targetAspect;
 
         Rect rect;
-
-        if (scale < 1f)               // window too tall → letter-box
+        if (UI.Toolkit.ToolkitResponsiveLayout.Portrait(size))
         {
-            rect = new Rect(0f, (1f - scale) * 0.5f, 1f, scale);
+            var pixels = UI.Toolkit.ToolkitResponsiveLayout.WorldPixels(size, Screen.safeArea);
+            rect = new Rect(pixels.x / size.x, pixels.y / size.y, pixels.width / size.x, pixels.height / size.y);
         }
-        else                          // window too wide → pillar-box
+        else
         {
-            float invScale = 1f / scale;
-            rect = new Rect((1f - invScale) * 0.5f, 0f, invScale, 1f);
+            float windowAspect = (float)size.x / size.y;
+            float targetAspect = Mathf.Clamp(windowAspect, minAspect, maxAspect);
+            float scale = windowAspect / targetAspect;
+
+            if (scale < 1f)               // window too tall → letter-box
+            {
+                rect = new Rect(0f, (1f - scale) * 0.5f, 1f, scale);
+            }
+            else                          // window too wide → pillar-box
+            {
+                float invScale = 1f / scale;
+                rect = new Rect((1f - invScale) * 0.5f, 0f, invScale, 1f);
+            }
         }
 
-        targetCamera.rect = rect;
+        if (rect.width > 0 && rect.height > 0 &&
+            !float.IsNaN(rect.x) && !float.IsNaN(rect.y) &&
+            !float.IsInfinity(rect.x) && !float.IsInfinity(rect.y) &&
+            !float.IsInfinity(rect.width) && !float.IsInfinity(rect.height) &&
+            targetCamera.rect != rect)
+            targetCamera.rect = rect;
     }
 }
 }
