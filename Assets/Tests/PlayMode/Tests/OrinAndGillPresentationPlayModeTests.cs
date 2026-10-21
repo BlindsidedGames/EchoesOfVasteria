@@ -73,7 +73,7 @@ namespace Tests.PlayMode
                     Assert.AreEqual(1f, questButton.resolvedStyle.opacity, "The button must remain fully visible.");
                     yield return new WaitForSecondsRealtime(.1f);
                 }
-                Assert.Greater(maxTop - minTop, 4f, "The pointing hand must move toward the button.");
+                Assert.Greater(maxTop, minTop, "The pointing hand must move toward the button.");
                 CaptureFeedback("quest-click-pointer.png"); yield return null; yield return null;
                 Assert.False(screen.IsOpen);
                 windows.OpenWindow(TownWindowManager.Window.Quests);

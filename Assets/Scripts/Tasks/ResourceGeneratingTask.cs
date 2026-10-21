@@ -68,6 +68,7 @@ namespace TimelessEchoes.Tasks
                     windfallInputs[res.resource] = procInput + final;
                     var baseYield = (double)res.count * mult;
                     final += CauldronResourceYield.Supplement(oracle?.saveData, res.resource, baseYield);
+                    final *= TimelessEchoes.Shop.ShopService.ResourceMultiplier;
                     resourceManager.Add(res.resource, final);
                     if (dropTotals.ContainsKey(res.resource))
                         dropTotals[res.resource] += final;

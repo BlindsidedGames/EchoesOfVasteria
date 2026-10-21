@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.3.22",
     "com.unity.2d.animation": "16.0.1",
     "com.unity.2d.aseprite": "6.0.0",
     "com.unity.2d.psdimporter": "15.0.1",
@@ -7,6 +8,7 @@
     "com.unity.2d.spriteshape": "16.0.0",
     "com.unity.2d.tilemap": "1.0.0",
     "com.unity.2d.tilemap.extras": "9.0.1",
+    "com.unity.addressables": "4.1.0",
     "com.unity.cinemachine": "6.6.0",
     "com.unity.collab-proxy": "2.13.6",
     "com.unity.ide.rider": "3.1.0",
@@ -14,13 +16,19 @@
     "com.unity.inputsystem": "1.20.0",
     "com.unity.localization": "1.5.13",
     "com.unity.multiplayer.center": "2.0.1",
+    "com.unity.pipeline": "0.8.0-exp.1",
     "com.unity.project-auditor-rules": "3.0.0",
+    "com.unity.purchasing": "5.4.4",
     "com.unity.recorder": "5.1.7",
     "com.unity.render-pipelines.universal": "17.6.0",
+    "com.unity.scriptablebuildpipeline": "4.0.0",
     "com.unity.sdk.linux-x86_64": "1.1.0",
     "com.unity.services.analytics": "6.3.0",
+    "com.unity.services.authentication": "3.8.0",
     "com.unity.services.cloudcode": "2.10.4",
     "com.unity.services.cloudsave": "3.4.1",
+    "com.unity.services.wire": "1.6.0",
+    "com.unity.splines": "2.9.1",
     "com.unity.test-framework": "1.8.0",
     "com.unity.timeline": "6.6.0",
     "com.unity.toolchain.win-x86_64-linux": "1.1.0",
@@ -60,13 +68,7 @@
     "com.unity.modules.vehicles": "1.0.0",
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0",
-    "com.unity.pipeline": "0.8.0-exp.1",
-    "com.unity.addressables": "4.1.0",
-    "com.unity.scriptablebuildpipeline": "4.0.0",
-    "com.unity.services.authentication": "3.8.0",
-    "com.unity.services.wire": "1.6.0",
-    "com.unity.splines": "2.9.1"
+    "com.unity.modules.xr": "1.0.0"
   },
   "scopedRegistries": []
 }

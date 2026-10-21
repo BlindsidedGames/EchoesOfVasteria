@@ -3191,7 +3191,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003049
-    m_Localized: "Construisez d\u2019abord les parcelles pr\u00e9c\u00e9dentes."
+    m_Localized: "Construisez d\u2019abord les parcelles pr\xE9c\xE9dentes."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003048
@@ -3263,7 +3263,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003031
-    m_Localized: Arroser une fois
+    m_Localized: Arroser
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003030
@@ -3327,7 +3327,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003015
-    m_Localized: "Niveau 20 des jumeaux : r\u00e9colte et replante avec 1 sachet de graines du bon type ou 1 jeune arbre du bon type. S\u2019arr\u00eate quand les r\u00e9serves sont \u00e9puis\u00e9es."
+    m_Localized: "Niveau 20 des jumeaux : r\xE9colte et replante avec 1 sachet de graines du bon type ou 1 jeune arbre du bon type. S\u2019arr\xEAte quand les r\xE9serves sont \xE9puis\xE9es."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003014
@@ -3343,7 +3343,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003011
-    m_Localized: "Verrouill\xE9 \xB7 construction requise"
+    m_Localized: "Verrouill\xE9"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003010
@@ -3889,7 +3889,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004019
-    m_Localized: "Il faut 1 sachet de graines du bon type pour ensemencer une parcelle."
+    m_Localized: Il faut 1 sachet de graines du bon type pour ensemencer une parcelle.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004020
@@ -3897,11 +3897,295 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004021
-    m_Localized: "N\u00e9cessite {0} sachet de graines du bon type par parcelle."
+    m_Localized: "N\xE9cessite {0} sachet de graines du bon type par parcelle."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004022
     m_Localized: "N\xE9cessite {0} jeune arbre correspondant par emplacement."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004023
+    m_Localized: Boutique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004024
+    m_Localized: "Bonus de r\xE9colte"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004025
+    m_Localized: +50% de ressources en aventure
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004026
+    m_Localized: Autres jeux
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004027
+    m_Localized: "Bonus de r\xE9colte permanent"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004028
+    m_Localized: +50% de ressources en aventure sur toutes les sauvegardes. Sans recharge.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004029
+    m_Localized: "Soutenir le d\xE9veloppement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004030
+    m_Localized: "Soutien facultatif, sans bonus de jeu suppl\xE9mentaire."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004031
+    m_Localized: Petit merci
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004032
+    m_Localized: Grand merci
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004033
+    m_Localized: Immense merci
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004034
+    m_Localized: Restaurer les achats
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004035
+    m_Localized: Bonus permanent actif
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004036
+    m_Localized: "Bonus permanent d\xE9sactiv\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004037
+    m_Localized: "Reste {0} \xB7 En pause hors aventure"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004038
+    m_Localized: "30 minutes par activation \xB7 Cumul jusqu\u2019\xE0 2 heures"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004039
+    m_Localized: Ajouter 30 min
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004040
+    m_Localized: "Activer \xB7 30 min"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004041
+    m_Localized: "Achat d\u2019origine \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004042
+    m_Localized: "Achet\xE9 \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004043
+    m_Localized: "Acheter \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004044
+    m_Localized: Indisponible
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004045
+    m_Localized: Achats disponibles sur iOS et Android.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004046
+    m_Localized: Promotion de jeu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004047
+    m_Localized: Voir le jeu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004048
+    m_Localized: Obtenir 30 min
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004049
+    m_Localized: "Connexion \xE0 la boutique\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004050
+    m_Localized: "Boutique indisponible. R\xE9essayez plus tard."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004051
+    m_Localized: "Produits indisponibles. R\xE9essayez plus tard."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004052
+    m_Localized: "Boutique de test de l\u2019\xE9diteur \u2014 sans frais"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004053
+    m_Localized: "Boutique d\xE9connect\xE9e."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004054
+    m_Localized: "En attente de l\u2019achat\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004055
+    m_Localized: "Impossible de lancer l\u2019achat."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004056
+    m_Localized: "Achat re\xE7u, mais non enregistr\xE9. Restaurez les achats pour r\xE9essayer."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004057
+    m_Localized: Merci pour votre soutien !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004058
+    m_Localized: "Achat enregistr\xE9. La confirmation sera retent\xE9e lors de la restauration."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004059
+    m_Localized: "Achat annul\xE9 ou \xE9chou\xE9. Aucun contenu d\xE9bloqu\xE9."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004060
+    m_Localized: "Achat en attente d\u2019autorisation."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004061
+    m_Localized: "Achats restaur\xE9s."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004062
+    m_Localized: "Restauration indisponible. R\xE9essayez plus tard."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004063
+    m_Localized: "Restauration des achats\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004064
+    m_Localized: "Terminez d\u2019abord la pr\xE9sentation de Flora et Tillman."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004065
+    m_Localized: Niveau {0} des Champs requis.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004066
+    m_Localized: Chargement des Champs en cours.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004067
+    m_Localized: Parcelle {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004068
+    m_Localized: Niv. {0} requis
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004069
+    m_Localized: "{0} : {1:N0} poss\xE9d\xE9s / {2:N0} requis"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004070
+    m_Localized: 'Replantation auto : niv. {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004071
+    m_Localized: 'Arrosage auto : niv. {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004072
+    m_Localized: Champs | Niveau {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004073
+    m_Localized: "Parcelles {0}\u2013{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004074
+    m_Localized: "Trouvez des sachets de graines en accomplissant des t\xE2ches de culture en aventure."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004075
+    m_Localized: Construire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004076
+    m_Localized: Auto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004077
+    m_Localized: "Champs niv. {0} : r\xE9colte et replante avec un sachet de graines ou un jeune arbre adapt\xE9. S\u2019arr\xEAte sans stock. D\xE8s le niv. {1}, toute nouvelle plantation est arros\xE9e automatiquement, m\xEAme si Auto est d\xE9sactiv\xE9."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004078
+    m_Localized: Abattre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004079
+    m_Localized: "R\xE9colter"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004080
+    m_Localized: "{0} \xB7 {1} {2} requis"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004081
+    m_Localized: "Arros\xE9 : {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004082
+    m_Localized: "Sec : {0} \xB7 Arros\xE9 : {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004083
+    m_Localized: +{0} XP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004084
+    m_Localized: +{0} XP des Champs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004085
+    m_Localized: "Ch\xEAne"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004086
+    m_Localized: Bouleau
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004087
+    m_Localized: "\xC9pic\xE9a"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004088
+    m_Localized: "Jeune ch\xEAne"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004089
+    m_Localized: Jeune bouleau
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004090
+    m_Localized: "Jeune \xE9pic\xE9a"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004091
+    m_Localized: Village
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004092
+    m_Localized: "Auto \u2022 Oui"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004093
+    m_Localized: "Auto \u2022 Non"
     m_Metadata:
       m_Items: []
   references:

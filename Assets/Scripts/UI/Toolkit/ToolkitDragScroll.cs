@@ -30,7 +30,8 @@ namespace TimelessEchoes.UI.Toolkit
             scroll.contentViewport.AddManipulator(new ToolkitDragScroll(scroll));
             scroll.RegisterCallback<GeometryChangedEvent>(_ =>
             {
-                foreach (var button in scroll.contentContainer.Query<Button>().ToList()) EnableFrom(scroll, button);
+                // Only explicit content tiles opt into button dragging via EnableFrom.
+                // Action buttons, sliders and fields must keep their own gesture.
                 // Put phone scrollbars in the outer gutter, without taking width
                 // away from the content. Leave inset dialogs and nested columns alone.
                 var gap = ToolkitResponsiveLayout.Size.x - scroll.worldBound.xMax;

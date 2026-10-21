@@ -3243,7 +3243,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003049
-    m_Localized: "Baue zuerst die vorherigen Felder."
+    m_Localized: Baue zuerst die vorherigen Felder.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003048
@@ -3315,7 +3315,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003031
-    m_Localized: "Einmal gie\xDFen"
+    m_Localized: "Gie\xDFen"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003030
@@ -3379,7 +3379,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003015
-    m_Localized: "Zwillinge Stufe 20: Erntet und pflanzt mit 1 passenden Samenp\u00e4ckchen oder 1 passenden Setzling neu. Stoppt, wenn die Vorr\u00e4te aufgebraucht sind."
+    m_Localized: "Zwillinge Stufe 20: Erntet und pflanzt mit 1 passenden Samenp\xE4ckchen oder 1 passenden Setzling neu. Stoppt, wenn die Vorr\xE4te aufgebraucht sind."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003014
@@ -3395,7 +3395,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003011
-    m_Localized: "Gesperrt \xB7 Bau erforderlich"
+    m_Localized: Gesperrt
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003010
@@ -3945,7 +3945,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004019
-    m_Localized: "Zum Bes\u00e4en eines Beets wird 1 passendes Samenp\u00e4ckchen ben\u00f6tigt."
+    m_Localized: "Zum Bes\xE4en eines Beets wird 1 passendes Samenp\xE4ckchen ben\xF6tigt."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004020
@@ -3953,11 +3953,295 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004021
-    m_Localized: "Ben\u00f6tigt {0} passendes Samenp\u00e4ckchen pro Beet."
+    m_Localized: "Ben\xF6tigt {0} passendes Samenp\xE4ckchen pro Beet."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004022
     m_Localized: "Ben\xF6tigt {0} passenden Setzling pro Pflanzplatz."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004023
+    m_Localized: Shop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004024
+    m_Localized: Sammelbonus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004025
+    m_Localized: +50% Ressourcen auf Abenteuern
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004026
+    m_Localized: Weitere Spiele
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004027
+    m_Localized: Dauerhafter Sammelbonus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004028
+    m_Localized: "+50% Abenteuerressourcen in jedem Spielstand. Kein Nachladen n\xF6tig."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004029
+    m_Localized: "Entwicklung unterst\xFCtzen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004030
+    m_Localized: "Freiwillige Unterst\xFCtzung ohne zus\xE4tzliche Spielboni."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004031
+    m_Localized: "Kleines Dankesch\xF6n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004032
+    m_Localized: "Gro\xDFes Dankesch\xF6n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004033
+    m_Localized: "Riesiges Dankesch\xF6n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004034
+    m_Localized: "K\xE4ufe wiederherstellen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004035
+    m_Localized: Dauerbonus aktiv
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004036
+    m_Localized: Dauerbonus deaktiviert
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004037
+    m_Localized: "{0} \xFCbrig \xB7 Pausiert au\xDFerhalb von Abenteuern"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004038
+    m_Localized: "30 Minuten pro Abholung \xB7 Bis zu 2 Stunden Vorrat"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004039
+    m_Localized: "30 Min. hinzuf\xFCgen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004040
+    m_Localized: "Aktivieren \xB7 30 Min."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004041
+    m_Localized: "Urspr\xFCnglicher K\xE4ufer \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004042
+    m_Localized: "Gekauft \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004043
+    m_Localized: "Kaufen \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004044
+    m_Localized: "Nicht verf\xFCgbar"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004045
+    m_Localized: "K\xE4ufe sind auf iOS und Android verf\xFCgbar."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004046
+    m_Localized: Spielewerbung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004047
+    m_Localized: Spiel ansehen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004048
+    m_Localized: 30 Min. abholen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004049
+    m_Localized: "Verbindung zum Shop\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004050
+    m_Localized: "Shop nicht verf\xFCgbar. Sp\xE4ter erneut versuchen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004051
+    m_Localized: "Produkte nicht verf\xFCgbar. Sp\xE4ter erneut versuchen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004052
+    m_Localized: "Editor-Testshop \u2014 keine Kosten"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004053
+    m_Localized: Shop-Verbindung getrennt.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004054
+    m_Localized: "Warten auf den Kauf\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004055
+    m_Localized: Kauf konnte nicht gestartet werden.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004056
+    m_Localized: "Kauf empfangen, aber nicht gespeichert. \xDCber \u201EK\xE4ufe wiederherstellen\u201C erneut versuchen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004057
+    m_Localized: "Vielen Dank f\xFCr die Unterst\xFCtzung!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004058
+    m_Localized: "Kauf gespeichert. Beim Wiederherstellen wird die Shop-Best\xE4tigung erneut versucht."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004059
+    m_Localized: Kauf abgebrochen oder fehlgeschlagen. Nichts freigeschaltet.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004060
+    m_Localized: Kauf wartet auf Genehmigung.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004061
+    m_Localized: "K\xE4ufe wiederhergestellt."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004062
+    m_Localized: "Wiederherstellen nicht verf\xFCgbar. Sp\xE4ter erneut versuchen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004063
+    m_Localized: "K\xE4ufe werden wiederhergestellt\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004064
+    m_Localized: "Schlie\xDFe zuerst Floras und Tillmans Einf\xFChrung ab."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004065
+    m_Localized: Felder-Stufe {0} erforderlich.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004066
+    m_Localized: Die Felder werden noch geladen.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004067
+    m_Localized: Parzelle {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004068
+    m_Localized: "Ben\xF6tigt St. {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004069
+    m_Localized: "{0}: {1:N0} vorhanden / {2:N0} ben\xF6tigt"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004070
+    m_Localized: 'Auto-Pflanzen: St. {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004071
+    m_Localized: "Auto-Gie\xDFen: St. {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004072
+    m_Localized: Felder | Stufe {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004073
+    m_Localized: "Parzellen {0}\u2013{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004074
+    m_Localized: Finde Saatgutpakete bei Ernteaufgaben auf Abenteuern.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004075
+    m_Localized: Bauen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004076
+    m_Localized: Auto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004077
+    m_Localized: 'Felder-Stufe {0}: Erntet und pflanzt mit einem passenden Saatgutpaket oder Setzling nach. Stoppt ohne Vorrat. Ab Stufe {1} wird jede neue Pflanzung automatisch gegossen, auch bei ausgeschaltetem Auto.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004078
+    m_Localized: "F\xE4llen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004079
+    m_Localized: Ernten
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004080
+    m_Localized: "{0} \xB7 {1} {2} erforderlich"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004081
+    m_Localized: 'Gegossen: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004082
+    m_Localized: "Trocken: {0} \xB7 Gegossen: {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004083
+    m_Localized: +{0} EP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004084
+    m_Localized: +{0} Felder-EP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004085
+    m_Localized: Eiche
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004086
+    m_Localized: Birke
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004087
+    m_Localized: Fichte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004088
+    m_Localized: Eichensetzling
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004089
+    m_Localized: Birkensetzling
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004090
+    m_Localized: Fichtensetzling
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004091
+    m_Localized: Dorf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004092
+    m_Localized: "Auto \u2022 An"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87000000000004093
+    m_Localized: "Auto \u2022 Aus"
     m_Metadata:
       m_Items: []
   references:

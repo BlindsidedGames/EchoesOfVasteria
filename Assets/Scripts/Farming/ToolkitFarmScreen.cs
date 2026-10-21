@@ -303,7 +303,7 @@ namespace TimelessEchoes.UI.Toolkit
                 {
                     feedback = string.Join(" · ", harvested.Select(b => "+" + Compact(b.ExpectedYield) + " " + b.YieldTitle +
                         (b.SecondaryExpectedYield > 0 ? " · +" + Compact(b.SecondaryExpectedYield) + " " + b.SecondaryTitle : ""))) +
-                        " · +" + harvested.Sum(b => b.HarvestXp) + " Fields XP";
+                        " · " + ToolkitLocalization.Text("fields.harvest-feedback-xp", "+{0} Fields XP", harvested.Sum(b => b.HarvestXp));
                     feedbackUntil = Time.unscaledTime + 6;
                 }
             }
@@ -344,6 +344,7 @@ namespace TimelessEchoes.UI.Toolkit
             root.EnableInClassList("fields-automation-locked", snapshot.TwinsLevel < FarmContent.AutoWaterLevel);
             selectedBed ??= snapshot.Beds.FirstOrDefault(b => b.Unlocked)?.Id ?? snapshot.Beds.FirstOrDefault()?.Id;
             var target = snapshot.Beds.FirstOrDefault(b => b.Id == selectedBed); var orchard = target?.Orchard == true;
+            if (target?.Planted == true) selectedRecipe = target.RecipeId;
             selectedRecipe ??= snapshot.Recipes.FirstOrDefault(r => r.Orchard == orchard && r.Discovered && r.Eligible)?.Id;
             var selected = snapshot.Recipes.FirstOrDefault(r => r.Id == selectedRecipe);
             heading.text = ToolkitLocalization.Text("fields.level-heading", "Fields | Level {0}", snapshot.TwinsLevel);
@@ -388,8 +389,8 @@ namespace TimelessEchoes.UI.Toolkit
                 : dryTime / (autoWater ? 2 : 1);
             seedHeading.text = selected == null ? "" : selected.CropTitle + " • " + FormatTime(growthTime, mspace: false, shortForm: true);
             seedHeading.tooltip = selected == null ? "" : autoWater
-                ? "Watered: " + FormatTime(growthTime, mspace: false, shortForm: true)
-                : "Dry: " + FormatTime(dryTime, mspace: false, shortForm: true) + " · Watered: " + FormatTime(dryTime / 2, mspace: false, shortForm: true);
+                ? ToolkitLocalization.Text("fields.watered-time", "Watered: {0}", FormatTime(growthTime, mspace: false, shortForm: true))
+                : ToolkitLocalization.Text("fields.growth-times", "Dry: {0} · Watered: {1}", FormatTime(dryTime, mspace: false, shortForm: true), FormatTime(dryTime / 2, mspace: false, shortForm: true));
             var columns = narrow ? 4 : 5;
             var seedIndex = 0;
             // Leave a pixel for the button border and fractional layout rounding,
@@ -430,7 +431,7 @@ namespace TimelessEchoes.UI.Toolkit
             secondaryIcon.sprite = target?.SecondaryIcon;
             secondaryAmount.text = target == null ? "" : Compact(target.SecondaryExpectedYield);
             secondaryReward.tooltip = target?.SecondaryTitle;
-            yieldXp.text = target == null ? "" : "+" + target.HarvestXp + " XP";
+            yieldXp.text = target == null ? "" : ToolkitLocalization.Text("fields.harvest-xp", "+{0} XP", target.HarvestXp);
             yieldRow.tooltip = target?.YieldTitle;
             detail.text = selectedBuild != null || target?.Planted == true ? "" : !matches ? T("fields.find-seeds", "Find seed packs by completing crop tasks on adventures.") : !selected.Discovered ? T("fields.discover-first", "Discover this seed or sapling first.") : !selected.Eligible ?
                 RecipeRequirement(selected) : "";
@@ -448,7 +449,7 @@ namespace TimelessEchoes.UI.Toolkit
             SetWaterLabel(water, T("fields.action.water-once", "Water"), true);
             repeat.SetEnabled(snapshot.TownActionsAllowed && target?.Unlocked == true && snapshot.TwinsLevel >= FarmContent.AutoReplantLevel);
             repeat.EnableInClassList("primary", target?.Repeat == true);
-            repeat.text = T("fields.auto", "Auto") + " • " + (target?.Repeat == true ? T("common.on", "On") : T("common.off", "Off"));
+            repeat.text = target?.Repeat == true ? T("fields.auto-on", "Auto • On") : T("fields.auto-off", "Auto • Off");
             repeat.tooltip = ToolkitLocalization.Text("fields.repeat-help-water-on-plant", "Fields level {0}: harvest and replant using one matching seed pack or sapling. Stops when you run out. From Fields level {1}, every new planting is watered automatically, even with Auto off.", FarmContent.AutoReplantLevel, FarmContent.AutoWaterLevel);
             Visible(preview.Root, !orchard && selectedBuild == null); Visible(orchardPreview.Root, orchard && selectedBuild == null);
             if (target != null)
@@ -525,7 +526,7 @@ namespace TimelessEchoes.UI.Toolkit
         private static string T(string key, string fallback) => ToolkitLocalization.Text(key, fallback);
         private static string RecipeRequirement(FarmRecipePresentation recipe) => ToolkitLocalization.Text("fields.recipe-skill-required", "{0} · {1} {2} required", recipe.Title, recipe.RequiredSkill, recipe.RequiredHeroLevel);
         private static string PlantCost(bool orchard) => ToolkitLocalization.Text(orchard ? "fields.plant-sapling-cost" : "fields.plant-seed-cost", orchard ? "Requires {0} matching sapling per plot." : "Requires {0} matching seed pack per field.", FarmContent.PlantingCost(orchard));
-        private static string BedStatus(FarmBedPresentation bed) => !bed.Unlocked ? T("fields.locked", "Locked · construction required") : !bed.Planted ? T("fields.empty", "Empty") : bed.RecipeTitle + "\n" + (bed.Ready ? T("fields.ready", "Ready") : FormatTime(Math.Max(0, bed.RemainingSeconds), mspace: false, shortForm: true));
+        private static string BedStatus(FarmBedPresentation bed) => !bed.Unlocked ? T("fields.locked", "Locked") : !bed.Planted ? T("fields.empty", "Empty") : bed.RecipeTitle + "\n" + (bed.Ready ? T("fields.ready", "Ready") : FormatTime(Math.Max(0, bed.RemainingSeconds), mspace: false, shortForm: true));
         private void ApplyLayout()
         {
             narrow = ToolkitResponsiveLayout.IsPortrait || ToolkitWindowLayout.SafeArea.width - CompanionWidth < 500;
@@ -554,8 +555,9 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (source != null) source.Changed -= Refresh; ToolkitLocalization.Changed -= Refresh;
             root?.RemoveFromHierarchy(); root = null; seeds.Clear(); beds.Clear(); orchardPairs.Clear();
+            ToolkitPanel.Release(GetComponent<UIDocument>(), ref settings);
         }
         private void OnDisable() => Hide();
-        private void OnDestroy() { Hide(); if (settings) Destroy(settings); }
+        private void OnDestroy() => Hide();
     }
 }
