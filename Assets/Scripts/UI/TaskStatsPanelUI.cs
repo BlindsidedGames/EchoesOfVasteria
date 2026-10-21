@@ -338,7 +338,7 @@ namespace TimelessEchoes.UI
                 if (category == null)
                     continue;
 
-                var categoryWeight = Mathf.Max(0f, category.weight);
+                var categoryWeight = category.GetWeight(worldX);
                 cachedCategoryWeightSum += categoryWeight;
 
                 float taskSum = 0f;
@@ -367,7 +367,7 @@ namespace TimelessEchoes.UI
 
                 if (categoryByTask.TryGetValue(data, out var category) && category != null)
                 {
-                    var categoryWeight = Mathf.Max(0f, category.weight);
+                    var categoryWeight = category.GetWeight(worldX);
                     if (categoryWeight <= 0f || cachedCategoryWeightSum <= 0f)
                     {
                         chance = 0f;
