@@ -8,6 +8,31 @@ namespace Tests.EditMode
 {
     public sealed class SaveMigrationValidationTests
     {
+        [TestCase(1, true)] [TestCase(7, true)] [TestCase(7, false)]
+        public void ReturningPlayersKeepTheirSetupWithoutReplayingTheOpening(int schema, bool established)
+        {
+            var source = new GameData { SchemaVersion = schema, LastGameVersion = "1.4.3" };
+            source.Quests["The names Gill"] = new GameData.QuestRecord { Completed = established };
+            source.Quests["Into The Multiverse"] = new GameData.QuestRecord { Completed = established };
+            source.Resources["Stone"] = new GameData.ResourceEntry { Amount = 35800000 };
+            source.SkillData["Combat"] = new GameData.SkillProgress { Level = 405, CurrentXP = 123.5f };
+            source.EquipmentBySlot["Weapon"] = new GearItemRecord { slot = "Weapon", rarity = "Vastium" };
+            source.BuffSlots[0] = "Echo Combat";
+            var result = SaveMigrationRunner.TryMigrate(source, "9999.0.0");
+            Assert.True(result.Succeeded, result.Error);
+            Assert.AreEqual(established ? 3 : 0, result.Data.General.InventoryTutorialStage);
+            Assert.AreEqual(established, TimelessEchoes.Shop.ShopRules.IntroComplete(result.Data));
+            Assert.AreEqual(35800000, result.Data.Resources["Stone"].Amount);
+            Assert.AreEqual(405, result.Data.SkillData["Combat"].Level);
+            Assert.AreEqual(123.5f, result.Data.SkillData["Combat"].CurrentXP);
+            Assert.AreEqual("Vastium", result.Data.EquipmentBySlot["Weapon"].rarity);
+            Assert.AreEqual("Echo Combat", result.Data.BuffSlots[0]);
+            var repeated = SaveMigrationRunner.TryMigrate(CurrentSaveCodec.Clone(result.Data), "9999.0.0");
+            Assert.True(repeated.Succeeded, repeated.Error);
+            Assert.AreEqual(result.Data.General.InventoryTutorialStage, repeated.Data.General.InventoryTutorialStage);
+            Assert.AreEqual(0, source.General.InventoryTutorialStage, "Migration must not edit the source save.");
+        }
+
         [Test]
         public void HistoricalZeroSchemaRemainsReadableWithExactProgress()
         {

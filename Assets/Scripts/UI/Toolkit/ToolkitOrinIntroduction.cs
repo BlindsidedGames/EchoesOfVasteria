@@ -27,6 +27,13 @@ namespace TimelessEchoes.UI.Toolkit
             while (intro && intro.IsVisible) yield return null;
             while (TimelessEchoes.Characters.CharacterCreation.Required) yield return null;
             if (!meetingPrefab) yield break;
+            var returning = Oracle.oracle.saveData.General;
+            if (returning.ReturningPlayerIntroductionComplete && !returning.ReturningPlayerWelcomeSeen)
+            {
+                yield return Explain("ReturningPlayerWelcome", "Welcome back! Your progress and equipment are ready. The opening lessons have been skipped. Explore the updated menus at your own pace; help is available in the Library.");
+                returning.ReturningPlayerWelcomeSeen = true;
+                Blindsided.EventHandler.SaveData();
+            }
             // Field encounter cards are hidden in town. Keep this native panel at
             // the scene root, independent of field visibility and other UIDocuments.
             if (!QuestUtils.QuestCompleted(firstQuest))
@@ -84,10 +91,11 @@ namespace TimelessEchoes.UI.Toolkit
                 else if ((!gm || gm.IsInTown) && data.General.ReturnedFromFarmlands && QuestUtils.QuestCompleted("The names Gill") && data.General.InventoryTutorialStage == 0)
                 {
                     if (!Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Contains("InventoryIntroduction"))
-                        yield return Explain("InventoryIntroduction", "Gill's boots are equipped! Open Hub, then Inventory, to see your equipment bonuses and the resources you gathered.");
+                        yield return Explain("InventoryIntroduction", "Open Hub, then Inventory, to view your equipped items, their bonuses and the resources you gathered.");
                     data.General.InventoryTutorialStage = 1;
                 }
                 else if ((!gm || gm.IsInTown) && hubIntroduction && !hubIntroduction.HasBeenCompleted &&
+                         data.General.HubTutorialStage < 3 &&
                          QuestUtils.QuestCompleted("The names Gill") && data.General.InventoryTutorialStage >= 3 && ToolkitVisibilityRule.HasLevelledSkill())
                     yield return hubIntroduction.ShowAndWait(windows.transform);
                 else if ((!gm || gm.IsInTown) && data.General.MapStatisticsTutorialStage == 1)

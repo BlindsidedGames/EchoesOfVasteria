@@ -215,6 +215,18 @@ namespace TimelessEchoes.UI.Toolkit
                 }
             }
             if (hand.parent != root) root.Add(hand);
+            if (target is Button && target.name.StartsWith("toggle-task-stat-", StringComparison.Ordinal))
+            {
+                var viewport = target.GetFirstAncestorOfType<ScrollView>()?.contentViewport;
+                if (viewport != null && !viewport.worldBound.Contains(target.worldBound.center))
+                { hand.style.display = DisplayStyle.None; return; }
+                var beside = root.WorldToLocal(new Vector2(target.worldBound.xMin, target.worldBound.center.y));
+                hand.style.left = Mathf.Round(beside.x - 27 - 1.5f * (1 + Mathf.Cos(Time.unscaledTime * 4)));
+                hand.style.top = Mathf.Round(beside.y - 12);
+                hand.style.rotate = new Rotate(Angle.Degrees(90));
+                hand.BringToFront();
+                return;
+            }
             // A labelled dropdown includes its caption. Point at its actual input.
             var input = target is DropdownField ? target.Q(className: "unity-base-popup-field__input") : null;
             var rect = (input ?? target).worldBound;

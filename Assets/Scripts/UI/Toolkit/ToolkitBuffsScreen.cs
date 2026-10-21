@@ -95,6 +95,12 @@ namespace TimelessEchoes.UI.Toolkit
         private void AssignSlot(int index){var manager=BuffManager.Instance;if(!manager)return;if(!inRun&&selected&&manager.IsSlotUnlocked(index)){manager.AssignBuff(index,selected);if(BuffIntroductionGuidance.Active&&BuffIntroductionGuidance.IsFirstEcho(manager.GetAssigned(index))){Blindsided.Oracle.oracle.saveData.General.BuffTutorialStage=3;Blindsided.EventHandler.SaveData();rebuild=true;}}else manager.ToggleSlotAutoCast(index);selected=null;Refresh();}
         private void Refresh()
         {
+            if (BuffIntroductionGuidance.Active && BuffManager.Instance &&
+                Enumerable.Range(0, 5).Any(i => BuffIntroductionGuidance.IsFirstEcho(BuffManager.Instance.GetAssigned(i))))
+            {
+                Blindsided.Oracle.oracle.saveData.General.BuffTutorialStage = 3;
+                rebuild = true;
+            }
             var manager=BuffManager.Instance;if(!manager||!IsOpen)return;
             instruction.text=inRun?ToolkitLocalization.Text("buffs.instructions-running", "Assignments are locked during runs. Select an equipped slot to toggle autocast."):selected?ToolkitLocalization.Text("buffs.instructions-select-slot", "Choose a slot for {0}. Select Cancel to finish without assigning.", selected.GetDisplayName()):ToolkitLocalization.Text("buffs.instructions-select-buff", "Select a buff to assign it. Select an equipped slot to toggle autocast.");
             if (BuffIntroductionGuidance.Active)
@@ -125,7 +131,8 @@ namespace TimelessEchoes.UI.Toolkit
                 row.timing.text=row.recipe.durationType==BuffDurationType.DistancePercent?ToolkitLocalization.Text("buffs.timing-distance", "Distance {0}%", Mathf.CeilToInt(row.recipe.GetDuration()*100)):ToolkitLocalization.Text("buffs.timing-duration", "Duration {0}   ·   Cooldown {1}", CalcUtils.FormatTime(row.recipe.GetDuration(),shortForm:true), CalcUtils.FormatTime(row.recipe.GetCooldown(),shortForm:true));
             }
             lessonHand.style.display=BuffIntroductionGuidance.Active&&selected&&definition.tutorialHand?DisplayStyle.Flex:DisplayStyle.None;
-            if(BuffIntroductionGuidance.Active&&selected){var p=root.WorldToLocal(new Vector2(slots[0].worldBound.center.x,slots[0].worldBound.yMax));lessonHand.style.left=Mathf.Round(p.x-12);lessonHand.style.top=Mathf.Round(p.y+2+4*(1+Mathf.Cos(Time.unscaledTime*5)));lessonHand.BringToFront();}
+            root.Q(className:"eov-buffs-header").style.paddingTop=BuffIntroductionGuidance.Active&&selected?28:0;
+            if(BuffIntroductionGuidance.Active&&selected){var p=root.WorldToLocal(new Vector2(slots[0].worldBound.center.x,slots[0].worldBound.yMin));lessonHand.style.left=Mathf.Round(p.x-12);lessonHand.style.top=Mathf.Round(p.y-26-1.5f*(1+Mathf.Cos(Time.unscaledTime*5)));lessonHand.style.rotate=new Rotate(Angle.Degrees(180));lessonHand.BringToFront();}
         }
         private void LocalizationChanged(){rebuild=true;nextRefresh=0;}
         private void Loaded(){selected=null;rebuild=true;}

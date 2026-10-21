@@ -29,7 +29,7 @@
 .gameplay.portrait .eov-run-overlay {background-color:var(--surface);}
 .gameplay.portrait .summary-sheet {padding:10px;}
 .gameplay.portrait .summary-facts {flex-wrap:wrap;}
-.gameplay.portrait .summary-fact {width:50%;flex-basis:auto;flex-shrink:0;}
+.gameplay.portrait .summary-fact {width:50%;flex-basis:auto;flex-grow:0;flex-shrink:0;}
 .gameplay.portrait .summary-guide {flex-shrink:0;}
 /* Map dialogue is one bounded row: portrait and action, then scrollable text. */
 .gameplay.portrait.eov-meeting {flex-direction:row;align-items:stretch;overflow:visible;background-color:var(--surface);border-width:1px;border-color:var(--line);}
