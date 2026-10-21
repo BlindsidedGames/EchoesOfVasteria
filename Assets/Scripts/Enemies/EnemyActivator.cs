@@ -44,9 +44,7 @@ namespace TimelessEchoes.Enemies
 
         private void LateUpdate()
         {
-            if (cam == null) return;
-            Vector3 min = cam.ViewportToWorldPoint(Vector3.zero);
-            Vector3 max = cam.ViewportToWorldPoint(Vector3.one);
+            if (!RunActivityArea.TryGetBounds(cam, out var min, out var max)) return;
             min -= Vector3.one * activationPadding;
             max += Vector3.one * activationPadding;
 

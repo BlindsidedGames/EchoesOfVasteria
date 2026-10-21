@@ -803,6 +803,7 @@ namespace TimelessEchoes.UI
 
         private void UpdateTownButtonsVisibility()
         {
+            TimelessEchoes.UI.Toolkit.ToolkitResponsiveLayout.SetFocusView(false);
             if (townButtons != null)
                 townButtons.SetActive(true);
             if (windowsOpenIndicator != null)

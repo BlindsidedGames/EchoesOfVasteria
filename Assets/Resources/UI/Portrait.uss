@@ -1,4 +1,6 @@
 /* Responsive portrait dock: retain all actions and reflow information vertically. */
+.focus-collapsible { transition-property: translate; transition-duration: 0.18s; transition-timing-function: ease-in-out; }
+.focus-collapsible.focus-suspended, .gameplay.focus-collapsible.focus-suspended { translate: 0 1000px; }
 .gameplay.portrait .button {min-height:28px;}
 .gameplay.portrait .eov-text, .gameplay.portrait .eov-text--caption,
 .gameplay.portrait .small, .gameplay.portrait .library-prose,

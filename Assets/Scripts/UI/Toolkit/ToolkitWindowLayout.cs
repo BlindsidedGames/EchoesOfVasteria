@@ -40,6 +40,7 @@ namespace TimelessEchoes.UI.Toolkit
         public bool Apply(VisualElement root, Rect bounds)
         {
             if (root == null) return false;
+            ToolkitResponsiveLayout.ApplyFocusPresentation(root);
             if (ToolkitResponsiveLayout.IsPortrait && root.ClassListContains("gameplay"))
             {
                 var area = SafeArea;

@@ -14,6 +14,53 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly List<VisualElement> roots = new();
         private VisualElement dock;
         private PanelSettings dockSettings;
+        private static bool focusRequested;
+        private static readonly Dictionary<VisualElement, bool> suspended = new();
+        public static bool FocusView => focusRequested && IsPortrait && !TownView;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetFocus() { focusRequested = false; suspended.Clear(); }
+
+        public static void SetFocusView(bool expanded) => focusRequested = expanded;
+
+        // Keep the existing tree, selection and scroll position while it slides offscreen.
+        // Disabling the subtree also removes its buttons and dismiss layers from input.
+        public static void ApplyFocusPresentation(VisualElement root)
+        {
+            if (root == null) return;
+            if (!root.ClassListContains("focus-collapsible"))
+            {
+                root.AddToClassList("focus-collapsible");
+                root.RegisterCallback<DetachFromPanelEvent>(_ => suspended.Remove(root));
+            }
+            if (FocusView)
+            {
+                if (!suspended.ContainsKey(root))
+                {
+                    // Unity hosts dropdowns beside the screen tree. Close through
+                    // their normal cancel route so popup state and callbacks reset.
+                    var popups = new List<VisualElement>();
+                    root.panel?.visualTree.Query<VisualElement>().ForEach(element =>
+                    {
+                        if (element.userData is GenericDropdownMenu menu && menu.targetElement != null &&
+                            (menu.targetElement == root || root.Contains(menu.targetElement))) popups.Add(element);
+                    });
+                    foreach (var popup in popups)
+                    {
+                        using var cancel = NavigationCancelEvent.GetPooled();
+                        popup.SendEvent(cancel);
+                    }
+                    suspended[root] = root.enabledSelf;
+                    root.SetEnabled(false);
+                    root.AddToClassList("focus-suspended");
+                }
+            }
+            else if (suspended.Remove(root, out var enabled))
+            {
+                root.RemoveFromClassList("focus-suspended");
+                root.SetEnabled(enabled);
+            }
+        }
         public static bool IsPortrait => Portrait(new Vector2Int(Screen.width, Screen.height));
         public static bool TownView => Application.isPlaying && GameManager.Instance && !GameManager.Instance.CurrentMap;
         public static bool Portrait(Vector2Int size) => size.x > 0 && size.y >= size.x * 1.25f;
@@ -48,7 +95,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (!Portrait(size)) return new Rect(0, 0, size.x, size.y);
             safe = ValidSafeArea(size, safe);
-            if (TownView) return new Rect(0, 0, size.x, size.y);
+            if (TownView || FocusView) return new Rect(0, 0, size.x, size.y);
             var height = safe.width * 9f / 16f;
             // The world can extend behind the Dynamic Island; only interactive UI
             // needs the top safe-area inset. Keep the run viewport at 16:9.
@@ -63,7 +110,9 @@ namespace TimelessEchoes.UI.Toolkit
             if (TownView)
                 return new Rect(safe.xMin * scale, (size.y - safe.yMax) * scale,
                     safe.width * scale, safe.height * scale);
-            var world = WorldPixels(size, safe);
+            // Preserve the dock's normal geometry while suspended. Its panels must
+            // never receive zero/negative layout heights during focus mode.
+            var world = new Rect(safe.x, size.y - safe.width * 9f / 16f, safe.width, safe.width * 9f / 16f);
             var top = (size.y - world.yMin) * scale;
             return new Rect(safe.xMin * scale, top,
                 safe.width * scale,
@@ -139,6 +188,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void Update()
         {
+            if (TownView) focusRequested = false;
             if (dock == null || dock.panel == null)
             {
                 var document = GetComponent<UIDocument>();
@@ -150,7 +200,7 @@ namespace TimelessEchoes.UI.Toolkit
             for (var i = roots.Count - 1; i >= 0; i--)
                 if (roots[i].panel == null) roots.RemoveAt(i); else roots[i].EnableInClassList("portrait", IsPortrait);
             Configure(dockSettings);
-            dock.style.display = IsPortrait && !TownView ? DisplayStyle.Flex : DisplayStyle.None;
+            dock.style.display = IsPortrait && !TownView && !FocusView ? DisplayStyle.Flex : DisplayStyle.None;
             var world = WorldPixels(new Vector2Int(Screen.width, Screen.height), Screen.safeArea);
             var top = (Screen.height - world.yMin) * Scale(new Vector2Int(Screen.width, Screen.height));
             dock.style.left = 0; dock.style.top = top; dock.style.width = Size.x; dock.style.height = Size.y - top;

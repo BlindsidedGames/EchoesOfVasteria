@@ -40,6 +40,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         public void ShowSummary(RunSummaryData summary, IReadOnlyDictionary<Resource, double> amounts, IReadOnlyDictionary<Resource, double> bonus)
         {
+            ToolkitResponsiveLayout.SetFocusView(false);
             HideDetails();
             summaryData = summary ?? new RunSummaryData();
             foreach (var pair in amounts) if (pair.Key && pair.Value > 0) summaryAmounts[pair.Key] = pair.Value;

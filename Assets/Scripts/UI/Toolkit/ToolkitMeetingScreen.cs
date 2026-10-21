@@ -59,6 +59,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void Show()
         {
+            ToolkitResponsiveLayout.SetFocusView(false);
             if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
             if (!theme || !template || !runtimeTheme || !textSettings || !definition || !definition.portraitFrame || !definition.shadow)
                 throw new InvalidOperationException("Native meeting assets are not configured.");

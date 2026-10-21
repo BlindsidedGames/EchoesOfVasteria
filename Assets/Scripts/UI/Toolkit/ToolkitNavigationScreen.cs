@@ -399,7 +399,7 @@ namespace TimelessEchoes.UI.Toolkit
                 var current = RunProgressPresentation.Read(hero.transform.position.x);
                 if (!hasProgress || !current.SameText(lastProgress)) progressText.text = "<b>" + current.FormatText() + "</b>";
                 progressFill.style.width = Length.Percent(current.normalized * 100);
-                progressHero.style.left = -16.5f + current.normalized * (ToolkitResponsiveLayout.IsPortrait ? Mathf.Max(103, ToolkitWindowLayout.SafeArea.width - 20) : 103);
+                progressHero.style.left = -16.5f + current.normalized * (ToolkitResponsiveLayout.IsPortrait ? Mathf.Max(103, ToolkitWindowLayout.SafeArea.width - 60) : 103);
                 lastProgress = current; hasProgress = true;
             }
             ToolkitGameplay.SetToggle(autoPin,AutoPinActiveQuests);
@@ -478,6 +478,7 @@ namespace TimelessEchoes.UI.Toolkit
                     windows.IsWindowOpen(TownWindowManager.Window.Stats) ? "stats" :
                     windows.IsWindowOpen(TownWindowManager.Window.Options) ? "options" : "townsfolk";
             if (desired != highlightedEntryId) { highlightedEntryId = desired; questHighlightStartedAt = Time.unscaledTime; }
+            if (desired != null) ToolkitResponsiveLayout.SetFocusView(false);
             foreach (var pair in tutorialPrompts)
             {
                 var visible = pair.Key == desired;
@@ -591,6 +592,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void ApplyLayout()
         {
+            ToolkitResponsiveLayout.ApplyFocusPresentation(root);
             var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height), Screen.safeArea,
                 UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);
             root.style.left = area.x + (ToolkitResponsiveLayout.IsPortrait ? 0 : 8);
@@ -605,9 +607,9 @@ namespace TimelessEchoes.UI.Toolkit
             context.style.display = ToolkitResponsiveLayout.IsPortrait && !(GameManager.Instance && GameManager.Instance.CurrentMap) ? DisplayStyle.None : DisplayStyle.Flex;
             context.style.top = ToolkitResponsiveLayout.IsPortrait ?
                 ToolkitResponsiveLayout.WorldArea.yMax - root.resolvedStyle.top - 39 : StyleKeyword.Null;
-            progressRoot.style.width = ToolkitResponsiveLayout.IsPortrait ? area.width - 16 : StyleKeyword.Null;
-            progressRoot.Q(className: "eov-navigation-progress-track").style.width = ToolkitResponsiveLayout.IsPortrait ? area.width - 20 : StyleKeyword.Null;
-            progressReaper.style.left = ToolkitResponsiveLayout.IsPortrait ? area.width - 40 : StyleKeyword.Null;
+            progressRoot.style.width = ToolkitResponsiveLayout.IsPortrait ? area.width - 56 : StyleKeyword.Null;
+            progressRoot.Q(className: "eov-navigation-progress-track").style.width = ToolkitResponsiveLayout.IsPortrait ? area.width - 60 : StyleKeyword.Null;
+            progressReaper.style.left = ToolkitResponsiveLayout.IsPortrait ? area.width - 80 : StyleKeyword.Null;
             if (ToolkitResponsiveLayout.IsPortrait)
                 foreach (var entry in navigationEntries) buttons[entry].style.minWidth = entry.group == Group.Toolbar ? StyleKeyword.Auto : entry.width;
             else

@@ -41,6 +41,9 @@ namespace TimelessEchoes.UI.Toolkit
         private VisualElement portraitRunActions;
         private VisualElement portraitDashboard;
         private ScrollView portraitStatsScroll;
+        private VisualElement focusControls;
+        private Button focusToggle;
+        private Image focusArrow;
         private float nextRefresh, elapsedAtEnd, runStartedAt;
         private int tooltipSlot = -1;
         public bool IsConfigured => definition && definition.buffs && theme && runtimeTheme && textSettings;
@@ -78,6 +81,24 @@ namespace TimelessEchoes.UI.Toolkit
             detail=Panel(overlay,"breakdown-sheet");var head=E(detail,"row breakdown-header");LocalizedLabel(head, "run.base-return-rate", "Base rate (return bonus)","small muted breakdown-rate");detailTitle=L(head,ToolkitLocalization.Text("run.breakdown-heading", "Run breakdown"),"heading breakdown-title");runTime=L(head,"","strong breakdown-time");BuildSummaryOverview();
             detailRows=ToolkitGameplay.Scroll(detail,"run-ledger");detailRows.contentContainer.AddToClassList("run-ledger-grid");var footer=E(detail,"row breakdown-footer");runRatesLeft=L(footer,"","small");runRatesRight=L(footer,"","small");runRatesRight.style.unityTextAlign=TextAnchor.MiddleRight; BuildDetailsClose(); HideDetails();
             tooltip = Panel(root, "eov-run-tooltip", definition.tooltipFrame); tooltipText = Text(tooltip, ""); SetVisible(tooltip, false);
+            focusControls = new VisualElement { name = "run-focus-controls", pickingMode = PickingMode.Ignore };
+            theme.Apply(focusControls); ToolkitGameplay.Apply(focusControls, theme);
+            focusControls.style.position = Position.Absolute;
+            focusControls.style.left = focusControls.style.top = 0;
+            focusControls.style.width = focusControls.style.height = Length.Percent(100);
+            document.rootVisualElement.Add(focusControls);
+            focusToggle = ToolkitControls.Button("run-focus-toggle", () =>
+            {
+                var expand = !ToolkitResponsiveLayout.FocusView;
+                if (expand) SetHeroStatsOpen(false);
+                ToolkitResponsiveLayout.SetFocusView(expand);
+            }, theme.button);
+            focusToggle.style.position = Position.Absolute;
+            focusToggle.style.width = focusToggle.style.height = 32;
+            focusToggle.style.paddingLeft = focusToggle.style.paddingRight = 8;
+            focusToggle.style.paddingTop = focusToggle.style.paddingBottom = 8;
+            focusControls.Add(focusToggle);
+            focusArrow = ToolkitGameplay.Icon(focusToggle, theme.expand, 16);
             ToolkitLocalization.Changed += LocalizationChanged;
             Blindsided.EventHandler.OnRunStarted += RunStarted;
             AttachServices(); Refresh();
@@ -159,7 +180,13 @@ namespace TimelessEchoes.UI.Toolkit
         private void Update()
         {
             if (root == null) return; AttachServices();
-            var area = ToolkitWindowLayout.SafeArea;
+            var gm = GameManager.Instance;
+            var canFocus = gm && gm.CurrentMap && !gm.HeroIsDead && !gm.FirstReapDialoguePending &&
+                !gm.IvanReturnPending && !gm.FirstReapReturnPending && !ToolkitMeetingScreen.HasVisibleMeeting &&
+                BuffIntroductionGuidance.Stage != 3;
+            if (!canFocus) ToolkitResponsiveLayout.SetFocusView(false);
+            var focus = ToolkitResponsiveLayout.FocusView;
+            var area = focus ? ToolkitResponsiveLayout.SafeScreenArea : ToolkitWindowLayout.SafeArea;
             root.style.left = area.x; root.style.top = area.y; root.style.width = area.width; root.style.height = area.height;
             ConfigurePortraitHud(area);
             UpdatePortraitResources(area);
@@ -180,7 +207,20 @@ namespace TimelessEchoes.UI.Toolkit
                 ivanReturnPointer.style.left = Mathf.Round(point.x - 12); ivanReturnPointer.style.top = Mathf.Round(point.y + 2 + 4 * (1 + Mathf.Cos(Time.unscaledTime * 5)));
             }
             if (Mouse.current?.rightButton.wasPressedThisFrame == true || Keyboard.current?.escapeKey.wasPressedThisFrame == true) { HideDetails(); SetHeroStatsOpen(false); }
-            if (Time.unscaledTime < nextRefresh) return; nextRefresh = Time.unscaledTime + .1f; Refresh();
+            if (Time.unscaledTime >= nextRefresh) { nextRefresh = Time.unscaledTime + .1f; Refresh(); }
+            SetVisible(focusControls, ToolkitResponsiveLayout.IsPortrait && canFocus && !HasOpenDetails);
+            var world = ToolkitResponsiveLayout.WorldArea;
+            var safe = ToolkitResponsiveLayout.SafeScreenArea;
+            focusToggle.style.left = Mathf.Min(world.xMax, safe.xMax) - 40;
+            focusToggle.style.top = focus ? safe.yMax - 84 : Mathf.Max(safe.y, world.yMax - 40);
+            focusArrow.style.rotate = new Rotate(Angle.Degrees(focus ? 90 : 270));
+            if (focus)
+            {
+                SetVisible(portraitDashboard, false);
+                SetVisible(portraitResources, false);
+                SetVisible(returnControls, false);
+                SetVisible(breakdown, false);
+            }
         }
         private void ConfigurePortraitHud(Rect area)
         {
@@ -189,7 +229,7 @@ namespace TimelessEchoes.UI.Toolkit
             var health = hud.Q("run-health-strip");
             var world = ToolkitResponsiveLayout.WorldArea;
             hud.style.left = portrait ? 8 : 12;
-            hud.style.top = portrait ? 8 : StyleKeyword.Auto;
+            hud.style.top = portrait ? (ToolkitResponsiveLayout.FocusView ? area.height - 40 : 8) : StyleKeyword.Auto;
             hud.style.bottom = portrait ? StyleKeyword.Auto : 12;
             hud.style.width = portrait ? Mathf.Min(138, world.width - 220) : 154;
             if (portraitStatsScroll != null)
@@ -201,7 +241,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (portrait)
             {
                 abilityBar.style.left = area.width - 204;
-                abilityBar.style.top = 8;
+                abilityBar.style.top = ToolkitResponsiveLayout.FocusView ? area.height - 40 : 8;
             }
             if (portraitRun == portrait) return;
             portraitRun = portrait;
@@ -353,7 +393,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void RunEnded(bool died) { elapsedAtEnd = tracker ? tracker.LastRunDuration : 0; if (died) HideDetails(); }
         private void ResourceAdded(Resource resource, double amount, bool bonus)
         { if (!tracker || !tracker.RunInProgress || !resource || resource.DisableAlterEcho || bonus || amount <= 0) return; runResources.TryGetValue(resource, out var current); runResources[resource] = current + amount; portraitResourcesDirty = true; }
-        public void ShowBreakdown() { HideDetails(); detail.Q(className: "breakdown-rate").style.display=DisplayStyle.Flex; showingBreakdown = true; detailTitle.text = ToolkitLocalization.Text("run.breakdown-title", "Run Breakdown"); SetVisible(overlay, true); RefreshBreakdown(); }
+        public void ShowBreakdown() { ToolkitResponsiveLayout.SetFocusView(false); HideDetails(); detail.Q(className: "breakdown-rate").style.display=DisplayStyle.Flex; showingBreakdown = true; detailTitle.text = ToolkitLocalization.Text("run.breakdown-title", "Run Breakdown"); SetVisible(overlay, true); RefreshBreakdown(); }
         private void RefreshBreakdown()
         {
             double elapsed = tracker && tracker.RunInProgress ? Time.time - runStartedAt : elapsedAtEnd; double seconds = Math.Max(.0001, elapsed);
@@ -372,6 +412,8 @@ namespace TimelessEchoes.UI.Toolkit
         private static void SetVisible(VisualElement element, bool value) { if (element != null) element.style.display = value ? DisplayStyle.Flex : DisplayStyle.None; }
         private void OnDisable()
         {
+            ToolkitResponsiveLayout.SetFocusView(false);
+            focusControls?.RemoveFromHierarchy(); focusControls = null;
             portraitRun = null;
             ToolkitLocalization.Changed -= LocalizationChanged;
             Blindsided.EventHandler.OnRunStarted -= RunStarted;

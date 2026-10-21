@@ -95,8 +95,7 @@ namespace TimelessEchoes.Tasks
             if (cam == null || task.Target == null)
                 return true;
 
-            var v = cam.WorldToViewportPoint(task.Target.position);
-            return v.x >= 0f && v.x <= 1f && v.y >= 0f && v.y <= 1f;
+            return RunActivityArea.Contains(cam, task.Target.position);
         }
 
         public bool HasVisibleTasks()
