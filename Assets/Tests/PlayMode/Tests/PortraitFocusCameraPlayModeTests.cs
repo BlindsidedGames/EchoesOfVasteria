@@ -68,8 +68,12 @@ namespace Tests.PlayMode
                     for (var frame = 0; frame < 4; frame++) { yield return null; brain.ManualUpdate(); }
                     Assert.That(camera.aspect, expanded ? Is.LessThan(1f) : Is.GreaterThan(1.7f),
                         "The real output camera must switch between portrait crop and landscape viewport.");
-                    Assert.That(camera.transform.position.x, Is.EqualTo(baselineX).Within(.001f),
-                        "Changing only the display must not move the camera or its Echo activity region.");
+                    if (expanded)
+                        Assert.That(camera.WorldToViewportPoint(target.transform.position).x, Is.InRange(.15f, .334f),
+                            "The zoomed portrait view must frame the player in the first third even at rest.");
+                    RunActivityArea.TryGetBounds(camera, out var minimum, out var maximum);
+                    Assert.That(maximum.x - minimum.x, Is.EqualTo(32f).Within(.001f),
+                        "Reframing must preserve the full landscape-width Echo activity area.");
                     Assert.That(composer.Composition.ScreenPosition, Is.EqualTo(authored.ScreenPosition));
                     Assert.That(composer.Composition.DeadZone.Size, Is.EqualTo(authored.DeadZone.Size));
                     Assert.That(composer.Composition.HardLimits.Size, Is.EqualTo(authored.HardLimits.Size),
@@ -99,6 +103,9 @@ namespace Tests.PlayMode
                             var visible = camera.WorldToViewportPoint(target.transform.position);
                             Assert.That(visible.x, portrait ? Is.InRange(.15f, .85f) : Is.InRange(.04f, .96f),
                                 "Lookahead must retain the player on screen even at high speed.");
+                            if (mode == 1)
+                                Assert.That(visible.x, Is.LessThanOrEqualTo(.334f),
+                                    "The zoomed player must stay in the first third throughout movement.");
                             Assert.AreEqual(1f, composer.Lookahead.Time, "Do not rewrite authored landscape lookahead settings.");
                         }
                         Assert.Greater(target.transform.position.x - startX, speed * 5.9f, "The test must actually move the tracked player.");

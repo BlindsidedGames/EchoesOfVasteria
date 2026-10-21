@@ -84,7 +84,12 @@ namespace TimelessEchoes
                     // must not place the tracked player beyond the visible crop.
                     var margin = UI.Toolkit.ToolkitResponsiveLayout.IsPortrait ? .65f : .9f;
                     var maximumLead = state.Lens.OrthographicSize * state.Lens.Aspect * margin;
-                    pos.x = Mathf.Clamp(pos.x, vcam.Follow.position.x - maximumLead, vcam.Follow.position.x + maximumLead);
+                    // Lookahead predicts motion; framing independently keeps the
+                    // player in the first third of the zoomed forward view.
+                    var minimumLead = UI.Toolkit.ToolkitResponsiveLayout.FocusView
+                        ? state.Lens.OrthographicSize * state.Lens.Aspect / 3f
+                        : -maximumLead;
+                    pos.x = Mathf.Clamp(pos.x, vcam.Follow.position.x + minimumLead, vcam.Follow.position.x + maximumLead);
                 }
                 state.PositionCorrection += pos - state.GetFinalPosition();
             }
