@@ -15,6 +15,7 @@ namespace Tests.PlayMode
         public IEnumerator PortraitFocusPreservesComposerWorldDeadzoneAndAuthoredSettings()
         {
             var owner = new GameObject("Protected focus camera tracking");
+            var previousDeltaTime = CinemachineCore.UniformDeltaTimeOverride;
             try
             {
                 var manager = owner.AddComponent<GameManager>(); manager.enabled = false;
@@ -74,10 +75,40 @@ namespace Tests.PlayMode
                     Assert.That(composer.Composition.HardLimits.Size, Is.EqualTo(authored.HardLimits.Size),
                         "Runtime compensation must leave authored composition settings intact.");
                 }
+                composer.Lookahead.Enabled = true;
+                composer.Lookahead.Time = 1f;
+                composer.Lookahead.Smoothing = 30;
+                CinemachineCore.UniformDeltaTimeOverride = 1f / 60f;
+                foreach (var mode in new[] { 0, 1, 2 })
+                {
+                    var portrait = mode != 2;
+                    if (!portrait) UnityEditor.PlayModeWindow.SetCustomRenderingResolution(2556, 1179, "Landscape camera tracking");
+                    ToolkitResponsiveLayout.SetFocusView(mode == 1);
+                    for (var frame = 0; frame < 4; frame++) { yield return null; brain.ManualUpdate(); }
+                    foreach (var speed in new[] { 10f, 120f, 600f })
+                    {
+                        var startX = target.transform.position.x;
+                        for (var frame = 0; frame < 60; frame++)
+                        {
+                            target.transform.position += Vector3.right * speed / 60f;
+                            yield return null;
+                            brain.ManualUpdate();
+                            var visible = camera.WorldToViewportPoint(target.transform.position);
+                            Assert.That(visible.x, portrait ? Is.InRange(.15f, .85f) : Is.InRange(.04f, .96f),
+                                "Lookahead must retain the player on screen even at high speed.");
+                            Assert.AreEqual(1f, composer.Lookahead.Time, "Do not rewrite authored landscape lookahead settings.");
+                        }
+                        Assert.Greater(target.transform.position.x - startX, speed * .9f, "The test must actually move the tracked player.");
+                        if (speed >= 120)
+                            Assert.Greater(camera.transform.position.x, target.transform.position.x,
+                                "Portrait should retain forward lead rather than always centering the player.");
+                    }
+                }
             }
             finally
             {
                 ToolkitResponsiveLayout.SetFocusView(false);
+                CinemachineCore.UniformDeltaTimeOverride = previousDeltaTime;
                 Object.DestroyImmediate(owner);
             }
         }

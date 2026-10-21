@@ -95,7 +95,13 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (!Portrait(size)) return new Rect(0, 0, size.x, size.y);
             safe = ValidSafeArea(size, safe);
-            if (TownView || FocusView) return new Rect(0, 0, size.x, size.y);
+            if (TownView) return new Rect(0, 0, size.x, size.y);
+            if (FocusView)
+            {
+                // Keep the health/ability row on its own panel, above navigation.
+                var bottom = Mathf.Clamp(safe.yMin + 92f / Scale(size), 0, size.y - 1);
+                return new Rect(0, bottom, size.x, size.y - bottom);
+            }
             var height = safe.width * 9f / 16f;
             // The world can extend behind the Dynamic Island; only interactive UI
             // needs the top safe-area inset. Keep the run viewport at 16:9.
@@ -200,7 +206,7 @@ namespace TimelessEchoes.UI.Toolkit
             for (var i = roots.Count - 1; i >= 0; i--)
                 if (roots[i].panel == null) roots.RemoveAt(i); else roots[i].EnableInClassList("portrait", IsPortrait);
             Configure(dockSettings);
-            dock.style.display = IsPortrait && !TownView && !FocusView ? DisplayStyle.Flex : DisplayStyle.None;
+            dock.style.display = IsPortrait && !TownView ? DisplayStyle.Flex : DisplayStyle.None;
             var world = WorldPixels(new Vector2Int(Screen.width, Screen.height), Screen.safeArea);
             var top = (Screen.height - world.yMin) * Scale(new Vector2Int(Screen.width, Screen.height));
             dock.style.left = 0; dock.style.top = top; dock.style.width = Size.x; dock.style.height = Size.y - top;

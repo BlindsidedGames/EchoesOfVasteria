@@ -141,7 +141,8 @@ namespace Tests.PlayMode
                         var progress = navigationUi.Q("run-progress");
                         Assert.AreEqual(DisplayStyle.Flex, progress.resolvedStyle.display, "Run progress must remain visible.");
                         Assert.Less(progress.worldBound.yMax, ui.Q("run-stats-toggle").worldBound.yMin, "Progress and ability controls need separate rows.");
-                        Assert.That(camera.rect, Is.EqualTo(new Rect(0, 0, 1, 1)));
+                        Assert.Greater(camera.rect.yMin, 0, "Focus reserves the bottom panel instead of drawing behind it.");
+                        Assert.Less(ToolkitResponsiveLayout.WorldArea.yMax, ui.Q("run-stats-toggle").worldBound.yMin);
                         Assert.True(ToolkitResponsiveLayout.SafeScreenArea.Contains(toggle.worldBound.center));
                         ToolkitResponsiveLayout.ApplyFocusPresentation(menu);
                         Assert.False(field.enabledInHierarchy, "Hidden menu controls must not accept input.");
