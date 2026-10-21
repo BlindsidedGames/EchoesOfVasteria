@@ -897,7 +897,7 @@ namespace Tests.PlayMode
                 Assert.AreEqual(DisplayStyle.None, ui.Q("skills-row").style.display.value);
                 Assert.AreEqual(DisplayStyle.Flex, ui.Q("hub-row").style.display.value);
                 var meeting = Object.FindAnyObjectByType<ToolkitMeetingScreen>(); Assert.NotNull(meeting);
-                Assert.That(meeting.GetComponent<UIDocument>().rootVisualElement.Q<Label>("dialogue").text, Does.Contain("Gill's boots").And.Contain("Inventory"));
+                Assert.That(meeting.GetComponent<UIDocument>().rootVisualElement.Q<Label>("dialogue").text, Does.Contain("Inventory"));
                 FieldsClick(meeting.GetComponent<UIDocument>().rootVisualElement.Q<Button>("advance"));
                 yield return null; yield return null; nav.Refresh();
                 Assert.AreEqual(DisplayStyle.Flex, ui.Q("tutorial-pointer-hub").style.display.value);

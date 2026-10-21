@@ -9,6 +9,6 @@ namespace TimelessEchoes.Shop
         public static double Remaining(double seconds) => double.IsNaN(seconds) || double.IsInfinity(seconds) ? 0 : Math.Max(0, Math.Min(MaximumSeconds, seconds));
         public static bool CanClaim(double seconds) => Remaining(seconds) <= MaximumSeconds - ClaimSeconds;
         public static bool IntroComplete(Blindsided.SaveData.GameData data) => data?.General != null &&
-            (data.General.MapStatisticsTutorialStage >= 9 || data.CompletedNpcTasks?.Contains("OpeningTutorialComplete") == true);
+            (data.General.ReturningPlayerIntroductionComplete || data.General.MapStatisticsTutorialStage >= 9 || data.CompletedNpcTasks?.Contains("OpeningTutorialComplete") == true);
     }
 }

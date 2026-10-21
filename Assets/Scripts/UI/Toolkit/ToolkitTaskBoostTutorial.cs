@@ -23,6 +23,8 @@ namespace TimelessEchoes.UI.Toolkit
                     var task = TaskBoostGuidance.FindTask();
                     if (task && taskRows.TryGetValue(task, out var row))
                     {
+                        if (Tasks.TaskWeightService.IsToggleEnabled(task))
+                        { general.TaskBoostTutorialStage = 2; return; }
                         target = row.Toggle;
                         if (!boostScrolled && row.Root.layout.height > 0)
                         { body.Q<ScrollView>()?.ScrollTo(row.Root); boostScrolled = true; }

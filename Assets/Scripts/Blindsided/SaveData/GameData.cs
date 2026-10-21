@@ -22,7 +22,7 @@ namespace Blindsided.SaveData
             copy.AppliedMigrationIds = new HashSet<string>(AppliedMigrationIds);
             return copy;
         }
-        public const int CurrentSchemaVersion = 7;
+        public const int CurrentSchemaVersion = 8;
 
         public int SchemaVersion = CurrentSchemaVersion;
         public TimelessEchoes.Characters.CharacterProfile Character = TimelessEchoes.Characters.CharacterProfile.Legacy();
@@ -408,6 +408,8 @@ namespace Blindsided.SaveData
             public bool ReturnedFromRiver;
             public bool ReturnedFromFarmlands;
             public int InventoryTutorialStage;
+            public bool ReturningPlayerIntroductionComplete;
+            public bool ReturningPlayerWelcomeSeen;
             public bool RunSummaryIntroductionSeen;
             public int ForgeFirstLessonStage;
             public GearItemRecord ForgeFirstLessonItem;

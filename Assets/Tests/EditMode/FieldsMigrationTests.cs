@@ -37,7 +37,7 @@ namespace Tests.EditMode
             Assert.IsTrue(result.Succeeded, result.Error);
             Assert.AreNotSame(source, result.Data);
             var farm = result.Data.Farm;
-            Assert.AreEqual(7, result.Data.SchemaVersion);
+            Assert.AreEqual(GameData.CurrentSchemaVersion, result.Data.SchemaVersion);
             Assert.AreEqual(1, farm.ProductionRevision);
             Assert.AreEqual(1, farm.TwinsLevel);
             Assert.AreEqual(0, farm.TwinsXp);
@@ -79,7 +79,7 @@ namespace Tests.EditMode
             var repeated = SaveMigrationRunner.TryMigrate(loaded, "9999.0.0");
             Assert.IsTrue(repeated.Succeeded, repeated.Error);
             Assert.IsFalse(repeated.Changed);
-            Assert.AreEqual(7, repeated.Data.SchemaVersion);
+            Assert.AreEqual(GameData.CurrentSchemaVersion, repeated.Data.SchemaVersion);
             Assert.AreEqual(72, repeated.Data.SkillData["Farming"].Level);
             Assert.AreEqual(8192.125f, repeated.Data.SkillData["Farming"].CurrentXP);
             Assert.AreEqual(19.25, repeated.Data.Resources["Radish"].Amount);
@@ -115,7 +115,7 @@ namespace Tests.EditMode
             var repeated = SaveMigrationRunner.TryMigrate(loaded, "9999.0.0");
             Assert.IsTrue(repeated.Succeeded, repeated.Error);
             Assert.IsFalse(repeated.Changed);
-            Assert.AreEqual(7, repeated.Data.SchemaVersion);
+            Assert.AreEqual(GameData.CurrentSchemaVersion, repeated.Data.SchemaVersion);
             Assert.AreEqual(60, repeated.Data.Farm.TwinsLevel);
             Assert.AreEqual(17, repeated.Data.Farm.TwinsXp);
             Assert.AreEqual(4, repeated.Data.Farm.GardenCapacity);
