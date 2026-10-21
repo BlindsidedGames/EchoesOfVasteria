@@ -1046,8 +1046,8 @@
 .gameplay .summary-sheet .breakdown-title {position:relative;left:0;width:auto;margin:0;padding:0;font-size:13px;-unity-text-align:middle-left;}
 .gameplay .summary-overview {flex-shrink:0;}
 .gameplay .summary-subtitle {font-size:7px;margin-bottom:10px;}
-.gameplay .summary-facts {margin-bottom:10px;flex-wrap:wrap;}
-.gameplay .summary-fact {width:25%;padding:6px 8px;background-color:var(--field);border-left-width:.5px;border-left-color:var(--line);}
+.gameplay .summary-facts {margin-bottom:10px;flex-wrap:nowrap;}
+.gameplay .summary-fact {width:auto;min-width:0;flex-basis:0;flex-grow:1;padding:6px 8px;background-color:var(--field);border-left-width:.5px;border-left-color:var(--line);}
 .gameplay .summary-fact-label {font-size:6.5px;margin-bottom:2px;white-space:nowrap;}
 .gameplay .summary-fact-value {font-size:12px;}
 .gameplay .summary-distance {align-items:center;min-height:24px;padding:4px 0;margin-bottom:10px;border-bottom-width:.5px;border-bottom-color:var(--line);}
@@ -1064,7 +1064,8 @@
 .gameplay .summary-resource-total {font-size:9px;min-width:28px;margin-left:8px;-unity-text-align:middle-right;}
 .gameplay .summary-resource-bonus {font-size:6px;color:var(--accent);white-space:normal;}
 .gameplay .summary-empty {font-size:8px;padding:14px 0;}
-.gameplay .summary-narrow .summary-fact {width:50%;}
+.gameplay .summary-narrow .summary-facts {flex-wrap:wrap;}
+.gameplay .summary-narrow .summary-fact {width:50%;flex-basis:auto;flex-grow:0;}
 .gameplay .summary-narrow .summary-resource {width:100%;}
 .gameplay .summary-narrow .summary-distance {flex-wrap:wrap;}
 .gameplay .summary-narrow .summary-distance-label {width:100%;margin-bottom:3px;}
