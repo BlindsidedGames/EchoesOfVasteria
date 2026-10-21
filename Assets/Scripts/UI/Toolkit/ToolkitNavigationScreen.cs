@@ -44,9 +44,10 @@ namespace TimelessEchoes.UI.Toolkit
         private Vector3 previousHeroPosition;
         private bool progressHeroFacingLeft;
         private float progressReapStarted = -1;
-        private Label progressText;
+        private Label progressText, progressDistance;
         private RunProgressPresentation lastProgress;
         private bool hasProgress;
+        private bool lastProgressPortrait;
         private Group openGroup;
         private ToolkitRunScreen runScreen;
         private Button menuAnchor;
@@ -207,6 +208,10 @@ namespace TimelessEchoes.UI.Toolkit
             progressText = new Label { pickingMode = PickingMode.Ignore, enableRichText = true };
             progressText.AddToClassList("eov-navigation-progress-text"); progressText.style.color = definition.progressTextColor;
             progressRoot.Add(progressText); context.Add(progressRoot);
+            progressDistance = new Label { name = "run-progress-distance", pickingMode = PickingMode.Ignore, enableRichText = true };
+            progressDistance.AddToClassList("eov-navigation-progress-distance");
+            progressDistance.style.color = definition.progressTextColor;
+            progressRoot.Add(progressDistance);
             autoPinGroup = new VisualElement { name = "auto-pin", pickingMode = PickingMode.Ignore };
             autoPinGroup.AddToClassList("eov-navigation-auto-pin");
             
@@ -253,6 +258,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void ToggleMenu(Group group, Button anchor)
         {
+            ToolkitResponsiveLayout.SetFocusView(false);
             if (openGroup == group || ToolkitResponsiveLayout.IsPortrait &&
                 (group == Group.Hub && HubWindowOpen() || group == Group.Townsfolk && TownWindowOpen()))
             {
@@ -276,6 +282,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void Update()
         {
             if (root == null) return;
+            if (ToolkitResponsiveLayout.FocusView && HasOpenMenu) CloseMenu();
             if (!windows) windows = TownWindowManager.Instance;
             if (windows && !hooked)
             {
@@ -397,9 +404,17 @@ namespace TimelessEchoes.UI.Toolkit
             if (inRun && hero != null)
             {
                 var current = RunProgressPresentation.Read(hero.transform.position.x);
-                if (!hasProgress || !current.SameText(lastProgress)) progressText.text = "<b>" + current.FormatText() + "</b>";
+                if (!hasProgress || !current.SameText(lastProgress) || lastProgressPortrait != ToolkitResponsiveLayout.IsPortrait)
+                {
+                    var text = current.FormatText();
+                    var split = ToolkitResponsiveLayout.IsPortrait && current.killMode ? text.LastIndexOf('\n') : -1;
+                    progressText.text = "<b>" + (split >= 0 ? text.Substring(0, split) : text) + "</b>";
+                    progressDistance.text = split >= 0 ? "<b>" + text.Substring(split + 1) + "</b>" : "";
+                    SetVisible(progressDistance, split >= 0);
+                    lastProgressPortrait = ToolkitResponsiveLayout.IsPortrait;
+                }
                 progressFill.style.width = Length.Percent(current.normalized * 100);
-                progressHero.style.left = -16.5f + current.normalized * (ToolkitResponsiveLayout.IsPortrait ? Mathf.Max(103, ToolkitWindowLayout.SafeArea.width - 60) : 103);
+                progressHero.style.left = -16.5f + current.normalized * (ToolkitResponsiveLayout.IsPortrait ? Mathf.Max(103, ToolkitWindowLayout.SafeArea.width - 20) : 103);
                 lastProgress = current; hasProgress = true;
             }
             ToolkitGameplay.SetToggle(autoPin,AutoPinActiveQuests);
@@ -592,7 +607,6 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void ApplyLayout()
         {
-            ToolkitResponsiveLayout.ApplyFocusPresentation(root);
             var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height), Screen.safeArea,
                 UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);
             root.style.left = area.x + (ToolkitResponsiveLayout.IsPortrait ? 0 : 8);
@@ -606,10 +620,10 @@ namespace TimelessEchoes.UI.Toolkit
             var context = root.Q("navigation-context");
             context.style.display = ToolkitResponsiveLayout.IsPortrait && !(GameManager.Instance && GameManager.Instance.CurrentMap) ? DisplayStyle.None : DisplayStyle.Flex;
             context.style.top = ToolkitResponsiveLayout.IsPortrait ?
-                ToolkitResponsiveLayout.WorldArea.yMax - root.resolvedStyle.top - 39 : StyleKeyword.Null;
-            progressRoot.style.width = ToolkitResponsiveLayout.IsPortrait ? area.width - 56 : StyleKeyword.Null;
-            progressRoot.Q(className: "eov-navigation-progress-track").style.width = ToolkitResponsiveLayout.IsPortrait ? area.width - 60 : StyleKeyword.Null;
-            progressReaper.style.left = ToolkitResponsiveLayout.IsPortrait ? area.width - 80 : StyleKeyword.Null;
+                (ToolkitResponsiveLayout.FocusView ? ToolkitResponsiveLayout.SafeScreenArea.yMax - 92 : ToolkitResponsiveLayout.WorldArea.yMax) - root.resolvedStyle.top - 39 : StyleKeyword.Null;
+            progressRoot.style.width = ToolkitResponsiveLayout.IsPortrait ? area.width - 16 : StyleKeyword.Null;
+            progressRoot.Q(className: "eov-navigation-progress-track").style.width = ToolkitResponsiveLayout.IsPortrait ? area.width - 20 : StyleKeyword.Null;
+            progressReaper.style.left = ToolkitResponsiveLayout.IsPortrait ? area.width - 40 : StyleKeyword.Null;
             if (ToolkitResponsiveLayout.IsPortrait)
                 foreach (var entry in navigationEntries) buttons[entry].style.minWidth = entry.group == Group.Toolbar ? StyleKeyword.Auto : entry.width;
             else

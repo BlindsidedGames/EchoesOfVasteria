@@ -1,4 +1,7 @@
 /* Responsive portrait dock: retain all actions and reflow information vertically. */
+.gameplay .run-focus-toggle {background-color:transparent;background-image:none;border-width:0;}
+.gameplay .run-focus-toggle:hover {background-color:rgba(39,33,33,0.3);}
+.eov-navigation-progress-distance {display:none;position:absolute;left:0;top:-18px;font-size:9px;white-space:nowrap;}
 .focus-collapsible { transition-property: translate; transition-duration: 0.18s; transition-timing-function: ease-in-out; }
 .focus-collapsible.focus-suspended, .gameplay.focus-collapsible.focus-suspended { translate: 0 1000px; }
 .gameplay.portrait .button {min-height:28px;}

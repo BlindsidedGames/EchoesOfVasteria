@@ -7,6 +7,7 @@ namespace TimelessEchoes.UI.Toolkit
         public Sprite panel, portrait, portraitFrame, portraitInset, detailFrame, tooltipFrame, healthTrack, healthFill;
         public Sprite dadJokeBubble;
         public Sprite tutorialHand;
+        public Sprite fullscreenIcon;
         public Font dadJokeFont;
         public ToolkitBuffsDefinition buffs;
     }

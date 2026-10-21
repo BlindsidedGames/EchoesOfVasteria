@@ -95,10 +95,11 @@ namespace TimelessEchoes.UI.Toolkit
             }, theme.button);
             focusToggle.style.position = Position.Absolute;
             focusToggle.style.width = focusToggle.style.height = 32;
-            focusToggle.style.paddingLeft = focusToggle.style.paddingRight = 8;
-            focusToggle.style.paddingTop = focusToggle.style.paddingBottom = 8;
+            focusToggle.AddToClassList("run-focus-toggle");
+            focusToggle.style.paddingLeft = focusToggle.style.paddingRight = 3;
+            focusToggle.style.paddingTop = focusToggle.style.paddingBottom = 3;
             focusControls.Add(focusToggle);
-            focusArrow = ToolkitGameplay.Icon(focusToggle, theme.expand, 16);
+            focusArrow = ToolkitGameplay.Icon(focusToggle, definition.fullscreenIcon, 26);
             ToolkitLocalization.Changed += LocalizationChanged;
             Blindsided.EventHandler.OnRunStarted += RunStarted;
             AttachServices(); Refresh();
@@ -212,8 +213,7 @@ namespace TimelessEchoes.UI.Toolkit
             var world = ToolkitResponsiveLayout.WorldArea;
             var safe = ToolkitResponsiveLayout.SafeScreenArea;
             focusToggle.style.left = Mathf.Min(world.xMax, safe.xMax) - 40;
-            focusToggle.style.top = focus ? safe.yMax - 84 : Mathf.Max(safe.y, world.yMax - 40);
-            focusArrow.style.rotate = new Rotate(Angle.Degrees(focus ? 90 : 270));
+            focusToggle.style.top = focus ? safe.yMax - 178 : Mathf.Max(safe.y, world.yMax - 78);
             if (focus)
             {
                 SetVisible(portraitDashboard, false);
@@ -229,7 +229,7 @@ namespace TimelessEchoes.UI.Toolkit
             var health = hud.Q("run-health-strip");
             var world = ToolkitResponsiveLayout.WorldArea;
             hud.style.left = portrait ? 8 : 12;
-            hud.style.top = portrait ? (ToolkitResponsiveLayout.FocusView ? area.height - 40 : 8) : StyleKeyword.Auto;
+            hud.style.top = portrait ? (ToolkitResponsiveLayout.FocusView ? area.height - 84 : 8) : StyleKeyword.Auto;
             hud.style.bottom = portrait ? StyleKeyword.Auto : 12;
             hud.style.width = portrait ? Mathf.Min(138, world.width - 220) : 154;
             if (portraitStatsScroll != null)
@@ -241,7 +241,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (portrait)
             {
                 abilityBar.style.left = area.width - 204;
-                abilityBar.style.top = ToolkitResponsiveLayout.FocusView ? area.height - 40 : 8;
+                abilityBar.style.top = ToolkitResponsiveLayout.FocusView ? area.height - 84 : 8;
             }
             if (portraitRun == portrait) return;
             portraitRun = portrait;

@@ -94,6 +94,9 @@ namespace Tests.PlayMode
                 var destination = new GameObject("Offscreen task"); destination.transform.SetParent(owner.transform);
                 var task = new FocusTask { Target = destination.transform }; controller.tasks.Add(task);
                 view = CreateGuidanceRunView();
+                var navigation = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Navigation.prefab"));
+                navigation.transform.SetParent(owner.transform);
+                var navigationUi = navigation.GetComponent<UIDocument>().rootVisualElement;
                 var ui = view.GetComponent<UIDocument>().rootVisualElement;
                 var toggle = ui.Q<Button>("run-focus-toggle");
                 Assert.NotNull(toggle);
@@ -134,6 +137,10 @@ namespace Tests.PlayMode
                         }
                         for (var frame = 0; frame < 5; frame++) yield return null;
                         Assert.True(ToolkitResponsiveLayout.FocusView);
+                        Assert.True(navigationUi.Q("navigation-buttons").enabledInHierarchy, "Bottom navigation must stay usable in focus view.");
+                        var progress = navigationUi.Q("run-progress");
+                        Assert.AreEqual(DisplayStyle.Flex, progress.resolvedStyle.display, "Run progress must remain visible.");
+                        Assert.Less(progress.worldBound.yMax, ui.Q("run-stats-toggle").worldBound.yMin, "Progress and ability controls need separate rows.");
                         Assert.That(camera.rect, Is.EqualTo(new Rect(0, 0, 1, 1)));
                         Assert.True(ToolkitResponsiveLayout.SafeScreenArea.Contains(toggle.worldBound.center));
                         ToolkitResponsiveLayout.ApplyFocusPresentation(menu);
