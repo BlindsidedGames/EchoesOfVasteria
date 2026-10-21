@@ -76,7 +76,6 @@ namespace TimelessEchoes
                 var pos = state.GetFinalPosition();
                 pos.y = yLevel;
                 float halfWidth = state.Lens.OrthographicSize * RunActivityArea.Aspect(state.Lens.Aspect);
-                pos.x = Mathf.Max(minX + halfWidth, pos.x);
                 if (Application.isPlaying && !UI.Toolkit.ToolkitResponsiveLayout.TownView &&
                     state.Lens.Orthographic && vcam.Follow != null)
                 {
@@ -91,6 +90,9 @@ namespace TimelessEchoes
                         : -maximumLead;
                     pos.x = Mathf.Clamp(pos.x, vcam.Follow.position.x + minimumLead, vcam.Follow.position.x + maximumLead);
                 }
+                // The generated-map boundary is authoritative: player framing
+                // may yield near the start, but must never reveal ungenerated space.
+                pos.x = Mathf.Max(minX + halfWidth, pos.x);
                 state.PositionCorrection += pos - state.GetFinalPosition();
             }
         }

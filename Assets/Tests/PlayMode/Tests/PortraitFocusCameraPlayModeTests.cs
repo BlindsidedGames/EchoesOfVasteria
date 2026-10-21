@@ -89,6 +89,21 @@ namespace Tests.PlayMode
                     if (!portrait) UnityEditor.PlayModeWindow.SetCustomRenderingResolution(2556, 1179, "Landscape camera tracking");
                     ToolkitResponsiveLayout.SetFocusView(mode == 1);
                     for (var frame = 0; frame < 4; frame++) { yield return null; brain.ManualUpdate(); }
+                    // Framing must never override the generated world's left edge.
+                    foreach (var boundaryX in new[] { 0f, 2f, 15f })
+                    {
+                        target.transform.position = new Vector3(boundaryX, 9, 0);
+                        virtualCamera.PreviousStateIsValid = false;
+                        for (var frame = 0; frame < 4; frame++) { yield return null; brain.ManualUpdate(); }
+                        Assert.That(camera.ViewportToWorldPoint(new Vector3(0, .5f, 10)).x,
+                            Is.GreaterThanOrEqualTo(-.001f), "The rendered view must not expose tiles left of the map.");
+                        RunActivityArea.TryGetBounds(camera, out var mapMinimum, out _);
+                        Assert.That(mapMinimum.x, Is.GreaterThanOrEqualTo(-.001f),
+                            "The full-width activity area must also respect the generated map boundary.");
+                    }
+                    target.transform.position = new Vector3(60, 9, 0);
+                    virtualCamera.PreviousStateIsValid = false;
+                    for (var frame = 0; frame < 4; frame++) { yield return null; brain.ManualUpdate(); }
                     foreach (var speed in new[] { 10f, 120f, 600f })
                     {
                         virtualCamera.PreviousStateIsValid = false;
