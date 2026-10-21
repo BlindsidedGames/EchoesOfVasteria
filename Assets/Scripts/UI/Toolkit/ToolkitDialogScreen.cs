@@ -7,7 +7,7 @@ using static Blindsided.SaveData.StaticReferences;
 
 namespace TimelessEchoes.UI.Toolkit
 {
-    /// <summary>Native two-action dialog. The caller retains ownership of all operations.</summary>
+    /// <summary>Native dialog with footer actions and optional choices. The caller owns all operations.</summary>
     [RequireComponent(typeof(UIDocument))]
     public sealed class ToolkitDialogScreen : MonoBehaviour
     {
@@ -24,10 +24,16 @@ namespace TimelessEchoes.UI.Toolkit
         private Action primaryAction, secondaryAction;
         private bool interactable;
         private readonly List<ToolkitTextBinding> bindings = new();
+        private readonly List<Button> choiceButtons = new();
+        public sealed class Choice
+        {
+            public string Text;
+            public Action Select;
+        }
         public bool IsVisible => root != null;
 
         public void Show(string title, string body, string primaryText, string secondaryText,
-            Action onPrimary, Action onSecondary, bool enabled = true)
+            Action onPrimary, Action onSecondary, bool enabled = true, IEnumerable<Choice> choices = null)
         {
             if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
             ClearBindings();
@@ -38,6 +44,21 @@ namespace TimelessEchoes.UI.Toolkit
             secondary.text = secondaryText;
             primaryAction = onPrimary;
             secondaryAction = onSecondary;
+            foreach (var old in choiceButtons) old.RemoveFromHierarchy();
+            choiceButtons.Clear();
+            if (choices != null)
+                foreach (var choice in choices)
+                {
+                    var button = new Button(() => { if (interactable) choice.Select?.Invoke(); }) { text = choice.Text, enableRichText = false };
+                    button.AddToClassList("button");
+                    button.style.whiteSpace = WhiteSpace.Normal;
+                    button.style.height = StyleKeyword.Auto;
+                    button.style.minHeight = 52;
+                    button.style.marginTop = 8;
+                    button.style.paddingTop = button.style.paddingBottom = 10;
+                    root.Q<ScrollView>("dialog-scroll").Add(button);
+                    choiceButtons.Add(button);
+                }
             SetInteractable(enabled);
             ApplyLayout();
         }
@@ -105,6 +126,7 @@ namespace TimelessEchoes.UI.Toolkit
             interactable = value;
             primary?.SetEnabled(value);
             secondary?.SetEnabled(value);
+            foreach (var button in choiceButtons) button.SetEnabled(value);
         }
 
         private void Update() { if (root != null) ApplyLayout(); }
@@ -126,6 +148,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (primary != null) primary.clicked -= InvokePrimary;
             if (secondary != null) secondary.clicked -= InvokeSecondary;
             primaryAction = secondaryAction = null;
+            choiceButtons.Clear();
             root?.RemoveFromHierarchy();
             root = null;
             primary = secondary = null;

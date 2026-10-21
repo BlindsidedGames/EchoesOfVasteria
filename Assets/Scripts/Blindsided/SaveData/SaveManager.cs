@@ -109,7 +109,7 @@ namespace Blindsided.SaveData
     /// GameData capture occurs synchronously so callers never serialize a live mutable graph on a worker.
     /// Checksum, durable disk I/O, verification, publication, and retention run off the calling thread.
     /// </summary>
-    public sealed class SaveManager
+    public sealed partial class SaveManager
     {
         private const int RetainedGenerationCount = 5;
         private const int MaxGenerationDeletesPerCommit = 2;
@@ -408,8 +408,11 @@ namespace Blindsided.SaveData
             }
         }
 
-        private SaveWriteResult WriteSnapshot(SaveWriteRequest request)
+        private SaveWriteResult WriteSnapshot(SaveWriteRequest request, RecoveryCandidate recovery = null)
         {
+            if (recovery != null && !RecoveryViewMatches(recovery))
+                return CreateReloadRequiredResult(request, SaveLoadStatus.Conflict,
+                    "The available saves changed. Refresh the recovery choices before choosing again.");
             if (!IsCurrentAuthorityEpoch(request.SlotName, request.AuthorityEpoch))
             {
                 return new SaveWriteResult(
@@ -618,6 +621,10 @@ namespace Blindsided.SaveData
             // The destination is unique, so a same-directory rename publishes the complete generation
             // without replacing or deleting any older recoverable save.
             File.Move(tempPath, finalPath);
+
+            if (recovery != null && !RecoveryViewMatches(recovery, finalPath))
+                return CreateReloadRequiredResult(request, SaveLoadStatus.Conflict,
+                    "The available saves changed during recovery. No existing branch was replaced.", finalPath, generation);
 
             SlotStateRecord committedState = stateRead.Record;
             if (publishActiveState)
