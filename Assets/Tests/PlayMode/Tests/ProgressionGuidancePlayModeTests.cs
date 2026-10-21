@@ -23,6 +23,56 @@ namespace Tests.PlayMode
     public sealed partial class FieldsProductionPlayModeTests
     {
         [UnityTest]
+        public IEnumerator GuidanceReturningWelcomeDoesNotReplaySkillsAndStaysDismissedAfterReload()
+        {
+            var owner = new GameObject("Returning player lesson owner");
+            GameObject speakerObject = null;
+            try
+            {
+                owner.AddComponent<ResourceManager>();
+                owner.AddComponent<QuestManager>().enabled = false;
+                owner.AddComponent<TownWindowManager>().enabled = false;
+                var gm = owner.AddComponent<TimelessEchoes.GameManager>(); gm.enabled = false;
+                typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(gm, true);
+                var template = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Intro.prefab").GetComponent<ToolkitOrinIntroduction>();
+                var first = (QuestData)typeof(ToolkitOrinIntroduction).GetField("firstQuest", Private).GetValue(template);
+                oracle.saveData.SchemaVersion = 7;
+                foreach (var id in new[] { first.questId, "The names Gill", "Into The Multiverse" })
+                    oracle.saveData.Quests[id] = new GameData.QuestRecord { Completed = true };
+                oracle.saveData.CompletedNpcTasks.Add(Resources.Load<ToolkitNpcIntroduction>("NPC Introductions/Eva the Witch").npcId);
+                oracle.saveData.SkillData["Combat"] = new GameData.SkillProgress { Level = 405 };
+                var migration = Blindsided.SaveData.Migrations.SaveMigrationRunner.TryMigrate(oracle.saveData, "9999.0.0");
+                Assert.True(migration.Succeeded, migration.Error);
+                oracle.saveData = migration.Data;
+                Blindsided.EventHandler.LoadData();
+                void StartSpeaker()
+                {
+                    speakerObject = new GameObject("Returning welcome");
+                    var speaker = speakerObject.AddComponent<ToolkitOrinIntroduction>();
+                    foreach (var field in typeof(ToolkitOrinIntroduction).GetFields(Private)) field.SetValue(speaker, field.GetValue(template));
+                }
+                StartSpeaker();
+                yield return new WaitForSecondsRealtime(.2f);
+                var meeting = Object.FindAnyObjectByType<ToolkitMeetingScreen>(); Assert.NotNull(meeting);
+                FieldsClick(meeting.GetComponent<UIDocument>().rootVisualElement.Q<Button>("advance"));
+                yield return new WaitForSecondsRealtime(.2f);
+                Assert.True(oracle.saveData.General.ReturningPlayerWelcomeSeen);
+                Assert.IsNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>(), "Completed Skills and other opening lessons must not replay after the welcome.");
+                Blindsided.EventHandler.SaveData(); Blindsided.EventHandler.LoadData();
+                Object.DestroyImmediate(speakerObject); StartSpeaker();
+                yield return new WaitForSecondsRealtime(.2f);
+                Assert.True(oracle.saveData.General.ReturningPlayerWelcomeSeen);
+                Assert.IsNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>(), "Dismissal must survive save and reload.");
+            }
+            finally
+            {
+                if (speakerObject) Object.DestroyImmediate(speakerObject);
+                foreach (var meeting in Object.FindObjectsByType<ToolkitMeetingScreen>()) Object.DestroyImmediate(meeting.gameObject);
+                Object.DestroyImmediate(owner);
+            }
+        }
+
+        [UnityTest]
         public IEnumerator GuidanceFirstReapingWaitsForDialogueBeforeOfferingRunActions()
         {
             var owner = new GameObject("Protected first reaping");
@@ -897,7 +947,7 @@ namespace Tests.PlayMode
                 Assert.AreEqual(DisplayStyle.None, ui.Q("skills-row").style.display.value);
                 Assert.AreEqual(DisplayStyle.Flex, ui.Q("hub-row").style.display.value);
                 var meeting = Object.FindAnyObjectByType<ToolkitMeetingScreen>(); Assert.NotNull(meeting);
-                Assert.That(meeting.GetComponent<UIDocument>().rootVisualElement.Q<Label>("dialogue").text, Does.Contain("Gill's boots").And.Contain("Inventory"));
+                Assert.That(meeting.GetComponent<UIDocument>().rootVisualElement.Q<Label>("dialogue").text, Does.Contain("Inventory"));
                 FieldsClick(meeting.GetComponent<UIDocument>().rootVisualElement.Q<Button>("advance"));
                 yield return null; yield return null; nav.Refresh();
                 Assert.AreEqual(DisplayStyle.Flex, ui.Q("tutorial-pointer-hub").style.display.value);

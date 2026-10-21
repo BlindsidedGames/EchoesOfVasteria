@@ -408,6 +408,8 @@ namespace Blindsided.SaveData
             public bool ReturnedFromRiver;
             public bool ReturnedFromFarmlands;
             public int InventoryTutorialStage;
+            public bool ReturningPlayerIntroductionComplete;
+            public bool ReturningPlayerWelcomeSeen;
             public bool RunSummaryIntroductionSeen;
             public int ForgeFirstLessonStage;
             public GearItemRecord ForgeFirstLessonItem;

@@ -19,7 +19,7 @@ namespace TimelessEchoes.UI.Toolkit
                 .Where(t => t && t.associatedSkill && TaskWeightService.GetEffectiveWeight(t, distance) > 0)
                 .GroupBy(t => t.associatedSkill).Where(g => g.Count() > 1)
                 .SelectMany(g => g).Where(t => TaskWeightService.GetTotalCompletions(t) > 0)
-                .OrderBy(t => t.taskID).FirstOrDefault();
+                .OrderByDescending(t => TaskWeightService.IsToggleEnabled(t)).ThenBy(t => t.taskID).FirstOrDefault();
         }
     }
 }

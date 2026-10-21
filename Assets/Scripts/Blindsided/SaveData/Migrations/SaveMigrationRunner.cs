@@ -250,6 +250,7 @@ namespace Blindsided.SaveData.Migrations
             Register(new Migration_SchemaV5AlterEchoRetirement());
             Register(new Migration_SchemaV6Fields());
             Register(new Migration_SchemaV7SeedResources());
+            Register(new Migration_ReturningPlayerGuidance());
         }
     }
 
