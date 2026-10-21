@@ -102,8 +102,28 @@ namespace TimelessEchoes.UI.Toolkit
                 english ?? string.Empty, arguments ?? Array.Empty<object>()); }
             catch (FormatException) { return english ?? string.Empty; }
         }
-        public static string Name(UnityEngine.Object value, string category = "resource") =>
-            value ? Text(category + "." + value.name, value.name) : string.Empty;
+        public static string Name(UnityEngine.Object value, string category = "resource")
+        {
+            if (!value) return string.Empty;
+            if (value is TimelessEchoes.Tasks.TaskData task && (category == "resource" || category == "task"))
+                return Text("task." + value.name, task.taskName);
+            return Text(category + "." + value.name,
+                category == "resource" ? ResourceNameFallback(value.name) : value.name);
+        }
+
+        // Asset names are persistent save keys. Keep the renamed ores readable even
+        // before the localization tables finish loading, without renaming those keys.
+        internal static string ResourceNameFallback(string name)
+        {
+            var separator = name.IndexOf(' ');
+            var tier = separator < 0 ? name : name.Substring(0, separator);
+            var display = tier switch
+            {
+                "Eznorb" => "Bronze", "Nori" => "Iron", "Dlog" => "Gold",
+                "Erif" => "Fire", "Idle" => "Crimsonite", _ => tier
+            };
+            return display == tier ? name : display + (separator < 0 ? "" : name.Substring(separator));
+        }
 
         public static void Bind(TextElement element, string key, string english, params object[] arguments)
         {

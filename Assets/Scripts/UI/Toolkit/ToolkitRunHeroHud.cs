@@ -92,10 +92,11 @@ namespace TimelessEchoes.UI.Toolkit
             bar = new VisualElement(); bar.style.height = Length.Percent(100);
             bar.style.backgroundColor = (Color)new Color32(101, 185, 68, 255); track.Add(bar);
             heroStatsToggle = new Button(() => SetHeroStatsOpen(!heroStatsOpen)) { name = "run-stats-toggle" };
+            heroStatsToggle.AddToClassList("button");
             var toggle = heroStatsToggle;
             ToolkitLocalization.Bind(toggle, "run.stats", "Stats");
             toggle.RegisterCallback<ClickEvent>(_ => TimelessEchoes.Audio.AudioManager.Instance?.PlayUIButtonClick());
-            ToolkitLocalization.BindTooltip(toggle, "run.stats-tooltip", "Show or hide combat stats"); toggle.style.fontSize = 8; toggle.style.color = HeroForeground;
+            ToolkitLocalization.BindTooltip(toggle, "run.stats-tooltip", "Show or hide combat stats"); toggle.style.fontSize = 8;
             toggle.style.minWidth = 31; toggle.style.height = 18; toggle.style.marginLeft = toggle.style.marginRight = toggle.style.marginTop = toggle.style.marginBottom = 0;
             toggle.style.paddingLeft = toggle.style.paddingRight = toggle.style.paddingTop = toggle.style.paddingBottom = 0;
             HeroSurface(toggle); healthStrip.Add(toggle);

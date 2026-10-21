@@ -41,7 +41,7 @@ namespace TimelessEchoes.Characters
         [Serializable] public sealed class GearVisual { public string helmet, chest, legs, boots, tool; }
         public GearVisual[] gear = Array.Empty<GearVisual>();
         public Sprite[] skillToolIcons = Array.Empty<Sprite>(); // Brown, then metals; axe, pick, watering can, rod.
-        public Sprite[] skillSupportIcons = Array.Empty<Sprite>(); // Brown, then metals; looting crest, combat weapon.
+        public Sprite[] skillSupportIcons = Array.Empty<Sprite>(); // Brown, then metals; looting crystal, combat weapon.
         public Part[] parts = Array.Empty<Part>();
         public Pose[] poses = Array.Empty<Pose>();
         public SourceFrame[] sourceFrames = Array.Empty<SourceFrame>();

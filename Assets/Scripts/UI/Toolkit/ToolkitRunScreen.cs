@@ -251,8 +251,8 @@ namespace TimelessEchoes.UI.Toolkit
             health.style.borderLeftWidth = health.style.borderRightWidth = health.style.borderTopWidth = health.style.borderBottomWidth = portrait ? 0 : .5f;
             health.style.paddingLeft = portrait ? 0 : 5;
             health.style.paddingRight = portrait ? 0 : 3;
-            heroStatsToggle.style.backgroundColor = portrait ? Color.clear : (Color)new Color32(43, 36, 37, 255);
-            heroStatsToggle.style.borderLeftWidth = heroStatsToggle.style.borderRightWidth = heroStatsToggle.style.borderTopWidth = heroStatsToggle.style.borderBottomWidth = portrait ? 0 : .5f;
+            heroStatsToggle.style.backgroundColor = StyleKeyword.Null;
+            heroStatsToggle.style.borderLeftWidth = heroStatsToggle.style.borderRightWidth = heroStatsToggle.style.borderTopWidth = heroStatsToggle.style.borderBottomWidth = .5f;
             heroStatsPanel.EnableInClassList("portrait-stats-content", portrait);
             heroStatsPanel.style.position = portrait ? Position.Relative : Position.Absolute;
             heroStatsPanel.style.bottom = portrait ? StyleKeyword.Auto : Length.Percent(100);
@@ -263,7 +263,9 @@ namespace TimelessEchoes.UI.Toolkit
             heroHealthText.style.fontSize = portrait ? 9 : 8;
             heroStatsToggle.style.fontSize = portrait ? 9 : 8;
             heroStatsToggle.style.height = portrait ? 28 : 18;
-            heroStatsToggle.style.minWidth = portrait ? 34 : 31;
+            heroStatsToggle.style.minHeight = portrait ? 28 : 18;
+            heroStatsToggle.style.minWidth = portrait ? 38 : 31;
+            heroStatsToggle.style.flexShrink = 0;
             if (portrait)
             {
                 root.Add(abilityBar);

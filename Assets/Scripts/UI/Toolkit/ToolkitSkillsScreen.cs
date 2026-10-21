@@ -405,7 +405,7 @@ namespace TimelessEchoes.UI.Toolkit
 
                     row.Add(body); Text(body, unlocked ? ToolkitLocalization.Text("skills.task-unlocked", "{0} | <size=80%>Unlocked at level {1}</size>", (unlock.resource ? ToolkitLocalization.Name(unlock.resource) : ToolkitLocalization.Name(unlock.task)), unlock.requiredLevel) : ToolkitLocalization.Text("skills.task-locked", "??? | <size=80%>Unlocks at level {0}</size>", unlock.requiredLevel), 6);
 
-                    Text(body, unlocked && !string.IsNullOrEmpty(unlock.description) ? unlock.description : "", 5);
+                    Text(body, unlocked ? unlock.DisplayDescription : "", 5);
 
                 }
 

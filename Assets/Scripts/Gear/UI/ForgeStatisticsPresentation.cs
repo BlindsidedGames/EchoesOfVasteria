@@ -89,7 +89,7 @@ namespace TimelessEchoes.Gear.UI
 			sb.AppendLine(ToolkitLocalization.Text("forge.stats.items-entries-avg-item", "• Items: {0:N0}  • Entries: {1:N0}  • Avg/Item: {2:N2}", forge.SalvageItems, forge.SalvageEntries, SafeDiv(forge.SalvageEntries, forge.SalvageItems)));
 			AppendAll(sb, forge.SalvagesByRarity, formatKey: k => ToolkitLocalization.Text("forge.stats.rarity", "rarity {0}", TierName(k)));
 			AppendAll(sb, forge.SalvagesByCore, formatKey: k => ToolkitLocalization.Text("forge.stats.core", "core {0}", TierName(k)));
-			AppendAll(sb, forge.SalvageYieldPerResource?.ToDictionary(p => p.Key, p => p.Value.sum), formatKey: k => ToolkitLocalization.Text("forge.stats.gained", "gained {0}", ToolkitLocalization.Text("resource." + k, k)));
+			AppendAll(sb, forge.SalvageYieldPerResource?.ToDictionary(p => p.Key, p => p.Value.sum), formatKey: k => ToolkitLocalization.Text("forge.stats.gained", "gained {0}", ToolkitLocalization.Text("resource." + k, ToolkitLocalization.ResourceNameFallback(k))));
 
 			// Distributions
 			sb.AppendLine(SectionTitle("forge.stats.section-distributions", "Distributions", preserveSectionIds));
@@ -311,7 +311,7 @@ namespace TimelessEchoes.Gear.UI
 			}
 		}
 
-		private static string TierName(string key) => ToolkitLocalization.Text("rarity." + key + ".name", key);
+		private static string TierName(string key) => ToolkitLocalization.Text("rarity." + key + ".name", ToolkitLocalization.ResourceNameFallback(key));
 
 		private IEnumerable<string> OrderCoresByPreferred(IEnumerable<string> input)
 		{
