@@ -55,6 +55,7 @@ namespace Blindsided
         private TimelessEchoes.UI.Toolkit.ToolkitDialogScreen _nativeRecoveryView;
         private TMP_Text _localizedRecoveryTitle;
         private bool _recoveryActionInProgress;
+        private IReadOnlyList<SaveManager.RecoveryCandidate> _recoveryChoices;
         private const int MaxLoadAttempts = 3;
         private const float LoadRetryDelaySeconds = 0.35f;
         private const float FirstAutosaveDelaySeconds = 30f;
@@ -934,6 +935,7 @@ namespace Blindsided
 
         private void PrepareForSlotLoad()
         {
+            _recoveryChoices = null;
             loaded = false;
             _recoveryRequired = false;
             _recoveryStatus = SaveLoadStatus.Failed;
@@ -964,6 +966,59 @@ namespace Blindsided
             try { FeedbackForm.Submit("Save.RecoveryRequired", _recoveryDiagnostic); }
             catch { }
             ShowRecoveryUiAtLoadingBoundary();
+            if (status == SaveLoadStatus.Conflict) StartCoroutine(LoadRecoveryChoices());
+        }
+
+        private IEnumerator LoadRecoveryChoices()
+        {
+            var slot = CurrentSlot;
+            var task = SaveManager.Instance.GetRecoveryCandidatesAsync(GetSlotDirectoryName(slot));
+            while (!task.IsCompleted) yield return null;
+            if (!task.IsFaulted && !task.IsCanceled && _recoveryRequired &&
+                _recoveryStatus == SaveLoadStatus.Conflict && CurrentSlot == slot)
+            {
+                _recoveryChoices = task.Result;
+                ShowRecoveryUi();
+            }
+        }
+
+        private IEnumerable<ToolkitDialogScreen.Choice> RecoveryChoices()
+        {
+            if (_recoveryChoices == null) yield break;
+            foreach (var candidate in _recoveryChoices)
+            {
+                var hours = Math.Max(0, candidate.PlayTime / 3600);
+                yield return new ToolkitDialogScreen.Choice
+                {
+                    Text = ToolkitLocalization.Text("save.recovery.keep-choice",
+                        "Keep {0}\n{1} · {2:0.##}% complete · {3:0.0} hours played",
+                        candidate.CharacterName ?? "Adventurer", candidate.SavedAtUtc.ToLocalTime().ToString("g"),
+                        candidate.Completion, hours),
+                    Select = () => StartCoroutine(RecoverSavedProgress(candidate))
+                };
+            }
+        }
+
+        private IEnumerator RecoverSavedProgress(SaveManager.RecoveryCandidate choice)
+        {
+            if (_recoveryActionInProgress || _loadingSceneTransitionInProgress ||
+                _recoverySceneTransitionRoutine != null) yield break;
+            _recoveryActionInProgress = true;
+            ShowRecoveryUi();
+            var task = SaveManager.Instance.RecoverSnapshotAsync(choice);
+            while (!task.IsCompleted) yield return null;
+            _recoveryActionInProgress = false;
+            if (task.IsFaulted || task.IsCanceled || !task.Result.Succeeded)
+            {
+                _recoveryDiagnostic = task.IsFaulted ? task.Exception.GetBaseException().Message :
+                    task.IsCanceled ? "Recovery cancelled." : task.Result.Error;
+                _recoveryChoices = null;
+                ShowRecoveryUi();
+                StartCoroutine(LoadRecoveryChoices());
+                yield break;
+            }
+            // Reload the committed bytes through the normal migration and activation path.
+            yield return RetryRecoveryRoutine();
         }
 
         private void ShowRecoveryUiAtLoadingBoundary()
@@ -1013,7 +1068,8 @@ namespace Blindsided
                 _nativeRecoveryView.Show(titleText, bodyText, ToolkitLocalization.Text("save.recovery.retry", "Retry"),
                     canStartFresh ? ToolkitLocalization.Text("save.recovery.fresh", "Keep Old Files & Start Fresh") : ToolkitLocalization.Text("save.recovery.folder", "Open Save Folder"),
                     BeginRecoveryRetry, canStartFresh ? BeginFreshRecovery : OpenSaveFolder,
-                    !_recoveryActionInProgress);
+                    !_recoveryActionInProgress && !_loadingSceneTransitionInProgress &&
+                    _recoverySceneTransitionRoutine == null, RecoveryChoices());
                 return;
             }
 
@@ -1089,6 +1145,9 @@ namespace Blindsided
 
         private string GetRecoveryBody(bool canStartFresh, bool unsupportedNewer)
         {
+            if (_recoveryChoices?.Count > 0)
+                return ToolkitLocalization.Text("save.recovery.choose-body",
+                    "More than one version of File {0} was found. Choose the progress to keep. All original snapshots remain saved.", CurrentSlot + 1);
             if (unsupportedNewer)
                 return ToolkitLocalization.Text("save.recovery.newer-body", "File {0} was written by a newer game version. It has not been changed. Install the newer version, then Retry, or inspect the save folder. Starting fresh is disabled to protect that progress.\n\n{1}", CurrentSlot + 1, _recoveryDiagnostic);
             if (canStartFresh)

@@ -131,6 +131,111 @@ namespace Tests.EditMode
             setter.Invoke(null, new object[] { path });
         }
 
+        [TestCase(33.5f)]
+        [TestCase(83.25f)]
+        public void ExplicitBranchRecoveryKeepsChosenProgressAndAllOriginalSnapshots(float completion)
+        {
+            CreateConflict();
+            var manager = SaveManager.Instance;
+            Assert.AreEqual(SaveLoadStatus.Conflict, manager.LoadDetailedAsync("Save1").GetAwaiter().GetResult().Status);
+            var originals = Directory.GetFiles(Path.Combine(root, "Saves", "Save1"), "snapshot*")
+                .ToDictionary(p => p, File.ReadAllBytes);
+            var choices = manager.GetRecoveryCandidatesAsync("Save1").GetAwaiter().GetResult();
+            Assert.AreEqual(2, choices.Count);
+            var choice = choices.Single(c => c.Completion == completion);
+            var chosenBytes = originals.Single(p => p.Key.Contains(choice.WriteId.ToString("N"))).Value;
+            var originalPayload = chosenBytes.Skip(BitConverter.ToUInt16(chosenBytes, 6)).ToArray();
+            var result = manager.RecoverSnapshotAsync(choice).GetAwaiter().GetResult();
+            Assert.IsTrue(result.Succeeded, result.Error);
+            var committed = File.ReadAllBytes(result.Path);
+            CollectionAssert.AreEqual(originalPayload, committed.Skip(BitConverter.ToUInt16(committed, 6)).ToArray(),
+                "Recovery must retain legacy fields until the normal migration path runs.");
+            SetRoot(root);
+            var recovered = manager.LoadDetailedAsync("Save1").GetAwaiter().GetResult();
+            Assert.IsTrue(recovered.Succeeded, recovered.Diagnostic);
+            Assert.AreEqual(completion, recovered.Data.CompletionPercentage);
+            foreach (var original in originals) CollectionAssert.AreEqual(original.Value, File.ReadAllBytes(original.Key));
+            Assert.IsTrue(manager.SaveDetailedAsync(recovered.Data, "Save1").GetAwaiter().GetResult().Succeeded);
+            SetRoot(root);
+            Assert.AreEqual(completion, manager.LoadDetailedAsync("Save1").GetAwaiter().GetResult().Data.CompletionPercentage);
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void ChangedSnapshotRejectsStaleRecoveryChoiceWithoutPublishingAuthority(bool newCloudSnapshot)
+        {
+            CreateConflict();
+            var manager = SaveManager.Instance;
+            var choice = manager.GetRecoveryCandidatesAsync("Save1").GetAwaiter().GetResult().Single(c => c.Completion == 83.25f);
+            var states = Directory.GetFiles(Path.Combine(root, "Saves", "SlotState")).ToDictionary(p => p, File.ReadAllBytes);
+            var files = Directory.GetFiles(Path.Combine(root, "Saves", "Save1"), "snapshot.g*.bin");
+            var path = files.Single(p => p.Contains(choice.WriteId.ToString("N")));
+            if (newCloudSnapshot)
+            {
+                SetRoot(Path.Combine(root, "fork"));
+                Assert.IsTrue(manager.LoadDetailedAsync("Save1").GetAwaiter().GetResult().Succeeded);
+                Commit(50f);
+                var added = Directory.GetFiles(Path.Combine(root, "fork", "Saves", "Save1"), "snapshot.g*.bin")
+                    .OrderByDescending(Path.GetFileName, StringComparer.Ordinal).First();
+                File.Copy(added, Path.Combine(root, "Saves", "Save1", Path.GetFileName(added)));
+                SetRoot(root);
+            }
+            else
+            {
+                var bytes = File.ReadAllBytes(path); bytes[bytes.Length - 1] ^= 1; File.WriteAllBytes(path, bytes);
+            }
+            var result = manager.RecoverSnapshotAsync(choice).GetAwaiter().GetResult();
+            Assert.AreEqual(SaveWriteStatus.ReloadRequired, result.Status);
+            Assert.AreEqual(files.Length + (newCloudSnapshot ? 1 : 0),
+                Directory.GetFiles(Path.Combine(root, "Saves", "Save1"), "snapshot.g*.bin").Length);
+            foreach (var state in states) CollectionAssert.AreEqual(state.Value, File.ReadAllBytes(state.Key));
+        }
+
+        [Test]
+        public void SupersededFutureSchemaDoesNotHideActiveRecoveryChoices()
+        {
+            CreateConflict();
+            var otherRoot = Path.Combine(root, "superseded");
+            SetRoot(otherRoot);
+            Commit(99f);
+            var path = Directory.GetFiles(Path.Combine(otherRoot, "Saves", "Save1"), "snapshot.g*.bin").Single();
+            var bytes = File.ReadAllBytes(path);
+            Buffer.BlockCopy(BitConverter.GetBytes(GameData.CurrentSchemaVersion + 1), 0, bytes, 8, 4);
+            var headerSize = BitConverter.ToUInt16(bytes, 6);
+            using (var sha = SHA256.Create())
+                Buffer.BlockCopy(sha.ComputeHash(bytes, 0, headerSize - 32), 0, bytes, headerSize - 32, 32);
+            File.WriteAllBytes(path, bytes);
+            Assert.AreEqual(SaveLoadStatus.UnsupportedNewer,
+                SaveManager.Instance.LoadDetailedAsync("Save1").GetAwaiter().GetResult().Status);
+            var preserved = Path.Combine(root, "Saves", "Save1", Path.GetFileName(path));
+            File.Copy(path, preserved);
+            SetRoot(root);
+            Assert.AreEqual(SaveLoadStatus.Conflict,
+                SaveManager.Instance.LoadDetailedAsync("Save1").GetAwaiter().GetResult().Status);
+            var choices = SaveManager.Instance.GetRecoveryCandidatesAsync("Save1").GetAwaiter().GetResult();
+            CollectionAssert.AreEquivalent(new[] { 33.5f, 83.25f }, choices.Select(c => c.Completion));
+            CollectionAssert.AreEqual(bytes, File.ReadAllBytes(preserved));
+        }
+
+        private void CreateConflict()
+        {
+            Commit(12.5f);
+            var fork = Path.Combine(root, "fork");
+            foreach (var file in Directory.GetFiles(Path.Combine(root, "Saves"), "*", SearchOption.AllDirectories))
+            {
+                var destination = Path.Combine(fork, file.Substring(root.Length + 1));
+                Directory.CreateDirectory(Path.GetDirectoryName(destination));
+                File.Copy(file, destination);
+            }
+            Commit(83.25f);
+            SetRoot(fork);
+            Assert.IsTrue(SaveManager.Instance.LoadDetailedAsync("Save1").GetAwaiter().GetResult().Succeeded);
+            Commit(33.5f);
+            foreach (var file in Directory.GetFiles(Path.Combine(fork, "Saves", "Save1"), "snapshot.g*.bin"))
+                File.Copy(file, Path.Combine(root, "Saves", "Save1", Path.GetFileName(file)), true);
+            SetRoot(root);
+        }
+
         private void Commit(float completion)
         {
             var result = SaveManager.Instance.SaveDetailedAsync(new GameData { CompletionPercentage = completion }, "Save1")
