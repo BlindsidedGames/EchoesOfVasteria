@@ -50,8 +50,12 @@ namespace TimelessEchoes.UI.Toolkit
                 localizationRevision = ToolkitLocalization.Revision;
                 text.text = ToolkitLocalization.Text(localizedKey, localizedEnglish, localizedArguments);
             }
-            var area = ToolkitWindowLayout.SafeArea; float width = Mathf.Min(240, area.width);
-            root.style.left = area.center.x - width / 2; root.style.top = area.y + ToolkitResponsiveLayout.WindowTop; root.style.width = width;
+            var portrait = ToolkitResponsiveLayout.IsPortrait;
+            var area = portrait ? ToolkitResponsiveLayout.SafeScreenArea : ToolkitWindowLayout.SafeArea;
+            float width = Mathf.Min(240, area.width);
+            root.style.left = area.center.x - width / 2;
+            root.style.top = area.y + (portrait ? 6 : ToolkitResponsiveLayout.WindowTop);
+            root.style.width = width;
             float remaining = expires - Time.unscaledTime;
             fill.style.width = Length.Percent(Mathf.Clamp01(remaining / duration) * 100);
             if (remaining <= 0) root.style.display = DisplayStyle.None;
