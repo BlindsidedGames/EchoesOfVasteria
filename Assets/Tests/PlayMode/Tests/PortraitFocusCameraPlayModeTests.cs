@@ -87,8 +87,11 @@ namespace Tests.PlayMode
                     for (var frame = 0; frame < 4; frame++) { yield return null; brain.ManualUpdate(); }
                     foreach (var speed in new[] { 10f, 120f, 600f })
                     {
+                        virtualCamera.PreviousStateIsValid = false;
                         var startX = target.transform.position.x;
-                        for (var frame = 0; frame < 60; frame++)
+                        // Allow the authored three-second velocity smoothing to
+                        // settle before judging the steady movement lead.
+                        for (var frame = 0; frame < 360; frame++)
                         {
                             target.transform.position += Vector3.right * speed / 60f;
                             yield return null;
@@ -98,10 +101,9 @@ namespace Tests.PlayMode
                                 "Lookahead must retain the player on screen even at high speed.");
                             Assert.AreEqual(1f, composer.Lookahead.Time, "Do not rewrite authored landscape lookahead settings.");
                         }
-                        Assert.Greater(target.transform.position.x - startX, speed * .9f, "The test must actually move the tracked player.");
-                        if (speed >= 120)
-                            Assert.Greater(camera.transform.position.x, target.transform.position.x,
-                                "Portrait should retain forward lead rather than always centering the player.");
+                        Assert.Greater(target.transform.position.x - startX, speed * 5.9f, "The test must actually move the tracked player.");
+                        Assert.Greater(camera.transform.position.x, target.transform.position.x,
+                            "Ordinary movement must lead too, not only extreme high-speed movement.");
                     }
                 }
             }

@@ -46,9 +46,10 @@ namespace TimelessEchoes
             // the composer runs, then restore its serialized settings below.
             extra.AuthoredComposition = extra.Composer.Composition;
             extra.AuthoredLookaheadTime = extra.Composer.Lookahead.Time;
-            // A full second of prediction can put a fast player outside a narrow
-            // crop. Keep some lead, scaled down with the visible horizontal span.
-            extra.Composer.Lookahead.Time *= .35f * Mathf.Min(1f, displayAspect / RunActivityArea.PortraitAspect);
+            // Keep a real half-second of prediction in the zoomed portrait view.
+            // Scaling time by aspect made ordinary movement lag behind the hero.
+            extra.Composer.Lookahead.Time = UI.Toolkit.ToolkitResponsiveLayout.FocusView
+                ? .5f : extra.AuthoredLookaheadTime;
             var composition = extra.AuthoredComposition;
             var widthScale = activityAspect / displayAspect;
             composition.DeadZone.Size.x *= widthScale;
