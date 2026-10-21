@@ -95,6 +95,7 @@ namespace TimelessEchoes.UI.Toolkit
                     data.General.InventoryTutorialStage = 1;
                 }
                 else if ((!gm || gm.IsInTown) && hubIntroduction && !hubIntroduction.HasBeenCompleted &&
+                         data.General.HubTutorialStage < 3 &&
                          QuestUtils.QuestCompleted("The names Gill") && data.General.InventoryTutorialStage >= 3 && ToolkitVisibilityRule.HasLevelledSkill())
                     yield return hubIntroduction.ShowAndWait(windows.transform);
                 else if ((!gm || gm.IsInTown) && data.General.MapStatisticsTutorialStage == 1)

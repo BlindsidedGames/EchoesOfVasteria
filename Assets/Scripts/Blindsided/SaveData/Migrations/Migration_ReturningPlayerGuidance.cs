@@ -4,11 +4,11 @@ using System.Linq;
 namespace Blindsided.SaveData.Migrations
 {
     // Run after legacy quest/buff migrations, on the detached save candidate only.
-    internal sealed class Migration_SchemaV8ReturningPlayers : IPostVersionSaveMigration
+    internal sealed class Migration_ReturningPlayerGuidance : IPostVersionSaveMigration
     {
-        public int? TargetSchema => 8;
+        public int? TargetSchema => 7;
         public string TargetVersion => null;
-        public string Id => "SchemaV8ReturningPlayerGuidance";
+        public string Id => "SchemaV7ReturningPlayerGuidance";
 
         public void Apply(GameData data)
         {

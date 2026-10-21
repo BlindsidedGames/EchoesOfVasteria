@@ -22,7 +22,7 @@ namespace Blindsided.SaveData
             copy.AppliedMigrationIds = new HashSet<string>(AppliedMigrationIds);
             return copy;
         }
-        public const int CurrentSchemaVersion = 8;
+        public const int CurrentSchemaVersion = 7;
 
         public int SchemaVersion = CurrentSchemaVersion;
         public TimelessEchoes.Characters.CharacterProfile Character = TimelessEchoes.Characters.CharacterProfile.Legacy();
