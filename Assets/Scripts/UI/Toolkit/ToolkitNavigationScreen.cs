@@ -329,7 +329,6 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void ToggleMenu(Group group, Button anchor)
         {
-            ToolkitResponsiveLayout.SetFocusView(false);
             if (openGroup == group || ToolkitResponsiveLayout.IsPortrait &&
                 (group == Group.Hub && HubWindowOpen() || group == Group.Townsfolk && TownWindowOpen()))
             {
@@ -353,7 +352,6 @@ namespace TimelessEchoes.UI.Toolkit
         private void Update()
         {
             if (root == null) return;
-            if (ToolkitResponsiveLayout.FocusView && HasOpenMenu) CloseMenu();
             if (!windows) windows = TownWindowManager.Instance;
             if (windows && !hooked)
             {

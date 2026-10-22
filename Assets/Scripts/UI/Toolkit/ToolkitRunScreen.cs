@@ -189,7 +189,7 @@ namespace TimelessEchoes.UI.Toolkit
             var canFocus = gm && gm.CurrentMap && !gm.HeroIsDead && !gm.FirstReapDialoguePending &&
                 !gm.IvanReturnPending && !gm.FirstReapReturnPending && !ToolkitMeetingScreen.HasVisibleMeeting &&
                 BuffIntroductionGuidance.Stage != 3;
-            if (!canFocus) ToolkitResponsiveLayout.SetFocusView(false);
+            if (!canFocus && !(gm && gm.RunLoadingActive)) ToolkitResponsiveLayout.SetFocusView(false);
             var focus = ToolkitResponsiveLayout.FocusView;
             var area = focus ? ToolkitResponsiveLayout.SafeScreenArea : ToolkitWindowLayout.SafeArea;
             root.style.left = area.x; root.style.top = area.y; root.style.width = area.width; root.style.height = area.height;

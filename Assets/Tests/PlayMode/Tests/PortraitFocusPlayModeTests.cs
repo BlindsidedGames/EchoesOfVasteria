@@ -89,7 +89,13 @@ namespace Tests.PlayMode
             }
             try
             {
+                var navigationDefinition = AssetDatabase.LoadAssetAtPath<ToolkitNavigationDefinition>("Assets/UI/Toolkit/Navigation.asset");
+                foreach (var entry in navigationDefinition.entries)
+                    foreach (var rule in entry.visibility)
+                        if (rule.quest) oracle.saveData.Quests[rule.quest.questId] = new Blindsided.SaveData.GameData.QuestRecord { Completed = true };
+                oracle.saveData.Quests["The names Gill"] = new Blindsided.SaveData.GameData.QuestRecord { Completed = true };
                 var gm = owner.AddComponent<GameManager>(); gm.enabled = false;
+                owner.AddComponent<TimelessEchoes.UI.TownWindowManager>().enabled = false;
                 typeof(GameManager).GetProperty("CurrentMap").SetValue(gm, owner);
                 typeof(GameManager).GetProperty("IsInTown").SetValue(gm, false);
                 var cameraObject = new GameObject("Focus camera", typeof(Camera));
@@ -185,6 +191,31 @@ namespace Tests.PlayMode
                         for (var frame = 0; frame < 5; frame++) yield return null;
                         Assert.False(view.GetComponent<ToolkitRunScreen>().HasOpenHeroStats, "Second Stats tap closes the popup.");
                         Assert.AreEqual(DisplayStyle.None, stats.resolvedStyle.display);
+                        foreach (var id in new[] { "adventure", "hub", "townsfolk" })
+                        {
+                            var navButton = navigationUi.Q<Button>(id);
+                            ClickControl(navButton);
+                            for (var frame = 0; frame < 8; frame++) yield return null;
+                            Assert.True(ToolkitResponsiveLayout.FocusView, id + " popup must preserve expanded portrait play.");
+                            Assert.True(navigation.GetComponent<ToolkitNavigationScreen>().HasOpenMenu, id + " popup must stay open.");
+                            Assert.AreEqual(viewport, camera.rect, "Menus must not resize the gameplay viewport.");
+                            var popup = navigationUi.Q("navigation-popup");
+                            Assert.Less(popup.worldBound.yMax, navButton.worldBound.yMin);
+                            Assert.True(ToolkitResponsiveLayout.SafeScreenArea.Contains(popup.worldBound.min));
+                            ClickControl(navButton);
+                            for (var frame = 0; frame < 4; frame++) yield return null;
+                            Assert.False(navigation.GetComponent<ToolkitNavigationScreen>().HasOpenMenu);
+                        }
+                        // Run replacement briefly has no map while the loading
+                        // overlay owns the screen; this is not a return to town.
+                        typeof(GameManager).GetField("runLoadingActive", Private).SetValue(gm, true);
+                        typeof(GameManager).GetProperty("CurrentMap").SetValue(gm, null);
+                        for (var frame = 0; frame < 5; frame++) yield return null;
+                        Assert.True(ToolkitResponsiveLayout.FocusView, "Keep expanded mode through map teardown during loading.");
+                        typeof(GameManager).GetProperty("CurrentMap").SetValue(gm, owner);
+                        typeof(GameManager).GetField("runLoadingActive", Private).SetValue(gm, false);
+                        for (var frame = 0; frame < 5; frame++) yield return null;
+                        Assert.True(ToolkitResponsiveLayout.FocusView, "The replacement map inherits expanded mode.");
                         ToolkitResponsiveLayout.ApplyFocusPresentation(menu);
                         Assert.False(field.enabledInHierarchy, "Hidden menu controls must not accept input.");
                         Assert.False(menu.panel.visualTree.Query<VisualElement>().ToList().Exists(e => e.userData is GenericDropdownMenu), "Focus must dismiss detached dropdown portals.");
@@ -194,7 +225,7 @@ namespace Tests.PlayMode
                     foreach (var offset in new[] { -12f, 12f })
                     {
                         destination.transform.position = new Vector3(30 + offset, 0, 0);
-                        if (!landscape) Assert.False(camera.pixelRect.Contains(camera.WorldToScreenPoint(destination.transform.position)), "Exercise a task outside the displayed portrait crop.");
+                        if (!landscape) Assert.False(camera.pixelRect.Contains(camera.WorldToScreenPoint(destination.transform.position)), "Exercise a task outside the displayed portrait crop: aspect=" + camera.aspect + " rect=" + camera.rect + " x=" + camera.transform.position.x + " focus=" + ToolkitResponsiveLayout.FocusView);
                         Assert.True(controller.HasVisibleTasksForHero(echo), "Echo must retain tasks on both sides of the full working area.");
                         echo.SetTask(null);
                         controller.SelectEarliestTask(echo, (TimelessEchoes.Skills.Skill)null);

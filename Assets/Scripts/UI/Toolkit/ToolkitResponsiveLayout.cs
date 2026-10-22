@@ -62,7 +62,8 @@ namespace TimelessEchoes.UI.Toolkit
             }
         }
         public static bool IsPortrait => Portrait(new Vector2Int(Screen.width, Screen.height));
-        public static bool TownView => Application.isPlaying && GameManager.Instance && !GameManager.Instance.CurrentMap;
+        public static bool TownView => Application.isPlaying && GameManager.Instance &&
+            !GameManager.Instance.CurrentMap && !GameManager.Instance.RunLoadingActive;
         public static bool Portrait(Vector2Int size) => size.x > 0 && size.y >= size.x * 1.25f;
         public static float Scale(Vector2Int size) => Portrait(size) ? 360f / size.x : 432f / Mathf.Max(1, size.y);
         public static Vector2 Size => new Vector2(Screen.width, Screen.height) * Scale(new Vector2Int(Screen.width, Screen.height));

@@ -803,11 +803,12 @@ namespace TimelessEchoes.UI
 
         private void UpdateTownButtonsVisibility()
         {
-            TimelessEchoes.UI.Toolkit.ToolkitResponsiveLayout.SetFocusView(false);
+            var anyWindowOpen = AnyWindowOpen();
+            if (anyWindowOpen) TimelessEchoes.UI.Toolkit.ToolkitResponsiveLayout.SetFocusView(false);
             if (townButtons != null)
                 townButtons.SetActive(true);
             if (windowsOpenIndicator != null)
-                windowsOpenIndicator.SetActive(AnyWindowOpen());
+                windowsOpenIndicator.SetActive(anyWindowOpen);
             if (closeButton != null)
                 closeButton.gameObject.SetActive(ShouldShowGlobalCloseButton());
             WindowsChanged?.Invoke();
