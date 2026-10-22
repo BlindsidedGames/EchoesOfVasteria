@@ -24,6 +24,13 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void SetHeroStatsOpen(bool open)
         {
+            if (open)
+            {
+                // Give Stats ownership of the dock without changing the player's
+                // portrait viewport. Otherwise the existing window covers it.
+                TownWindowManager.Instance?.CloseAllWindows();
+                HideDetails();
+            }
             heroStatsOpen = open;
             SetVisible(heroStatsPanel, open);
             heroStatsToggle?.EnableInClassList("active", open);
@@ -96,7 +103,10 @@ namespace TimelessEchoes.UI.Toolkit
             track.style.backgroundColor = (Color)new Color32(104, 76, 63, 255); health.Add(track);
             bar = new VisualElement(); bar.style.height = Length.Percent(100);
             bar.style.backgroundColor = (Color)new Color32(101, 185, 68, 255); track.Add(bar);
-            heroStatsToggle = new Button(() => SetHeroStatsOpen(!heroStatsOpen)) { name = "run-stats-toggle" };
+            heroStatsToggle = new Button(() => SetHeroStatsOpen(!heroStatsOpen ||
+                (TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow) ||
+                HasOpenDetails || FindAnyObjectByType<ToolkitNavigationScreen>()?.HasOpenMenu == true))
+                { name = "run-stats-toggle" };
             heroStatsToggle.AddToClassList("button");
             var toggle = heroStatsToggle;
             ToolkitLocalization.Bind(toggle, "run.stats", "Stats");

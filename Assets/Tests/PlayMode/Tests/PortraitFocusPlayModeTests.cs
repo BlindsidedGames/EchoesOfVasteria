@@ -95,6 +95,7 @@ namespace Tests.PlayMode
                         if (rule.quest) oracle.saveData.Quests[rule.quest.questId] = new Blindsided.SaveData.GameData.QuestRecord { Completed = true };
                 oracle.saveData.Quests["The names Gill"] = new Blindsided.SaveData.GameData.QuestRecord { Completed = true };
                 var gm = owner.AddComponent<GameManager>(); gm.enabled = false;
+                owner.AddComponent<TimelessEchoes.Stats.GameplayStatTracker>();
                 owner.AddComponent<TimelessEchoes.UI.TownWindowManager>().enabled = false;
                 typeof(GameManager).GetProperty("CurrentMap").SetValue(gm, owner);
                 typeof(GameManager).GetProperty("IsInTown").SetValue(gm, false);
@@ -114,6 +115,10 @@ namespace Tests.PlayMode
                 view = CreateGuidanceRunView();
                 var navigation = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Navigation.prefab"));
                 navigation.transform.SetParent(owner.transform);
+                var statistics = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Statistics.prefab"), owner.transform);
+                var windows = owner.GetComponent<TimelessEchoes.UI.TownWindowManager>();
+                typeof(TimelessEchoes.UI.TownWindowManager).GetField("toolkitStatistics", Private)
+                    .SetValue(windows, statistics.GetComponent<ToolkitStatisticsScreen>());
                 var navigationUi = navigation.GetComponent<UIDocument>().rootVisualElement;
                 var ui = view.GetComponent<UIDocument>().rootVisualElement;
                 var toggle = ui.Q<Button>("run-focus-toggle");
@@ -247,6 +252,45 @@ namespace Tests.PlayMode
                 Assert.AreEqual("Preserved selection", field.value);
                 Assert.Greater(camera.rect.y, 0, "Restoring menus must restore the top 16:9 viewport.");
                 CaptureSimulator("focus-portrait-restored.png"); yield return null; yield return null;
+                menu.RemoveFromHierarchy();
+                foreach (var landscape in new[] { false, true, false })
+                {
+                    Orientation(landscape);
+                    for (var frame = 0; frame < 5; frame++) yield return null;
+                    ClickControl(navigationUi.Q<Button>("hub"));
+                    for (var frame = 0; frame < 5; frame++) yield return null;
+                    Assert.True(navigation.GetComponent<ToolkitNavigationScreen>().HasOpenMenu);
+                    var statsViewport = camera.rect;
+                    ClickControl(ui.Q<Button>("run-stats-toggle"));
+                    for (var frame = 0; frame < 5; frame++) yield return null;
+                    Assert.False(navigation.GetComponent<ToolkitNavigationScreen>().HasOpenMenu, "Stats must dismiss an existing menu rather than open underneath it.");
+                    Assert.True(view.GetComponent<ToolkitRunScreen>().HasOpenHeroStats);
+                    Assert.AreEqual(statsViewport, camera.rect, "Switching to Stats preserves the current gameplay size.");
+                    Assert.AreEqual(DisplayStyle.Flex, ui.Q("run-stats-panel").resolvedStyle.display);
+                    // Opening another window while Stats is logically open must
+                    // bring Stats back on the next tap, not just toggle it off.
+                    windows.OpenWindow(TimelessEchoes.UI.TownWindowManager.Window.Stats);
+                    for (var frame = 0; frame < 5; frame++) yield return null;
+                    Assert.True(windows.HasOpenWindow);
+                    ClickControl(ui.Q<Button>("run-stats-toggle"));
+                    for (var frame = 0; frame < 5; frame++) yield return null;
+                    Assert.False(windows.HasOpenWindow);
+                    Assert.True(view.GetComponent<ToolkitRunScreen>().HasOpenHeroStats);
+                    ClickControl(ui.Q<Button>("run-stats-toggle"));
+                    yield return null;
+                    windows.OpenWindow(TimelessEchoes.UI.TownWindowManager.Window.Stats);
+                    for (var frame = 0; frame < 5; frame++) yield return null;
+                    Assert.True(windows.HasOpenWindow);
+                    ClickControl(ui.Q<Button>("run-stats-toggle"));
+                    for (var frame = 0; frame < 5; frame++) yield return null;
+                    Assert.False(windows.HasOpenWindow, "Combat Stats replaces the current window.");
+                    Assert.True(view.GetComponent<ToolkitRunScreen>().HasOpenHeroStats);
+                    Assert.AreEqual(statsViewport, camera.rect);
+                    Assert.AreEqual(DisplayStyle.Flex, ui.Q("run-stats-panel").resolvedStyle.display);
+                    ClickControl(ui.Q<Button>("run-stats-toggle"));
+                    yield return null;
+                    CaptureSimulator(landscape ? "stats-switch-landscape.png" : "stats-switch-portrait.png");
+                }
                 simulator.Close(); gameView.Focus();
                 yield return null; yield return null;
             }
