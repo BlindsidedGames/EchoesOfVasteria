@@ -58,7 +58,7 @@ namespace TimelessEchoes.UI.Toolkit
             preferencesTab = ActionButton(tabs, "preferences-tab", () => SelectPage("preferences"), 24); Grow(preferencesTab);
             savesTab = ActionButton(tabs, "saves-tab", () => SelectPage("saves"), 24); Grow(savesTab);
             preferences = new VisualElement { name="settings-preferences" }; scroll.Add(preferences); currentPage=preferences;
-            BuildAudio(); BuildDisplay(); BuildFloating();
+            BuildAudio(); BuildAppearance(); BuildDisplay(); BuildFloating();
             savePage = new VisualElement { name="settings-saves" }; scroll.Add(savePage); currentPage=savePage; BuildSaves();
             BuildFooter(); MarkRowEnds(); SelectPage(selectedPage);
             widthPreview = new VisualElement { name = "width-preview", pickingMode = PickingMode.Ignore };
@@ -73,6 +73,7 @@ namespace TimelessEchoes.UI.Toolkit
             RefreshLanguage(UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocale);
             if (dialogs) dialogs.Imported += RefreshSlots;
             ToolkitLocalization.Changed += RefreshLocalizedValues;
+            ToolkitColorTheme.Changed += RefreshThemeButtons;
             RefreshSlots(); RefreshValues(); Layout(); return true;
         }
 
@@ -161,6 +162,19 @@ namespace TimelessEchoes.UI.Toolkit
             var mute=LabelledToggle(frame,"mute","mute-label",()=>{MuteWhenUnfocused=!MuteWhenUnfocused;AudioManager.Instance?.ApplyFocusMuteNow();});
             mute.style.display=UnityEngine.Device.Application.isMobilePlatform?DisplayStyle.None:DisplayStyle.Flex;
         }
+        private void BuildAppearance()
+        {
+            var frame = new VisualElement { name = "appearance" };
+            frame.AddToClassList("eov-options-frame"); currentPage.Add(frame);
+            var appearance = ToolkitGameplay.L(frame, "", "settings-section-title");
+            ToolkitLocalization.Bind(appearance, "options.appearance", "Appearance");
+            var themeRow = Row(frame, "appearance-mode"); themeRow.AddToClassList("settings-actions");
+            var dark = ActionButton(themeRow, "theme-dark", () => ToolkitColorTheme.SetLight(false), 22, false); Grow(dark);
+            var light = ActionButton(themeRow, "theme-light", () => ToolkitColorTheme.SetLight(true), 22, false); Grow(light);
+            ToolkitLocalization.Bind(dark, "options.theme-dark", "Dark");
+            ToolkitLocalization.Bind(light, "options.theme-light", "Light");
+            RefreshThemeButtons();
+        }
         private void BuildDisplay()
         {
             var frame=Frame("display");
@@ -172,6 +186,11 @@ namespace TimelessEchoes.UI.Toolkit
             full.style.display=window.style.display=UnityEngine.Device.Application.isMobilePlatform?DisplayStyle.None:DisplayStyle.Flex;
             var fps=ActionButton(row,"fps",()=>{TargetFps=TargetFps==30?60:TargetFps==60?120:30;ApplyFps();RefreshValues();},22);Grow(fps);
             LabelledToggle(row,"vsync","vsync-label",()=>{VSyncEnabled=!VSyncEnabled;ApplyFps();});
+        }
+        private void RefreshThemeButtons()
+        {
+            if (buttons.TryGetValue("theme-dark", out var dark)) dark.EnableInClassList("active", !ToolkitColorTheme.IsLight);
+            if (buttons.TryGetValue("theme-light", out var light)) light.EnableInClassList("active", ToolkitColorTheme.IsLight);
         }
         private static void ApplyFps()
         {
@@ -294,6 +313,7 @@ namespace TimelessEchoes.UI.Toolkit
         public void Hide()
         {
             ToolkitLocalization.Changed -= RefreshLocalizedValues;
+            ToolkitColorTheme.Changed -= RefreshThemeButtons;
             Blindsided.EventHandler.OnLoadData -= RefreshLoadedData;
             UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocaleChanged -= RefreshLanguage;
             if (dialogs) dialogs.Imported -= RefreshSlots;

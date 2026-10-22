@@ -112,7 +112,8 @@ namespace TimelessEchoes.UI.Toolkit
             var portrait = ToolkitResponsiveLayout.IsPortrait;
             selectedName.style.visibility = portrait && portraitEquipmentSelected ? Visibility.Hidden : Visibility.Visible;
             portraitInventoryTabs.style.display = portrait ? DisplayStyle.Flex : DisplayStyle.None;
-            root.style.paddingBottom = portrait ? 48 : StyleKeyword.Null;
+            // Reserve exactly the portrait tab height so both viewports meet its divider.
+            root.style.paddingBottom = portrait ? 40 : StyleKeyword.Null;
             portraitInventoryTabs.ElementAt(0).EnableInClassList("active", !portraitEquipmentSelected);
             portraitInventoryTabs.ElementAt(1).EnableInClassList("active", portraitEquipmentSelected);
             equipmentColumn.style.display = portrait && !portraitEquipmentSelected ? DisplayStyle.None : DisplayStyle.Flex;

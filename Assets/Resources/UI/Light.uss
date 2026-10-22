@@ -1,0 +1,72 @@
+/* Palette derived from the existing Cute Fantasy UI art: clay, peach, warm cream, and plum-brown. */
+.theme-dock.dark {background-color:#272121;}
+.theme-dock.light {background-color:#d5ab87;}
+.gameplay.light {
+ --surface:#d5ab87; --text:#3f2832; --muted:#5f3b32;
+ --control:#e4a672; --hover:#ebbd88; --field:#ead4aa;
+ --line:#b27b59; --accent:#743f39; --on-accent:#f5e4d6;
+ --selected:#edbe8a; --health:#63c64d;
+ --button-edge:#8d563f; --button-light:#f4d2a1; --button-pressed:#b77855;
+ --primary-hover:#825044; --primary-edge:#533039; --primary-light:#a56d53;
+ --panel-edge:#8d563f; --panel-light:#ead4aa;
+}
+.gameplay.light .shade {background-color:rgba(185,142,108,.94);}
+.gameplay.light .track {background-color:#ead4aa;}
+.gameplay.light .fill {background-color:#743f39;}
+.gameplay.light .health .fill,.gameplay.light .hero-health-fill {background-color:#398132;}
+.gameplay.light .hero-health-track {background-color:#ead4aa;}
+.gameplay.light .hero-text {color:var(--text);}
+.gameplay.light .hero-surface {background-color:var(--surface);border-color:var(--panel-edge);}
+.gameplay.light .hero-surface.button.active {background-color:var(--accent);color:var(--on-accent);}
+.gameplay.light .toast-duration-fill {background-color:#743f39;}
+.gameplay.light .graph-outcome-retreated {background-color:#77533c;}
+.gameplay.light .graph-outcome-reaped {background-color:#754289;}
+.gameplay.light .graph-outcome-died {background-color:#98372f;}
+.gameplay.light .graph-outcome-abandoned {background-color:#605452;}
+.gameplay.light .hero-stat-divider {background-color:var(--line);}
+.gameplay.light .eov-pinned-background {background-color:rgba(213,171,135,.96);}
+.gameplay.light .eov-navigation-progress-text,.gameplay.light .eov-navigation-progress-distance {color:var(--text);}
+.gameplay.light.portrait-focus .eov-navigation-progress-text,.gameplay.light.portrait-focus .eov-navigation-progress-distance {color:#f5e4d6;text-shadow:1px 1px 1px #3f2832;}
+.gameplay.light.loading-screen {background-color:#d5ab87;}
+.gameplay.light .loading-track {background-color:#ead4aa;}
+.gameplay.light .loading-fill {background-color:#743f39;}
+.gameplay.light .unity-foldout__toggle > .unity-toggle__checkmark,.gameplay.light .unity-popup-field__arrow {-unity-background-image-tint-color:#743f39;}
+.gameplay.light .modal,.gameplay.light.character-overlay {background-color:rgba(47,31,30,.70);}
+.gameplay.light .skill-entry-divider,.gameplay.light .graph-grid-line {background-color:rgba(63,40,50,.23);}
+.gameplay.light .eov-stat-entry,.gameplay.light .eov-stat-item,.gameplay.light .eov-stat-summary,
+.gameplay.light .journal-run,.gameplay.light .journal-lifetime .general-column.general-column-first {border-bottom-color:var(--line);}
+.gameplay.light .graph-run-bar:hover,.gameplay.light .graph-run-bar:focus,.gameplay.light .graph-run-bar.selected {background-color:rgba(63,40,50,.13);}
+.gameplay.light .forge-gain {color:#245c28;}
+.gameplay.light .forge-loss {color:#862b28;}
+.gameplay.light.fields-ui .fields-level-requirement.fields-shortfall,
+.gameplay.light.fields-ui .fields-cost-count.fields-shortfall {color:#862b28;}
+.gameplay.light .eov-milestone-row.unlocked .skill-entry-icon-frame,.gameplay.light .eov-stat-entry.known .eov-stat-entry-icon,
+.gameplay.light .journal-discovery.known {border-color:#86522d;}
+.gameplay.light .eov-milestone-row.milestone-enabled .skill-entry-icon-frame,.gameplay.light .eov-task-entry.boosted .eov-stat-entry-icon,
+.gameplay.light .buff-slot-auto,.gameplay.light .buff-equipped .buff-entry-icon {border-color:#653d78;}
+/* The selection includes the complete button bevel, without moving its icon or hit area. */
+.gameplay.light.eov-forge .eov-forge-slot > .eov-forge-selection {left:-.5px;right:-.5px;top:-.5px;bottom:-1.5px;}
+/* Progress is distinct from both dividers and selection. */
+.gameplay.light.eov-forge .eov-forge-xp {background-color:#ead4aa;}
+.gameplay.light.eov-forge .eov-forge-xp .fill {background-color:#743f39;}
+/* Craft and Smelt inherit the same shared button states as dark mode. */
+.gameplay.light .button:disabled {
+ opacity:1;background-color:#c2a084;color:#816752;border-color:#ae896d;border-top-color:#d8b594;
+}
+.gameplay.light .button:disabled Label {color:#816752;}
+.gameplay.light.eov-forge .eov-forge-core-frame {background-color:#e5b684;border-color:#9b654b;}
+.gameplay.light.eov-forge .eov-forge-slot {background-color:#dca270;}
+.gameplay.light.eov-forge .eov-forge-selection {border-color:#743f39;}
+.gameplay.light.eov-forge .eov-forge-conversion {background-color:#c49370;border-color:#9b654b;}
+.gameplay.light.eov-forge .eov-forge-conversion .eov-number-field,
+.gameplay.light.eov-forge .eov-forge-conversion .eov-number-field .unity-base-text-field__input,
+.gameplay.light.eov-forge .eov-forge-conversion .eov-number-field #unity-text-input {
+ background-color:var(--field);color:var(--text);border-color:#8b5b43;
+}
+.gameplay.light .check-mark {background-color:#ead4aa;border-color:#895b44;}
+/* The game's check glyph is dark; a lighter checked fill preserves contrast. */
+.gameplay.light .check-mark.checked {background-color:#efb984;border-color:#8f5b40;}
+.gameplay.light.portrait .portrait-page-tabs,
+.gameplay.light.portrait .portrait-inventory-tabs {background-color:#c49370;border-top-color:#9b654b;}
+.gameplay.light.portrait .portrait-page-tabs .button {color:#5f3b32;}
+.gameplay.light.portrait .portrait-page-tabs .button.active {background-color:#d5ab87;color:#3f2832;border-top-color:#743f39;}

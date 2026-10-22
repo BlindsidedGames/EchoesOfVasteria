@@ -151,7 +151,8 @@ namespace TimelessEchoes.UI.Toolkit
             document.rootVisualElement.pickingMode = PickingMode.Ignore;
             dock = new VisualElement { name = "portrait-dock", pickingMode = PickingMode.Ignore };
             dock.style.position = Position.Absolute;
-            dock.style.backgroundColor = (Color)new Color32(39, 33, 33, 255);
+            dock.AddToClassList("theme-dock");
+            ToolkitColorTheme.Bind(dock);
             document.rootVisualElement.Add(dock);
         }
 

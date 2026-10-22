@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
@@ -16,17 +17,45 @@ namespace TimelessEchoes.UI.Toolkit
             public string pressedLink;
             public bool dragged, linkClick;
             public int pointerId;
+            public string sourceText, renderedText;
         }
         private static readonly ConditionalWeakTable<TextElement, State> States = new();
+        private static readonly Regex LinkColour = new(@"<color=#(?:EFB889|EFB984)>", RegexOptions.IgnoreCase);
+
+        private static void RefreshColour(TextElement text, State state)
+        {
+            // Remember authored/localized markup, so repeated switches never rewrite source data.
+            if (text.text != state.renderedText) state.sourceText = text.text;
+            var source = state.sourceText ?? string.Empty;
+            var display = ToolkitColorTheme.IsLight ? LinkColour.Replace(source, "<color=#743F39>") : source;
+            if (text.text != display) text.text = display;
+            state.renderedText = display;
+        }
 
         public static void Attach(TextElement text, Func<string, bool> localRoute = null)
         {
             if (States.TryGetValue(text, out var existing))
             {
+                RefreshColour(text, existing);
                 if (localRoute != null) existing.localRoute = localRoute;
                 return;
             }
             var state = new State { localRoute = localRoute }; States.Add(text, state);
+            RefreshColour(text, state);
+            bool subscribed = false;
+            void ColourChanged() => RefreshColour(text, state);
+            void Subscribe()
+            {
+                if (subscribed) return;
+                subscribed = true; ToolkitColorTheme.Changed += ColourChanged; ColourChanged();
+            }
+            text.RegisterCallback<AttachToPanelEvent>(_ => Subscribe());
+            text.RegisterCallback<DetachFromPanelEvent>(_ =>
+            {
+                if (!subscribed) return;
+                subscribed = false; ToolkitColorTheme.Changed -= ColourChanged;
+            });
+            if (text.panel != null) Subscribe();
             text.pickingMode = PickingMode.Position;
             VisualElement trackingRoot = null;
             void StopTracking()

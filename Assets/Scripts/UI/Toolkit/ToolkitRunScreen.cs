@@ -256,11 +256,11 @@ namespace TimelessEchoes.UI.Toolkit
                 portraitStatsScroll.style.bottom = focus ? area.yMax - world.yMax + 48 : StyleKeyword.Auto;
                 portraitStatsScroll.style.maxHeight = focus ? Mathf.Min(240, world.height - 64) : Mathf.Min(180, area.height - 140);
                 portraitStatsScroll.style.width = focus ? Mathf.Min(260, area.width - 64) : area.width - 16;
-                portraitStatsScroll.style.backgroundColor = focus ? (Color)new Color32(43, 36, 37, 255) : Color.clear;
+                portraitStatsScroll.style.backgroundColor = focus ? ToolkitColorTheme.HudSurface : Color.clear;
                 portraitStatsScroll.style.borderLeftWidth = portraitStatsScroll.style.borderRightWidth =
                     portraitStatsScroll.style.borderTopWidth = portraitStatsScroll.style.borderBottomWidth = focus ? .5f : 0;
                 portraitStatsScroll.style.borderLeftColor = portraitStatsScroll.style.borderRightColor =
-                    portraitStatsScroll.style.borderTopColor = portraitStatsScroll.style.borderBottomColor = (Color)new Color32(126, 104, 78, 255);
+                    portraitStatsScroll.style.borderTopColor = portraitStatsScroll.style.borderBottomColor = ToolkitColorTheme.HudBorder;
                 SetVisible(portraitStatsScroll, portrait && heroStatsOpen);
             }
             if (portrait)
@@ -268,11 +268,13 @@ namespace TimelessEchoes.UI.Toolkit
                 abilityBar.style.left = area.width - 204;
                 abilityBar.style.top = ToolkitResponsiveLayout.FocusView ? area.height - 84 : 8;
             }
+            // Colour changes must not repeat the orientation-only reparenting below.
+            health.style.backgroundColor = portrait ? Color.clear : ToolkitColorTheme.HudSurface;
+            heroStatsPanel.style.backgroundColor = portrait ? Color.clear : ToolkitColorTheme.HudSurface;
             if (portraitRun == portrait) return;
             portraitRun = portrait;
             health.style.width = portrait ? Length.Percent(100) : 154;
             health.style.height = portrait ? 36 : 24;
-            health.style.backgroundColor = portrait ? Color.clear : (Color)new Color32(43, 36, 37, 255);
             health.style.borderLeftWidth = health.style.borderRightWidth = health.style.borderTopWidth = health.style.borderBottomWidth = portrait ? 0 : .5f;
             health.style.paddingLeft = portrait ? 0 : 5;
             health.style.paddingRight = portrait ? 0 : 3;
@@ -283,7 +285,6 @@ namespace TimelessEchoes.UI.Toolkit
             heroStatsPanel.style.bottom = portrait ? StyleKeyword.Auto : Length.Percent(100);
             heroStatsPanel.style.width = portrait ? Length.Percent(100) : 154;
             heroStatsPanel.style.marginBottom = portrait ? 0 : 4;
-            heroStatsPanel.style.backgroundColor = portrait ? Color.clear : (Color)new Color32(43, 36, 37, 255);
             heroStatsPanel.style.borderLeftWidth = heroStatsPanel.style.borderRightWidth = heroStatsPanel.style.borderTopWidth = heroStatsPanel.style.borderBottomWidth = portrait ? 0 : .5f;
             heroHealthText.style.fontSize = portrait ? 9 : 8;
             heroStatsToggle.style.fontSize = portrait ? 9 : 8;

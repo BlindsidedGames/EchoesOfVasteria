@@ -19,9 +19,9 @@ namespace TimelessEchoes.UI.Toolkit
             if(!theme || !runtimeTheme || !textSettings)return;
             settings=ToolkitPanel.CreateSettings(runtimeTheme,textSettings);settings.sortingOrder=900;
             var document=GetComponent<UIDocument>(); document.panelSettings=settings; document.rootVisualElement.pickingMode=PickingMode.Ignore;
-            root=new VisualElement { name = "loading-backdrop" };root.style.position=Position.Absolute;root.style.left=root.style.top=0;root.style.backgroundColor=new Color(.12f,.075f,.06f,1f);root.style.opacity=1;root.style.alignItems=Align.Center;root.style.justifyContent=Justify.Center;theme.Apply(root);ToolkitGameplay.Apply(root,theme);document.rootVisualElement.Add(root);
+            root=new VisualElement { name = "loading-backdrop" };root.style.position=Position.Absolute;root.style.left=root.style.top=0;root.AddToClassList("loading-screen");root.style.opacity=1;root.style.alignItems=Align.Center;root.style.justifyContent=Justify.Center;theme.Apply(root);ToolkitGameplay.Apply(root,theme);document.rootVisualElement.Add(root);
             var box=new VisualElement();box.style.width=180;box.style.paddingTop=box.style.paddingBottom=box.style.paddingLeft=box.style.paddingRight=5;box.AddToClassList("surface");root.Add(box);
-            loadingLabel=ToolkitControls.Text(ToolkitLocalization.Text("loading.title", "Loading..."),ToolkitControls.TextRole.Heading);box.Add(loadingLabel);ToolkitLocalization.Changed+=RefreshText;var track=new VisualElement();track.style.height=4;track.style.backgroundColor=new Color(.12f,.075f,.06f);box.Add(track);fill=new VisualElement();fill.style.height=4;fill.style.backgroundColor=new Color(.47f,.72f,.26f);track.Add(fill);
+            loadingLabel=ToolkitControls.Text(ToolkitLocalization.Text("loading.title", "Loading..."),ToolkitControls.TextRole.Heading);box.Add(loadingLabel);ToolkitLocalization.Changed+=RefreshText;var track=new VisualElement();track.style.height=4;track.AddToClassList("loading-track");box.Add(track);fill=new VisualElement();fill.style.height=4;fill.AddToClassList("loading-fill");track.Add(fill);
             if (StartupDiagnostics.Enabled)
             {
                 box.style.width = Length.Percent(90);
