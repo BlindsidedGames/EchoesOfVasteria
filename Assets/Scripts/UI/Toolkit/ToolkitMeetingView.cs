@@ -29,7 +29,7 @@ namespace TimelessEchoes.UI.Toolkit
         public bool AwaitingMeet => index < 0;
 
         public ToolkitMeetingView(ToolkitTheme theme, VisualTreeAsset template, Sprite portrait,
-            ToolkitMeetingDefinition definition, IReadOnlyList<string> lines, Action finished, IReadOnlyList<string> localizedLineKeys = null)
+            ToolkitMeetingDefinition definition, IReadOnlyList<string> lines, Action finished, IReadOnlyList<string> localizedLineKeys = null, bool continueAfterDialogue = false)
         {
             this.lines = lines ?? Array.Empty<string>();
             lineKeys = localizedLineKeys ?? Array.Empty<string>();
@@ -72,7 +72,7 @@ namespace TimelessEchoes.UI.Toolkit
             // Stable keys are shared by every encounter; dialogue still comes from the task assets.
             meet = new ToolkitTextBinding(meetLabel, definition.meet);
             next = new ToolkitTextBinding(nextLabel, definition.next);
-            close = new ToolkitTextBinding(closeLabel, definition.close);
+            close = new ToolkitTextBinding(closeLabel, continueAfterDialogue ? definition.next : definition.close);
             AdvanceButton.clicked += Advance;
             portraitFrame = Root.Q("portrait-frame");
             portraitColumn = new VisualElement { name = "meeting-portrait-column" };
@@ -122,7 +122,7 @@ namespace TimelessEchoes.UI.Toolkit
             Refresh();
         }
 
-        public void FitPortrait(float availableHeight)
+        public void FitPortrait(float availableHeight, float navigationClearance = 0)
         {
             var noPortrait = Root.ClassListContains("meeting-no-portrait");
             var safe = ToolkitResponsiveLayout.SafeScreenArea;
@@ -132,7 +132,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (AwaitingMeet)
             {
                 Root.style.height = height;
-                Root.style.top = safe.yMax - ToolkitResponsiveLayout.WindowBottom - height - 8;
+                Root.style.top = safe.yMax - ToolkitResponsiveLayout.WindowBottom - height - 8 - navigationClearance;
                 return;
             }
             // Measure after layout so localization and the actual available text width
@@ -143,7 +143,7 @@ namespace TimelessEchoes.UI.Toolkit
             var minimum = noPortrait ? 76 : 96;
             height = Mathf.RoundToInt(Mathf.Clamp(Mathf.Ceil(textHeight) + 64, minimum, availableHeight));
             Root.style.height = height;
-            Root.style.top = safe.yMax - ToolkitResponsiveLayout.WindowBottom - height - 8;
+            Root.style.top = safe.yMax - ToolkitResponsiveLayout.WindowBottom - height - 8 - navigationClearance;
         }
 
         private float MeasureDialogueHeight(float width)

@@ -57,8 +57,42 @@ namespace TimelessEchoes.UI.Toolkit
         private bool highlightQuestsUntilOpened;
         private readonly Dictionary<string, VisualElement> tutorialPrompts = new();
         private string highlightedEntryId;
+        private Entry refresherEntry;
+        private int refresherTab = -1;
         private float questHighlightStartedAt;
         public Group OpenGroup => openGroup;
+
+        public bool RefresherDestinationOpen
+        {
+            get
+            {
+                if (refresherEntry == null || !windows || !windows.IsWindowOpen(refresherEntry.window)) return false;
+                if (refresherTab < 0) return true;
+                if (!statisticsScreen) statisticsScreen = FindAnyObjectByType<ToolkitStatisticsScreen>();
+                return statisticsScreen && statisticsScreen.SelectedTab == refresherTab;
+            }
+        }
+
+        public bool BeginRefresherNavigation(string route)
+        {
+            var parts = route.Split('/');
+            var id = parts[0] == "statistics" ? "stats" : parts[0];
+            var entry = System.Array.Find(navigationEntries, e => e.id == id);
+            if (entry == null || !ToolkitVisibilityRule.All(entry.visibility) || !windows || !windows.CanOpenWindow(entry.window)) return false;
+            refresherEntry = entry;
+            refresherTab = parts.Length > 1 ? parts[1] switch { "general" => 0, "graphs" => 2, "tasks" => 4, _ => -1 } : -1;
+            CloseMenu();
+            windows.CloseAllWindows();
+            RefreshTutorialPrompt();
+            return true;
+        }
+
+        public void EndRefresherNavigation()
+        {
+            refresherEntry = null;
+            refresherTab = -1;
+            RefreshTutorialPrompt();
+        }
 
         private void OnEnable()
         {
@@ -550,7 +584,10 @@ namespace TimelessEchoes.UI.Toolkit
                 data?.General.TaskBoostTutorialStage == 1 ? 4 : 0;
             var needsStatisticsSection = ToolkitResponsiveLayout.IsPortrait && statistics && statistics.SelectedTab != statisticsSection;
             if (!runScreen) runScreen = FindAnyObjectByType<ToolkitRunScreen>();
-            if (ActiveNpcMeetings.Count > 0 || (runScreen && runScreen.HasOpenDetails)) desired = null;
+            if (refresherEntry != null)
+                desired = RefresherDestinationOpen ? null : refresherTab >= 0 && openGroup == Group.Statistics ?
+                    "statistics-section-" + refresherTab : refresherEntry.id;
+            else if (ActiveNpcMeetings.Count > 0 || (runScreen && runScreen.HasOpenDetails)) desired = null;
             else if (highlightQuestsUntilOpened) desired = "quests";
             else if (inTown && BuffIntroductionGuidance.Active)
                 desired = windows != null && windows.IsWindowOpen(TownWindowManager.Window.Buffs) ? null : windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Hub ? "buffs" : "hub";
@@ -791,6 +828,7 @@ namespace TimelessEchoes.UI.Toolkit
             menuDismiss = null;
             characterPortrait = null;
             tutorialPrompts.Clear(); highlightedEntryId = null;
+            refresherEntry = null; refresherTab = -1;
             openGroup = Group.Toolbar;
         }
         private void OnDestroy()
