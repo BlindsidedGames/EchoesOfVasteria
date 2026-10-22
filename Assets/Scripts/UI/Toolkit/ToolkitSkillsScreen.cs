@@ -111,7 +111,7 @@ namespace TimelessEchoes.UI.Toolkit
 
                 button.RegisterCallback<PointerEnterEvent>(_ => highlight.style.display = DisplayStyle.None);
 
-                var label = Text(button, "", 6); label.AddToClassList("eov-skill-selector-level"); label.style.color = new Color(.918f, .831f, .667f); selectorLevels.Add(label);
+                var label = Text(button, "", 6); label.AddToClassList("eov-skill-selector-level");  selectorLevels.Add(label);
 
             }
 
@@ -119,7 +119,7 @@ namespace TimelessEchoes.UI.Toolkit
 
             level = Text(info, "", 5); level.name = "skill-level"; xp = Text(info, "", 5); xp.name = "skill-xp";
 
-            level.style.color = xp.style.color = new Color(.918f, .831f, .667f);
+
 
             var track = new VisualElement(); track.AddToClassList("eov-skill-xp-track"); track.AddToClassList("track"); header.Add(track);
 

@@ -1,4 +1,21 @@
 /* Semantic roles are shared by both routes. Rarity colours retain the original tier artwork. */
+.gameplay.dark .hero-text {color:#eaddd1;}
+.gameplay.dark .hero-surface {background-color:#2b2425;border-color:#7e684e;}
+.gameplay.dark .hero-health-track {background-color:#684c3f;}
+.gameplay .hero-health-fill {background-color:#65b944;}
+.gameplay.dark .hero-stat-divider {background-color:#705649;}
+.gameplay.dark .eov-skill-selector-level,.gameplay.dark .eov-skill-info .eov-skill-text {color:#ead4aa;}
+.gameplay.dark .eov-navigation-progress-text,.gameplay.dark .eov-navigation-progress-distance {color:#ead4aa;}
+.gameplay.dark .eov-pinned-background {background-color:rgba(0,0,0,.502);}
+.gameplay.dark.loading-screen {background-color:rgb(30.6,19.125,15.3);}
+.gameplay.dark .loading-track {background-color:rgb(30.6,19.125,15.3);}
+.gameplay.dark .loading-fill {background-color:rgb(119.85,183.6,66.3);}
+.gameplay.dark .toast-duration-fill {background-color:rgb(119.85,183.6,66.3);}
+.gameplay.dark .graph-outcome-retreated {background-color:rgb(183.6,168.3,155.55);}
+.gameplay.dark .graph-outcome-reaped {background-color:rgb(178.5,137.7,201.45);}
+.gameplay.dark .graph-outcome-died {background-color:rgb(209.1,102,102);}
+.gameplay.dark .graph-outcome-abandoned {background-color:rgb(109.65,107.1,109.65);}
+.gameplay.dark .hero-surface.button.active {background-color:var(--accent);color:var(--on-accent);}
 .gameplay { position:absolute; left:0; right:0; top:0; bottom:0; overflow:hidden; --space-tight:2px; --space-control:4px; --space-section:8px; --space-panel:12px; --body:8px; --small:6.5px; --heading:10.5px; --title:16px; --amount:19px; font-size:var(--body); color:var(--text); }
 .gameplay.dark { --surface:#292426; --text:#f5e4d6; --muted:#c8aea1; --control:#3c3032; --hover:#514042; --line:#74514a; --accent:#efb984; --on-accent:#302126; --selected:#674635; --field:#382e31; --health:#63c64d; }
 .gameplay.large { --body:10.4px; --small:8.45px; --heading:13.65px; --title:20.8px; --amount:24.7px; }

@@ -62,7 +62,7 @@ namespace TimelessEchoes.UI.Toolkit
             empty=Text(plot,ToolkitLocalization.Text("graph.empty", "No saved runs for this selection."),"graph-empty");
             var axisLabels=ToolkitGameplay.E(body,"graph-x-labels");first=Text(axisLabels,"","graph-first");Text(axisLabels,ToolkitLocalization.Text("graph.run-number", "Run number"),"graph-x-title");last=Text(axisLabels,"","graph-last");
             var legend=ToolkitGameplay.E(body,"graph-legend");
-            Legend(legend,ToolkitLocalization.Text("run.outcome-retreated", "Retreated"),new Color(.72f,.66f,.61f));Legend(legend,ToolkitLocalization.Text("run.outcome-reaped", "Reaped"),new Color(.70f,.54f,.79f));Legend(legend,ToolkitLocalization.Text("run.outcome-died", "Died"),new Color(.82f,.40f,.40f));Legend(legend,ToolkitLocalization.Text("run.outcome-abandoned", "Abandoned"),new Color(.43f,.42f,.43f));
+            Legend(legend,ToolkitLocalization.Text("run.outcome-retreated", "Retreated"),"retreated");Legend(legend,ToolkitLocalization.Text("run.outcome-reaped", "Reaped"),"reaped");Legend(legend,ToolkitLocalization.Text("run.outcome-died", "Died"),"died");Legend(legend,ToolkitLocalization.Text("run.outcome-abandoned", "Abandoned"),"abandoned");
             var detailHeader=ToolkitGameplay.E(body,"graph-detail-heading");detailTitle=Text(detailHeader,"","graph-detail-title");
             Text(detailHeader,ToolkitLocalization.Text("graph.select-bar", "Select a bar for details"),"graph-detail-hint");
             details=ToolkitGameplay.E(body,"graph-details");
@@ -78,7 +78,7 @@ namespace TimelessEchoes.UI.Toolkit
         };
         private static Button Choice(VisualElement parent,string name,string text,Action click){var b=ToolkitGameplay.B(parent,text,click);b.name=name;b.AddToClassList("graph-choice");return b;}
         private static Label Text(VisualElement parent,string text,string classes)=>ToolkitGameplay.L(parent,text,classes);
-        private static void Legend(VisualElement parent,string title,Color colour){var item=ToolkitGameplay.E(parent,"graph-legend-item");var swatch=ToolkitGameplay.E(item,"graph-legend-swatch");swatch.style.backgroundColor=colour;Text(item,title,"");}
+        private static void Legend(VisualElement parent,string title,string outcome){var item=ToolkitGameplay.E(parent,"graph-legend-item");var swatch=ToolkitGameplay.E(item,"graph-legend-swatch");swatch.AddToClassList("graph-outcome-"+outcome);Text(item,title,"");}
         public (Metric metric, int map, int selectedRun, bool perMinute) ViewState => (metric, map, selectedRun, perMinute);
         public void RestoreViewState((Metric metric, int map, int selectedRun, bool perMinute) state)
         {
@@ -122,7 +122,7 @@ namespace TimelessEchoes.UI.Toolkit
                 var run=visible[i];var value=values[i];var hit=new Button(()=>{selectedRun=run.RunNumber;ShowDetails(run);StyleSelection();}){name="graph-run-"+run.RunNumber};
                 hit.AddToClassList("graph-run-bar");hit.style.width=Length.Percent(100f/slots);barHost.Add(hit);
                 var fill=ToolkitGameplay.E(hit,"graph-run-fill");fill.pickingMode=PickingMode.Ignore;fill.style.height=Length.Percent((float)(value/ceiling*100));
-                fill.style.backgroundColor=run.Abandoned?new Color(.43f,.42f,.43f):run.Reaped?new Color(.70f,.54f,.79f):run.Died?new Color(.82f,.40f,.40f):new Color(.72f,.66f,.61f);
+                fill.AddToClassList("graph-outcome-"+(run.Abandoned?"abandoned":run.Reaped?"reaped":run.Died?"died":"retreated"));
                 hit.RegisterCallback<PointerEnterEvent>(_=>ShowDetails(run));hit.RegisterCallback<PointerLeaveEvent>(_=>ShowSelected());
                 hit.RegisterCallback<FocusInEvent>(_=>ShowDetails(run));hit.RegisterCallback<FocusOutEvent>(_=>ShowSelected());
                 hit.userData=run.RunNumber;

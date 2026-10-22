@@ -8,7 +8,6 @@ namespace TimelessEchoes.UI.Toolkit
 {
     public sealed partial class ToolkitRunScreen
     {
-        private static readonly Color HeroForeground = new Color32(234, 221, 209, 255);
         private readonly Dictionary<StatIconLookup.StatKey, Label> heroStatValues = new();
         private VisualElement heroStatsPanel;
         private Label heroHealthText;
@@ -63,7 +62,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private Label HeroText(VisualElement parent, string text, int size = 8)
         {
-            var label = new Label(text); label.style.color = HeroForeground; label.style.fontSize = size;
+            var label = new Label(text); label.AddToClassList("hero-text"); label.style.fontSize = size;
             label.style.marginTop = label.style.marginBottom = label.style.marginLeft = label.style.marginRight = 0;
             parent.Add(label); return label;
         }
@@ -81,9 +80,8 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void HeroSurface(VisualElement element)
         {
-            element.style.backgroundColor = (Color)new Color32(43, 36, 37, 255);
+            element.AddToClassList("hero-surface");
             element.style.borderLeftWidth = element.style.borderRightWidth = element.style.borderTopWidth = element.style.borderBottomWidth = .5f;
-            element.style.borderLeftColor = element.style.borderRightColor = element.style.borderTopColor = element.style.borderBottomColor = (Color)new Color32(126, 104, 78, 255);
         }
         private void BuildHeroHud()
         {
@@ -100,9 +98,9 @@ namespace TimelessEchoes.UI.Toolkit
             var health = new VisualElement(); health.style.flexGrow = 1; health.style.marginRight = 6; healthStrip.Add(health);
             heroHealthText = HeroText(health, "", 8);
             var track = new VisualElement(); track.style.height = 3; track.style.marginTop = 2;
-            track.style.backgroundColor = (Color)new Color32(104, 76, 63, 255); health.Add(track);
+            track.AddToClassList("hero-health-track"); health.Add(track);
             bar = new VisualElement(); bar.style.height = Length.Percent(100);
-            bar.style.backgroundColor = (Color)new Color32(101, 185, 68, 255); track.Add(bar);
+            bar.AddToClassList("hero-health-fill"); track.Add(bar);
             heroStatsToggle = new Button(() => SetHeroStatsOpen(!heroStatsOpen ||
                 (TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow) ||
                 HasOpenDetails || FindAnyObjectByType<ToolkitNavigationScreen>()?.HasOpenMenu == true))
@@ -131,7 +129,7 @@ namespace TimelessEchoes.UI.Toolkit
             HeroMetric(heroStatsPanel, StatIconLookup.StatKey.CritDamage, "Crit damage");
             var line = new VisualElement(); line.style.height = .5f; line.style.marginTop = line.style.marginBottom = 3;
             line.AddToClassList("hero-stat-divider");
-            line.style.backgroundColor = (Color)new Color32(112, 86, 73, 255); heroStatsPanel.Add(line);
+            heroStatsPanel.Add(line);
             HeroMetric(heroStatsPanel, StatIconLookup.StatKey.Defense, "Damage reduction");
             HeroMetric(heroStatsPanel, StatIconLookup.StatKey.Regen, "Health regen");
             HeroMetric(heroStatsPanel, StatIconLookup.StatKey.MoveSpeed, "Movement speed");

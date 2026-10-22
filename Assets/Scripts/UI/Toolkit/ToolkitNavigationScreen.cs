@@ -252,11 +252,11 @@ namespace TimelessEchoes.UI.Toolkit
             progressReaper.AddToClassList("eov-navigation-progress-actor"); progressReaper.AddToClassList("progress-reaper");progressReaper.style.scale=new Scale(new Vector3(-1,1,1)); progressRoot.Add(progressReaper);
             progressHero.name = "progress-hero";
             progressText = new Label { pickingMode = PickingMode.Ignore, enableRichText = true };
-            progressText.AddToClassList("eov-navigation-progress-text"); progressText.style.color = definition.progressTextColor;
+            progressText.AddToClassList("eov-navigation-progress-text");
             progressRoot.Add(progressText); context.Add(progressRoot);
             progressDistance = new Label { name = "run-progress-distance", pickingMode = PickingMode.Ignore, enableRichText = true };
             progressDistance.AddToClassList("eov-navigation-progress-distance");
-            progressDistance.style.color = definition.progressTextColor;
+
             progressRoot.Add(progressDistance);
             autoPinGroup = new VisualElement { name = "auto-pin", pickingMode = PickingMode.Ignore };
             autoPinGroup.AddToClassList("eov-navigation-auto-pin");
@@ -530,6 +530,7 @@ namespace TimelessEchoes.UI.Toolkit
             SetVisible(discord, windows != null && windows.IsWindowOpen(TownWindowManager.Window.Options));
             var inRun = GameManager.Instance != null && GameManager.Instance.CurrentMap != null;
             SetVisible(progressRoot, inRun);
+            root.EnableInClassList("portrait-focus", ToolkitResponsiveLayout.IsPortrait && ToolkitResponsiveLayout.FocusView);
             var hero = Hero.HeroController.Instance;
             if (inRun && hero != null)
             {

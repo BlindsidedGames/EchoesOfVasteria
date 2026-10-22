@@ -30,7 +30,7 @@ namespace TimelessEchoes.UI.Toolkit
                 frame = new VisualElement { pickingMode = PickingMode.Ignore }; frame.style.width = frame.style.height = 26; row.Add(frame);
                 icon = ToolkitControls.Icon(null); icon.style.width = icon.style.height = 24; frame.Add(icon);
                 text = ToolkitControls.Text(""); text.style.flexShrink = 1; row.Add(text);
-                fill = new VisualElement { pickingMode = PickingMode.Ignore }; fill.style.height = 2; fill.style.backgroundColor = new Color(.47f,.72f,.26f); root.Add(fill);
+                fill = new VisualElement { pickingMode = PickingMode.Ignore }; fill.style.height = 2; fill.AddToClassList("toast-duration-fill"); root.Add(fill);
             }
             localizedKey = null; localizedArguments = null;
             icon.sprite = sprite;  text.text = message;
