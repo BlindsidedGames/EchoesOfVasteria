@@ -49,7 +49,7 @@ namespace TimelessEchoes.Gear.UI
 			}
 			sb.AppendLine(ToolkitLocalization.Text("forge.stats.level", "• Level: {0:N0}", ivLevel));
 			sb.AppendLine(ToolkitLocalization.Text("forge.stats.xp", "• XP: {0:N0} / {1:N0}", ivCurrent, ivNeeded));
-			sb.AppendLine(ToolkitLocalization.Text("forge.stats.total-xp-gained-level-ups", "• XP gained: {0:N0}\n• Levels gained: {1:N0}", forge.IvanXpGainedTotal, forge.IvanLevelUpsFromCrafts));
+			sb.AppendLine(ToolkitLocalization.Text("forge.stats.total-xp-gained-level-ups", "• XP gained: {0:N0}", forge.IvanXpGainedTotal));
 
 			// Autocraft
 			sb.AppendLine(SectionTitle("forge.stats.section-autocraft", "Autocraft", preserveSectionIds));
