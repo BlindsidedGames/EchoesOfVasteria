@@ -134,7 +134,7 @@ namespace TimelessEchoes.UI.Toolkit
                 else
                 {
                     var label = new Label { pickingMode = PickingMode.Ignore };
-                    label.AddToClassList("eov-navigation-label"); 
+                    label.AddToClassList("eov-navigation-label");
                     button.Add(label); bindings.Add(new ToolkitTextBinding(label, entry.label));
                 }
                 row.Add(button);
@@ -214,7 +214,7 @@ namespace TimelessEchoes.UI.Toolkit
             progressRoot.Add(progressDistance);
             autoPinGroup = new VisualElement { name = "auto-pin", pickingMode = PickingMode.Ignore };
             autoPinGroup.AddToClassList("eov-navigation-auto-pin");
-            
+
             autoPin = new Button(() => { AutoPinActiveQuests = !AutoPinActiveQuests; Refresh(); });
             autoPin.AddToClassList("eov-navigation-toggle");autoPin.AddToClassList("button"); autoPinGroup.Add(autoPin);
             var label = new Label { pickingMode = PickingMode.Ignore };
@@ -228,6 +228,77 @@ namespace TimelessEchoes.UI.Toolkit
             icon.AddToClassList("eov-navigation-icon"); discord.Add(icon);
             discord.style.marginRight = 2;
             root.Q("navigation-close").Insert(0, discord);
+        }
+
+        public void FollowHelpAfterDialogue(string route) => StartCoroutine(FollowAfterDialogue(route));
+        private System.Collections.IEnumerator FollowAfterDialogue(string route)
+        {
+            // Let the existing dialogue completion record its tutorial stage and
+            // release its modal before asking the normal navigation gates to open.
+            yield return null; yield return null;
+            ToolkitHelpLinks.Follow(route);
+        }
+
+        /// <summary>Help navigation shares authored progression gates and never begins an adventure.</summary>
+        public bool OpenHelpDestination(string route)
+        {
+            var parts = route.Split('/');
+            var entryId = parts[0] == "statistics" ? "stats" : parts[0] == "fields" ? "farm" : parts[0];
+            var subpage = parts.Length == 2 ? parts[1] : null;
+            if (parts.Length > 2 || navigationEntries == null || root == null) return false;
+            if (!windows) windows = TownWindowManager.Instance;
+            if (!windows) return false;
+            // Conversations and modal lessons must retain ownership of their completion.
+            if (ToolkitMeetingScreen.HasOpenDialogue ||
+                UnityEngine.Object.FindAnyObjectByType<ToolkitIntroScreen>()?.IsVisible == true ||
+                UnityEngine.Object.FindAnyObjectByType<ToolkitDialogScreen>()?.IsVisible == true) return false;
+            if (entryId is "hero-stats" or "run-summary")
+            {
+                if (subpage != null || !GameManager.Instance || entryId == "hero-stats" && !GameManager.Instance.CurrentMap) return false;
+                var run = UnityEngine.Object.FindAnyObjectByType<ToolkitRunScreen>();
+                if (!run || !run.IsConfigured) return false;
+                var summary = UnityEngine.Object.FindAnyObjectByType<Upgrades.RunResourceTrackerUI>();
+                if (entryId == "run-summary" && !summary) return false;
+                CloseMenu(); windows.CloseAllWindows();
+                if (entryId == "hero-stats") return run.ShowHeroStats();
+                if (GameManager.Instance.CurrentMap) run.ShowBreakdown();
+                else summary.ShowWindow();
+                return run.HasOpenDetails;
+            }
+            var entry = System.Array.Find(navigationEntries, e => e.id == entryId);
+            if (entry == null || entry.action is not (NavAction.Window or NavAction.AdventureMenu or NavAction.HubMenu or NavAction.TownsfolkMenu) ||
+                !ToolkitVisibilityRule.All(entry.visibility)) return false;
+            // Children are subject to the same parent-menu unlock as normal navigation.
+            if (entry.group != Group.Toolbar)
+            {
+                var parent = System.Array.Find(navigationEntries, e => e.action ==
+                    (entry.group == Group.Hub ? NavAction.HubMenu : entry.group == Group.Adventure ? NavAction.AdventureMenu : NavAction.TownsfolkMenu));
+                if (parent == null || !ToolkitVisibilityRule.All(parent.visibility)) return false;
+            }
+            var tab = -1;
+            if (subpage != null)
+            {
+                if (entryId == "stats")
+                {
+                    tab = subpage switch { "general" => 0, "graphs" => 2, "enemies" => 3, "tasks" => 4, "items" => 5, "forging" => 6, _ => -1 };
+                    if (tab < 0) return false;
+                }
+                else if (entryId != "skills" || subpage is not ("Farming" or "Fishing" or "Mining" or "Woodcutting" or "Combat" or "Looting")) return false;
+            }
+            if (entry.action == NavAction.Window && !windows.CanOpenWindow(entry.window)) return false;
+            CloseMenu();
+            if (entry.action != NavAction.Window)
+            {
+                windows.CloseAllWindows(); ToggleMenu(entry.action == NavAction.AdventureMenu ? Group.Adventure :
+                    entry.action == NavAction.HubMenu ? Group.Hub : Group.Townsfolk, buttons[entry]);
+                return HasOpenMenu;
+            }
+            if (!windows.IsWindowOpen(entry.window)) windows.OpenWindow(entry.window);
+            if (!windows.IsWindowOpen(entry.window)) return false;
+            if (tab >= 0) UnityEngine.Object.FindAnyObjectByType<ToolkitStatisticsScreen>()?.SelectTab(tab);
+            if (entryId == "skills" && subpage != null)
+                return UnityEngine.Object.FindAnyObjectByType<ToolkitSkillsScreen>()?.RevealSkill(subpage) == true;
+            Refresh(); return true;
         }
 
         private void Activate(Entry entry)

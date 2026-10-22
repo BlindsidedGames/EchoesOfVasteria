@@ -3537,7 +3537,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002032
-    m_Localized: "S\xE9 que este juego puede resultar algo confuso al principio. Mientras preparo un tutorial completo, este mensaje sirve como gu\xEDa provisional.\n\nAnte todo, este es un juego incremental: \xA1el progreso ocurre autom\xE1ticamente y en segundo plano mientras haces otras cosas!\n\nPuedes encontrar informaci\xF3n sobre los distintos sistemas haciendo clic en Biblioteca, arriba.\n\nLas misiones son tu punto de partida y te ayudar\xE1n a orientarte a medida que avances. \n\nTu h\xE9roe se desplazar\xE1 solo y completar\xE1 tareas durante las aventuras.\n\nEspero que te diviertas. \xA1Si te atoras, siempre puedes encontrarme en Discord!"
+    m_Localized: "S\xE9 que este juego puede resultar algo confuso al principio. Mientras preparo un tutorial completo, este mensaje sirve como gu\xEDa provisional.\n\nAnte todo, este es un juego incremental: \xA1el progreso ocurre autom\xE1ticamente y en segundo plano mientras haces otras cosas!\n\nPuedes encontrar informaci\xF3n sobre los distintos sistemas haciendo clic en <link=\"help:wiki\"><u><color=#EFB889>Biblioteca</color></u></link>, arriba.\n\nLas misiones son tu punto de partida y te ayudar\xE1n a orientarte a medida que avances. \n\nTu h\xE9roe se desplazar\xE1 solo y completar\xE1 tareas durante las aventuras.\n\nEspero que te diviertas. \xA1Si te atoras, siempre puedes encontrarme en Discord!"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002033
@@ -4209,7 +4209,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164274115306983424
-    m_Localized: Abre Centro y luego Inventario para ver tus objetos equipados, sus bonificaciones y los recursos que reuniste.
+    m_Localized: Abre <link="help:hub"><u><color=#EFB889>Centro</color></u></link> y luego <link="help:inventory"><u><color=#EFB889>Inventario</color></u></link> para ver tus objetos equipados, sus bonificaciones y los recursos que reuniste.
     m_Metadata:
       m_Items: []
   - m_Id: 165856244562268160
@@ -4218,6 +4218,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 165995727630766080
     m_Localized: Desbloquea {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166039173942874112
+    m_Localized: "Esta pantalla a\xFAn no est\xE1 disponible. Sigue con tus misiones o termina la lecci\xF3n actual."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166041501840314368
+    m_Localized: Inicia una aventura para ver esta pantalla.
     m_Metadata:
       m_Items: []
   references:

@@ -53,8 +53,12 @@ namespace TimelessEchoes.UI.Toolkit
             root.style.width = definition.width;
             theme.Apply(root);ToolkitGameplay.Apply(root,theme);
             close = root.Q<Button>("intro-close");
-            close.AddToClassList("surface");
-            
+            var frame = root.Q("intro-frame");
+            frame.AddToClassList("surface");
+            // Preserve tap-to-continue on the notice without making the prose a
+            // child of a button that captures its embedded links' pointer events.
+            frame.RegisterCallback<ClickEvent>(evt => { if (evt.button == 0) TryClose(); });
+
             progress = root.Q("intro-progress");
             fill = root.Q("intro-fill");
             progress.AddToClassList("track");
@@ -63,6 +67,16 @@ namespace TimelessEchoes.UI.Toolkit
             bindings.Add(new ToolkitTextBinding(root.Q<Label>("intro-title"), definition.title));
             bindings.Add(new ToolkitTextBinding(root.Q<Label>("intro-body"), definition.body));
             bindings.Add(new ToolkitTextBinding(closeLabel, definition.close));
+            var body = root.Q<Label>("intro-body");
+            // Prose owns its clicks; a queued native link event must win over
+            // the notice's background tap-to-continue handler.
+            body.RegisterCallback<ClickEvent>(evt => evt.StopPropagation());
+            ToolkitHelpLinks.Attach(body, route =>
+            {
+                var navigation = UnityEngine.Object.FindAnyObjectByType<ToolkitNavigationScreen>();
+                if (!navigation || remaining > 0) return false;
+                TryClose(); navigation.FollowHelpAfterDialogue(route); return true;
+            });
             close.clicked += TryClose;
             remaining = Mathf.Max(0, definition.countdownSeconds);
             document.rootVisualElement.Add(root);
@@ -84,6 +98,7 @@ namespace TimelessEchoes.UI.Toolkit
             root.style.top = area.center.y;
             var ready = remaining <= 0;
             close.SetEnabled(ready);
+            close.style.display = ready ? DisplayStyle.Flex : DisplayStyle.None;
             progress.style.display = ready ? DisplayStyle.None : DisplayStyle.Flex;
             closeLabel.style.display = ready ? DisplayStyle.Flex : DisplayStyle.None;
             fill.style.width = Length.Percent(definition.countdownSeconds <= 0 ? 100 :

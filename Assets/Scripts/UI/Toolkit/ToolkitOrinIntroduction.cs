@@ -91,7 +91,7 @@ namespace TimelessEchoes.UI.Toolkit
                 else if ((!gm || gm.IsInTown) && data.General.ReturnedFromFarmlands && QuestUtils.QuestCompleted("The names Gill") && data.General.InventoryTutorialStage == 0)
                 {
                     if (!Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Contains("InventoryIntroduction"))
-                        yield return Explain("InventoryIntroduction", "Open Hub → Inventory to inspect your equipment and resources.");
+                        yield return Explain("InventoryIntroduction", "Open <link=\"help:inventory\"><u><color=#EFB889>Hub → Inventory</color></u></link> to inspect your equipment and resources.");
                     data.General.InventoryTutorialStage = 1;
                 }
                 else if ((!gm || gm.IsInTown) && hubIntroduction && !hubIntroduction.HasBeenCompleted &&
@@ -113,7 +113,7 @@ namespace TimelessEchoes.UI.Toolkit
                          !Gear.ForgeFirstLesson.Active && !MapStatisticsGuidance.Active && data.General.TaskBoostTutorialStage != 1 &&
                          !(gm && gm.IvanReturnPending))
                 {
-                    yield return Explain("GraphsIntroduction", "Open Statistics (the bar-chart icon), then Graphs to see your recent runs.");
+                    yield return Explain("GraphsIntroduction", "Open <link=\"help:statistics/graphs\"><u><color=#EFB889>Statistics (the bar-chart icon), then Graphs</color></u></link> to see your recent runs.");
                     if (!data.General.GraphsViewed) data.General.GraphsTutorialStage = 1;
                 }
                 else if ((!gm || gm.IsInTown) && data.General.HubTutorialStage >= 3 && data.General.TaskBoostTutorialStage == 0 &&
@@ -122,7 +122,7 @@ namespace TimelessEchoes.UI.Toolkit
                 {
                     nextBoostCheck = Time.unscaledTime + 1;
                     if (!TaskBoostGuidance.FindTask()) { yield return null; continue; }
-                    yield return Explain("TaskBoostIntroduction", "Open Statistics (the bar-chart icon), then Tasks to choose which tasks appear more often.");
+                    yield return Explain("TaskBoostIntroduction", "Open <link=\"help:statistics/tasks\"><u><color=#EFB889>Statistics (the bar-chart icon), then Tasks</color></u></link> to choose which tasks appear more often.");
                     data.General.TaskBoostTutorialStage = 1;
                 }
                 yield return null;

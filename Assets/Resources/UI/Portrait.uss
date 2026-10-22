@@ -171,7 +171,7 @@
 .gameplay.portrait.eov-forge .eov-forge-conversions {margin:0;padding-top:0;border-top-width:0;}
 .gameplay .portrait-topic-picker {display:none;}
 .gameplay.portrait .portrait-topic-picker {display:flex;min-height:34px;flex-shrink:0;margin:0 0 10px 0;font-size:11px;justify-content:flex-start;}
-.gameplay.portrait.library-reader .library-topics {height:auto;max-height:none;flex-grow:1;min-height:0;}
+.gameplay.portrait.library-reader .library-topics {height:auto;max-height:none;flex-grow:1;flex-basis:0;flex-shrink:1;min-height:0;}
 .gameplay.portrait.library-reader .library-topic {min-height:36px;margin-bottom:2px;}
 .gameplay.portrait.library-reader .library-article-title {font-size:16px;}
 .gameplay.portrait.library-reader .library-prose {font-size:11px;}

@@ -533,6 +533,7 @@
 .gameplay .eov-intro-title {font-size:12px;margin-bottom:var(--space-control);}
 .gameplay .eov-intro-body {font-size:8px;color:var(--text);}
 .gameplay .eov-intro-close-label {font-size:8px;margin-top:var(--space-section);}
+.gameplay .eov-intro-action {margin:0;padding:0;border-width:0;border-radius:0;background-color:rgba(0,0,0,0);flex-shrink:0;}
 .gameplay .eov-meeting-dialogue {font-size:8px;color:var(--text);}
 .gameplay .eov-meeting-dialogue-frame {width:160px;padding:var(--space-section);}
 .gameplay .eov-meeting-button {min-height:22px;padding:var(--space-tight);}

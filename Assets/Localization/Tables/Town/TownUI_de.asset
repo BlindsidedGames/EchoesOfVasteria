@@ -3581,7 +3581,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002032
-    m_Localized: "Ich wei\xDF, dass das Spiel anfangs etwas verwirrend ist. Ein richtiges Tutorial ist in Arbeit; bis dahin dient dieser Text als kurze Einf\xFChrung.\n\nVor allem ist dies ein Idle-Spiel: Dein Fortschritt l\xE4uft automatisch im Hintergrund weiter, w\xE4hrend du andere Dinge erledigst!\n\nInformationen zu den verschiedenen Systemen findest du \xFCber die Bibliothek oben.\n\nAuftr\xE4ge sind dein Ausgangspunkt und begleiten deinen Fortschritt. \n\nW\xE4hrend einer Reise findet dein Held selbst den Weg und erledigt Aufgaben automatisch.\n\nIch w\xFCnsche dir viel Spa\xDF. Wenn du nicht weiterkommst, erreichst du mich jederzeit auf Discord!"
+    m_Localized: "Ich wei\xDF, dass das Spiel anfangs etwas verwirrend ist. Ein richtiges Tutorial ist in Arbeit; bis dahin dient dieser Text als kurze Einf\xFChrung.\n\nVor allem ist dies ein Idle-Spiel: Dein Fortschritt l\xE4uft automatisch im Hintergrund weiter, w\xE4hrend du andere Dinge erledigst!\n\nInformationen zu den verschiedenen Systemen findest du \xFCber die <link=\"help:wiki\"><u><color=#EFB889>Bibliothek</color></u></link> oben.\n\n<link=\"help:quests\"><u><color=#EFB889>Auftr\xE4ge</color></u></link> sind dein Ausgangspunkt und begleiten deinen Fortschritt. \n\nW\xE4hrend einer Reise findet dein Held selbst den Weg und erledigt Aufgaben automatisch.\n\nIch w\xFCnsche dir viel Spa\xDF. Wenn du nicht weiterkommst, erreichst du mich jederzeit auf Discord!"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002033
@@ -4253,7 +4253,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164274115306983424
-    m_Localized: "\xD6ffne Hub und dann Inventar, um deine ausger\xFCsteten Gegenst\xE4nde, ihre Boni und deine gesammelten Ressourcen anzusehen."
+    m_Localized: "\xD6ffne <link=\"help:hub\"><u><color=#EFB889>Hub</color></u></link> und dann <link=\"help:inventory\"><u><color=#EFB889>Inventar</color></u></link>, um deine ausger\xFCsteten Gegenst\xE4nde, ihre Boni und deine gesammelten Ressourcen anzusehen."
     m_Metadata:
       m_Items: []
   - m_Id: 165856244562268160
@@ -4262,6 +4262,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 165995727630766080
     m_Localized: Schaltet {0} frei
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166039173942874112
+    m_Localized: "Dieser Bildschirm ist noch nicht verf\xFCgbar. Setze deine Auftr\xE4ge fort oder beende die aktuelle Lektion."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166041501840314368
+    m_Localized: Starte ein Abenteuer, um diesen Bildschirm zu sehen.
     m_Metadata:
       m_Items: []
   references:

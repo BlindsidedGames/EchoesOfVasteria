@@ -3527,7 +3527,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002032
-    m_Localized: "Je sais que le jeu peut \xEAtre un peu d\xE9routant au d\xE9but. Un v\xE9ritable tutoriel est en pr\xE9paration ; ce message sert d\u2019introduction provisoire.\n\nC\u2019est avant tout un jeu incr\xE9mental : la progression se fait automatiquement, en arri\xE8re-plan, pendant que vous faites autre chose !\n\nLe bouton Biblioth\xE8que, en haut, explique les diff\xE9rents syst\xE8mes.\n\nCommencez par les qu\xEAtes : elles vous guideront dans votre progression.\n\nVotre h\xE9ros se d\xE9place et accomplit les t\xE2ches tout seul pendant une aventure.\n\nJ\u2019esp\xE8re que vous vous amuserez. Si vous \xEAtes bloqu\xE9, retrouvez-moi sur Discord !"
+    m_Localized: "Je sais que le jeu peut \xEAtre un peu d\xE9routant au d\xE9but. Un v\xE9ritable tutoriel est en pr\xE9paration ; ce message sert d\u2019introduction provisoire.\n\nC\u2019est avant tout un jeu incr\xE9mental : la progression se fait automatiquement, en arri\xE8re-plan, pendant que vous faites autre chose !\n\nLe bouton <link=\"help:wiki\"><u><color=#EFB889>Biblioth\xE8que</color></u></link>, en haut, explique les diff\xE9rents syst\xE8mes.\n\nCommencez par les qu\xEAtes : elles vous guideront dans votre progression.\n\nVotre h\xE9ros se d\xE9place et accomplit les t\xE2ches tout seul pendant une aventure.\n\nJ\u2019esp\xE8re que vous vous amuserez. Si vous \xEAtes bloqu\xE9, retrouvez-moi sur Discord !"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002033
@@ -4197,7 +4197,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164274115306983424
-    m_Localized: "Ouvre le Hub, puis l\u2019Inventaire, pour voir tes objets \xE9quip\xE9s, leurs bonus et les ressources que tu as r\xE9colt\xE9es."
+    m_Localized: "Ouvre le <link=\"help:hub\"><u><color=#EFB889>Hub</color></u></link>, puis l\u2019<link=\"help:inventory\"><u><color=#EFB889>Inventaire</color></u></link>, pour voir tes objets \xE9quip\xE9s, leurs bonus et les ressources que tu as r\xE9colt\xE9es."
     m_Metadata:
       m_Items: []
   - m_Id: 165856244562268160
@@ -4206,6 +4206,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 165995727630766080
     m_Localized: "D\xE9bloque {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166039173942874112
+    m_Localized: "Cet \xE9cran n\u2019est pas encore disponible. Poursuis tes qu\xEAtes ou termine la le\xE7on en cours."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166041501840314368
+    m_Localized: "Lance une aventure pour voir cet \xE9cran."
     m_Metadata:
       m_Items: []
   references:

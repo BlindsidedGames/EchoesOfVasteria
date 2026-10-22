@@ -3643,7 +3643,7 @@ MonoBehaviour:
       I recommend starting a new save to experience the new introduction and progression. You can also choose to carry on with your existing save.
 
 
-      Your hero moves between tasks, gathers resources and fights automatically during adventures. Start with Quests to meet the townsfolk and unlock new places to explore.
+      Your hero moves between tasks, gathers resources and fights automatically during adventures. Start with <link="help:quests"><u><color=#EFB889>Quests</color></u></link> to meet the townsfolk and unlock new places to explore.
 
 
       You can ask for help on Discord.'
@@ -4038,7 +4038,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164191093392019457
-    m_Localized: "Open Quests to see what needs doing and claim your rewards. You\u2019ll meet the townsfolk along the way."
+    m_Localized: "Open <link=\"help:quests\"><u><color=#EFB889>Quests</color></u></link> to see what needs doing and claim your rewards. You\u2019ll meet the townsfolk along the way."
     m_Metadata:
       m_Items: []
   - m_Id: 164191093392019458
@@ -4106,7 +4106,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164241707132129280
-    m_Localized: "You\u2019ve gained a skill level! Open Hub \u2192 Skills to see your bonuses and next unlocks."
+    m_Localized: "You\u2019ve gained a skill level! Open <link=\"help:skills\"><u><color=#EFB889>Hub \u2192 Skills</color></u></link> to see your bonuses and next unlocks."
     m_Metadata:
       m_Items: []
   - m_Id: 164268729187307520
@@ -4150,7 +4150,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164274115306983424
-    m_Localized: "Open Hub \u2192 Inventory to inspect your equipment and resources."
+    m_Localized: "Open <link=\"help:inventory\"><u><color=#EFB889>Hub \u2192 Inventory</color></u></link> to inspect your equipment and resources."
     m_Metadata:
       m_Items: []
   - m_Id: 164286682234490880
@@ -4218,7 +4218,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164290767910211584
-    m_Localized: Open Statistics (the bar-chart icon), then Graphs to see your recent runs.
+    m_Localized: Open <link="help:statistics/graphs"><u><color=#EFB889>Statistics (the bar-chart icon), then Graphs</color></u></link> to see your recent runs.
     m_Metadata:
       m_Items: []
   - m_Id: 164297665183092736
@@ -4538,7 +4538,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166027245250023433
-    m_Localized: Open Statistics (the bar-chart icon), then Tasks to choose which tasks appear more often.
+    m_Localized: Open <link="help:statistics/tasks"><u><color=#EFB889>Statistics (the bar-chart icon), then Tasks</color></u></link> to choose which tasks appear more often.
     m_Metadata:
       m_Items: []
   - m_Id: 166027245250023432
@@ -4583,6 +4583,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 166027245208080384
     m_Localized: Select your first slot to equip this Echo.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166039173942874112
+    m_Localized: This screen is not available yet. Continue your quests or finish the current lesson.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166041501840314368
+    m_Localized: Start an adventure to view this screen.
     m_Metadata:
       m_Items: []
   references:

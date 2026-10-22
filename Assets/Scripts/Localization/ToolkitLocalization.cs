@@ -127,7 +127,11 @@ namespace TimelessEchoes.UI.Toolkit
 
         public static void Bind(TextElement element, string key, string english, params object[] arguments)
         {
-            BindValue(element, () => element.text = Text(key, english, arguments));
+            BindValue(element, () =>
+            {
+                element.text = Text(key, english, arguments);
+                if (element.text.Contains("<link=\"help:")) ToolkitHelpLinks.Attach(element);
+            });
         }
         public static void BindTooltip(VisualElement element, string key, string english, params object[] arguments)
         {

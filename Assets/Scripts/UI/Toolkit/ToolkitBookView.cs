@@ -129,7 +129,8 @@ namespace TimelessEchoes.UI.Toolkit
             if (!isReference && section.illustrations.Length > 0)
             {
                 var figures = new VisualElement { name = "library-illustrations" }; figures.AddToClassList("library-illustrations"); articleContent.Add(figures);
-                var detail = new Label { name = "library-illustration-description" }; detail.AddToClassList("library-illustration-description");
+                var detail = new Label { name = "library-illustration-description" };
+                ToolkitHelpLinks.Attach(detail, OpenArticleLink); detail.AddToClassList("library-illustration-description");
                 var choices = new List<(Button button, int index)>();
                 void SelectIllustration(int index)
                 {
@@ -177,7 +178,14 @@ namespace TimelessEchoes.UI.Toolkit
         private Label BindText(VisualElement parent, ToolkitBookDefinition.Text text, string css)
         {
             var label = new Label(); label.AddToClassList(css); parent.Add(label);
+            if (text?.fallback?.Contains("<link=\"help:") == true) ToolkitHelpLinks.Attach(label, OpenArticleLink);
             articleBindings.Add(new ToolkitTextBinding(label, DefenseText(text))); return label;
+        }
+
+        private bool OpenArticleLink(string route)
+        {
+            if (route != "reference") return false;
+            Select(selected, true); return true;
         }
 
         // Both Library and Buffs call the recipe formatter: the same translated

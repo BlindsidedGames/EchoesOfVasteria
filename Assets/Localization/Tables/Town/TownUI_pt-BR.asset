@@ -3545,7 +3545,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002032
-    m_Localized: "Sei que este jogo \xE9 um pouco confuso no come\xE7o. Enquanto um tutorial completo est\xE1 sendo preparado, esta mensagem serve como uma orienta\xE7\xE3o r\xE1pida provis\xF3ria.\n\nAntes de tudo, este \xE9 um jogo idle: o progresso acontece automaticamente e em segundo plano enquanto voc\xEA faz outras coisas!\n\nVoc\xEA encontra informa\xE7\xF5es sobre os sistemas clicando no bot\xE3o Biblioteca no topo.\n\nAs miss\xF5es s\xE3o seu ponto de partida e ajudam a orientar seu progresso. \n\nSeu her\xF3i se desloca sozinho e conclui tarefas durante as expedi\xE7\xF5es.\n\nEspero que se divirta! Se ficar perdido, pode sempre falar comigo no Discord!"
+    m_Localized: "Sei que este jogo \xE9 um pouco confuso no come\xE7o. Enquanto um tutorial completo est\xE1 sendo preparado, esta mensagem serve como uma orienta\xE7\xE3o r\xE1pida provis\xF3ria.\n\nAntes de tudo, este \xE9 um jogo idle: o progresso acontece automaticamente e em segundo plano enquanto voc\xEA faz outras coisas!\n\nVoc\xEA encontra informa\xE7\xF5es sobre os sistemas clicando no bot\xE3o <link=\"help:wiki\"><u><color=#EFB889>Biblioteca</color></u></link> no topo.\n\nAs miss\xF5es s\xE3o seu ponto de partida e ajudam a orientar seu progresso. \n\nSeu her\xF3i se desloca sozinho e conclui tarefas durante as expedi\xE7\xF5es.\n\nEspero que se divirta! Se ficar perdido, pode sempre falar comigo no Discord!"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002033
@@ -4217,7 +4217,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164274115306983424
-    m_Localized: "Abra o Hub e depois o Invent\xE1rio para ver seus itens equipados, os b\xF4nus deles e os recursos que voc\xEA coletou."
+    m_Localized: "Abra o <link=\"help:hub\"><u><color=#EFB889>Hub</color></u></link> e depois o <link=\"help:inventory\"><u><color=#EFB889>Invent\xE1rio</color></u></link> para ver seus itens equipados, os b\xF4nus deles e os recursos que voc\xEA coletou."
     m_Metadata:
       m_Items: []
   - m_Id: 165856244562268160
@@ -4226,6 +4226,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 165995727630766080
     m_Localized: Desbloqueia {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166039173942874112
+    m_Localized: "Esta tela ainda n\xE3o est\xE1 dispon\xEDvel. Continue suas miss\xF5es ou conclua a li\xE7\xE3o atual."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166041501840314368
+    m_Localized: Inicie uma aventura para ver esta tela.
     m_Metadata:
       m_Items: []
   references:

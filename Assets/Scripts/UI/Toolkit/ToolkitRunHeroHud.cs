@@ -16,6 +16,12 @@ namespace TimelessEchoes.UI.Toolkit
         private Button heroStatsToggle;
         private bool heroStatsOpen;
 
+        public bool ShowHeroStats()
+        {
+            if (root == null || !GameManager.Instance || !GameManager.Instance.CurrentMap) return false;
+            SetHeroStatsOpen(true); return true;
+        }
+
         private void SetHeroStatsOpen(bool open)
         {
             if (open) ToolkitResponsiveLayout.SetFocusView(false);

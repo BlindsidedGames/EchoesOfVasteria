@@ -224,6 +224,14 @@ namespace TimelessEchoes.UI.Toolkit
 
         }
 
+        public bool RevealSkill(string skillName)
+        {
+            if (!IsOpen) return false;
+            var index = System.Array.FindIndex(definition.skills, skill => skill && skill.name == skillName);
+            if (index < 0) return false;
+            Select(index); return true;
+        }
+
         private void Select(int index) { selected = index; highlights[index].style.display = DisplayStyle.None; Refresh(); }
 
         private void Experience(Skill skill, float current, float required) { if (skill == Current) RefreshExperience(); }
@@ -531,6 +539,3 @@ namespace TimelessEchoes.UI.Toolkit
     }
 
 }
-
-
-

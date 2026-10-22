@@ -55,8 +55,14 @@ namespace TimelessEchoes.UI.Toolkit
             }
             dialogueFrame = Root.Q("dialogue-frame");
             dialogueFrame.AddToClassList("surface");
-            
+
             dialogue = Root.Q<Label>("dialogue");
+            ToolkitHelpLinks.Attach(dialogue, route =>
+            {
+                var navigation = UnityEngine.Object.FindAnyObjectByType<ToolkitNavigationScreen>();
+                if (!navigation || index != lines.Count - 1 || !AdvanceButton.enabledSelf) return false;
+                Advance(); navigation.FollowHelpAfterDialogue(route); return true;
+            });
             AdvanceButton = Root.Q<Button>("advance");
             if (!portrait) AdvanceButton.style.top = 0;
             AdvanceButton.AddToClassList("button");
