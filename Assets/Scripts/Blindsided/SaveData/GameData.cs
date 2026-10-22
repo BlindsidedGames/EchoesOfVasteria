@@ -22,7 +22,7 @@ namespace Blindsided.SaveData
             copy.AppliedMigrationIds = new HashSet<string>(AppliedMigrationIds);
             return copy;
         }
-        public const int CurrentSchemaVersion = 7;
+        public const int CurrentSchemaVersion = 8;
 
         public int SchemaVersion = CurrentSchemaVersion;
         public TimelessEchoes.Characters.CharacterProfile Character = TimelessEchoes.Characters.CharacterProfile.Legacy();
@@ -517,6 +517,8 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker]
         public class ForgeStats
         {
+            // Current lifetime history. Other fields below are legacy read compatibility only.
+            public int HighestCraftedRarityTier = -1;
             // Top-level totals
             public int TotalCrafts;
             public int TotalEquippedFromCraft;

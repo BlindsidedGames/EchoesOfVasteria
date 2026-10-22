@@ -16,7 +16,6 @@ namespace TimelessEchoes.Gear
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => Instance = null;
 
-
         [SerializeField] private CraftingConfigSO config;
         [SerializeField] private List<RaritySO> rarities = new();
         [SerializeField] private List<StatDefSO> stats = new();
@@ -44,14 +43,6 @@ namespace TimelessEchoes.Gear
                 return;
             }
             Instance = this;
-            // Analytics belongs to crafting, not to a particular window renderer.
-            // Keep it available in scenes whose legacy forge UI has been retired.
-            if (FindAnyObjectByType<ForgeAnalyticsService>() == null)
-            {
-                var analytics = new GameObject("Forge Analytics");
-                analytics.transform.SetParent(transform, false);
-                analytics.AddComponent<ForgeAnalyticsService>();
-            }
             if (equipment == null)
                 equipment = EquipmentController.Instance;
 
@@ -104,9 +95,6 @@ namespace TimelessEchoes.Gear
                 rm.EndBatch();
             }
 
-            // Record resource spending via analytics service
-            ForgeAnalyticsService.Instance?.RecordResourceSpend(core, core.requiredIngot, core.ingotCost, coreResource, coreCost);
-
             var rarity = RollRarity(core);
             var slot = !string.IsNullOrWhiteSpace(selectedSlot) ? selectedSlot : RollSlot(core, slotWhitelist);
 			var item = GearObjectPool.GetItem();
@@ -118,28 +106,7 @@ namespace TimelessEchoes.Gear
             // Award Ivan XP based on core tier and rolled rarity
             GrantIvanExperience(core, rarity);
 
-            // Record craft telemetry via analytics service
-            if (ForgeAnalyticsService.Instance != null)
-            {
-                var eq = equipment != null ? equipment.GetEquipped(slot) : null;
-                float upgradeScore = TimelessEchoes.Gear.UI.UpgradeEvaluator.ComputeUpgradeScore(this, item, eq);
-                float absScore = TimelessEchoes.Gear.UI.UpgradeEvaluator.ComputeAbsoluteScore(this, item);
-                bool isUpgrade = eq == null || TimelessEchoes.Gear.UI.UpgradeEvaluator.IsPotentialUpgrade(this, item, eq);
-
-                var craftResult = new CraftResult
-                {
-                    Core = core,
-                    Rarity = rarity,
-                    Slot = slot,
-                    Item = item,
-                    EquippedComparison = eq,
-                    UpgradeScore = upgradeScore,
-                    AbsoluteScore = absScore,
-                    IsUpgrade = isUpgrade
-                };
-
-                ForgeAnalyticsService.Instance.RecordCraft(craftResult);
-            }
+            ForgeAnalyticsService.RecordCraft(oracle?.saveData?.Forge, item);
 
             return item;
         }
@@ -158,7 +125,7 @@ namespace TimelessEchoes.Gear
 
         /// <summary>
         /// Crafts multiple items in batch for autocrafting efficiency.
-        /// Uses ForgeAnalyticsService batch mode to defer telemetry.
+        /// Records lifetime highlights before each item can be reused.
         /// </summary>
         /// <param name="count">Number of items to craft</param>
         /// <param name="core">Core to craft with</param>
@@ -185,49 +152,38 @@ namespace TimelessEchoes.Gear
             var rm = ResourceManager.Instance;
             if (rm == null) return result;
 
-            // Begin analytics batch mode
-            ForgeAnalyticsService.Instance?.BeginBatch();
-
-            try
+            for (int i = 0; i < count; i++)
             {
-                for (int i = 0; i < count; i++)
+                // Check resources before each craft
+                var haveIngots = rm.GetAmount(core.requiredIngot) >= core.ingotCost;
+                var haveCores = rm.GetAmount(coreResource) >= coreCost;
+                if (!haveIngots || !haveCores)
+                    break;
+
+                var item = Craft(core, selectedSlot, slotWhitelist, coreResource, coreCost);
+                if (item == null)
+                    break;
+
+                result.TotalCrafted++;
+                result.LastCrafted = item;
+
+                // Check if upgrade
+                var eq = equipment?.GetEquipped(item.slot);
+                var upgradeScore = TimelessEchoes.Gear.UI.UpgradeEvaluator.ComputeUpgradeScore(this, item, eq);
+                var isUpgrade = eq == null || upgradeScore > 0.0001f;
+
+                if (isUpgrade)
                 {
-                    // Check resources before each craft
-                    var haveIngots = rm.GetAmount(core.requiredIngot) >= core.ingotCost;
-                    var haveCores = rm.GetAmount(coreResource) >= coreCost;
-                    if (!haveIngots || !haveCores)
-                        break;
-
-                    var item = Craft(core, selectedSlot, slotWhitelist, coreResource, coreCost);
-                    if (item == null)
-                        break;
-
-                    result.TotalCrafted++;
-                    result.LastCrafted = item;
-
-                    // Check if upgrade
-                    var eq = equipment?.GetEquipped(item.slot);
-                    var upgradeScore = TimelessEchoes.Gear.UI.UpgradeEvaluator.ComputeUpgradeScore(this, item, eq);
-                    var isUpgrade = eq == null || upgradeScore > 0.0001f;
-
-                    if (isUpgrade)
+                    result.UpgradesFound++;
+                    if (upgradeScore > result.BestUpgradeScore)
                     {
-                        result.UpgradesFound++;
-                        if (upgradeScore > result.BestUpgradeScore)
-                        {
-                            result.BestUpgradeScore = upgradeScore;
-                            result.BestUpgrade = item;
-                        }
-
-                        if (stopOnUpgrade)
-                            break;
+                        result.BestUpgradeScore = upgradeScore;
+                        result.BestUpgrade = item;
                     }
+
+                    if (stopOnUpgrade)
+                        break;
                 }
-            }
-            finally
-            {
-                // End batch mode (flushes all pending telemetry)
-                ForgeAnalyticsService.Instance?.EndBatch();
             }
 
             return result;
@@ -306,7 +262,7 @@ namespace TimelessEchoes.Gear
 
 			if (grant <= 0) return;
 			// Apply XP and handle level-ups with exponential curve
-			int beforeLevel = oracle.saveData.CraftingMasteryLevel;
+
 			oracle.saveData.CraftingMasteryXP += grant;
 			int safety = 0;
 			while (safety++ < 100)
@@ -324,8 +280,6 @@ namespace TimelessEchoes.Gear
 			float needed = config.xpForFirstLevel * Mathf.Pow(Mathf.Max(1, oracle.saveData.CraftingMasteryLevel), config.xpLevelMultiplier);
 			OnIvanXpChanged?.Invoke(oracle.saveData.CraftingMasteryLevel, oracle.saveData.CraftingMasteryXP, needed);
 
-			// Record Ivan XP telemetry via analytics service
-			ForgeAnalyticsService.Instance?.RecordIvanXp(core, rolled, grant, beforeLevel, oracle.saveData.CraftingMasteryLevel);
 		}
 
         public (int level, float currentXp, float neededXp) GetIvanXpState()
@@ -504,5 +458,4 @@ namespace TimelessEchoes.Gear
         }
     }
 }
-
 

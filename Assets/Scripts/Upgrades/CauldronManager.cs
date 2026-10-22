@@ -127,18 +127,7 @@ namespace TimelessEchoes.Upgrades
             {
                 tastings = oracle != null ? oracle.saveData.CauldronTotals.TotalTastings : 0,
                 cardsGained = oracle != null ? oracle.saveData.CauldronTotals.TotalCards : 0,
-                gainedNothing = oracle != null ? oracle.saveData.CauldronTotals.GainedNothing : 0,
-                alterEcho = oracle != null ? oracle.saveData.CauldronTotals.AlterEcho : 0,
-                buffs = oracle != null ? oracle.saveData.CauldronTotals.Buffs : 0,
-                lowCards = oracle != null ? oracle.saveData.CauldronTotals.LowCards : 0,
-                evasBlessing = oracle != null ? oracle.saveData.CauldronTotals.EvasBlessing : 0,
-                vastSurge = oracle != null ? oracle.saveData.CauldronTotals.VastSurge : 0,
-                aeFarming = oracle != null ? oracle.saveData.CauldronTotals.AEFarming : 0,
-                aeFishing = oracle != null ? oracle.saveData.CauldronTotals.AEFishing : 0,
-                aeMining = oracle != null ? oracle.saveData.CauldronTotals.AEMining : 0,
-                aeWoodcutting = oracle != null ? oracle.saveData.CauldronTotals.AEWoodcutting : 0,
-                aeLooting = oracle != null ? oracle.saveData.CauldronTotals.AELooting : 0,
-                aeCombat = oracle != null ? oracle.saveData.CauldronTotals.AECombat : 0
+
             };
         }
 
@@ -730,65 +719,54 @@ namespace TimelessEchoes.Upgrades
             {
                 case RollType.Nothing:
                     countNothing++;
-                    if (oracle != null) oracle.saveData.CauldronTotals.GainedNothing++;
                     break;
                 // Legacy AlterEcho removed
                 case RollType.AEFarming:
                     countAEFarming++;
                     countAlterEcho++;
-                    if (oracle != null) { oracle.saveData.CauldronTotals.AEFarming++; oracle.saveData.CauldronTotals.AlterEcho++; }
                     GrantRandomResourceCardFromGroup(AEResourceGroup.Farming, cardMultiplier);
                     break;
                 case RollType.AEFishing:
                     countAEFishing++;
                     countAlterEcho++;
-                    if (oracle != null) { oracle.saveData.CauldronTotals.AEFishing++; oracle.saveData.CauldronTotals.AlterEcho++; }
                     GrantRandomResourceCardFromGroup(AEResourceGroup.Fishing, cardMultiplier);
                     break;
                 case RollType.AEMining:
                     countAEMining++;
                     countAlterEcho++;
-                    if (oracle != null) { oracle.saveData.CauldronTotals.AEMining++; oracle.saveData.CauldronTotals.AlterEcho++; }
                     GrantRandomResourceCardFromGroup(AEResourceGroup.Mining, cardMultiplier);
                     break;
                 case RollType.AEWoodcutting:
                     countAEWoodcutting++;
                     countAlterEcho++;
-                    if (oracle != null) { oracle.saveData.CauldronTotals.AEWoodcutting++; oracle.saveData.CauldronTotals.AlterEcho++; }
                     GrantRandomResourceCardFromGroup(AEResourceGroup.Woodcutting, cardMultiplier);
                     break;
                 case RollType.AELooting:
                     countAECombat++; // session total remains under legacy AE; per-sub has its own counter below
                     countAlterEcho++;
-                    if (oracle != null) { oracle.saveData.CauldronTotals.AELooting++; oracle.saveData.CauldronTotals.AlterEcho++; }
                     GrantRandomResourceCardFromGroup(AEResourceGroup.Looting, cardMultiplier);
                     break;
                 case RollType.AECombat:
                     countAECombat++;
                     countAlterEcho++;
-                    if (oracle != null) { oracle.saveData.CauldronTotals.AECombat++; oracle.saveData.CauldronTotals.AlterEcho++; }
                     GrantRandomResourceCardFromGroup(AEResourceGroup.Combat, cardMultiplier);
                     break;
                 case RollType.Buff:
                     countBuffs++;
-                    if (oracle != null) oracle.saveData.CauldronTotals.Buffs++;
                     GrantRandomCards(1, cardMultiplier, onlyBuffs: true);
                     break;
                 case RollType.Lowest:
                     countLowCards++;
-                    if (oracle != null) oracle.saveData.CauldronTotals.LowCards++;
                     GrantLowestCard(1, cardMultiplier);
                     break;
                 case RollType.EvasX2:
                     countEvasBlessing++;
-                    if (oracle != null) oracle.saveData.CauldronTotals.EvasBlessing++;
                     // Redirect to Infinity when all categories are maxed
                     if (poolAllCards.Count == 0 && poolInfinityCards.Count > 0) GrantRandomInfinityCards(2, cardMultiplier);
                     else GrantRandomCards(2, cardMultiplier);
                     break;
                 case RollType.VastX10:
                     countVastSurge++;
-                    if (oracle != null) oracle.saveData.CauldronTotals.VastSurge++;
                     if (poolAllCards.Count == 0 && poolInfinityCards.Count > 0) GrantRandomInfinityCards(10, cardMultiplier);
                     else GrantRandomCards(10, cardMultiplier);
                     break;

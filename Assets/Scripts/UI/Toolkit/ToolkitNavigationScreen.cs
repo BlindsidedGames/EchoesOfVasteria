@@ -292,7 +292,7 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 if (entryId == "stats")
                 {
-                    tab = subpage switch { "general" => 0, "graphs" => 2, "enemies" => 3, "tasks" => 4, "items" => 5, "forging" => 6, _ => -1 };
+                    tab = subpage switch { "general" => 0, "graphs" => 2, "enemies" => 3, "tasks" => 4, "items" => 5, "town" or "forging" => 6, _ => -1 };
                     if (tab < 0) return false;
                 }
                 else if (entryId != "skills" || subpage is not ("Farming" or "Fishing" or "Mining" or "Woodcutting" or "Combat" or "Looting")) return false;

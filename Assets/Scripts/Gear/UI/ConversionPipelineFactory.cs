@@ -38,7 +38,7 @@ namespace TimelessEchoes.Gear.UI
                     double max = Math.Min(maxByChunks, maxByCrystals);
                     return Math.Max(0, Math.Min(desired, max));
                 },
-                execute: (rm, core, amount, costs) =>
+                execute: (rm, core, amount) =>
                 {
                     rm.BeginBatch();
                     try
@@ -47,13 +47,11 @@ namespace TimelessEchoes.Gear.UI
                         {
                             var chunkCost = core.chunkCostPerIngot * amount;
                             rm.Spend(core.chunkResource, chunkCost);
-                            costs[core.chunkResource] = chunkCost;
                         }
                         if (core.crystalResource != null && core.crystalCostPerIngot > 0)
                         {
                             var crystalCost = core.crystalCostPerIngot * amount;
                             rm.Spend(core.crystalResource, crystalCost);
-                            costs[core.crystalResource] = crystalCost;
                         }
                         rm.Add(core.requiredIngot, amount, trackStats: false);
                     }
@@ -98,7 +96,7 @@ namespace TimelessEchoes.Gear.UI
                     double max = Math.Min(maxByChunks, maxBySlime);
                     return Math.Max(0, Math.Min(desired, max));
                 },
-                execute: (rm, core, amount, costs) =>
+                execute: (rm, core, amount) =>
                 {
                     rm.BeginBatch();
                     try
@@ -107,13 +105,11 @@ namespace TimelessEchoes.Gear.UI
                         {
                             var chunkCost = 2 * amount;
                             rm.Spend(core.chunkResource, chunkCost);
-                            costs[core.chunkResource] = chunkCost;
                         }
                         if (slimeResource != null)
                         {
                             var slimeCost = 1 * amount;
                             rm.Spend(slimeResource, slimeCost);
-                            costs[slimeResource] = slimeCost;
                         }
                         if (core.crystalResource != null)
                             rm.Add(core.crystalResource, amount, trackStats: false);
@@ -152,7 +148,7 @@ namespace TimelessEchoes.Gear.UI
                     double max = Math.Min(maxByCrystals, maxByStone);
                     return Math.Max(0, Math.Min(desired, max));
                 },
-                execute: (rm, core, amount, costs) =>
+                execute: (rm, core, amount) =>
                 {
                     rm.BeginBatch();
                     try
@@ -161,13 +157,11 @@ namespace TimelessEchoes.Gear.UI
                         {
                             var crystalCost = 1 * amount;
                             rm.Spend(core.crystalResource, crystalCost);
-                            costs[core.crystalResource] = crystalCost;
                         }
                         if (stoneResource != null)
                         {
                             var stoneCost = 2 * amount;
                             rm.Spend(stoneResource, stoneCost);
-                            costs[stoneResource] = stoneCost;
                         }
                         if (core.chunkResource != null)
                             rm.Add(core.chunkResource, amount, trackStats: false);
@@ -207,7 +201,7 @@ namespace TimelessEchoes.Gear.UI
                     double max = Math.Min(maxByCurrent, maxByNext);
                     return Math.Max(0, Math.Min(desired, max));
                 },
-                execute: (rm, core, amount, costs) =>
+                execute: (rm, core, amount) =>
                 {
                     var (curRes, nextRes, isFinalTier) = resolveResources(core);
                     if (isFinalTier || curRes == null || nextRes == null) return;
@@ -220,9 +214,6 @@ namespace TimelessEchoes.Gear.UI
                         rm.Spend(curRes, currentCost);
                         rm.Spend(nextRes, nextCost);
                         rm.Add(nextRes, 2 * amount, trackStats: false);
-
-                        costs[curRes] = currentCost;
-                        costs[nextRes] = nextCost;
                     }
                     finally
                     {

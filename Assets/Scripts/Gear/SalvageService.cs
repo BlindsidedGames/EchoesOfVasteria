@@ -13,7 +13,6 @@ namespace TimelessEchoes.Gear
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => Instance = null;
 
-
         // Scratch dictionary for batch salvage to avoid allocations
         private readonly Dictionary<Resource, float> _scratchExpected = new(8);
 
@@ -115,29 +114,12 @@ namespace TimelessEchoes.Gear
                 if (amount <= 0) continue;
                 rm.Add(kv.Key, amount, trackStats: false);
 
-                // Record stats
-                if (forge != null)
-                {
-                    var rname = kv.Key.name;
-                    if (!forge.ResourcesGainedFromSalvage.ContainsKey(rname))
-                        forge.ResourcesGainedFromSalvage[rname] = 0;
-                    forge.ResourcesGainedFromSalvage[rname] += amount;
-                    if (!forge.SalvageYieldPerResource.ContainsKey(rname))
-                        forge.SalvageYieldPerResource[rname] =
-                            new Blindsided.SaveData.GameData.ForgeStats.ResourceAgg();
-                    var agg = forge.SalvageYieldPerResource[rname];
-                    agg.count += count;
-                    agg.sum += amount;
-                }
             }
 
             // Update salvage counters
             if (forge != null)
             {
                 forge.TotalSalvaged += count;
-                forge.SalvageItems += count;
-                forge.BatchSalvageCount += count;
-                forge.SalvagesByCore.Increment(core.name, count);
             }
         }
 
@@ -163,24 +145,8 @@ namespace TimelessEchoes.Gear
                     rm.Add(res.resource, res.count, trackStats: false);
                     totalAwardedEntries++;
 
-                    // Record salvage yield per resource and total gained from salvage
-                    var o = Blindsided.Oracle.oracle;
-                    if (o != null && o.saveData != null && o.saveData.Forge != null && res.resource != null)
-                    {
-                        var forge = o.saveData.Forge;
-                        var rname = res.resource.name;
-                        if (!forge.ResourcesGainedFromSalvage.ContainsKey(rname))
-                            forge.ResourcesGainedFromSalvage[rname] = 0;
-                        forge.ResourcesGainedFromSalvage[rname] += res.count;
-                        if (!forge.SalvageYieldPerResource.ContainsKey(rname))
-                            forge.SalvageYieldPerResource[rname] =
-                                new Blindsided.SaveData.GameData.ForgeStats.ResourceAgg();
-                        var agg = forge.SalvageYieldPerResource[rname];
-                        agg.count++;
-                        agg.sum += res.count;
-                    }
                 }
-            } 
+            }
             finally
             {
                 rm.EndBatch();
@@ -194,14 +160,7 @@ namespace TimelessEchoes.Gear
                 {
                     var forge = o.saveData.Forge;
                     forge.TotalSalvaged++;
-                    forge.SalvageItems++;
-                    forge.SalvageEntries += totalAwardedEntries;
-                    var rarityKey = item.rarity != null ? item.rarity.name : "(null)";
-                    var coreKey = item.core != null ? item.core.name : "(null)";
-                    forge.SalvagesByRarity.Increment(rarityKey);
-                    forge.SalvagesByCore.Increment(coreKey);
-                    if (!string.IsNullOrWhiteSpace(item.slot))
-                        forge.SalvagesBySlot.Increment(item.slot);
+
                 }
             }
 
@@ -212,5 +171,4 @@ namespace TimelessEchoes.Gear
         }
     }
 }
-
 

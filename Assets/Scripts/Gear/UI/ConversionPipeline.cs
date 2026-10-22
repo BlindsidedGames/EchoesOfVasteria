@@ -17,7 +17,7 @@ namespace TimelessEchoes.Gear.UI
         // Cost formula delegates
         public Func<ResourceManager, CoreSO, bool> CanPerform { get; private set; }
         public Func<ResourceManager, CoreSO, double, double> GetMaxAmount { get; private set; }
-        public Action<ResourceManager, CoreSO, double, Dictionary<Resource, double>> Execute { get; private set; }
+        public Action<ResourceManager, CoreSO, double> Execute { get; private set; }
 
         // Amount tracking
         public double DesiredAmount { get; set; } = 1;
@@ -29,7 +29,7 @@ namespace TimelessEchoes.Gear.UI
             ConversionType type,
             Func<ResourceManager, CoreSO, bool> canPerform,
             Func<ResourceManager, CoreSO, double, double> getMaxAmount,
-            Action<ResourceManager, CoreSO, double, Dictionary<Resource, double>> execute)
+            Action<ResourceManager, CoreSO, double> execute)
         {
             Type = type;
             CanPerform = canPerform;
@@ -38,7 +38,7 @@ namespace TimelessEchoes.Gear.UI
         }
 
         /// <summary>
-        /// Performs the conversion and records telemetry.
+        /// Performs the conversion.
         /// </summary>
         /// <returns>True if conversion was performed, false otherwise.</returns>
         public bool PerformConversion(ResourceManager rm, CoreSO core)
@@ -49,14 +49,8 @@ namespace TimelessEchoes.Gear.UI
             var amount = GetMaxAmount?.Invoke(rm, core, DesiredAmount) ?? 0;
             if (amount <= 0) return false;
 
-            // Track costs for analytics
-            var costs = new Dictionary<Resource, double>();
-
             // Execute the conversion
-            Execute?.Invoke(rm, core, amount, costs);
-
-            // Record telemetry via ForgeAnalyticsService
-            ForgeAnalyticsService.Instance?.RecordConversion(Type, core, amount, costs);
+            Execute?.Invoke(rm, core, amount);
 
             return true;
         }

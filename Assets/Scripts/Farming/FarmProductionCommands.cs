@@ -149,7 +149,11 @@ namespace TimelessEchoes.Farming
                     !ValidPaidBatch(owner.Farm, id, bed, legacy)) return Reject("InvalidHarvestBatch");
                 result.ResourceDeltas.TryGetValue(recipe.output.name, out var total);
                 var bonus = CauldronResourceYield.BonusPercent(owner, recipe.output);
-                result.ResourceDeltas[recipe.output.name] = total + (legacy ? bed.HarvestYield : bed.FrozenYield) * (1 + bonus / 100d);
+                var gathered = (legacy ? bed.HarvestYield : bed.FrozenYield) * (1 + bonus / 100d);
+                result.ResourceDeltas[recipe.output.name] = total + gathered;
+                result.Candidate.TotalHarvests++;
+                if (recipe.orchard && recipe.secondaryOutput) result.Candidate.LogsGathered += gathered;
+                else result.Candidate.CropsGathered += gathered;
                 if (recipe.secondaryOutput && bed.FrozenSecondaryYield > 0)
                 {
                     result.ResourceDeltas.TryGetValue(recipe.secondaryOutput.name, out var secondary);

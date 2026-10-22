@@ -209,9 +209,12 @@ namespace Tests.PlayMode
             Assert.AreEqual(0, bed.ElapsedSeconds);
             Assert.AreEqual(0, oracle.saveData.Resources["Radish Seed Pack"].Amount);
             Assert.AreEqual(before + 10, oracle.saveData.Resources["Radish"].Amount, 1e-9);
+            Assert.AreEqual(1, service.State.TotalHarvests);
+            Assert.AreEqual(10, service.State.CropsGathered, 1e-9);
             Assert.False(Commit(s => FarmCommands.HarvestFields(oracle.saveData,
                 FarmJournal.NextOperation(s, "harvest-fields"), Now.AddDays(10), content, false)));
             Assert.AreEqual(before + 10, oracle.saveData.Resources["Radish"].Amount, 1e-9);
+            Assert.AreEqual(1, service.State.TotalHarvests, "Rejected harvest must not count again.");
             FarmCommands.TickFields(service.State, content.baseDurationSeconds);
             service.enabled = true;
             // Let ordinary Update rebind the committed bank and auto-harvest it.
@@ -231,6 +234,9 @@ namespace Tests.PlayMode
             Assert.True(loaded.Succeeded, loaded.Diagnostic);
             Assert.False(loaded.Data.Farm.Beds[FarmCommands.WestBedId].IsPlanted);
             Assert.False(loaded.Data.Farm.Beds[FarmCommands.WestBedId].Repeat);
+            Assert.AreEqual(2, loaded.Data.Farm.TotalHarvests);
+            Assert.AreEqual(21.9, loaded.Data.Farm.CropsGathered, 1e-9);
+            Assert.AreEqual(0, loaded.Data.Farm.LogsGathered);
         }
 
         [Test]
@@ -281,6 +287,7 @@ namespace Tests.PlayMode
                 oracle.saveData.Farm.OrchardCapacity = 4;
                 oracle.saveData.Farm.TwinsLevel = 20;
                 var treeRecipes = new[] { "recipe.apple.v1", "recipe.oak.v1", "recipe.birch.v1", "recipe.spruce.v1" };
+                double gatheredCrops = 0, gatheredLogs = 0;
                 for (var i = 0; i < treeRecipes.Length; i++)
                 {
                     var recipe = content.Recipe(treeRecipes[i]); var bedId = FarmCommands.OrchardBeds[i];
@@ -294,7 +301,13 @@ namespace Tests.PlayMode
                     Assert.AreSame(recipe.stages[0], tree.sprite, "New trees start from their own sapling stage.");
                     FarmCommands.TickFields(service.State, 100000); view.Refresh();
                     Assert.AreSame(recipe.stages[3], tree.sprite);
+                    var beforeYield = oracle.saveData.Resources.TryGetValue(recipe.output.name, out var stock) ? stock.Amount : 0;
                     Assert.True(service.Harvest(bedId)); view.Refresh();
+                    var paidYield = oracle.saveData.Resources[recipe.output.name].Amount - beforeYield;
+                    if (i == 0) gatheredCrops += paidYield; else gatheredLogs += paidYield;
+                    Assert.AreEqual(i + 1, service.State.TotalHarvests);
+                    Assert.AreEqual(gatheredCrops, service.State.CropsGathered, 1e-9);
+                    Assert.AreEqual(gatheredLogs, service.State.LogsGathered, 1e-9, "Count primary logs without including secondary sticks.");
                     Assert.AreSame(recipe.stages[0], tree.sprite, "Harvest must restart the world tree from a sapling, including older fruit trees.");
                 }
             }
