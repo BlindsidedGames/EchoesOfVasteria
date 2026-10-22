@@ -39,7 +39,7 @@ namespace TimelessEchoes.UI.Toolkit
             portraitMetric.RegisterValueChangedCallback(_ => { if (portraitMetric.index >= 0) SetMetric((Metric)portraitMetric.index); });
             var mapNames = new List<string> { ToolkitLocalization.Text("graph.all-maps", "All maps") };
             mapNames.AddRange(definition.maps.Select(m => ToolkitLocalization.Text("map." + m.config.name, m.label.Trim())));
-            portraitMap = new DropdownField(mapNames, 0); portraitMap.AddToClassList("portrait-picker"); phoneFilters.Add(portraitMap);
+            portraitMap = new DropdownField(mapNames, 0); portraitMap.AddToClassList("portrait-picker"); portraitMap.AddToClassList("graph-last-picker"); phoneFilters.Add(portraitMap);
             portraitMap.RegisterValueChangedCallback(_ => { map = portraitMap.index - 1; selectedRun = -1; Refresh(); });
             var controls = ToolkitGameplay.E(body, "graph-controls");
             foreach (Metric m in Enum.GetValues(typeof(Metric)))
@@ -47,8 +47,10 @@ namespace TimelessEchoes.UI.Toolkit
             var units=ToolkitGameplay.E(controls,"graph-units");
             totals=Choice(units,"graph-totals",ToolkitLocalization.Text("graph.totals", "Totals"),()=>{perMinute=false;Refresh();});
             rates=Choice(units,"graph-rates",ToolkitLocalization.Text("graph.per-minute", "Per minute"),()=>{perMinute=true;Refresh();});
+            rates.AddToClassList("graph-last-choice");
             var filters=ToolkitGameplay.E(body,"graph-map-filters");
             for(int i=-1;i<definition.maps.Length;i++) {var index=i;maps.Add(Choice(filters,"graph-map-"+(i+1),i<0?ToolkitLocalization.Text("graph.all-maps", "All maps"):ToolkitLocalization.Text("map." + definition.maps[i].config.name, definition.maps[i].label.Trim()),()=>{map=index;selectedRun=-1;Refresh();}));}
+            maps[maps.Count - 1].AddToClassList("graph-last-choice");
             var heading=ToolkitGameplay.E(body,"graph-summary-row");
             summary=Text(heading,"","graph-summary");sample=Text(heading,"","graph-sample");
             var chart=ToolkitGameplay.E(body,"graph-chart");
