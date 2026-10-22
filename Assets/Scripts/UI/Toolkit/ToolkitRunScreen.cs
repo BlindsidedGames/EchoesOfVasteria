@@ -90,7 +90,14 @@ namespace TimelessEchoes.UI.Toolkit
             focusToggle = ToolkitControls.Button("run-focus-toggle", () =>
             {
                 var expand = !ToolkitResponsiveLayout.FocusView;
-                if (expand) SetHeroStatsOpen(false);
+                if (expand)
+                {
+                    // Expansion dismisses the menu, including its selected-window
+                    // state, so the next navigation tap opens it normally.
+                    TownWindowManager.Instance?.CloseAllWindows();
+                    HideDetails();
+                    SetHeroStatsOpen(false);
+                }
                 ToolkitResponsiveLayout.SetFocusView(expand);
             }, theme.button);
             focusToggle.style.position = Position.Absolute;

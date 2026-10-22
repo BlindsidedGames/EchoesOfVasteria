@@ -140,7 +140,7 @@ namespace Tests.PlayMode
     button.SendEvent(move); FieldsClick(button);
    }
    var owner = new GameObject("Protected navigation routes");
-   GameObject nav = null, stats = null, quests = null;
+   GameObject nav = null, stats = null, quests = null, run = null;
    try {
     owner.AddComponent<TimelessEchoes.Quests.QuestManager>().enabled = false;
     owner.AddComponent<TimelessEchoes.Upgrades.ResourceManager>();
@@ -200,8 +200,53 @@ namespace Tests.PlayMode
      oracle.saveData.General.MapStatisticsTutorialStage=9; oracle.saveData.General.GraphsViewed=true;
      oracle.saveData.General.TaskBoostTutorialStage=2;
     }
+    foreach(var entry in AssetDatabase.LoadAssetAtPath<ToolkitNavigationDefinition>("Assets/UI/Toolkit/Navigation.asset").entries)
+     foreach(var rule in entry.visibility)
+      if(rule.quest)oracle.saveData.Quests[rule.quest.questId]=new Blindsided.SaveData.GameData.QuestRecord{Completed=true};
+    var gm=owner.AddComponent<TimelessEchoes.GameManager>(); gm.enabled=false;
+    typeof(TimelessEchoes.GameManager).GetProperty("CurrentMap").SetValue(gm,owner);
+    typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(gm,false);
+    run=CreateGuidanceRunView();
+    var expand=run.GetComponent<UIDocument>().rootVisualElement.Q<Button>("run-focus-toggle");
+    foreach(var size in new[]{new Vector2Int(1170,2532),new Vector2Int(5120,2054),new Vector2Int(1170,2532)}) {
+     PlayModeWindow.SetCustomRenderingResolution((uint)size.x,(uint)size.y,"Expand closes navigation state");
+     yield return new WaitForSecondsRealtime(.2f);
+     if(!ToolkitResponsiveLayout.IsPortrait) {
+      Assert.False(ToolkitResponsiveLayout.FocusView);
+      Assert.True(screen.OpenHelpDestination("quests")); yield return null;
+      Assert.True(manager.HasOpenWindow,"Landscape window navigation remains available.");
+      manager.CloseAllWindows(); yield return null; continue;
+     }
+     foreach(var route in new[]{"quests","stats/tasks"}) {
+      Assert.True(screen.OpenHelpDestination(route)); yield return new WaitForSecondsRealtime(.15f);
+      Assert.True(manager.HasOpenWindow);
+      ClickControl(expand); yield return new WaitForSecondsRealtime(.2f);
+      Assert.True(ToolkitResponsiveLayout.FocusView);
+      Assert.False(manager.HasOpenWindow,"Expanding must close the window, not suspend an open selection.");
+      Assert.False(screen.HasOpenMenu);
+      var parent=root.Q<Button>(route=="quests"?"hub":"stats");
+      Assert.False(parent.ClassListContains("active"),"The hidden window must not leave its navigation selected.");
+      ClickControl(parent); yield return new WaitForSecondsRealtime(.15f);
+      Assert.True(screen.HasOpenMenu,"The first tap after expanding must open the menu again.");
+      ClickControl(root.Q<Button>(route=="quests"?"quests":"statistics-section-4")); yield return new WaitForSecondsRealtime(.15f);
+      Assert.True(manager.HasOpenWindow,"The window must reopen on the first selection.");
+      manager.CloseAllWindows(); yield return null;
+     }
+     foreach(var id in new[]{"adventure","hub","townsfolk","stats"}) {
+      ClickControl(root.Q<Button>(id)); yield return new WaitForSecondsRealtime(.15f);
+      Assert.True(screen.HasOpenMenu);
+      ClickControl(expand); yield return new WaitForSecondsRealtime(.2f);
+      Assert.True(ToolkitResponsiveLayout.FocusView);
+      Assert.False(screen.HasOpenMenu,"Expanding must close the "+id+" popup.");
+      Assert.False(root.Q<Button>(id).ClassListContains("active"));
+      ClickControl(root.Q<Button>(id)); yield return new WaitForSecondsRealtime(.15f);
+      Assert.True(screen.HasOpenMenu,"A single tap must reopen "+id+" after expansion.");
+      ClickControl(root.Q<Button>(id)); ClickControl(expand); yield return new WaitForSecondsRealtime(.15f);
+     }
+    }
    } finally {
-    if(nav)Object.DestroyImmediate(nav); if(stats)Object.DestroyImmediate(stats); if(quests)Object.DestroyImmediate(quests); Object.DestroyImmediate(owner);
+    ToolkitResponsiveLayout.SetFocusView(false);
+    if(run)Object.DestroyImmediate(run); if(nav)Object.DestroyImmediate(nav); if(stats)Object.DestroyImmediate(stats); if(quests)Object.DestroyImmediate(quests); Object.DestroyImmediate(owner);
    }
   }
  }
