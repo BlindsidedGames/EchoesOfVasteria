@@ -749,7 +749,7 @@
 
 .gameplay .graph-controls,.gameplay .graph-map-filters {flex-direction:row;flex-shrink:0;margin-bottom:var(--space-section);}
 .gameplay .graph-choice {height:22px;min-height:22px;font-size:7px;padding:var(--space-control) var(--space-section);margin-right:var(--space-control);}
-.gameplay .graph-choice:last-child {margin-right:0;}
+.gameplay .graph-choice.graph-last-choice {margin-right:0;}
 .gameplay .graph-controls {align-items:center;}
 .gameplay .graph-controls > .graph-choice {flex-grow:1;flex-basis:0;min-width:0;}
 .gameplay .graph-units {flex-direction:row;flex-shrink:0;margin-left:var(--space-control);}
