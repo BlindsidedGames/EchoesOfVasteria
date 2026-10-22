@@ -52,11 +52,11 @@ namespace TimelessEchoes.UI.Toolkit
             string option = null;
             if (general.MapStatisticsTutorialStage >= 7)
             {
-                mapTutorialText.text = ToolkitLocalization.Text("journal.tutorial.close", "Close Statistics to finish the tutorial.");
+                mapTutorialText.text = ToolkitLocalization.Text("journal.tutorial.close", "Close Statistics to continue.");
             }
             else if (selectedTab != 0)
             {
-                mapTutorialText.text = ToolkitLocalization.Text("journal.tutorial.general", "Open General to view the maps.");
+                mapTutorialText.text = ToolkitLocalization.Text("journal.tutorial.general", "Choose General to view the maps.");
                 target = StatisticsSectionTarget(0);
                 option = TabTitle(0);
             }

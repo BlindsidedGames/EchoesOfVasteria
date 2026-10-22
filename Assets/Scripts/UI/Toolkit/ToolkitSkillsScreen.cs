@@ -327,7 +327,7 @@ namespace TimelessEchoes.UI.Toolkit
                 var currentLevel = controller.GetLevel(skill);
                 var next = milestones.Concat(unlocks).Where(i => i.level > currentLevel).OrderBy(i => i.level).FirstOrDefault();
                 var nextName = next.milestone != null ? next.milestone.DisplayName : next.unlock != null ? (next.unlock.resource ? ToolkitLocalization.Name(next.unlock.resource) : ToolkitLocalization.Name(next.unlock.task)) : "";
-                var hint = Text(milestoneList, ToolkitLocalization.Text("skills.first-lesson", "Tasks earn skill XP. Your current bonuses are shown on the left.") +
+                var hint = Text(milestoneList, ToolkitLocalization.Text("skills.first-lesson", "Complete tasks to earn skill XP and unlock bonuses.") +
                     (next.level > 0 ? "\n" + ToolkitLocalization.Text("skills.next-unlock", "Next: {0} at level {1}.", nextName, next.level) : ""), 8);
                 hint.name = "skills-tutorial-hint"; hint.style.whiteSpace = WhiteSpace.Normal;
             }

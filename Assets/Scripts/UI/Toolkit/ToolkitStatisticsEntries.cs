@@ -27,7 +27,7 @@ namespace TimelessEchoes.UI.Toolkit
             body.style.paddingTop = body.style.paddingBottom = body.style.paddingLeft = body.style.paddingRight = 0;
             if (!enemies && Blindsided.Oracle.oracle?.saveData?.General.TaskBoostTutorialStage == 1)
             {
-                var hint = ToolkitControls.Text(ToolkitLocalization.Text("statistics.boost-lesson", "Boost makes a task more likely relative to others in its category. Completion milestones strengthen that bonus. Try Boost; toggle it again to undo."), ToolkitControls.TextRole.Body);
+                var hint = ToolkitControls.Text(ToolkitLocalization.Text("statistics.boost-lesson", "Select Boost to make this task more common within its category. Its category also becomes a little more common on the map. Completion milestones strengthen the boost. Select Boost again to turn it off."), ToolkitControls.TextRole.Body);
                 hint.name = "task-boost-lesson"; hint.style.whiteSpace = WhiteSpace.Normal; body.Add(hint);
             }
             var scroll = ToolkitControls.RecessedScroll(body, enemies ? "enemy-statistics" : "task-statistics", theme, definition.inset);

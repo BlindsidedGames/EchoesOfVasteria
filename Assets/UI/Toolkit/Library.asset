@@ -35,7 +35,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: "<b>Start:</b> Adventure \u2192 select a map.\n\nYour character travels between tasks and gathers resources automatically. Each map has different resources.\n\n<b>Map information:</b> Statistics \u2192 General \u2192 select a map. Discovered resources are shown there. Locked maps show where to learn more."
+      fallback: "Choose Adventure, then a map to start a run. Your hero moves between tasks and gathers resources automatically. Each map has different resources.\n\nTo see what you\u2019ve discovered, open Statistics \u2192 General and choose a map. Locked maps show how to learn more."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -61,6 +61,7 @@ MonoBehaviour:
         m_LocalVariables: []
     illustrations:
     - sprite: {fileID: -2997195532997922311, guid: e36f7692c71d2a34383e21fe9d44dc80, type: 3}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -116,7 +117,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: "Tasks award resources and skill XP.\n\n<b>Skill bonuses and unlocks:</b> Hub \u2192 Skills \u2192 select a skill.\n\n<b>Task chances:</b> Statistics \u2192 Tasks. Adjust a task's weight to change how often it appears among eligible tasks."
+      fallback: "Complete tasks to earn resources and skill XP.\n\nOpen Hub \u2192 Skills and choose a skill to see its bonuses and unlocks.\n\nOpen Statistics \u2192 Tasks and use Boost to make a task more common within its category. Boosting also gives that category a smaller increase in how often it appears on the map."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -130,7 +131,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: "Task weights do not unlock tasks or change which maps they appear on. Map, distance, and progression still apply.\n\nCombat levels unlock higher core and crystal tiers. Required levels are listed under Skills \u2192 Combat."
+      fallback: "Boosting a task does not unlock it or change which maps it appears on. Map, distance and progression requirements still apply.\n\nCombat levels unlock higher core and crystal tiers. See Hub \u2192 Skills \u2192 Combat for the required levels."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -142,6 +143,7 @@ MonoBehaviour:
         m_LocalVariables: []
     illustrations:
     - sprite: {fileID: -263682996174179970, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -160,7 +162,7 @@ MonoBehaviour:
         key:
         bold: 0
         smallCaps: 0
-        fallback: "<b>Farming</b>\nHarvest crop patches in Farmlands to gain crops and Farming XP. These adventure tasks are separate from planting crops in town. Check Skills \u2192 Farming for bonuses and unlocks."
+        fallback: "<b>Farming</b>\nHarvest crop patches in Farmlands to earn crops and Farming XP. Growing your own crops through Fields is a separate system. See Hub \u2192 Skills \u2192 Farming for bonuses and unlocks."
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -171,6 +173,7 @@ MonoBehaviour:
           m_WaitForCompletion: 0
           m_LocalVariables: []
     - sprite: {fileID: -5728692859750609351, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -189,7 +192,7 @@ MonoBehaviour:
         key:
         bold: 0
         smallCaps: 0
-        fallback: "<b>Fishing</b>\nGill provides your first rod. Fishing tasks catch fish and award Fishing XP. Check Statistics \u2192 General for a map's discovered resources, and Skills \u2192 Fishing for progression."
+        fallback: "<b>Fishing</b>\nGill gives you your first rod. Fishing tasks award fish and Fishing XP.\n\nSee Statistics \u2192 General for each map\u2019s discovered resources, or Hub \u2192 Skills \u2192 Fishing for bonuses and unlocks."
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -200,6 +203,7 @@ MonoBehaviour:
           m_WaitForCompletion: 0
           m_LocalVariables: []
     - sprite: {fileID: -6623575528231689321, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -218,7 +222,7 @@ MonoBehaviour:
         key:
         bold: 0
         smallCaps: 0
-        fallback: "<b>Mining</b>\nMining tasks provide ores and Mining XP. Smelt ores into ingots at the Forge to craft equipment. Check Skills \u2192 Mining for ore unlock levels."
+        fallback: "<b>Mining</b>\nMine ore to earn Mining XP. Smelt ore into ingots at the Forge, then use them to craft equipment. See Hub \u2192 Skills \u2192 Mining for ore unlock levels."
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -229,6 +233,7 @@ MonoBehaviour:
           m_WaitForCompletion: 0
           m_LocalVariables: []
     - sprite: {fileID: 3201700494366066137, guid: 22ed88aefbda3ed4bb433eff8c8ce8ad, type: 3}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -247,7 +252,7 @@ MonoBehaviour:
         key:
         bold: 0
         smallCaps: 0
-        fallback: "<b>Woodcutting</b>\nWoodcutting tasks provide wood resources and Woodcutting XP. Follow Barkley's quests to progress into the Woods. Check Skills \u2192 Woodcutting for unlocks and Statistics \u2192 Tasks to adjust eligible task chances."
+        fallback: "<b>Woodcutting</b>\nChop wood to earn Woodcutting XP. Barkley\u2019s quests lead you into the Woods.\n\nSee Hub \u2192 Skills \u2192 Woodcutting for unlocks, or Statistics \u2192 Tasks to boost task chances."
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -282,13 +287,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: '<b>Open:</b> Quests.
-
-
-        Accept a quest, complete its requirements, then turn it in while in town. Resource hand-ins spend the requested items.
-
-
-        Tracked quests appear on your HUD. Untracked quests remain in the quest list.'
+      fallback: "Open Quests to view your objectives. Complete a quest\u2019s requirements, then turn it in while in town to claim the reward. Resource hand-ins spend the listed items.\n\nPinned quests appear during a run. Other quests stay in the quest list."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -302,10 +301,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: 'A quest can require resources, enemy kills, an NPC meeting, or a guided interaction. Meeting its requirements makes it ready to turn in; rewards are claimed at turn-in.
-
-
-        Quests cannot be turned in during an adventure.'
+      fallback: Quests may ask for resources, enemy kills, an NPC meeting or a tutorial action. Meeting the requirements makes a quest ready to turn in. You receive its reward when you turn it in, which you can only do in town.
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -317,6 +313,7 @@ MonoBehaviour:
         m_LocalVariables: []
     illustrations:
     - sprite: {fileID: 3947923570558630869, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -372,7 +369,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: "<b>Open:</b> Hub \u2192 Inventory.\n\nSelect an equipped slot to inspect its bonuses. Total equipment bonuses combine all equipped items.\n\nCompare stat values when replacing equipment. Higher rarity does not guarantee a better item.\n\n<b>Current combat stats:</b> in-run HUD \u2192 Stats."
+      fallback: "Open Hub \u2192 Inventory to inspect your equipment and resources. Select an equipped item to see its bonuses. Your total equipment bonuses include every equipped item.\n\nCompare the stats before replacing an item: a rarer item is not always an upgrade.\n\nDuring a run, select Stats beside your health bar to see your current combat stats."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -386,7 +383,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: Discovered resources appear first, followed by undiscovered resources. Each group keeps your chosen sort order.
+      fallback: Discovered resources appear before undiscovered ones. Both groups use a fixed resource order.
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -398,6 +395,7 @@ MonoBehaviour:
         m_LocalVariables: []
     illustrations:
     - sprite: {fileID: 5064720189575774579, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -418,7 +416,7 @@ MonoBehaviour:
         smallCaps: 0
         fallback: '<b>Weapon</b>
 
-          Crafted weapons guarantee damage. Compare the other rolled stats before replacing your current weapon.'
+          Every crafted weapon has a damage stat. Compare its other stats before replacing your current weapon.'
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -429,6 +427,7 @@ MonoBehaviour:
           m_WaitForCompletion: 0
           m_LocalVariables: []
     - sprite: {fileID: -5938119891582100046, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -449,7 +448,7 @@ MonoBehaviour:
         smallCaps: 0
         fallback: '<b>Helmet</b>
 
-          Crafted helmets guarantee health. Other rolled stats can improve offense, defense, or recovery.'
+          Every crafted helmet has a health stat. Its other stats can improve offense, defense or recovery.'
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -460,6 +459,7 @@ MonoBehaviour:
           m_WaitForCompletion: 0
           m_LocalVariables: []
     - sprite: {fileID: 3631121382201776489, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -480,7 +480,7 @@ MonoBehaviour:
         smallCaps: 0
         fallback: '<b>Chest</b>
 
-          Crafted chest pieces guarantee defense. Defense reduces incoming damage with diminishing returns.'
+          Every crafted chest piece has a defense stat. More defense reduces incoming damage, with diminishing returns.'
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -491,6 +491,7 @@ MonoBehaviour:
           m_WaitForCompletion: 0
           m_LocalVariables: []
     - sprite: {fileID: -4207116279972355936, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -511,7 +512,7 @@ MonoBehaviour:
         smallCaps: 0
         fallback: '<b>Boots</b>
 
-          Crafted boots guarantee movement, which increases travel speed. Movement rolls are exclusive to this slot.'
+          Every crafted pair of boots has a movement stat, which increases travel speed. Only boots can roll movement.'
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -546,7 +547,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: "Your character fights enemies automatically, then returns to their task.\n\n<b>Current stats:</b> in-run HUD \u2192 Stats.\n<b>Enemy stats and kill bonuses:</b> Statistics \u2192 Enemies."
+      fallback: "Your hero fights enemies automatically, then returns to their task.\n\nSelect Stats beside your health bar during a run to see your current stats. Open Statistics \u2192 Enemies to see enemy stats and your kill bonuses."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -560,7 +561,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: "<b>Defense:</b> with default tuning, damage taken = incoming damage \xD7 25 \xF7 (defense + 25). Negative defense is treated as zero.\n\nRepeated kills against an enemy grant bonus damage against that enemy. Its Statistics entry shows the bonus and next milestone."
+      fallback: "Damage taken = incoming damage \xD7 {0:0.##} \xF7 (defense + {0:0.##}). Defense below zero counts as zero.\n\nRepeated kills of the same enemy unlock bonus damage against it. See Statistics \u2192 Enemies for your current bonus and next milestone."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -572,6 +573,7 @@ MonoBehaviour:
         m_LocalVariables: []
     illustrations:
     - sprite: {fileID: -1557160357, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -592,7 +594,10 @@ MonoBehaviour:
         smallCaps: 0
         fallback: '<b>Damage</b>
 
-          Determines damage dealt per hit before enemy defense and other modifiers. Attack speed controls how often you hit; critical chance and critical damage affect critical hits. View current values in the in-run Stats panel.'
+          Damage per hit, before enemy defense and other modifiers. Attack speed determines how often you hit. Critical chance determines how often you land a critical hit; critical damage determines its strength.
+
+
+          Select Stats beside your health bar during a run to see your current values.'
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -603,6 +608,7 @@ MonoBehaviour:
           m_WaitForCompletion: 0
           m_LocalVariables: []
     - sprite: {fileID: 967639951, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -623,7 +629,7 @@ MonoBehaviour:
         smallCaps: 0
         fallback: '<b>Defense</b>
 
-          Reduces incoming damage. At 25 defense you take half damage; at 75 defense you take one quarter. Defense does not prevent damage completely. The formula is in Reference.'
+          Reduces incoming damage. At {0:0.##} defense you take half damage; at {1:0.##} defense you take one quarter. Defense does not prevent damage completely. See Reference for the formula.'
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -634,6 +640,7 @@ MonoBehaviour:
           m_WaitForCompletion: 0
           m_LocalVariables: []
     - sprite: {fileID: 134269120, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -654,7 +661,10 @@ MonoBehaviour:
         smallCaps: 0
         fallback: '<b>Health</b>
 
-          Your character dies when health reaches zero. Equipment can increase maximum health; regeneration restores health over time. Check the health bar and current Stats during a run.'
+          Your hero dies when health reaches zero. Equipment can increase maximum health, and regeneration restores health over time.
+
+
+          Select Stats beside your health bar during a run for your current values.'
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -1059,7 +1069,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: "Carl reaps your character at the map's limit. The run ends; gathered resources and skill progress are kept.\n\nReturn to town to turn in quests. The Run Summary lists your gains and progress.\n\n<b>Map limits:</b> Statistics \u2192 General \u2192 select a map."
+      fallback: "<b>River, Woods and Mines</b>\nCarl ends your run at the distance limit. Being reaped at that limit increases your shared reaping distance by 1%.\n\n<b>Farmlands</b>\nCarl ends your run at the distance limit, but reaping gives no distance increase.\n\n<b>Spooky</b>\nEnemy levels rise with your kills. There is no kill cap or distance reaping limit.\n\nYou keep gathered resources and skill progress when a run ends. Return to town to turn in quests, and check the Run Summary to see your gains. Map information is in Statistics \u2192 General."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -1073,7 +1083,19 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: Reaping at the limit increases distance by 1% on River, Woods, and Mines. Farmlands gives no increase. Spooky uses a kill limit instead of distance. Some quests also increase your reach.
+      fallback: '<b>River, Woods and Mines</b>
+
+        Being reaped at the distance limit increases your shared reaping distance by 1% of the effective limit reached, including distance buffs. Some quests also let you travel farther.
+
+
+        <b>Farmlands</b>
+
+        Carl ends the run at its distance limit, but being reaped gives no distance increase.
+
+
+        <b>Spooky</b>
+
+        Enemy levels rise as you get more kills. There is no kill cap or distance reaping limit.'
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -1085,6 +1107,7 @@ MonoBehaviour:
         m_LocalVariables: []
     illustrations:
     - sprite: {fileID: 5850598286787540372}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -1103,9 +1126,7 @@ MonoBehaviour:
         key:
         bold: 0
         smallCaps: 0
-        fallback: '<b>Carl</b>
-
-          Carl ends the run at the map''s limit. You keep gathered resources and skill progress. River, Woods, and Mines gain 1% distance when you are reaped at the limit; Farmlands does not. Spooky uses kills instead of distance.'
+        fallback: "<b>Carl</b>\nCarl ends your run at the map\u2019s distance limit. You keep gathered resources and skill progress.\n\nRiver, Woods and Mines gain 1% distance when Carl reaps you at the limit. Farmlands gives no increase. Spooky scales with kills and has no distance reaping limit."
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -1334,7 +1355,7 @@ MonoBehaviour:
         key:
         bold: 0
         smallCaps: 0
-        fallback: Kill limit
+        fallback: Enemy levels scale with kills; no kill cap
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -1381,13 +1402,13 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: '<b>Return:</b> use the return-to-town control during a run.
+      fallback: 'Use the return-to-town control during a run to retreat. Each kill adds 2% to your retreat resource bonus, shown on the control.
 
 
-        Each kill adds 2% to your retreat resource bonus. The return control shows the current bonus.
+        If you request a return during combat, your hero finishes the fight before leaving.
 
 
-        A return requested during combat is queued until the fight ends.'
+        You only receive this bonus if you return alive. Dying or being reaped forfeits it; you still keep the resources already gathered.'
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -1401,7 +1422,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: The retreat bonus is based on kills earned during the current run. Reaping and retreating are different ways to end a run.
+      fallback: Your retreat bonus comes from kills in the current run and is awarded when you return alive. Dying or being reaped forfeits the bonus, but does not remove the resources already gathered.
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -1437,7 +1458,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: "<b>Open:</b> Townsfolk \u2192 Forge, after meeting Ivan.\n\n<b>1. Smelt ingots</b> from the required materials.\n<b>2. Select a core.</b> It sets rarity odds and material costs.\n<b>3. Select a slot and Craft.</b> Each craft spends ingots and one core.\n<b>4. Compare the result.</b> Choose Equip to replace your current item.\n\nOutside Ivan's lesson, crafting for an empty slot equips the result automatically."
+      fallback: "After meeting Ivan, open Town \u2192 Forge.\n\n1. Smelt the required materials into ingots.\n2. Select a core to set the rarity chances and material costs.\n3. Select an equipment slot, then Craft. Each craft uses ingots and one core.\n4. Compare the result. Select Equip to replace your current item.\n\nOutside Ivan\u2019s lesson, a crafted item equips automatically if its slot is empty."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -1451,7 +1472,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: "<b>Salvage</b>\nAn unused result is salvaged when you craft again or switch slots. Review it before continuing.\n\n<b>Automation \u2014 Forge mastery level 3</b>\nCraft Until Upgrade repeats crafting and spends materials each time.\nStop for Vastium stops on a Vastium result, even if it is a downgrade.\nStat Matching requires an upgrade to match your equipped item's affix types before stopping for that upgrade.\n\n<b>Core and crystal unlocks:</b> Hub \u2192 Skills \u2192 Combat."
+      fallback: "<b>Salvage</b>\nReview your result before crafting again or switching slots: either action salvages an unequipped result.\n\n<b>Automation \u2014 Forge mastery level 3</b>\nCraft Until Upgrade keeps crafting, spending materials on every attempt.\n\nStop for Vastium stops on any Vastium result, even a downgrade.\n\nWith Stat Matching on, an upgrade must also have the same stat types as your equipped item before crafting stops.\n\nSee Hub \u2192 Skills \u2192 Combat for core and crystal unlocks."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -1463,6 +1484,7 @@ MonoBehaviour:
         m_LocalVariables: []
     illustrations:
     - sprite: {fileID: 8925258338319069828, guid: f84262455b69072498ba0e2afc130d21, type: 3}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -1483,7 +1505,7 @@ MonoBehaviour:
         smallCaps: 0
         fallback: '<b>Ingots</b>
 
-          Smelt the materials shown by the ingot control. The selected core determines the ingot type and quantity required for a craft. Smelting creates materials; it does not create equipment.'
+          Smelt the listed materials into ingots. Your selected core determines which ingots a craft needs and how many. Smelting makes materials; Craft makes equipment.'
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -1494,6 +1516,7 @@ MonoBehaviour:
           m_WaitForCompletion: 0
           m_LocalVariables: []
     - sprite: {fileID: 791382025818577539, guid: 9a7553022bc32ea4cab234021aded58a, type: 3}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -1512,9 +1535,7 @@ MonoBehaviour:
         key:
         bold: 0
         smallCaps: 0
-        fallback: '<b>Cores</b>
-
-          Each craft consumes one core. The selected core determines rarity odds and material costs. Combat levels unlock higher core tiers; upgrade cores using the Forge''s conversion controls.'
+        fallback: "<b>Cores</b>\nEach craft uses one core. Your selected core sets the rarity chances and material costs. Higher core tiers unlock through Combat levels. Use the Forge\u2019s conversion controls to upgrade cores."
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -1525,6 +1546,7 @@ MonoBehaviour:
           m_WaitForCompletion: 0
           m_LocalVariables: []
     - sprite: {fileID: 5064720189575774579, guid: fffb6aee16bdecb4cb3248697c59ee9f, type: 3}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -1545,7 +1567,10 @@ MonoBehaviour:
         smallCaps: 0
         fallback: '<b>Sword</b>
 
-          Select Weapon, then Craft. Weapons guarantee a damage stat. Review the rolled bonuses and choose Equip to replace your current weapon. An unused result is salvaged when you craft again or switch slots.'
+          Select Weapon, then Craft. Every weapon has a damage stat. Compare the result, then select Equip to replace your current weapon.
+
+
+          Crafting again or switching slots salvages an unequipped result.'
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -1781,7 +1806,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: "<b>Open:</b> Hub \u2192 Buffs.\n\nBuffs provide temporary bonuses. Check the effect, cost, and duration before activating one. Buffs expire when their duration ends or you return to town.\n\nComplete a slot's required quest to unlock autocasting. Toggle autocasting from that slot."
+      fallback: "Select a buff icon to see its current effects, duration and cooldown. These values include your upgrades.\n\nOpen Hub \u2192 Buffs to assign buffs and manage autocasting. Complete a slot\u2019s required quest to unlock autocasting for that slot.\n\nBuffs end when their duration runs out or you return to town."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -1806,18 +1831,19 @@ MonoBehaviour:
         m_WaitForCompletion: 0
         m_LocalVariables: []
     illustrations:
-    - sprite: {fileID: 7039786379928897746, guid: 6eca58ce81dde1648bbe834da736d225, type: 3}
+    - sprite: {fileID: 3365429046567243591, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+      buff: {fileID: 11400000, guid: b3da0caef68423743816441b6a45b46d, type: 2}
       caption:
         key:
         bold: 0
         smallCaps: 0
-        fallback: Resource Doubler
+        fallback: Bonus Experience
         localized:
           m_TableReference:
-            m_TableCollectionName: Wiki
+            m_TableCollectionName: TownUI
           m_TableEntryReference:
             m_KeyId: 0
-            m_Key: help.buffs.art.0
+            m_Key: buff.Bonus Experience
           m_FallbackState: 0
           m_WaitForCompletion: 0
           m_LocalVariables: []
@@ -1825,7 +1851,247 @@ MonoBehaviour:
         key:
         bold: 0
         smallCaps: 0
-        fallback: "<b>Resource Doubler</b>\nA temporary resource-gathering buff. Check its displayed effect, cost, and duration in Hub \u2192 Buffs. Eligible slots can autocast after their required quests are completed."
+        fallback: "Select a buff above to see its current effects, duration and cooldown below. Complete a slot\u2019s required quest to unlock autocasting for that slot."
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.buffs.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: 21300000, guid: 2143ab0cfe7f19943b34c1b867a598b6, type: 2}
+      buff: {fileID: 11400000, guid: 4109c1531cf22e3499a2feff0eee6fad, type: 2}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Collector's Instinct
+        localized:
+          m_TableReference:
+            m_TableCollectionName: TownUI
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: buff.Collectors Instinct
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: "Select a buff above to see its current effects, duration and cooldown below. Complete a slot\u2019s required quest to unlock autocasting for that slot."
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.buffs.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: 2601603839896418933, guid: 61614b6dea4e6254e853eb57bbf5ef3b, type: 3}
+      buff: {fileID: 11400000, guid: 9ee99b6b8437872428306f02bdb1ee68, type: 2}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Combat Enhancer
+        localized:
+          m_TableReference:
+            m_TableCollectionName: TownUI
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: buff.Combat Enhancer
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: "Select a buff above to see its current effects, duration and cooldown below. Complete a slot\u2019s required quest to unlock autocasting for that slot."
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.buffs.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: 2125737359283935466, guid: ccef7b4dfa81a334298f0e309b4e61f4, type: 3}
+      buff: {fileID: 11400000, guid: d3c04ce599778464a867445da1dd6b79, type: 2}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Critical Roll
+        localized:
+          m_TableReference:
+            m_TableCollectionName: TownUI
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: buff.Critical Roll
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: "Select a buff above to see its current effects, duration and cooldown below. Complete a slot\u2019s required quest to unlock autocasting for that slot."
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.buffs.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: 7218046035808895280, guid: 16b9f4cabb88e55479fb4cb5a33be70d, type: 3}
+      buff: {fileID: 11400000, guid: e2fc3ccddf9f9de4189bdebaf3a184a6, type: 2}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Echo | Combat
+        localized:
+          m_TableReference:
+            m_TableCollectionName: TownUI
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: buff.Echo Combat
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: "Select a buff above to see its current effects, duration and cooldown below. Complete a slot\u2019s required quest to unlock autocasting for that slot."
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.buffs.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: 21300000, guid: 1ca9993a81e8cb74c9392f5ba10ac4b6, type: 2}
+      buff: {fileID: 11400000, guid: ca9009dd4a965db42a2727b2b5e1a973, type: 2}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Echo Resonance
+        localized:
+          m_TableReference:
+            m_TableCollectionName: TownUI
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: buff.Echo Resonance
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: "Select a buff above to see its current effects, duration and cooldown below. Complete a slot\u2019s required quest to unlock autocasting for that slot."
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.buffs.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: 21300000, guid: 27afd0a9708dae942b5fcb9f60c65dff, type: 3}
+      buff: {fileID: 11400000, guid: f17a13066cddffd48894dc414bebf6d1, type: 2}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Echo | Tasks
+        localized:
+          m_TableReference:
+            m_TableCollectionName: TownUI
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: buff.Echo Tasks
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: "Select a buff above to see its current effects, duration and cooldown below. Complete a slot\u2019s required quest to unlock autocasting for that slot."
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.buffs.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: -5882155960153656733, guid: 75e6aad650cc46242a07d1d673daedeb, type: 3}
+      buff: {fileID: 11400000, guid: 93c2ce8508bc0614590bbdb57f32cde3, type: 2}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Movement Speed
+        localized:
+          m_TableReference:
+            m_TableCollectionName: TownUI
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: buff.MoveSpeed
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: "Select a buff above to see its current effects, duration and cooldown below. Complete a slot\u2019s required quest to unlock autocasting for that slot."
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.buffs.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: 7039786379928897746, guid: 6eca58ce81dde1648bbe834da736d225, type: 3}
+      buff: {fileID: 11400000, guid: 6d8a9537ce49fbd4a9c7505ac4c17068, type: 2}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Resource Multiplier
+        localized:
+          m_TableReference:
+            m_TableCollectionName: TownUI
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: buff.Resource Doubler
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: "Select a buff above to see its current effects, duration and cooldown below. Complete a slot\u2019s required quest to unlock autocasting for that slot."
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -1836,6 +2102,7 @@ MonoBehaviour:
           m_WaitForCompletion: 0
           m_LocalVariables: []
     - sprite: {fileID: 7997396682134867387, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+      buff: {fileID: 11400000, guid: 6cda1ab3aea58cb4db8f2581a7d3cd4f, type: 2}
       caption:
         key:
         bold: 0
@@ -1843,10 +2110,10 @@ MonoBehaviour:
         fallback: Task Speed
         localized:
           m_TableReference:
-            m_TableCollectionName: Wiki
+            m_TableCollectionName: TownUI
           m_TableEntryReference:
             m_KeyId: 0
-            m_Key: help.buffs.art.1
+            m_Key: buff.Task Speed
           m_FallbackState: 0
           m_WaitForCompletion: 0
           m_LocalVariables: []
@@ -1854,13 +2121,73 @@ MonoBehaviour:
         key:
         bold: 0
         smallCaps: 0
-        fallback: "<b>Task Speed</b>\nA temporary buff that speeds up task completion. Manage its slot and autocasting in Hub \u2192 Buffs. Buffs end when their duration expires or you return to town."
+        fallback: "Select a buff above to see its current effects, duration and cooldown below. Complete a slot\u2019s required quest to unlock autocasting for that slot."
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
           m_TableEntryReference:
             m_KeyId: 0
-            m_Key: help.buffs.art.1.description
+            m_Key: help.buffs.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: -2906203513720773286, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
+      buff: {fileID: 11400000, guid: 7d03eb1ee4f9b3544ba4d7a8e858f5f8, type: 2}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Regeneration
+        localized:
+          m_TableReference:
+            m_TableCollectionName: TownUI
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: buff.Vampiric
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: "Select a buff above to see its current effects, duration and cooldown below. Complete a slot\u2019s required quest to unlock autocasting for that slot."
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.buffs.art.0.description
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+    - sprite: {fileID: 21300000, guid: fc76e7e56db413c40b074269623929e2, type: 2}
+      buff: {fileID: 11400000, guid: 494a787dc235ad34d93744119fde415a, type: 2}
+      caption:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: Windfall
+        localized:
+          m_TableReference:
+            m_TableCollectionName: TownUI
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: buff.Windfall
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+      description:
+        key:
+        bold: 0
+        smallCaps: 0
+        fallback: "Select a buff above to see its current effects, duration and cooldown below. Complete a slot\u2019s required quest to unlock autocasting for that slot."
+        localized:
+          m_TableReference:
+            m_TableCollectionName: Wiki
+          m_TableEntryReference:
+            m_KeyId: 0
+            m_Key: help.buffs.art.0.description
           m_FallbackState: 0
           m_WaitForCompletion: 0
           m_LocalVariables: []
@@ -1892,7 +2219,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: "<b>Open:</b> Townsfolk \u2192 Cauldron.\n\nMix food into stew, then taste the stew to receive cards. Check the displayed reward chances before tasting.\n\nResource cards increase matching resource yield. Buff cards improve buffs. Card levels are separate from resource rarity tiers."
+      fallback: "Open Town \u2192 Cauldron. Mix food into stew, then taste the stew to receive cards. Check the reward chances before tasting.\n\nResource cards increase how much of that resource you gather. Buff cards improve buffs. Card levels and resource rarity tiers are separate systems."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -1906,13 +2233,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: 'A category uses the lowest card tier among its unlocked resources; unowned cards count as tier zero.
-
-
-        Resource-card and category bonuses add together, up to 70%. They apply to gathering, enemy drops, and town crop harvests. Rewards, seeds, refunds, and conversions do not receive them.
-
-
-        Complete all available resource and buff collections to unlock Eternal Boons.'
+      fallback: "A category\u2019s tier is the lowest card tier among its unlocked resources. A card you do not own counts as tier zero.\n\nResource-card and category bonuses add together, up to 70%. They apply to gathering, enemy drops and town crop harvests. They do not apply to rewards, seeds, refunds or conversions.\n\nComplete all available resource and buff collections to unlock Eternal Boons."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -1924,6 +2245,7 @@ MonoBehaviour:
         m_LocalVariables: []
     illustrations:
     - sprite: {fileID: -6316128909204395339, guid: de898b1a9190842419c92214290725b9, type: 3}
+      buff: {fileID: 0}
       caption:
         key:
         bold: 0
@@ -1944,7 +2266,10 @@ MonoBehaviour:
         smallCaps: 0
         fallback: '<b>Cauldron</b>
 
-          Choose food and a quantity to mix into stew. Taste stew to receive cards using the displayed reward chances. Resource cards improve matching resource yield; buff cards improve buffs. Reference lists resource-card and category thresholds.'
+          Choose food and how much to mix into stew. Taste the stew to receive cards, using the displayed reward chances. Resource cards increase gathering yield; buff cards improve buffs.
+
+
+          See Reference for resource-card and category thresholds.'
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -2365,7 +2690,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: "Echoes are temporary copies of your character that gather resources or fight enemies.\n\nOrin's realms are connected. Spikes in temporal energy let Echoes of your past cross between them to help you. Helping the townsfolk earns you the power to summon Echoes at will.\n\nSkill milestone Echoes seek tasks belonging to that skill. Check Skills \u2192 Milestones or the summoning buff for its effects."
+      fallback: "Echoes are temporary copies of your hero that gather resources or fight enemies.\n\nOrin\u2019s realms are connected. Surges of temporal energy let Echoes of your past cross between them to help you. Helping the townsfolk lets you summon Echoes yourself.\n\nEchoes unlocked through a skill\u2019s milestones seek tasks for that skill. See Hub \u2192 Skills for milestones, or the summoning buff for its effects."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -2379,7 +2704,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: An Echo with both task and combat abilities prioritizes tasks and fights when engaged.
+      fallback: An Echo that can both gather and fight prioritizes tasks, then fights when engaged.
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -2391,6 +2716,7 @@ MonoBehaviour:
         m_LocalVariables: []
     illustrations:
     - sprite: {fileID: 21300000, guid: 27afd0a9708dae942b5fcb9f60c65dff, type: 3}
+      buff: {fileID: 11400000, guid: f17a13066cddffd48894dc414bebf6d1, type: 2}
       caption:
         key:
         bold: 0
@@ -2409,9 +2735,7 @@ MonoBehaviour:
         key:
         bold: 0
         smallCaps: 0
-        fallback: '<b>Task Echo</b>
-
-          Gathers resources without attacking or attracting enemies. Skill milestone Echoes seek tasks for that skill. The summoning buff or milestone specifies the Echo''s duration and abilities.'
+        fallback: "<b>Task Echo</b>\nGathers resources without attacking or attracting enemies. Echoes unlocked through a skill\u2019s milestones seek tasks for that skill. Check the milestone or summoning buff for its duration and abilities.\n\nThe current summon\u2019s effects, duration and cooldown are shown below."
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -2422,6 +2746,7 @@ MonoBehaviour:
           m_WaitForCompletion: 0
           m_LocalVariables: []
     - sprite: {fileID: 7218046035808895280, guid: 16b9f4cabb88e55479fb4cb5a33be70d, type: 3}
+      buff: {fileID: 11400000, guid: e2fc3ccddf9f9de4189bdebaf3a184a6, type: 2}
       caption:
         key:
         bold: 0
@@ -2440,9 +2765,7 @@ MonoBehaviour:
         key:
         bold: 0
         smallCaps: 0
-        fallback: '<b>Combat Echo</b>
-
-          Seeks and fights enemies. Combat-only Echoes do not gather resources. An Echo with both task and combat abilities prioritizes tasks and fights when engaged.'
+        fallback: "<b>Combat Echo</b>\nSeeks out enemies and fights them. Combat-only Echoes do not gather resources. An Echo that can both gather and fight prioritizes tasks, then fights when engaged.\n\nThe current summon\u2019s effects, duration and cooldown are shown below."
         localized:
           m_TableReference:
             m_TableCollectionName: Wiki
@@ -2589,13 +2912,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: 'Gathering can raise a resource''s rarity tier. Higher tiers permanently increase future yield for that resource.
-
-
-        Town crop harvests use your current tier bonus but do not roll upgrades.
-
-
-        Resource tiers, equipment rarity, and Cauldron card levels are separate systems.'
+      fallback: "Gathering can raise a resource\u2019s rarity tier, permanently increasing how much of it you collect.\n\nTown crop harvests receive your current tier bonus but cannot raise the tier.\n\nSeed packs do not gain rarity tiers or rarity bonuses.\n\nResource tiers, equipment rarity and Cauldron card levels are separate systems."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -2609,7 +2926,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: Upgrade chances are per eligible collection at the previous tier. Tier 1 is the starting tier.
+      fallback: Resources start at Tier 1. Each upgrade chance applies when you collect an eligible resource at the previous tier.
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -3177,7 +3494,7 @@ Sprite:
       height: 14
     textureRectOffset: {x: 0, y: 0}
     atlasRectOffset: {x: -1, y: -1}
-    settingsRaw: 3072
+    settingsRaw: 0
     uvTransform: {x: 16, y: 9, z: 16, w: 14}
     downscaleMultiplier: 1
   m_AtlasRD:
@@ -3397,7 +3714,7 @@ Sprite:
       height: 27
     textureRectOffset: {x: 0, y: 0}
     atlasRectOffset: {x: -1, y: -1}
-    settingsRaw: 3072
+    settingsRaw: 0
     uvTransform: {x: 16, y: 31.5, z: 16, w: 804.5}
     downscaleMultiplier: 1
   m_AtlasRD:

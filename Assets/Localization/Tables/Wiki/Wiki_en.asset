@@ -19,14 +19,11 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 188400156672
-    m_Localized: Alter-Echo production has been retired. Gather resources on adventures or harvest planted crops.
+    m_Localized: "Alter-Echo production has been retired. Gather resources on adventures or harvest crops you\u2019ve planted."
     m_Metadata:
       m_Items: []
   - m_Id: 478381752320
-    m_Localized: 'Buffs are short-term, timed powers that expire when they run out or if you return to town.  They can be autocast after completing the required quest for the slot and the autocasting defaults to on. You can toggle it off by clicking the slot in the buffs management window.
-
-
-      Buff cooldowns can be reduced via Eva''s Cauldron.'
+    m_Localized: "Buffs are temporary powers. They end when their duration runs out or you return to town.\n\nComplete a slot\u2019s required quest to unlock autocasting, which starts enabled. Select the slot in Hub \u2192 Buffs to turn it on or off.\n\nEva\u2019s Cauldron can reduce buff cooldowns."
     m_Metadata:
       m_Items: []
   - m_Id: 492340396032
@@ -34,41 +31,35 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 512217202688
-    m_Localized: "Echoes are alternate versions of your character who will shift slightly into their reality to help out under various circumstances.\n\nEach echo can have a combination of your character's skillset. But most Echoes won't have them all.\n\nThe main difference in Echo behaviour comes from whether or not they are combat enabled.\nCombat-enabled Echoes have two different styles depending on whether or not they can also complete tasks. \n\nA combat-enabled Echo that does NOT have the ability to do tasks will seek out enemies specifically.\nA combat-enabled Echo that DOES have the ability to do tasks will prioritize tasks over combat and only engage enemies that see them.\n\nEchoes that do not have combat will not be targeted by or target enemies.\n\nDev Note | Right now there are no echoes in the game that can do both combat and tasks. Echoes from Milestones specifically seek out tasks for that skills milestone EG an echo spawned with woodcutting will only seek out woodcutting tasks."
+    m_Localized: 'Echoes are versions of your hero from other realities. Each has its own set of abilities.
+
+
+      Combat-only Echoes seek enemies. Echoes that can gather and fight prioritize tasks, then fight when engaged. Echoes that cannot fight neither attack nor attract enemies.
+
+
+      Echoes unlocked through skill milestones seek tasks for that skill. For example, a Woodcutting Echo seeks Woodcutting tasks.'
     m_Metadata:
       m_Items: []
   - m_Id: 532437942272
-    m_Localized: 'For each kill you get on a run, your resource bonus goes up by 2%. During combat, this is temporarily set to 0%
+    m_Localized: 'Use the return-to-town control during a run to retreat. Each kill adds 2% to your retreat resource bonus, shown on the control.
 
 
-      Aim to retreat just before combat gets too tough for you to handle so that you get as many bonus resources as possible!'
+      If you request a return during combat, your hero finishes the fight before leaving.
+
+
+      You only receive this bonus if you return alive. Dying or being reaped forfeits it; you still keep the resources already gathered.'
     m_Metadata:
       m_Items: []
   - m_Id: 698595295232
-    m_Localized: 'Tasks are the primary purpose of your character''s journey. Gathering resources for the town is essential to growth.
-
-
-      These are completed automatically, and you will complete them faster as your skills level.
-
-
-      Task spawns have a range from minimum to maximum distance, however after reaching maximum distance their chance to spawn goes down by 90%. With this considered once all tasks are at their maximum the weight system will average out and all tasks will be equally available based on their weights.'
+    m_Localized: "Your hero completes tasks automatically to gather resources. Higher skill levels help you complete them faster.\n\nTasks have minimum and maximum spawn distances. Beyond a task\u2019s maximum distance, its spawn weight falls by 90%. If all eligible tasks are beyond their maximums, their relative weights still determine how often they appear."
     m_Metadata:
       m_Items: []
   - m_Id: 505754247643136
-    m_Localized: 'Quests have different types of conditions that need to be met before you hand them in.
-
-
-      <b>Information</b> | These quests are instantly completed, either for story, or to guide you through the intro.
-
-      <b>Gathering</b> | These quests require you to gather resources and hand them in to complete.
-
-      <b>Kills</b> | Kill enemies and report back to complete these.
-
-      <b>Meet</b> | Require you to meet a certain NPC most of whom are found at specific distances reached.'
+    m_Localized: "Complete a quest\u2019s requirements, then turn it in while in town.\n\n<b>Information:</b> Read or acknowledge the quest to continue the story or tutorial.\n<b>Gathering:</b> Bring the listed resources. Turning in the quest spends them.\n<b>Kills:</b> Defeat the required enemies, then report back.\n<b>Meet:</b> Find and speak with the named NPC. Some appear only after you reach a particular distance."
     m_Metadata:
       m_Items: []
   - m_Id: 3785742338113536
-    m_Localized: "Upon reaching certain distances from the town Carl will reap your soul ensuring you don't stray too far. \nYou can view your maximum reaping distance in the statistics under the General Tab.\n\nReaping distance is increased via the following methods.\n<b>Being Reaped</b> | Increases distance by 1% of your current maximum reaping distance. (Except on farmlands)\n<b>Quests</b> | Some quests will provide a reaping distance increase."
+    m_Localized: "Carl ends your run when you reach the map\u2019s limit. See Statistics \u2192 General for map limits.\n\nBeing reaped at the limit increases distance by 1% in River, Woods and Mines. Farmlands gives no increase. Spooky scales enemy levels with kills and has no kill cap. Some quests also increase your travel limit."
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
@@ -114,7 +105,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9824133160779776
-    m_Localized: "Ivan's forge is a magical place. Whether you're chilling in town or out on the road, you can help guide him as he improves his smithing skills.\n\nYou have access to two toggles while forging:\n\n<b>Stop for Vastium:</b> Always stops if you roll a Vastium piece, even if it is a downgrade.\n\n<b>Stat Matching:</b> With this enabled, the forge will continue to work until an upgrade has the exact same stat types as your equipped piece of gear.\n\nQuality is represented by this icon: <sprite=206>\n\nThis is where you craft gear and choose the best stats for your build. \nRight now there are 8 stats that can be rolled on gear with each piece guaranteeing a specific one.\n\n<sprite=198> = Damage.\n<sprite=200> = Attack Speed.\n<sprite=199> = Crit Chance.\n<sprite=205> = Crit Damage.  \n\n<sprite=202> = Health.\n<sprite=203> = Regen.\n<sprite=201> = Defense.\n<sprite=204> = Movement.\n\n<sprite=192> = Upgrade.\n<sprite=193> = Downgrade. \n<sprite=194> = No change.\n<sprite=195> Stat is not on new item.\n<sprite=196> Stat is not on old item.\n\n<b>Weapon</b> | Guarantees <sprite=198>\n<b>Helmet</b> | Guarantees <sprite=202>\n<b>Chest</b> | Guarantees <sprite=201>\n<b>Boots</b> | Guarantees <sprite=204> which is exclusive to this slot.\n\nGear is automatically salvaged when you craft a new piece, select a different slot, or close the game.\n\nDepending on rarity you can receive up to 5 stats on a piece of gear. There are plans to add additional stats to gear in the future!"
+    m_Localized: "Open Town \u2192 Forge to craft equipment, whether you\u2019re in town or on an adventure.\n\nCrafting options:\n\n<b>Stop for Vastium:</b> Always stops if you roll a Vastium piece, even if it is a downgrade.\n\n<b>Stat Matching:</b> With this enabled, the forge will continue to work until an upgrade has the exact same stat types as your equipped piece of gear.\n\nQuality is represented by this icon: <sprite=206>\n\nThis is where you craft gear and choose the best stats for your build. \nEquipment can roll 8 different stats. Each slot guarantees one of them.\n\n<sprite=198> = Damage.\n<sprite=200> = Attack Speed.\n<sprite=199> = Crit Chance.\n<sprite=205> = Crit Damage.  \n\n<sprite=202> = Health.\n<sprite=203> = Regen.\n<sprite=201> = Defense.\n<sprite=204> = Movement.\n\n<sprite=192> = Upgrade.\n<sprite=193> = Downgrade. \n<sprite=194> = No change.\n<sprite=195> Stat is not on new item.\n<sprite=196> Stat is not on old item.\n\n<b>Weapon</b> | Guarantees <sprite=198>\n<b>Helmet</b> | Guarantees <sprite=202>\n<b>Chest</b> | Guarantees <sprite=201>\n<b>Boots</b> | Guarantees <sprite=204> which is exclusive to this slot.\n\nGear is automatically salvaged when you craft a new piece, select a different slot, or close the game.\n\nDepending on rarity you can receive up to 5 stats on a piece of gear."
     m_Metadata:
       m_Items: []
   - m_Id: 9824133185945600
@@ -126,44 +117,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12027031164698624
-    m_Localized: 'The Cauldron converts selected food into stew. You choose how much to mix; stew gained depends on the food''s authored value and the quantity. Taste stew to receive cards using Eva''s displayed reward weights.
-
-
-      Resource cards improve genuine gathering, enemy drops and town crop harvests for the matching resource. Their copy thresholds are 1, 25, 75, 200, 750, 1500, 3500 and 10000; yield bonuses are 1%, 2%, 3%, 5%, 7%, 10%, 15% and 20%.
-
-
-      A resource category uses the lowest card tier among its unlocked resources. Unowned cards count as tier zero. Category tiers 1 through 8 add 2%, 5%, 10%, 15%, 20%, 30%, 40% and 50% yield to that category. Card and category bonuses add together, up to 70%. Rewards, seeds, refunds and conversions do not receive these bonuses.
-
-
-      These card tiers are separate from resource rarity. Existing buff-card cooldown and power benefits remain unchanged. Complete all available resource and buff collections to unlock Eternal Boons.'
+    m_Localized: "The Cauldron converts selected food into stew. You choose how much to mix; stew gained depends on the food\u2019s value and the quantity. Taste stew to receive cards using the displayed reward chances.\n\nResource cards improve gathering, enemy drops and town crop harvests for the matching resource. Their copy thresholds are 1, 25, 75, 200, 750, 1500, 3500 and 10000; yield bonuses are 1%, 2%, 3%, 5%, 7%, 10%, 15% and 20%.\n\nA resource category uses the lowest card tier among its unlocked resources. Unowned cards count as tier zero. Category tiers 1 through 8 add 2%, 5%, 10%, 15%, 20%, 30%, 40% and 50% yield to that category. Card and category bonuses add together, up to 70%. Rewards, seeds, refunds and conversions do not receive these bonuses.\n\nThese card tiers are separate from resource rarity. Buff cards improve cooldowns and power. Complete all available resource and buff collections to unlock Eternal Boons."
     m_Metadata:
       m_Items: []
   - m_Id: 18915029441462272
-    m_Localized: 'Items have a low chance of tiering up each time you collect them. Town farm harvests do not roll resource tier upgrades.
-
-      Each tier above the first grants you bonus resources each time you collect it in the future.
-
-
-      I''m a bit loathe to share this information with you but here you go - Orin...
-
-
-      Tier | Bonus | Chance
-
-      <b>Tier 1</b> - 0%\tBase
-
-      <b>Tier 2</b> - 10%\t1 /1,000
-
-      <b>Tier 3</b> - 20%\t1 / 5,000
-
-      <b>Tier 4</b> - 30%\t1 / 10,000
-
-      <b>Tier 5</b> - 50%\t1 / 50,000
-
-      <b>Tier 6</b> - 75%\t1 / 100,000
-
-      <b>Tier 7</b> - 100%\t1 / 250,000
-
-      <b>Tier 8</b> - 150%\t1 / 1,000,000'
+    m_Localized: "Gathering has a small chance to raise a resource\u2019s rarity tier. Town farm harvests do not roll resource tier upgrades.\nEach tier above the first permanently increases how much of that resource you collect.\n\n\u201CI\u2019d rather keep this to myself, but here you go.\u201D \u2014 Orin\n\nTier | Bonus | Chance\n<b>Tier 1</b> - 0%\\tBase\n<b>Tier 2</b> - 10%\\t1 /1,000\n<b>Tier 3</b> - 20%\\t1 / 5,000\n<b>Tier 4</b> - 30%\\t1 / 10,000\n<b>Tier 5</b> - 50%\\t1 / 50,000\n<b>Tier 6</b> - 75%\\t1 / 100,000\n<b>Tier 7</b> - 100%\\t1 / 250,000\n<b>Tier 8</b> - 150%\\t1 / 1,000,000"
     m_Metadata:
       m_Items: []
   - m_Id: 25772880722018304
@@ -175,7 +133,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299008
-    m_Localized: "<b>Start:</b> Adventure \u2192 select a map.\n\nYour character travels between tasks and gathers resources automatically. Each map has different resources.\n\n<b>Map information:</b> Statistics \u2192 General \u2192 select a map. Discovered resources are shown there. Locked maps show where to learn more."
+    m_Localized: "Choose Adventure, then a map to start a run. Your hero moves between tasks and gathers resources automatically. Each map has different resources.\n\nTo see what you\u2019ve discovered, open Statistics \u2192 General and choose a map. Locked maps show how to learn more."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299009
@@ -187,11 +145,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299011
-    m_Localized: "Tasks award resources and skill XP.\n\n<b>Skill bonuses and unlocks:</b> Hub \u2192 Skills \u2192 select a skill.\n\n<b>Task chances:</b> Statistics \u2192 Tasks. Adjust a task's weight to change how often it appears among eligible tasks."
+    m_Localized: "Complete tasks to earn resources and skill XP.\n\nOpen Hub \u2192 Skills and choose a skill to see its bonuses and unlocks.\n\nOpen Statistics \u2192 Tasks and use Boost to make a task more common within its category. Boosting also gives that category a smaller increase in how often it appears on the map."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299012
-    m_Localized: "Task weights do not unlock tasks or change which maps they appear on. Map, distance, and progression still apply.\n\nCombat levels unlock higher core and crystal tiers. Required levels are listed under Skills \u2192 Combat."
+    m_Localized: "Boosting a task does not unlock it or change which maps it appears on. Map, distance and progression requirements still apply.\n\nCombat levels unlock higher core and crystal tiers. See Hub \u2192 Skills \u2192 Combat for the required levels."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299013
@@ -199,20 +157,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299014
-    m_Localized: '<b>Open:</b> Quests.
-
-
-      Accept a quest, complete its requirements, then turn it in while in town. Resource hand-ins spend the requested items.
-
-
-      Tracked quests appear on your HUD. Untracked quests remain in the quest list.'
+    m_Localized: "Open Quests to view your objectives. Complete a quest\u2019s requirements, then turn it in while in town to claim the reward. Resource hand-ins spend the listed items.\n\nPinned quests appear during a run. Other quests stay in the quest list."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299015
-    m_Localized: 'A quest can require resources, enemy kills, an NPC meeting, or a guided interaction. Meeting its requirements makes it ready to turn in; rewards are claimed at turn-in.
-
-
-      Quests cannot be turned in during an adventure.'
+    m_Localized: Quests may ask for resources, enemy kills, an NPC meeting or a tutorial action. Meeting the requirements makes a quest ready to turn in. You receive its reward when you turn it in, which you can only do in town.
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299016
@@ -220,11 +169,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299017
-    m_Localized: "<b>Open:</b> Hub \u2192 Inventory.\n\nSelect an equipped slot to inspect its bonuses. Total equipment bonuses combine all equipped items.\n\nCompare stat values when replacing equipment. Higher rarity does not guarantee a better item.\n\n<b>Current combat stats:</b> in-run HUD \u2192 Stats."
+    m_Localized: "Open Hub \u2192 Inventory to inspect your equipment and resources. Select an equipped item to see its bonuses. Your total equipment bonuses include every equipped item.\n\nCompare the stats before replacing an item: a rarer item is not always an upgrade.\n\nDuring a run, select Stats beside your health bar to see your current combat stats."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299018
-    m_Localized: Discovered resources appear first, followed by undiscovered resources. Each group keeps your chosen sort order.
+    m_Localized: Discovered resources appear before undiscovered ones. Both groups use a fixed resource order.
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299019
@@ -232,11 +181,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299020
-    m_Localized: "Your character fights enemies automatically, then returns to their task.\n\n<b>Current stats:</b> in-run HUD \u2192 Stats.\n<b>Enemy stats and kill bonuses:</b> Statistics \u2192 Enemies."
+    m_Localized: "Your hero fights enemies automatically, then returns to their task.\n\nSelect Stats beside your health bar during a run to see your current stats. Open Statistics \u2192 Enemies to see enemy stats and your kill bonuses."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299021
-    m_Localized: "<b>Defense:</b> with default tuning, damage taken = incoming damage \xD7 25 \xF7 (defense + 25). Negative defense is treated as zero.\n\nRepeated kills against an enemy grant bonus damage against that enemy. Its Statistics entry shows the bonus and next milestone."
+    m_Localized: "Damage taken = incoming damage \xD7 {0:0.##} \xF7 (defense + {0:0.##}). Defense below zero counts as zero.\n\nRepeated kills of the same enemy unlock bonus damage against it. See Statistics \u2192 Enemies for your current bonus and next milestone."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299022
@@ -244,11 +193,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299023
-    m_Localized: "Carl reaps your character at the map's limit. The run ends; gathered resources and skill progress are kept.\n\nReturn to town to turn in quests. The Run Summary lists your gains and progress.\n\n<b>Map limits:</b> Statistics \u2192 General \u2192 select a map."
+    m_Localized: "<b>River, Woods and Mines</b>\nCarl ends your run at the distance limit. Being reaped at that limit increases your shared reaping distance by 1%.\n\n<b>Farmlands</b>\nCarl ends your run at the distance limit, but reaping gives no distance increase.\n\n<b>Spooky</b>\nEnemy levels rise with your kills. There is no kill cap or distance reaping limit.\n\nYou keep gathered resources and skill progress when a run ends. Return to town to turn in quests, and check the Run Summary to see your gains. Map information is in Statistics \u2192 General."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299024
-    m_Localized: Reaping at the limit increases distance by 1% on River, Woods, and Mines. Farmlands gives no increase. Spooky uses a kill limit instead of distance. Some quests also increase your reach.
+    m_Localized: '<b>River, Woods and Mines</b>
+
+      Being reaped at the distance limit increases your shared reaping distance by 1% of the effective limit reached, including distance buffs. Some quests also let you travel farther.
+
+
+      <b>Farmlands</b>
+
+      Carl ends the run at its distance limit, but being reaped gives no distance increase.
+
+
+      <b>Spooky</b>
+
+      Enemy levels rise as you get more kills. There is no kill cap or distance reaping limit.'
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299025
@@ -256,17 +217,17 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299026
-    m_Localized: '<b>Return:</b> use the return-to-town control during a run.
+    m_Localized: 'Use the return-to-town control during a run to retreat. Each kill adds 2% to your retreat resource bonus, shown on the control.
 
 
-      Each kill adds 2% to your retreat resource bonus. The return control shows the current bonus.
+      If you request a return during combat, your hero finishes the fight before leaving.
 
 
-      A return requested during combat is queued until the fight ends.'
+      You only receive this bonus if you return alive. Dying or being reaped forfeits it; you still keep the resources already gathered.'
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299027
-    m_Localized: The retreat bonus is based on kills earned during the current run. Reaping and retreating are different ways to end a run.
+    m_Localized: Your retreat bonus comes from kills in the current run and is awarded when you return alive. Dying or being reaped forfeits the bonus, but does not remove the resources already gathered.
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299028
@@ -274,11 +235,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299029
-    m_Localized: "<b>Open:</b> Townsfolk \u2192 Forge, after meeting Ivan.\n\n<b>1. Smelt ingots</b> from the required materials.\n<b>2. Select a core.</b> It sets rarity odds and material costs.\n<b>3. Select a slot and Craft.</b> Each craft spends ingots and one core.\n<b>4. Compare the result.</b> Choose Equip to replace your current item.\n\nOutside Ivan's lesson, crafting for an empty slot equips the result automatically."
+    m_Localized: "After meeting Ivan, open Town \u2192 Forge.\n\n1. Smelt the required materials into ingots.\n2. Select a core to set the rarity chances and material costs.\n3. Select an equipment slot, then Craft. Each craft uses ingots and one core.\n4. Compare the result. Select Equip to replace your current item.\n\nOutside Ivan\u2019s lesson, a crafted item equips automatically if its slot is empty."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299030
-    m_Localized: "<b>Salvage</b>\nAn unused result is salvaged when you craft again or switch slots. Review it before continuing.\n\n<b>Automation \u2014 Forge mastery level 3</b>\nCraft Until Upgrade repeats crafting and spends materials each time.\nStop for Vastium stops on a Vastium result, even if it is a downgrade.\nStat Matching requires an upgrade to match your equipped item's affix types before stopping for that upgrade.\n\n<b>Core and crystal unlocks:</b> Hub \u2192 Skills \u2192 Combat."
+    m_Localized: "<b>Salvage</b>\nReview your result before crafting again or switching slots: either action salvages an unequipped result.\n\n<b>Automation \u2014 Forge mastery level 3</b>\nCraft Until Upgrade keeps crafting, spending materials on every attempt.\n\nStop for Vastium stops on any Vastium result, even a downgrade.\n\nWith Stat Matching on, an upgrade must also have the same stat types as your equipped item before crafting stops.\n\nSee Hub \u2192 Skills \u2192 Combat for core and crystal unlocks."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299031
@@ -286,7 +247,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299032
-    m_Localized: "<b>Open:</b> Hub \u2192 Buffs.\n\nBuffs provide temporary bonuses. Check the effect, cost, and duration before activating one. Buffs expire when their duration ends or you return to town.\n\nComplete a slot's required quest to unlock autocasting. Toggle autocasting from that slot."
+    m_Localized: "Select a buff icon to see its current effects, duration and cooldown. These values include your upgrades.\n\nOpen Hub \u2192 Buffs to assign buffs and manage autocasting. Complete a slot\u2019s required quest to unlock autocasting for that slot.\n\nBuffs end when their duration runs out or you return to town."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299033
@@ -298,17 +259,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299035
-    m_Localized: "<b>Open:</b> Townsfolk \u2192 Cauldron.\n\nMix food into stew, then taste the stew to receive cards. Check the displayed reward chances before tasting.\n\nResource cards increase matching resource yield. Buff cards improve buffs. Card levels are separate from resource rarity tiers."
+    m_Localized: "Open Town \u2192 Cauldron. Mix food into stew, then taste the stew to receive cards. Check the reward chances before tasting.\n\nResource cards increase how much of that resource you gather. Buff cards improve buffs. Card levels and resource rarity tiers are separate systems."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299036
-    m_Localized: 'A category uses the lowest card tier among its unlocked resources; unowned cards count as tier zero.
-
-
-      Resource-card and category bonuses add together, up to 70%. They apply to gathering, enemy drops, and town crop harvests. Rewards, seeds, refunds, and conversions do not receive them.
-
-
-      Complete all available resource and buff collections to unlock Eternal Boons.'
+    m_Localized: "A category\u2019s tier is the lowest card tier among its unlocked resources. A card you do not own counts as tier zero.\n\nResource-card and category bonuses add together, up to 70%. They apply to gathering, enemy drops and town crop harvests. They do not apply to rewards, seeds, refunds or conversions.\n\nComplete all available resource and buff collections to unlock Eternal Boons."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299037
@@ -316,11 +271,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299038
-    m_Localized: "Echoes are temporary copies of your character that gather resources or fight enemies.\n\nOrin's realms are connected. Spikes in temporal energy let Echoes of your past cross between them to help you. Helping the townsfolk earns you the power to summon Echoes at will.\n\nSkill milestone Echoes seek tasks belonging to that skill. Check Skills \u2192 Milestones or the summoning buff for its effects."
+    m_Localized: "Echoes are temporary copies of your hero that gather resources or fight enemies.\n\nOrin\u2019s realms are connected. Surges of temporal energy let Echoes of your past cross between them to help you. Helping the townsfolk lets you summon Echoes yourself.\n\nEchoes unlocked through a skill\u2019s milestones seek tasks for that skill. See Hub \u2192 Skills for milestones, or the summoning buff for its effects."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299039
-    m_Localized: An Echo with both task and combat abilities prioritizes tasks and fights when engaged.
+    m_Localized: An Echo that can both gather and fight prioritizes tasks, then fights when engaged.
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299040
@@ -328,17 +283,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299041
-    m_Localized: 'Gathering can raise a resource''s rarity tier. Higher tiers permanently increase future yield for that resource.
-
-
-      Town crop harvests use your current tier bonus but do not roll upgrades.
-
-
-      Resource tiers, equipment rarity, and Cauldron card levels are separate systems.'
+    m_Localized: "Gathering can raise a resource\u2019s rarity tier, permanently increasing how much of it you collect.\n\nTown crop harvests receive your current tier bonus but cannot raise the tier.\n\nSeed packs do not gain rarity tiers or rarity bonuses.\n\nResource tiers, equipment rarity and Cauldron card levels are separate systems."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299042
-    m_Localized: Upgrade chances are per eligible collection at the previous tier. Tier 1 is the starting tier.
+    m_Localized: Resources start at Tier 1. Each upgrade chance applies when you collect an eligible resource at the previous tier.
     m_Metadata:
       m_Items: []
   - m_Id: 164580385641598976
@@ -590,7 +539,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164584687365918733
-    m_Localized: Kill limit
+    m_Localized: Enemy levels scale with kills; no kill cap
     m_Metadata:
       m_Items: []
   - m_Id: 164584687365918734
@@ -940,19 +889,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164588427305160704
-    m_Localized: "<b>Farming</b>\nHarvest crop patches in Farmlands to gain crops and Farming XP. These adventure tasks are separate from planting crops in town. Check Skills \u2192 Farming for bonuses and unlocks."
+    m_Localized: "<b>Farming</b>\nHarvest crop patches in Farmlands to earn crops and Farming XP. Growing your own crops through Fields is a separate system. See Hub \u2192 Skills \u2192 Farming for bonuses and unlocks."
     m_Metadata:
       m_Items: []
   - m_Id: 164588427305160705
-    m_Localized: "<b>Fishing</b>\nGill provides your first rod. Fishing tasks catch fish and award Fishing XP. Check Statistics \u2192 General for a map's discovered resources, and Skills \u2192 Fishing for progression."
+    m_Localized: "<b>Fishing</b>\nGill gives you your first rod. Fishing tasks award fish and Fishing XP.\n\nSee Statistics \u2192 General for each map\u2019s discovered resources, or Hub \u2192 Skills \u2192 Fishing for bonuses and unlocks."
     m_Metadata:
       m_Items: []
   - m_Id: 164588427305160706
-    m_Localized: "<b>Mining</b>\nMining tasks provide ores and Mining XP. Smelt ores into ingots at the Forge to craft equipment. Check Skills \u2192 Mining for ore unlock levels."
+    m_Localized: "<b>Mining</b>\nMine ore to earn Mining XP. Smelt ore into ingots at the Forge, then use them to craft equipment. See Hub \u2192 Skills \u2192 Mining for ore unlock levels."
     m_Metadata:
       m_Items: []
   - m_Id: 164588427305160707
-    m_Localized: "<b>Woodcutting</b>\nWoodcutting tasks provide wood resources and Woodcutting XP. Follow Barkley's quests to progress into the Woods. Check Skills \u2192 Woodcutting for unlocks and Statistics \u2192 Tasks to adjust eligible task chances."
+    m_Localized: "<b>Woodcutting</b>\nChop wood to earn Woodcutting XP. Barkley\u2019s quests lead you into the Woods.\n\nSee Hub \u2192 Skills \u2192 Woodcutting for unlocks, or Statistics \u2192 Tasks to boost task chances."
     m_Metadata:
       m_Items: []
   - m_Id: 164588427305160708
@@ -964,93 +913,97 @@ MonoBehaviour:
   - m_Id: 164588427309355008
     m_Localized: '<b>Weapon</b>
 
-      Crafted weapons guarantee damage. Compare the other rolled stats before replacing your current weapon.'
+      Every crafted weapon has a damage stat. Compare its other stats before replacing your current weapon.'
     m_Metadata:
       m_Items: []
   - m_Id: 164588427309355009
     m_Localized: '<b>Helmet</b>
 
-      Crafted helmets guarantee health. Other rolled stats can improve offense, defense, or recovery.'
+      Every crafted helmet has a health stat. Its other stats can improve offense, defense or recovery.'
     m_Metadata:
       m_Items: []
   - m_Id: 164588427309355010
     m_Localized: '<b>Chest</b>
 
-      Crafted chest pieces guarantee defense. Defense reduces incoming damage with diminishing returns.'
+      Every crafted chest piece has a defense stat. More defense reduces incoming damage, with diminishing returns.'
     m_Metadata:
       m_Items: []
   - m_Id: 164588427309355011
     m_Localized: '<b>Boots</b>
 
-      Crafted boots guarantee movement, which increases travel speed. Movement rolls are exclusive to this slot.'
+      Every crafted pair of boots has a movement stat, which increases travel speed. Only boots can roll movement.'
     m_Metadata:
       m_Items: []
   - m_Id: 164588427309355012
     m_Localized: '<b>Damage</b>
 
-      Determines damage dealt per hit before enemy defense and other modifiers. Attack speed controls how often you hit; critical chance and critical damage affect critical hits. View current values in the in-run Stats panel.'
+      Damage per hit, before enemy defense and other modifiers. Attack speed determines how often you hit. Critical chance determines how often you land a critical hit; critical damage determines its strength.
+
+
+      Select Stats beside your health bar during a run to see your current values.'
     m_Metadata:
       m_Items: []
   - m_Id: 164588427309355013
     m_Localized: '<b>Defense</b>
 
-      Reduces incoming damage. At 25 defense you take half damage; at 75 defense you take one quarter. Defense does not prevent damage completely. The formula is in Reference.'
+      Reduces incoming damage. At {0:0.##} defense you take half damage; at {1:0.##} defense you take one quarter. Defense does not prevent damage completely. See Reference for the formula.'
     m_Metadata:
       m_Items: []
   - m_Id: 164588427309355014
     m_Localized: '<b>Health</b>
 
-      Your character dies when health reaches zero. Equipment can increase maximum health; regeneration restores health over time. Check the health bar and current Stats during a run.'
+      Your hero dies when health reaches zero. Equipment can increase maximum health, and regeneration restores health over time.
+
+
+      Select Stats beside your health bar during a run for your current values.'
     m_Metadata:
       m_Items: []
   - m_Id: 164588427309355015
-    m_Localized: '<b>Carl</b>
-
-      Carl ends the run at the map''s limit. You keep gathered resources and skill progress. River, Woods, and Mines gain 1% distance when you are reaped at the limit; Farmlands does not. Spooky uses kills instead of distance.'
+    m_Localized: "<b>Carl</b>\nCarl ends your run at the map\u2019s distance limit. You keep gathered resources and skill progress.\n\nRiver, Woods and Mines gain 1% distance when Carl reaps you at the limit. Farmlands gives no increase. Spooky scales with kills and has no distance reaping limit."
     m_Metadata:
       m_Items: []
   - m_Id: 164588427309355016
     m_Localized: '<b>Ingots</b>
 
-      Smelt the materials shown by the ingot control. The selected core determines the ingot type and quantity required for a craft. Smelting creates materials; it does not create equipment.'
+      Smelt the listed materials into ingots. Your selected core determines which ingots a craft needs and how many. Smelting makes materials; Craft makes equipment.'
     m_Metadata:
       m_Items: []
   - m_Id: 164588427309355017
-    m_Localized: '<b>Cores</b>
-
-      Each craft consumes one core. The selected core determines rarity odds and material costs. Combat levels unlock higher core tiers; upgrade cores using the Forge''s conversion controls.'
+    m_Localized: "<b>Cores</b>\nEach craft uses one core. Your selected core sets the rarity chances and material costs. Higher core tiers unlock through Combat levels. Use the Forge\u2019s conversion controls to upgrade cores."
     m_Metadata:
       m_Items: []
   - m_Id: 164588427309355018
     m_Localized: '<b>Sword</b>
 
-      Select Weapon, then Craft. Weapons guarantee a damage stat. Review the rolled bonuses and choose Equip to replace your current weapon. An unused result is salvaged when you craft again or switch slots.'
+      Select Weapon, then Craft. Every weapon has a damage stat. Compare the result, then select Equip to replace your current weapon.
+
+
+      Crafting again or switching slots salvages an unequipped result.'
     m_Metadata:
       m_Items: []
   - m_Id: 164588427309355019
-    m_Localized: "<b>Resource Doubler</b>\nA temporary resource-gathering buff. Check its displayed effect, cost, and duration in Hub \u2192 Buffs. Eligible slots can autocast after their required quests are completed."
+    m_Localized: "Select a buff above to see its current effects, duration and cooldown below. Complete a slot\u2019s required quest to unlock autocasting for that slot."
     m_Metadata:
       m_Items: []
   - m_Id: 164588427309355020
-    m_Localized: "<b>Task Speed</b>\nA temporary buff that speeds up task completion. Manage its slot and autocasting in Hub \u2192 Buffs. Buffs end when their duration expires or you return to town."
+    m_Localized: "Select a buff above to see its current effects, duration and cooldown below. Complete a slot\u2019s required quest to unlock autocasting for that slot."
     m_Metadata:
       m_Items: []
   - m_Id: 164588427309355021
     m_Localized: '<b>Cauldron</b>
 
-      Choose food and a quantity to mix into stew. Taste stew to receive cards using the displayed reward chances. Resource cards improve matching resource yield; buff cards improve buffs. Reference lists resource-card and category thresholds.'
+      Choose food and how much to mix into stew. Taste the stew to receive cards, using the displayed reward chances. Resource cards increase gathering yield; buff cards improve buffs.
+
+
+      See Reference for resource-card and category thresholds.'
     m_Metadata:
       m_Items: []
   - m_Id: 164588427309355022
-    m_Localized: '<b>Task Echo</b>
-
-      Gathers resources without attacking or attracting enemies. Skill milestone Echoes seek tasks for that skill. The summoning buff or milestone specifies the Echo''s duration and abilities.'
+    m_Localized: "<b>Task Echo</b>\nGathers resources without attacking or attracting enemies. Echoes unlocked through a skill\u2019s milestones seek tasks for that skill. Check the milestone or summoning buff for its duration and abilities.\n\nThe current summon\u2019s effects, duration and cooldown are shown below."
     m_Metadata:
       m_Items: []
   - m_Id: 164588427309355023
-    m_Localized: '<b>Combat Echo</b>
-
-      Seeks and fights enemies. Combat-only Echoes do not gather resources. An Echo with both task and combat abilities prioritizes tasks and fights when engaged.'
+    m_Localized: "<b>Combat Echo</b>\nSeeks out enemies and fights them. Combat-only Echoes do not gather resources. An Echo that can both gather and fight prioritizes tasks, then fights when engaged.\n\nThe current summon\u2019s effects, duration and cooldown are shown below."
     m_Metadata:
       m_Items: []
   - m_Id: 164590655340417024

@@ -30,7 +30,7 @@ namespace TimelessEchoes.UI.Toolkit
             var returning = Oracle.oracle.saveData.General;
             if (returning.ReturningPlayerIntroductionComplete && !returning.ReturningPlayerWelcomeSeen)
             {
-                yield return Explain("ReturningPlayerWelcome", "Welcome back! Your progress and equipment are ready. The opening lessons have been skipped. Explore the updated menus at your own pace; help is available in the Library.");
+                yield return Explain("ReturningPlayerWelcome", "Welcome back! Your progress and equipment are intact. You can carry on without replaying the opening lessons.");
                 returning.ReturningPlayerWelcomeSeen = true;
                 Blindsided.EventHandler.SaveData();
             }
@@ -82,16 +82,16 @@ namespace TimelessEchoes.UI.Toolkit
                 { yield return null; continue; }
                 if ((!gm || gm.IsInTown) && BuffIntroductionGuidance.Eligible)
                 {
-                    yield return Explain("BuffIntroduction", "You can now summon an Echo to help on your adventures. Choose one to gather resources or fight by your side.");
+                    yield return Explain("BuffIntroduction", "You can now summon an Echo to help on adventures. Choose one to gather resources or fight alongside you.");
                     data.General.BuffTutorialStage = 1;
                     Blindsided.EventHandler.SaveData();
                 }
                 else if (gm && gm.FirstReapReturnPending && !Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Contains("FirstReapIntroduction"))
-                    yield return Explain("FirstReapIntroduction", "Being reaped ends this run, but you keep your loot and skill progress. Return to town to turn in your quests.");
+                    yield return Explain("FirstReapIntroduction", "Carl has ended this run. You keep your loot and skill progress. Return to town to turn in your quests.");
                 else if ((!gm || gm.IsInTown) && data.General.ReturnedFromFarmlands && QuestUtils.QuestCompleted("The names Gill") && data.General.InventoryTutorialStage == 0)
                 {
                     if (!Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Contains("InventoryIntroduction"))
-                        yield return Explain("InventoryIntroduction", "Open Hub, then Inventory, to view your equipped items, their bonuses and the resources you gathered.");
+                        yield return Explain("InventoryIntroduction", "Open Hub → Inventory to inspect your equipment and resources.");
                     data.General.InventoryTutorialStage = 1;
                 }
                 else if ((!gm || gm.IsInTown) && hubIntroduction && !hubIntroduction.HasBeenCompleted &&
@@ -100,20 +100,20 @@ namespace TimelessEchoes.UI.Toolkit
                     yield return hubIntroduction.ShowAndWait(windows.transform);
                 else if ((!gm || gm.IsInTown) && data.General.MapStatisticsTutorialStage == 1)
                 {
-                    yield return Explain("MapStatisticsIntroduction", "Different maps give different resources.");
+                    yield return Explain("MapStatisticsIntroduction", "Each map has different resources. Let’s see what you’ve found.");
                     data.General.MapStatisticsTutorialStage = 2;
                 }
                 else if ((!gm || gm.IsInTown) && data.General.MapStatisticsTutorialStage == 8 &&
                          data.General.TaskBoostTutorialStage >= 2 && data.General.GraphsViewed)
                 {
-                    yield return Explain("OpeningTutorialComplete", "You’re ready to explore on your own! If you’d like to learn more, you’ll find helpful information in the Library.");
+                    yield return Explain("OpeningTutorialComplete", "That’s the last opening lesson. Choose your next adventure when you’re ready.");
                     data.General.MapStatisticsTutorialStage = 9;
                 }
                 else if ((!gm || gm.IsInTown) && GraphStatisticsGuidance.Eligible &&
                          !Gear.ForgeFirstLesson.Active && !MapStatisticsGuidance.Active && data.General.TaskBoostTutorialStage != 1 &&
                          !(gm && gm.IvanReturnPending))
                 {
-                    yield return Explain("GraphsIntroduction", "You can find the history of your travels in the statistics panel!");
+                    yield return Explain("GraphsIntroduction", "Open Statistics (the bar-chart icon), then Graphs to see your recent runs.");
                     if (!data.General.GraphsViewed) data.General.GraphsTutorialStage = 1;
                 }
                 else if ((!gm || gm.IsInTown) && data.General.HubTutorialStage >= 3 && data.General.TaskBoostTutorialStage == 0 &&
@@ -122,7 +122,7 @@ namespace TimelessEchoes.UI.Toolkit
                 {
                     nextBoostCheck = Time.unscaledTime + 1;
                     if (!TaskBoostGuidance.FindTask()) { yield return null; continue; }
-                    yield return Explain("TaskBoostIntroduction", "You now have a choice of tasks. Open Statistics, then Tasks, to adjust which ones appear more often.");
+                    yield return Explain("TaskBoostIntroduction", "Open Statistics (the bar-chart icon), then Tasks to choose which tasks appear more often.");
                     data.General.TaskBoostTutorialStage = 1;
                 }
                 yield return null;

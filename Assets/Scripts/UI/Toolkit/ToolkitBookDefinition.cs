@@ -41,6 +41,7 @@ namespace TimelessEchoes.UI.Toolkit
         public sealed class Illustration
         {
             public Sprite sprite;
+            public TimelessEchoes.Buffs.BuffRecipe buff;
             public Text caption = new();
             public Text description = new();
         }

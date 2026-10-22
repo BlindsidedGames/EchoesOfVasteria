@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
   m_Name: TownUI Shared Data
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   m_TableCollectionName: TownUI
   m_TableCollectionNameGuidString: 79e2dd3ef4efaf5459ce0f738238ca3e
   m_Entries:
@@ -4433,6 +4433,58 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 165995727630766080
     m_Key: skills.unlocks-resource
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245208080384
+    m_Key: buffs.lesson.slot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023424
+    m_Key: buffs.lesson.choice
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023425
+    m_Key: buffs.lesson.casting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023426
+    m_Key: journal.tutorial.close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023427
+    m_Key: run.summary.guide-distance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023428
+    m_Key: skills.first-lesson
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023429
+    m_Key: statistics.boost-lesson
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023430
+    m_Key: intro.BuffIntroduction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023431
+    m_Key: intro.FirstReapIntroduction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023432
+    m_Key: intro.OpeningTutorialComplete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023433
+    m_Key: intro.TaskBoostIntroduction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027246403457024
+    m_Key: library.browse-topics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027246403457025
+    m_Key: library.back-to-article
     m_Metadata:
       m_Items: []
   m_Metadata:

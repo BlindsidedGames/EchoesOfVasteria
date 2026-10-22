@@ -29,7 +29,8 @@ namespace TimelessEchoes.Farming
         public int lastCropCapLevel = 5000;
         public double baseYield = 10;
         public int harvestXp = 10;
-        public float seedChance = .1f;
+        [Range(0, 1)] public float seedChance = .05f;
+        [Range(0, 1)] public float seedChancePerCropTier = .9f;
         public List<FarmRecipe> recipes = new();
         public List<FarmBuild> builds = new();
         private static FarmContent cached;
@@ -40,6 +41,16 @@ namespace TimelessEchoes.Farming
         public static FarmContent Load() => cached ? cached : cached = Resources.Load<FarmContent>("Farming/FarmContent");
         public FarmRecipe Recipe(string id) => recipes?.FirstOrDefault(r => r != null && r.id == id);
         public FarmBuild Build(string id) => builds?.FirstOrDefault(b => b != null && b.questId == id);
+        // Crop progression tiers, not resource rarity. Packs themselves never tier up.
+        public float SeedDropChance(FarmRecipe recipe)
+        {
+            if (recipe == null || recipe.orchard || !recipe.source || recipes == null || !recipes.Contains(recipe)) return 0;
+            var rank = recipes.Count(candidate => candidate != null && !candidate.orchard && candidate.source &&
+                (candidate.source.requiredSkillLevel < recipe.source.requiredSkillLevel ||
+                 candidate.source.requiredSkillLevel == recipe.source.requiredSkillLevel &&
+                 string.CompareOrdinal(candidate.id, recipe.id) < 0));
+            return Mathf.Clamp01(seedChance) * Mathf.Pow(Mathf.Clamp01(seedChancePerCropTier), rank);
+        }
         public static int SkillLevel(GameData data, string key)
         {
             var controller = SkillController.Instance;

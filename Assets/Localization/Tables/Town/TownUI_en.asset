@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
   m_Name: TownUI_en
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   m_LocaleId:
     m_Code: en
   m_SharedData: {fileID: 11400000, guid: 79e2dd3ef4efaf5459ce0f738238ca3e, type: 2}
@@ -67,15 +67,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003845
-    m_Localized: Select a buff to assign it. Select an equipped slot to toggle autocast.
+    m_Localized: Select Assign beside a buff, then choose a slot. Select an equipped slot to turn autocast on or off.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003844
-    m_Localized: Choose a slot for {0}. Select Cancel to finish without assigning.
+    m_Localized: Choose a slot for {0}, or select Cancel to keep your current setup.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003843
-    m_Localized: Assignments are locked during runs. Select an equipped slot to toggle autocast.
+    m_Localized: "You can\u2019t change buffs during a run. Select an equipped slot to turn autocast on or off."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003842
@@ -3505,7 +3505,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002002
-    m_Localized: Autocast can be toggled by clicking the buttons for each buff slot you have unlocked while not assigning. Buffs cannot be assigned during a run.
+    m_Localized: "Select an equipped slot to turn autocast on or off when you\u2019re not assigning a buff. You can\u2019t change assignments during a run."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002003
@@ -3637,11 +3637,20 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002032
-    m_Localized: "I am aware that this game is a little confusing when you first start playing. While a proper tutorial is in the works this message serves as a quick placeholder.\n\nFirst and foremost this is an idle game, progress happens automatically and in the background while you do other things!\n\nYou can find information on various systems by clicking the Library button at the top.\n\nQuests are your starting point and will help guide you as you progress. \n\nYour hero will self navigate and complete tasks while you are in a run.\n\nI hope you have fun, if you get stuck I can always be reached on discord!"
+    m_Localized: 'Echoes of Vasteria has had a major update. Progression, tutorials and menus have changed, so some things may work differently from what you remember.
+
+
+      I recommend starting a new save to experience the new introduction and progression. You can also choose to carry on with your existing save.
+
+
+      Your hero moves between tasks, gathers resources and fights automatically during adventures. Start with Quests to meet the townsfolk and unlock new places to explore.
+
+
+      You can ask for help on Discord.'
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002033
-    m_Localized: Click to close this forever!
+    m_Localized: Continue
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002034
@@ -3657,9 +3666,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002037
-    m_Localized: 'Tasks
-
-'
+    m_Localized: Tasks
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002038
@@ -3683,9 +3690,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002043
-    m_Localized: 'Combat
-
-'
+    m_Localized: Combat
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002044
@@ -3825,7 +3830,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002078
-    m_Localized: You can pin goals by tapping anywhere on their Name, Description, or Reward area.
+    m_Localized: "Select an active quest\u2019s name, description or reward to pin or unpin it. Completed quests and information-only quests cannot be pinned."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002079
@@ -4029,15 +4034,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164191093392019456
-    m_Localized: The Farmlands are full of ripe crops, ready for you to gather.
+    m_Localized: "The Farmlands are full of ripe crops. Let\u2019s gather a few."
     m_Metadata:
       m_Items: []
   - m_Id: 164191093392019457
-    m_Localized: Your quests will help you find your feet and meet the people around here. Open the quest window to see your objectives and claim your rewards.
+    m_Localized: "Open Quests to see what needs doing and claim your rewards. You\u2019ll meet the townsfolk along the way."
     m_Metadata:
       m_Items: []
   - m_Id: 164191093392019458
-    m_Localized: Let's take a look at your first quest. Then head into the Farmlands.
+    m_Localized: "Let\u2019s look at your first quest."
     m_Metadata:
       m_Items: []
   - m_Id: 164201421198725120
@@ -4045,7 +4050,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164201421236473856
-    m_Localized: For now, you can reach distance 50. As you help the townsfolk and unlock new areas, I'll let you travel farther.
+    m_Localized: "For now, your distance limit is 50. Help the townsfolk and unlock new areas, and I\u2019ll let you travel farther."
     m_Metadata:
       m_Items: []
   - m_Id: 164206864017002496
@@ -4077,11 +4082,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164232214319075331
-    m_Localized: Ivan supplied the materials. Click here to smelt your first ingot.
+    m_Localized: Ivan supplied the materials. Select Smelt to make your first ingot.
     m_Metadata:
       m_Items: []
   - m_Id: 164232214319075332
-    m_Localized: Your core determines the rarity odds. Later, you can upgrade cores to higher tiers. Select this basic core.
+    m_Localized: Select the Basic Core. Your core sets the rarity chances; higher tiers unlock later.
     m_Metadata:
       m_Items: []
   - m_Id: 164232214319075333
@@ -4089,11 +4094,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164232214319075334
-    m_Localized: Click Craft to use your ingot and core to make a sword.
+    m_Localized: Select Craft to turn your ingot and core into a sword.
     m_Metadata:
       m_Items: []
   - m_Id: 164232214319075335
-    m_Localized: Your sword is ready. Click Equip to wield it.
+    m_Localized: Your sword is ready. Select Equip to use it.
     m_Metadata:
       m_Items: []
   - m_Id: 164232214843363328
@@ -4101,7 +4106,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164241707132129280
-    m_Localized: You've levelled up a skill! Open Hub, then Skills, to see your bonuses and what you can unlock next.
+    m_Localized: "You\u2019ve gained a skill level! Open Hub \u2192 Skills to see your bonuses and next unlocks."
     m_Metadata:
       m_Items: []
   - m_Id: 164268729187307520
@@ -4125,11 +4130,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164268730030362624
-    m_Localized: Different maps give different resources.
+    m_Localized: "Each map has different resources. Let\u2019s see what you\u2019ve found."
     m_Metadata:
       m_Items: []
   - m_Id: 164268730030362625
-    m_Localized: Open General to view the maps.
+    m_Localized: Choose General to view the maps.
     m_Metadata:
       m_Items: []
   - m_Id: 164268730030362626
@@ -4137,15 +4142,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164268730030362627
-    m_Localized: Now choose {0} to compare its resources.
+    m_Localized: Choose {0} to see its resources.
     m_Metadata:
       m_Items: []
   - m_Id: 164268730030362628
-    m_Localized: Now choose {0} to compare its resources.
+    m_Localized: Choose {0} to see its resources.
     m_Metadata:
       m_Items: []
   - m_Id: 164274115306983424
-    m_Localized: Open Hub, then Inventory, to view your equipped items, their bonuses and the resources you gathered.
+    m_Localized: "Open Hub \u2192 Inventory to inspect your equipment and resources."
     m_Metadata:
       m_Items: []
   - m_Id: 164286682234490880
@@ -4213,7 +4218,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164290767910211584
-    m_Localized: You can find the history of your travels in the statistics panel!
+    m_Localized: Open Statistics (the bar-chart icon), then Graphs to see your recent runs.
     m_Metadata:
       m_Items: []
   - m_Id: 164297665183092736
@@ -4517,11 +4522,67 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 165856244562268160
-    m_Localized: Welcome back! Your progress and equipment are ready. The opening lessons have been skipped. Explore the updated menus at your own pace; help is available in the Library.
+    m_Localized: Welcome back! Your progress and equipment are intact. You can carry on without replaying the opening lessons.
     m_Metadata:
       m_Items: []
   - m_Id: 165995727630766080
     m_Localized: Unlocks {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027246403457025
+    m_Localized: Back to article
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027246403457024
+    m_Localized: Browse topics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023433
+    m_Localized: Open Statistics (the bar-chart icon), then Tasks to choose which tasks appear more often.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023432
+    m_Localized: "That\u2019s the last opening lesson. Choose your next adventure when you\u2019re ready."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023431
+    m_Localized: Carl has ended this run. You keep your loot and skill progress. Return to town to turn in your quests.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023430
+    m_Localized: You can now summon an Echo to help on adventures. Choose one to gather resources or fight alongside you.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023429
+    m_Localized: Select Boost to make this task more common within its category. Its category also becomes a little more common on the map. Completion milestones strengthen the boost. Select Boost again to turn it off.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023428
+    m_Localized: Complete tasks to earn skill XP and unlock bonuses.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023427
+    m_Localized: '<b>River, Woods and Mines:</b> being reaped at the distance limit increases your shared reaping distance by 1%.
+
+      <b>Farmlands:</b> no distance increase from reaping.
+
+      <b>Spooky:</b> enemy levels scale with kills, with no kill cap or distance reaping limit.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023426
+    m_Localized: Close Statistics to continue.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023425
+    m_Localized: "During an adventure, select your Echo\u2019s ability button to summon it. Complete Echo Casting to unlock autocasting."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023424
+    m_Localized: Choose Task Echo to gather resources or Combat Echo to fight. Select Assign beside your choice.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245208080384
+    m_Localized: Select your first slot to equip this Echo.
     m_Metadata:
       m_Items: []
   references:

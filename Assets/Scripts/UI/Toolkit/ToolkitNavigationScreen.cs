@@ -367,6 +367,10 @@ namespace TimelessEchoes.UI.Toolkit
             foreach (var entry in navigationEntries)
             {
                 var visible = ToolkitVisibilityRule.All(entry.visibility) && (entry.group == Group.Toolbar || entry.group == openGroup);
+                // Returning players may predate the quest that unlocks Town. Keep
+                // the portrait route to Library available without replaying it.
+                if (entry.id == "townsfolk" && Blindsided.Oracle.oracle?.saveData?.General.ReturningPlayerIntroductionComplete == true)
+                    visible = true;
                 if (entry.id == "shop") visible &= TimelessEchoes.Shop.ShopService.Ensure().Unlocked;
                 if (ToolkitResponsiveLayout.IsPortrait && entry.group == Group.Toolbar && !PortraitBottomEntry(entry))
                     visible &= openGroup == Group.Townsfolk;
