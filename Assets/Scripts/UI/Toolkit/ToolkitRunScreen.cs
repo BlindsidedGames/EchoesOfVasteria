@@ -217,9 +217,16 @@ namespace TimelessEchoes.UI.Toolkit
             SetVisible(focusControls, ToolkitResponsiveLayout.IsPortrait && canFocus && !HasOpenDetails);
             var world = ToolkitResponsiveLayout.WorldArea;
             var safe = ToolkitResponsiveLayout.SafeScreenArea;
-            focusIcon.style.backgroundImage = new StyleBackground(focus ? definition.restoreViewIcon : definition.fullscreenIcon);
-            focusIcon.style.width = focus ? 28 : 18;
-            focusIcon.style.height = focus ? 18 : 28;
+            var focusSprite = focus ? definition.restoreViewIcon : definition.fullscreenIcon;
+            focusIcon.style.backgroundImage = new StyleBackground(focusSprite);
+            focusIcon.style.width = focusIcon.style.height = 26;
+            // Explicit source-pixel slices preserve the corner pixels; changing
+            // the centre gap must not stretch the artwork's corner strokes.
+            var focusBorder = focusSprite ? focusSprite.border : Vector4.zero;
+            focusIcon.style.unitySliceLeft = Mathf.RoundToInt(focusBorder.x);
+            focusIcon.style.unitySliceBottom = Mathf.RoundToInt(focusBorder.y);
+            focusIcon.style.unitySliceRight = Mathf.RoundToInt(focusBorder.z);
+            focusIcon.style.unitySliceTop = Mathf.RoundToInt(focusBorder.w);
             focusToggle.style.left = Mathf.Min(world.xMax, safe.xMax) - 40;
             focusToggle.style.top = focus ? safe.yMax - 178 : Mathf.Max(safe.y, world.yMax - 78);
             if (focus)

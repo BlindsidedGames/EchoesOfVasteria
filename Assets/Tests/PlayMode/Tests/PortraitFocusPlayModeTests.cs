@@ -161,7 +161,8 @@ namespace Tests.PlayMode
                         Assert.Greater(menu.worldBound.yMin, ToolkitResponsiveLayout.Size.y, "Suspended panels must actually slide out of view.");
                         for (var frame = 0; frame < 3; frame++) yield return null;
                         var restoreIcon = ui.Q("run-focus-icon");
-                        Assert.Greater(restoreIcon.worldBound.width, restoreIcon.worldBound.height, "Restore icon should indicate the wide compact viewport.");
+                        Assert.AreEqual(restoreIcon.worldBound.width, restoreIcon.worldBound.height, .01f, "Zoom-out icon stays square.");
+                        Assert.AreEqual("UI_Selectors_65", restoreIcon.resolvedStyle.backgroundImage.sprite.name);
                         var viewport = camera.rect;
                         ClickControl(ui.Q<Button>("run-stats-toggle"));
                         for (var frame = 0; frame < 5; frame++) yield return null;
@@ -207,7 +208,10 @@ namespace Tests.PlayMode
                 ToolkitResponsiveLayout.ApplyFocusPresentation(menu);
                 Assert.False(ToolkitResponsiveLayout.FocusView);
                 var expandIcon = ui.Q("run-focus-icon");
-                Assert.Greater(expandIcon.worldBound.height, expandIcon.worldBound.width, "Expand icon should indicate the tall portrait viewport.");
+                Assert.AreEqual(expandIcon.worldBound.height, expandIcon.worldBound.width, .01f, "Zoom-in icon stays square.");
+                Assert.AreEqual("UI_Selectors_50", expandIcon.resolvedStyle.backgroundImage.sprite.name);
+                var runDefinition = AssetDatabase.LoadAssetAtPath<ToolkitRunDefinition>("Assets/UI/Toolkit/Run.asset");
+                Assert.AreEqual(runDefinition.fullscreenIcon.pixelsPerUnit, runDefinition.restoreViewIcon.pixelsPerUnit, "Both icons share the same pixel scale.");
                 Assert.True(field.enabledInHierarchy);
                 Assert.AreEqual("Preserved selection", field.value);
                 Assert.Greater(camera.rect.y, 0, "Restoring menus must restore the top 16:9 viewport.");
