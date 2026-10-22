@@ -218,7 +218,7 @@ namespace TimelessEchoes.UI.Toolkit
             var safe = ToolkitResponsiveLayout.SafeScreenArea;
             var focusSprite = focus ? definition.restoreViewIcon : definition.fullscreenIcon;
             ToolkitTheme.Background(focusIcon, focusSprite);
-            focusIcon.style.width = focusIcon.style.height = 26;
+            focusIcon.style.width = focusIcon.style.height = focus ? 22 : 26;
             focusToggle.style.left = Mathf.Min(world.xMax, safe.xMax) - 40;
             focusToggle.style.top = focus ? safe.yMax - 178 : Mathf.Max(safe.y, world.yMax - 78);
             if (focus)
