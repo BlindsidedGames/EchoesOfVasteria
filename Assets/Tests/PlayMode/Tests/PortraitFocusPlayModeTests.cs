@@ -191,7 +191,7 @@ namespace Tests.PlayMode
                         for (var frame = 0; frame < 5; frame++) yield return null;
                         Assert.False(view.GetComponent<ToolkitRunScreen>().HasOpenHeroStats, "Second Stats tap closes the popup.");
                         Assert.AreEqual(DisplayStyle.None, stats.resolvedStyle.display);
-                        foreach (var id in new[] { "adventure", "hub", "townsfolk" })
+                        foreach (var id in new[] { "adventure", "hub", "townsfolk", "stats" })
                         {
                             var navButton = navigationUi.Q<Button>(id);
                             ClickControl(navButton);

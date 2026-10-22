@@ -39,9 +39,9 @@ namespace Tests.PlayMode
                 var nav = navigation.GetComponent<ToolkitNavigationScreen>();
                 var navUi = navigation.GetComponent<UIDocument>().rootVisualElement;
                 nav.Refresh();
-                foreach (var id in new[] { "options", "stats", "quests" })
+                foreach (var id in new[] { "options", "stats", "hub", "wiki" })
                     Assert.AreEqual(DisplayStyle.Flex, navUi.Q(id + "-row").style.display.value, id);
-                foreach (var id in new[] { "adventure", "skills", "inventory", "wiki", "townsfolk" })
+                foreach (var id in new[] { "quests", "adventure", "skills", "inventory", "townsfolk" })
                     Assert.AreEqual(DisplayStyle.None, navUi.Q(id + "-row").style.display.value, id);
                 screenObject = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Quests.prefab"));
                 var screen = screenObject.GetComponent<ToolkitQuestsScreen>();
@@ -58,6 +58,8 @@ namespace Tests.PlayMode
                 for (int i = 0; i < 3; i++) meeting.BeginDialogue();
                 yield return null;
                 Assert.False(screen.IsOpen, "Orin must let the player choose to open Quests.");
+                Assert.AreEqual(DisplayStyle.Flex, navUi.Q("tutorial-pointer-hub").style.display.value, "First guide to the parent menu, even on a fresh save.");
+                FieldsClick(navUi.Q<Button>("hub")); yield return null; yield return null;
                 var questButton = navUi.Q<Button>("quests");
                 var pointer = navUi.Q("quest-tutorial-pointer");
                 Assert.NotNull(pointer);
@@ -76,7 +78,7 @@ namespace Tests.PlayMode
                 Assert.Greater(maxTop, minTop, "The pointing hand must move toward the button.");
                 CaptureFeedback("quest-click-pointer.png"); yield return null; yield return null;
                 Assert.False(screen.IsOpen);
-                windows.OpenWindow(TownWindowManager.Window.Quests);
+                FieldsClick(questButton);
                 nav.Refresh();
                 Assert.True(screen.IsOpen);
                 Assert.AreEqual(DisplayStyle.None, pointer.style.display.value, "Opening Quests dismisses the pointing hand.");
@@ -86,7 +88,7 @@ namespace Tests.PlayMode
                 nav.Refresh();
                 Assert.AreEqual(DisplayStyle.Flex, navUi.Q("adventure-row").style.display.value);
                 Assert.AreEqual(DisplayStyle.None, navUi.Q("skills-row").style.display.value);
-                Assert.AreEqual(DisplayStyle.None, navUi.Q("wiki-row").style.display.value);
+                Assert.AreEqual(DisplayStyle.Flex, navUi.Q("wiki-row").style.display.value);
                 var eva = Resources.Load<ToolkitNpcIntroduction>("NPC Introductions/Eva the Witch");
                 var radishes = Resources.Load<QuestData>("Quests/SkillExperience/For The Jam");
                 Assert.AreEqual(DisplayStyle.Flex, navUi.Q("tutorial-pointer-close").style.display.value);
@@ -167,7 +169,7 @@ namespace Tests.PlayMode
                 windows.OpenWindow(TownWindowManager.Window.Quests);
                 nav.Refresh();
                 Assert.AreEqual(DisplayStyle.None, navUi.Q("skills-row").style.display.value);
-                Assert.AreEqual(DisplayStyle.None, navUi.Q("wiki-row").style.display.value);
+                Assert.AreEqual(DisplayStyle.Flex, navUi.Q("wiki-row").style.display.value);
 
                 var gill = Resources.Load<QuestData>("Quests/Gill/The names Gill");
                 foreach (var prerequisite in gill.requiredQuests)

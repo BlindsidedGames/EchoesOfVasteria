@@ -133,18 +133,76 @@ namespace Tests.PlayMode
    } finally {if(run)Object.DestroyImmediate(run);Object.DestroyImmediate(owner);}
   }
   [UnityTest]
-  public IEnumerator GuidancePointerLandscapeKeepsUtilityIconsWithNavigation()
+  public IEnumerator GuidancePointerNavigationOpensStatisticsTabsAndHubQuestsAcrossLayouts()
   {
-   var nav=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Navigation.prefab"));
+   void ClickControl(Button button) {
+    using var move = PointerMoveEvent.GetPooled(new Event {type=EventType.MouseMove,mousePosition=button.worldBound.center});
+    button.SendEvent(move); FieldsClick(button);
+   }
+   var owner = new GameObject("Protected navigation routes");
+   GameObject nav = null, stats = null, quests = null;
    try {
-    foreach(var size in new[]{new Vector2Int(1170,2532),new Vector2Int(5120,2054)}) {
+    owner.AddComponent<TimelessEchoes.Quests.QuestManager>().enabled = false;
+    owner.AddComponent<TimelessEchoes.Upgrades.ResourceManager>();
+    owner.AddComponent<TimelessEchoes.Stats.GameplayStatTracker>().enabled = false;
+    var manager = owner.AddComponent<TimelessEchoes.UI.TownWindowManager>(); manager.enabled = false;
+    stats = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Statistics.prefab"));
+    quests = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Quests.prefab"));
+    typeof(TimelessEchoes.UI.TownWindowManager).GetField("toolkitStatistics",Private).SetValue(manager,stats.GetComponent<ToolkitStatisticsScreen>());
+    typeof(TimelessEchoes.UI.TownWindowManager).GetField("toolkitQuests",Private).SetValue(manager,quests.GetComponent<ToolkitQuestsScreen>());
+    nav=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Navigation.prefab"));
+    var screen=nav.GetComponent<ToolkitNavigationScreen>();
+    var root=nav.GetComponent<UIDocument>().rootVisualElement;
+    foreach(var size in new[]{new Vector2Int(1170,2532),new Vector2Int(5120,2054),new Vector2Int(1170,2532)}) {
      PlayModeWindow.SetCustomRenderingResolution((uint)size.x,(uint)size.y,"Navigation resize check");
      yield return null;yield return null;yield return new WaitForSecondsRealtime(.15f);
+     Assert.AreSame(root.Q("navigation-buttons"),root.Q<Button>("stats").parent.parent);
+     Assert.AreSame(root.Q("navigation-buttons"),root.Q<Button>("options").parent.parent);
+     Assert.AreEqual(DisplayStyle.None,root.Q("quests-row").resolvedStyle.display);
+     foreach(var tab in new[]{0,2,3,4,5,6}) {
+      ClickControl(root.Q<Button>("stats")); yield return new WaitForSecondsRealtime(.15f);
+      Assert.AreEqual(ToolkitNavigationDefinition.Group.Statistics,screen.OpenGroup);
+      var choice=root.Q<Button>("statistics-section-"+tab);
+      Assert.AreEqual(DisplayStyle.Flex,choice.parent.resolvedStyle.display);
+      ClickControl(choice); yield return new WaitForSecondsRealtime(.15f);
+      var statistics=stats.GetComponent<ToolkitStatisticsScreen>();
+      Assert.True(statistics.IsOpen); Assert.AreEqual(tab,statistics.SelectedTab);
+      Assert.False(screen.HasOpenMenu);
+      Assert.IsNull(stats.GetComponent<UIDocument>().rootVisualElement.Q("portrait-statistics-section"));
+      manager.CloseAllWindows(); yield return null;
+     }
+     ClickControl(root.Q<Button>("hub")); yield return new WaitForSecondsRealtime(.15f);
+     var questButton=root.Q<Button>("quests");
+     Assert.AreEqual(DisplayStyle.Flex,questButton.parent.resolvedStyle.display);
+     ClickControl(questButton); yield return new WaitForSecondsRealtime(.15f);
+     Assert.True(quests.GetComponent<ToolkitQuestsScreen>().IsOpen,"A fresh slot can reach Quests under Hub.");
+     manager.CloseAllWindows(); yield return null;
+     Assert.True(screen.OpenHelpDestination("stats/tasks"));
+     Assert.AreEqual(4,stats.GetComponent<ToolkitStatisticsScreen>().SelectedTab,"Library links still open the exact Statistics section.");
+     manager.CloseAllWindows(); yield return null;
+     Assert.True(screen.OpenHelpDestination("quests"));
+     Assert.True(quests.GetComponent<ToolkitQuestsScreen>().IsOpen);
+     manager.CloseAllWindows(); yield return null;
+     foreach (var lessonTab in new[] {0,2,4}) {
+      var general=oracle.saveData.General;
+      general.MapStatisticsTutorialStage=lessonTab==0?3:9;
+      general.GraphsViewed=lessonTab!=2; general.GraphsTutorialStage=lessonTab==2?1:2;
+      general.TaskBoostTutorialStage=lessonTab==4?1:2;
+      Assert.True(screen.OpenHelpDestination("stats/items")); yield return new WaitForSecondsRealtime(.15f);
+      if(ToolkitResponsiveLayout.IsPortrait)
+       Assert.AreEqual(DisplayStyle.Flex,root.Q("tutorial-pointer-stats").style.display.value,"Guide out of the wrong portrait Statistics page.");
+      ClickControl(root.Q<Button>("stats")); yield return new WaitForSecondsRealtime(.15f);
+      Assert.AreEqual(DisplayStyle.Flex,root.Q("tutorial-pointer-statistics-section-"+lessonTab).style.display.value,"The lesson must point at the correct popup entry in either layout.");
+      ClickControl(root.Q<Button>("statistics-section-"+lessonTab)); yield return new WaitForSecondsRealtime(.15f);
+      Assert.AreEqual(lessonTab,stats.GetComponent<ToolkitStatisticsScreen>().SelectedTab);
+      manager.CloseAllWindows(); yield return null;
+     }
+     oracle.saveData.General.MapStatisticsTutorialStage=9; oracle.saveData.General.GraphsViewed=true;
+     oracle.saveData.General.TaskBoostTutorialStage=2;
     }
-    var root=nav.GetComponent<UIDocument>().rootVisualElement;
-    Assert.AreSame(root.Q("navigation-buttons"),root.Q<Button>("stats").parent.parent);
-    Assert.AreSame(root.Q("navigation-buttons"),root.Q<Button>("options").parent.parent);
-   } finally {Object.DestroyImmediate(nav);}
+   } finally {
+    if(nav)Object.DestroyImmediate(nav); if(stats)Object.DestroyImmediate(stats); if(quests)Object.DestroyImmediate(quests); Object.DestroyImmediate(owner);
+   }
   }
  }
 }

@@ -7,8 +7,8 @@ namespace TimelessEchoes.UI.Toolkit
     [CreateAssetMenu(menuName = "Timeless Echoes/UI Toolkit/Navigation")]
     public sealed class ToolkitNavigationDefinition : ScriptableObject
     {
-        public enum Group { Toolbar, Adventure, Hub, Townsfolk }
-        public enum Action { Window, AdventureMenu, HubMenu, TownsfolkMenu, BeginMap, Close }
+        public enum Group { Toolbar, Adventure, Hub, Townsfolk, Statistics }
+        public enum Action { Window, AdventureMenu, HubMenu, TownsfolkMenu, BeginMap, Close, StatisticsMenu }
         [Serializable]
         public sealed class Entry
         {
@@ -16,6 +16,7 @@ namespace TimelessEchoes.UI.Toolkit
             public Group group;
             public Action action;
             public TownWindowManager.Window window;
+            public int statisticsTab = -1;
             public MapGenerationConfig map;
             public ToolkitBookDefinition.Text label = new();
             public Sprite background, icon, shadow;

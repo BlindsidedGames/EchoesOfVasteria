@@ -1044,9 +1044,8 @@ namespace Tests.PlayMode
                 yield return null; yield return null; nav.Refresh();
                 Assert.AreEqual(DisplayStyle.Flex, navUi.Q("tutorial-pointer-stats").style.display.value);
                 FieldsClick(navUi.Q<Button>("stats")); yield return new WaitForSecondsRealtime(.1f);
-                Assert.AreEqual(3, oracle.saveData.General.MapStatisticsTutorialStage);
-                Assert.That(ui.Q("map-statistics-tutorial").Q<Label>().text, Does.Contain("General"));
-                FieldsClick(ui.Q<Button>("stats-tab-0")); yield return new WaitForSecondsRealtime(.1f);
+                Assert.AreEqual(DisplayStyle.Flex, navUi.Q("tutorial-pointer-statistics-section-0").style.display.value);
+                FieldsClick(navUi.Q<Button>("statistics-section-0")); yield return new WaitForSecondsRealtime(.1f);
                 Assert.AreEqual(4, oracle.saveData.General.MapStatisticsTutorialStage);
                 FieldsClick(ui.Q<Button>("journal-map-1")); yield return new WaitForSecondsRealtime(.1f);
                 Assert.AreEqual(7, oracle.saveData.General.MapStatisticsTutorialStage, "Viewing one map should finish the map-selection lesson.");
@@ -1338,11 +1337,10 @@ namespace Tests.PlayMode
                     Assert.AreEqual(1, oracle.saveData.General.GraphsTutorialStage);
                     Assert.IsNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>(), "Reload resumes the hand prompt without repeating dialogue.");
                     FieldsClick(navUi.Q<Button>("stats")); yield return new WaitForSecondsRealtime(.1f);
+                    FieldsClick(navUi.Q<Button>("statistics-section-2")); yield return new WaitForSecondsRealtime(.1f);
                     var ui = stats.GetComponent<UIDocument>().rootVisualElement;
                     Assert.IsNull(ui.Q("stats-tab-1"), "The ranking tab is removed.");
-                    Assert.AreEqual(DisplayStyle.Flex, ui.Q("graphs-tutorial-hand").style.display.value);
-                    FieldsClick(ui.Q<Button>("stats-tab-2")); yield return new WaitForSecondsRealtime(.1f);
-                    Assert.AreEqual(DisplayStyle.None, ui.Q("graphs-tutorial-hand").style.display.value);
+                    Assert.True(oracle.saveData.General.GraphsViewed, "Choosing Graphs from the Statistics popup completes the viewing lesson.");
                     Assert.NotNull(ui.Q(className: "graph-chart"));
                 }
                 Assert.True(oracle.saveData.General.GraphsViewed);
