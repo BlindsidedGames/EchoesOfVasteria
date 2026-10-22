@@ -24,7 +24,6 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void SetHeroStatsOpen(bool open)
         {
-            if (open) ToolkitResponsiveLayout.SetFocusView(false);
             heroStatsOpen = open;
             SetVisible(heroStatsPanel, open);
             heroStatsToggle?.EnableInClassList("active", open);

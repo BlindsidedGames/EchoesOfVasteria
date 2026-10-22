@@ -43,7 +43,7 @@ namespace TimelessEchoes.UI.Toolkit
         private ScrollView portraitStatsScroll;
         private VisualElement focusControls;
         private Button focusToggle;
-        private Image focusArrow;
+        private VisualElement focusIcon;
         private float nextRefresh, elapsedAtEnd, runStartedAt;
         private int tooltipSlot = -1;
         public bool IsConfigured => definition && definition.buffs && theme && runtimeTheme && textSettings;
@@ -99,7 +99,12 @@ namespace TimelessEchoes.UI.Toolkit
             focusToggle.style.paddingLeft = focusToggle.style.paddingRight = 3;
             focusToggle.style.paddingTop = focusToggle.style.paddingBottom = 3;
             focusControls.Add(focusToggle);
-            focusArrow = ToolkitGameplay.Icon(focusToggle, definition.fullscreenIcon, 26);
+            focusToggle.style.alignItems = Align.Center;
+            focusToggle.style.justifyContent = Justify.Center;
+            focusIcon = new VisualElement { name = "run-focus-icon", pickingMode = PickingMode.Ignore };
+            focusIcon.style.flexShrink = 0;
+            focusIcon.style.unitySliceScale = .5f;
+            focusToggle.Add(focusIcon);
             ToolkitLocalization.Changed += LocalizationChanged;
             Blindsided.EventHandler.OnRunStarted += RunStarted;
             AttachServices(); Refresh();
@@ -212,6 +217,9 @@ namespace TimelessEchoes.UI.Toolkit
             SetVisible(focusControls, ToolkitResponsiveLayout.IsPortrait && canFocus && !HasOpenDetails);
             var world = ToolkitResponsiveLayout.WorldArea;
             var safe = ToolkitResponsiveLayout.SafeScreenArea;
+            focusIcon.style.backgroundImage = new StyleBackground(focus ? definition.restoreViewIcon : definition.fullscreenIcon);
+            focusIcon.style.width = focus ? 28 : 18;
+            focusIcon.style.height = focus ? 18 : 28;
             focusToggle.style.left = Mathf.Min(world.xMax, safe.xMax) - 40;
             focusToggle.style.top = focus ? safe.yMax - 178 : Mathf.Max(safe.y, world.yMax - 78);
             if (focus)
@@ -232,10 +240,21 @@ namespace TimelessEchoes.UI.Toolkit
             hud.style.top = portrait ? (ToolkitResponsiveLayout.FocusView ? area.height - 84 : 8) : StyleKeyword.Auto;
             hud.style.bottom = portrait ? StyleKeyword.Auto : 12;
             hud.style.width = portrait ? Mathf.Min(138, world.width - 220) : 154;
+            heroStatsPanel.EnableInClassList("focus-stats-content", portrait && ToolkitResponsiveLayout.FocusView);
             if (portraitStatsScroll != null)
             {
-                portraitStatsScroll.style.maxHeight = Mathf.Min(180, area.height - 140);
-                portraitStatsScroll.style.width = area.width - 16;
+                var focus = ToolkitResponsiveLayout.FocusView;
+                // Expanded play keeps its camera viewport. Float the stats above
+                // the progress strip instead of reopening the suspended dock.
+                portraitStatsScroll.style.top = focus ? StyleKeyword.Auto : 52;
+                portraitStatsScroll.style.bottom = focus ? area.yMax - world.yMax + 48 : StyleKeyword.Auto;
+                portraitStatsScroll.style.maxHeight = focus ? Mathf.Min(240, world.height - 64) : Mathf.Min(180, area.height - 140);
+                portraitStatsScroll.style.width = focus ? Mathf.Min(260, area.width - 64) : area.width - 16;
+                portraitStatsScroll.style.backgroundColor = focus ? (Color)new Color32(43, 36, 37, 255) : Color.clear;
+                portraitStatsScroll.style.borderLeftWidth = portraitStatsScroll.style.borderRightWidth =
+                    portraitStatsScroll.style.borderTopWidth = portraitStatsScroll.style.borderBottomWidth = focus ? .5f : 0;
+                portraitStatsScroll.style.borderLeftColor = portraitStatsScroll.style.borderRightColor =
+                    portraitStatsScroll.style.borderTopColor = portraitStatsScroll.style.borderBottomColor = (Color)new Color32(126, 104, 78, 255);
                 SetVisible(portraitStatsScroll, portrait && heroStatsOpen);
             }
             if (portrait)
@@ -269,10 +288,11 @@ namespace TimelessEchoes.UI.Toolkit
             if (portrait)
             {
                 root.Add(abilityBar);
-                portraitStatsScroll = ToolkitGameplay.Scroll(hud, "portrait-combat-stats");
+                portraitStatsScroll = ToolkitGameplay.Scroll(root, "portrait-combat-stats");
                 portraitStatsScroll.Add(heroStatsPanel);
                 portraitStatsScroll.style.position = Position.Absolute;
-                portraitStatsScroll.style.top = 44;
+                portraitStatsScroll.style.left = 8;
+                portraitStatsScroll.style.top = 52;
                 portraitStatsScroll.style.width = area.width - 16;
                 portraitStatsScroll.style.maxHeight = Mathf.Min(180, area.height - 140);
                 SetVisible(portraitStatsScroll, heroStatsOpen);

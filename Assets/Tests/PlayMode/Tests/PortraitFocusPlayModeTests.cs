@@ -40,10 +40,22 @@ namespace Tests.PlayMode
             var screenSimulation = simulatorMain.GetType().GetProperty("ScreenSimulation").GetValue(simulatorMain);
             void Orientation(bool landscape)
             {
+                var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+                simulatorMain.GetType().GetMethod("Enable", flags).Invoke(simulatorMain, null);
                 screenSimulation.GetType().GetProperty("DeviceRotation").SetValue(screenSimulation, landscape ? 90 : 0);
                 screenSimulation.GetType().GetMethod("RequestOrientation", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                     .Invoke(screenSimulation, new object[] { landscape ? ScreenOrientation.LandscapeLeft : ScreenOrientation.Portrait });
                 screenSimulation.GetType().GetMethod("ApplyChanges", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Invoke(screenSimulation, null);
+                simulator.Focus();
+                simulatorType.GetMethod("RepaintImmediately", flags).Invoke(simulator, null);
+                System.Type.GetType("UnityEditor.PlayModeView, UnityEditor").GetProperty("targetSize", flags)
+                    .SetValue(simulator, new Vector2(UnityEngine.Device.Screen.width, UnityEngine.Device.Screen.height));
+                simulatorType.GetMethod("RenderView", flags).Invoke(simulator, new object[] { Vector2.zero, false });
+            }
+            void ClickControl(Button button)
+            {
+                using (var move = PointerMoveEvent.GetPooled(new Event { type = EventType.MouseMove, mousePosition = button.worldBound.center })) button.SendEvent(move);
+                FieldsClick(button);
             }
             void CaptureSimulator(string name)
             {
@@ -122,10 +134,10 @@ namespace Tests.PlayMode
                     {
                         if (!ToolkitResponsiveLayout.FocusView)
                         {
-                            FieldsClick(toggle);
+                            ClickControl(toggle);
                             yield return null;
                             Assert.True(ToolkitResponsiveLayout.FocusView, "The expand control must open focus view.");
-                            FieldsClick(toggle);
+                            ClickControl(toggle);
                             yield return null;
                             dropdown.Focus();
                             using var submit = NavigationSubmitEvent.GetPooled();
@@ -145,10 +157,36 @@ namespace Tests.PlayMode
                         Assert.Less(ToolkitResponsiveLayout.WorldArea.yMax, ui.Q("run-stats-toggle").worldBound.yMin);
                         Assert.True(ToolkitResponsiveLayout.SafeScreenArea.Contains(toggle.worldBound.center));
                         ToolkitResponsiveLayout.ApplyFocusPresentation(menu);
-                        Assert.False(field.enabledInHierarchy, "Hidden menu controls must not accept input.");
-                        Assert.False(menu.panel.visualTree.Query<VisualElement>().ToList().Exists(e => e.userData is GenericDropdownMenu), "Focus must dismiss detached dropdown portals.");
                         yield return new WaitForSecondsRealtime(.25f);
                         Assert.Greater(menu.worldBound.yMin, ToolkitResponsiveLayout.Size.y, "Suspended panels must actually slide out of view.");
+                        for (var frame = 0; frame < 3; frame++) yield return null;
+                        var restoreIcon = ui.Q("run-focus-icon");
+                        Assert.Greater(restoreIcon.worldBound.width, restoreIcon.worldBound.height, "Restore icon should indicate the wide compact viewport.");
+                        var viewport = camera.rect;
+                        ClickControl(ui.Q<Button>("run-stats-toggle"));
+                        for (var frame = 0; frame < 5; frame++) yield return null;
+                        Assert.True(ToolkitResponsiveLayout.FocusView, "Stats must float over expanded play without restoring the menu dock.");
+                        Assert.AreEqual(viewport, camera.rect, "Opening stats must not resize the gameplay viewport.");
+                        var stats = ui.Q<ScrollView>("portrait-combat-stats");
+                        Assert.AreEqual(DisplayStyle.Flex, stats.resolvedStyle.display);
+                        Assert.Less(stats.worldBound.yMax, progress.worldBound.yMin, "Floating stats must sit above the reaper strip.");
+                        Assert.True(ToolkitResponsiveLayout.SafeScreenArea.Contains(stats.worldBound.min));
+                        Assert.True(ToolkitResponsiveLayout.SafeScreenArea.Contains(stats.worldBound.max));
+                        Assert.Greater(stats.resolvedStyle.backgroundColor.a, .9f, "Stats need an opaque readable surface over gameplay.");
+                        Assert.False(stats.worldBound.Overlaps(toggle.worldBound), "Floating stats must leave the view toggle reachable.");
+                        var previousRowBottom = float.NegativeInfinity;
+                        foreach (var row in stats.Query<VisualElement>(className: "hero-stat-row").ToList())
+                        {
+                            Assert.GreaterOrEqual(row.worldBound.yMin, previousRowBottom, "Expanded stats need one readable stat per row.");
+                            previousRowBottom = row.worldBound.yMax;
+                        }
+                        ClickControl(ui.Q<Button>("run-stats-toggle"));
+                        for (var frame = 0; frame < 5; frame++) yield return null;
+                        Assert.False(view.GetComponent<ToolkitRunScreen>().HasOpenHeroStats, "Second Stats tap closes the popup.");
+                        Assert.AreEqual(DisplayStyle.None, stats.resolvedStyle.display);
+                        ToolkitResponsiveLayout.ApplyFocusPresentation(menu);
+                        Assert.False(field.enabledInHierarchy, "Hidden menu controls must not accept input.");
+                        Assert.False(menu.panel.visualTree.Query<VisualElement>().ToList().Exists(e => e.userData is GenericDropdownMenu), "Focus must dismiss detached dropdown portals.");
                     }
                     CaptureSimulator(landscape ? "focus-landscape.png" : "focus-portrait-expanded.png");
                     yield return null; yield return null;
@@ -164,10 +202,12 @@ namespace Tests.PlayMode
                     destination.transform.position = new Vector3(80, 0, 0);
                     Assert.False(controller.HasVisibleTasksForHero(echo), "Focus must not remove the existing bounded working range.");
                 }
-                FieldsClick(toggle);
+                ClickControl(toggle);
                 for (var frame = 0; frame < 5; frame++) yield return null;
                 ToolkitResponsiveLayout.ApplyFocusPresentation(menu);
                 Assert.False(ToolkitResponsiveLayout.FocusView);
+                var expandIcon = ui.Q("run-focus-icon");
+                Assert.Greater(expandIcon.worldBound.height, expandIcon.worldBound.width, "Expand icon should indicate the tall portrait viewport.");
                 Assert.True(field.enabledInHierarchy);
                 Assert.AreEqual("Preserved selection", field.value);
                 Assert.Greater(camera.rect.y, 0, "Restoring menus must restore the top 16:9 viewport.");

@@ -1205,7 +1205,9 @@ TextureImporter:
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
+  spriteTessellationMethod: 0
   spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
@@ -1265,13 +1267,13 @@ TextureImporter:
       name: UI_Selectors_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 912
-        width: 48
-        height: 48
+        x: 11
+        y: 922
+        width: 26
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1287,13 +1289,13 @@ TextureImporter:
       name: UI_Selectors_1
       rect:
         serializedVersion: 2
-        x: 48
-        y: 912
-        width: 48
-        height: 48
+        x: 59
+        y: 923
+        width: 26
+        height: 26
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1309,13 +1311,13 @@ TextureImporter:
       name: UI_Selectors_2
       rect:
         serializedVersion: 2
-        x: 96
-        y: 912
-        width: 48
-        height: 48
+        x: 107
+        y: 922
+        width: 26
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1337,7 +1339,7 @@ TextureImporter:
         height: 26
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 9, y: 9, z: 9, w: 9}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1353,13 +1355,13 @@ TextureImporter:
       name: UI_Selectors_4
       rect:
         serializedVersion: 2
-        x: 0
-        y: 864
-        width: 48
-        height: 48
+        x: 10
+        y: 873
+        width: 28
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 8, z: 7, w: 8}
       customData: 
       outline: []
       physicsShape: []
@@ -1375,13 +1377,13 @@ TextureImporter:
       name: UI_Selectors_5
       rect:
         serializedVersion: 2
-        x: 48
-        y: 864
-        width: 48
-        height: 48
+        x: 58
+        y: 874
+        width: 28
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1397,13 +1399,13 @@ TextureImporter:
       name: UI_Selectors_6
       rect:
         serializedVersion: 2
-        x: 96
-        y: 864
-        width: 48
-        height: 48
+        x: 106
+        y: 873
+        width: 28
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 8, z: 7, w: 8}
       customData: 
       outline: []
       physicsShape: []
@@ -1419,13 +1421,13 @@ TextureImporter:
       name: UI_Selectors_7
       rect:
         serializedVersion: 2
-        x: 144
-        y: 864
-        width: 48
-        height: 48
+        x: 154
+        y: 874
+        width: 28
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1441,13 +1443,13 @@ TextureImporter:
       name: UI_Selectors_8
       rect:
         serializedVersion: 2
-        x: 0
-        y: 816
-        width: 48
-        height: 48
+        x: 11
+        y: 826
+        width: 26
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1463,13 +1465,13 @@ TextureImporter:
       name: UI_Selectors_9
       rect:
         serializedVersion: 2
-        x: 48
-        y: 816
-        width: 48
-        height: 48
+        x: 59
+        y: 827
+        width: 26
+        height: 26
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1485,13 +1487,13 @@ TextureImporter:
       name: UI_Selectors_10
       rect:
         serializedVersion: 2
-        x: 96
-        y: 816
-        width: 48
-        height: 48
+        x: 107
+        y: 826
+        width: 26
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1507,13 +1509,13 @@ TextureImporter:
       name: UI_Selectors_11
       rect:
         serializedVersion: 2
-        x: 144
-        y: 816
-        width: 48
-        height: 48
+        x: 155
+        y: 827
+        width: 26
+        height: 26
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1529,13 +1531,13 @@ TextureImporter:
       name: UI_Selectors_12
       rect:
         serializedVersion: 2
-        x: 0
-        y: 768
-        width: 48
-        height: 48
+        x: 10
+        y: 777
+        width: 28
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 8, z: 7, w: 8}
       customData: 
       outline: []
       physicsShape: []
@@ -1551,13 +1553,13 @@ TextureImporter:
       name: UI_Selectors_13
       rect:
         serializedVersion: 2
-        x: 48
-        y: 768
-        width: 48
-        height: 48
+        x: 58
+        y: 778
+        width: 28
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1573,13 +1575,13 @@ TextureImporter:
       name: UI_Selectors_14
       rect:
         serializedVersion: 2
-        x: 96
-        y: 768
-        width: 48
-        height: 48
+        x: 106
+        y: 777
+        width: 28
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 8, z: 7, w: 8}
       customData: 
       outline: []
       physicsShape: []
@@ -1595,13 +1597,13 @@ TextureImporter:
       name: UI_Selectors_15
       rect:
         serializedVersion: 2
-        x: 144
-        y: 768
-        width: 48
-        height: 48
+        x: 154
+        y: 778
+        width: 28
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1617,13 +1619,13 @@ TextureImporter:
       name: UI_Selectors_16
       rect:
         serializedVersion: 2
-        x: 0
-        y: 720
-        width: 48
-        height: 48
+        x: 11
+        y: 730
+        width: 26
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1639,13 +1641,13 @@ TextureImporter:
       name: UI_Selectors_17
       rect:
         serializedVersion: 2
-        x: 48
-        y: 720
-        width: 48
-        height: 48
+        x: 59
+        y: 731
+        width: 26
+        height: 26
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1661,13 +1663,13 @@ TextureImporter:
       name: UI_Selectors_18
       rect:
         serializedVersion: 2
-        x: 96
-        y: 720
-        width: 48
-        height: 48
+        x: 107
+        y: 730
+        width: 26
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1689,7 +1691,7 @@ TextureImporter:
         height: 26
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 9, y: 9, z: 9, w: 9}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1705,13 +1707,13 @@ TextureImporter:
       name: UI_Selectors_20
       rect:
         serializedVersion: 2
-        x: 0
-        y: 672
-        width: 48
-        height: 48
+        x: 10
+        y: 681
+        width: 28
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 8, z: 7, w: 8}
       customData: 
       outline: []
       physicsShape: []
@@ -1727,13 +1729,13 @@ TextureImporter:
       name: UI_Selectors_21
       rect:
         serializedVersion: 2
-        x: 48
-        y: 672
-        width: 48
-        height: 48
+        x: 58
+        y: 682
+        width: 28
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1749,13 +1751,13 @@ TextureImporter:
       name: UI_Selectors_22
       rect:
         serializedVersion: 2
-        x: 96
-        y: 672
-        width: 48
-        height: 48
+        x: 106
+        y: 681
+        width: 28
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 8, z: 7, w: 8}
       customData: 
       outline: []
       physicsShape: []
@@ -1771,13 +1773,13 @@ TextureImporter:
       name: UI_Selectors_23
       rect:
         serializedVersion: 2
-        x: 144
-        y: 672
-        width: 48
-        height: 48
+        x: 154
+        y: 682
+        width: 28
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1793,13 +1795,13 @@ TextureImporter:
       name: UI_Selectors_24
       rect:
         serializedVersion: 2
-        x: 0
-        y: 624
-        width: 48
-        height: 48
+        x: 11
+        y: 634
+        width: 26
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1815,13 +1817,13 @@ TextureImporter:
       name: UI_Selectors_25
       rect:
         serializedVersion: 2
-        x: 48
-        y: 624
-        width: 48
-        height: 48
+        x: 59
+        y: 635
+        width: 26
+        height: 26
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1837,13 +1839,13 @@ TextureImporter:
       name: UI_Selectors_26
       rect:
         serializedVersion: 2
-        x: 96
-        y: 624
-        width: 48
-        height: 48
+        x: 107
+        y: 634
+        width: 26
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1859,13 +1861,13 @@ TextureImporter:
       name: UI_Selectors_27
       rect:
         serializedVersion: 2
-        x: 144
-        y: 624
-        width: 48
-        height: 48
+        x: 155
+        y: 635
+        width: 26
+        height: 26
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1881,13 +1883,13 @@ TextureImporter:
       name: UI_Selectors_28
       rect:
         serializedVersion: 2
-        x: 0
-        y: 576
-        width: 48
-        height: 48
+        x: 10
+        y: 585
+        width: 28
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 8, z: 7, w: 8}
       customData: 
       outline: []
       physicsShape: []
@@ -1903,13 +1905,13 @@ TextureImporter:
       name: UI_Selectors_29
       rect:
         serializedVersion: 2
-        x: 48
-        y: 576
-        width: 48
-        height: 48
+        x: 58
+        y: 586
+        width: 28
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1925,13 +1927,13 @@ TextureImporter:
       name: UI_Selectors_30
       rect:
         serializedVersion: 2
-        x: 96
-        y: 576
-        width: 48
-        height: 48
+        x: 106
+        y: 585
+        width: 28
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 8, z: 7, w: 8}
       customData: 
       outline: []
       physicsShape: []
@@ -1947,13 +1949,13 @@ TextureImporter:
       name: UI_Selectors_31
       rect:
         serializedVersion: 2
-        x: 144
-        y: 576
-        width: 48
-        height: 48
+        x: 154
+        y: 586
+        width: 28
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1969,13 +1971,13 @@ TextureImporter:
       name: UI_Selectors_32
       rect:
         serializedVersion: 2
-        x: 0
-        y: 528
-        width: 48
-        height: 48
+        x: 11
+        y: 538
+        width: 26
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -1991,13 +1993,13 @@ TextureImporter:
       name: UI_Selectors_33
       rect:
         serializedVersion: 2
-        x: 48
-        y: 528
-        width: 48
-        height: 48
+        x: 59
+        y: 539
+        width: 26
+        height: 26
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -2013,13 +2015,13 @@ TextureImporter:
       name: UI_Selectors_34
       rect:
         serializedVersion: 2
-        x: 96
-        y: 528
-        width: 48
-        height: 48
+        x: 107
+        y: 538
+        width: 26
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -2035,13 +2037,13 @@ TextureImporter:
       name: UI_Selectors_35
       rect:
         serializedVersion: 2
-        x: 144
-        y: 528
-        width: 48
-        height: 48
+        x: 155
+        y: 539
+        width: 26
+        height: 26
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -2057,13 +2059,13 @@ TextureImporter:
       name: UI_Selectors_36
       rect:
         serializedVersion: 2
-        x: 0
-        y: 480
-        width: 48
-        height: 48
+        x: 10
+        y: 489
+        width: 28
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 8, z: 7, w: 8}
       customData: 
       outline: []
       physicsShape: []
@@ -2079,13 +2081,13 @@ TextureImporter:
       name: UI_Selectors_37
       rect:
         serializedVersion: 2
-        x: 48
-        y: 480
-        width: 48
-        height: 48
+        x: 58
+        y: 490
+        width: 28
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -2101,13 +2103,13 @@ TextureImporter:
       name: UI_Selectors_38
       rect:
         serializedVersion: 2
-        x: 96
-        y: 480
-        width: 48
-        height: 48
+        x: 106
+        y: 489
+        width: 28
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 8, z: 7, w: 8}
       customData: 
       outline: []
       physicsShape: []
@@ -2123,13 +2125,13 @@ TextureImporter:
       name: UI_Selectors_39
       rect:
         serializedVersion: 2
-        x: 144
-        y: 480
-        width: 48
-        height: 48
+        x: 154
+        y: 490
+        width: 28
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -2145,13 +2147,13 @@ TextureImporter:
       name: UI_Selectors_40
       rect:
         serializedVersion: 2
-        x: 0
-        y: 432
-        width: 48
-        height: 48
+        x: 11
+        y: 442
+        width: 26
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -2167,13 +2169,13 @@ TextureImporter:
       name: UI_Selectors_41
       rect:
         serializedVersion: 2
-        x: 48
-        y: 432
-        width: 48
-        height: 48
+        x: 59
+        y: 443
+        width: 26
+        height: 26
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -2189,13 +2191,13 @@ TextureImporter:
       name: UI_Selectors_42
       rect:
         serializedVersion: 2
-        x: 96
-        y: 432
-        width: 48
-        height: 48
+        x: 107
+        y: 442
+        width: 26
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -2211,13 +2213,13 @@ TextureImporter:
       name: UI_Selectors_43
       rect:
         serializedVersion: 2
-        x: 144
-        y: 432
-        width: 48
-        height: 48
+        x: 155
+        y: 443
+        width: 26
+        height: 26
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -2233,13 +2235,13 @@ TextureImporter:
       name: UI_Selectors_44
       rect:
         serializedVersion: 2
-        x: 0
-        y: 384
-        width: 48
-        height: 48
+        x: 10
+        y: 393
+        width: 28
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 8, z: 7, w: 8}
       customData: 
       outline: []
       physicsShape: []
@@ -2255,13 +2257,13 @@ TextureImporter:
       name: UI_Selectors_45
       rect:
         serializedVersion: 2
-        x: 48
-        y: 384
-        width: 48
-        height: 48
+        x: 58
+        y: 394
+        width: 28
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -2277,13 +2279,13 @@ TextureImporter:
       name: UI_Selectors_46
       rect:
         serializedVersion: 2
-        x: 96
-        y: 384
-        width: 48
-        height: 48
+        x: 106
+        y: 393
+        width: 28
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 8, z: 7, w: 8}
       customData: 
       outline: []
       physicsShape: []
@@ -2299,13 +2301,13 @@ TextureImporter:
       name: UI_Selectors_47
       rect:
         serializedVersion: 2
-        x: 144
-        y: 384
-        width: 48
-        height: 48
+        x: 154
+        y: 394
+        width: 28
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -2321,13 +2323,13 @@ TextureImporter:
       name: UI_Selectors_48
       rect:
         serializedVersion: 2
-        x: 0
-        y: 336
-        width: 48
-        height: 48
+        x: 13
+        y: 348
+        width: 22
+        height: 24
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 6, z: 6, w: 6}
       customData: 
       outline: []
       physicsShape: []
@@ -2343,13 +2345,13 @@ TextureImporter:
       name: UI_Selectors_49
       rect:
         serializedVersion: 2
-        x: 48
-        y: 336
-        width: 48
-        height: 48
+        x: 61
+        y: 349
+        width: 22
+        height: 22
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 6, z: 6, w: 6}
       customData: 
       outline: []
       physicsShape: []
@@ -2365,13 +2367,13 @@ TextureImporter:
       name: UI_Selectors_50
       rect:
         serializedVersion: 2
-        x: 96
-        y: 336
-        width: 48
-        height: 48
+        x: 109
+        y: 348
+        width: 22
+        height: 24
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 6, z: 6, w: 6}
       customData: 
       outline: []
       physicsShape: []
@@ -2387,13 +2389,13 @@ TextureImporter:
       name: UI_Selectors_51
       rect:
         serializedVersion: 2
-        x: 144
-        y: 336
-        width: 48
-        height: 48
+        x: 157
+        y: 349
+        width: 22
+        height: 22
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 6, z: 6, w: 6}
       customData: 
       outline: []
       physicsShape: []
@@ -2409,13 +2411,13 @@ TextureImporter:
       name: UI_Selectors_52
       rect:
         serializedVersion: 2
-        x: 0
-        y: 288
-        width: 48
-        height: 48
+        x: 12
+        y: 299
+        width: 24
+        height: 26
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 7, z: 6, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -2431,13 +2433,13 @@ TextureImporter:
       name: UI_Selectors_53
       rect:
         serializedVersion: 2
-        x: 48
-        y: 288
-        width: 48
-        height: 48
+        x: 60
+        y: 300
+        width: 24
+        height: 24
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 6, z: 6, w: 6}
       customData: 
       outline: []
       physicsShape: []
@@ -2453,13 +2455,13 @@ TextureImporter:
       name: UI_Selectors_54
       rect:
         serializedVersion: 2
-        x: 96
-        y: 288
-        width: 48
-        height: 48
+        x: 108
+        y: 299
+        width: 24
+        height: 26
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 7, z: 6, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -2475,13 +2477,13 @@ TextureImporter:
       name: UI_Selectors_55
       rect:
         serializedVersion: 2
-        x: 144
-        y: 288
-        width: 48
-        height: 48
+        x: 156
+        y: 300
+        width: 24
+        height: 24
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 6, z: 6, w: 6}
       customData: 
       outline: []
       physicsShape: []
@@ -2497,13 +2499,13 @@ TextureImporter:
       name: UI_Selectors_56
       rect:
         serializedVersion: 2
-        x: 0
-        y: 240
-        width: 48
-        height: 48
+        x: 13
+        y: 252
+        width: 22
+        height: 24
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 6, z: 6, w: 6}
       customData: 
       outline: []
       physicsShape: []
@@ -2519,13 +2521,13 @@ TextureImporter:
       name: UI_Selectors_57
       rect:
         serializedVersion: 2
-        x: 48
-        y: 240
-        width: 48
-        height: 48
+        x: 61
+        y: 253
+        width: 22
+        height: 22
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 6, z: 6, w: 6}
       customData: 
       outline: []
       physicsShape: []
@@ -2541,13 +2543,13 @@ TextureImporter:
       name: UI_Selectors_58
       rect:
         serializedVersion: 2
-        x: 96
-        y: 240
-        width: 48
-        height: 48
+        x: 109
+        y: 252
+        width: 22
+        height: 24
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 6, z: 6, w: 6}
       customData: 
       outline: []
       physicsShape: []
@@ -2563,13 +2565,13 @@ TextureImporter:
       name: UI_Selectors_59
       rect:
         serializedVersion: 2
-        x: 144
-        y: 240
-        width: 48
-        height: 48
+        x: 157
+        y: 253
+        width: 22
+        height: 22
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 6, z: 6, w: 6}
       customData: 
       outline: []
       physicsShape: []
@@ -2585,13 +2587,13 @@ TextureImporter:
       name: UI_Selectors_60
       rect:
         serializedVersion: 2
-        x: 0
-        y: 192
-        width: 48
-        height: 48
+        x: 10
+        y: 201
+        width: 28
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 8, z: 7, w: 8}
       customData: 
       outline: []
       physicsShape: []
@@ -2629,13 +2631,13 @@ TextureImporter:
       name: UI_Selectors_62
       rect:
         serializedVersion: 2
-        x: 96
-        y: 192
-        width: 48
-        height: 48
+        x: 106
+        y: 201
+        width: 28
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 8, z: 7, w: 8}
       customData: 
       outline: []
       physicsShape: []
@@ -2651,13 +2653,13 @@ TextureImporter:
       name: UI_Selectors_63
       rect:
         serializedVersion: 2
-        x: 144
-        y: 192
-        width: 48
-        height: 48
+        x: 154
+        y: 202
+        width: 28
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -2673,13 +2675,13 @@ TextureImporter:
       name: UI_Selectors_64
       rect:
         serializedVersion: 2
-        x: 0
-        y: 144
-        width: 48
-        height: 48
+        x: 13
+        y: 156
+        width: 22
+        height: 24
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 6, z: 6, w: 6}
       customData: 
       outline: []
       physicsShape: []
@@ -2695,13 +2697,13 @@ TextureImporter:
       name: UI_Selectors_65
       rect:
         serializedVersion: 2
-        x: 48
-        y: 144
-        width: 48
-        height: 48
+        x: 61
+        y: 157
+        width: 22
+        height: 22
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 6, z: 6, w: 6}
       customData: 
       outline: []
       physicsShape: []
@@ -2717,13 +2719,13 @@ TextureImporter:
       name: UI_Selectors_66
       rect:
         serializedVersion: 2
-        x: 0
-        y: 96
-        width: 48
-        height: 48
+        x: 12
+        y: 107
+        width: 24
+        height: 26
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 7, z: 6, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -2739,13 +2741,13 @@ TextureImporter:
       name: UI_Selectors_67
       rect:
         serializedVersion: 2
-        x: 48
-        y: 96
-        width: 48
-        height: 48
+        x: 60
+        y: 108
+        width: 24
+        height: 24
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 6, z: 6, w: 6}
       customData: 
       outline: []
       physicsShape: []
@@ -2761,13 +2763,13 @@ TextureImporter:
       name: UI_Selectors_68
       rect:
         serializedVersion: 2
-        x: 0
-        y: 48
-        width: 48
-        height: 48
+        x: 13
+        y: 60
+        width: 22
+        height: 24
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 6, z: 6, w: 6}
       customData: 
       outline: []
       physicsShape: []
@@ -2783,13 +2785,13 @@ TextureImporter:
       name: UI_Selectors_69
       rect:
         serializedVersion: 2
-        x: 48
-        y: 48
-        width: 48
-        height: 48
+        x: 61
+        y: 61
+        width: 22
+        height: 22
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 6, y: 6, z: 6, w: 6}
       customData: 
       outline: []
       physicsShape: []
@@ -2805,13 +2807,13 @@ TextureImporter:
       name: UI_Selectors_70
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 48
-        height: 48
+        x: 10
+        y: 9
+        width: 28
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 8, z: 7, w: 8}
       customData: 
       outline: []
       physicsShape: []
@@ -2827,13 +2829,13 @@ TextureImporter:
       name: UI_Selectors_71
       rect:
         serializedVersion: 2
-        x: 48
-        y: 0
-        width: 48
-        height: 48
+        x: 58
+        y: 10
+        width: 28
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
@@ -2854,7 +2856,7 @@ TextureImporter:
         width: 49
         height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -2876,8 +2878,8 @@ TextureImporter:
         width: 26
         height: 26
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 9, y: 9, z: 9, w: 9}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 7, y: 7, z: 7, w: 7}
       customData: 
       outline: []
       physicsShape: []
