@@ -122,7 +122,7 @@ namespace TimelessEchoes.UI.Toolkit
             Refresh();
         }
 
-        public void FitPortrait(float availableHeight)
+        public void FitPortrait(float availableHeight, float navigationClearance = 0)
         {
             var noPortrait = Root.ClassListContains("meeting-no-portrait");
             var safe = ToolkitResponsiveLayout.SafeScreenArea;
@@ -132,7 +132,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (AwaitingMeet)
             {
                 Root.style.height = height;
-                Root.style.top = safe.yMax - ToolkitResponsiveLayout.WindowBottom - height - 8;
+                Root.style.top = safe.yMax - ToolkitResponsiveLayout.WindowBottom - height - 8 - navigationClearance;
                 return;
             }
             // Measure after layout so localization and the actual available text width
@@ -143,7 +143,7 @@ namespace TimelessEchoes.UI.Toolkit
             var minimum = noPortrait ? 76 : 96;
             height = Mathf.RoundToInt(Mathf.Clamp(Mathf.Ceil(textHeight) + 64, minimum, availableHeight));
             Root.style.height = height;
-            Root.style.top = safe.yMax - ToolkitResponsiveLayout.WindowBottom - height - 8;
+            Root.style.top = safe.yMax - ToolkitResponsiveLayout.WindowBottom - height - 8 - navigationClearance;
         }
 
         private float MeasureDialogueHeight(float width)

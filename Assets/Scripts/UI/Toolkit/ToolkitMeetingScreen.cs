@@ -26,6 +26,7 @@ namespace TimelessEchoes.UI.Toolkit
         private Action finished;
         private bool initialized, completed;
         private bool continueAfterDialogue;
+        private ToolkitNavigationScreen lessonNavigation;
         private IDisposable conversationWait;
         private Rect lastArea;
         private int lastIndex = -1;
@@ -49,6 +50,8 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void OnEnable() { if (initialized && !completed) Show(); }
         public void BeginDialogue() => view?.Advance();
+
+        public void GuideNavigation(ToolkitNavigationScreen navigation) => lessonNavigation = navigation;
 
         public void SetPortraitAnimation(IReadOnlyList<Sprite> frames, float framesPerSecond)
         {
@@ -104,7 +107,14 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 ApplyLayout();
                 if (ToolkitResponsiveLayout.IsPortrait)
-                    view.FitPortrait(Mathf.Min(220, ToolkitResponsiveLayout.SafeScreenArea.height - 100));
+                    view.FitPortrait(Mathf.Min(220, ToolkitResponsiveLayout.SafeScreenArea.height - 100), lessonNavigation ? 32 : 0);
+                if (lessonNavigation)
+                {
+                    // Dropdowns and their tutorial hand must remain visible and clickable.
+                    // Restore the explanation once the player selects a destination.
+                    view.Root.style.display = lessonNavigation.HasOpenMenu ? DisplayStyle.None : DisplayStyle.Flex;
+                    view.AdvanceButton.SetEnabled(lessonNavigation.RefresherDestinationOpen);
+                }
                 meetHand.style.display = view.AwaitingMeet && definition.tutorialHand ? DisplayStyle.Flex : DisplayStyle.None;
                 if (view.AwaitingMeet)
                 {

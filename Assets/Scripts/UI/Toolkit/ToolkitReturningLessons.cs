@@ -74,18 +74,24 @@ namespace TimelessEchoes.UI.Toolkit
                         continue;
                     }
                     var navigation = FindAnyObjectByType<ToolkitNavigationScreen>();
-                    navigation?.OpenHelpDestination(lesson.route);
-                    yield return null;
-                    var meeting = Instantiate(meetingPrefab).GetComponent<ToolkitMeetingScreen>();
+                    ToolkitMeetingScreen meeting = null;
                     var finished = false;
                     try
                     {
+                        var guiding = navigation && navigation.BeginRefresherNavigation(lesson.route);
+                        yield return null;
+                        meeting = Instantiate(meetingPrefab).GetComponent<ToolkitMeetingScreen>();
                         meeting.Init(null, new[] { lesson.text }, () => finished = true,
                             new[] { "intro.refresher." + lesson.key }, index < ReturningTour.Length - 1);
+                        if (guiding) meeting.GuideNavigation(navigation);
                         meeting.BeginDialogue();
                         while (meeting && !finished) yield return null;
                     }
-                    finally { if (meeting) Destroy(meeting.gameObject); }
+                    finally
+                    {
+                        if (navigation) navigation.EndRefresherNavigation();
+                        if (meeting) Destroy(meeting.gameObject);
+                    }
                     if (!finished) yield break;
                     TownWindowManager.Instance?.CloseAllWindows();
                     general.ReturningPlayerLessonStage = index + 1 == ReturningTour.Length ? 0 : index + 2;
