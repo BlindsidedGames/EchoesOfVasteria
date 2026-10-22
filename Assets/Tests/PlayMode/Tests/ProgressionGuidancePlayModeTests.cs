@@ -23,7 +23,7 @@ namespace Tests.PlayMode
     public sealed partial class FieldsProductionPlayModeTests
     {
         [UnityTest]
-        public IEnumerator GuidanceReturningWelcomeDoesNotReplaySkillsAndStaysDismissedAfterReload()
+        public IEnumerator GuidanceReturningWelcomeOffersOptionalReadOnlyLessonsAndRemembersChoice()
         {
             var owner = new GameObject("Returning player lesson owner");
             GameObject speakerObject = null;
@@ -37,10 +37,12 @@ namespace Tests.PlayMode
                 var template = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Intro.prefab").GetComponent<ToolkitOrinIntroduction>();
                 var first = (QuestData)typeof(ToolkitOrinIntroduction).GetField("firstQuest", Private).GetValue(template);
                 oracle.saveData.SchemaVersion = 7;
-                foreach (var id in new[] { first.questId, "The names Gill", "Into The Multiverse" })
+                foreach (var id in new[] { first.questId, "The names Gill", "Into The Multiverse", "Ivan's First Lesson" })
                     oracle.saveData.Quests[id] = new GameData.QuestRecord { Completed = true };
                 oracle.saveData.CompletedNpcTasks.Add(Resources.Load<ToolkitNpcIntroduction>("NPC Introductions/Eva the Witch").npcId);
                 oracle.saveData.SkillData["Combat"] = new GameData.SkillProgress { Level = 405 };
+                oracle.saveData.Resources["Stone"] = new GameData.ResourceEntry { Amount = 1000, Earned = true, Tier = 1 };
+                oracle.saveData.General.ForgeFirstLessonStage = 5;
                 var migration = Blindsided.SaveData.Migrations.SaveMigrationRunner.TryMigrate(oracle.saveData, "9999.0.0");
                 Assert.True(migration.Succeeded, migration.Error);
                 oracle.saveData = migration.Data;
@@ -51,23 +53,76 @@ namespace Tests.PlayMode
                     var speaker = speakerObject.AddComponent<ToolkitOrinIntroduction>();
                     foreach (var field in typeof(ToolkitOrinIntroduction).GetFields(Private)) field.SetValue(speaker, field.GetValue(template));
                 }
-                StartSpeaker();
-                yield return new WaitForSecondsRealtime(.2f);
-                var meeting = Object.FindAnyObjectByType<ToolkitMeetingScreen>(); Assert.NotNull(meeting);
-                FieldsClick(meeting.GetComponent<UIDocument>().rootVisualElement.Q<Button>("advance"));
-                yield return new WaitForSecondsRealtime(.2f);
-                Assert.True(oracle.saveData.General.ReturningPlayerWelcomeSeen);
-                Assert.IsNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>(), "Completed Skills and other opening lessons must not replay after the welcome.");
-                Blindsided.EventHandler.SaveData(); Blindsided.EventHandler.LoadData();
-                Object.DestroyImmediate(speakerObject); StartSpeaker();
-                yield return new WaitForSecondsRealtime(.2f);
-                Assert.True(oracle.saveData.General.ReturningPlayerWelcomeSeen);
-                Assert.IsNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>(), "Dismissal must survive save and reload.");
+                string Progress() => System.Convert.ToBase64String(CurrentSaveCodec.Serialize(new GameData {
+                    Resources = oracle.saveData.Resources, EquipmentBySlot = oracle.saveData.EquipmentBySlot,
+                    Quests = oracle.saveData.Quests, SkillData = oracle.saveData.SkillData,
+                    Forge = oracle.saveData.Forge, Farm = oracle.saveData.Farm, CompletedNpcTasks = oracle.saveData.CompletedNpcTasks,
+                    General = new GameData.GeneralStats {
+                        ForgeFirstLessonStage = oracle.saveData.General.ForgeFirstLessonStage,
+                        HubTutorialStage = oracle.saveData.General.HubTutorialStage,
+                        BuffTutorialStage = oracle.saveData.General.BuffTutorialStage,
+                        MapStatisticsTutorialStage = oracle.saveData.General.MapStatisticsTutorialStage,
+                        TaskBoostTutorialStage = oracle.saveData.General.TaskBoostTutorialStage,
+                        GraphsTutorialStage = oracle.saveData.General.GraphsTutorialStage,
+                        InventoryTutorialStage = oracle.saveData.General.InventoryTutorialStage
+                    }
+                }));
+                foreach (var portrait in new[] { false, true })
+                foreach (var replay in new[] { false, true })
+                {
+                    UnityEditor.PlayModeWindow.SetCustomRenderingResolution(portrait ? 600u : 1920u, portrait ? 1100u : 1080u, "Returning lessons");
+                    yield return null; yield return null;
+                    Assert.AreEqual(portrait, ToolkitResponsiveLayout.IsPortrait);
+                    oracle.saveData.General.ReturningPlayerWelcomeSeen = true; // Already dismissed the old informational welcome.
+                    oracle.saveData.General.ReturningPlayerLessonsChoiceMade = false;
+                    oracle.saveData.General.ReturningPlayerLessonStage = 0;
+                    var before = Progress();
+                    StartSpeaker();
+                    yield return new WaitForSecondsRealtime(.2f);
+                    var dialog = Object.FindAnyObjectByType<ToolkitDialogScreen>(); Assert.NotNull(dialog);
+                    var ui = dialog.GetComponent<UIDocument>().rootVisualElement;
+                    var action = ui.Q<Button>(replay ? "dialog-primary" : "dialog-secondary");
+                    Assert.True(action.enabledInHierarchy);
+                    Assert.Greater(action.worldBound.width, 0);
+                    FieldsClick(action);
+                    yield return new WaitForSecondsRealtime(.2f);
+                    Assert.True(oracle.saveData.General.ReturningPlayerLessonsChoiceMade);
+                    for (var step = 1; replay && step <= 8; step++)
+                    {
+                        if (step == 5) continue; // Completed Forge lessons remain skipped.
+                        var meeting = Object.FindAnyObjectByType<ToolkitMeetingScreen>(); Assert.NotNull(meeting, "Lesson " + step);
+                        Assert.AreEqual(step, oracle.saveData.General.ReturningPlayerLessonStage);
+                        Assert.AreEqual(before, Progress(), "A refresher must not change gameplay or restart the Forge lesson.");
+                        if (portrait && step == 4)
+                        {
+                            Object.DestroyImmediate(speakerObject);
+                            Object.DestroyImmediate(meeting.gameObject);
+                            Blindsided.EventHandler.SaveData(); Blindsided.EventHandler.LoadData();
+                            StartSpeaker(); yield return new WaitForSecondsRealtime(.2f);
+                            meeting = Object.FindAnyObjectByType<ToolkitMeetingScreen>(); Assert.NotNull(meeting);
+                            Assert.IsNull(Object.FindAnyObjectByType<ToolkitDialogScreen>(), "Resume the lesson without asking again.");
+                            Assert.AreEqual(step, oracle.saveData.General.ReturningPlayerLessonStage);
+                        }
+                        FieldsClick(meeting.GetComponent<UIDocument>().rootVisualElement.Q<Button>("advance"));
+                        yield return new WaitForSecondsRealtime(.1f);
+                    }
+                    Assert.AreEqual(0, oracle.saveData.General.ReturningPlayerLessonStage);
+                    Assert.AreEqual(before, Progress());
+                    Assert.IsNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>());
+                    Object.DestroyImmediate(speakerObject);
+                    Blindsided.EventHandler.SaveData(); Blindsided.EventHandler.LoadData();
+                    StartSpeaker(); yield return new WaitForSecondsRealtime(.2f);
+                    Assert.True(oracle.saveData.General.ReturningPlayerLessonsChoiceMade);
+                    Assert.IsNull(Object.FindAnyObjectByType<ToolkitDialogScreen>(), "The saved choice must not prompt again.");
+                    Assert.IsNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>());
+                    Object.DestroyImmediate(speakerObject);
+                }
             }
             finally
             {
                 if (speakerObject) Object.DestroyImmediate(speakerObject);
                 foreach (var meeting in Object.FindObjectsByType<ToolkitMeetingScreen>()) Object.DestroyImmediate(meeting.gameObject);
+                foreach (var dialog in Object.FindObjectsByType<ToolkitDialogScreen>()) Object.DestroyImmediate(dialog.gameObject);
                 Object.DestroyImmediate(owner);
             }
         }

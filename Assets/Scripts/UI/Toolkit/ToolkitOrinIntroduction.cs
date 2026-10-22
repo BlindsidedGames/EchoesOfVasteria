@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace TimelessEchoes.UI.Toolkit
 {
-    public sealed class ToolkitOrinIntroduction : MonoBehaviour
+    public sealed partial class ToolkitOrinIntroduction : MonoBehaviour
     {
         [SerializeField] private GameObject meetingPrefab;
         [SerializeField] private Sprite portrait;
@@ -27,13 +27,7 @@ namespace TimelessEchoes.UI.Toolkit
             while (intro && intro.IsVisible) yield return null;
             while (TimelessEchoes.Characters.CharacterCreation.Required) yield return null;
             if (!meetingPrefab) yield break;
-            var returning = Oracle.oracle.saveData.General;
-            if (returning.ReturningPlayerIntroductionComplete && !returning.ReturningPlayerWelcomeSeen)
-            {
-                yield return Explain("ReturningPlayerWelcome", "Welcome back! Your progress and equipment are intact. You can carry on without replaying the opening lessons.");
-                returning.ReturningPlayerWelcomeSeen = true;
-                Blindsided.EventHandler.SaveData();
-            }
+            yield return ReturningLessons();
             // Field encounter cards are hidden in town. Keep this native panel at
             // the scene root, independent of field visibility and other UIDocuments.
             if (!QuestUtils.QuestCompleted(firstQuest))
