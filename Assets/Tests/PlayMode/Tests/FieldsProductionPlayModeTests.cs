@@ -59,6 +59,9 @@ namespace Tests.PlayMode
             root = Path.Combine(Application.temporaryCachePath, "FieldsPlay_" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(root);
             SaveManager.SetRootPathForTests(root);
+            // Match a fresh scene's transient meeting state. Coroutine teardown can
+            // otherwise leave a marker from a failed earlier test blocking input.
+            StaticReferences.ActiveNpcMeetings.Clear();
             previousOracle = Oracle.oracle;
             Assert.IsNull(previousOracle, "This fixture requires the runner's isolated empty scene.");
             oracleObject = new GameObject("Fields protected transaction owner");
