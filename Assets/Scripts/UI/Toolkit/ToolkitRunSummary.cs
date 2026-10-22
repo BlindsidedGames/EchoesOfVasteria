@@ -141,7 +141,7 @@ namespace TimelessEchoes.UI.Toolkit
                     break;
                 case 1:
                     summaryGuideTarget = summaryOverview.Q("summary-distance-value");
-                    summaryGuideText.text = ToolkitLocalization.Text("run.summary.guide-distance", "Being reaped at the limit increases your reaping distance by 1% in River, Woods and Mines. Farmlands gives no increase. Spooky uses kills instead of a distance limit.");
+                    summaryGuideText.text = ToolkitLocalization.Text("run.summary.guide-distance", "<b>River, Woods and Mines:</b> being reaped at the distance limit increases your shared reaping distance by 1%.\n<b>Farmlands:</b> no distance increase from reaping.\n<b>Spooky:</b> enemy levels scale with kills, with no kill cap or distance reaping limit.");
                     break;
                 default:
                     summaryGuideTarget = detailsClose;

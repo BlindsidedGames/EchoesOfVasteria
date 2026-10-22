@@ -42,7 +42,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6768cee87f1cf334e8285dbc0555123e, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.UI.Toolkit.ToolkitCharacterCreator
   theme: {fileID: 11400000, guid: 94df34547d8b76041b7ca2aa8f9e2d48, type: 2}
   runtimeTheme: {fileID: -4733365628477956816, guid: d3334a705ed77a842b72a4eaba3f92bc, type: 3}
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
   m_PanelSettings: {fileID: 0}
   m_ParentUI: {fileID: 0}
@@ -115,7 +115,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55066b6ad85c0cc489781d4b44a6eb2a, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.UI.Toolkit.ToolkitIntroScreen
   definition: {fileID: 11400000, guid: c9f53cb29d32e4a46907f180cbf23979, type: 2}
   showOnFirstLaunch: 0
@@ -133,15 +133,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a13961ba6a6e2f2448a8e0158e4ae0f1, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.UI.Toolkit.ToolkitOrinIntroduction
   meetingPrefab: {fileID: 4473393103591709735, guid: 8ed7138ae18d6d148b1f94dd314d3c1b, type: 3}
   portrait: {fileID: 0}
   firstQuest: {fileID: 11400000, guid: 298f411e97766fb47bf1d61e9e1a5bf8, type: 2}
   lines:
   - Welcome to Vasteria! I'm Orin. Let's get you settled.
-  - The Farmlands are full of ripe crops, ready for you to gather.
-  - Your quests will help you find your feet and meet the people around here. Open the quest window to see your objectives and claim your rewards.
+  - "The Farmlands are full of ripe crops. Let\u2019s gather a few."
+  - "Open <link=\"help:quests\"><u><color=#EFB889>Quests</color></u></link> to see what needs doing and claim your rewards. You\u2019ll meet the townsfolk along the way."
   lineKeys:
   - intro.Orin.quest-window.line.01
   - intro.Orin.quest-window.line.02

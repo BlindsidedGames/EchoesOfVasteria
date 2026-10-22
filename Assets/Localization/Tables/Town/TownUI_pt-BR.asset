@@ -311,7 +311,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003784
-    m_Localized: "\u2022 XP total obtido: {0:N0} (n\xEDveis ganhos: {1:N0})"
+    m_Localized: "\u2022 XP obtido: {0:N0}"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003783
@@ -1939,15 +1939,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003365
-    m_Localized: Idle
+    m_Localized: Crimsonite
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003364
-    m_Localized: Erif
+    m_Localized: Fogo
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003363
-    m_Localized: Nori
+    m_Localized: Ferro
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003362
@@ -1955,11 +1955,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003361
-    m_Localized: Dlog
+    m_Localized: Ouro
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003360
-    m_Localized: Eznorb
+    m_Localized: Bronze
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003359
@@ -2091,11 +2091,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003327
-    m_Localized: Lingote de Dlog
+    m_Localized: Lingote de ouro
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003326
-    m_Localized: "Peda\xE7os de Erif"
+    m_Localized: "Peda\xE7os de fogo"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003325
@@ -2103,7 +2103,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003324
-    m_Localized: "Peda\xE7os de Idle"
+    m_Localized: "Peda\xE7os de crimsonite"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003323
@@ -2111,7 +2111,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003322
-    m_Localized: "Peda\xE7os de Dlog"
+    m_Localized: "Peda\xE7os de ouro"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003321
@@ -2123,15 +2123,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003319
-    m_Localized: "N\xFAcleo de Idle"
+    m_Localized: "N\xFAcleo de crimsonite"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003318
-    m_Localized: Lingote de Erif
+    m_Localized: Lingote de fogo
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003317
-    m_Localized: Cristal de Erif
+    m_Localized: Cristal de fogo
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003316
@@ -2139,7 +2139,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003315
-    m_Localized: Cristal de Idle
+    m_Localized: Cristal de crimsonite
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003314
@@ -2151,7 +2151,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003312
-    m_Localized: Cristal de Dlog
+    m_Localized: Cristal de ouro
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003311
@@ -2171,7 +2171,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003307
-    m_Localized: "N\xFAcleo de Nori"
+    m_Localized: "N\xFAcleo de ferro"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003306
@@ -2179,7 +2179,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003305
-    m_Localized: Lingote de Nori
+    m_Localized: Lingote de ferro
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003304
@@ -2219,7 +2219,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003295
-    m_Localized: Lingote de Eznorb
+    m_Localized: Lingote de bronze
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003294
@@ -2239,7 +2239,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003290
-    m_Localized: Cristal de Nori
+    m_Localized: Cristal de ferro
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003289
@@ -2275,7 +2275,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003281
-    m_Localized: "N\xFAcleo de Eznorb"
+    m_Localized: "N\xFAcleo de bronze"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003280
@@ -2303,7 +2303,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003274
-    m_Localized: "Peda\xE7os de Eznorb"
+    m_Localized: "Peda\xE7os de bronze"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003273
@@ -2315,7 +2315,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003271
-    m_Localized: "Peda\xE7os de Nori"
+    m_Localized: "Peda\xE7os de ferro"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003270
@@ -2351,15 +2351,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003262
-    m_Localized: Lingote de Idle
+    m_Localized: Lingote de crimsonite
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003261
-    m_Localized: "N\xFAcleo de Dlog"
+    m_Localized: "N\xFAcleo de ouro"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003260
-    m_Localized: Cristal de Eznorb
+    m_Localized: Cristal de bronze
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003259
@@ -2399,7 +2399,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003250
-    m_Localized: "N\xFAcleo de Erif"
+    m_Localized: "N\xFAcleo de fogo"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003249
@@ -2539,7 +2539,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003215
-    m_Localized: "Min\xE9rio de Idle"
+    m_Localized: "Min\xE9rio de crimsonite"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003214
@@ -2551,19 +2551,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003212
-    m_Localized: "Min\xE9rio de Dlog"
+    m_Localized: "Min\xE9rio de ouro"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003211
-    m_Localized: "Min\xE9rio de Erif"
+    m_Localized: "Min\xE9rio de fogo"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003210
-    m_Localized: "Min\xE9rio de Eznorb"
+    m_Localized: "Min\xE9rio de bronze"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003209
-    m_Localized: "Min\xE9rio de Nori"
+    m_Localized: "Min\xE9rio de ferro"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003208
@@ -2571,23 +2571,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003207
-    m_Localized: "Ba\xFA de Nori"
+    m_Localized: "Ba\xFA de ferro"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003206
-    m_Localized: "Ba\xFA de Erif"
+    m_Localized: "Ba\xFA de fogo"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003205
-    m_Localized: "Ba\xFA de Dlog"
+    m_Localized: "Ba\xFA de ouro"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003204
-    m_Localized: "Ba\xFA de Idle"
+    m_Localized: "Ba\xFA de crimsonite"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003203
-    m_Localized: "Ba\xFA de Eznorb"
+    m_Localized: "Ba\xFA de bronze"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003202
@@ -3545,7 +3545,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002032
-    m_Localized: "Sei que este jogo \xE9 um pouco confuso no come\xE7o. Enquanto um tutorial completo est\xE1 sendo preparado, esta mensagem serve como uma orienta\xE7\xE3o r\xE1pida provis\xF3ria.\n\nAntes de tudo, este \xE9 um jogo idle: o progresso acontece automaticamente e em segundo plano enquanto voc\xEA faz outras coisas!\n\nVoc\xEA encontra informa\xE7\xF5es sobre os sistemas clicando no bot\xE3o Biblioteca no topo.\n\nAs miss\xF5es s\xE3o seu ponto de partida e ajudam a orientar seu progresso. \n\nSeu her\xF3i se desloca sozinho e conclui tarefas durante as expedi\xE7\xF5es.\n\nEspero que se divirta! Se ficar perdido, pode sempre falar comigo no Discord!"
+    m_Localized: "Sei que este jogo \xE9 um pouco confuso no come\xE7o. Enquanto um tutorial completo est\xE1 sendo preparado, esta mensagem serve como uma orienta\xE7\xE3o r\xE1pida provis\xF3ria.\n\nAntes de tudo, este \xE9 um jogo idle: o progresso acontece automaticamente e em segundo plano enquanto voc\xEA faz outras coisas!\n\nVoc\xEA encontra informa\xE7\xF5es sobre os sistemas clicando no bot\xE3o <link=\"help:wiki\"><u><color=#EFB889>Biblioteca</color></u></link> no topo.\n\nAs miss\xF5es s\xE3o seu ponto de partida e ajudam a orientar seu progresso. \n\nSeu her\xF3i se desloca sozinho e conclui tarefas durante as expedi\xE7\xF5es.\n\nEspero que se divirta! Se ficar perdido, pode sempre falar comigo no Discord!"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002033
@@ -4217,11 +4217,83 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164274115306983424
-    m_Localized: "Abra o Hub e depois o Invent\xE1rio para ver seus itens equipados, os b\xF4nus deles e os recursos que voc\xEA coletou."
+    m_Localized: "Abra o <link=\"help:hub\"><u><color=#EFB889>Hub</color></u></link> e depois o <link=\"help:inventory\"><u><color=#EFB889>Invent\xE1rio</color></u></link> para ver seus itens equipados, os b\xF4nus deles e os recursos que voc\xEA coletou."
     m_Metadata:
       m_Items: []
   - m_Id: 165856244562268160
     m_Localized: "Boas-vindas de volta! Seu progresso e equipamento est\xE3o prontos. As li\xE7\xF5es iniciais foram puladas. Explore os menus atualizados no seu ritmo; voc\xEA encontra ajuda na Biblioteca."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165995727630766080
+    m_Localized: Desbloqueia {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166039173942874112
+    m_Localized: "Esta tela ainda n\xE3o est\xE1 dispon\xEDvel. Continue suas miss\xF5es ou conclua a li\xE7\xE3o atual."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166041501840314368
+    m_Localized: Inicie uma aventura para ver esta tela.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166103968264097792
+    m_Localized: Cidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166103971388854272
+    m_Localized: Forja
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166103973880270848
+    m_Localized: "Caldeir\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166103976308772864
+    m_Localized: Campos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166103978749857792
+    m_Localized: Itens fabricados
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166103981002199040
+    m_Localized: Itens reciclados
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166103983233568768
+    m_Localized: Maior raridade fabricada
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166103985469132800
+    m_Localized: Melhores atributos obtidos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166103987683725312
+    m_Localized: Nenhuma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166103989927677952
+    m_Localized: "Degusta\xE7\xF5es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166103992142270464
+    m_Localized: Cartas obtidas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166103994407194624
+    m_Localized: "Desde esta atualiza\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166103996680507392
+    m_Localized: Colheitas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166103998886711296
+    m_Localized: Cultivos colhidos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166104001101303808
+    m_Localized: Toras coletadas
     m_Metadata:
       m_Items: []
   references:

@@ -19,10 +19,10 @@ MonoBehaviour:
     fallback: Welcome to Echoes of Vasteria
     localized:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName:
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: 
+        m_Key:
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
@@ -30,13 +30,22 @@ MonoBehaviour:
     key: intro.body
     bold: 0
     smallCaps: 0
-    fallback: "I am aware that this game is a little confusing when you first start playing. While a proper tutorial is in the works this message serves as a quick placeholder.\n\nFirst and foremost this is an idle game, progress happens automatically and in the background while you do other things!\n\nYou can find information on various systems by clicking the Library button at the top.\n\nQuests are your starting point and will help guide you as you progress. \n\nYour hero will self navigate and complete tasks while you are in a run.\n\nI hope you have fun, if you get stuck I can always be reached on discord!"
+    fallback: 'Echoes of Vasteria has had a major update. Progression, tutorials and menus have changed, so some things may work differently from what you remember.
+
+
+      I recommend starting a new save to experience the new introduction and progression. You can also choose to carry on with your existing save.
+
+
+      Your hero moves between tasks, gathers resources and fights automatically during adventures. Start with <link="help:quests"><u><color=#EFB889>Quests</color></u></link> to meet the townsfolk and unlock new places to explore.
+
+
+      You can ask for help on Discord.'
     localized:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName:
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: 
+        m_Key:
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
@@ -44,13 +53,13 @@ MonoBehaviour:
     key: intro.close
     bold: 0
     smallCaps: 0
-    fallback: Click to close this forever!
+    fallback: Continue
     localized:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName:
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: 
+        m_Key:
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []

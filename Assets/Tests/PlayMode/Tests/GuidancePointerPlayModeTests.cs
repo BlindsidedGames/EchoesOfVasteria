@@ -133,18 +133,121 @@ namespace Tests.PlayMode
    } finally {if(run)Object.DestroyImmediate(run);Object.DestroyImmediate(owner);}
   }
   [UnityTest]
-  public IEnumerator GuidancePointerLandscapeKeepsUtilityIconsWithNavigation()
+  public IEnumerator GuidancePointerNavigationOpensStatisticsTabsAndHubQuestsAcrossLayouts()
   {
-   var nav=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Navigation.prefab"));
+   void ClickControl(Button button) {
+    using var move = PointerMoveEvent.GetPooled(new Event {type=EventType.MouseMove,mousePosition=button.worldBound.center});
+    button.SendEvent(move); FieldsClick(button);
+   }
+   var owner = new GameObject("Protected navigation routes");
+   GameObject nav = null, stats = null, quests = null, run = null;
    try {
-    foreach(var size in new[]{new Vector2Int(1170,2532),new Vector2Int(5120,2054)}) {
+    owner.AddComponent<TimelessEchoes.Quests.QuestManager>().enabled = false;
+    owner.AddComponent<TimelessEchoes.Upgrades.ResourceManager>();
+    owner.AddComponent<TimelessEchoes.Stats.GameplayStatTracker>().enabled = false;
+    var manager = owner.AddComponent<TimelessEchoes.UI.TownWindowManager>(); manager.enabled = false;
+    stats = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Statistics.prefab"));
+    quests = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Quests.prefab"));
+    typeof(TimelessEchoes.UI.TownWindowManager).GetField("toolkitStatistics",Private).SetValue(manager,stats.GetComponent<ToolkitStatisticsScreen>());
+    typeof(TimelessEchoes.UI.TownWindowManager).GetField("toolkitQuests",Private).SetValue(manager,quests.GetComponent<ToolkitQuestsScreen>());
+    nav=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Navigation.prefab"));
+    var screen=nav.GetComponent<ToolkitNavigationScreen>();
+    var root=nav.GetComponent<UIDocument>().rootVisualElement;
+    foreach(var size in new[]{new Vector2Int(1170,2532),new Vector2Int(5120,2054),new Vector2Int(1170,2532)}) {
      PlayModeWindow.SetCustomRenderingResolution((uint)size.x,(uint)size.y,"Navigation resize check");
      yield return null;yield return null;yield return new WaitForSecondsRealtime(.15f);
+     Assert.AreSame(root.Q("navigation-buttons"),root.Q<Button>("stats").parent.parent);
+     Assert.AreSame(root.Q("navigation-buttons"),root.Q<Button>("options").parent.parent);
+     Assert.AreEqual(DisplayStyle.None,root.Q("quests-row").resolvedStyle.display);
+     foreach(var tab in new[]{0,2,3,4,5,6}) {
+      ClickControl(root.Q<Button>("stats")); yield return new WaitForSecondsRealtime(.15f);
+      Assert.AreEqual(ToolkitNavigationDefinition.Group.Statistics,screen.OpenGroup);
+      var choice=root.Q<Button>("statistics-section-"+tab);
+      Assert.AreEqual(DisplayStyle.Flex,choice.parent.resolvedStyle.display);
+      ClickControl(choice); yield return new WaitForSecondsRealtime(.15f);
+      var statistics=stats.GetComponent<ToolkitStatisticsScreen>();
+      Assert.True(statistics.IsOpen); Assert.AreEqual(tab,statistics.SelectedTab);
+      Assert.False(screen.HasOpenMenu);
+      Assert.IsNull(stats.GetComponent<UIDocument>().rootVisualElement.Q("portrait-statistics-section"));
+      manager.CloseAllWindows(); yield return null;
+     }
+     ClickControl(root.Q<Button>("hub")); yield return new WaitForSecondsRealtime(.15f);
+     var questButton=root.Q<Button>("quests");
+     Assert.AreEqual(DisplayStyle.Flex,questButton.parent.resolvedStyle.display);
+     ClickControl(questButton); yield return new WaitForSecondsRealtime(.15f);
+     Assert.True(quests.GetComponent<ToolkitQuestsScreen>().IsOpen,"A fresh slot can reach Quests under Hub.");
+     manager.CloseAllWindows(); yield return null;
+     Assert.True(screen.OpenHelpDestination("stats/tasks"));
+     Assert.AreEqual(4,stats.GetComponent<ToolkitStatisticsScreen>().SelectedTab,"Library links still open the exact Statistics section.");
+     manager.CloseAllWindows(); yield return null;
+     Assert.True(screen.OpenHelpDestination("quests"));
+     Assert.True(quests.GetComponent<ToolkitQuestsScreen>().IsOpen);
+     manager.CloseAllWindows(); yield return null;
+     foreach (var lessonTab in new[] {0,2,4}) {
+      var general=oracle.saveData.General;
+      general.MapStatisticsTutorialStage=lessonTab==0?3:9;
+      general.GraphsViewed=lessonTab!=2; general.GraphsTutorialStage=lessonTab==2?1:2;
+      general.TaskBoostTutorialStage=lessonTab==4?1:2;
+      Assert.True(screen.OpenHelpDestination("stats/items")); yield return new WaitForSecondsRealtime(.15f);
+      if(ToolkitResponsiveLayout.IsPortrait)
+       Assert.AreEqual(DisplayStyle.Flex,root.Q("tutorial-pointer-stats").style.display.value,"Guide out of the wrong portrait Statistics page.");
+      ClickControl(root.Q<Button>("stats")); yield return new WaitForSecondsRealtime(.15f);
+      Assert.AreEqual(DisplayStyle.Flex,root.Q("tutorial-pointer-statistics-section-"+lessonTab).style.display.value,"The lesson must point at the correct popup entry in either layout.");
+      ClickControl(root.Q<Button>("statistics-section-"+lessonTab)); yield return new WaitForSecondsRealtime(.15f);
+      Assert.AreEqual(lessonTab,stats.GetComponent<ToolkitStatisticsScreen>().SelectedTab);
+      manager.CloseAllWindows(); yield return null;
+     }
+     oracle.saveData.General.MapStatisticsTutorialStage=9; oracle.saveData.General.GraphsViewed=true;
+     oracle.saveData.General.TaskBoostTutorialStage=2;
     }
-    var root=nav.GetComponent<UIDocument>().rootVisualElement;
-    Assert.AreSame(root.Q("navigation-buttons"),root.Q<Button>("stats").parent.parent);
-    Assert.AreSame(root.Q("navigation-buttons"),root.Q<Button>("options").parent.parent);
-   } finally {Object.DestroyImmediate(nav);}
+    foreach(var entry in AssetDatabase.LoadAssetAtPath<ToolkitNavigationDefinition>("Assets/UI/Toolkit/Navigation.asset").entries)
+     foreach(var rule in entry.visibility)
+      if(rule.quest)oracle.saveData.Quests[rule.quest.questId]=new Blindsided.SaveData.GameData.QuestRecord{Completed=true};
+    var gm=owner.AddComponent<TimelessEchoes.GameManager>(); gm.enabled=false;
+    typeof(TimelessEchoes.GameManager).GetProperty("CurrentMap").SetValue(gm,owner);
+    typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(gm,false);
+    run=CreateGuidanceRunView();
+    var expand=run.GetComponent<UIDocument>().rootVisualElement.Q<Button>("run-focus-toggle");
+    foreach(var size in new[]{new Vector2Int(1170,2532),new Vector2Int(5120,2054),new Vector2Int(1170,2532)}) {
+     PlayModeWindow.SetCustomRenderingResolution((uint)size.x,(uint)size.y,"Expand closes navigation state");
+     yield return new WaitForSecondsRealtime(.2f);
+     if(!ToolkitResponsiveLayout.IsPortrait) {
+      Assert.False(ToolkitResponsiveLayout.FocusView);
+      Assert.True(screen.OpenHelpDestination("quests")); yield return null;
+      Assert.True(manager.HasOpenWindow,"Landscape window navigation remains available.");
+      manager.CloseAllWindows(); yield return null; continue;
+     }
+     foreach(var route in new[]{"quests","stats/tasks"}) {
+      Assert.True(screen.OpenHelpDestination(route)); yield return new WaitForSecondsRealtime(.15f);
+      Assert.True(manager.HasOpenWindow);
+      ClickControl(expand); yield return new WaitForSecondsRealtime(.2f);
+      Assert.True(ToolkitResponsiveLayout.FocusView);
+      Assert.False(manager.HasOpenWindow,"Expanding must close the window, not suspend an open selection.");
+      Assert.False(screen.HasOpenMenu);
+      var parent=root.Q<Button>(route=="quests"?"hub":"stats");
+      Assert.False(parent.ClassListContains("active"),"The hidden window must not leave its navigation selected.");
+      ClickControl(parent); yield return new WaitForSecondsRealtime(.15f);
+      Assert.True(screen.HasOpenMenu,"The first tap after expanding must open the menu again.");
+      ClickControl(root.Q<Button>(route=="quests"?"quests":"statistics-section-4")); yield return new WaitForSecondsRealtime(.15f);
+      Assert.True(manager.HasOpenWindow,"The window must reopen on the first selection.");
+      manager.CloseAllWindows(); yield return null;
+     }
+     foreach(var id in new[]{"adventure","hub","townsfolk","stats"}) {
+      ClickControl(root.Q<Button>(id)); yield return new WaitForSecondsRealtime(.15f);
+      Assert.True(screen.HasOpenMenu);
+      ClickControl(expand); yield return new WaitForSecondsRealtime(.2f);
+      Assert.True(ToolkitResponsiveLayout.FocusView);
+      Assert.False(screen.HasOpenMenu,"Expanding must close the "+id+" popup.");
+      Assert.False(root.Q<Button>(id).ClassListContains("active"));
+      ClickControl(root.Q<Button>(id)); yield return new WaitForSecondsRealtime(.15f);
+      Assert.True(screen.HasOpenMenu,"A single tap must reopen "+id+" after expansion.");
+      ClickControl(root.Q<Button>(id)); ClickControl(expand); yield return new WaitForSecondsRealtime(.15f);
+     }
+    }
+   } finally {
+    ToolkitResponsiveLayout.SetFocusView(false);
+    if(run)Object.DestroyImmediate(run); if(nav)Object.DestroyImmediate(nav); if(stats)Object.DestroyImmediate(stats); if(quests)Object.DestroyImmediate(quests); Object.DestroyImmediate(owner);
+   }
   }
  }
 }

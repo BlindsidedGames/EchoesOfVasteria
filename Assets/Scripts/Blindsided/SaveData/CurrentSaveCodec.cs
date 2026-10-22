@@ -13,8 +13,16 @@ namespace Blindsided.SaveData
     public static class CurrentSaveCodec
     {
         private static readonly ISerializationPolicy Policy = new CustomSerializationPolicy(
-            "Echoes.CurrentSave.Schema5", true, member =>
+            "Echoes.CurrentSave.Schema8", true, member =>
                 member is FieldInfo field && field.IsPublic && !field.IsNotSerialized &&
+                (field.DeclaringType != typeof(GameData.ForgeStats) ||
+                 field.Name == nameof(GameData.ForgeStats.TotalCrafts) ||
+                 field.Name == nameof(GameData.ForgeStats.TotalSalvaged) ||
+                 field.Name == nameof(GameData.ForgeStats.HighestCraftedRarityTier) ||
+                 field.Name == nameof(GameData.ForgeStats.HighestRollByStat)) &&
+                (field.DeclaringType != typeof(GameData.CauldronTotalsRecord) ||
+                 field.Name == nameof(GameData.CauldronTotalsRecord.TotalTastings) ||
+                 field.Name == nameof(GameData.CauldronTotalsRecord.TotalCards)) &&
                 !(field.DeclaringType == typeof(GameData) &&
                   (field.Name == nameof(GameData.UpgradeLevels) ||
                    field.Name == nameof(GameData.StatUpgradesMigratedToGear) ||

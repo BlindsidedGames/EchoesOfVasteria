@@ -169,7 +169,7 @@ namespace TimelessEchoes.Farming
                 !FarmContent.Completed(Oracle.oracle.saveData, FarmContent.IntroductionId)) return null;
             var recipe = Content.recipes.FirstOrDefault(r => !r.orchard && r.source == task);
             if (recipe == null || !Content.CanPlant(Oracle.oracle.saveData, recipe)) return null;
-            var id = FarmJournal.StageSeed(State, recipe.seedId, UnityEngine.Random.value < Content.seedChance, DateTime.UtcNow);
+            var id = FarmJournal.StageSeed(State, recipe.seedId, UnityEngine.Random.value < Content.SeedDropChance(recipe), DateTime.UtcNow);
             return id == null ? null : new StagedTaskCredit(this, Oracle.oracle.saveData, Oracle.oracle.CurrentSlot, id);
         }
         public StagedTaskCredit StageRadishCompletion(bool rolled)

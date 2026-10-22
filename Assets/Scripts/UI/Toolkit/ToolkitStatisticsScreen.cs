@@ -28,14 +28,15 @@ namespace TimelessEchoes.UI.Toolkit
         private Image boostHand;
         private bool boostScrolled;
         private int selectedTab;
-        private DropdownField portraitSection, portraitSort;
+        private DropdownField portraitSort;
         private bool syncingPortraitSelectors;
         private bool? previousPortraitLayout;
         private readonly List<(string title, System.Action action)> portraitSortActions = new();
-        private static readonly int[] PortraitSections = { 0, 2, 3, 4, 5, 6 };
-        private ToolkitForgingStatisticsView forgingView;
-        private float nextForgeRefresh;
+        public static readonly IReadOnlyList<int> Sections = Array.AsReadOnly(new[] { 0, 2, 3, 4, 5, 6 });
+        private ToolkitTownStatisticsView townView;
+        private float nextTownRefresh;
         public bool IsOpen => root != null;
+        public int SelectedTab => selectedTab;
         public bool IsConfigured => definition && theme && runtimeTheme && textSettings;
         public bool Show()
         {
@@ -45,11 +46,8 @@ namespace TimelessEchoes.UI.Toolkit
             if (!settings) { settings = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); settings.sortingOrder = 100; }
             var document = GetComponent<UIDocument>(); document.panelSettings = settings; document.rootVisualElement.pickingMode = PickingMode.Ignore;
             root = new VisualElement { name = "statistics" }; root.AddToClassList("eov-statistics"); theme.Apply(root);ToolkitGameplay.Apply(root,theme);root.AddToClassList("menu-surface"); document.rootVisualElement.Add(root);
-            portraitSection = new DropdownField(PortraitSections.Select(TabTitle).ToList(), 0) { name = "portrait-statistics-section" };
-            portraitSection.AddToClassList("portrait-picker"); root.Add(portraitSection);
-            portraitSection.RegisterValueChangedCallback(_ => { if (portraitSection.index >= 0) SelectTab(PortraitSections[portraitSection.index]); });
             var tabs = new VisualElement(); tabs.AddToClassList("eov-stat-tabs"); root.Add(tabs);
-            foreach (var index in new[] { 0, 2, 3, 4, 5, 6 })
+            foreach (var index in Sections)
             {
                 var tab = index;
                 tabButtons.Add(tab, Action(tabs, "stats-tab-" + tab, TabTitle(tab), () => SelectTab(tab)));
@@ -68,27 +66,25 @@ namespace TimelessEchoes.UI.Toolkit
             Blindsided.EventHandler.OnLoadData += Changed;
             resourceManager = TimelessEchoes.Upgrades.ResourceManager.Instance;
             if (resourceManager) { resourceManager.OnInventoryChanged += InventoryChanged; resourceManager.OnResourceAdded += ResourceChanged; resourceManager.OnResourceTierUpgraded += ResourceTierChanged; }
-            // Keep the section selector in a stable hierarchy while its popup is open.
-            root.Add(portraitSection);
             SelectTab(selectedTab); Layout(); return true;
         }
         public void SelectTab(int index)
         {
             if (!IsOpen || !tabButtons.ContainsKey(index)) return;
-            runGraph = null; forgingView = null; selectedTab = index; distanceControls?.RemoveFromHierarchy(); distanceControls = null; enemyDistance = null; body.Clear(); footer.Clear(); portraitSortActions.Clear(); summaries.Clear(); tooltip.style.display = DisplayStyle.None;
+            runGraph = null; townView = null; selectedTab = index; distanceControls?.RemoveFromHierarchy(); distanceControls = null; enemyDistance = null; body.Clear(); footer.Clear(); portraitSortActions.Clear(); summaries.Clear(); tooltip.style.display = DisplayStyle.None;
             foreach (var pair in tabButtons) StyleSelection(pair.Value, pair.Key == index);
             footer.style.display = index != 0 && index != 6 ? DisplayStyle.Flex : DisplayStyle.None;
             boostScrolled = false;
-            if (index == 0) BuildGeneral(); else if (index == 2) BuildGraph(); else if (index == 5) BuildItems(); else if (index == 6) forgingView = new ToolkitForgingStatisticsView(body, theme); else BuildStatList(index == 3); Refresh();
+            if (index == 0) BuildGeneral(); else if (index == 2) BuildGraph(); else if (index == 5) BuildItems(); else if (index == 6) townView = new ToolkitTownStatisticsView(body, theme); else BuildStatList(index == 3); Refresh();
         }
-        private static string TabTitle(int index) => index switch
+        public static string TabTitle(int index) => index switch
         {
             0 => ToolkitLocalization.Text("statistics.tab-general", "General"),
             2 => ToolkitLocalization.Text("statistics.tab-graphs", "Graphs"),
             3 => ToolkitLocalization.Text("statistics.tab-enemies", "Enemies"),
             4 => ToolkitLocalization.Text("statistics.tab-tasks", "Tasks"),
             5 => ToolkitLocalization.Text("statistics.tab-items", "Items"),
-            6 => ToolkitLocalization.Text("statistics.tab-forging", "Forging"),
+            6 => ToolkitLocalization.Text("statistics.tab-town", "Town"),
             _ => ""
         };
 
@@ -145,7 +141,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void Refresh()
         {
             dirty = false;
-            if (selectedTab == 6) { forgingView?.Refresh(); nextForgeRefresh = Time.unscaledTime + .75f; return; }
+            if (selectedTab == 6) { townView?.Refresh(); nextTownRefresh = Time.unscaledTime + .75f; return; }
             if (selectedTab == 2) { RefreshGraph(); return; }
             if (selectedTab == 5) { RefreshItems(); return; }
             if (selectedTab == 3) { RefreshEnemies(); return; }
@@ -188,8 +184,9 @@ namespace TimelessEchoes.UI.Toolkit
         private void Changed() { dirty = true; }
         private void RunEnded(bool _) => Changed();
         private void DistanceChanged(float _) { if (selectedTab == 0) dirty = true; }
-        private void Update() { if (!IsOpen) return; Layout(); RefreshJournalAccess(); RefreshMapTutorial(); RefreshGraphGuidance(); RefreshBoostGuidance(); if (localizationDirty) { localizationDirty = false; RefreshLocalization(); } if (dirty || selectedTab == 6 && Time.unscaledTime >= nextForgeRefresh) Refresh(); }
-        private VisualElement StatisticsSectionTarget(int tab) => ToolkitResponsiveLayout.IsPortrait ? portraitSection : tabButtons[tab];
+        private void Update() { if (!IsOpen) return; Layout(); RefreshJournalAccess(); RefreshMapTutorial(); RefreshGraphGuidance(); RefreshBoostGuidance(); if (localizationDirty) { localizationDirty = false; RefreshLocalization(); } if (dirty || selectedTab == 6 && Time.unscaledTime >= nextTownRefresh) Refresh(); }
+        // Portrait section guidance belongs to the global Statistics popup.
+        private VisualElement StatisticsSectionTarget(int tab) => ToolkitResponsiveLayout.IsPortrait ? null : tabButtons[tab];
         private void PositionStatisticsHand(Image hand, VisualElement target, string option = null)
         {
             if (target == null || target.resolvedStyle.display == DisplayStyle.None || target.worldBound.width <= 0)
@@ -254,10 +251,7 @@ namespace TimelessEchoes.UI.Toolkit
             }
             previousPortraitLayout = portrait;
             syncingPortraitSelectors = true;
-            portraitSection.style.display = portrait ? DisplayStyle.Flex : DisplayStyle.None;
-            footer.style.display = !portrait && selectedTab != 2 ? DisplayStyle.Flex : DisplayStyle.None;
-            var sectionTitle = TabTitle(selectedTab);
-            if (portraitSection.value != sectionTitle) portraitSection.SetValueWithoutNotify(sectionTitle);
+            footer.style.display = !portrait && selectedTab != 0 && selectedTab != 2 && selectedTab != 6 ? DisplayStyle.Flex : DisplayStyle.None;
             portraitSort.style.display = portrait && portraitSortActions.Count > 0 ? DisplayStyle.Flex : DisplayStyle.None;
             if (portraitSortActions.Count > 0)
             {
@@ -286,7 +280,7 @@ namespace TimelessEchoes.UI.Toolkit
             taskRows.Clear(); enemyRows.Clear(); statSortButtons.Clear(); distanceControls = null; enemyDistance = null;
             itemRows.Clear(); itemSortButtons.Clear(); itemContent = null;
             journalSelectors.Clear(); journalDiscoveries.Clear(); journalContent = journalRecent = journalCollection = null; journalDiscoveryCount = null;
-            Blindsided.EventHandler.OnLoadData -= Changed; root?.RemoveFromHierarchy(); root = null; tracker = null; runGraph = null; forgingView = null; tabButtons.Clear(); summaries.Clear();
+            Blindsided.EventHandler.OnLoadData -= Changed; root?.RemoveFromHierarchy(); root = null; tracker = null; runGraph = null; townView = null; tabButtons.Clear(); summaries.Clear();
             ToolkitPanel.Release(GetComponent<UIDocument>(), ref settings);
         }
         private void OnDisable() => Hide();

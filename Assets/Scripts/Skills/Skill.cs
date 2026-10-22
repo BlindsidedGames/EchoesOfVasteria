@@ -16,6 +16,12 @@ namespace TimelessEchoes.Skills
         [ShowIf("useOverrideIcon")]
         public Sprite overrideIcon;
         public string description;
+
+        public string DisplayDescription => string.IsNullOrEmpty(description) ? string.Empty :
+            description.StartsWith("Unlocks ", System.StringComparison.Ordinal) && (resource || task)
+                ? TimelessEchoes.UI.Toolkit.ToolkitLocalization.Text("skills.unlocks-resource", "Unlocks {0}",
+                    TimelessEchoes.UI.Toolkit.ToolkitLocalization.Name(resource ? (UnityEngine.Object)resource : task))
+                : description;
     }
 
     [ManageableData]

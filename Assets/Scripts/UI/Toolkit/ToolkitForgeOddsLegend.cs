@@ -20,8 +20,6 @@ namespace TimelessEchoes.UI.Toolkit
         private bool IsRarityKnown(RaritySO rarity)
         {
             if (!rarity) return false;
-            var history = Blindsided.Oracle.oracle?.saveData?.Forge?.CraftsByRarity;
-            if (history != null && history.TryGetValue(rarity.name, out var crafts) && crafts > 0) return true;
             if (session.HasResult && session.Pending?.rarity == rarity) return true;
             foreach (var slot in equipment.Slots)
                 if (equipment.GetEquipped(slot)?.rarity == rarity) return true;

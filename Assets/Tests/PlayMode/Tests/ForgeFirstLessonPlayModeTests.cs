@@ -129,10 +129,10 @@ namespace Tests.PlayMode
                 yield return new WaitForSecondsRealtime(.2f);
                 Assert.True(session.CanCraft());
                 var automationBounds = ui.Q("forge-automation-area").worldBound;
-                var sessions = oracle.saveData.Forge.TotalAutocraftSessions;
+                var craftsBeforeRepeat = oracle.saveData.Forge.TotalCrafts;
                 session.StartAutoCrafting();
                 Assert.False(session.IsAutoCrafting);
-                Assert.AreEqual(sessions, oracle.saveData.Forge.TotalAutocraftSessions);
+                Assert.AreEqual(craftsBeforeRepeat, oracle.saveData.Forge.TotalCrafts);
                 Assert.False(ui.Q<Button>("forge-repeat-craft").enabledInHierarchy);
                 Assert.AreEqual(DisplayStyle.Flex, ui.Q("forge-automation-locked").style.display.value);
                 CaptureFeedback("forge-automation-locked.png"); yield return null; yield return null;
@@ -143,9 +143,9 @@ namespace Tests.PlayMode
                 Assert.AreEqual(DisplayStyle.None, ui.Q("forge-automation-locked").style.display.value);
                 Assert.AreEqual(automationBounds, ui.Q("forge-automation-area").worldBound, "Unlocking automation must preserve the work area layout.");
                 FieldsClick(ui.Q<Button>("forge-repeat-craft"));
-                Assert.AreEqual(sessions, oracle.saveData.Forge.TotalAutocraftSessions, "Choosing repeat must not spend resources before Craft is clicked.");
+                Assert.AreEqual(craftsBeforeRepeat, oracle.saveData.Forge.TotalCrafts, "Choosing repeat must not craft before Craft is clicked.");
                 FieldsClick(ui.Q<Button>("forge-craft"));
-                Assert.AreEqual(sessions + 1, oracle.saveData.Forge.TotalAutocraftSessions);
+                Assert.Greater(oracle.saveData.Forge.TotalCrafts, craftsBeforeRepeat);
                 FieldsClick(ui.Q<Button>("forge-repeat-craft"));
                 Assert.False(session.IsAutoCrafting, "Unchecking repeat stops the active batch.");
                 yield return null; yield return null;
@@ -178,10 +178,10 @@ namespace Tests.PlayMode
                 var statisticsUi = statistics.GetComponent<UIDocument>().rootVisualElement;
                 yield return null; yield return null;
                 FieldsClick(statisticsUi.Q<Button>("stats-tab-6")); yield return null; yield return null;
-                var totalCrafts = statisticsUi.Query<Label>(className: "forging-statistics-name").ToList().Single(l => l.text == "Total Crafts");
-                Assert.AreEqual(oracle.saveData.Forge.TotalCrafts.ToString("N0"), totalCrafts.parent.Q<Label>(className: "forging-statistics-value").text,
+                var totalCrafts = statisticsUi.Q("town-statistics-crafted");
+                Assert.AreEqual(oracle.saveData.Forge.TotalCrafts.ToString("N0"), totalCrafts.Q<Label>(className: "town-statistics-value").text,
                     "The Statistics tab must retain the actual crafting history from the completed forge lesson.");
-                CaptureFeedback("forging-statistics.png"); yield return null; yield return null;
+                CaptureFeedback("town-statistics.png"); yield return null; yield return null;
             }
             finally { if (forge) Object.DestroyImmediate(forge); if (board) Object.DestroyImmediate(board); Object.DestroyImmediate(owner); }
         }

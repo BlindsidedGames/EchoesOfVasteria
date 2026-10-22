@@ -30,6 +30,7 @@ namespace TimelessEchoes.UI.Toolkit
         private int lastIndex = -1;
         private bool lastPortrait;
         public static bool HasVisibleMeeting => Visible.Count > 0;
+        public static bool HasOpenDialogue => Visible.Exists(meeting => meeting && meeting.view != null && !meeting.view.AwaitingMeet);
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => Visible.Clear();

@@ -279,7 +279,7 @@ namespace TimelessEchoes.Skills
             }
 
             // Title - show "???" when locked (match Tasks panel behavior)
-            string name = isUnlocked ? (unlock.resource ? TimelessEchoes.UI.Toolkit.ToolkitLocalization.Name(unlock.resource) : unlock.task?.taskName ?? "Resource") : "???";
+            string name = isUnlocked ? TimelessEchoes.UI.Toolkit.ToolkitLocalization.Name(unlock.resource ? (UnityEngine.Object)unlock.resource : unlock.task) : "???";
             refs.NameText?.SetText(isUnlocked
                 ? $"{name} | <size=80%>Unlocked at level {unlock.requiredLevel}</size>"
                 : $"{name} | <size=80%>Unlocks at level {unlock.requiredLevel}</size>");
@@ -287,8 +287,8 @@ namespace TimelessEchoes.Skills
             // Description only when unlocked
             if (refs.PassiveText != null)
             {
-                refs.PassiveText.text = isUnlocked && !string.IsNullOrEmpty(unlock.description)
-                    ? unlock.description
+                refs.PassiveText.text = isUnlocked
+                    ? unlock.DisplayDescription
                     : string.Empty;
             }
 

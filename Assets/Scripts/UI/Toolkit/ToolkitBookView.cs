@@ -24,6 +24,8 @@ namespace TimelessEchoes.UI.Toolkit
         private ToolkitBookDefinition.Section selected;
         private readonly Dictionary<string, int> selectedIllustrations;
         private ToolkitTextBinding illustrationBinding;
+        private Label buffEffects;
+        private TimelessEchoes.Buffs.BuffRecipe selectedBuff;
         public VisualElement Root { get; }
         public ScrollView Scroll { get; }
         public string SelectedSectionId => selected?.id;
@@ -84,6 +86,7 @@ namespace TimelessEchoes.UI.Toolkit
                 ?? definition.sections.FirstOrDefault(s => ToolkitVisibilityRule.All(s.visibility));
             if (initial != null) Select(initial, previousReference);
             RefreshVisibility();
+            ToolkitLocalization.Changed += LocaleChanged;
         }
 
         public void RefreshPortrait()
@@ -96,7 +99,7 @@ namespace TimelessEchoes.UI.Toolkit
             tabs.style.display = portrait && topicsOpen ? DisplayStyle.None : DisplayStyle.Flex;
             Root.style.paddingBottom = portrait ? 48 : StyleKeyword.Null;
             portraitTopics.style.display = portrait ? DisplayStyle.Flex : DisplayStyle.None;
-            portraitTopics.text = topicsOpen ? "Back to article" : "Browse topics";
+            portraitTopics.text = topicsOpen ? ToolkitLocalization.Text("library.back-to-article", "Back to article") : ToolkitLocalization.Text("library.browse-topics", "Browse topics");
             topicIndex.style.display = !portrait || topicsOpen ? DisplayStyle.Flex : DisplayStyle.None;
             portraitArticle.style.display = portrait && topicsOpen ? DisplayStyle.None : DisplayStyle.Flex;
         }
@@ -122,17 +125,25 @@ namespace TimelessEchoes.UI.Toolkit
             var hasReference = !string.IsNullOrEmpty(section.details?.fallback) || section.referenceRows.Length > 0;
             reference.style.display = hasReference ? DisplayStyle.Flex : DisplayStyle.None;
             articleContent.Clear(); Scroll.scrollOffset = Vector2.zero;
+            selectedBuff = null; buffEffects = null;
             if (!isReference && section.illustrations.Length > 0)
             {
                 var figures = new VisualElement { name = "library-illustrations" }; figures.AddToClassList("library-illustrations"); articleContent.Add(figures);
-                var detail = new Label { name = "library-illustration-description" }; detail.AddToClassList("library-illustration-description");
+                var detail = new Label { name = "library-illustration-description" };
+                ToolkitHelpLinks.Attach(detail, OpenArticleLink); detail.AddToClassList("library-illustration-description");
                 var choices = new List<(Button button, int index)>();
                 void SelectIllustration(int index)
                 {
                     selectedIllustrations[section.id] = index;
                     foreach (var choice in choices) choice.button.EnableInClassList("active", choice.index == index);
                     illustrationBinding?.Dispose();
-                    illustrationBinding = new ToolkitTextBinding(detail, section.illustrations[index].description);
+                    // The buff catalogue uses recipe prose and effects below. Keep
+                    // the separate role explanations in the Echoes article.
+                    var catalogue = section.id == "help-buffs";
+                    detail.style.display = catalogue ? DisplayStyle.None : DisplayStyle.Flex;
+                    illustrationBinding = catalogue ? null : new ToolkitTextBinding(detail, DefenseText(section.illustrations[index].description));
+                    selectedBuff = section.illustrations[index].buff;
+                    RefreshSharedEffects();
                 }
                 for (var index = 0; index < section.illustrations.Length; index++)
                 {
@@ -143,9 +154,16 @@ namespace TimelessEchoes.UI.Toolkit
                     figure.AddToClassList("library-figure"); figures.Add(figure); choices.Add((figure, index));
                     var image = new Image { sprite = illustration.sprite, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
                     image.AddToClassList("library-figure-art"); figure.Add(image);
-                    BindText(figure, illustration.caption, "library-figure-caption");
+                    if (illustration.buff)
+                    {
+                        var caption = new Label(); caption.AddToClassList("library-figure-caption"); figure.Add(caption);
+                        ToolkitLocalization.Bind(caption, "buff." + illustration.buff.name, illustration.buff.GetDisplayName());
+                    }
+                    else BindText(figure, illustration.caption, "library-figure-caption");
                 }
                 articleContent.Add(detail);
+                buffEffects = new Label { name = "library-buff-effects", enableRichText = true };
+                buffEffects.AddToClassList("library-prose"); articleContent.Add(buffEffects);
                 if (choices.Count > 0)
                 {
                     var initial = selectedIllustrations.TryGetValue(section.id, out var saved) && choices.Any(c => c.index == saved) ? saved : choices[0].index;
@@ -160,7 +178,39 @@ namespace TimelessEchoes.UI.Toolkit
         private Label BindText(VisualElement parent, ToolkitBookDefinition.Text text, string css)
         {
             var label = new Label(); label.AddToClassList(css); parent.Add(label);
-            articleBindings.Add(new ToolkitTextBinding(label, text)); return label;
+            if (text?.fallback?.Contains("<link=\"help:") == true) ToolkitHelpLinks.Attach(label, OpenArticleLink);
+            articleBindings.Add(new ToolkitTextBinding(label, DefenseText(text))); return label;
+        }
+
+        private bool OpenArticleLink(string route)
+        {
+            if (route != "reference") return false;
+            Select(selected, true); return true;
+        }
+
+        // Both Library and Buffs call the recipe formatter: the same translated
+        // effect templates, current upgrades and Cauldron timing bonuses apply.
+        private void LocaleChanged() { RefreshPortrait(); RefreshSharedEffects(); }
+
+        public void RefreshSharedEffects()
+        {
+            if (buffEffects == null) return;
+            buffEffects.style.display = selectedBuff ? DisplayStyle.Flex : DisplayStyle.None;
+            if (selectedBuff) buffEffects.text = string.Join("\n", selectedBuff.GetDescriptionLines());
+        }
+
+        private static ToolkitBookDefinition.Text DefenseText(ToolkitBookDefinition.Text text)
+        {
+            var key = text?.localized?.TableEntryReference.Key;
+            if (key != "help.combat.details" && key != "help.combat.art.1.description") return text;
+            var scalar = Combat.DefaultArmorScalarN;
+            object[] arguments = { scalar, scalar * 3 };
+            return new ToolkitBookDefinition.Text
+            {
+                key = text.key, bold = text.bold, smallCaps = text.smallCaps,
+                fallback = string.Format(System.Globalization.CultureInfo.CurrentCulture, text.fallback, arguments),
+                localized = new LocalizedString(text.localized.TableReference, text.localized.TableEntryReference) { Arguments = arguments }
+            };
         }
 
         private void AddTable(ToolkitBookDefinition.Section section)
@@ -204,6 +254,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         public void Dispose()
         {
+            ToolkitLocalization.Changed -= LocaleChanged;
             illustrationBinding?.Dispose();
             foreach (var binding in bindings) binding.Dispose(); foreach (var binding in articleBindings) binding.Dispose();
             bindings.Clear(); articleBindings.Clear(); Root.RemoveFromHierarchy();

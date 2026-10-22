@@ -75,7 +75,10 @@ namespace TimelessEchoes
                 }
                 var pos = state.GetFinalPosition();
                 pos.y = yLevel;
-                float halfWidth = state.Lens.OrthographicSize * RunActivityArea.Aspect(state.Lens.Aspect);
+                // Clamp the rendered view, not the wider Echo simulation area.
+                // Using the landscape working width here pushes a portrait
+                // camera right far enough to hide the hero at the map entrance.
+                float halfWidth = state.Lens.OrthographicSize * state.Lens.Aspect;
                 if (Application.isPlaying && !UI.Toolkit.ToolkitResponsiveLayout.TownView &&
                     state.Lens.Orthographic && vcam.Follow != null)
                 {

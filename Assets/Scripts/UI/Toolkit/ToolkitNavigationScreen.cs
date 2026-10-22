@@ -36,7 +36,7 @@ namespace TimelessEchoes.UI.Toolkit
         private VisualElement morePopup;
         private bool moreOpen;
         private bool? portraitNavigation;
-        private Image forgeAttention, cauldronAttention, questAttention;
+        private Image forgeAttention, cauldronAttention, questAttention, hubQuestAttention;
         private VisualElement progressRoot, progressFill;
         private Image progressHero, progressReaper;
         private TimelessEchoes.Characters.CharacterImage characterPortrait;
@@ -50,6 +50,7 @@ namespace TimelessEchoes.UI.Toolkit
         private bool lastProgressPortrait;
         private Group openGroup;
         private ToolkitRunScreen runScreen;
+        private ToolkitStatisticsScreen statisticsScreen;
         private Button menuAnchor;
         private float nextRefresh;
         private bool hooked;
@@ -68,11 +69,16 @@ namespace TimelessEchoes.UI.Toolkit
         private void Create()
         {
             if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return;
-            navigationEntries = new List<Entry>(definition.entries)
+            var entries = new List<Entry>(definition.entries)
             {
                 new Entry { id = "shop", group = Group.Hub, action = NavAction.Window, window = TownWindowManager.Window.Shop,
                     label = new ToolkitBookDefinition.Text { key = "navigation.shop", fallback = "Shop" }, width = 62 }
-            }.ToArray();
+            };
+            foreach (var tab in ToolkitStatisticsScreen.Sections)
+                entries.Add(new Entry { id = "statistics-section-" + tab, group = Group.Statistics,
+                    action = NavAction.Window, window = TownWindowManager.Window.Stats, statisticsTab = tab,
+                    label = new ToolkitBookDefinition.Text { fallback = ToolkitStatisticsScreen.TabTitle(tab) }, width = 62 });
+            navigationEntries = entries.ToArray();
             TimelessEchoes.Shop.ShopService.Ensure();
             if (!shopScreen) shopScreen = new GameObject("Shop", typeof(UIDocument)).AddComponent<ToolkitShopScreen>();
             shopScreen.Configure(theme, runtimeTheme, textSettings);
@@ -134,11 +140,11 @@ namespace TimelessEchoes.UI.Toolkit
                 else
                 {
                     var label = new Label { pickingMode = PickingMode.Ignore };
-                    label.AddToClassList("eov-navigation-label"); 
+                    label.AddToClassList("eov-navigation-label");
                     button.Add(label); bindings.Add(new ToolkitTextBinding(label, entry.label));
                 }
                 row.Add(button);
-                if (entry.id is "options" or "quests" or "close" or "adventure" or "map-0" or "map-1" or "map-3" or "stats" or "townsfolk" or "forge" or "hub" or "skills" or "inventory" or "buffs")
+                if (entry.group == Group.Statistics || entry.id is "options" or "quests" or "close" or "adventure" or "map-0" or "map-1" or "map-3" or "stats" or "townsfolk" or "forge" or "hub" or "skills" or "inventory" or "buffs")
                 {
                     var prompt = new VisualElement { name = entry.id == "quests" ? "quest-tutorial-pointer" : "tutorial-pointer-" + entry.id, pickingMode = PickingMode.Ignore };
                     prompt.style.position = Position.Absolute;
@@ -149,6 +155,12 @@ namespace TimelessEchoes.UI.Toolkit
                     button.RegisterCallback<GeometryChangedEvent>(_ => RefreshTutorialPrompt());
                 }
                 rows.Add(entry, row); buttons.Add(entry, button);
+                if (entry.action == NavAction.HubMenu)
+                {
+                    hubQuestAttention = AddAttention(button, definition.questAttention);
+                    hubQuestAttention.name = "hub-quest-attention";
+                    hubQuestAttention.AddToClassList("eov-navigation-quest-attention");
+                }
                 if (entry.action == NavAction.TownsfolkMenu)
                 {
                     forgeAttention = AddAttention(button, definition.forgeAttention);
@@ -214,7 +226,7 @@ namespace TimelessEchoes.UI.Toolkit
             progressRoot.Add(progressDistance);
             autoPinGroup = new VisualElement { name = "auto-pin", pickingMode = PickingMode.Ignore };
             autoPinGroup.AddToClassList("eov-navigation-auto-pin");
-            
+
             autoPin = new Button(() => { AutoPinActiveQuests = !AutoPinActiveQuests; Refresh(); });
             autoPin.AddToClassList("eov-navigation-toggle");autoPin.AddToClassList("button"); autoPinGroup.Add(autoPin);
             var label = new Label { pickingMode = PickingMode.Ignore };
@@ -230,6 +242,78 @@ namespace TimelessEchoes.UI.Toolkit
             root.Q("navigation-close").Insert(0, discord);
         }
 
+        public void FollowHelpAfterDialogue(string route) => StartCoroutine(FollowAfterDialogue(route));
+        private System.Collections.IEnumerator FollowAfterDialogue(string route)
+        {
+            // Let the existing dialogue completion record its tutorial stage and
+            // release its modal before asking the normal navigation gates to open.
+            yield return null; yield return null;
+            ToolkitHelpLinks.Follow(route);
+        }
+
+        /// <summary>Help navigation shares authored progression gates and never begins an adventure.</summary>
+        public bool OpenHelpDestination(string route)
+        {
+            var parts = route.Split('/');
+            var entryId = parts[0] == "statistics" ? "stats" : parts[0] == "fields" ? "farm" : parts[0];
+            var subpage = parts.Length == 2 ? parts[1] : null;
+            if (parts.Length > 2 || navigationEntries == null || root == null) return false;
+            if (!windows) windows = TownWindowManager.Instance;
+            if (!windows) return false;
+            // Conversations and modal lessons must retain ownership of their completion.
+            if (ToolkitMeetingScreen.HasOpenDialogue ||
+                UnityEngine.Object.FindAnyObjectByType<ToolkitIntroScreen>()?.IsVisible == true ||
+                UnityEngine.Object.FindAnyObjectByType<ToolkitDialogScreen>()?.IsVisible == true) return false;
+            if (entryId is "hero-stats" or "run-summary")
+            {
+                if (subpage != null || !GameManager.Instance || entryId == "hero-stats" && !GameManager.Instance.CurrentMap) return false;
+                var run = UnityEngine.Object.FindAnyObjectByType<ToolkitRunScreen>();
+                if (!run || !run.IsConfigured) return false;
+                var summary = UnityEngine.Object.FindAnyObjectByType<Upgrades.RunResourceTrackerUI>();
+                if (entryId == "run-summary" && !summary) return false;
+                CloseMenu(); windows.CloseAllWindows();
+                if (entryId == "hero-stats") return run.ShowHeroStats();
+                if (GameManager.Instance.CurrentMap) run.ShowBreakdown();
+                else summary.ShowWindow();
+                return run.HasOpenDetails;
+            }
+            var entry = System.Array.Find(navigationEntries, e => e.id == entryId);
+            if (entry == null || entry.action is not (NavAction.Window or NavAction.AdventureMenu or NavAction.HubMenu or NavAction.TownsfolkMenu or NavAction.StatisticsMenu) ||
+                !ToolkitVisibilityRule.All(entry.visibility)) return false;
+            // Children are subject to the same parent-menu unlock as normal navigation.
+            if (entry.group != Group.Toolbar)
+            {
+                var parent = System.Array.Find(navigationEntries, e => e.action ==
+                    ParentAction(entry.group));
+                if (parent == null || !ToolkitVisibilityRule.All(parent.visibility)) return false;
+            }
+            var tab = -1;
+            if (subpage != null)
+            {
+                if (entryId == "stats")
+                {
+                    tab = subpage switch { "general" => 0, "graphs" => 2, "enemies" => 3, "tasks" => 4, "items" => 5, "town" or "forging" => 6, _ => -1 };
+                    if (tab < 0) return false;
+                }
+                else if (entryId != "skills" || subpage is not ("Farming" or "Fishing" or "Mining" or "Woodcutting" or "Combat" or "Looting")) return false;
+            }
+            var opensWindow = entry.action is NavAction.Window or NavAction.StatisticsMenu;
+            if (opensWindow && !windows.CanOpenWindow(entry.window)) return false;
+            CloseMenu();
+            if (!opensWindow)
+            {
+                windows.CloseAllWindows(); ToggleMenu(entry.action == NavAction.AdventureMenu ? Group.Adventure :
+                    entry.action == NavAction.HubMenu ? Group.Hub : Group.Townsfolk, buttons[entry]);
+                return HasOpenMenu;
+            }
+            if (!windows.IsWindowOpen(entry.window)) windows.OpenWindow(entry.window);
+            if (!windows.IsWindowOpen(entry.window)) return false;
+            if (tab >= 0) UnityEngine.Object.FindAnyObjectByType<ToolkitStatisticsScreen>()?.SelectTab(tab);
+            if (entryId == "skills" && subpage != null)
+                return UnityEngine.Object.FindAnyObjectByType<ToolkitSkillsScreen>()?.RevealSkill(subpage) == true;
+            Refresh(); return true;
+        }
+
         private void Activate(Entry entry)
         {
             if (!ToolkitVisibilityRule.All(entry.visibility)) return;
@@ -240,7 +324,12 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 case NavAction.Window:
                     CloseMenu();
-                    if (ToolkitResponsiveLayout.IsPortrait && windows && windows.IsWindowOpen(entry.window))
+                    if (entry.statisticsTab >= 0)
+                    {
+                        if (windows && !windows.IsWindowOpen(entry.window)) windows.OpenWindow(entry.window);
+                        if (windows && windows.IsWindowOpen(entry.window)) FindAnyObjectByType<ToolkitStatisticsScreen>()?.SelectTab(entry.statisticsTab);
+                    }
+                    else if (ToolkitResponsiveLayout.IsPortrait && windows && windows.IsWindowOpen(entry.window))
                         windows.CloseAllWindows();
                     else windows?.OpenWindow(entry.window);
                     break;
@@ -252,20 +341,20 @@ namespace TimelessEchoes.UI.Toolkit
                     ToggleMenu(Group.Hub, buttons[entry]);
                     break;
                 case NavAction.TownsfolkMenu: ToggleMenu(Group.Townsfolk, buttons[entry]); break;
+                case NavAction.StatisticsMenu: ToggleMenu(Group.Statistics, buttons[entry]); break;
             }
             Refresh();
         }
 
         private void ToggleMenu(Group group, Button anchor)
         {
-            ToolkitResponsiveLayout.SetFocusView(false);
             if (openGroup == group || ToolkitResponsiveLayout.IsPortrait &&
                 (group == Group.Hub && HubWindowOpen() || group == Group.Townsfolk && TownWindowOpen()))
             {
                 windows?.CloseAllWindows(); CloseMenu(); Refresh(); return;
             }
             if (ToolkitResponsiveLayout.IsPortrait) windows?.CloseAllWindows();
-            portraitMenuTitle.text = group == Group.Adventure ? ToolkitLocalization.Text("navigation.adventure", "Adventure") : group == Group.Hub ? ToolkitLocalization.Text("navigation.hub", "Hub") : ToolkitLocalization.Text("navigation.town", "Town");
+            portraitMenuTitle.text = MenuTitle(group);
             openGroup = group; menuAnchor = ToolkitResponsiveLayout.IsPortrait && anchor.parent?.parent == morePopup ? moreButton : anchor; popup.style.display = DisplayStyle.Flex;
             Refresh();
         }
@@ -282,7 +371,6 @@ namespace TimelessEchoes.UI.Toolkit
         private void Update()
         {
             if (root == null) return;
-            if (ToolkitResponsiveLayout.FocusView && HasOpenMenu) CloseMenu();
             if (!windows) windows = TownWindowManager.Instance;
             if (windows && !hooked)
             {
@@ -359,7 +447,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (root == null) return;
             if (portraitMenuTitle != null && HasOpenMenu)
-                portraitMenuTitle.text = openGroup == Group.Adventure ? ToolkitLocalization.Text("navigation.adventure", "Adventure") : openGroup == Group.Hub ? ToolkitLocalization.Text("navigation.hub", "Hub") : ToolkitLocalization.Text("navigation.town", "Town");
+                portraitMenuTitle.text = MenuTitle(openGroup);
             if (windows != null && windows.IsWindowOpen(TownWindowManager.Window.Quests))
                 highlightQuestsUntilOpened = false;
             root.EnableInClassList("eov-navigation--window-open", openGroup != Group.Toolbar || (windows != null && windows.HasOpenWindow));
@@ -367,11 +455,17 @@ namespace TimelessEchoes.UI.Toolkit
             foreach (var entry in navigationEntries)
             {
                 var visible = ToolkitVisibilityRule.All(entry.visibility) && (entry.group == Group.Toolbar || entry.group == openGroup);
+                // Returning players may predate the quest that unlocks Town. Keep
+                // the portrait route to Library available without replaying it.
+                if (entry.id == "townsfolk" && Blindsided.Oracle.oracle?.saveData?.General.ReturningPlayerIntroductionComplete == true)
+                    visible = true;
                 if (entry.id == "shop") visible &= TimelessEchoes.Shop.ShopService.Ensure().Unlocked;
                 if (ToolkitResponsiveLayout.IsPortrait && entry.group == Group.Toolbar && !PortraitBottomEntry(entry))
                     visible &= openGroup == Group.Townsfolk;
                 if (entry.action == NavAction.Close) visible &= !ToolkitResponsiveLayout.IsPortrait && windows != null && windows.HasOpenWindow;
                 rows[entry].style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+                if (entry.statisticsTab >= 0)
+                    buttons[entry].Q<Label>(className: "eov-navigation-label").text = ToolkitStatisticsScreen.TabTitle(entry.statisticsTab);
                 if (entry.action == NavAction.Window && entry.window == TownWindowManager.Window.Farm)
                 {
                     var label = buttons[entry].Q<Label>("fields-navigation-label");
@@ -380,7 +474,8 @@ namespace TimelessEchoes.UI.Toolkit
                 buttons[entry].SetEnabled(entry.action != NavAction.Window || windows == null ||
                     windows.IsWindowOpen(entry.window) || windows.CanOpenWindow(entry.window));
                 var selected = entry.action == NavAction.Window && windows && windows.IsWindowOpen(entry.window);
-                if (entry.id == "hub" && windows) selected = openGroup == Group.Hub || windows.IsWindowOpen(TownWindowManager.Window.Inventory) || windows.IsWindowOpen(TownWindowManager.Window.Skills) || windows.IsWindowOpen(TownWindowManager.Window.Buffs) || windows.IsWindowOpen(TownWindowManager.Window.Shop);
+                if (entry.id == "hub") selected = openGroup == Group.Hub || HubWindowOpen();
+                if (entry.id == "stats") selected = openGroup == Group.Statistics || windows && windows.IsWindowOpen(TownWindowManager.Window.Stats);
                 if (entry.id == "townsfolk") selected = openGroup == Group.Townsfolk || TownWindowOpen();
                 if (entry.id == "adventure") selected = openGroup == Group.Adventure;
                 buttons[entry].EnableInClassList("active", ToolkitResponsiveLayout.IsPortrait && selected);
@@ -396,6 +491,7 @@ namespace TimelessEchoes.UI.Toolkit
             SetVisible(forgeAttention, windows != null && windows.ForgeNeedsAttention);
             SetVisible(cauldronAttention, windows != null && windows.CauldronNeedsAttention);
             SetVisible(questAttention, QuestManager.Instance != null && QuestManager.Instance.HasQuestsReadyForTurnIn());
+            SetVisible(hubQuestAttention, QuestManager.Instance != null && QuestManager.Instance.HasQuestsReadyForTurnIn());
             SetVisible(autoPinGroup, !ToolkitResponsiveLayout.IsPortrait && windows != null && windows.IsWindowOpen(TownWindowManager.Window.Quests));
             SetVisible(discord, windows != null && windows.IsWindowOpen(TownWindowManager.Window.Options));
             var inRun = GameManager.Instance != null && GameManager.Instance.CurrentMap != null;
@@ -447,6 +543,12 @@ namespace TimelessEchoes.UI.Toolkit
                 inventoryTutorial = data.General.InventoryTutorialStage < 3;
             }
             string desired = null;
+            if (windows && windows.IsWindowOpen(TownWindowManager.Window.Stats) && !statisticsScreen)
+                statisticsScreen = FindAnyObjectByType<ToolkitStatisticsScreen>();
+            var statistics = windows && windows.IsWindowOpen(TownWindowManager.Window.Stats) ? statisticsScreen : null;
+            var statisticsSection = MapStatisticsGuidance.Active ? 0 : GraphStatisticsGuidance.Active ? 2 :
+                data?.General.TaskBoostTutorialStage == 1 ? 4 : 0;
+            var needsStatisticsSection = ToolkitResponsiveLayout.IsPortrait && statistics && statistics.SelectedTab != statisticsSection;
             if (!runScreen) runScreen = FindAnyObjectByType<ToolkitRunScreen>();
             if (ActiveNpcMeetings.Count > 0 || (runScreen && runScreen.HasOpenDetails)) desired = null;
             else if (highlightQuestsUntilOpened) desired = "quests";
@@ -472,14 +574,14 @@ namespace TimelessEchoes.UI.Toolkit
                     data.General.MapStatisticsTutorialStage == 1 ||
                     (windows != null && windows.HasOpenWindow && !windows.IsWindowOpen(TownWindowManager.Window.Stats)) ?
                     (windows != null && windows.HasOpenWindow ? "close" : null) :
-                    windows != null && windows.IsWindowOpen(TownWindowManager.Window.Stats) ? null : "stats";
+                    statistics && !needsStatisticsSection ? null : "stats";
             else if (data != null && inTown && TimelessEchoes.Gear.ForgeFirstLesson.Active)
                 desired = windows != null && windows.IsWindowOpen(TownWindowManager.Window.Forge) ? null : windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Townsfolk ? "forge" : "townsfolk";
             else if (data != null && inTown && data.General.TaskBoostTutorialStage == 1)
-                desired = windows != null && windows.IsWindowOpen(TownWindowManager.Window.Stats) ? null :
+                desired = statistics && !needsStatisticsSection ? null :
                     windows != null && windows.HasOpenWindow ? "close" : "stats";
             else if (data != null && inTown && GraphStatisticsGuidance.Active)
-                desired = windows != null && windows.IsWindowOpen(TownWindowManager.Window.Stats) ? null :
+                desired = statistics && !needsStatisticsSection ? null :
                     windows != null && windows.HasOpenWindow ? "close" : "stats";
             else if (data != null && inTown && QuestUtils.QuestCompleted("You get this one for free!") &&
                      !data.CompletedNpcTasks.Contains("Reaper1") && !QuestUtils.QuestCompleted("An Intro to Trekking"))
@@ -492,6 +594,15 @@ namespace TimelessEchoes.UI.Toolkit
                 desired = HubWindowOpen() ? "hub" : windows.IsWindowOpen(TownWindowManager.Window.Quests) ? "quests" :
                     windows.IsWindowOpen(TownWindowManager.Window.Stats) ? "stats" :
                     windows.IsWindowOpen(TownWindowManager.Window.Options) ? "options" : "townsfolk";
+            var choosingStatisticsSection = inTown && ActiveNpcMeetings.Count == 0 && !(runScreen && runScreen.HasOpenDetails) &&
+                (MapStatisticsGuidance.Stage is >= 2 and <= 6 || GraphStatisticsGuidance.Active || data?.General.TaskBoostTutorialStage == 1);
+            if (openGroup == Group.Statistics && (desired == "stats" || choosingStatisticsSection && desired is null or "close"))
+                desired = "statistics-section-" + statisticsSection;
+            // A hidden child cannot be the first step of a tutorial. Guide the
+            // player through its parent, then move the hand onto the real row.
+            var desiredEntry = System.Array.Find(navigationEntries, e => e.id == desired);
+            if (desiredEntry != null && desiredEntry.group != Group.Toolbar && openGroup != desiredEntry.group)
+                desired = System.Array.Find(navigationEntries, e => e.action == ParentAction(desiredEntry.group))?.id;
             if (desired != highlightedEntryId) { highlightedEntryId = desired; questHighlightStartedAt = Time.unscaledTime; }
             if (desired != null) ToolkitResponsiveLayout.SetFocusView(false);
             foreach (var pair in tutorialPrompts)
@@ -560,7 +671,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (!portrait) { portraitGroupScroll?.RemoveFromHierarchy(); portraitMoreScroll?.RemoveFromHierarchy(); }
             if (portrait)
             {
-                foreach (var id in new[] { "adventure", "hub", "quests", "townsfolk", "stats", "options" })
+                foreach (var id in new[] { "adventure", "hub", "townsfolk", "stats", "options" })
                 {
                     var entry = System.Array.Find(navigationEntries, e => e.id == id);
                     if (entry != null) bar.Add(rows[entry]);
@@ -581,7 +692,21 @@ namespace TimelessEchoes.UI.Toolkit
             return header;
         }
 
-        private static bool PortraitBottomEntry(Entry entry) => entry.id is "adventure" or "hub" or "quests" or "townsfolk" or "stats" or "options";
+        private static bool PortraitBottomEntry(Entry entry) => entry.id is "adventure" or "hub" or "townsfolk" or "stats" or "options";
+
+        private static NavAction ParentAction(Group group) => group switch
+        {
+            Group.Hub => NavAction.HubMenu, Group.Adventure => NavAction.AdventureMenu,
+            Group.Statistics => NavAction.StatisticsMenu, _ => NavAction.TownsfolkMenu
+        };
+
+        private static string MenuTitle(Group group) => group switch
+        {
+            Group.Adventure => ToolkitLocalization.Text("navigation.adventure", "Adventure"),
+            Group.Hub => ToolkitLocalization.Text("navigation.hub", "Hub"),
+            Group.Statistics => ToolkitLocalization.Text("navigation.stats-tooltip", "Statistics"),
+            _ => ToolkitLocalization.Text("navigation.town", "Town")
+        };
 
         private bool TownWindowOpen() => windows && windows.HasOpenWindow && !HubWindowOpen() &&
             !windows.IsWindowOpen(TownWindowManager.Window.Quests) &&
@@ -591,6 +716,7 @@ namespace TimelessEchoes.UI.Toolkit
         private bool HubWindowOpen() => windows &&
             (windows.IsWindowOpen(TownWindowManager.Window.Inventory) ||
              windows.IsWindowOpen(TownWindowManager.Window.Skills) ||
+             windows.IsWindowOpen(TownWindowManager.Window.Quests) ||
              windows.IsWindowOpen(TownWindowManager.Window.Buffs) || windows.IsWindowOpen(TownWindowManager.Window.Shop));
 
         private void ToggleMore()

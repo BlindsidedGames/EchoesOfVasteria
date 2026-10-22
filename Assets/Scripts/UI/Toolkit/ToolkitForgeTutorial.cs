@@ -45,11 +45,11 @@ namespace TimelessEchoes.UI.Toolkit
             string target, text;
             switch (stage)
             {
-                case 0: target = "smelt-Ingot"; text = "Ivan supplied the materials. Click here to smelt your first ingot."; break;
-                case 1: target = "core-" + core.name; text = "Your core determines the rarity odds. Later, you can upgrade cores to higher tiers. Select this basic core."; break;
+                case 0: target = "smelt-Ingot"; text = "Ivan supplied the materials. Select Smelt to make your first ingot."; break;
+                case 1: target = "core-" + core.name; text = "Select the Basic Core. Your core sets the rarity chances; higher tiers unlock later."; break;
                 case 2: target = "gear-Weapon"; text = "Choose Weapon to make your first sword."; break;
-                case 3: target = "forge-craft"; text = "Click Craft to use your ingot and core to make a sword."; break;
-                default: target = "forge-replace"; text = "Your sword is ready. Click Equip to wield it."; break;
+                case 3: target = "forge-craft"; text = "Select Craft to turn your ingot and core into a sword."; break;
+                default: target = "forge-replace"; text = "Your sword is ready. Select Equip to use it."; break;
             }
             lessonText.text = ToolkitLocalization.Text("forge.lesson.step-" + stage, text);
             lessonTarget = root.Q<Button>(target);

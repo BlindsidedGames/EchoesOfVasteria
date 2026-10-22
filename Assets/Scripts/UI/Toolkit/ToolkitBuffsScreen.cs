@@ -102,11 +102,11 @@ namespace TimelessEchoes.UI.Toolkit
                 rebuild = true;
             }
             var manager=BuffManager.Instance;if(!manager||!IsOpen)return;
-            instruction.text=inRun?ToolkitLocalization.Text("buffs.instructions-running", "Assignments are locked during runs. Select an equipped slot to toggle autocast."):selected?ToolkitLocalization.Text("buffs.instructions-select-slot", "Choose a slot for {0}. Select Cancel to finish without assigning.", selected.GetDisplayName()):ToolkitLocalization.Text("buffs.instructions-select-buff", "Select a buff to assign it. Select an equipped slot to toggle autocast.");
+            instruction.text=inRun?ToolkitLocalization.Text("buffs.instructions-running", "You can’t change buffs during a run. Select an equipped slot to turn autocast on or off."):selected?ToolkitLocalization.Text("buffs.instructions-select-slot", "Choose a slot for {0}, or select Cancel to keep your current setup.", selected.GetDisplayName()):ToolkitLocalization.Text("buffs.instructions-select-buff", "Select Assign beside a buff, then choose a slot. Select an equipped slot to turn autocast on or off.");
             if (BuffIntroductionGuidance.Active)
-                instruction.text = selected ? ToolkitLocalization.Text("buffs.lesson.slot", "Click your first slot to equip this Echo.") : ToolkitLocalization.Text("buffs.lesson.choice", "Choose Task Echo to gather resources, or Combat Echo to fight enemies. Select Assign, then choose your first slot.");
+                instruction.text = selected ? ToolkitLocalization.Text("buffs.lesson.slot", "Select your first slot to equip this Echo.") : ToolkitLocalization.Text("buffs.lesson.choice", "Choose Task Echo to gather resources or Combat Echo to fight. Select Assign beside your choice.");
             else if (!inRun && !selected && BuffIntroductionGuidance.Stage >= 3 && !manager.IsAutoSlotUnlocked(0))
-                instruction.text = ToolkitLocalization.Text("buffs.lesson.casting", "Click your Echo's button during an adventure to summon it. Complete Echo Casting to unlock autocasting.");
+                instruction.text = ToolkitLocalization.Text("buffs.lesson.casting", "During an adventure, select your Echo’s ability button to summon it. Complete Echo Casting to unlock autocasting.");
             for(int i=0;i<5;i++)
             {
                 var recipe=manager.GetAssigned(i);icons[i].sprite=recipe?recipe.buffIcon:null;

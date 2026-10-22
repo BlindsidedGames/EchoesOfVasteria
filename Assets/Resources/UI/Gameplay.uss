@@ -533,6 +533,7 @@
 .gameplay .eov-intro-title {font-size:12px;margin-bottom:var(--space-control);}
 .gameplay .eov-intro-body {font-size:8px;color:var(--text);}
 .gameplay .eov-intro-close-label {font-size:8px;margin-top:var(--space-section);}
+.gameplay .eov-intro-action {margin:0;padding:0;border-width:0;border-radius:0;background-color:rgba(0,0,0,0);flex-shrink:0;}
 .gameplay .eov-meeting-dialogue {font-size:8px;color:var(--text);}
 .gameplay .eov-meeting-dialogue-frame {width:160px;padding:var(--space-section);}
 .gameplay .eov-meeting-button {min-height:22px;padding:var(--space-tight);}
@@ -1154,10 +1155,6 @@
 .gameplay .character-narrow .character-preset .character-load-preset { width:auto;flex-grow:0;flex-shrink:0; }
 
 /* Lifetime crafting history lives in Statistics, separate from forge actions. */
-.gameplay .forging-statistics-section {margin-bottom:6px;}
-.gameplay .forging-statistics-row {flex-direction:row;align-items:center;padding:3px 0;border-bottom-width:.5px;border-bottom-color:var(--line);}
-.gameplay .forging-statistics-name {flex-grow:1;flex-shrink:1;white-space:normal;}
-.gameplay .forging-statistics-value {max-width:60%;margin-left:12px;white-space:normal;-unity-text-align:middle-right;}
 
 /* The recipe sets its natural width; the remaining width belongs to the controls. */
 .gameplay.eov-forge .eov-forge-conversion > .forge-conversion-body {height:auto;min-height:48px;align-items:center;min-width:0;flex-shrink:0;}
@@ -1171,3 +1168,14 @@
 
 .gameplay.eov-forge .forge-conversion-result {align-items:center;flex-shrink:0;}
 .gameplay.eov-forge .forge-conversion-result .eov-text {-unity-text-align:middle-center;}
+
+.gameplay .town-statistics-section { margin-bottom:6px; }
+.gameplay .town-statistics-row { flex-direction:row; align-items:center; padding:4px 0; border-bottom-width:.5px; border-bottom-color:var(--line); }
+.gameplay .town-statistics-name { flex-grow:1; flex-shrink:1; white-space:normal; min-width:0; }
+.gameplay .town-statistics-value { flex-shrink:0; margin-left:12px; white-space:nowrap; -unity-text-align:middle-right; }
+.gameplay .town-statistics-icon { flex-shrink:0; margin-right:6px; }
+.gameplay .town-statistics-roll-title { margin-top:8px; margin-bottom:4px; }
+.gameplay .town-statistics-rolls { flex-direction:row; flex-wrap:wrap; }
+.gameplay .town-statistics-roll { width:48%; margin-right:2%; }
+.gameplay.portrait .town-statistics-roll { width:100%; margin-right:0; }
+.gameplay .town-statistics-since-update { margin-bottom:4px; }

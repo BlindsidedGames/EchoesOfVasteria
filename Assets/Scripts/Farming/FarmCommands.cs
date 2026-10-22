@@ -191,6 +191,8 @@ namespace TimelessEchoes.Farming
                 return Reject("InvalidHarvestYieldBonus");
             // Final payout lives in the committed proposal; replay cannot re-evaluate card ownership.
             result.ResourceDeltas["Radish"] = total * (1 + harvestYieldBonusPercent / 100d);
+            result.Candidate.TotalHarvests += result.HarvestedBeds.Count;
+            result.Candidate.CropsGathered += result.ResourceDeltas["Radish"];
             return result;
         }
 

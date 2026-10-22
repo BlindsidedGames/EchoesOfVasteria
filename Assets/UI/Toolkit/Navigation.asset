@@ -42,7 +42,7 @@ MonoBehaviour:
     visibility: []
   - id: stats
     group: 0
-    action: 0
+    action: 6
     window: 5
     map: {fileID: 0}
     label:
@@ -183,10 +183,7 @@ MonoBehaviour:
     iconSliced: 0
     width: 31.61
     fontSize: 8
-    visibility:
-    - condition: 11
-      quest: {fileID: 0}
-      npcId:
+    visibility: []
   - id: townsfolk
     group: 0
     action: 3
@@ -218,7 +215,7 @@ MonoBehaviour:
       quest: {fileID: 11400000, guid: c09209e764b12664d970cbd53a3f25a5, type: 2}
       npcId:
   - id: quests
-    group: 0
+    group: 2
     action: 0
     window: 2
     map: {fileID: 0}
@@ -270,10 +267,7 @@ MonoBehaviour:
     iconSliced: 0
     width: 46.25
     fontSize: 8
-    visibility:
-    - condition: 8
-      quest: {fileID: 0}
-      npcId:
+    visibility: []
   - id: close
     group: 0
     action: 5

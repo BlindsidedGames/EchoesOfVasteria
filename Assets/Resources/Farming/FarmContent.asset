@@ -30,7 +30,8 @@ MonoBehaviour:
   lastCropCapLevel: 5000
   baseYield: 10
   harvestXp: 10
-  seedChance: 0.1
+  seedChance: 0.05
+  seedChancePerCropTier: 0.9
   recipes:
   - id: recipe.radish.v1
     displayName:

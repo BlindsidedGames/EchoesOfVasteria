@@ -23,7 +23,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 478381752320
-    m_Localized: "Les buffs sont des pouvoirs temporaires. Ils expirent \xE0 la fin de leur dur\xE9e ou au retour en ville. Apr\xE8s avoir termin\xE9 la qu\xEAte requise pour un emplacement, vous pouvez les lancer automatiquement ; cette option est activ\xE9e par d\xE9faut. D\xE9sactivez-la en cliquant sur l\u2019emplacement dans la fen\xEAtre de gestion des buffs.\n\nLe Chaudron d\u2019Eva peut r\xE9duire leurs temps de recharge."
+    m_Localized: "Les buffs sont des pouvoirs temporaires. Ils expirent \xE0 la fin de leur dur\xE9e ou au retour en ville. Apr\xE8s avoir termin\xE9 la qu\xEAte requise pour un emplacement, vous pouvez les lancer automatiquement ; cette option est activ\xE9e par d\xE9faut. D\xE9sactivez-la en cliquant sur l\u2019emplacement dans la fen\xEAtre de gestion des buffs.\n\nLe <link=\"help:cauldron\"><u><color=#EFB889>Chaudron</color></u></link> d\u2019Eva peut r\xE9duire leurs temps de recharge."
     m_Metadata:
       m_Items: []
   - m_Id: 492340396032
@@ -47,7 +47,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3785742338113536
-    m_Localized: "\xC0 certaines distances du village, Carl fauche votre \xE2me pour vous emp\xEAcher de trop vous \xE9loigner.\nLa distance maximale de Fauche figure dans les statistiques de l\u2019onglet G\xE9n\xE9ral.\n\nElle augmente des fa\xE7ons suivantes :\n<b>\xCAtre fauch\xE9</b> | Augmente la distance de 1% de votre maximum actuel. (Sauf dans les Terres agricoles.)\n<b>Qu\xEAtes</b> | Certaines qu\xEAtes augmentent la distance de Fauche."
+    m_Localized: "\xC0 certaines distances du village, Carl fauche votre \xE2me pour vous emp\xEAcher de trop vous \xE9loigner.\nLa distance maximale de Fauche figure dans les statistiques de l\u2019onglet G\xE9n\xE9ral.\n\nElle augmente des fa\xE7ons suivantes :\n<b>\xCAtre fauch\xE9</b> | Augmente la distance de 1% de votre maximum actuel. (Sauf dans les Terres agricoles.)\n<b><link=\"help:quests\"><u><color=#EFB889>Qu\xEAtes</color></u></link></b> | Certaines qu\xEAtes augmentent la distance de Fauche."
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
@@ -105,7 +105,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12027031164698624
-    m_Localized: "Le Chaudron transforme les aliments s\xE9lectionn\xE9s en rago\xFBt. Choisissez la quantit\xE9 \xE0 m\xE9langer : le rago\xFBt obtenu d\xE9pend de la valeur d\xE9finie de l\u2019aliment et de sa quantit\xE9. Go\xFBtez-le pour recevoir des cartes selon les pond\xE9rations de r\xE9compense affich\xE9es par Eva.\n\nLes cartes de ressources am\xE9liorent les r\xE9coltes r\xE9elles, le butin des ennemis et les r\xE9coltes des Champs pour la ressource correspondante. Leurs seuils d\u2019exemplaires sont 1, 25, 75, 200, 750, 1500, 3500 et 10000 ; les bonus de rendement sont 1%, 2%, 3%, 5%, 7%, 10%, 15% et 20%.\n\nUne cat\xE9gorie utilise le palier de carte le plus bas parmi ses ressources d\xE9bloqu\xE9es. Une carte non poss\xE9d\xE9e compte comme palier z\xE9ro. Les paliers de cat\xE9gorie de 1 \xE0 8 ajoutent 2%, 5%, 10%, 15%, 20%, 30%, 40% et 50% de rendement \xE0 cette cat\xE9gorie. Les bonus de carte et de cat\xE9gorie s\u2019additionnent, jusqu\u2019\xE0 70%. Les r\xE9compenses, graines, remboursements et conversions n\u2019en b\xE9n\xE9ficient pas.\n\nCes paliers sont distincts de la raret\xE9 des ressources. Les avantages actuels des cartes de buffs sur la recharge et la puissance restent inchang\xE9s. Compl\xE9tez toutes les collections disponibles de ressources et de buffs pour d\xE9bloquer les Bienfaits \xE9ternels."
+    m_Localized: "Le <link=\"help:cauldron\"><u><color=#EFB889>Chaudron</color></u></link> transforme les aliments s\xE9lectionn\xE9s en rago\xFBt. Choisissez la quantit\xE9 \xE0 m\xE9langer : le rago\xFBt obtenu d\xE9pend de la valeur d\xE9finie de l\u2019aliment et de sa quantit\xE9. Go\xFBtez-le pour recevoir des cartes selon les pond\xE9rations de r\xE9compense affich\xE9es par Eva.\n\nLes cartes de ressources am\xE9liorent les r\xE9coltes r\xE9elles, le butin des ennemis et les r\xE9coltes des Champs pour la ressource correspondante. Leurs seuils d\u2019exemplaires sont 1, 25, 75, 200, 750, 1500, 3500 et 10000 ; les bonus de rendement sont 1%, 2%, 3%, 5%, 7%, 10%, 15% et 20%.\n\nUne cat\xE9gorie utilise le palier de carte le plus bas parmi ses ressources d\xE9bloqu\xE9es. Une carte non poss\xE9d\xE9e compte comme palier z\xE9ro. Les paliers de cat\xE9gorie de 1 \xE0 8 ajoutent 2%, 5%, 10%, 15%, 20%, 30%, 40% et 50% de rendement \xE0 cette cat\xE9gorie. Les bonus de carte et de cat\xE9gorie s\u2019additionnent, jusqu\u2019\xE0 70%. Les r\xE9compenses, graines, remboursements et conversions n\u2019en b\xE9n\xE9ficient pas.\n\nCes paliers sont distincts de la raret\xE9 des ressources. Les avantages actuels des cartes de buffs sur la recharge et la puissance restent inchang\xE9s. Compl\xE9tez toutes les collections disponibles de ressources et de buffs pour d\xE9bloquer les Bienfaits \xE9ternels."
     m_Metadata:
       m_Items: []
   - m_Id: 18915029441462272

@@ -224,6 +224,14 @@ namespace TimelessEchoes.UI.Toolkit
 
         }
 
+        public bool RevealSkill(string skillName)
+        {
+            if (!IsOpen) return false;
+            var index = System.Array.FindIndex(definition.skills, skill => skill && skill.name == skillName);
+            if (index < 0) return false;
+            Select(index); return true;
+        }
+
         private void Select(int index) { selected = index; highlights[index].style.display = DisplayStyle.None; Refresh(); }
 
         private void Experience(Skill skill, float current, float required) { if (skill == Current) RefreshExperience(); }
@@ -327,7 +335,7 @@ namespace TimelessEchoes.UI.Toolkit
                 var currentLevel = controller.GetLevel(skill);
                 var next = milestones.Concat(unlocks).Where(i => i.level > currentLevel).OrderBy(i => i.level).FirstOrDefault();
                 var nextName = next.milestone != null ? next.milestone.DisplayName : next.unlock != null ? (next.unlock.resource ? ToolkitLocalization.Name(next.unlock.resource) : ToolkitLocalization.Name(next.unlock.task)) : "";
-                var hint = Text(milestoneList, ToolkitLocalization.Text("skills.first-lesson", "Tasks earn skill XP. Your current bonuses are shown on the left.") +
+                var hint = Text(milestoneList, ToolkitLocalization.Text("skills.first-lesson", "Complete tasks to earn skill XP and unlock bonuses.") +
                     (next.level > 0 ? "\n" + ToolkitLocalization.Text("skills.next-unlock", "Next: {0} at level {1}.", nextName, next.level) : ""), 8);
                 hint.name = "skills-tutorial-hint"; hint.style.whiteSpace = WhiteSpace.Normal;
             }
@@ -405,7 +413,7 @@ namespace TimelessEchoes.UI.Toolkit
 
                     row.Add(body); Text(body, unlocked ? ToolkitLocalization.Text("skills.task-unlocked", "{0} | <size=80%>Unlocked at level {1}</size>", (unlock.resource ? ToolkitLocalization.Name(unlock.resource) : ToolkitLocalization.Name(unlock.task)), unlock.requiredLevel) : ToolkitLocalization.Text("skills.task-locked", "??? | <size=80%>Unlocks at level {0}</size>", unlock.requiredLevel), 6);
 
-                    Text(body, unlocked && !string.IsNullOrEmpty(unlock.description) ? unlock.description : "", 5);
+                    Text(body, unlocked ? unlock.DisplayDescription : "", 5);
 
                 }
 
@@ -531,6 +539,3 @@ namespace TimelessEchoes.UI.Toolkit
     }
 
 }
-
-
-

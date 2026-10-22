@@ -36,6 +36,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (smallCaps) display = "<smallcaps>" + display + "</smallcaps>";
             if (bold) display = "<b>" + display + "</b>";
             target.text = display;
+            if (display.Contains("<link=\"help:")) ToolkitHelpLinks.Attach(target);
         }
 
         public void Dispose()

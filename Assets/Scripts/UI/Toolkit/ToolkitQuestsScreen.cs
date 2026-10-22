@@ -192,7 +192,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void AddQuest(VisualElement parent, QuestNoticeboardEntry entry)
         {
             var quest = entry.Quest;
-            var row = new VisualElement { name = "quest-" + quest.questId }; row.AddToClassList("eov-quest-row"); 
+            var row = new VisualElement { name = "quest-" + quest.questId }; row.AddToClassList("eov-quest-row");
             row.EnableInClassList("quest-completed",entry.Completed); row.EnableInClassList("quest-ready",!entry.Completed&&entry.Progress>=1); parent.Add(row);
             var top = new VisualElement(); top.AddToClassList("eov-quest-top"); row.Add(top);
             var texts = new VisualElement(); texts.AddToClassList("eov-quest-texts"); top.Add(texts);
@@ -200,6 +200,7 @@ namespace TimelessEchoes.UI.Toolkit
             Text(texts, "<b>" + quest.questName.GetLocalizedString() + "</b>", 9).AddToClassList("quest-name");
             var description = Text(texts, quest.description.GetLocalizedString(), 6); description.AddToClassList("quest-description");
             description.style.fontSize = StyleKeyword.Null;
+            ToolkitHelpLinks.Attach(description);
             Button turnIn = null;
             Label turnInLabel = null;
             var first = quest.requirements?.FirstOrDefault()?.type;

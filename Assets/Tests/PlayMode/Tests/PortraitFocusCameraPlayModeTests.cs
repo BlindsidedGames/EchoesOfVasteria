@@ -94,12 +94,18 @@ namespace Tests.PlayMode
                     {
                         target.transform.position = new Vector3(boundaryX, 9, 0);
                         virtualCamera.PreviousStateIsValid = false;
-                        for (var frame = 0; frame < 4; frame++) { yield return null; brain.ManualUpdate(); }
+                        for (var frame = 0; frame < 4; frame++)
+                        {
+                            yield return null; brain.ManualUpdate();
+                            Assert.That(camera.WorldToViewportPoint(target.transform.position).x,
+                                Is.InRange(-.001f, 1.001f), "A fresh map camera must show the player from its first frame, including near the left edge.");
+                        }
                         Assert.That(camera.ViewportToWorldPoint(new Vector3(0, .5f, 10)).x,
                             Is.GreaterThanOrEqualTo(-.001f), "The rendered view must not expose tiles left of the map.");
-                        RunActivityArea.TryGetBounds(camera, out var mapMinimum, out _);
-                        Assert.That(mapMinimum.x, Is.GreaterThanOrEqualTo(-.001f),
-                            "The full-width activity area must also respect the generated map boundary.");
+                        RunActivityArea.TryGetBounds(camera, out var activityMinimum, out var activityMaximum);
+                        Assert.That(activityMaximum.x - activityMinimum.x,
+                            Is.EqualTo(18f * RunActivityArea.Aspect(camera.aspect)).Within(.001f),
+                            "Camera framing must retain the full-width Echo working range.");
                     }
                     target.transform.position = new Vector3(60, 9, 0);
                     virtualCamera.PreviousStateIsValid = false;

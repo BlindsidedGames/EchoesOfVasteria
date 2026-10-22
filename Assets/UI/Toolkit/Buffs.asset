@@ -30,13 +30,13 @@ MonoBehaviour:
     key: buff-instructions
     bold: 0
     smallCaps: 0
-    fallback: Autocast can be toggled by clicking the buttons for each buff slot you have unlocked while not assigning. Buffs cannot be assigned during a run.
+    fallback: "Select an equipped slot to turn autocast on or off when you\u2019re not assigning a buff. You can\u2019t change assignments during a run."
     localized:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName:
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: 
+        m_Key:
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []

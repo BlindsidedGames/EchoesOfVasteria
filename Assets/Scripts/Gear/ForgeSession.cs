@@ -132,7 +132,7 @@ namespace TimelessEchoes.Gear
         public void Craft()
         {
             if (isAutoCrafting) { StopAutoCrafting(); return; }
-            if (!CanCraft()) { if (Oracle.oracle?.saveData?.Forge != null) Oracle.oracle.saveData.Forge.TotalFailedCraftAttempts++; Notify(); return; }
+            if (!CanCraft()) { Notify(); return; }
             if (lastCrafted != null) { SalvageService.Instance?.Salvage(lastCrafted, isAuto: false); lastCrafted = null; }
             lastCrafted = crafting.Craft(selectedCore, selectedSlot, null, catalog.Find(selectedCore).coreResource);
             if (lastCrafted == null) { Notify(); return; }
@@ -144,8 +144,7 @@ namespace TimelessEchoes.Gear
             if (equipment.GetEquipped(lastCrafted.slot) == null)
             {
                 if (!equipment.Equip(lastCrafted)) { resultVisible = true; Notify(); return; }
-                var forge = Oracle.oracle?.saveData?.Forge;
-                if (forge != null) { forge.TotalEquippedFromCraft++; if (!forge.EquipsBySlot.ContainsKey(selectedSlot)) forge.EquipsBySlot[selectedSlot] = 0; forge.EquipsBySlot[selectedSlot]++; }
+
                 lastCrafted = null; resultVisible = false;
             }
             else resultVisible = true;
@@ -163,7 +162,6 @@ namespace TimelessEchoes.Gear
                 Oracle.oracle.saveData.General.ForgeIntroductionSeen = true;
                 TimelessEchoes.Quests.QuestManager.Instance?.TryTurnInQuest(ForgeFirstLesson.QuestId);
             }
-            if (Oracle.oracle?.saveData?.Forge != null) Oracle.oracle.saveData.Forge.TotalEquippedFromCraft++;
             lastCrafted = null; resultVisible = false; Notify(); Save("equip");
         }
         public static double ClampAmount(double value) => double.IsNaN(value) || double.IsInfinity(value) ? 1 : Math.Max(1, Math.Floor(value));
@@ -186,22 +184,16 @@ namespace TimelessEchoes.Gear
             if (isAutoCrafting) { StopAutoCrafting(); return; }
             if (!CanCraft()) return;
             isAutoCrafting = true;
-            var forge = Oracle.oracle?.saveData?.Forge; if (forge != null) { forge.TotalAutocraftSessions++; forge.TotalCraftUntilUpgradeSessions++; }
             autoCraftCoroutine = StartCoroutine(CraftUntilUpgradeCoroutine()); Notify();
         }
         public void StopAutoCrafting()
         {
             if (!isAutoCrafting) return;
-            isAutoCrafting = false; RecordStop("Cancelled");
+            isAutoCrafting = false;
             if (autoCraftCoroutine != null) StopCoroutine(autoCraftCoroutine);
             autoCraftCoroutine = null; AutomationStopped?.Invoke(); Notify();
         }
-        private void RecordStop(string reason)
-        {
-            var forge = Oracle.oracle?.saveData?.Forge; if (forge == null) return;
-            if (!forge.AutocraftStopReasons.ContainsKey(reason)) forge.AutocraftStopReasons[reason] = 0;
-            forge.AutocraftStopReasons[reason]++;
-        }
+
         private void Notify() => Changed?.Invoke();
         private static void Save(string operation) { try { Blindsided.EventHandler.SaveData(); } catch (Exception e) { Debug.LogError($"SaveData after {operation} failed: {e}"); } }
         private void OnDestroy()
@@ -324,14 +316,7 @@ namespace TimelessEchoes.Gear
 
                     if (!CanCraft())
                     {
-                        // Out of resources stop reason
-                        var o = Blindsided.Oracle.oracle;
-                        if (o != null && o.saveData != null && o.saveData.Forge != null)
-                        {
-                            var forge = o.saveData.Forge;
-                            if (!forge.AutocraftStopReasons.ContainsKey("OutOfResources")) forge.AutocraftStopReasons["OutOfResources"] = 0;
-                            forge.AutocraftStopReasons["OutOfResources"]++;
-                        }
+
                         shouldBreak = true;
                         break;
                     }
@@ -352,13 +337,6 @@ namespace TimelessEchoes.Gear
                     }
 
                     lastCrafted = craftedItem;
-
-                    // Count autocraft craft
-                    {
-                        var o2 = Blindsided.Oracle.oracle;
-                        if (o2 != null && o2.saveData != null && o2.saveData.Forge != null)
-                            o2.saveData.Forge.AutocraftCrafts++;
-                    }
 
                     var eq = equipment?.GetEquipped(lastCrafted.slot);
 
@@ -386,7 +364,7 @@ namespace TimelessEchoes.Gear
                     {
                         lastStatsUpdate = now;
                         Notify();
-                        
+
                     }
 
                     // Resource display: 1 Hz staggered or immediate on stop
@@ -416,22 +394,7 @@ namespace TimelessEchoes.Gear
 
                         if (passesLock)
                         {
-                            // Stop reason: Upgraded
-                            var o = Blindsided.Oracle.oracle;
-                            if (o != null && o.saveData != null && o.saveData.Forge != null)
-                            {
-                                var forge = o.saveData.Forge;
-                                if (!forge.AutocraftStopReasons.ContainsKey("Upgraded")) forge.AutocraftStopReasons["Upgraded"] = 0;
-                                forge.AutocraftStopReasons["Upgraded"]++;
-                                // Track best rarity reached by slot
-                                var slot = lastCrafted != null ? lastCrafted.slot : null;
-                                if (!string.IsNullOrWhiteSpace(slot) && lastCrafted != null && lastCrafted.rarity != null)
-                                {
-                                    var tier = lastCrafted.rarity.tierIndex;
-                                    if (!forge.AutocraftBestRarityTierBySlot.ContainsKey(slot) || forge.AutocraftBestRarityTierBySlot[slot] < tier)
-                                        forge.AutocraftBestRarityTierBySlot[slot] = tier;
-                                }
-                            }
+
                             shouldBreak = true;
                             break; // leave lastCrafted for player to review/replace/salvage
                         }
@@ -439,13 +402,7 @@ namespace TimelessEchoes.Gear
 
                     if (isVastium)
                     {
-                        var o3 = Blindsided.Oracle.oracle;
-                        if (o3 != null && o3.saveData != null && o3.saveData.Forge != null)
-                        {
-                            var forge = o3.saveData.Forge;
-                            if (!forge.AutocraftStopReasons.ContainsKey("Vastium")) forge.AutocraftStopReasons["Vastium"] = 0;
-                            forge.AutocraftStopReasons["Vastium"]++;
-                        }
+
                         shouldBreak = true;
                         break;
                     }

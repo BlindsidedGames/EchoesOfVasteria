@@ -19,6 +19,7 @@ namespace TimelessEchoes.UI.Toolkit
         private Rect lastSafeArea;
         private Vector2Int lastSize;
         private float lastRatio = -1;
+        private float nextSharedEffectsRefresh;
         private string selectedSection;
         private bool referenceSelected;
         private Vector2 scrollOffset;
@@ -91,6 +92,11 @@ namespace TimelessEchoes.UI.Toolkit
         private void Update()
         {
             if (!IsOpen) return;
+            if (Time.unscaledTime >= nextSharedEffectsRefresh)
+            {
+                nextSharedEffectsRefresh = Time.unscaledTime + .5f;
+                view.RefreshSharedEffects();
+            }
             ToolkitResponsiveLayout.ApplyFocusPresentation(view.Root);
             var ratio = UnityEngine.Device.Application.isMobilePlatform ? 1f : SafeAreaRatio;
             if (lastSize.x != Screen.width || lastSize.y != Screen.height ||
