@@ -20,7 +20,7 @@ namespace TimelessEchoes.Gear
         public List<GearAffix> affixes = new();
 
         public string GetName() => TimelessEchoes.Quests.QuestEquipmentReward.GetDisplayName(this)
-            ?? (rarity ? rarity.GetName() + " " : "") + slot;
+            ?? (rarity ? TimelessEchoes.UI.Toolkit.ToolkitLocalization.Text("inventory.item-name", "{0} {1}", rarity.GetName(), TimelessEchoes.UI.Toolkit.ToolkitLocalization.Text("forge.slot." + slot, slot)) : TimelessEchoes.UI.Toolkit.ToolkitLocalization.Text("forge.slot." + slot, slot));
 
         public float GetStatValue(StatDefSO stat)
         {

@@ -69,8 +69,8 @@ namespace TimelessEchoes.UI.Toolkit
             BuildHeader(); BuildWork(); BuildConversions(); BuildFirstLesson();
             var content = mainScroll.contentContainer;
             portraitPages = new ToolkitPortraitPages(content, null, new[] { root.Q(className: "eov-forge-work") }, mainScroll,
-                new ToolkitPortraitPages.Page("Craft", root.Q(className: "eov-forge-selections"), root.Q(className: "eov-forge-actions"), root.Q(className: "forge-comparison-section")),
-                new ToolkitPortraitPages.Page("Materials", root.Q(className: "eov-forge-conversions"), rarityOddsSection));
+                new ToolkitPortraitPages.Page("forge.craft", "Craft", root.Q(className: "eov-forge-selections"), root.Q(className: "eov-forge-actions"), root.Q(className: "forge-comparison-section")),
+                new ToolkitPortraitPages.Page("forge.materials", "Materials", root.Q(className: "eov-forge-conversions"), rarityOddsSection));
             ToolkitLocalization.Changed += LocalizationChanged;
             resources.OnInventoryChanged += MarkDirty; equipment.OnEquipmentChanged += MarkDirty; crafting.OnIvanXpChanged += XpChanged; session.Changed += MarkDirty;
             nextRefresh = 0; comparisonSignature = null; Refresh(); Layout();
@@ -173,6 +173,7 @@ namespace TimelessEchoes.UI.Toolkit
             var width = Mathf.Min(744, area.width - 24);
             layout.Apply(root, new Rect(area.center.x-width/2, area.y+ToolkitResponsiveLayout.WindowTop, width, Mathf.Max(0, area.height-ToolkitResponsiveLayout.WindowTop-ToolkitResponsiveLayout.WindowBottom)));
             root.EnableInClassList("forge-narrow", width < 620);
+            root.EnableInClassList("forge-compact-landscape", width < 620 && !ToolkitResponsiveLayout.IsPortrait);
             RefreshPortraitForge();
             LayoutConversions();
         }

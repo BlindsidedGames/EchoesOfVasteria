@@ -11,6 +11,7 @@ using TimelessEchoes.UI.Toolkit;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UIElements;
 
 namespace Tests.PlayMode
@@ -23,6 +24,9 @@ namespace Tests.PlayMode
         public IEnumerator CauldronQuantityFloorsInputAndFormatsPreviewWithoutChangingUnitValue()
         {
             var previousCulture = CultureInfo.CurrentCulture;
+            yield return LocalizationSettings.InitializationOperation;
+            var previousLocale = LocalizationSettings.SelectedLocale;
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.GetLocale("en");
             var food = Resources.LoadAll<Resource>("").Single(r => r.name == "Bloopicus Maximus");
             oracle.saveData.Resources[food.name] = new GameData.ResourceEntry { Amount = 973.607686865636, Earned = true, Tier = 1 };
             var inventoryObject = new GameObject("Isolated cauldron food inventory");
@@ -53,11 +57,13 @@ namespace Tests.PlayMode
                 input.value = "12.9";
                 Assert.AreEqual("12", input.value);
                 Assert.AreEqual("+0.48", Regex.Replace(preview.text, "<[^>]*>", ""));
-                CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("fr-FR");
-                input.value = "13.9";
-                Assert.AreEqual("13", input.value, "Editable whole quantities retain the established invariant input format.");
+                LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.GetLocale("fr");
+                yield return null; yield return null;
+                input.value = "13,9";
+                Assert.AreEqual("13", input.value, "Editable whole quantities accept the selected language decimal separator.");
                 Assert.AreEqual("+0,52", Regex.Replace(preview.text, "<[^>]*>", ""), "Preview follows the game's locale-sensitive number formatter.");
-                CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+                LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.GetLocale("en");
+                yield return null; yield return null;
                 foreach (var invalid in new[] { "0", "0.9", "-1", "bad", "NaN", "Infinity" })
                 {
                     input.value = invalid;
@@ -68,7 +74,7 @@ namespace Tests.PlayMode
                 yield return null;
                 max.Focus(); max.SendEvent(NavigationSubmitEvent.GetPooled());
                 Assert.AreEqual("5000000973", input.value);
-                Assert.AreEqual("+200 M", Regex.Replace(preview.text, "<[^>]*>", ""));
+                Assert.AreEqual("+200\u00a0M", Regex.Replace(preview.text, "<[^>]*>", ""));
                 input.value = "973.9";
                 var before = inventory.GetAmount(food);
                 var stewBefore = oracle.saveData.CauldronStew;
@@ -94,6 +100,7 @@ namespace Tests.PlayMode
             finally
             {
                 CultureInfo.CurrentCulture = previousCulture;
+                LocalizationSettings.SelectedLocale = previousLocale;
                 if (screenObject) Object.DestroyImmediate(screenObject);
                 Object.DestroyImmediate(cauldronObject); Object.DestroyImmediate(inventoryObject);
             }

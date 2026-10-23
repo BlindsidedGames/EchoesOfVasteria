@@ -111,6 +111,36 @@ namespace TimelessEchoes.Tests.Localization
         }
 
         [UnityTest]
+        public IEnumerator BaseStatDescriptionsUseLocalizedGearStatNames()
+        {
+            tables.Add(english, "gear-stat.5.name", "Health");
+            tables.Add(russian, "gear-stat.5.name", "Здоровье");
+            var definition = ScriptableObject.CreateInstance<TimelessEchoes.Gear.StatDefSO>();
+            definition.id = "5";
+            definition.displayName = "Health";
+            var stat = ScriptableObject.CreateInstance<TimelessEchoes.Upgrades.BaseStat>();
+            stat.name = "Health";
+            typeof(TimelessEchoes.Upgrades.BaseStat).GetField("associatedStat",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                .SetValue(stat, definition);
+            try
+            {
+                ToolkitLocalization.Name(stat, "stat");
+                for (var i = 0; i < 5; i++) yield return null;
+                Assert.That(ToolkitLocalization.Name(stat, "stat"), Is.EqualTo("Health"));
+                LocalizationSettings.SelectedLocale = russian;
+                ToolkitLocalization.Name(stat, "stat");
+                for (var i = 0; i < 5; i++) yield return null;
+                Assert.That(ToolkitLocalization.Name(stat, "stat"), Is.EqualTo("Здоровье"));
+            }
+            finally
+            {
+                Object.DestroyImmediate(stat);
+                Object.DestroyImmediate(definition);
+            }
+        }
+
+        [UnityTest]
         public IEnumerator DynamicArgumentsUseTranslationAndBrokenTranslationKeepsEnglishUsable()
         {
             tables.Add(english, "test.quantity", "Collected {0} of {1}");
@@ -136,6 +166,36 @@ namespace TimelessEchoes.Tests.Localization
                 Assert.That(resource.name, Is.EqualTo("StableResourceId"));
             }
             finally { Object.DestroyImmediate(resource); }
+        }
+
+        [UnityTest]
+        public IEnumerator ChangingLanguageFormatsNumbersWithoutChangingProcessCulture()
+        {
+            var previousCulture = System.Globalization.CultureInfo.CurrentCulture;
+            var previousOracle = Blindsided.Oracle.oracle;
+            var owner = new GameObject("Number presentation fixture"); owner.SetActive(false);
+            var oracle = owner.AddComponent<Blindsided.Oracle>();
+            oracle.saveData = new Blindsided.SaveData.GameData();
+            Blindsided.Oracle.oracle = oracle;
+            try
+            {
+                System.Globalization.CultureInfo.CurrentCulture = System.Globalization.CultureInfo.GetCultureInfo("en-US");
+                Blindsided.SaveData.StaticReferences.Notation = Blindsided.SaveData.GameData.NumberTypes.Standard;
+                tables.Add(russian, "test.numeric", "{0:N1}");
+                LocalizationSettings.SelectedLocale = russian;
+                ToolkitLocalization.Text("test.numeric", "{0:N1}", 12345.5);
+                for (var frame = 0; frame < 5; frame++) yield return null;
+                Assert.That(ToolkitLocalization.Text("test.numeric", "{0:N1}", 12345.5), Is.EqualTo("12\u00a0345,5"));
+                Assert.That(Blindsided.Utilities.CalcUtils.FormatNumber(10000), Does.Contain("10,0"));
+                Assert.That(Blindsided.Utilities.CalcUtils.FormatNumber(10000), Does.Contain("тыс."));
+                Assert.That(System.Globalization.CultureInfo.CurrentCulture.Name, Is.EqualTo("en-US"));
+            }
+            finally
+            {
+                System.Globalization.CultureInfo.CurrentCulture = previousCulture;
+                Blindsided.Oracle.oracle = previousOracle;
+                Object.DestroyImmediate(owner);
+            }
         }
 
         public class FixtureWindow : EditorWindow { }

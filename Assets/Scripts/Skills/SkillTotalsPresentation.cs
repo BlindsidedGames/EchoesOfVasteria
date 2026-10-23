@@ -210,10 +210,6 @@ namespace TimelessEchoes.Skills
             if (stat == null)
                 return ToolkitLocalization.Text("skills.unnamed-stat", "Stat");
 
-            var def = stat.AssociatedStat;
-            if (def != null && !string.IsNullOrWhiteSpace(def.displayName))
-                return ToolkitLocalization.Text("stat." + def.name, def.displayName);
-
             return !string.IsNullOrWhiteSpace(stat.name) ? ToolkitLocalization.Name(stat, "stat") : ToolkitLocalization.Text("skills.unnamed-stat", "Stat");
         }
 

@@ -33,8 +33,8 @@ namespace TimelessEchoes.UI.Toolkit
                 // Keep press-and-hold conversion behavior while using native pointer capture.
                 ToolkitControls.RepeatWhileHeld(row.button, () => session.Convert(type));
                 row.amount = new TextField { name = "amount-" + type, keyboardType = TouchScreenKeyboardType.NumberPad }; row.amount.AddToClassList("eov-number-field"); ToolkitLocalization.BindTooltip(row.amount, "forge.conversion-batch-size", "Conversion batch size"); control.Insert(0, row.amount);
-                row.amount.SetValueWithoutNotify(session.Desired(type).ToString("0"));
-                row.amount.RegisterValueChangedCallback(e => { session.SetAmount(type, double.TryParse(e.newValue, out var value) ? value : 1); row.amount.SetValueWithoutNotify(session.Desired(type).ToString("0")); }); conversions.Add(type, row);
+                row.amount.SetValueWithoutNotify(LocaleNumbers.Input(session.Desired(type)));
+                row.amount.RegisterValueChangedCallback(e => { session.SetAmount(type, LocaleNumbers.TryInput(e.newValue, out var value) ? value : 1); row.amount.SetValueWithoutNotify(LocaleNumbers.Input(session.Desired(type))); }); conversions.Add(type, row);
             }
         }
         private static string ConversionTitle(ConversionType type) => type switch
@@ -48,7 +48,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void Refresh()
         {
             dirty = false; nextRefresh = Time.unscaledTime + .1f;
-            var (level, current, needed) = crafting.GetIvanXpState(); ivan.text = ToolkitLocalization.Text("forge.ivan-level", "Ivan | Level {0}", Math.Max(0, level)); xp.text = $"{current:N0}/{needed:N0}"; xpFill.style.width = Length.Percent(needed > 0 ? Mathf.Clamp01(current / needed) * 100 : 0);
+            var (level, current, needed) = crafting.GetIvanXpState(); ivan.text = ToolkitLocalization.Text("forge.ivan-level", "Ivan | Level {0}", Math.Max(0, level)); xp.text = LocaleNumbers.Format($"{current:N0}/{needed:N0}"); xpFill.style.width = Length.Percent(needed > 0 ? Mathf.Clamp01(current / needed) * 100 : 0);
             foreach (var entry in gearSlots)
             {
                 var item = equipment.GetEquipped(entry.Key); entry.Value.icon.sprite = definition.GearSprite(item, entry.Key); entry.Value.selected.style.display = session.Slot == entry.Key ? DisplayStyle.Flex : DisplayStyle.None; entry.Value.tier.text = item?.rarity ? ToolkitLocalization.Text("inventory.tier", "Tier {0}", Mathf.Clamp(item.rarity.tierIndex + 1, 1, 8)) : "—";
@@ -67,7 +67,7 @@ namespace TimelessEchoes.UI.Toolkit
             }
             lockedCore.style.display = hasLockedCore ? DisplayStyle.Flex : DisplayStyle.None;
             var core = session.Core; var bindingSelected = definition.catalog.Find(core); var ingot = bindingSelected?.ingotResource ? bindingSelected.ingotResource : core?.requiredIngot;
-            costCore.sprite = ResourceSprite(bindingSelected?.coreResource, 1); costIngot.sprite = ResourceSprite(ingot, core ? core.ingotCost : 0); ingotCost.text = core ? core.ingotCost.ToString("0") : "";
+            costCore.sprite = ResourceSprite(bindingSelected?.coreResource, 1); costIngot.sprite = ResourceSprite(ingot, core ? core.ingotCost : 0); ingotCost.text = core ? core.ingotCost.ToString("0", LocaleNumbers.Culture) : "";
             coreCost.EnableInClassList("forge-loss", !(bindingSelected?.coreResource) || resources.GetAmount(bindingSelected.coreResource) < 1);
             ingotCost.EnableInClassList("forge-loss", !ingot || resources.GetAmount(ingot) < (core ? core.ingotCost : 0));
             craftArrow.sprite = session.CanCraft() ? definition.arrowValid : definition.arrowInvalid;
@@ -119,7 +119,7 @@ namespace TimelessEchoes.UI.Toolkit
                 case ConversionType.Core: var pair = definition.catalog.ConversionResources(core); first = pair.currentCore; second = result = pair.nextCore; visible = !pair.finalTier; costA = 5; costB = 1; output = 2; break;
             }
             row.root.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None; if (!visible) return;
-            row.amount.SetValueWithoutNotify(session.Desired(type).ToString("0"));
+            row.amount.SetValueWithoutNotify(LocaleNumbers.Input(session.Desired(type)));
             var amount = session.ConversionAmount(type); row.first.sprite = ResourceSprite(first, costA); row.second.sprite = ResourceSprite(second, costB); row.result.sprite = ResourceSprite(result);
             var shownAmount = Math.Max(1, amount);
             row.firstCount.text = CalcUtils.FormatNumber(costA * shownAmount, true); row.secondCount.text = CalcUtils.FormatNumber(costB * shownAmount, true); row.resultCount.text = CalcUtils.FormatNumber(output * shownAmount, true);

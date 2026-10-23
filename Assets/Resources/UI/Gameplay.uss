@@ -476,7 +476,7 @@
 .gameplay .gameplay-slider #unity-tracker {height:3px;background-color:var(--line);border-width:0;}
 .gameplay .gameplay-slider #unity-dragger {width:6px;background-color:var(--accent);border-width:.5px;border-color:var(--on-accent);}
 .gameplay .gameplay-slider #value-fill {background-color:var(--accent);}
-.gameplay.settings-page #vsync-label {width:26px;white-space:nowrap;}
+.gameplay.settings-page #vsync-label {min-width:26px;flex-shrink:0;white-space:nowrap;}
 .gameplay .eov-skill-info .eov-skill-text {font-size:8px;}
 .gameplay .gameplay-scroll .unity-scroller--vertical {width:3px;margin-left:var(--space-control);}
 .gameplay .gameplay-scroll .unity-scroller--vertical .unity-base-slider {width:3px;}
@@ -844,8 +844,6 @@
 .gameplay.eov-forge .eov-forge-conversion .eov-forge-button {width:72px;margin-right:4px;}
 .gameplay.eov-forge .eov-forge-conversion .eov-number-field {flex-grow:1;width:65px;height:22px;min-width:0;}
 .gameplay.eov-forge.forge-narrow .eov-forge-sidebar {width:185px;}
-.gameplay.eov-forge.forge-narrow .eov-forge-columns {flex-direction:column;}
-.gameplay.eov-forge.forge-narrow .eov-forge-selections {width:100%;margin-right:0;margin-bottom:8px;}
 /* Keep selection, crafting and comparison together above conversions. */
 .gameplay.eov-forge .eov-forge-selections {width:126px;margin-right:8px;}
 .gameplay.eov-forge .eov-forge-slot {width:27px;height:28px;min-height:28px;}
@@ -862,7 +860,6 @@
 .gameplay.eov-forge .forge-comparison-section .forge-metric-header .forge-metric-name {display:flex;font-size:6px;}
 .gameplay.eov-forge .forge-comparison-section .forge-metric-value {flex-grow:0;width:70px;}
 .gameplay.eov-forge .eov-forge-conversion {min-height:42px;}
-.gameplay.eov-forge.forge-narrow .forge-comparison-section {width:100%;margin-top:8px;}
 .gameplay.eov-forge .eov-forge-conversion {flex-direction:column;align-items:stretch;min-height:0;min-width:0;flex-basis:0;flex-grow:1;padding:6px;border-width:.5px;border-color:var(--line);background-color:var(--control);}
 .gameplay.eov-forge .forge-conversion-title {font-size:8px;margin-bottom:4px;}
 .gameplay.eov-forge .eov-forge-conversion > .eov-forge-row {width:auto;height:36px;}
@@ -910,10 +907,10 @@
 .gameplay.eov-forge .forge-odds-legend {flex-grow:1;min-width:0;}
 .gameplay.eov-forge .forge-odds-legend > .eov-text--heading {font-size:8px;margin-bottom:3px;}
 .gameplay.eov-forge .forge-odds-rows {flex-direction:row;flex-wrap:wrap;}
-.gameplay.eov-forge .forge-odds-row {flex-direction:row;align-items:center;height:12px;width:50%;padding-right:6px;}
+.gameplay.eov-forge .forge-odds-row {flex-direction:row;align-items:center;min-height:12px;width:50%;padding-right:6px;}
 .gameplay.eov-forge .forge-odds-row .eov-text {font-size:7px;white-space:nowrap;}
 .gameplay.eov-forge .forge-odds-swatch {width:6px;height:6px;margin-right:4px;flex-shrink:0;}
-.gameplay.eov-forge .forge-odds-name {flex-grow:1;flex-shrink:1;min-width:0;}
+.gameplay.eov-forge .forge-odds-row .forge-odds-name {flex-grow:1;flex-shrink:1;min-width:0;white-space:normal;}
 .gameplay.eov-forge .forge-odds-value {width:36px;flex-shrink:0;-unity-text-align:middle-right;}
 .gameplay.eov-forge .forge-odds-zero {opacity:.35;}
 .gameplay.eov-forge .forge-craft-controls {align-items:center;margin-bottom:4px;}
@@ -1140,7 +1137,7 @@
 .gameplay .character-choice .button { width:20px;height:22px;min-height:22px;padding:0; }
 .gameplay .character-choice-label { flex-grow:1;flex-shrink:1;width:0;white-space:normal;-unity-text-align:middle-center;font-size:8px;margin-left:4px;margin-right:4px; }
 .gameplay .character-colour-grid { flex-direction:row;flex-wrap:wrap;width:124px;flex-shrink:0;align-content:flex-start; }
-.gameplay .character-colour-button { flex-direction:row;align-items:center;width:100px;height:22px;min-height:22px;flex-shrink:0;padding:3px 5px; }
+.gameplay .character-colour-button { flex-direction:row;align-items:center;width:132px;height:22px;min-height:22px;flex-shrink:0;padding:3px 5px; }
 .gameplay .character-colour-button > .character-colour-swatch { flex-grow:0; }
 .gameplay .character-colour-popup { position:absolute;left:0;right:0;top:0;bottom:0; }
 .gameplay .character-colour-menu { position:absolute;align-items:center;background-color:var(--surface);border-width:1px;border-color:var(--line);padding:2px; }
@@ -1168,7 +1165,7 @@
 .gameplay .character-narrow .character-animation-label { font-size:7px; }
 .gameplay .character-narrow .character-option-row { flex-direction:column;align-items:stretch;padding:3px 0; }
 .gameplay .character-narrow .character-option-heading { width:auto;margin:0 0 2px; }
-.gameplay .character-narrow .character-colour-button { width:76px;padding:3px; }
+.gameplay .character-narrow .character-colour-button { width:132px;padding:3px; }
 .gameplay .character-narrow .character-presets { flex-direction:column;align-items:stretch; }
 .gameplay .character-narrow .character-presets > .strong { width:auto;margin-bottom:4px; }
 .gameplay .character-narrow .character-preset { flex-direction:column;min-width:0;margin-right:3px; }
@@ -1208,3 +1205,8 @@
 .gameplay.meeting-guided .meeting-skip {margin-top:4px;font-size:6.5px;padding:3px 1px;}
 
 .gameplay.meeting-guided .eov-meeting-dialogue-frame {left:44px;}
+
+
+/* Keep room for the recipe and readable odds on 4:3 landscape tablets. */
+.gameplay.eov-forge.forge-compact-landscape .forge-comparison-section {width:38%;}
+.gameplay.eov-forge.forge-compact-landscape .forge-odds-row {width:100%;}

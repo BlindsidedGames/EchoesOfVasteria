@@ -175,7 +175,7 @@ namespace TimelessEchoes.UI
             if (distanceText != null)
             {
                 float dist = GetPreviewDistance();
-                distanceText.text = $"Distance | {dist:N0}";
+                distanceText.text = LocaleNumbers.Format($"Distance | {dist:N0}");
             }
         }
 
@@ -301,7 +301,7 @@ namespace TimelessEchoes.UI
                     float defVal = stats.GetDefenseForLevel(level);
                     float frac = TimelessEchoes.Combat.ApplyDefense(1f, defVal);
                     float reduction = (1f - frac) * 100f;
-                    def = reduction.ToString("0") + "%";
+                    def = reduction.ToString("0", LocaleNumbers.Culture) + LocaleNumbers.PercentSuffix;
                 }
             }
             string atk = reveal >= 4 ? (spawnable ? CalcUtils.FormatNumber(stats.attackSpeed, true, 400f, false) : "-") : "???";
@@ -343,7 +343,7 @@ namespace TimelessEchoes.UI
             {
                 _sb.Clear();
                 _sb.Append("Kills: "); _sb.Append(killsText); _sb.Append('\n');
-                _sb.Append("Bonus Damage: "); _sb.Append((bonus * 100f).ToString("0")); _sb.Append('%');
+                _sb.Append("Bonus Damage: "); _sb.Append((bonus * 100f).ToString("0", LocaleNumbers.Culture)); _sb.Append('%');
                 ui.killsAndNextAndBonusText.SetText(_sb);
             }
         }

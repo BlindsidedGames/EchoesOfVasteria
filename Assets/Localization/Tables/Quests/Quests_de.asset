@@ -23,7 +23,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 689627873280
-    m_Localized: "Du erwachst wie aus einem Traum. Sanfte Worte verklingen in der Ferne, getragen vom Wind der Zeit. \n\"Beginne diese Reise, f\xFChre sie zu Ende, und ich werde dich aus diesem Reich entlassen\" - Orin\n\n<b>Schlie\xDFe zun\xE4chst diesen Auftrag ab, schlie\xDFe dieses Fenster und klicke auf \"Ackerbau beginnen\".</b>"
+    m_Localized: "Du erwachst wie aus einem Traum. Eine Stimme verklingt in der Ferne.\n\n\u201EBringe diese Reise zu Ende, dann werde ich dich aus dieser Welt entlassen.\u201C \u2014 Orin\n\nHole diese Belohnung ab und schlie\xDFe dann das Auftragsfenster, um fortzufahren."
     m_Metadata:
       m_Items: []
   - m_Id: 723614318592
@@ -47,7 +47,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4508550053888
-    m_Localized: "\"Carl der Schnitter sorgt daf\xFCr, dass du dich nicht zu weit von der Stadt entfernst. Wenn du den Stadtbewohnern hilfst, l\xE4sst er dir allm\xE4hlich mehr Spielraum\" - Orin\n\n<b>Die Reisedistanz ist die maximale Entfernung, die du zur\xFCcklegen kannst. Sie steigt durch Auftr\xE4ge oder um 1%, wenn deine Seele geerntet wird.</b>"
+    m_Localized: "\u201ECarl der Schnitter sorgt daf\xFCr, dass du dich nicht zu weit von der Stadt entfernst. Hilf den Bewohnern, dann l\xE4sst er die Leine lockerer.\u201C \u2014 Orin\n\nDeine Schnitterdistanz ist deine Reisegrenze. Manche Quests erh\xF6hen sie. An der Grenze zur\xFCckgeholt zu werden, gibt 1\_% mehr Distanz in Fluss, Wald und Minen; Ackerland gibt keine Steigerung. Gruselwelt verwendet die Zahl besiegter Gegner statt der Entfernung."
     m_Metadata:
       m_Items: []
   - m_Id: 4510643011584
@@ -79,7 +79,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4904353939456
-    m_Localized: "\"In diesem Reich ist Ivan dein Bruder. Er hilft dir, deine Werte zu verbessern, aber du musst ihm die n\xF6tigen Ressourcen besorgen\" - Orin\n\n<b>Das schaltet ein neues Men\xFC frei: die <link=\"help:forge\"><u><color=#EFB889>Schmiede</color></u></link> unter \"Stadtbewohner\".</b>"
+    m_Localized: "\u201EIn dieser Welt ist Ivan dein Bruder. Bringe ihm Materialien, dann schmiedet er Ausr\xFCstung f\xFCr dich.\u201C \u2014 Orin\n\n\xD6ffne <link=\"help:forge\"><u><color=#EFB889>Dorf \u2192 Schmiede</color></u></link>, nachdem du Ivan getroffen hast."
     m_Metadata:
       m_Items: []
   - m_Id: 4905721282560
@@ -107,7 +107,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5293610516480
-    m_Localized: "\"Wie l\xE4uft's, Kumpel? Komme gerade vom besten Angelausflug meines Lebens zur\xFCck. Was? Du warst noch nie angeln!? Hier, nimm meine Ersatzrute und fang ein paar Flippy Floppy f\xFCr Mildred. Die gibt's so gut wie \xFCberall!\" - Gill"
+    m_Localized: "\u201EWie geht's, Kumpel? Ich hatte gerade den besten Angelausflug meines Lebens. Du hast noch nie geangelt? Hier, nimm meine Ersatzangel. Fang ein paar Flippy Floppy f\xFCr Mildred!\u201C \u2014 Gill"
     m_Metadata:
       m_Items: []
   - m_Id: 5294684258304
@@ -123,7 +123,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5495314595840
-    m_Localized: "\"Hier, nimm meine Ersatzaxt und geh in den Wald. Wir brauchen mindestens 10 Holzst\xE4mme, um mit dem Rahmen anzufangen\" - Barkley"
+    m_Localized: "\u201EHier, nimm meine Ersatzaxt und geh in den Wald. Wir brauchen mindestens 10 St\xE4mme, um mit diesem Ger\xFCst anzufangen.\u201C \u2014 Barkley"
     m_Metadata:
       m_Items: []
   - m_Id: 5496426086400
@@ -219,7 +219,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7245635403776
-    m_Localized: 2,600 Ackerbau-XP
+    m_Localized: 2.600 Ackerbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7520072908800
@@ -231,7 +231,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7522576908288
-    m_Localized: 1,400 Ackerbau-XP
+    m_Localized: 1.400 Ackerbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7639480549376
@@ -243,7 +243,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7640587845632
-    m_Localized: 4,600 Ackerbau-XP
+    m_Localized: 4.600 Ackerbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7872075677696
@@ -255,7 +255,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7874336407552
-    m_Localized: 13,600 Ackerbau-XP
+    m_Localized: 13.600 Ackerbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7954296619008
@@ -267,7 +267,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7955957563392
-    m_Localized: 9,000 Ackerbau-XP
+    m_Localized: 9.000 Ackerbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7955958563392
@@ -305,7 +305,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7955978563392
-    m_Localized: "2,800 Bergbau-XP\nReisedistanz um 25 erh\xF6ht."
+    m_Localized: "2.800 Bergbau-XP\nReisedistanz um 25 erh\xF6ht."
     m_Metadata:
       m_Items: []
   - m_Id: 7955985563392
@@ -313,7 +313,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7955986563392
-    m_Localized: "\"Je \xF6fter du diese Zauber verwendest, desto vertrauter wird dir meine Macht. Dann wirken Echos deiner Vergangenheit sie f\xFCr dich\" - Orin\n\n<b>Echo-Zauberei = automatisches Wirken. Halte die Taste gedr\xFCckt oder klicke im Zauber-Reiter, w\xE4hrend du nichts zuweist, um es umzuschalten.</b>"
+    m_Localized: "Wirke 10-mal Zauber, um automatisches Wirken f\xFCr deinen ersten Zauberplatz und den Zauber Bonuserfahrung freizuschalten."
     m_Metadata:
       m_Items: []
   - m_Id: 7955987563392
@@ -353,7 +353,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956041563392
-    m_Localized: 7,200 Bergbau-XP
+    m_Localized: 7.200 Bergbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7956042563392
@@ -365,7 +365,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956044563392
-    m_Localized: 4,000 Bergbau-XP
+    m_Localized: 4.000 Bergbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7956045563392
@@ -377,7 +377,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956047563392
-    m_Localized: 16,800 Ackerbau-XP
+    m_Localized: 16.800 Ackerbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7956048563392
@@ -389,7 +389,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956050563392
-    m_Localized: 9,200 Bergbau-XP
+    m_Localized: 9.200 Bergbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7956051563392
@@ -401,7 +401,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956053563392
-    m_Localized: 10,400 Ackerbau-XP
+    m_Localized: 10.400 Ackerbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7956054563392
@@ -413,7 +413,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956056563392
-    m_Localized: 8,000 Ackerbau-XP
+    m_Localized: 8.000 Ackerbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7956057563392
@@ -425,19 +425,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956059563392
-    m_Localized: 5,400 Bergbau-XP
+    m_Localized: 5.400 Bergbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7956060563392
-    m_Localized:
+    m_Localized: 
     m_Metadata:
       m_Items: []
   - m_Id: 7956061563392
-    m_Localized:
+    m_Localized: 
     m_Metadata:
       m_Items: []
   - m_Id: 7956062563392
-    m_Localized:
+    m_Localized: 
     m_Metadata:
       m_Items: []
   - m_Id: 7956063563392
@@ -449,7 +449,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956065563392
-    m_Localized: 11,400 Ackerbau-XP
+    m_Localized: 11.400 Ackerbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7956066563392
@@ -461,7 +461,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956068563392
-    m_Localized: 12,400 Ackerbau-XP
+    m_Localized: 12.400 Ackerbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7956069563392
@@ -473,7 +473,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956071563392
-    m_Localized: 14,800 Ackerbau-XP
+    m_Localized: 14.800 Ackerbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7956072563392
@@ -485,7 +485,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956074563392
-    m_Localized: 5,800 Ackerbau-XP
+    m_Localized: 5.800 Ackerbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7956075563392
@@ -497,7 +497,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956077563392
-    m_Localized: 15,800 Ackerbau-XP
+    m_Localized: 15.800 Ackerbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7956078563392
@@ -509,7 +509,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956080563392
-    m_Localized: 7,000 Ackerbau-XP
+    m_Localized: 7.000 Ackerbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7956081563392
@@ -521,7 +521,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956083563392
-    m_Localized: 18,000 Ackerbau-XP
+    m_Localized: 18.000 Ackerbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7956084563392
@@ -533,7 +533,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956086563392
-    m_Localized: 11,200 Bergbau-XP
+    m_Localized: 11.200 Bergbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7956087563392
@@ -545,7 +545,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956089563392
-    m_Localized: 3,600 Ackerbau-XP
+    m_Localized: 3.600 Ackerbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 7955964563392
@@ -755,55 +755,55 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904135
-    m_Localized: "Neuer Zauber!\u2014Bewegungstempo: +20%."
+    m_Localized: "Neuer Zauber!\u2014Bewegungstempo: +20\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904138
-    m_Localized: 'Bewegungstempo: +20%<sprite=194>30%.'
+    m_Localized: "Bewegungstempo: +20\_%<sprite=194>30\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904141
-    m_Localized: 'Bewegungstempo: +30%<sprite=194>40%.'
+    m_Localized: "Bewegungstempo: +30\_%<sprite=194>40\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904144
-    m_Localized: 'Bewegungstempo: +40%<sprite=194>50%.'
+    m_Localized: "Bewegungstempo: +40\_%<sprite=194>50\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904147
-    m_Localized: "Neuer Zauber!\u2014Aufgabentempo: +25%."
+    m_Localized: "Neuer Zauber!\u2014Aufgabentempo: +25\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904150
-    m_Localized: 'Aufgabentempo: +25%<sprite=194>50%.'
+    m_Localized: "Aufgabentempo: +25\_%<sprite=194>50\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904153
-    m_Localized: 'Aufgabentempo: +50%<sprite=194>75%.'
+    m_Localized: "Aufgabentempo: +50\_%<sprite=194>75\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904156
-    m_Localized: 'Aufgabentempo: +75%<sprite=194>100%.'
+    m_Localized: "Aufgabentempo: +75\_%<sprite=194>100\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904159
-    m_Localized: 'Aufgabentempo: +100%<sprite=194>150%.'
+    m_Localized: "Aufgabentempo: +100\_%<sprite=194>150\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904162
-    m_Localized: 'Aufgabentempo: +150%<sprite=194>200%.'
+    m_Localized: "Aufgabentempo: +150\_%<sprite=194>200\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904165
-    m_Localized: "Neuer Zauber!\u2014Kampfverst\xE4rker: Schaden +25%."
+    m_Localized: "Neuer Zauber!\u2014Kampfverst\xE4rker: Schaden +25\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904168
-    m_Localized: "Kampfverst\xE4rker: Schaden +25%<sprite=194>50%; +25% Verteidigung."
+    m_Localized: "Kampfverst\xE4rker: Schaden +25\_%<sprite=194>50\_%; +25\_% Verteidigung."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904171
-    m_Localized: "Kampfverst\xE4rker: Schaden +50%, Verteidigung +25%<sprite=194>75%, 50%"
+    m_Localized: "Kampfverst\xE4rker: Schaden +50\_%, Verteidigung +25\_%<sprite=194>75\_%, 50\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904174
@@ -827,55 +827,55 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904189
-    m_Localized: "Neuer Zauber!\u2014Regeneration: +40%."
+    m_Localized: "Neuer Zauber!\u2014Regeneration: +40\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904192
-    m_Localized: 'Regeneration: +40%<sprite=194>80%.'
+    m_Localized: "Regeneration: +40\_%<sprite=194>80\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904195
-    m_Localized: 'Regeneration: +80%<sprite=194>120%.'
+    m_Localized: "Regeneration: +80\_%<sprite=194>120\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904198
-    m_Localized: 'Regeneration: +120%<sprite=194>150%.'
+    m_Localized: "Regeneration: +120\_%<sprite=194>150\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904201
-    m_Localized: "Neuer Zauber!\u2014Kritischer Wurf: kritische Trefferchance +10%."
+    m_Localized: "Neuer Zauber!\u2014Kritischer Wurf: kritische Trefferchance +10\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904204
-    m_Localized: 'Kritischer Wurf: 10%<sprite=194>15%.'
+    m_Localized: "Kritischer Wurf: 10\_%<sprite=194>15\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904207
-    m_Localized: 'Kritischer Wurf: 15%<sprite=194>20%.'
+    m_Localized: "Kritischer Wurf: 15\_%<sprite=194>20\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904210
-    m_Localized: 'Kritischer Wurf: 20%<sprite=194>25%.'
+    m_Localized: "Kritischer Wurf: 20\_%<sprite=194>25\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904213
-    m_Localized: "Neuer Zauber!\u2014Ressourcenmultiplikator: +25% Ressourcen beim Abschlie\xDFen von Aufgaben."
+    m_Localized: "Neuer Zauber!\u2014Ressourcenmultiplikator: +25\_% Ressourcen beim Abschlie\xDFen von Aufgaben."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904216
-    m_Localized: 'Ressourcenmultiplikator: 25%<sprite=194>50%.'
+    m_Localized: "Ressourcenmultiplikator: 25\_%<sprite=194>50\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904219
-    m_Localized: 'Ressourcenmultiplikator: 50%<sprite=194>70%.'
+    m_Localized: "Ressourcenmultiplikator: 50\_%<sprite=194>70\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904222
-    m_Localized: 'Ressourcenmultiplikator: 70%<sprite=194>100%.'
+    m_Localized: "Ressourcenmultiplikator: 70\_%<sprite=194>100\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834126098434
-    m_Localized: 'Ressourcenmultiplikator: 100%<sprite=194>150%.'
+    m_Localized: "Ressourcenmultiplikator: 100\_%<sprite=194>150\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904132
@@ -923,7 +923,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904136
-    m_Localized: Wind sammeln
+    m_Localized: Aufkommende Winde
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904137
@@ -1023,10 +1023,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904173
-    m_Localized: '"So spricht man''s aus, richtig?" - Orin
-
-
-      <b>Ein weiteres Angebot der Stadtbewohner. Hier gewinnst du viel Macht.</b>'
+    m_Localized: "\u201ESo sagt man das doch, oder?\u201C \u2014 Orin\n\n\xD6ffne <link=\"help:cauldron\"><u><color=#EFB889>Dorf \u2192 Kessel</color></u></link>, um Nahrung zu Eintopf zu verarbeiten und Karten zu erhalten."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904175
@@ -1070,7 +1067,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904190
-    m_Localized: Nachwuchsprotokoll
+    m_Localized: Regenerationsprotokoll
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904191
@@ -1178,15 +1175,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 34882991914631168
-    m_Localized: "F\xFCr die Marmelade! - Neu erz\xE4hlt"
+    m_Localized: "F\xFCr die Marmelade!"
     m_Metadata:
       m_Items: []
   - m_Id: 34882991939796992
-    m_Localized: "\"Njeh heh heh, Abenteurer. Ich bin die Hexe, die dich lehrt, den Boden zu pflegen. Was, du dachtest, ich braue Tr\xE4nke f\xFCr dich? H\xF6r auf mit deinen Klischees. Und bring f\xFCnfzig ausgewachsene Radieschen zur\xFCck. Als Beweis, ganz sicher nicht f\xFCr meine Radieschenmarmelade\" \u2014 Ganz bestimmt nicht unsere Eva"
+    m_Localized: "Kannst du f\xFCr meine Marmelade 50 Radieschen im Ackerland sammeln?"
     m_Metadata:
       m_Items: []
   - m_Id: 34882991939796993
-    m_Localized: 1,000 Ackerbau-XP
+    m_Localized: 1.000 Ackerbau-XP
     m_Metadata:
       m_Items: []
   - m_Id: 38005472116490240
@@ -1198,7 +1195,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 38005472141656065
-    m_Localized: 15,000 Angel-XP
+    m_Localized: 15.000 Angel-XP
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000000
@@ -1206,11 +1203,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000001
-    m_Localized: "Flora und Tillman erkl\xE4ren die Felder. Erledige auf Abenteuern passende Anbauaufgaben, um Saatgutpakete zu finden. Jede bezahlte Ernte steigert ihre gemeinsame Erfahrung. Einmaliges Gie\xDFen halbiert die Wachstumszeit. Die Felder wachsen nur, w\xE4hrend das Spiel l\xE4uft."
+    m_Localized: "Baue dein erstes Beet und s\xE4e das Radieschensamenp\xE4ckchen von Flora und Tillman aus. Gie\xDFe es, um die Wachstumszeit zu halbieren. Ernte Pflanzen, um deine Felder-Stufe zu erh\xF6hen und weitere Beete freizuschalten. Weitere Samenp\xE4ckchen findest du durch Ernteaufgaben auf Abenteuern."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000002
-    m_Localized: Aktiviert passende Saatgutfunde. Kein kostenloses Saatgut, keine Erfahrung und kein Beetbau.
+    m_Localized: "1 Radieschensamenp\xE4ckchen. Schaltet Samenfunde auf Abenteuern frei."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000010
@@ -1218,11 +1215,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000011
-    m_Localized: "Flora und Tillman: Erreiche Zwillingsstufe 1, dann bring die Materialien, damit Barkley diesen Ausbau errichtet. Der vorherige Bau und zug\xE4ngliche Sammelquellen sind erforderlich. Eine Abgabe bezahlt den gesamten Bau."
+    m_Localized: Erreiche Felder-Stufe 1 und sammle die Materialien zum Bau dieser Beete. Kaufe sie hier oder unter Felder.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000012
-    m_Localized: "Feldkapazit\xE4t: 1 Beete und 0 Baumparzellen. Keine weitere Zahlung und keine Bauwartezeit."
+    m_Localized: "Felder-Kapazit\xE4t: 1 Anbaubeet."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000020
@@ -1230,11 +1227,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000021
-    m_Localized: "Flora und Tillman: Erreiche Zwillingsstufe 5, dann bring die Materialien, damit Barkley diesen Ausbau errichtet. Der vorherige Bau und zug\xE4ngliche Sammelquellen sind erforderlich. Eine Abgabe bezahlt den gesamten Bau."
+    m_Localized: Erreiche Felder-Stufe 10 und sammle die Materialien zum Bau dieser Beete. Kaufe sie hier oder unter Felder.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000022
-    m_Localized: "Feldkapazit\xE4t: 2 Beete und 0 Baumparzellen. Keine weitere Zahlung und keine Bauwartezeit."
+    m_Localized: "Felder-Kapazit\xE4t: 2 Anbaubeete."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000030
@@ -1242,11 +1239,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000031
-    m_Localized: "Flora und Tillman: Erreiche Zwillingsstufe 35, dann bring die Materialien, damit Barkley diesen Ausbau errichtet. Der vorherige Bau und zug\xE4ngliche Sammelquellen sind erforderlich. Eine Abgabe bezahlt den gesamten Bau."
+    m_Localized: Erreiche Felder-Stufe 35 und sammle die Materialien zum Bau dieser Beete. Kaufe sie hier oder unter Felder.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000032
-    m_Localized: "Feldkapazit\xE4t: 3 Beete und 0 Baumparzellen. Keine weitere Zahlung und keine Bauwartezeit."
+    m_Localized: "Felder-Kapazit\xE4t: 3 Anbaubeete."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000040
@@ -1254,11 +1251,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000041
-    m_Localized: "Flora und Tillman: Erreiche Zwillingsstufe 65, dann bring die Materialien, damit Barkley diesen Ausbau errichtet. Der vorherige Bau und zug\xE4ngliche Sammelquellen sind erforderlich. Eine Abgabe bezahlt den gesamten Bau."
+    m_Localized: Erreiche Felder-Stufe 65 und sammle die Materialien zum Bau dieser Beete. Kaufe sie hier oder unter Felder.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000042
-    m_Localized: "Feldkapazit\xE4t: 4 Beete und 0 Baumparzellen. Keine weitere Zahlung und keine Bauwartezeit."
+    m_Localized: "Felder-Kapazit\xE4t: 4 Anbaubeete."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000050
@@ -1266,11 +1263,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000051
-    m_Localized: "Flora und Tillman: Erreiche Zwillingsstufe 95, dann bring die Materialien, damit Barkley diesen Ausbau errichtet. Der vorherige Bau und zug\xE4ngliche Sammelquellen sind erforderlich. Eine Abgabe bezahlt den gesamten Bau."
+    m_Localized: Erreiche Felder-Stufe 95 und sammle die Materialien zum Bau dieser Beete. Kaufe sie hier oder unter Felder.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000052
-    m_Localized: "Feldkapazit\xE4t: 5 Beete und 0 Baumparzellen. Keine weitere Zahlung und keine Bauwartezeit."
+    m_Localized: "Felder-Kapazit\xE4t: 5 Anbaubeete."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000060
@@ -1278,11 +1275,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000061
-    m_Localized: "Flora und Tillman: Erreiche Zwillingsstufe 125, dann bring die Materialien, damit Barkley diesen Ausbau errichtet. Der vorherige Bau und zug\xE4ngliche Sammelquellen sind erforderlich. Eine Abgabe bezahlt den gesamten Bau."
+    m_Localized: Erreiche Felder-Stufe 125 und sammle die Materialien zum Bau dieser Beete. Kaufe sie hier oder unter Felder.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000062
-    m_Localized: "Feldkapazit\xE4t: 6 Beete und 0 Baumparzellen. Keine weitere Zahlung und keine Bauwartezeit."
+    m_Localized: "Felder-Kapazit\xE4t: 6 Anbaubeete."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000070
@@ -1290,11 +1287,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000071
-    m_Localized: "Flora und Tillman: Erreiche Zwillingsstufe 150, dann bring die Materialien, damit Barkley diesen Ausbau errichtet. Der vorherige Bau und zug\xE4ngliche Sammelquellen sind erforderlich. Eine Abgabe bezahlt den gesamten Bau."
+    m_Localized: Erreiche Felder-Stufe 5 und sammle die Materialien zum Bau dieser Beete. Kaufe sie hier oder unter Felder.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000072
-    m_Localized: "Feldkapazit\xE4t: 6 Beete und 2 Baumparzellen. Keine weitere Zahlung und keine Bauwartezeit."
+    m_Localized: "Schaltet Obstgartenpl\xE4tze 1\u20132 frei."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000080
@@ -1302,11 +1299,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000081
-    m_Localized: "Flora und Tillman: Erreiche Zwillingsstufe 185, dann bring die Materialien, damit Barkley diesen Ausbau errichtet. Der vorherige Bau und zug\xE4ngliche Sammelquellen sind erforderlich. Eine Abgabe bezahlt den gesamten Bau."
+    m_Localized: Erreiche Felder-Stufe 50 und sammle die Materialien zum Bau dieser Beete. Kaufe sie hier oder unter Felder.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000082
-    m_Localized: "Feldkapazit\xE4t: 6 Beete und 4 Baumparzellen. Keine weitere Zahlung und keine Bauwartezeit."
+    m_Localized: "Schaltet Obstgartenpl\xE4tze 3\u20134 frei."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000090
@@ -1314,11 +1311,79 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000091
-    m_Localized: "Flora und Tillman: Erreiche Zwillingsstufe 225, dann bring die Materialien, damit Barkley diesen Ausbau errichtet. Der vorherige Bau und zug\xE4ngliche Sammelquellen sind erforderlich. Eine Abgabe bezahlt den gesamten Bau."
+    m_Localized: Erreiche Felder-Stufe 110 und sammle die Materialien zum Bau dieser Beete. Kaufe sie hier oder unter Felder.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000092
-    m_Localized: "Feldkapazit\xE4t: 6 Beete und 6 Baumparzellen. Keine weitere Zahlung und keine Bauwartezeit."
+    m_Localized: "Schaltet Obstgartenpl\xE4tze 5\u20136 frei."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159845896289914880
+    m_Localized: "Hier ist deine erste Angel! Ich zeige dir einen geheimen Angelplatz unten am Fluss.\n\nDiese alten Stiefel habe ich auch gefunden. Sie scheinen deine Gr\xF6\xDFe zu haben."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159845897237827584
+    m_Localized: "Deine erste Angel, Zugang zum Fluss und Stiefel: +10 Bewegung, +25 Leben, +5 Verteidigung, +1 Regeneration (automatisch ausger\xFCstet)."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159849588615417856
+    m_Localized: "Deine erste Angel, Zugang zum Fluss und ein Paar Stiefel (automatisch ausger\xFCstet)."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159850354524688384
+    m_Localized: "Hole diese Belohnung ab, schlie\xDFe das Auftragsfenster und w\xE4hle dann <link=\"help:adventure\"><u><color=#EFB889>Abenteuer \u2192 Ackerland</color></u></link>. Dein Held erntet reife Pflanzen automatisch. Flora und Tillman helfen dir sp\xE4ter, eigene Pflanzen anzubauen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159859916489232384
+    m_Localized: "Carl der Schnitter wacht dar\xFCber, wie weit du dich von der Stadt entfernst. Vorerst liegt deine Grenze bei 50. Hilf den Stadtbewohnern und schalte neue Gebiete frei, um weiter reisen zu k\xF6nnen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159859916514398208
+    m_Localized: "Du kennst deine Grenzen. Hilf den Stadtbewohnern, um weiter reisen zu d\xFCrfen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159865356388274176
+    m_Localized: Suche Barkley am Fluss auf. Er sucht nach dem perfekten Holz.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159865356442800128
+    m_Localized: "Ivan ist dein Bruder in dieser Welt. Er kann aus deinen gesammelten Materialien Ausr\xFCstung schmieden."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159880735105880064
+    m_Localized: "Hole diese Belohnung ab und schlie\xDFe dann das Questfenster, um mit Eva zu sprechen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159880735131045888
+    m_Localized: "Eva hat dir ihre magische Gie\xDFkanne geliehen. Ernte f\xFCnf Radieschen im Ackerland."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159880735131045889
+    m_Localized: "Danke f\xFCr die Radieschen!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159890707516624896
+    m_Localized: "Finde Ivan im Wald und kehre dann in die Stadt zur\xFCck. Er zeigt dir, wie du dein erstes Schwert schmiedest."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159890707558567936
+    m_Localized: Ivans erste Lektion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159890707558567937
+    m_Localized: "Ivan hat Materialien f\xFCr dein erstes Schwert bereitgelegt. Nimm sie an und folge dann seiner Einf\xFChrung in der Schmiede."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159890707558567938
+    m_Localized: "Materialien f\xFCr deinen ersten Barren und einen Basiskern."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 160252005534273536
+    m_Localized: "Bringe Mildred 5 Flippy Floppys, um deine ersten Echo-Zauber freizuschalten. W\xE4hle ein Aufgaben-Echo zum Ressourcensammeln oder ein Kampf-Echo zum Bek\xE4mpfen von Gegnern."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 160252005576216576
+    m_Localized: "Aufgaben-Echo- und Kampf-Echo-Zauber. Weise einen unter Hauptmen\xFC \u2192 Zauber zu."
     m_Metadata:
       m_Items: []
   references:

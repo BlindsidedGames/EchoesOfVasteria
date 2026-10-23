@@ -112,7 +112,7 @@ namespace TimelessEchoes.UI
                 _sb.Append(CalcUtils.FormatNumber(statTracker.TotalResourcesGathered, true));
                 _sb.Append('\n');
                 _sb.Append("Reaping Distance: ");
-                _sb.Append(statTracker.MaxRunDistance.ToString("N0"));
+                _sb.Append(statTracker.MaxRunDistance.ToString("N0", LocaleNumbers.Culture));
                 references.distanceLongestTasksText.SetText(_sb);
             }
 

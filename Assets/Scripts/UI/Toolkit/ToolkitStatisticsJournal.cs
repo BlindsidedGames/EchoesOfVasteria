@@ -29,6 +29,7 @@ namespace TimelessEchoes.UI.Toolkit
             var areas = new List<string> { ToolkitLocalization.Text("statistics.overall", "Overall") };
             areas.AddRange(definition.maps.Select(m => ToolkitLocalization.Text("map." + m.config.name, m.label.Trim())));
             journalArea = new DropdownField("Area", areas, 0) { name = "journal-area" };
+            ToolkitLocalization.Bind(journalArea.labelElement, "statistics.area", "Area");
             journalArea.AddToClassList("portrait-picker"); layout.Add(journalArea);
             journalArea.RegisterValueChangedCallback(_ => SelectJournalMap(journalArea.index - 1, true));
             var selectors = ToolkitGameplay.E(layout, "journal-selectors");
@@ -129,10 +130,22 @@ namespace TimelessEchoes.UI.Toolkit
                 var button = ToolkitGameplay.B(journalRecent, "", () => ShowJournalRun(run));
                 button.AddToClassList("journal-run"); button.userData = run;
                 Text(button, "#" + run.RunNumber, 7).AddToClassList("journal-run-number");
-                Text(button, CalcUtils.FormatTime(run.Duration), 7).AddToClassList("journal-run-duration");
-                Text(button, ToolkitLocalization.Text("journal.run-resources", "{0} resources", ItemStatisticsPresentation.Number(run.ResourcesCollected)), 7).AddToClassList("journal-run-rewards");
+                var duration = Text(button, JournalDuration(run.Duration), 7);
+                duration.AddToClassList("journal-run-duration");
+                duration.tooltip = CalcUtils.FormatTime(run.Duration);
+                Text(button, ToolkitLocalization.Text("journal.run-resources", "Resources: {0}", ItemStatisticsPresentation.Number(run.ResourcesCollected)), 7).AddToClassList("journal-run-rewards");
                 Text(button, run.Abandoned ? ToolkitLocalization.Text("run.outcome-abandoned", "Abandoned") : run.Reaped ? ToolkitLocalization.Text("run.outcome-reaped", "Reaped") : run.Died ? ToolkitLocalization.Text("run.outcome-died", "Died") : ToolkitLocalization.Text("run.outcome-retreated", "Retreated"), 6).AddToClassList("journal-run-outcome");
             }
+        }
+        private static string JournalDuration(double duration)
+        {
+            if (!LocaleNumbers.IsFinite(duration) || duration < 0 || duration >= TimeSpan.MaxValue.TotalSeconds)
+                return CalcUtils.FormatTime(duration);
+            var elapsed = TimeSpan.FromSeconds(duration);
+            var hours = (long)elapsed.TotalHours;
+            return hours > 0
+                ? $"{hours.ToString(LocaleNumbers.Culture)}:{elapsed.Minutes:00}:{elapsed.Seconds:00}"
+                : $"{elapsed.Minutes}:{elapsed.Seconds:00}";
         }
         private void ShowJournalRun(GameData.RunRecord run)
         {

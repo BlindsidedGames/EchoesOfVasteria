@@ -1001,7 +1001,7 @@ namespace TimelessEchoes.UI
 
             slot.completionPercentage = completion;
 
-            var display = $"File {index + 1} | {slot.completionPercentage:0}%";
+            var display = LocaleNumbers.Format($"File {index + 1} | {slot.completionPercentage:0}{LocaleNumbers.PercentSuffix}");
             if (index == oracle.CurrentSlot)
                 display += " - Active";
             if (slot.fileNameText != null)
@@ -1058,7 +1058,7 @@ namespace TimelessEchoes.UI
                 slot.completionPercentage = oracle.saveData.CompletionPercentage;
                 if (slot.fileNameText != null)
                     slot.fileNameText.text =
-                        $"File {index + 1} | {slot.completionPercentage:0}% - Active";
+                        LocaleNumbers.Format($"File {index + 1} | {slot.completionPercentage:0}{LocaleNumbers.PercentSuffix} - Active");
 
                 var playtime = oracle.saveData.PlayTime;
                 if (slot.playtimeText != null)
@@ -1091,11 +1091,11 @@ namespace TimelessEchoes.UI
             {
                 if (slot.fileNameText != null)
                     slot.fileNameText.text =
-                        $"File {index + 1} | {slot.completionPercentage:0}%";
+                        LocaleNumbers.Format($"File {index + 1} | {slot.completionPercentage:0}{LocaleNumbers.PercentSuffix}");
 
                 if (slot.lastPlayed.HasValue)
                 {
-                    var date = slot.lastPlayed.Value.ToLocalTime().ToString("g");
+                    var date = slot.lastPlayed.Value.ToLocalTime().ToString("g", LocaleNumbers.Culture);
                     var diff = DateTime.UtcNow - slot.lastPlayed.Value;
                     slot.lastPlayedText.text =
                         $"Last Played: {date} • {CalcUtils.FormatTime(diff.TotalSeconds, shortForm: true)} ago";

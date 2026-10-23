@@ -553,7 +553,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (inRun && hero != null)
             {
                 var current = RunProgressPresentation.Read(hero.transform.position.x);
-                if (!hasProgress || !current.SameText(lastProgress) || lastProgressPortrait != ToolkitResponsiveLayout.IsPortrait)
+                if (!hasProgress || lastProgressLocaleRevision != ToolkitLocalization.Revision || !current.SameText(lastProgress) || lastProgressPortrait != ToolkitResponsiveLayout.IsPortrait)
                 {
                     var text = current.FormatText();
                     var split = ToolkitResponsiveLayout.IsPortrait && current.killMode ? text.LastIndexOf('\n') : -1;
@@ -561,6 +561,7 @@ namespace TimelessEchoes.UI.Toolkit
                     progressDistance.text = split >= 0 ? "<b>" + text.Substring(split + 1) + "</b>" : "";
                     SetVisible(progressDistance, split >= 0);
                     lastProgressPortrait = ToolkitResponsiveLayout.IsPortrait;
+                    lastProgressLocaleRevision = ToolkitLocalization.Revision;
                 }
                 progressFill.style.width = Length.Percent(current.normalized * 100);
                 progressHero.style.left = -16.5f + current.normalized * (ToolkitResponsiveLayout.IsPortrait ? Mathf.Max(103, ToolkitWindowLayout.SafeArea.width - 20) : 103);
@@ -568,6 +569,8 @@ namespace TimelessEchoes.UI.Toolkit
             }
             ToolkitGameplay.SetToggle(autoPin,AutoPinActiveQuests);
         }
+
+        private int lastProgressLocaleRevision = -1;
 
         private void RefreshTutorialPrompt()
         {

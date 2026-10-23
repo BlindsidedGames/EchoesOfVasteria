@@ -52,7 +52,7 @@ namespace TimelessEchoes.Shop
         private ShopLedger ledger;
         private ShopOwnership ownership => ledger.Current;
         private bool started, applicationPaused;
-        private string OwnershipPath => Path.Combine(Application.persistentDataPath, Application.isEditor ? "shop-editor-ownership.json" : SteamInventoryPurchases.Supported ? "shop-steam-unverified.json" : "shop-ownership.json");
+        private string OwnershipPath => Path.Combine(Platform.StartupDiagnostics.EditorScreenshotRoot ?? Application.persistentDataPath, Application.isEditor ? "shop-editor-ownership.json" : SteamInventoryPurchases.Supported ? "shop-steam-unverified.json" : "shop-ownership.json");
         private string steamAccount;
         public void SelectSteamAccount(string account)
         {
@@ -78,6 +78,7 @@ namespace TimelessEchoes.Shop
         }
         private void Update()
         {
+            if (Platform.StartupDiagnostics.EditorScreenshotSession) return;
             if (Unlocked && !started) { started = true; Purchases.Connect(); GetComponent<LegacyShopOwner>()?.Check(); }
             var gm = GameManager.Instance;
             if (applicationPaused || Time.timeScale <= 0 || !gm || gm.IsInTown || gm.RunLoadingActive || !gm.CurrentMap || Oracle.oracle?.HasLoadedCurrentSlotData != true) return;

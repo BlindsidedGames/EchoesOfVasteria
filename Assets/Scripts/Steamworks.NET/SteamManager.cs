@@ -60,7 +60,7 @@ public class SteamManager : MonoBehaviour {
 	public static bool Initialized {
 		get {
 #if UNITY_EDITOR
-            if (!editorEnabled) return false;
+            if (!editorEnabled || UnityEditor.SessionState.GetBool("EOV.ScreenshotStudio.Active", false)) return false;
 #endif
 			return Instance.m_bInitialized;
 		}
@@ -89,7 +89,7 @@ public class SteamManager : MonoBehaviour {
 	protected virtual void Awake() {
 #if UNITY_EDITOR
         // Also guard scene-authored managers, not just lazy access through Initialized.
-        if (!editorEnabled) return;
+        if (!editorEnabled || UnityEditor.SessionState.GetBool("EOV.ScreenshotStudio.Active", false)) return;
 #endif
 		// Only one instance of SteamManager at a time!
 		if (s_instance != null) {

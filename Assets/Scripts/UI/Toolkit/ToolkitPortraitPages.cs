@@ -9,9 +9,9 @@ namespace TimelessEchoes.UI.Toolkit
     {
         public sealed class Page
         {
-            public readonly string Title;
+            public readonly string Key, Title;
             public readonly VisualElement[] Content;
-            public Page(string title, params VisualElement[] content) { Title = title; Content = content; }
+            public Page(string key, string title, params VisualElement[] content) { Key = key; Title = title; Content = content; }
         }
         private readonly VisualElement host, shared, tabs, content;
         private readonly VisualElement[] hidden;
@@ -36,6 +36,7 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 var index = i;
                 var button = ToolkitGameplay.B(tabs, pages[i].Title, () => Select(index));
+                ToolkitLocalization.Bind(button, pages[i].Key, pages[i].Title);
                 button.name = "portrait-page-" + i;
                 buttons.Add(button);
                 var panel = new VisualElement(); panel.AddToClassList("portrait-page"); panels.Add(panel); content.Add(panel);

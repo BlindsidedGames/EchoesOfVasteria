@@ -1,3 +1,4 @@
+using Blindsided.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -390,7 +391,7 @@ namespace TimelessEchoes.Upgrades
         private static string FormatWholeNumber(double value)
         {
             var rounded = Math.Round(value);
-            return rounded.ToString("N0", CultureInfo.InvariantCulture);
+            return rounded.ToString("N0", LocaleNumbers.Culture);
         }
 
         private void UpdateRuntimeLabel(double elapsedSeconds)
@@ -408,8 +409,8 @@ namespace TimelessEchoes.Upgrades
 
             var span = TimeSpan.FromSeconds(elapsedSeconds);
             return span.TotalHours >= 1d
-                ? $"{(int)span.TotalHours:00}:{span.Minutes:00}:{span.Seconds:00}"
-                : $"{span.Minutes:00}:{span.Seconds:00}";
+                ? LocaleNumbers.Format($"{(int)span.TotalHours:00}:{span.Minutes:00}:{span.Seconds:00}")
+                : LocaleNumbers.Format($"{span.Minutes:00}:{span.Seconds:00}");
         }
 
         private void CloseWindow()

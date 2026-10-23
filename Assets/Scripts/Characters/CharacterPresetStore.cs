@@ -22,7 +22,7 @@ namespace TimelessEchoes.Characters
         {
             profile = null; error = null;
             try { if (index < 0 || index >= 3) throw new ArgumentOutOfRangeException(nameof(index)); profile = Read().slots[index]?.Copy(); return true; }
-            catch (Exception ex) { error = ex.Message; return false; }
+            catch (Exception ex) { Debug.LogWarning("Could not load character preset: " + ex.Message); error = TimelessEchoes.UI.Toolkit.ToolkitLocalization.Text("character.preset-load-failed", "The saved characters could not be read. The existing file has been preserved."); return false; }
         }
         public static bool TrySave(int index, CharacterProfile profile, out string error)
         {
@@ -38,7 +38,7 @@ namespace TimelessEchoes.Characters
                 else File.Move(temporary, FilePath);
                 return true;
             }
-            catch (Exception ex) { error = ex.Message; return false; }
+            catch (Exception ex) { Debug.LogWarning("Could not save character preset: " + ex.Message); error = TimelessEchoes.UI.Toolkit.ToolkitLocalization.Text("character.preset-save-failed", "Your character preset could not be saved. Please try again."); return false; }
         }
     }
 }

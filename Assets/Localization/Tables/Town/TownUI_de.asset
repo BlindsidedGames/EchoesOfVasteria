@@ -31,7 +31,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003854
-    m_Localized: Distanz {0}%
+    m_Localized: "Distanz {0}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003853
@@ -67,15 +67,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003845
-    m_Localized: "W\xE4hle einen Zauber zum Zuweisen. W\xE4hle einen belegten Platz, um die Automatik umzuschalten."
+    m_Localized: "W\xE4hle Zuweisen neben einem Zauber und anschlie\xDFend einen Platz. W\xE4hle einen belegten Platz, um automatisches Wirken ein- oder auszuschalten."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003844
-    m_Localized: "W\xE4hle einen Platz f\xFCr {0}. Mit Abbrechen beendest du die Auswahl ohne Zuweisung."
+    m_Localized: "W\xE4hle einen Platz f\xFCr {0} oder Abbrechen, um deine aktuelle Belegung beizubehalten."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003843
-    m_Localized: "W\xE4hrend einer Reise sind Zuweisungen gesperrt. W\xE4hle einen belegten Platz, um die Automatik umzuschalten."
+    m_Localized: "W\xE4hrend einer Reise kannst du keine Zauber wechseln. W\xE4hle einen belegten Platz, um automatisches Wirken ein- oder auszuschalten."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003842
@@ -135,35 +135,35 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003828
-    m_Localized: Ressourcen nach Echo-Aufgaben +{0:0.#}% (10s)
+    m_Localized: "Ressourcen nach Echo-Aufgaben +{0:0.#}\_% (10s)"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003827
-    m_Localized: Ressourcenbonus +{0:0.#}% alle 10 Aufgaben
+    m_Localized: "Ressourcenbonus +{0:0.#}\_% alle 10 Aufgaben"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003826
-    m_Localized: Gewichtung unbekannter Aufgaben bis zu +{0:0.#}%
+    m_Localized: "Gewichtung unbekannter Aufgaben bis zu +{0:0.#}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003825
-    m_Localized: Erscheinungsgewichtung des Ziels +{0:0.#}%
+    m_Localized: "Erscheinungsgewichtung des Ziels +{0:0.#}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003824
-    m_Localized: Kritischer Schaden +{0}%
+    m_Localized: "Kritischer Schaden +{0}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003823
-    m_Localized: Kritische Trefferchance +{0}%
+    m_Localized: "Kritische Trefferchance +{0}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003822
-    m_Localized: '{0:0.#}% Bonuserfahrung'
+    m_Localized: "{0:0.#}\_% Bonuserfahrung"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003821
-    m_Localized: Ressourcenertrag +{0}%
+    m_Localized: "Ressourcenertrag +{0}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003820
@@ -171,31 +171,31 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003819
-    m_Localized: Max. Reisedistanz +{0}%
+    m_Localized: "Max. Reisedistanz +{0}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003818
-    m_Localized: Gesundheitsregeneration +{0}%
+    m_Localized: "Gesundheitsregeneration +{0}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003817
-    m_Localized: Aufgabentempo +{0}%
+    m_Localized: "Aufgabentempo +{0}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003816
-    m_Localized: Angriffstempo +{0}%
+    m_Localized: "Angriffstempo +{0}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003815
-    m_Localized: Verteidigung +{0}%
+    m_Localized: "Verteidigung +{0}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003814
-    m_Localized: Schaden +{0}%
+    m_Localized: "Schaden +{0}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003813
-    m_Localized: Bewegungstempo +{0}%
+    m_Localized: "Bewegungstempo +{0}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003812
@@ -203,7 +203,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003811
-    m_Localized: 'Distanz: {0}%'
+    m_Localized: "Distanz: {0}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003810
@@ -227,7 +227,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003805
-    m_Localized: "  \u2022 Kern {0}: {1:0.#}%"
+    m_Localized: "  \u2022 Kern {0}: {1:0.#}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003804
@@ -283,7 +283,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003791
-    m_Localized: "\u2022 Hohe W\xFCrfe | W\xFCrfe in den besten {0:0.#}% des Werts:"
+    m_Localized: "\u2022 Hohe W\xFCrfe | W\xFCrfe in den besten {0:0.#}\_% des Werts:"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003790
@@ -311,7 +311,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003784
-    m_Localized: "\u2022 XP erhalten: {0:N0}"
+    m_Localized: "\u2022 Erhaltene EP: {0:N0}"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003783
@@ -491,43 +491,43 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003739
-    m_Localized: '{0:0.#}% Chance, {1}{2} zu rufen'
+    m_Localized: "{0:0.#}\_% Chance, {1}{2} zu rufen"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003738
-    m_Localized: '{0:0.#}% Bonuserfahrung ({1})'
+    m_Localized: "{0:0.#}\_% Bonuserfahrung ({1})"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003737
-    m_Localized: '{0:0.#}% Bonusressourcen ({1})'
+    m_Localized: "{0:0.#}\_% Bonusressourcen ({1})"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003736
-    m_Localized: '{0:0.#}% Chance auf doppelte XP'
+    m_Localized: "{0:0.#}\_% Chance auf doppelte XP"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003735
-    m_Localized: '{0:0.#}% Chance auf doppelte Ressourcen'
+    m_Localized: "{0:0.#}\_% Chance auf doppelte Ressourcen"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003734
-    m_Localized: '{0:0.#}% Chance auf sofortigen Sieg'
+    m_Localized: "{0:0.#}\_% Chance, Gegner sofort zu besiegen"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003733
-    m_Localized: '{0:0.#}% Chance auf sofortigen Aufgabenabschluss'
+    m_Localized: "{0:0.#}\_% Chance auf sofortigen Aufgabenabschluss"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003732
-    m_Localized: "{0:0.#}% Bonuserfahrung (alle F\xE4higkeiten)"
+    m_Localized: "{0:0.#}\_% Bonuserfahrung (alle F\xE4higkeiten)"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003731
-    m_Localized: '{0:0.#}% Bonusressourcen (alle Aufgaben)'
+    m_Localized: "{0:0.#}\_% Bonusressourcen (alle Aufgaben)"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003730
-    m_Localized: "+{0:0.#}% Aufgabentempo f\xFCr {1} (durch {1}-Stufe)"
+    m_Localized: "+{0:0.#}\_% Aufgabentempo f\xFCr {1} (durch {1}-Stufe)"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003729
@@ -651,9 +651,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003700
-    m_Localized: 'Stufenbonus: {0:0.#}%
-
-      {1}'
+    m_Localized: "Stufenbonus: {0:0.#}\_%\n{1}"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003699
@@ -685,9 +683,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003693
-    m_Localized: 'Siege: {0}
-
-      Bonusschaden: {1:0}%'
+    m_Localized: "Besiegte Gegner: {0}\nBonusschaden: {1:0}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003692
@@ -725,15 +721,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003685
-    m_Localized: 'Erscheinungschance: {0:0.##}% ({1})
-
-      {2}
-
-      {3}'
+    m_Localized: "Erscheinungschance: {0:0.##}\_% ({1})\n{2}\n{3}"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003684
-    m_Localized: "N\xE4chste Verbesserung: {0} Aufgaben"
+    m_Localized: "Aufgaben bis zur Verst\xE4rkung: {0}"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003683
@@ -757,7 +749,7 @@ MonoBehaviour:
 
       {5}
 
-      Siege: {6:N0}
+      Besiegte Gegner: {6:N0}
 
       Schaden verursacht: {7:N0}
 
@@ -775,7 +767,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003678
-    m_Localized: Meiste Siege
+    m_Localized: Meiste besiegte Gegner
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003677
@@ -795,7 +787,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003673
-    m_Localized: Siege
+    m_Localized: Besiegte Gegner
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003672
@@ -819,7 +811,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003667
-    m_Localized: '{0} Ressourcen'
+    m_Localized: 'Ressourcen: {0}'
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003666
@@ -1067,7 +1059,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003605
-    m_Localized: Siege
+    m_Localized: Besiegte Gegner
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003604
@@ -1159,7 +1151,7 @@ MonoBehaviour:
   - m_Id: 87000000000003567
     m_Localized: 'Schaden / s: {0:N0}
 
-      Siege / min: {1:N0}'
+      Besiegte Gegner / min: {1:N0}'
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003566
@@ -1167,7 +1159,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003565
-    m_Localized: "Reise\xFCbersicht\n<size=75%>+{0:0}% Ressourcen</size>"
+    m_Localized: "Reise\xFCbersicht\n<size=75%>+{0:0}\_% Ressourcen</size>"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003564
@@ -1467,7 +1459,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003489
-    m_Localized: "{0} \xB7 Stufe {1}"
+    m_Localized: "{0} \xB7 Rang {1}"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003488
@@ -1523,19 +1515,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003475
-    m_Localized: Gibt eine Chance von {0}%, {1} Echos zu rufen, die {3:0.#} Sekunden lang Aufgaben ({2}) erledigen.
+    m_Localized: "Gibt eine Chance von {0}\_%, {1} Echos zu rufen, die {3:0.#} Sekunden lang Aufgaben ({2}) erledigen."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003474
-    m_Localized: Gibt eine Chance von {0}%, ein Echo zu rufen, das {2:0.#} Sekunden lang Aufgaben ({1}) erledigt.
+    m_Localized: "Gibt eine Chance von {0}\_%, ein Echo zu rufen, das {2:0.#} Sekunden lang Aufgaben ({1}) erledigt."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003473
-    m_Localized: Gibt eine Chance von {0}%, {1} Echos zu rufen, die {2:0.#} Sekunden lang im Kampf helfen.
+    m_Localized: "Gibt eine Chance von {0}\_%, {1} Echos zu rufen, die {2:0.#} Sekunden lang im Kampf helfen."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003472
-    m_Localized: Gibt eine Chance von {0}%, ein Echo zu rufen, das {1:0.#} Sekunden lang im Kampf hilft.
+    m_Localized: "Gibt eine Chance von {0}\_%, ein Echo zu rufen, das {1:0.#} Sekunden lang im Kampf hilft."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003471
@@ -1913,23 +1905,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003380
-    m_Localized: "Gibt eine Ausl\xF6sungschance von {0}%."
+    m_Localized: "Gibt eine Ausl\xF6sungschance von {0}\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003379
-    m_Localized: "Gibt eine Ausl\xF6sungschance von {0}%."
+    m_Localized: "Gibt eine Ausl\xF6sungschance von {0}\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003378
-    m_Localized: "Gibt eine Ausl\xF6sungschance von {0}%."
+    m_Localized: "Gibt eine Ausl\xF6sungschance von {0}\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003377
-    m_Localized: "Gibt eine Ausl\xF6sungschance von {0}%."
+    m_Localized: "Gibt eine Ausl\xF6sungschance von {0}\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003376
-    m_Localized: "Gibt eine Ausl\xF6sungschance von {0}%."
+    m_Localized: "Gibt eine Ausl\xF6sungschance von {0}\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003375
@@ -2501,7 +2493,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003233
-    m_Localized: Wartermelone
+    m_Localized: Watermelone
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003232
@@ -2869,7 +2861,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003141
-    m_Localized: 'Siege: {0}
+    m_Localized: 'Besiegte Gegner: {0}
 
       Schaden verursacht: {1}
 
@@ -2883,15 +2875,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003139
-    m_Localized: "Schritte zur\xFCckgelegt: {0}\nMeiste Siege: {1}\nAufgaben abgeschlossen: {2}\nRessourcen gesammelt: {3}"
+    m_Localized: "Schritte zur\xFCckgelegt: {0}\nMeiste besiegte Gegner: {1}\nAufgaben abgeschlossen: {2}\nRessourcen gesammelt: {3}"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003138
-    m_Localized: +{0:0}% Ressourcen
+    m_Localized: "+{0:0}\_% Ressourcen"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003137
-    m_Localized: "R\xFCckzug vorgemerkt +{0:0}%"
+    m_Localized: "R\xFCckzug vorgemerkt +{0:0}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003136
@@ -2931,7 +2923,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003127
-    m_Localized: "Mit {0} Siegen f\xFCr {1:0}% Bonus zur\xFCckgezogen"
+    m_Localized: "Mit {0} besiegten Gegnern f\xFCr {1:0}\_% Bonus zur\xFCckgezogen"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003126
@@ -3051,11 +3043,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003097
-    m_Localized: Datei {0} | {1:0}%
+    m_Localized: "Datei {0} | {1:0}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003096
-    m_Localized: Datei {0} | {1:0}% - Aktiv
+    m_Localized: "Datei {0} | {1:0}\_% - Aktiv"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003095
@@ -3455,7 +3447,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002002
-    m_Localized: "Klicke auf einen freigeschalteten Zauberplatz, w\xE4hrend du nichts zuweist, um die Automatik umzuschalten. W\xE4hrend einer Reise kannst du keine Zauber zuweisen."
+    m_Localized: "Wenn du gerade keinen Zauber zuweist, kannst du durch Ausw\xE4hlen eines belegten Platzes das automatische Wirken ein- oder ausschalten. W\xE4hrend einer Reise kannst du die Belegung nicht \xE4ndern."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002003
@@ -3529,11 +3521,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002019
-    m_Localized: Beute | 1.55s
+    m_Localized: Beute | 1,55s
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002020
-    m_Localized: Calebs Schaden | 1.55s
+    m_Localized: Schaden deines Charakters | 1,55 Sek.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002021
@@ -3581,11 +3573,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002032
-    m_Localized: "Ich wei\xDF, dass das Spiel anfangs etwas verwirrend ist. Ein richtiges Tutorial ist in Arbeit; bis dahin dient dieser Text als kurze Einf\xFChrung.\n\nVor allem ist dies ein Idle-Spiel: Dein Fortschritt l\xE4uft automatisch im Hintergrund weiter, w\xE4hrend du andere Dinge erledigst!\n\nInformationen zu den verschiedenen Systemen findest du \xFCber die <link=\"help:wiki\"><u><color=#EFB889>Bibliothek</color></u></link> oben.\n\n<link=\"help:quests\"><u><color=#EFB889>Auftr\xE4ge</color></u></link> sind dein Ausgangspunkt und begleiten deinen Fortschritt. \n\nW\xE4hrend einer Reise findet dein Held selbst den Weg und erledigt Aufgaben automatisch.\n\nIch w\xFCnsche dir viel Spa\xDF. Wenn du nicht weiterkommst, erreichst du mich jederzeit auf Discord!"
+    m_Localized: "Echoes of Vasteria hat ein gro\xDFes Update erhalten. Fortschritt, Tutorials und Men\xFCs wurden ge\xE4ndert. Daher funktioniert manches vielleicht anders, als du es in Erinnerung hast.\n\nIch empfehle einen neuen Spielstand, um die neue Einf\xFChrung und den neuen Fortschritt zu erleben. Du kannst aber auch mit deinem bisherigen Spielstand weiterspielen.\n\nAuf Abenteuern bewegt sich dein Held zwischen Aufgaben, sammelt Ressourcen und k\xE4mpft automatisch. Beginne mit <link=\"help:quests\"><u><color=#EFB889>Auftr\xE4ge</color></u></link>, um die Stadtbewohner kennenzulernen und neue Gebiete freizuschalten.\n\nAuf Discord kannst du um Hilfe bitten."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002033
-    m_Localized: "Klicken, um diese Nachricht dauerhaft zu schlie\xDFen!"
+    m_Localized: Fortfahren
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002034
@@ -3601,9 +3593,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002037
-    m_Localized: 'Aufgaben
-
-'
+    m_Localized: Aufgaben
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002038
@@ -3627,9 +3617,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002043
-    m_Localized: 'Kampf
-
-'
+    m_Localized: Kampf
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002044
@@ -3761,7 +3749,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002076
-    m_Localized: Gegnerschaden | 1.55s
+    m_Localized: Gegnerschaden | 1,55s
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002077
@@ -3769,7 +3757,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002078
-    m_Localized: Du kannst Ziele anheften, indem du auf ihren Namen, ihre Beschreibung oder ihre Belohnung tippst.
+    m_Localized: "W\xE4hle den Namen, die Beschreibung oder die Belohnung einer aktiven Quest, um sie anzuheften oder zu l\xF6sen. Abgeschlossene und reine Informationsquests k\xF6nnen nicht angeheftet werden."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002079
@@ -3825,7 +3813,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002092
-    m_Localized: Datei 1 | 38.4%
+    m_Localized: "Datei 1 | 38,4\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002093
@@ -3837,7 +3825,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002095
-    m_Localized: Datei 1 | 38.4%
+    m_Localized: "Datei 1 | 38,4\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002096
@@ -3849,7 +3837,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002098
-    m_Localized: Datei 1 | 38.4%
+    m_Localized: "Datei 1 | 38,4\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002099
@@ -3969,7 +3957,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004025
-    m_Localized: +50% Ressourcen auf Abenteuern
+    m_Localized: "+50\_% Ressourcen auf Abenteuern"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004026
@@ -3981,7 +3969,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004028
-    m_Localized: "+50% Abenteuerressourcen in jedem Spielstand. Kein Nachladen n\xF6tig."
+    m_Localized: "+50\_% Abenteuerressourcen in jedem Spielstand. Kein Nachladen n\xF6tig."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004029
@@ -4249,11 +4237,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004101
-    m_Localized: "{0} behalten\n{1} \xB7 {2:0.##}% abgeschlossen \xB7 {3:0.0} Stunden gespielt"
+    m_Localized: "{0} behalten\n{1} \xB7 {2:0.##}\_% abgeschlossen \xB7 {3:0.0} Stunden gespielt"
     m_Metadata:
       m_Items: []
   - m_Id: 164274115306983424
-    m_Localized: "\xD6ffne <link=\"help:hub\"><u><color=#EFB889>Hub</color></u></link> und dann <link=\"help:inventory\"><u><color=#EFB889>Inventar</color></u></link>, um deine ausger\xFCsteten Gegenst\xE4nde, ihre Boni und deine gesammelten Ressourcen anzusehen."
+    m_Localized: "\xD6ffne <link=\"help:inventory\"><u><color=#EFB889>Hauptmen\xFC \u2192 Inventar</color></u></link>, um deine Ausr\xFCstung und Ressourcen anzusehen."
     m_Metadata:
       m_Items: []
   - m_Id: 165856244562268160
@@ -4390,6 +4378,1084 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 166373263325925376
     m_Localized: "\xDCberspringen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510977933250560
+    m_Localized: Werte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510980684713984
+    m_Localized: "\xDCbersicht"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164286682276433925
+    m_Localized: Gesammelte Ressourcen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510984925155328
+    m_Localized: Noch nichts gesammelt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164232214319075330
+    m_Localized: "Ausr\xFCsten"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510989383700480
+    m_Localized: Schmieden wiederholen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510991736705024
+    m_Localized: Neuer Gegenstand
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510993867411456
+    m_Localized: Waffe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510995939397632
+    m_Localized: Helm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510997961052160
+    m_Localized: Brustpanzer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510999978512384
+    m_Localized: Stiefel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512173024677888
+    m_Localized: Ressourcen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512175142801408
+    m_Localized: "Ausr\xFCstung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512177218981888
+    m_Localized: "Angelegte Ausr\xFCstung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512179261607936
+    m_Localized: "Gesamte Ausr\xFCstungsboni"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512181262290944
+    m_Localized: Vorhandene Ressourcen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512183292334080
+    m_Localized: "Nichts ausger\xFCstet"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512185448206336
+    m_Localized: "R\xFCste einen Gegenstand aus, um seine Boni zu erhalten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512189768339456
+    m_Localized: Brustpanzer und Hose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512191823548416
+    m_Localized: '{0}-{1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512193908117504
+    m_Localized: Dein Charakter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512195942354944
+    m_Localized: Ewige Gaben
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512197947232256
+    m_Localized: Maximiere alle Sammlungen, um Ewige Gaben freizuschalten.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512199947915264
+    m_Localized: 'Karten: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164187860636405760
+    m_Localized: "Ich bin Gill. Ich habe gerade ein paar Angelpl\xE4tze ausgekundschaftet!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164187860682543104
+    m_Localized: "Triff mich in der Stadt, dann zeige ich dir einen meiner geheimen Angelpl\xE4tze und gebe dir deine erste Angel!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164191093350076416
+    m_Localized: Willkommen in Vasteria! Ich bin Orin. Machen wir dich erst einmal mit allem vertraut.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164191093392019456
+    m_Localized: Im Ackerland gibt es viele reife Pflanzen. Ernten wir ein paar davon.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164191093392019457
+    m_Localized: "\xD6ffne <link=\"help:quests\"><u><color=#EFB889>Auftr\xE4ge</color></u></link>, um deine Aufgaben anzusehen und Belohnungen abzuholen. Unterwegs lernst du die Stadtbewohner kennen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164191093392019458
+    m_Localized: Sehen wir uns deine erste Quest an.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164201421198725120
+    m_Localized: "Ich sorge daf\xFCr, dass du dich nicht zu weit von der Stadt entfernst."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164201421236473856
+    m_Localized: Deine Entfernungsgrenze liegt vorerst bei 50. Hilf den Stadtbewohnern und schalte neue Gebiete frei, dann lasse ich dich weiter reisen.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164206864017002496
+    m_Localized: "Unvollst\xE4ndig"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164222240134139904
+    m_Localized: "Hier, nimm meine magische Gie\xDFkanne. Kannst du mir ein paar Radieschen aus dem Ackerland mitbringen?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164225119611916288
+    m_Localized: Sprich zuerst mit Gill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164232214293909504
+    m_Localized: Verfolgt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164232214319075328
+    m_Localized: Nicht verfolgt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164232214319075329
+    m_Localized: Annehmen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164232214319075331
+    m_Localized: "Ivan hat die Materialien bereitgestellt. W\xE4hle Schmelzen, um deinen ersten Barren herzustellen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164232214319075332
+    m_Localized: "W\xE4hle den Basiskern. Dein Kern bestimmt die Seltenheitschancen; h\xF6here Stufen werden sp\xE4ter freigeschaltet."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164232214319075333
+    m_Localized: "W\xE4hle Waffe, um dein erstes Schwert herzustellen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164232214319075334
+    m_Localized: "W\xE4hle Schmieden, um aus deinem Barren und Kern ein Schwert zu machen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164232214319075335
+    m_Localized: "Dein Schwert ist fertig. W\xE4hle Ausr\xFCsten, um es zu benutzen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164232214843363328
+    m_Localized: Triff mich in der Stadt, dann zeige ich dir, wie man die Schmiede benutzt.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164241707132129280
+    m_Localized: "Eine deiner F\xE4higkeiten ist aufgestiegen! \xD6ffne <link=\"help:skills\"><u><color=#EFB889>Hauptmen\xFC \u2192 F\xE4higkeiten</color></u></link>, um deine Boni und n\xE4chsten Freischaltungen anzusehen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164268729187307520
+    m_Localized: "In der Stadt kannst du mehr \xFCber dieses Gebiet erfahren."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164268729246027776
+    m_Localized: "Im Ackerland kannst du mehr \xFCber dieses Gebiet erfahren."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164268729246027777
+    m_Localized: "Am Fluss kannst du mehr \xFCber dieses Gebiet erfahren."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164268729246027778
+    m_Localized: "Im Wald kannst du mehr \xFCber dieses Gebiet erfahren."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164268729246027779
+    m_Localized: "In der Stadt kannst du mehr \xFCber dieses Gebiet erfahren."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164268730030362624
+    m_Localized: Jede Karte bietet andere Ressourcen. Sehen wir uns an, was du entdeckt hast.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164268730030362625
+    m_Localized: "W\xE4hle Allgemein, um die Karten anzusehen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164268730030362626
+    m_Localized: "W\xE4hle Ackerland, um die dortigen Ressourcen anzusehen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164268730030362627
+    m_Localized: "W\xE4hle {0}, um die dortigen Ressourcen anzusehen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164268730030362628
+    m_Localized: "W\xE4hle {0}, um die dortigen Ressourcen anzusehen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164286682234490880
+    m_Localized: Seit dem Aufbruch aus der Stadt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164286682276433920
+    m_Localized: "{0} \xB7 Seit dem Aufbruch aus der Stadt"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164286682276433921
+    m_Localized: Schnitterdistanz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164286682276433922
+    m_Localized: "{0:N0} \u2192 {1:N0} Schritte"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164286682276433923
+    m_Localized: '{0:N0} Schritte'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164286682276433924
+    m_Localized: "Mit {0} besiegten Gegnern zur\xFCckgekehrt \xB7 +{1:0}\_% Ressourcenbonus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164286682276433926
+    m_Localized: 'Arten: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164286682276433927
+    m_Localized: Auf dieser Reise wurden keine Ressourcen gesammelt.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164286682276433928
+    m_Localized: "Enth\xE4lt +{0} Bonus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164286682276433929
+    m_Localized: "Kehre in die Stadt zur\xFCck, um Ivan zu treffen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164286682276433930
+    m_Localized: 'Distanz / Min.: {0:N0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164286682276433931
+    m_Localized: Zeit unterwegs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164286682276433932
+    m_Localized: "Schritte zur\xFCckgelegt"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164286682276433933
+    m_Localized: Tode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164286682276433934
+    m_Localized: "Von Carl zur\xFCckgeholt"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164290767910211584
+    m_Localized: "\xD6ffne <link=\"help:statistics/graphs\"><u><color=#EFB889>Statistiken (das Balkendiagramm-Symbol), dann Diagramme</color></u></link>, um deine letzten Reisen anzusehen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164297665183092736
+    m_Localized: "Ben\xF6tigt Kampfstufe {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164300371691966464
+    m_Localized: Alte Stiefel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245208080384
+    m_Localized: "W\xE4hle deinen ersten Platz, um dieses Echo auszur\xFCsten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023424
+    m_Localized: "W\xE4hle das Aufgaben-Echo zum Sammeln oder das Kampf-Echo zum K\xE4mpfen. W\xE4hle daneben Zuweisen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023425
+    m_Localized: "W\xE4hle w\xE4hrend eines Abenteuers die F\xE4higkeit deines Echos, um es zu beschw\xF6ren. Schlie\xDFe Echo-Zauberei ab, um das automatische Wirken freizuschalten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023426
+    m_Localized: "Schlie\xDFe die Statistiken, um fortzufahren."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023427
+    m_Localized: "<b>Fluss, Wald und Minen:</b> Wirst du an der Entfernungsgrenze zur\xFCckgeholt, steigt deine gemeinsame Schnitterdistanz um 1\_%.\n<b>Ackerland:</b> Keine Distanzsteigerung durch den Schnitter.\n<b>Gruselwelt:</b> Gegnerstufen steigen mit der Zahl besiegter Gegner, ohne Obergrenze f\xFCr besiegte Gegner oder Schnitterdistanzlimit."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023428
+    m_Localized: "Erledige Aufgaben, um F\xE4higkeits-EP zu sammeln und Boni freizuschalten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023429
+    m_Localized: "W\xE4hle Verst\xE4rken, damit diese Aufgabe innerhalb ihrer Kategorie h\xE4ufiger erscheint. Auch ihre Kategorie erscheint etwas h\xE4ufiger auf der Karte. Abschlussmeilensteine verst\xE4rken den Bonus. W\xE4hle Verst\xE4rken erneut, um ihn abzuschalten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023430
+    m_Localized: "Du kannst jetzt ein Echo als Hilfe auf Abenteuern beschw\xF6ren. W\xE4hle eines zum Ressourcensammeln oder zum gemeinsamen K\xE4mpfen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023431
+    m_Localized: "Carl hat diese Reise beendet. Du beh\xE4ltst deine Beute und deinen F\xE4higkeitsfortschritt. Kehre in die Stadt zur\xFCck, um deine Quests abzugeben."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023432
+    m_Localized: "Das war die letzte Einf\xFChrung. W\xE4hle dein n\xE4chstes Abenteuer, sobald du bereit bist."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027245250023433
+    m_Localized: "\xD6ffne <link=\"help:statistics/tasks\"><u><color=#EFB889>Statistiken (das Balkendiagramm-Symbol), dann Aufgaben</color></u></link>, um auszuw\xE4hlen, welche Aufgaben h\xE4ufiger erscheinen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027246403457024
+    m_Localized: Themen durchsuchen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166027246403457025
+    m_Localized: "Zur\xFCck zum Artikel"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885895647232
+    m_Localized: Abenteurer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395968
+    m_Localized: "Technische Details wurden f\xFCr den Support aufgezeichnet."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395969
+    m_Localized: Die gespeicherten Charaktere konnten nicht gelesen werden. Die vorhandene Datei wurde beibehalten.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395970
+    m_Localized: Deine Charaktervorlage konnte nicht gespeichert werden. Bitte versuche es erneut.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395971
+    m_Localized: Gib deinem Charakter einen Namen.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395972
+    m_Localized: "Verwende einen Namen ohne Zeilenumbr\xFCche oder Steuerzeichen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395973
+    m_Localized: "Verwende einen Namen mit h\xF6chstens 24 Zeichen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395974
+    m_Localized: "Schnitterdistanz: {0} \u2192 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395975
+    m_Localized: 'Kategorieertrag: +{0} {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395976
+    m_Localized: +{0} {1}-Ertrag (Sammeln und Ernten)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395977
+    m_Localized: Zauber
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395978
+    m_Localized: "Globale Zauberst\xE4rke: +{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395979
+    m_Localized: "Abklingzeit: -{0} | St\xE4rke: +{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395980
+    m_Localized: "Formel f\xFCr Ewige Gaben"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395981
+    m_Localized: Stufe {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395982
+    m_Localized: 'Effekt: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395983
+    m_Localized: 'Erledigt: {0}
+
+      Zeit: {1}
+
+      EP: {2}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395984
+    m_Localized: Mitwirkende
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395985
+    m_Localized: Erstelle deinen Charakter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395986
+    m_Localized: Nach links drehen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395987
+    m_Localized: Nach rechts drehen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395988
+    m_Localized: Vorherige Animation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395989
+    m_Localized: Stehen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395990
+    m_Localized: "N\xE4chste Animation"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395991
+    m_Localized: Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395992
+    m_Localized: Keine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395993
+    m_Localized: Stil {0} von {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395994
+    m_Localized: Vorheriger Stil
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395995
+    m_Localized: "N\xE4chster Stil"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395996
+    m_Localized: Gespeicherte Charaktere
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395997
+    m_Localized: Vorlage {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395998
+    m_Localized: Speichern
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395999
+    m_Localized: Aktuellen Charakter auf Platz {0} speichern
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396000
+    m_Localized: Spiel starten
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396001
+    m_Localized: In Vorlage {0} gespeichert.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396002
+    m_Localized: Leer {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396003
+    m_Localized: Kein Charakter gespeichert
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396004
+    m_Localized: '{0} laden'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396005
+    m_Localized: Dein Charakter konnte nicht gespeichert werden. Bitte versuche es erneut.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396006
+    m_Localized: Automatisierung wird auf Ivan-Stufe {0} freigeschaltet.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396007
+    m_Localized: Entdecke weitere Kerne, wenn deine Kampfstufe steigt.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396008
+    m_Localized: Wiederholt schmieden, bis eine Verbesserung oder eine andere Stoppbedingung erreicht wird.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396009
+    m_Localized: '{0} anzeigen'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396010
+    m_Localized: Inventar ausblenden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396011
+    m_Localized: Inventar anzeigen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396012
+    m_Localized: "Kehre in die Stadt zur\xFCck, um diese Quest abzugeben."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396013
+    m_Localized: Automatisch anheften
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396014
+    m_Localized: "W\xE4hle einen Balken f\xFCr Details"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396015
+    m_Localized: Letzte {0} Reisen{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396016
+    m_Localized: Kampfwerte ein- oder ausblenden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396017
+    m_Localized: Weiter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396018
+    m_Localized: "Du beh\xE4ltst die auf deinem Abenteuer gesammelten Ressourcen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396019
+    m_Localized: "Schlie\xDFe die Zusammenfassung, um fortzufahren."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396020
+    m_Localized: Fortfahren
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396021
+    m_Localized: "Als N\xE4chstes: {0} auf Stufe {1}."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396022
+    m_Localized: "Verst\xE4rken"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396023
+    m_Localized: "Der Spielstand ist zu gro\xDF oder konnte nicht f\xFCr den Export vorbereitet werden."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396024
+    m_Localized: "Der Export \xFCberschreitet die Grenze von {0:N0} Zeichen. Es wurde nichts kopiert."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396025
+    m_Localized: "F\xFCge einen Spielstand zum Importieren ein."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396026
+    m_Localized: "Der Import \xFCberschreitet die Grenze von {0:N0} Zeichen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396027
+    m_Localized: "Dieser Text ist kein unterst\xFCtzter Spielstandexport."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396028
+    m_Localized: "Die Spielstanddaten sind unvollst\xE4ndig oder besch\xE4digt. F\xFCge den vollst\xE4ndigen Export ein und versuche es erneut."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396029
+    m_Localized: Der Spielstand konnte nicht gelesen werden.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396030
+    m_Localized: "Dieser Spielstand verwendet Format {0}; dieses Spiel unterst\xFCtzt Format {1}. Aktualisiere das Spiel vor dem Import."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396031
+    m_Localized: Der Spielstand konnte nicht auf diese Spielversion aktualisiert werden. Dein vorhandener Fortschritt wurde nicht ersetzt.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396032
+    m_Localized: Das Spiel ist noch nicht bereit, einen Spielstand zu importieren. Versuche es nach dem Laden erneut.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396033
+    m_Localized: Der importierte Spielstand konnte nicht sicher aktiviert werden. Versuche es nach dem Laden erneut.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396034
+    m_Localized: "Der Import konnte nicht abgeschlossen werden. Bitte versuche es erneut. Technische Details wurden f\xFCr den Support aufgezeichnet."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396035
+    m_Localized: Dein Charakter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396036
+    m_Localized: Charakter speichern
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396037
+    m_Localized: '{0} ausblenden'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396038
+    m_Localized: Laufen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396039
+    m_Localized: Angeln
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396040
+    m_Localized: Abbauen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396041
+    m_Localized: "Gie\xDFen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396042
+    m_Localized: Kampf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396043
+    m_Localized: Haare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396044
+    m_Localized: Oberteil
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396045
+    m_Localized: Hose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396046
+    m_Localized: Schuhe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396047
+    m_Localized: Bauernhut
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396048
+    m_Localized: Bauernhose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396049
+    m_Localized: Bauernhemd
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396050
+    m_Localized: Frisur 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396051
+    m_Localized: Frisur 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396052
+    m_Localized: Frisur 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396053
+    m_Localized: Frisur 4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396054
+    m_Localized: Frisur 5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396055
+    m_Localized: Frisur 6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396056
+    m_Localized: "Holzf\xE4llerhemd"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396057
+    m_Localized: Hose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396058
+    m_Localized: "K\xF6nigliche Hose"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396059
+    m_Localized: "K\xF6nigliches Hemd"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396060
+    m_Localized: Hemd
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396061
+    m_Localized: Schuhe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396062
+    m_Localized: "Wei\xDF und Braun"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396063
+    m_Localized: Dunkelbraun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396064
+    m_Localized: Hellbraun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396065
+    m_Localized: Rotbraun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396066
+    m_Localized: Schwarz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396067
+    m_Localized: Blond
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396068
+    m_Localized: Braun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396069
+    m_Localized: Kupferrot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396070
+    m_Localized: Grau
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396071
+    m_Localized: Blau
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396072
+    m_Localized: "Gr\xFCn"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396073
+    m_Localized: Orange
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396074
+    m_Localized: Rosa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396075
+    m_Localized: Violett
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396076
+    m_Localized: Rot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396077
+    m_Localized: "Wei\xDF"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396078
+    m_Localized: Bronze
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396079
+    m_Localized: Gold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396080
+    m_Localized: Eisen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396081
+    m_Localized: Gesundheit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396082
+    m_Localized: Schaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396083
+    m_Localized: Verteidigung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396084
+    m_Localized: Angriffstempo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396085
+    m_Localized: Bewegung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396086
+    m_Localized: Sichtweite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396087
+    m_Localized: Besiegt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396088
+    m_Localized: Bonusschaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396089
+    m_Localized: Schaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396090
+    m_Localized: Angriffstempo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396091
+    m_Localized: Verteidigung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396092
+    m_Localized: Gesundheit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396093
+    m_Localized: Regeneration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396094
+    m_Localized: Bewegungstempo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396095
+    m_Localized: Kritische Trefferchance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396096
+    m_Localized: Kritischer Schaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396097
+    m_Localized: Abgeschlossen 1/1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396098
+    m_Localized: Einen NSC treffen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396099
+    m_Localized: 'Besiege {0}:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396100
+    m_Localized: 'Gegner besiegen:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396101
+    m_Localized: 'Besiegen:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396102
+    m_Localized: 'Reisedistanz:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396103
+    m_Localized: "Schritte zur\xFCckgelegt:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396104
+    m_Localized: 'Zauber wirken:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396105
+    m_Localized: 'Wirke {0}:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396106
+    m_Localized: 'Wirke {0} manuell:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396107
+    m_Localized: 'Kritische Treffer:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396108
+    m_Localized: 'Ressourcen sammeln:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396109
+    m_Localized: 'Aufgaben abgeschlossen:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396110
+    m_Localized: 'Ressourcen mischen:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396111
+    m_Localized: "Ein Schwert schmieden und ausr\xFCsten:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396112
+    m_Localized: "Qualit\xE4t {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396113
+    m_Localized: Schleime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396114
+    m_Localized: Rosa Schleime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396115
+    m_Localized: Schleime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396116
+    m_Localized: Skelettmagier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396117
+    m_Localized: Skelettmagier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396118
+    m_Localized: "Skelettbogensch\xFCtzen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396119
+    m_Localized: Skelettmagier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396120
+    m_Localized: Schleime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396121
+    m_Localized: Skelettkrieger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396122
+    m_Localized: "Skelettbogensch\xFCtzen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396123
+    m_Localized: Skelettkrieger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166517708725817344
+    m_Localized: Leistung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166517708788731904
+    m_Localized: Bereit zur Abgabe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166517708788731905
+    m_Localized: '{0} / {1} | +{2} Gegnerstufen
+
+      {3:N0} Distanz'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166517708788731906
+    m_Localized: Der Vorgang konnte nicht abgeschlossen werden. Bitte versuche es erneut.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147309613056
+    m_Localized: Materialien
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147418664960
+    m_Localized: Fortschritt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147418664961
+    m_Localized: Boni
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147418664962
+    m_Localized: Sortieren
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147418664963
+    m_Localized: Echo-Dauer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147422859264
+    m_Localized: Inventar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630746193920
+    m_Localized: Gebiet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525568
+    m_Localized: "Aufgaben bis zur Verst\xE4rkung: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525569
+    m_Localized: "Chance: {0:0.##}\_% ({1})\n{2}\n{3}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525570
+    m_Localized: Ackerland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525571
+    m_Localized: Fluss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525572
+    m_Localized: Wald
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525573
+    m_Localized: Minen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525574
+    m_Localized: Gruselwelt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525575
+    m_Localized: Schaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525576
+    m_Localized: Angriffstempo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525577
+    m_Localized: Krit.-Chance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525578
+    m_Localized: Krit.-Schaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525579
+    m_Localized: Bewegungstempo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525580
+    m_Localized: Schadensreduktion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525581
+    m_Localized: Regeneration
     m_Metadata:
       m_Items: []
   references:

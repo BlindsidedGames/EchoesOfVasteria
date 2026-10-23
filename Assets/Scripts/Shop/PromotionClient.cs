@@ -19,7 +19,7 @@ namespace TimelessEchoes.Shop
         private double checkedAt, attemptedAt = double.NegativeInfinity;
         private bool refreshing;
         private readonly List<string> history = new();
-        private string CacheRoot => Path.Combine(Application.persistentDataPath, "promotions-v1");
+        private string CacheRoot => Path.Combine(TimelessEchoes.Platform.StartupDiagnostics.EditorScreenshotRoot ?? Application.persistentDataPath, "promotions-v1");
         private static double Now => DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         public void Initialize()
         {
@@ -49,6 +49,7 @@ namespace TimelessEchoes.Shop
         public void RefreshCatalog(bool force = false)
         {
             Initialize();
+            if (TimelessEchoes.Platform.StartupDiagnostics.EditorScreenshotSession) return;
             if (refreshing || Now - attemptedAt < 60 || !force && Now - checkedAt < 21600) return;
             StartCoroutine(Refresh());
         }
@@ -93,6 +94,7 @@ namespace TimelessEchoes.Shop
                 if (texture) { done(texture); yield break; }
             }
             bytes = null;
+            if (TimelessEchoes.Platform.StartupDiagnostics.EditorScreenshotSession) { done(null); yield break; }
             yield return Fetch(PromotionCatalog.Origin + game.banner, 250 * 1024, "image/webp", value => bytes = value);
             texture = Decode(bytes);
             if (texture)

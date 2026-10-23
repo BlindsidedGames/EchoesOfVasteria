@@ -1,3 +1,4 @@
+using Blindsided.Utilities;
 using System.Collections.Generic;
 using static TimelessEchoes.UI.Toolkit.ToolkitGameplay;
 using System.Linq;
@@ -46,9 +47,17 @@ namespace TimelessEchoes.UI.Toolkit
             this.content = content; this.tooltip = tooltip;
             tooltipText = new Label { name = "collection-tooltip-text", pickingMode = PickingMode.Ignore };
             tooltipText.AddToClassList("eov-cauldron-tooltip-text"); tooltip.Add(tooltipText);
-            tabs=E(tabParent,"row tabs");tabParent.Insert(1,tabs);foreach(var name in new[]{"Resources","Buffs","Eternal"}){string selected=name;ToolkitGameplay.B(tabs,name,()=>{activeTab=selected;SelectTab();},"tab"+(name=="Eternal"?" last-tab":""));}legend=E(tabParent,"row legend");tabParent.Insert(2,legend);for(int i=1;i<=8;i++)L(legend,"T"+i,"tier-swatch rarity-badge tier-"+i);HideTooltip();
+            tabs=E(tabParent,"row tabs");tabParent.Insert(1,tabs);
+            foreach(var name in new[]{"Resources","Buffs","Eternal"})
+            {
+                string selected=name;
+                var button=ToolkitGameplay.B(tabs,name,()=>{activeTab=selected;SelectTab();},"tab"+(name=="Eternal"?" last-tab":""));
+                button.userData=name;
+                ToolkitLocalization.Bind(button,name=="Resources"?"inventory.resources":name=="Buffs"?"cauldron.reward-buffs":"cauldron.reward-eternal",name);
+            }
+            legend=E(tabParent,"row legend");tabParent.Insert(2,legend);for(int i=1;i<=8;i++)L(legend,LocaleNumbers.Integer(i, false),"tier-swatch rarity-badge tier-"+i);HideTooltip();
         }
-        private void SelectTab(){foreach(var section in sections)section.border.style.display=(activeTab=="Resources"?!section.buffs&&!section.infinity:activeTab=="Buffs"?section.buffs:section.infinity)?DisplayStyle.Flex:DisplayStyle.None;foreach(var button in tabs.Query<Button>().ToList())button.EnableInClassList("active",button.text==activeTab);legend.style.visibility=activeTab=="Eternal"?Visibility.Hidden:Visibility.Visible;if(empty!=null)empty.style.display=activeTab=="Eternal"&&!manager.IsInfinityActive()?DisplayStyle.Flex:DisplayStyle.None;}
+        private void SelectTab(){foreach(var section in sections)section.border.style.display=(activeTab=="Resources"?!section.buffs&&!section.infinity:activeTab=="Buffs"?section.buffs:section.infinity)?DisplayStyle.Flex:DisplayStyle.None;foreach(var button in tabs.Query<Button>().ToList())button.EnableInClassList("active",(string)button.userData==activeTab);legend.style.visibility=activeTab=="Eternal"?Visibility.Hidden:Visibility.Visible;if(empty!=null)empty.style.display=activeTab=="Eternal"&&!manager.IsInfinityActive()?DisplayStyle.Flex:DisplayStyle.None;}
 
         public string MembershipKey()
         {
@@ -60,14 +69,14 @@ namespace TimelessEchoes.UI.Toolkit
             HideTooltip(); content.Clear(); cards.Clear(); sections.Clear(); resourceById.Clear(); buffById.Clear(); infinityById.Clear();
             if (manager.IsInfinityActive())
             {
-                var section = AddSection("Eternal Boons", null, false, true);
+                var section = AddSection(ToolkitLocalization.Text("cauldron.collection.eternal-boons", "Eternal Boons"), null, false, true);
                 foreach (var stat in Blindsided.Utilities.AssetCache.GetAll<InfinityCauldronStatSO>("Infinity"))
                     if (stat) {var id="INF:"+stat.Stat;infinityById[id]=stat;AddCard(section,id,stat.Icon);}
             }
             var buffs = BuffRecipe.LoadAvailable("").Where(b => b && b.IsUnlocked).ToList();
             if (buffs.Count > 0)
             {
-                var section = AddSection("Buffs", null, true, false);
+                var section = AddSection(ToolkitLocalization.Text("cauldron.reward-buffs", "Buffs"), null, true, false);
                 foreach (var buff in buffs) { var id = "BUFF:" + buff.name; buffById[id] = buff; AddCard(section, id, buff.buffIcon); }
             }
             var groups = new Dictionary<CauldronManager.AEResourceGroup, Section>();
@@ -76,12 +85,12 @@ namespace TimelessEchoes.UI.Toolkit
                 var group = manager.GetResourceGroup(resource);
                 if (!groups.TryGetValue(group, out var section))
                 {
-                    section = AddSection("Resources — " + CauldronCollectionPresentation.FormatGroupName(group), group, false, false);
+                    section = AddSection(ToolkitLocalization.Text("skill." + group, CauldronCollectionPresentation.FormatGroupName(group)), group, false, false);
                     groups[group] = section;
                 }
                 var id = "RES:" + resource.name; resourceById[id] = resource; AddCard(section, id, resource.icon);
             }
-            empty=L(content,"Max all collections to unlock Eternal Boons.","muted");SelectTab();Refresh();
+            empty=L(content,"","muted");ToolkitLocalization.Bind(empty,"cauldron.collection.unlock-eternal","Max all collections to unlock Eternal Boons.");SelectTab();Refresh();
         }
         private Section AddSection(string title, CauldronManager.AEResourceGroup? group, bool buffs, bool infinity)
         {
@@ -111,9 +120,9 @@ namespace TimelessEchoes.UI.Toolkit
                 oracle.saveData.CauldronCardCounts.TryGetValue(card.id, out var count);
                 if(infinity && infinityById.TryGetValue(card.id,out var stat))
                 {
-                    card.count.text=count.ToString("N0")+" cards";
+                    card.count.text=ToolkitLocalization.Text("cauldron.collection.card-count","Cards: {0}",count.ToString("N0", LocaleNumbers.Culture));
                     var value=manager.GetInfinityValueFor(stat.Stat,out var percent);
-                    card.effect.text="+"+value.ToString("N"+Mathf.Clamp(stat.DecimalPlaces,0,6))+(percent?"%":"");
+                    card.effect.text="+"+value.ToString("N"+Mathf.Clamp(stat.DecimalPlaces,0,6), LocaleNumbers.Culture)+(percent?LocaleNumbers.PercentSuffix:"");
                 }
                 else
                 {
@@ -121,7 +130,7 @@ namespace TimelessEchoes.UI.Toolkit
                     var thresholds=resource?definition.config.resourceTierThresholds:definition.config.buffTierThresholds;
                     int actual=resource?manager.GetResourceTier(card.id.Substring(4)):manager.GetBuffTier(card.id.Substring(5));
                     bool maxed=thresholds.Length==0||actual>=thresholds.Length;
-                    card.count.text=maxed?"Max":count+" / "+thresholds[Mathf.Clamp(actual,0,thresholds.Length-1)];
+                    card.count.text=maxed?ToolkitLocalization.Text("cauldron.max","Max"):count+" / "+thresholds[Mathf.Clamp(actual,0,thresholds.Length-1)];
                     card.fill.style.width=Length.Percent(maxed?100:Mathf.Clamp01(fill)*100);
                 }
                 card.border.EnableInClassList("reward-highlight", card.highlightedUntil >= Time.unscaledTime);
@@ -129,7 +138,7 @@ namespace TimelessEchoes.UI.Toolkit
             foreach (var section in sections)
             {
                 var tier = SectionTier(section);
-                if(section.lastTier!=tier){section.bonus.parent.RemoveFromClassList("tier-"+section.lastTier);section.bonus.parent.AddToClassList("tier-"+tier);section.lastTier=tier;}section.bonus.parent.style.display=section.infinity?DisplayStyle.None:DisplayStyle.Flex;section.bonus.text=section.infinity?"":"+"+(section.buffs ? tier * 2.5f : CauldronResourceYield.CategoryBonusPercent(tier, definition.config)).ToString("0.#")+"%";
+                if(section.lastTier!=tier){section.bonus.parent.RemoveFromClassList("tier-"+section.lastTier);section.bonus.parent.AddToClassList("tier-"+tier);section.lastTier=tier;}section.bonus.parent.style.display=section.infinity?DisplayStyle.None:DisplayStyle.Flex;section.bonus.text=section.infinity?"":"+"+(section.buffs ? tier * 2.5f : CauldronResourceYield.CategoryBonusPercent(tier, definition.config)).ToString("0.#", LocaleNumbers.Culture)+LocaleNumbers.PercentSuffix;
             }
             if (tooltipId != null) ShowTooltip(tooltipId);
         }

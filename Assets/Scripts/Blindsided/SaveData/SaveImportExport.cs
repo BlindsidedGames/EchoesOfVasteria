@@ -6,6 +6,7 @@ using System.Text;
 using Sirenix.Serialization;
 using UnityEngine;
 using Blindsided.SaveData.Migrations;
+using TimelessEchoes.UI.Toolkit;
 
 namespace Blindsided.SaveData
 {
@@ -44,7 +45,7 @@ namespace Blindsided.SaveData
 
             var binary = CurrentSaveCodec.Serialize(oracle.saveData);
             if (binary == null || binary.Length > MaxSaveBytes)
-                throw new InvalidDataException($"Save payload size is invalid ({binary?.Length ?? 0} bytes).");
+                throw new InvalidDataException(ToolkitLocalization.Text("save.export.invalid-size", "The save is too large or could not be prepared for export."));
 
             var envelope = BuildEnvelope(binary);
             var compressed = Deflate(envelope);
@@ -52,8 +53,7 @@ namespace Blindsided.SaveData
             if (encodedLength > MaxEncodedCharacters)
             {
                 throw new InvalidDataException(
-                    $"Encoded export is too large to import ({encodedLength:N0} characters; " +
-                    $"maximum {MaxEncodedCharacters:N0}). Nothing was copied.");
+                    ToolkitLocalization.Text("save.export.too-large", "The export exceeds the limit of {0:N0} characters. Nothing was copied.", MaxEncodedCharacters));
             }
 
             var exportString = ExportPrefix + Base64UrlEncode(compressed);
@@ -85,12 +85,12 @@ namespace Blindsided.SaveData
             committedToDisk = false;
             if (string.IsNullOrWhiteSpace(input))
             {
-                error = "Empty input";
+                error = ToolkitLocalization.Text("save.import.empty", "Enter a save to import.");
                 return false;
             }
             if (input.Length > MaxEncodedCharacters)
             {
-                error = "Input is too long";
+                error = ToolkitLocalization.Text("save.import.too-long", "The import exceeds the limit of {0:N0} characters.", MaxEncodedCharacters);
                 return false;
             }
 
@@ -99,7 +99,7 @@ namespace Blindsided.SaveData
             var isEs3 = input.TrimStart().StartsWith("{", StringComparison.Ordinal);
             if (!isCurrentFormat && !isLegacyFormat && !isEs3)
             {
-                error = "Invalid prefix";
+                error = ToolkitLocalization.Text("save.import.invalid-format", "This text is not a supported save export.");
                 return false;
             }
 
@@ -110,7 +110,12 @@ namespace Blindsided.SaveData
                 {
                     if (isEs3)
                     {
-                        if (!LegacyEs3Adapter.TryDecode(input, out decoded, out error)) return false;
+                        if (!LegacyEs3Adapter.TryDecode(input, out decoded, out var legacyError))
+                        {
+                            Debug.LogWarning("Legacy save import failed: " + legacyError);
+                            error = ToolkitLocalization.Text("save.import.invalid-data", "The save data is incomplete or damaged. Paste the complete export and try again.");
+                            return false;
+                        }
                     }
                     else
                     {
@@ -126,18 +131,19 @@ namespace Blindsided.SaveData
                 {
                     // Malformed pasted data is an expected input failure. Keep unexpected
                     // migration and activation failures on the existing reporting path.
-                    error = ex.Message;
+                    Debug.LogWarning("Save import data could not be decoded: " + ex.Message);
+                    error = ToolkitLocalization.Text("save.import.invalid-data", "The save data is incomplete or damaged. Paste the complete export and try again.");
                     return false;
                 }
                 if (decoded == null)
                 {
-                    error = "Failed to decode save";
+                    error = ToolkitLocalization.Text("save.import.decode-failed", "The save could not be read.");
                     return false;
                 }
                 if (decoded.SchemaVersion > GameData.CurrentSchemaVersion)
                 {
                     error =
-                        $"This save uses newer schema {decoded.SchemaVersion}; this build supports {GameData.CurrentSchemaVersion}.";
+                        ToolkitLocalization.Text("save.import.newer-version", "This save uses format {0}; this game supports format {1}. Update the game before importing.", decoded.SchemaVersion, GameData.CurrentSchemaVersion);
                     return false;
                 }
 
@@ -145,14 +151,15 @@ namespace Blindsided.SaveData
                 foreach (var warning in migration.Warnings) Debug.LogWarning(warning);
                 if (!migration.Succeeded || migration.Data == null)
                 {
-                    error = migration.Error ?? "Save migration failed";
+                    Debug.LogWarning("Save import migration failed: " + migration.Error);
+                    error = ToolkitLocalization.Text("save.import.migration-failed", "The save could not be upgraded to this game version. Your existing progress was not replaced.");
                     return false;
                 }
 
                 var oracle = Blindsided.Oracle.oracle;
                 if (oracle == null)
                 {
-                    error = "Oracle missing";
+                    error = ToolkitLocalization.Text("save.import.not-ready", "The game is not ready to import a save. Try again after loading finishes.");
                     return false;
                 }
 
@@ -161,7 +168,8 @@ namespace Blindsided.SaveData
                         out var commitError,
                         out committedToDisk))
                 {
-                    error = commitError ?? "The imported data could not be activated safely.";
+                    Debug.LogWarning("Imported save could not be activated: " + commitError);
+                    error = ToolkitLocalization.Text("save.import.activation-failed", "The imported save could not be activated safely. Retry after loading finishes.");
                     return false;
                 }
 
@@ -169,7 +177,7 @@ namespace Blindsided.SaveData
             }
             catch (Exception ex)
             {
-                error = ex.Message;
+                error = ToolkitLocalization.Text("save.import.unexpected-error", "The import could not be completed. Please try again. Technical details were recorded for support.");
                 Blindsided.Utilities.FeedbackForm.SubmitException(
                     "SaveImportExport.Import",
                     ex,

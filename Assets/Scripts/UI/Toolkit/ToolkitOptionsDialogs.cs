@@ -94,7 +94,7 @@ namespace TimelessEchoes.UI.Toolkit
                 if (durable) SetStatus("options.transfer.exported", "Exported to clipboard");
                 else SetStatus("options.transfer.rescue-export", "Rescue export copied from memory; the disk save failed");
             }
-            catch (Exception ex) { SetStatus("options.transfer.export-failed", "Export failed: {0}", ex.Message); }
+            catch (Exception ex) { Debug.LogWarning(ex); SetStatus("options.transfer.export-failed", "Export failed: {0}", ToolkitLocalization.Text("options.transfer.operation-failed", "The operation could not be completed. Please try again.")); }
         }
         private void Import()
         {
@@ -106,10 +106,10 @@ namespace TimelessEchoes.UI.Toolkit
                 else if (committed) { Imported?.Invoke(); SetStatus("options.transfer.import-committed", "Imported safely to disk; restart the game or use Retry to finish loading it"); }
                 else SetStatus("options.transfer.import-failed", "Import failed: {0}", error);
             }
-            catch (Exception ex) { if (status != null) SetStatus("options.transfer.import-exception", "Import exception: {0}", ex.Message); }
+            catch (Exception ex) { Debug.LogWarning(ex); if (status != null) SetStatus("options.transfer.import-exception", "Import exception: {0}", ToolkitLocalization.Text("options.transfer.operation-failed", "The operation could not be completed. Please try again.")); }
         }
-        private void Copy() { try { GUIUtility.systemCopyBuffer = input.value ?? string.Empty; SetStatus("options.transfer.copied", "Copied export string"); } catch (Exception ex) { SetStatus("options.transfer.copy-failed", "Copy failed: {0}", ex.Message); } }
-        private void Paste() { try { input.value = GUIUtility.systemCopyBuffer ?? string.Empty; } catch (Exception ex) { SetStatus("options.transfer.paste-failed", "Paste failed: {0}", ex.Message); } }
+        private void Copy() { try { GUIUtility.systemCopyBuffer = input.value ?? string.Empty; SetStatus("options.transfer.copied", "Copied export string"); } catch (Exception ex) { Debug.LogWarning(ex); SetStatus("options.transfer.copy-failed", "Copy failed: {0}", ToolkitLocalization.Text("options.transfer.operation-failed", "The operation could not be completed. Please try again.")); } }
+        private void Paste() { try { input.value = GUIUtility.systemCopyBuffer ?? string.Empty; } catch (Exception ex) { Debug.LogWarning(ex); SetStatus("options.transfer.paste-failed", "Paste failed: {0}", ToolkitLocalization.Text("options.transfer.operation-failed", "The operation could not be completed. Please try again.")); } }
         private void SetStatus(string key, string english, params object[] arguments)
         {
             statusKey = key; statusEnglish = english; statusArguments = arguments;

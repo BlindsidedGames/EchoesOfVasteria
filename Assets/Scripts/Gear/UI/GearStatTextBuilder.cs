@@ -28,10 +28,10 @@ namespace TimelessEchoes.Gear.UI
 			var craftedQuality = item != null ? UpgradeEvaluator.ComputeQualityPercent(crafting, item, slot) : 0f;
 			var currentQuality = current != null ? UpgradeEvaluator.ComputeQualityPercent(crafting, current, slot) : 0f;
 			var qualityIcon = StatIconLookup.GetIconTag(StatIconLookup.StatKey.Quality);
-			var qualityValue = $"{craftedQuality:0.#}%";
+			var qualityValue = LocaleNumbers.PercentPoints(craftedQuality);
 			var qualityText = !string.IsNullOrEmpty(qualityIcon)
 				? $"{qualityIcon} {qualityValue}"
-				: $"Quality {qualityValue}";
+				: TimelessEchoes.UI.Toolkit.ToolkitLocalization.Text("gear.quality-value", "Quality {0}", qualityValue);
 			string qualityArrow;
 			if (current == null)
 			{
@@ -39,7 +39,7 @@ namespace TimelessEchoes.Gear.UI
 			}
 			else
 			{
-				var currentQualityText = $"{currentQuality:0.#}%";
+				var currentQualityText = LocaleNumbers.PercentPoints(currentQuality);
 				if (string.Equals(qualityValue, currentQualityText, StringComparison.Ordinal))
 				{
 					qualityArrow = StatIconLookup.GetIconTag(StatIconLookup.StatKey.RightArrow);
@@ -64,7 +64,7 @@ namespace TimelessEchoes.Gear.UI
 			{
 				if (a == null || a.stat == null) continue;
 				var iconTag = StatIconLookup.GetIconTag(a.stat.heroMapping);
-				var valueText = $"{CalcUtils.FormatNumber(a.value)}{(a.stat.isPercent ? "%" : "")}";
+				var valueText = $"{CalcUtils.FormatNumber(a.value)}{(a.stat.isPercent ? LocaleNumbers.PercentSuffix : "")}";
 				var nameText = a.stat.GetName();
 
 				var hasCurrent = currentByMapping.TryGetValue(a.stat.heroMapping, out var cur);
@@ -75,7 +75,7 @@ namespace TimelessEchoes.Gear.UI
 				}
 				else
 				{
-					var currentValueText = $"{CalcUtils.FormatNumber(cur.value)}{(cur.isPercent ? "%" : "")}";
+					var currentValueText = $"{CalcUtils.FormatNumber(cur.value)}{(cur.isPercent ? LocaleNumbers.PercentSuffix : "")}";
 					if (string.Equals(valueText, currentValueText, StringComparison.Ordinal))
 					{
 						arrow = StatIconLookup.GetIconTag(StatIconLookup.StatKey.RightArrow);
@@ -115,7 +115,7 @@ namespace TimelessEchoes.Gear.UI
 				var info = currentByMapping[mapping];
 				var isPercent = info.isPercent;
 				var name = info.name;
-				var valueText = $"{CalcUtils.FormatNumber(0)}{(isPercent ? "%" : "")}";
+				var valueText = $"{CalcUtils.FormatNumber(0)}{(isPercent ? LocaleNumbers.PercentSuffix : "")}";
 				if (!string.IsNullOrEmpty(iconTag))
 					lines.Add($"{prefix}{iconTag} {valueText}");
 				else
@@ -196,10 +196,10 @@ namespace TimelessEchoes.Gear.UI
 			var totalsLines = new List<string> { "<b>Totals</b>" };
 
 			var qualityIcon = StatIconLookup.GetIconTag(StatIconLookup.StatKey.Quality);
-			var qualityValue = $"{totalQuality:0.#}%";
+			var qualityValue = LocaleNumbers.PercentPoints(totalQuality);
 			totalsLines.Add(!string.IsNullOrEmpty(qualityIcon)
 				? $"{qualityIcon} {qualityValue}"
-				: $"Quality {qualityValue}");
+				: TimelessEchoes.UI.Toolkit.ToolkitLocalization.Text("gear.quality-value", "Quality {0}", qualityValue));
 
 			var mappings = new List<HeroStatMapping>(totalsByMapping.Keys);
 			mappings.Sort(StatSortOrder.Compare);
@@ -213,7 +213,7 @@ namespace TimelessEchoes.Gear.UI
 
 				var iconTag = StatIconLookup.GetIconTag(mapping);
 				var isPercent = percentByMapping.TryGetValue(mapping, out var percent) && percent;
-				var valueText = $"{CalcUtils.FormatNumber(totalValue)}{(isPercent ? "%" : string.Empty)}";
+				var valueText = $"{CalcUtils.FormatNumber(totalValue)}{(isPercent ? LocaleNumbers.PercentSuffix : string.Empty)}";
 				if (!string.IsNullOrEmpty(iconTag))
 				{
 					totalsLines.Add($"{iconTag} {valueText}");
@@ -353,7 +353,7 @@ namespace TimelessEchoes.Gear.UI
 			{
 				if (a == null || a.stat == null) continue;
 				var iconTag = StatIconLookup.GetIconTag(a.stat.heroMapping);
-				var valueText = $"{CalcUtils.FormatNumber(a.value)}{(a.stat.isPercent ? "%" : "")}";
+				var valueText = $"{CalcUtils.FormatNumber(a.value)}{(a.stat.isPercent ? LocaleNumbers.PercentSuffix : "")}";
 				var nameText = a.stat.GetName();
 				if (!string.IsNullOrEmpty(iconTag))
 					lines.Add($"{iconTag} {valueText}");

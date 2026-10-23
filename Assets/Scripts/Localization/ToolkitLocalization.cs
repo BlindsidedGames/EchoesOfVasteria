@@ -93,18 +93,25 @@ namespace TimelessEchoes.UI.Toolkit
                 if (operation.IsValid() && operation.IsDone && operation.Status == AsyncOperationStatus.Succeeded &&
                     operation.Result.Entry != null && !string.IsNullOrEmpty(operation.Result.Entry.LocalizedValue))
                 {
-                    try { return operation.Result.Entry.GetLocalizedString(arguments); }
+                    try { return operation.Result.Entry.IsSmart ? operation.Result.Entry.GetLocalizedString(arguments) :
+                        string.Format(Blindsided.Utilities.LocaleNumbers.Culture, operation.Result.Entry.LocalizedValue, arguments ?? Array.Empty<object>()); }
                     catch (FormatException) { /* Keep English usable when a translated template has invalid arguments. */ }
                 }
             }
-            try { return string.Format(LocalizationSettings.SelectedLocaleAsync.IsDone ?
-                LocalizationSettings.SelectedLocaleAsync.Result?.Identifier.CultureInfo ?? CultureInfo.CurrentCulture : CultureInfo.CurrentCulture,
+            try { return string.Format(Blindsided.Utilities.LocaleNumbers.Culture,
                 english ?? string.Empty, arguments ?? Array.Empty<object>()); }
             catch (FormatException) { return english ?? string.Empty; }
         }
         public static string Name(UnityEngine.Object value, string category = "resource")
         {
             if (!value) return string.Empty;
+            if (category == "stat")
+            {
+                if (value is TimelessEchoes.Upgrades.BaseStat baseStat && baseStat.AssociatedStat)
+                    return baseStat.AssociatedStat.GetName();
+                if (value is TimelessEchoes.Gear.StatDefSO statDefinition)
+                    return statDefinition.GetName();
+            }
             if (value is TimelessEchoes.Tasks.TaskData task && (category == "resource" || category == "task"))
                 return Text("task." + value.name, task.taskName);
             return Text(category + "." + value.name,

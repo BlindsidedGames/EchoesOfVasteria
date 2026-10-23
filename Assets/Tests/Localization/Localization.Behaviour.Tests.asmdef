@@ -1,7 +1,23 @@
 {
   "name": "Localization.Behaviour.Tests",
-  "references": ["TimelessEchoes.Runtime", "Unity.Localization", "Unity.Addressables", "Unity.ResourceManager"],
-  "includePlatforms": ["Editor"],
-  "defineConstraints": ["UNITY_INCLUDE_TESTS"],
-  "optionalUnityReferences": ["TestAssemblies"]
+  "references": [
+    "TimelessEchoes.Runtime",
+    "Unity.Localization",
+    "Unity.Addressables",
+    "Unity.ResourceManager"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "overrideReferences": true,
+  "precompiledReferences": [
+    "nunit.framework.dll",
+    "Sirenix.Serialization.dll"
+  ]
 }

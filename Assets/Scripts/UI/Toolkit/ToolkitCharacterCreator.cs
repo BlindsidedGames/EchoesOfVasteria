@@ -38,6 +38,9 @@ namespace TimelessEchoes.UI.Toolkit
         private int previewFacing;
         private float nextFrame;
         private bool optional;
+        private Action refreshLocale;
+        private static string T(string key, string english, params object[] args) => ToolkitLocalization.Text(key, english, args);
+        private void LocaleChanged() { CloseColourPicker(); refreshLocale?.Invoke(); foreach (var refresh in refreshChoices) refresh(); RefreshPresets(); }
         public bool IsOpen => root != null;
         public static bool BlocksWorldInput { get; private set; }
 
@@ -84,7 +87,7 @@ namespace TimelessEchoes.UI.Toolkit
             theme.Apply(root); ToolkitGameplay.Apply(root, theme); document.rootVisualElement.Add(root);
             BlocksWorldInput = true;
             sheet = E(root, "surface character-sheet");
-            L(sheet, optional ? "Your character" : "Create your character", "heading");
+            ToolkitLocalization.Bind(L(sheet, "", "heading"), optional ? "character.your-character" : "character.create", optional ? "Your character" : "Create your character");
             var content = E(sheet, "character-content");
             var left = E(content, "character-preview-column");
             var portraitRow = E(left, "character-portrait-row");
@@ -93,20 +96,20 @@ namespace TimelessEchoes.UI.Toolkit
             var actionIndex = 0; previewFacing = 0; pose = "Idle_Down";
             void UpdatePose() { pose = rows[actionIndex] + "_" + (previewFacing == 0 ? "Down" : previewFacing == 2 ? "Up" : "Right"); nextFrame = 0; }
             var turnLeft = B(portraitRow, "‹", () => { previewFacing = (previewFacing + 3) % 4; UpdatePose(); }, "inventory-character-turn character-turn");
-            turnLeft.name = "character-preview-left"; turnLeft.tooltip = "Turn left";
+            turnLeft.name = "character-preview-left"; ToolkitLocalization.BindTooltip(turnLeft, "character.turn-left", "Turn left");
             var previewBox = E(portraitRow, "character-preview"); preview = new CharacterImage(previewBox, 1.5f);
             var turnRight = B(portraitRow, "›", () => { previewFacing = (previewFacing + 1) % 4; UpdatePose(); }, "inventory-character-turn character-turn");
-            turnRight.name = "character-preview-right"; turnRight.tooltip = "Turn right";
+            turnRight.name = "character-preview-right"; ToolkitLocalization.BindTooltip(turnRight, "character.turn-right", "Turn right");
             var previewControls = E(left, "character-preview-controls");
             Label actionLabel = null;
-            void ChangeAction(int step) { actionIndex = (actionIndex + step + actions.Length) % actions.Length; actionLabel.text = actions[actionIndex]; UpdatePose(); }
+            void ChangeAction(int step) { actionIndex = (actionIndex + step + actions.Length) % actions.Length; actionLabel.text = T("character.action." + actions[actionIndex], actions[actionIndex]); UpdatePose(); }
             var previousAction = Arrow(previewControls, false, () => ChangeAction(-1));
-            previousAction.name = "character-preview-previous-action"; previousAction.tooltip = "Previous animation";
-            actionLabel = L(previewControls, "Idle", "character-animation-label"); actionLabel.name = "character-preview-pose";
+            previousAction.name = "character-preview-previous-action"; ToolkitLocalization.BindTooltip(previousAction, "character.previous-animation", "Previous animation");
+            actionLabel = L(previewControls, T("character.action.Idle", "Idle"), "character-animation-label"); actionLabel.name = "character-preview-pose";
             var nextAction = Arrow(previewControls, true, () => ChangeAction(1));
-            nextAction.name = "character-preview-next-action"; nextAction.tooltip = "Next animation";
+            nextAction.name = "character-preview-next-action"; ToolkitLocalization.BindTooltip(nextAction, "character.next-animation", "Next animation");
             var right = E(content, "character-options");
-            nameInput = new TextField("Name") { name = "character-name", value = draft.Name, maxLength = 24 };
+            nameInput = new TextField(T("character.name", "Name")) { name = "character-name", value = draft.Name, maxLength = 24 };
             right.Add(nameInput); nameInput.RegisterValueChangedCallback(e => { draft.Name = e.newValue; status.text = ""; });
             var scroll = ToolkitControls.RecessedScroll(right, "character-options-scroll", theme);
             refreshChoices.Clear();
@@ -116,7 +119,7 @@ namespace TimelessEchoes.UI.Toolkit
                 if (slot == CharacterSlot.Head) choices.Insert(0, null);
                 var row = E(scroll.contentContainer, "character-option-row"); row.name = "character-option-" + slot;
                 var heading = E(row, "row character-option-heading");
-                L(heading, slot == CharacterSlot.Head ? "Hair" : slot == CharacterSlot.Chest ? "Top" : slot == CharacterSlot.Legs ? "Trousers" : "Shoes", "strong");
+                ToolkitLocalization.Bind(L(heading, "", "strong"), "character.slot." + slot, slot == CharacterSlot.Head ? "Hair" : slot == CharacterSlot.Chest ? "Top" : slot == CharacterSlot.Legs ? "Trousers" : "Shoes");
                 var selectors = E(row, "row character-selectors");
                 var styles = choices.Select(p => p?.Style ?? "").Distinct().ToList();
                 var styleBox = E(selectors, "character-selector");
@@ -128,9 +131,9 @@ namespace TimelessEchoes.UI.Toolkit
                 List<CharacterCatalog.Part> Variants() => choices.Where(p => p != null && p.Style == catalog.Find(draft.Get(slot))?.Style).ToList();
                 void Refresh() {
                     var selected = catalog.Find(draft.Get(slot));
-                    label.text = selected?.StyleLabel ?? "None";
-                    label.tooltip = "Style " + (styles.IndexOf(selected?.Style ?? "") + 1) + " of " + styles.Count;
-                    colourLabel.text = selected?.Colour.Replace('_', ' ') ?? "";
+                    label.text = selected == null ? T("common.none", "None") : T("character.style." + selected.Style, selected.StyleLabel);
+                    ToolkitLocalization.BindTooltip(label, "character.style-count", "Style {0} of {1}", styles.IndexOf(selected?.Style ?? "") + 1, styles.Count);
+                    colourLabel.text = selected == null ? "" : T("character.colour." + selected.Colour, selected.Colour.Replace('_', ' '));
                     PaintSwatch(selectedSwatch, selected?.Colour);
                     colourButton.style.display = string.IsNullOrEmpty(selected?.Colour) ? DisplayStyle.None : DisplayStyle.Flex;
                     colourButton.SetEnabled(Variants().Count > 1);
@@ -149,9 +152,9 @@ namespace TimelessEchoes.UI.Toolkit
                         ?? variants.FirstOrDefault();
                     draft.Set(slot, replacement?.id ?? ""); Refresh();
                 }
-                var previous = Arrow(controls, false, () => ChangeStyle(-1)); previous.name = "character-previous-" + slot; previous.tooltip = "Previous style";
+                var previous = Arrow(controls, false, () => ChangeStyle(-1)); previous.name = "character-previous-" + slot; ToolkitLocalization.BindTooltip(previous, "character.previous-style", "Previous style");
                 label = L(controls, "", "character-choice-label"); label.name = "character-style-" + slot;
-                var next = Arrow(controls, true, () => ChangeStyle(1)); next.name = "character-next-" + slot; next.tooltip = "Next style";
+                var next = Arrow(controls, true, () => ChangeStyle(1)); next.name = "character-next-" + slot; ToolkitLocalization.BindTooltip(next, "character.next-style", "Next style");
                 previous.SetEnabled(styles.Count > 1); next.SetEnabled(styles.Count > 1);
                 if (styles.Count == 1) { previous.style.display = DisplayStyle.None; next.style.display = DisplayStyle.None; }
                 colourButton = B(selectors, "", () => OpenColourPicker(colourButton, slot, Variants(), draft.Get(slot), part => {
@@ -163,26 +166,28 @@ namespace TimelessEchoes.UI.Toolkit
                 L(colourButton, "▾", "small");
                 refreshChoices.Add(Refresh); Refresh();
             }
-            var presets = E(sheet, "character-presets"); L(presets, "Saved characters", "strong");
+            var presets = E(sheet, "character-presets"); ToolkitLocalization.Bind(L(presets, "", "strong"), "character.saved", "Saved characters");
             var presetRow = E(presets, "row character-preset-row");
             for (var i = 0; i < 3; i++) {
                 var index = i; var box = E(presetRow, "character-preset");
-                presetLoad[i] = B(box, "Preset " + (i + 1), () => LoadPreset(index)); presetLoad[i].name = "character-load-preset-" + i;
+                presetLoad[i] = B(box, T("character.preset", "Preset {0}", i + 1), () => LoadPreset(index)); presetLoad[i].name = "character-load-preset-" + i;
                 presetLoad[i].enableRichText = false;
                 presetLoad[i].AddToClassList("character-load-preset");
-                var save = B(box, "Save", () => SavePreset(index)); save.name = "character-save-preset-" + i;
-                save.tooltip = "Save current character to slot " + (i + 1);
+                var save = B(box, "", () => SavePreset(index)); ToolkitLocalization.Bind(save, "common.save", "Save"); save.name = "character-save-preset-" + i;
+                ToolkitLocalization.BindTooltip(save, "character.save-slot", "Save current character to slot {0}", i + 1);
             }
             status = L(sheet, "", "character-status"); status.name = "character-status";
             var footer = E(sheet, "row character-footer");
-            if (optional) B(footer, "Cancel", Hide);
-            var confirm = B(footer, optional ? "Save character" : "Start game", Confirm); confirm.name = "character-confirm";
+            if (optional) ToolkitLocalization.Bind(B(footer, "", Hide), "common.cancel", "Cancel");
+            var confirm = B(footer, "", Confirm); ToolkitLocalization.Bind(confirm, optional ? "character.save" : "character.start", optional ? "Save character" : "Start game"); confirm.name = "character-confirm";
+            refreshLocale = () => { nameInput.label = T("character.name", "Name"); actionLabel.text = T("character.action." + actions[actionIndex], actions[actionIndex]); };
+            ToolkitLocalization.Changed += LocaleChanged;
             RefreshPresets(); nextFrame = 0; nameInput.Focus(); return true;
         }
         private void SavePreset(int index)
         {
             draft.Name = nameInput.value;
-            status.text = CharacterPresetStore.TrySave(index, draft, out var error) ? "Saved to preset " + (index + 1) + "." : error;
+            status.text = CharacterPresetStore.TrySave(index, draft, out var error) ? T("character.preset-saved", "Saved to preset {0}.", index + 1) : error;
             RefreshPresets();
         }
         private void LoadPreset(int index)
@@ -201,8 +206,8 @@ namespace TimelessEchoes.UI.Toolkit
         {
             for (var i = 0; i < 3; i++) {
                 if (!CharacterPresetStore.TryLoad(i, out var preset, out var error)) { status.text = error; presetLoad[i].SetEnabled(false); continue; }
-                presetLoad[i].text = string.IsNullOrWhiteSpace(preset?.Name) ? "Empty " + (i + 1) : preset.Name;
-                presetLoad[i].tooltip = preset == null ? "No character saved" : "Load " + preset.Name;
+                presetLoad[i].text = string.IsNullOrWhiteSpace(preset?.Name) ? T("character.empty-preset", "Empty {0}", i + 1) : preset.Name;
+                presetLoad[i].tooltip = preset == null ? T("character.no-preset", "No character saved") : T("character.load-preset", "Load {0}", preset.Name);
                 presetLoad[i].SetEnabled(preset != null);
             }
         }
@@ -214,13 +219,14 @@ namespace TimelessEchoes.UI.Toolkit
             Blindsided.EventHandler.SaveData();
             if (!Oracle.oracle.SaveToSlot(Oracle.oracle.CurrentSlot)) {
                 Oracle.oracle.saveData.Character = owner;
-                status.text = "Your character could not be saved. Please try again."; return;
+                status.text = T("character.save-failed", "Your character could not be saved. Please try again."); return;
             }
             Hide();
         }
         public void Hide()
         {
             var wasOpen = root != null;
+            ToolkitLocalization.Changed -= LocaleChanged; refreshLocale = null;
             if (root != null) BlocksWorldInput = false;
             CloseColourPicker();
             preview?.Set(null, 0);
@@ -265,7 +271,7 @@ namespace TimelessEchoes.UI.Toolkit
             foreach (var part in colours) {
                 var button = B(grid, "", () => { choose(part); CloseColourPicker(); }, "character-swatch-button");
                 button.name = "character-colour-" + slot + "-" + part.Colour;
-                button.tooltip = part.Colour.Replace('_', ' ');
+                button.tooltip = T("character.colour." + part.Colour, part.Colour.Replace('_', ' '));
                 button.EnableInClassList("selected", part.id == selected);
                 PaintSwatch(E(button, "character-colour-swatch"), part.Colour);
                 if (part.id == selected) selectedButton = button;

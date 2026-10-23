@@ -1,3 +1,4 @@
+using Blindsided.Utilities;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -67,7 +68,7 @@ namespace TimelessEchoes.Skills
             if (baseFontSize.HasValue)
             {
                 float sizedown = Mathf.Max(1f, baseFontSize.Value - 1f);
-                return $"<size={sizedown:0.#}>{xpText}</size>";
+                return $"<size={sizedown.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture)}>{xpText}</size>";
             }
 
             return xpText;
@@ -79,7 +80,7 @@ namespace TimelessEchoes.Skills
             if (Mathf.Approximately(xpAmount, rounded))
                 return rounded.ToString();
 
-            return xpAmount.ToString("0.##");
+            return xpAmount.ToString("0.##", LocaleNumbers.Culture);
         }
     }
 }

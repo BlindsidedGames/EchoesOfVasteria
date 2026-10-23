@@ -22,6 +22,8 @@ namespace TimelessEchoes
         private DadJokeWorldView worldView;
         private int currentJokeIndex;
         private string currentJokeEnglish;
+        public string CurrentJoke => currentJokeEnglish == null ? string.Empty :
+            ToolkitLocalization.Text(JokeKey(currentJokeEnglish), currentJokeEnglish);
 
 
         private void Start()

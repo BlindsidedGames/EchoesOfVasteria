@@ -211,6 +211,13 @@ namespace TimelessEchoes.MapGeneration
             decorRoot.name = $"SegmentDecor_{offset.x}";
             decorRoot.transform.SetParent(decorParent, false);
             // Async tile/decor generation to avoid long main-thread spikes
+#if UNITY_EDITOR
+            // Screenshot recipes require fixed generation ordering. Frame-budget
+            // yields otherwise let animation/AI run between placement operations.
+            if (TimelessEchoes.Platform.StartupDiagnostics.EditorScreenshotSession)
+                chunkGenerator?.GenerateSegment(offset, segmentSize, decorRoot.transform);
+            else
+#endif
             if (chunkGenerator != null)
                 yield return chunkGenerator.GenerateSegmentAsync(offset, segmentSize, decorRoot.transform);
             else
@@ -224,6 +231,11 @@ namespace TimelessEchoes.MapGeneration
             var maxX = offset.x + segmentSize.x;
             if (maxX > minX)
             {
+#if UNITY_EDITOR
+                if (TimelessEchoes.Platform.StartupDiagnostics.EditorScreenshotSession)
+                    taskGenerator?.GenerateSegment(minX, maxX, tasksRoot.transform);
+                else
+#endif
                 if (taskGenerator != null)
                     yield return taskGenerator.GenerateSegmentAsync(minX, maxX, tasksRoot.transform);
                 else

@@ -53,7 +53,7 @@ namespace TimelessEchoes.UI.Toolkit
                     foreach (var pair in forge.HighestRollByStat)
                         if (StatDefUtils.MatchesStatId(pair.Key, stat) && (!value.HasValue || pair.Value > value)) value = pair.Value;
                 StatIconLookup.TryGetIcon(stat.heroMapping, out var sprite);
-                var row = AddRow(rolls, stat.GetName(), value.HasValue ? Number(value.Value) + (stat.isPercent ? "%" : "") : "—", sprite);
+                var row = AddRow(rolls, stat.GetName(), value.HasValue ? Number(value.Value) + (stat.isPercent ? LocaleNumbers.PercentSuffix : "") : "—", sprite);
                 row.name = "town-stat-roll-" + stat.id;
                 row.AddToClassList("town-statistics-roll");
             }
@@ -95,7 +95,7 @@ namespace TimelessEchoes.UI.Toolkit
                 if (data?.Forge?.HighestRollByStat != null)
                     foreach (var pair in data.Forge.HighestRollByStat)
                         if (StatDefUtils.MatchesStatId(pair.Key, stat) && (!best.HasValue || pair.Value > best)) best = pair.Value;
-                Set("town-stat-roll-" + stat.id, best.HasValue ? Number(best.Value) + (stat.isPercent ? "%" : "") : "—");
+                Set("town-stat-roll-" + stat.id, best.HasValue ? Number(best.Value) + (stat.isPercent ? LocaleNumbers.PercentSuffix : "") : "—");
             }
         }
 
@@ -109,7 +109,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void Row(VisualElement parent, string id, string fallback, string value) =>
             AddRow(parent, ToolkitLocalization.Text("town-stats." + id, fallback), value).name = "town-statistics-" + id;
-        private static string Number(double value) => value.ToString("N2", System.Globalization.CultureInfo.CurrentCulture).TrimEnd('0').TrimEnd(System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.ToCharArray());
+        private static string Number(double value) => value.ToString("N2", LocaleNumbers.Culture).TrimEnd('0').TrimEnd(Blindsided.Utilities.LocaleNumbers.Culture.NumberFormat.NumberDecimalSeparator.ToCharArray());
         private static VisualElement AddRow(VisualElement parent, string label, string value, Sprite sprite = null)
         {
             var row = new VisualElement(); row.AddToClassList("town-statistics-row"); parent.Add(row);

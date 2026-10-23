@@ -10,8 +10,8 @@ namespace TimelessEchoes.Gear.UI
         public string BuildStatsText(GameData.ForgeStats forge, bool preserveSectionIds = false)
         {
             var text = new StringBuilder();
-            text.AppendLine(ToolkitLocalization.Text("town-stats.crafted", "Items crafted") + ": " + (forge?.TotalCrafts ?? 0).ToString("N0"));
-            text.AppendLine(ToolkitLocalization.Text("town-stats.salvaged", "Items salvaged") + ": " + (forge?.TotalSalvaged ?? 0).ToString("N0"));
+            text.AppendLine(ToolkitLocalization.Text("town-stats.crafted", "Items crafted") + ": " + (forge?.TotalCrafts ?? 0).ToString("N0", Blindsided.Utilities.LocaleNumbers.Culture));
+            text.AppendLine(ToolkitLocalization.Text("town-stats.salvaged", "Items salvaged") + ": " + (forge?.TotalSalvaged ?? 0).ToString("N0", Blindsided.Utilities.LocaleNumbers.Culture));
             return text.ToString();
         }
     }

@@ -207,7 +207,7 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 var material = build?.Materials?.ElementAtOrDefault(i); Visible(strip.Counts[i].parent, material != null);
                 if (material == null) continue;
-                strip.Icons[i].sprite = material.Icon; strip.Counts[i].text = material.Required.ToString("N0", CultureInfo.CurrentCulture);
+                strip.Icons[i].sprite = material.Icon; strip.Counts[i].text = material.Required.ToString("N0", Blindsided.Utilities.LocaleNumbers.Culture);
                 strip.Counts[i].EnableInClassList("fields-shortfall", material.Owned < material.Required);
                 strip.Counts[i].parent.tooltip = ToolkitLocalization.Text("fields.cost-owned", "{0}: {1:N0} owned / {2:N0} needed", material.Title, material.Owned, material.Required);
             }

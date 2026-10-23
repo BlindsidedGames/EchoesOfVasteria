@@ -1,3 +1,5 @@
+using Blindsided.Utilities;
+using TimelessEchoes.UI.Toolkit;
 using System.Collections.Generic;
 using System.Linq;
 using TimelessEchoes.Upgrades;
@@ -11,7 +13,8 @@ namespace TimelessEchoes.UI.Cauldron
 		{
 			cachedCauldronManager ??= CauldronManager.Instance;
 
-			string sectionName;
+			string T(string key, string english, params object[] args) => ToolkitLocalization.Text(key, english, args);
+            string sectionName;
 			int sectionTier;
 			string cardName;
 			cardTier = 1;
@@ -31,9 +34,10 @@ namespace TimelessEchoes.UI.Cauldron
 				var config = CauldronResourceYield.Config;
                 cardTier = cachedCauldronManager != null ? cachedCauldronManager.GetResourceTier(cardName) : 0;
                 var sectPct = CauldronResourceYield.CategoryBonusPercent(sectionTier, config);
-                sectionEffect = $"Category Yield: +{FormatPercentNoTrailingZero(sectPct)}% {sectionName}";
+                sectionEffect = T("cauldron.category-yield", "Category Yield: +{0} {1}", LocaleNumbers.PercentPoints(sectPct), sectionName);
+                cardName = resourceById.TryGetValue(id, out var namedResource) ? ToolkitLocalization.Name(namedResource) : ToolkitLocalization.Text("resource." + cardName, cardName);
                 var pct = CauldronResourceYield.CardBonusPercent(cardTier, config);
-                cardEffect = $"+{pct:N0}% {cardName} Yield (gathering and harvests)";
+                cardEffect = T("cauldron.card-yield", "+{0} {1} Yield (gathering and harvests)", LocaleNumbers.PercentPoints(pct, "N0"), cardName);
 			}
 			else if (id.StartsWith("BUFF:"))
 			{
@@ -42,21 +46,21 @@ namespace TimelessEchoes.UI.Cauldron
 				if (buffById.TryGetValue(id, out var buff) && buff != null)
 					cardName = buff.GetDisplayName();
 				cardTier = Mathf.Max(1, cachedCauldronManager != null ? cachedCauldronManager.GetBuffTier(assetName) : 1);
-				sectionName = "Buffs";
+				sectionName = T("hub.buffs", "Buffs");
 				sectionTier = cachedCauldronManager != null ? Mathf.Max(0, cachedCauldronManager.GetBuffsGroupTier()) : 0;
 				var sectPct = sectionTier * 2.5f;
-				sectionEffect = $"Global Buff Power: +{FormatPercentNoTrailingZero(sectPct)}%";
+				sectionEffect = T("cauldron.global-buff-power", "Global Buff Power: +{0}", LocaleNumbers.PercentPoints(sectPct));
 				var cdr = cachedCauldronManager != null ? Mathf.Max(0f, cachedCauldronManager.GetBuffCooldownReductionPercent(assetName)) : 0f;
 				var groupBonus = sectionTier * 2.5f;
 				var totalPower = cachedCauldronManager != null ? Mathf.Max(0f, cachedCauldronManager.GetBuffPowerPercent(assetName)) : 0f;
 				var perBuffOnly = Mathf.Max(0f, totalPower - groupBonus);
-				cardEffect = $"Cooldown: -{cdr:N0}% | Power: +{perBuffOnly:N0}%";
+				cardEffect = T("cauldron.card-buff", "Cooldown: -{0} | Power: +{1}", LocaleNumbers.PercentPoints(cdr, "N0"), LocaleNumbers.PercentPoints(perBuffOnly, "N0"));
 			}
 			else if (id.StartsWith("INF:"))
 			{
 				isInfinity = true;
 				var mappingStr = id.Substring(4);
-				sectionName = "Eternal Boon Formula";
+				sectionName = T("cauldron.boon-formula", "Eternal Boon Formula");
 				sectionTier = 0;
 				sectionEffect = string.Empty;
 				cardName = mappingStr;
@@ -71,14 +75,14 @@ namespace TimelessEchoes.UI.Cauldron
 					cardName = display;
 					var dp = so != null ? Mathf.Clamp(so.DecimalPlaces, 0, 6) : 0;
 					string fmt = "N" + dp;
-					var valStr = val.ToString(fmt);
-					cardEffect = isPct ? $"+{valStr}% {display}" : $"+{valStr} {display}";
+					var valStr = val.ToString(fmt, LocaleNumbers.Culture);
+					cardEffect = isPct ? $"+{valStr}{LocaleNumbers.PercentSuffix} {display}" : $"+{valStr} {display}";
 					// Show formula details for Infinity on the section line
 					int n = 0;
 					var key = $"INF:{mapping}";
 					if (oracle != null && oracle.saveData != null && oracle.saveData.CauldronCardCounts != null)
 						oracle.saveData.CauldronCardCounts.TryGetValue(key, out n);
-					sectionEffect = $"{n:N0} ^ {(so != null ? so.Exponent : 1f)} = {val.ToString(fmt)}";
+					sectionEffect = LocaleNumbers.Format($"{n:N0} ^ {(so != null ? so.Exponent : 1f)} = {val.ToString(fmt, LocaleNumbers.Culture)}");
 				}
 				else cardEffect = string.Empty;
 			}
@@ -92,14 +96,14 @@ namespace TimelessEchoes.UI.Cauldron
 			var sb = new System.Text.StringBuilder(128);
 			// Card block first
 			sb.Append("<b>"); sb.Append(cardName); sb.Append("</b>");
-			if (!isInfinity) { sb.Append(" | Tier "); sb.Append(cardTier); }
+			if (!isInfinity) { sb.Append(" | "); sb.Append(T("cauldron.tier", "Tier {0}", cardTier)); }
 			sb.Append('\n');
-			sb.Append("Effect: "); sb.Append(cardEffect);
+			sb.Append(T("cauldron.effect", "Effect: {0}", "")); sb.Append(cardEffect);
 			// Half-height spacer between parts
 			sb.Append("<line-height=50%>\n</line-height>\n");
 			// Section block below card
 			sb.Append("<b>"); sb.Append(sectionName); sb.Append("</b>");
-			if (!isInfinity) { sb.Append(" | Tier "); sb.Append(sectionTier); }
+			if (!isInfinity) { sb.Append(" | "); sb.Append(T("cauldron.tier", "Tier {0}", sectionTier)); }
 			sb.Append('\n');
 			if (isInfinity)
 			{
@@ -108,7 +112,7 @@ namespace TimelessEchoes.UI.Cauldron
 			}
 			else
 			{
-				sb.Append("Effect: "); sb.Append(sectionEffect);
+				sb.Append(T("cauldron.effect", "Effect: {0}", "")); sb.Append(sectionEffect);
 			}
 
 			return sb.ToString();
@@ -116,7 +120,7 @@ namespace TimelessEchoes.UI.Cauldron
 
 		public static string FormatGroupName(CauldronManager.AEResourceGroup grp)
 		{
-			return grp switch
+			return ToolkitLocalization.Text("skill." + (grp == CauldronManager.AEResourceGroup.Woodcutting ? "Woodcutting" : grp.ToString()), grp switch
 			{
 				CauldronManager.AEResourceGroup.Farming => "Farming",
 				CauldronManager.AEResourceGroup.Fishing => "Fishing",
@@ -124,7 +128,7 @@ namespace TimelessEchoes.UI.Cauldron
 				CauldronManager.AEResourceGroup.Woodcutting => "Logging",
 				CauldronManager.AEResourceGroup.Looting => "Looting",
 				_ => "Combat"
-			};
+			});
 		}
 
 		private static string FormatPercentNoTrailingZero(float value)
@@ -133,7 +137,7 @@ namespace TimelessEchoes.UI.Cauldron
 			var rounded1 = Mathf.Round(value * 10f) / 10f;
 			var whole = Mathf.Round(rounded1);
 			bool hasFraction = Mathf.Abs(rounded1 - whole) > 0.0001f;
-			return hasFraction ? $"{rounded1:N1}" : $"{whole:N0}";
+			return hasFraction ? LocaleNumbers.Format($"{rounded1:N1}") : LocaleNumbers.Format($"{whole:N0}");
 		}
  }
 }

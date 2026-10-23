@@ -1,4 +1,5 @@
 using TimelessEchoes.UI.Toolkit;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -25,7 +26,7 @@ namespace TimelessEchoes.UI
         [SerializeField] private float displaySeconds = 5f;
         [SerializeField] private List<Sprite> tierBackgroundSprites;
 
-        private readonly Dictionary<Skill, List<string>> pendingMilestoneMessages = new();
+        private readonly Dictionary<Skill, List<Func<string>>> pendingMilestoneMessages = new();
         private readonly Dictionary<Skill, Dictionary<MilestoneDefinition, int>> milestoneTierCache = new();
         private readonly Dictionary<Skill, PendingLevelRange> pendingLevelRanges = new();
 
@@ -102,7 +103,7 @@ namespace TimelessEchoes.UI
 
             var oldTier = Mathf.Max(1, newTier - 1);
             var backgroundSprite = GetBackgroundSprite(newTier - 1);
-            var text = ToolkitLocalization.Text("notification.resource-tier", "Tier {0}<sprite=194>{1}" , oldTier, newTier);
+            Func<string> text = () => ToolkitLocalization.Text("notification.resource-tier", "Tier {0}<sprite=194>{1}" , oldTier, newTier);
 
             ShowNotification(new NotificationData(resource.icon, text, backgroundSprite));
         }
@@ -145,24 +146,18 @@ namespace TimelessEchoes.UI
             var endLevel = Mathf.Max(startLevel, range.EndLevel);
             pendingLevelRanges.Remove(skill);
 
-            var name = string.IsNullOrWhiteSpace(skill.skillName) ? ToolkitLocalization.Text("notification.skill", "Skill") : ToolkitLocalization.Text("skill." + skill.name, skill.skillName);
             var backgroundSprite = GetBackgroundSprite(0);
-
-            var builder = new StringBuilder();
-            builder.Append(ToolkitLocalization.Text("notification.skill-level", "{0} Lv {1}<sprite=194>{2}" , name, startLevel, endLevel));
-
-            if (pendingMilestoneMessages.TryGetValue(skill, out var messages) && messages.Count > 0)
+            var messages = pendingMilestoneMessages.TryGetValue(skill, out var pending)
+                ? pending.ToArray() : Array.Empty<Func<string>>();
+            pending?.Clear();
+            string Message()
             {
-                foreach (var message in messages)
-                {
-                    builder.Append('\n');
-                    builder.Append(message);
-                }
-
-                messages.Clear();
+                var name = string.IsNullOrWhiteSpace(skill.skillName) ? ToolkitLocalization.Text("notification.skill", "Skill") : ToolkitLocalization.Text("skill." + skill.name, skill.skillName);
+                var builder = new StringBuilder(ToolkitLocalization.Text("notification.skill-level", "{0} Lv {1}<sprite=194>{2}", name, startLevel, endLevel));
+                foreach (var message in messages) builder.Append('\n').Append(message());
+                return builder.ToString();
             }
-
-            ShowNotification(new NotificationData(TimelessEchoes.Characters.CharacterSkillTools.IconFor(skill, endLevel, skill.skillIcon), builder.ToString(), backgroundSprite));
+            ShowNotification(new NotificationData(TimelessEchoes.Characters.CharacterSkillTools.IconFor(skill, endLevel, skill.skillIcon), Message, backgroundSprite));
         }
 
         private void OnMilestoneUnlocked(Skill skill, MilestoneDefinition milestone)
@@ -171,7 +166,7 @@ namespace TimelessEchoes.UI
                 return;
 
             var messages = GetOrCreateMessages(skill);
-            messages.Add(ToolkitLocalization.Text("notification.milestone-unlocked", "<size=8>{0} Unlocked!</size>" , GetMilestoneName(milestone)));
+            messages.Add(() => ToolkitLocalization.Text("notification.milestone-unlocked", "<size=8>{0} Unlocked!</size>" , GetMilestoneName(milestone)));
 
             UpdateMilestoneTierCache(skill, milestone);
         }
@@ -189,14 +184,14 @@ namespace TimelessEchoes.UI
             var newTierDisplay = Mathf.Max(oldTierDisplay, newTierIndex + 1);
 
             var messages = GetOrCreateMessages(skill);
-            messages.Add(ToolkitLocalization.Text("notification.milestone-tier", "<size=8>{0} {1}<sprite=194>{2}</size>" , GetMilestoneName(milestone), oldTierDisplay, newTierDisplay));
+            messages.Add(() => ToolkitLocalization.Text("notification.milestone-tier", "<size=8>{0} {1}<sprite=194>{2}</size>" , GetMilestoneName(milestone), oldTierDisplay, newTierDisplay));
         }
 
-        private List<string> GetOrCreateMessages(Skill skill)
+        private List<Func<string>> GetOrCreateMessages(Skill skill)
         {
             if (!pendingMilestoneMessages.TryGetValue(skill, out var list))
             {
-                list = new List<string>();
+                list = new List<Func<string>>();
                 pendingMilestoneMessages[skill] = list;
             }
 
@@ -236,7 +231,7 @@ namespace TimelessEchoes.UI
         {
             if (nativeView && nativeView.IsConfigured)
             {
-                nativeView.Show(data.Icon, data.Text, data.Background, displaySeconds);
+                nativeView.ShowDynamic(data.Icon, data.Renderer, data.Background, displaySeconds);
                 return;
             }
             if (resourceIconImage != null)
@@ -298,15 +293,16 @@ namespace TimelessEchoes.UI
 
         private readonly struct NotificationData
         {
-            public NotificationData(Sprite icon, string text, Sprite background)
+            public NotificationData(Sprite icon, Func<string> text, Sprite background)
             {
                 Icon = icon;
-                Text = text;
+                Renderer = text;
                 Background = background;
             }
 
             public Sprite Icon { get; }
-            public string Text { get; }
+            public Func<string> Renderer { get; }
+            public string Text => Renderer();
             public Sprite Background { get; }
         }
 

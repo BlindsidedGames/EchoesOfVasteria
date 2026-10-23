@@ -1,3 +1,4 @@
+using Blindsided.Utilities;
 using Screen = UnityEngine.Device.Screen;
 using System;
 using System.Collections.Generic;
@@ -72,7 +73,7 @@ namespace TimelessEchoes.UI.Toolkit
                 painter.LineTo(new Vector2(back, rect.yMax)); painter.ClosePath(); painter.Fill();
             };
             inventoryToggle.Add(inventoryTriangle); heading.Add(inventoryToggle);
-            var inventoryLabel = new Label("Inventory"); inventoryLabel.AddToClassList("quest-inventory-label"); inventoryLabel.pickingMode = PickingMode.Ignore; inventoryToggle.Add(inventoryLabel);
+            var inventoryLabel = new Label(); ToolkitLocalization.Bind(inventoryLabel, "quests.inventory", "Inventory"); inventoryLabel.AddToClassList("quest-inventory-label"); inventoryLabel.pickingMode = PickingMode.Ignore; inventoryToggle.Add(inventoryLabel);
             portraitAutoPin = ToolkitGameplay.B(heading, "", () => {
                 Blindsided.SaveData.StaticReferences.AutoPinActiveQuests = !Blindsided.SaveData.StaticReferences.AutoPinActiveQuests;
                 RefreshPortraitAutoPin();
@@ -253,8 +254,8 @@ namespace TimelessEchoes.UI.Toolkit
                         var icon = ToolkitControls.Icon(sprite); icon.style.width = 8; icon.style.height = 8;
                         icon.style.marginRight = 2; stat.Add(icon);
                     }
-                    Text(stat, "+" + affix.value.ToString("0.##", System.Globalization.CultureInfo.CurrentCulture)
-                        + (affix.stat.isPercent ? "%" : ""), 7);
+                    Text(stat, "+" + affix.value.ToString("0.##", LocaleNumbers.Culture)
+                        + (affix.stat.isPercent ? LocaleNumbers.PercentSuffix : ""), 7);
                     stats.Add(stat);
                 }
             }

@@ -1,4 +1,5 @@
 using System.Text;
+using TimelessEchoes.UI.Toolkit;
 using UnityEngine;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Upgrades;
@@ -147,7 +148,8 @@ namespace TimelessEchoes.Quests
             if (completed || ready)
             {
                 var title = data.questName.GetLocalizedString();
-                return (string.IsNullOrEmpty(title) ? "<size=80%>Ready to turn in</size>" : $"{title}\n<size=80%>Ready to turn in</size>", true);
+                var readyText = "<size=80%>" + ToolkitLocalization.Text("quests.ready-to-turn-in", "Ready to turn in") + "</size>";
+                return (string.IsNullOrEmpty(title) ? readyText : $"{title}\n{readyText}", true);
             }
             return (sb.ToString(), false);
         }

@@ -14,6 +14,7 @@ namespace TimelessEchoes.UI.Toolkit
         private Label text;
         private float expires, duration;
         private string localizedKey, localizedEnglish;
+        private System.Func<string> localizedMessage;
         private object[] localizedArguments;
         private int localizationRevision = -1;
         public bool IsConfigured => theme && runtimeTheme && textSettings;
@@ -32,7 +33,7 @@ namespace TimelessEchoes.UI.Toolkit
                 text = ToolkitControls.Text(""); text.style.flexShrink = 1; row.Add(text);
                 fill = new VisualElement { pickingMode = PickingMode.Ignore }; fill.style.height = 2; fill.AddToClassList("toast-duration-fill"); root.Add(fill);
             }
-            localizedKey = null; localizedArguments = null;
+            localizedKey = null; localizedArguments = null; localizedMessage = null;
             icon.sprite = sprite;  text.text = message;
             duration = Mathf.Max(.01f, seconds); expires = Time.unscaledTime + duration; root.style.display = DisplayStyle.Flex;
         }
@@ -42,13 +43,18 @@ namespace TimelessEchoes.UI.Toolkit
             Show(sprite, ToolkitLocalization.Text(key, english, arguments), background, seconds);
             localizedKey = key; localizedEnglish = english; localizedArguments = arguments;
         }
+        public void ShowDynamic(Sprite sprite, System.Func<string> message, Sprite background, float seconds)
+        {
+            Show(sprite, message(), background, seconds);
+            localizedMessage = message;
+        }
         private void Update()
         {
             if (root == null || root.style.display.value == DisplayStyle.None) return;
-            if (localizedKey != null && localizationRevision != ToolkitLocalization.Revision)
+            if ((localizedKey != null || localizedMessage != null) && localizationRevision != ToolkitLocalization.Revision)
             {
                 localizationRevision = ToolkitLocalization.Revision;
-                text.text = ToolkitLocalization.Text(localizedKey, localizedEnglish, localizedArguments);
+                text.text = localizedMessage != null ? localizedMessage() : ToolkitLocalization.Text(localizedKey, localizedEnglish, localizedArguments);
             }
             var portrait = ToolkitResponsiveLayout.IsPortrait;
             var area = portrait ? ToolkitResponsiveLayout.SafeScreenArea : ToolkitWindowLayout.SafeArea;
@@ -60,6 +66,6 @@ namespace TimelessEchoes.UI.Toolkit
             fill.style.width = Length.Percent(Mathf.Clamp01(remaining / duration) * 100);
             if (remaining <= 0) root.style.display = DisplayStyle.None;
         }
-        private void OnDisable() { root?.RemoveFromHierarchy(); root = null; if(settings)Destroy(settings); settings=null; }
+        private void OnDisable() { localizedMessage = null; localizedKey = null; localizedArguments = null; root?.RemoveFromHierarchy(); root = null; if(settings)Destroy(settings); settings=null; }
     }
 }

@@ -1,3 +1,4 @@
+using Blindsided.Utilities;
 using TimelessEchoes.UI.Toolkit;
 using System;
 using System.Globalization;
@@ -30,8 +31,8 @@ namespace TimelessEchoes.Skills
         {
             var statName = baseStat != null ? ToolkitLocalization.Name(baseStat, "stat") : ToolkitLocalization.Text("milestone.stat-fallback", "stat");
             string formatted = percentBonus
-                ? (magnitude * 100f).ToString(amountFormat, CultureInfo.InvariantCulture) + "%"
-                : magnitude.ToString(amountFormat, CultureInfo.InvariantCulture);
+                ? (magnitude * 100f).ToString(amountFormat, LocaleNumbers.Culture) + LocaleNumbers.PercentSuffix
+                : magnitude.ToString(amountFormat, LocaleNumbers.Culture);
             return ToolkitLocalization.Text("milestone-effect." + name + ".descriptionTemplate", descriptionTemplate, formatted, statName);
         }
     }

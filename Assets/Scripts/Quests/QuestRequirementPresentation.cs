@@ -1,4 +1,5 @@
 using System;
+using TimelessEchoes.UI.Toolkit;
 using Blindsided;
 using Blindsided.SaveData;
 using Blindsided.Utilities;
@@ -14,9 +15,13 @@ namespace TimelessEchoes.Quests
         {
             GameData.QuestRecord record = null;
             Oracle.oracle?.saveData?.Quests?.TryGetValue(data.questId, out record);
+            return Build(data, req, record);
+        }
+        public static (string text, float progress) Build(QuestData data, QuestData.Requirement req, GameData.QuestRecord record)
+        {
             ComputeRequirementProgress(data, req, record, out var current, out var target, out var label, out var counts, out var meet, out var appendSpace);
             string text;
-            if (meet) text = current >= target && target > 0 ? "<size=80%>Complete 1/1</size>" : "<size=80%>Meet an NPC</size>";
+            if (meet) text = current >= target && target > 0 ? "<size=80%>" + T("quests.requirement-complete", "Complete 1/1") + "</size>" : "<size=80%>" + T("quests.requirement-meet", "Meet an NPC") + "</size>";
             else
             {
                 var space = appendSpace ? " " : string.Empty;
@@ -63,7 +68,7 @@ namespace TimelessEchoes.Quests
                             iconTag = unlocked ? ResourceIconLookup.GetIconTag(req.resource.resourceID)
                                                : ResourceIconLookup.GetUnknownIconTag(req.resource.resourceID);
                         }
-                        var fallbackName = req.resource ? req.resource.name : string.Empty;
+                        var fallbackName = req.resource ? ToolkitLocalization.Name(req.resource) : string.Empty;
                         var labelText = string.IsNullOrEmpty(iconTag) ? fallbackName : iconTag;
                         // Keep the count clear of the icon, including in native text layout.
                         var separator = string.IsNullOrEmpty(iconTag) ? ": " : QuestTextFormatter.ResourceIconSpacing;
@@ -88,20 +93,20 @@ namespace TimelessEchoes.Quests
                         }
                     }
                     if (!string.IsNullOrEmpty(req.killName))
-                        label = "<size=80%>Kill " + req.killName + ":";
+                        label = "<size=80%>" + T("quests.requirement-kill-name", "Kill {0}:", ToolkitLocalization.Text("quest-kill-name." + data.questId, req.killName));
                     else if (req.enemies == null || req.enemies.Count == 0)
-                        label = "<size=80%>Kill enemies:";
+                        label = "<size=80%>" + T("quests.requirement-kill-enemies", "Kill enemies:");
                     else
-                        label = "<size=80%>Kill:";
+                        label = "<size=80%>" + T("quests.requirement-kill", "Kill:");
                     break;
                 case QuestData.RequirementType.DistanceRun:
                     current = tracker ? tracker.LongestRun : 0f;
-                    label = "<size=80%>Run Distance:";
+                    label = "<size=80%>" + T("quests.requirement-distance", "Run Distance:");
                     appendSpace = true;
                     break;
                 case QuestData.RequirementType.DistanceTravel:
                     current = rec != null ? rec.DistanceTravelProgress : 0;
-                    label = "<size=80%>Steps Taken:";
+                    label = "<size=80%>" + T("quests.requirement-steps", "Steps Taken:");
                     appendSpace = true;
                     break;
                 case QuestData.RequirementType.BuffCast:
@@ -110,7 +115,7 @@ namespace TimelessEchoes.Quests
                         current = tracker ? tracker.BuffsCast : 0;
                         if (rec != null)
                             current -= rec.BuffCastBaseline;
-                        label = "<size=80%>Cast Buffs:";
+                        label = "<size=80%>" + T("quests.requirement-cast-buffs", "Cast Buffs:");
                         appendSpace = true;
                     }
                     else
@@ -126,9 +131,9 @@ namespace TimelessEchoes.Quests
                             }
                         }
                         var name = !string.IsNullOrEmpty(req.buffCastName)
-                            ? req.buffCastName
+                            ? ToolkitLocalization.Text("quest-buff-name." + data.questId, req.buffCastName)
                             : string.Join(", ", req.buffs.FindAll(b => b != null).ConvertAll(b => b.GetDisplayName()));
-                        label = req.includeAutoCasts ? $"<size=80%>Cast {name}:" : $"<size=80%>Manually cast {name}:";
+                        label = req.includeAutoCasts ? "<size=80%>" + T("quests.requirement-cast", "Cast {0}:", name) : "<size=80%>" + T("quests.requirement-manual-cast", "Manually cast {0}:", name);
                         appendSpace = true;
                     }
                     break;
@@ -136,30 +141,30 @@ namespace TimelessEchoes.Quests
                     current = tracker ? tracker.CriticalHits : 0;
                     if (rec != null)
                         current -= rec.CriticalBaseline;
-                    label = "<size=80%>Critical hits:";
+                    label = "<size=80%>" + T("quests.requirement-critical", "Critical hits:");
                     appendSpace = true;
                     break;
                 case QuestData.RequirementType.ResourcesGathered:
                     current = tracker ? tracker.TotalResourcesGathered : 0;
                     if (rec != null)
                         current -= rec.ResourcesBaseline;
-                    label = "<size=80%>Gather resources:";
+                    label = "<size=80%>" + T("quests.requirement-gather", "Gather resources:");
                     appendSpace = true;
                     break;
                 case QuestData.RequirementType.TasksCompleted:
                     current = tracker ? tracker.TasksCompleted : 0;
-                    label = "<size=80%>Tasks completed:";
+                    label = "<size=80%>" + T("quests.requirement-tasks", "Tasks completed:");
                     appendSpace = true;
                     break;
                 case QuestData.RequirementType.CauldronMix:
                     current = rec != null ? rec.CauldronMixProgress : 0;
-                    label = "<size=80%>Mix Resources:";
+                    label = "<size=80%>" + T("quests.requirement-mix", "Mix Resources:");
                     appendSpace = true;
                     break;
                 case QuestData.RequirementType.ForgeLesson:
                     current = (Blindsided.Oracle.oracle?.saveData?.General.ForgeFirstLessonStage ?? 0) >= 5 ? 1 : 0;
                     target = 1;
-                    label = "<size=80%>Forge and equip a sword:";
+                    label = "<size=80%>" + T("quests.requirement-forge", "Forge and equip a sword:");
                     appendSpace = true;
                     break;
                 case QuestData.RequirementType.Instant:
@@ -176,7 +181,7 @@ namespace TimelessEchoes.Quests
                     else
                         current = 0;
                     showCounts = false;
-                    label = "<size=80%>Meet an NPC</size>";
+                    label = "<size=80%>" + T("quests.requirement-meet", "Meet an NPC") + "</size>";
                     if (target <= 0) target = 1; // treat as 1/1 when completed
                     appendSpace = false;
                     break;
@@ -187,9 +192,11 @@ namespace TimelessEchoes.Quests
             }
         }
 
+        private static string T(string key, string english, params object[] args) => ToolkitLocalization.Text(key, english, args);
+
         public static string FormatValue(QuestData data, double value)
         {
-            return data != null && data.useN0ForPinnedNumbers ? value.ToString("N0") : CalcUtils.FormatNumber(value, true);
+            return data != null && data.useN0ForPinnedNumbers ? value.ToString("N0", LocaleNumbers.Culture) : CalcUtils.FormatNumber(value, true);
         }
     }
 }

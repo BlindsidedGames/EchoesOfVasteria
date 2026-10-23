@@ -1,3 +1,4 @@
+using Blindsided.Utilities;
 using System;
 using System.Collections.Generic;
 using TimelessEchoes.Shop;
@@ -95,7 +96,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (!shop.Unlocked) { Hide(); return; }
             var remaining = TimeSpan.FromSeconds(shop.Remaining);
             boostStatus.text = shop.PermanentOwned ? (shop.PermanentEnabled ? T("shop.permanent-active", "Permanent bonus active") : T("shop.permanent-disabled", "Permanent bonus disabled"))
-                : shop.Remaining > 0 ? T("shop.remaining", "{0} remaining · Pauses outside adventures", $"{(int)remaining.TotalHours}:{remaining.Minutes:00}:{remaining.Seconds:00}")
+                : shop.Remaining > 0 ? T("shop.remaining", "{0} remaining · Pauses outside adventures", LocaleNumbers.Format($"{(int)remaining.TotalHours}:{remaining.Minutes:00}:{remaining.Seconds:00}"))
                 : T("shop.bank-limit", "30 minutes per claim · Bank up to 2 hours");
             claim.text = shop.Remaining > 0 ? T("shop.add-time", "Add 30 min") : T("shop.activate", "Activate · 30 min");
             claim.SetEnabled(shop.CanClaim); claim.style.display = shop.PermanentOwned ? DisplayStyle.None : DisplayStyle.Flex;

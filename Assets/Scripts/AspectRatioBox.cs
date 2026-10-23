@@ -5,9 +5,8 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 /// <summary>
-/// Keeps the camera within a supported aspect ratio range. Adds black bars on
-/// the sides (pillar-box) or top/bottom (letter-box) if the window falls
-/// outside the range.
+/// Fills narrow displays with a cropped world view. Extremely wide displays
+/// retain pillarboxing beyond the supported maximum aspect ratio.
 /// </summary>
 namespace TimelessEchoes
 {
@@ -16,9 +15,6 @@ public class AspectRatioBox : MonoBehaviour
     [Tooltip("Camera that should be boxed. Leave null → main camera.")]
     public Camera targetCamera;
 
-    // Supported aspect ratios: minimum 16:9 and maximum 32:9. Keep literal
-    // values to avoid floating-point errors.
-    const float minAspect = 16f / 9f; // 1.777...
     const float maxAspect = 32f / 9f; // 3.555...
 
     Rect originalRect;
@@ -72,18 +68,13 @@ public class AspectRatioBox : MonoBehaviour
         else
         {
             float windowAspect = (float)size.x / size.y;
-            float targetAspect = Mathf.Clamp(windowAspect, minAspect, maxAspect);
+            float targetAspect = Mathf.Min(windowAspect, maxAspect);
             float scale = windowAspect / targetAspect;
 
-            if (scale < 1f)               // window too tall → letter-box
-            {
-                rect = new Rect(0f, (1f - scale) * 0.5f, 1f, scale);
-            }
-            else                          // window too wide → pillar-box
-            {
-                float invScale = 1f / scale;
-                rect = new Rect((1f - invScale) * 0.5f, 0f, invScale, 1f);
-            }
+            // A tablet keeps the full height and crops horizontally, just like
+            // expanded portrait. RunActivityArea retains the wider Echo bounds.
+            float invScale = 1f / scale;
+            rect = new Rect((1f - invScale) * 0.5f, 0f, invScale, 1f);
         }
 
         if (rect.width > 0 && rect.height > 0 &&

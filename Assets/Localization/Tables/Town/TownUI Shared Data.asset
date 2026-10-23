@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
   m_Name: TownUI Shared Data
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   m_TableCollectionName: TownUI
   m_TableCollectionNameGuidString: 79e2dd3ef4efaf5459ce0f738238ca3e
   m_Entries:
@@ -4613,6 +4613,822 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 166373263325925376
     m_Key: meeting.skip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510977933250560
+    m_Key: run.stats
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510980684713984
+    m_Key: run.summary-short
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510984925155328
+    m_Key: run.portrait.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510989383700480
+    m_Key: forge.repeat-craft
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510991736705024
+    m_Key: forge.new-item
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510993867411456
+    m_Key: forge.slot.Weapon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510995939397632
+    m_Key: forge.slot.Helmet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510997961052160
+    m_Key: forge.slot.Chest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510999978512384
+    m_Key: forge.slot.Boots
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512173024677888
+    m_Key: inventory.resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512175142801408
+    m_Key: inventory.equipment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512177218981888
+    m_Key: inventory.equipped
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512179261607936
+    m_Key: inventory.equipment-total
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512181262290944
+    m_Key: inventory.owned-resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512183292334080
+    m_Key: inventory.empty-slot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512185448206336
+    m_Key: inventory.no-equipment-bonuses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512189768339456
+    m_Key: inventory.chest-trousers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512191823548416
+    m_Key: inventory.item-name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512193908117504
+    m_Key: inventory.your-character
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512195942354944
+    m_Key: cauldron.collection.eternal-boons
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512197947232256
+    m_Key: cauldron.collection.unlock-eternal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512199947915264
+    m_Key: cauldron.collection.card-count
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885895647232
+    m_Key: character.default-name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395968
+    m_Key: save.recovery.diagnostics-note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395969
+    m_Key: character.preset-load-failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395970
+    m_Key: character.preset-save-failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395971
+    m_Key: character.name-required
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395972
+    m_Key: character.name-controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395973
+    m_Key: character.name-length
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395974
+    m_Key: run.summary.reaping-distance-text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395975
+    m_Key: cauldron.category-yield
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395976
+    m_Key: cauldron.card-yield
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395977
+    m_Key: hub.buffs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395978
+    m_Key: cauldron.global-buff-power
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395979
+    m_Key: cauldron.card-buff
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395980
+    m_Key: cauldron.boon-formula
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395981
+    m_Key: cauldron.tier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395982
+    m_Key: cauldron.effect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395983
+    m_Key: statistics.task-totals-compact
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395984
+    m_Key: credits.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395985
+    m_Key: character.create
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395986
+    m_Key: character.turn-left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395987
+    m_Key: character.turn-right
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395988
+    m_Key: character.previous-animation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395989
+    m_Key: character.action.Idle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395990
+    m_Key: character.next-animation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395991
+    m_Key: character.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395992
+    m_Key: common.none
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395993
+    m_Key: character.style-count
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395994
+    m_Key: character.previous-style
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395995
+    m_Key: character.next-style
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395996
+    m_Key: character.saved
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395997
+    m_Key: character.preset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395998
+    m_Key: common.save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395999
+    m_Key: character.save-slot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396000
+    m_Key: character.start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396001
+    m_Key: character.preset-saved
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396002
+    m_Key: character.empty-preset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396003
+    m_Key: character.no-preset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396004
+    m_Key: character.load-preset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396005
+    m_Key: character.save-failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396006
+    m_Key: forge.automation-locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396007
+    m_Key: forge.more-cores
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396008
+    m_Key: forge.repeat-craft-help
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396009
+    m_Key: inventory.show-item
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396010
+    m_Key: quests.hide-inventory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396011
+    m_Key: quests.show-inventory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396012
+    m_Key: quests.return-to-town
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396013
+    m_Key: quests.auto-pin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396014
+    m_Key: graph.select-bar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396015
+    m_Key: graph.recent-sample
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396016
+    m_Key: run.stats-tooltip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396017
+    m_Key: common.next
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396018
+    m_Key: run.summary.guide-resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396019
+    m_Key: run.summary.guide-close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396020
+    m_Key: common.continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396021
+    m_Key: skills.next-unlock
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396022
+    m_Key: statistics.boost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396023
+    m_Key: save.export.invalid-size
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396024
+    m_Key: save.export.too-large
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396025
+    m_Key: save.import.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396026
+    m_Key: save.import.too-long
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396027
+    m_Key: save.import.invalid-format
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396028
+    m_Key: save.import.invalid-data
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396029
+    m_Key: save.import.decode-failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396030
+    m_Key: save.import.newer-version
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396031
+    m_Key: save.import.migration-failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396032
+    m_Key: save.import.not-ready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396033
+    m_Key: save.import.activation-failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396034
+    m_Key: save.import.unexpected-error
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396035
+    m_Key: character.your-character
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396036
+    m_Key: character.save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396037
+    m_Key: inventory.hide-item
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396038
+    m_Key: character.action.Run
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396039
+    m_Key: character.action.Fish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396040
+    m_Key: character.action.Mine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396041
+    m_Key: character.action.Water
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396042
+    m_Key: character.action.Combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396043
+    m_Key: character.slot.Head
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396044
+    m_Key: character.slot.Chest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396045
+    m_Key: character.slot.Legs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396046
+    m_Key: character.slot.Feet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396047
+    m_Key: character.style.Farmer_Hat_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396048
+    m_Key: character.style.Farmer_Pants_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396049
+    m_Key: character.style.Farmer_Shirt_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396050
+    m_Key: character.style.Hair_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396051
+    m_Key: character.style.Hair_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396052
+    m_Key: character.style.Hair_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396053
+    m_Key: character.style.Hair_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396054
+    m_Key: character.style.Hair_5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396055
+    m_Key: character.style.Hair_6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396056
+    m_Key: character.style.Lumberjack_Shirt_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396057
+    m_Key: character.style.Pants_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396058
+    m_Key: character.style.Royal_Pants_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396059
+    m_Key: character.style.Royal_Shirt_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396060
+    m_Key: character.style.Shirt_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396061
+    m_Key: character.style.Shoes_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396062
+    m_Key: character.colour.White_and_Brown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396063
+    m_Key: character.colour.Dark_Brown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396064
+    m_Key: character.colour.Light_Brown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396065
+    m_Key: character.colour.Auburn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396066
+    m_Key: character.colour.Black
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396067
+    m_Key: character.colour.Blonde
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396068
+    m_Key: character.colour.Brown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396069
+    m_Key: character.colour.Ginger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396070
+    m_Key: character.colour.Grey
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396071
+    m_Key: character.colour.Blue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396072
+    m_Key: character.colour.Green
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396073
+    m_Key: character.colour.Orange
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396074
+    m_Key: character.colour.Pink
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396075
+    m_Key: character.colour.Purple
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396076
+    m_Key: character.colour.Red
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396077
+    m_Key: character.colour.White
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396078
+    m_Key: character.colour.Bronze
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396079
+    m_Key: character.colour.Gold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396080
+    m_Key: character.colour.Iron
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396081
+    m_Key: statistics.enemy-stat.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396082
+    m_Key: statistics.enemy-stat.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396083
+    m_Key: statistics.enemy-stat.2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396084
+    m_Key: statistics.enemy-stat.3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396085
+    m_Key: statistics.enemy-stat.4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396086
+    m_Key: statistics.enemy-stat.5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396087
+    m_Key: statistics.enemy-stat.6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396088
+    m_Key: statistics.enemy-stat.7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396089
+    m_Key: stat.Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396090
+    m_Key: stat.AttackRate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396091
+    m_Key: stat.Defense
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396092
+    m_Key: stat.MaxHealth
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396093
+    m_Key: stat.HealthRegen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396094
+    m_Key: stat.MoveSpeed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396095
+    m_Key: stat.CritChance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396096
+    m_Key: stat.CritDamage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396097
+    m_Key: quests.requirement-complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396098
+    m_Key: quests.requirement-meet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396099
+    m_Key: quests.requirement-kill-name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396100
+    m_Key: quests.requirement-kill-enemies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396101
+    m_Key: quests.requirement-kill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396102
+    m_Key: quests.requirement-distance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396103
+    m_Key: quests.requirement-steps
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396104
+    m_Key: quests.requirement-cast-buffs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396105
+    m_Key: quests.requirement-cast
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396106
+    m_Key: quests.requirement-manual-cast
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396107
+    m_Key: quests.requirement-critical
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396108
+    m_Key: quests.requirement-gather
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396109
+    m_Key: quests.requirement-tasks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396110
+    m_Key: quests.requirement-mix
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396111
+    m_Key: quests.requirement-forge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396112
+    m_Key: gear.quality-value
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396113
+    m_Key: quest-kill-name.CombatEnhancer25D
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396114
+    m_Key: quest-kill-name.EchoCombatPlus1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396115
+    m_Key: quest-kill-name.A Slime in Time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396116
+    m_Key: quest-kill-name.Beyond the Bone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396117
+    m_Key: quest-kill-name.Bone to Pick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396118
+    m_Key: quest-kill-name.Bonefire Night
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396119
+    m_Key: quest-kill-name.Grind Their Bones
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396120
+    m_Key: quest-kill-name.Protect the Town
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396121
+    m_Key: "quest-kill-name.Rattle \u2018n\u2019 Roll"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396122
+    m_Key: quest-kill-name.Shiver in Your Bones
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396123
+    m_Key: quest-kill-name.Watch Them Rattle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166517708725817344
+    m_Key: options.performance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166517708788731904
+    m_Key: quests.ready-to-turn-in
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166517708788731905
+    m_Key: run.kill-progress
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166517708788731906
+    m_Key: options.transfer.operation-failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147309613056
+    m_Key: forge.materials
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147418664960
+    m_Key: skills.tab-progress
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147418664961
+    m_Key: skills.tab-bonuses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147418664962
+    m_Key: statistics.sort-label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147418664963
+    m_Key: stat.Echo Lifetime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147422859264
+    m_Key: quests.inventory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630746193920
+    m_Key: statistics.area
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525568
+    m_Key: statistics.task-improvement-compact
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525569
+    m_Key: statistics.task-chance-compact
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525570
+    m_Key: map.Farmlands
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525571
+    m_Key: map.River
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525572
+    m_Key: map.Woods
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525573
+    m_Key: map.Mines
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525574
+    m_Key: map.Haloween
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525575
+    m_Key: run.stat-label-damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525576
+    m_Key: run.stat-label-attackrate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525577
+    m_Key: run.stat-label-critchance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525578
+    m_Key: run.stat-label-critdamage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525579
+    m_Key: run.stat-label-movespeed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525580
+    m_Key: run.stat-label-defense
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525581
+    m_Key: run.stat-label-regen
     m_Metadata:
       m_Items: []
   m_Metadata:

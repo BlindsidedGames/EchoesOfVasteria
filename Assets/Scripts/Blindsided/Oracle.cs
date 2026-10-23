@@ -992,7 +992,7 @@ namespace Blindsided
                 {
                     Text = ToolkitLocalization.Text("save.recovery.keep-choice",
                         "Keep {0}\n{1} · {2:0.##}% complete · {3:0.0} hours played",
-                        candidate.CharacterName ?? "Adventurer", candidate.SavedAtUtc.ToLocalTime().ToString("g"),
+                        candidate.CharacterName ?? ToolkitLocalization.Text("character.default-name", "Adventurer"), candidate.SavedAtUtc.ToLocalTime().ToString("g", LocaleNumbers.Culture),
                         candidate.Completion, hours),
                     Select = () => StartCoroutine(RecoverSavedProgress(candidate))
                 };
@@ -1145,14 +1145,16 @@ namespace Blindsided
 
         private string GetRecoveryBody(bool canStartFresh, bool unsupportedNewer)
         {
+            // Detailed paths and platform exception text remain in the diagnostic log.
+            var details = ToolkitLocalization.Text("save.recovery.diagnostics-note", "Technical details were recorded for support.");
             if (_recoveryChoices?.Count > 0)
                 return ToolkitLocalization.Text("save.recovery.choose-body",
                     "More than one version of File {0} was found. Choose the progress to keep. All original snapshots remain saved.", CurrentSlot + 1);
             if (unsupportedNewer)
-                return ToolkitLocalization.Text("save.recovery.newer-body", "File {0} was written by a newer game version. It has not been changed. Install the newer version, then Retry, or inspect the save folder. Starting fresh is disabled to protect that progress.\n\n{1}", CurrentSlot + 1, _recoveryDiagnostic);
+                return ToolkitLocalization.Text("save.recovery.newer-body", "File {0} was written by a newer game version. It has not been changed. Install the newer version, then Retry, or inspect the save folder. Starting fresh is disabled to protect that progress.\n\n{1}", CurrentSlot + 1, details);
             if (canStartFresh)
-                return ToolkitLocalization.Text("save.recovery.conflict-body", "File {0} has a confirmed integrity or cloud-authority conflict. Retry is the safest first action and every existing snapshot remains preserved. If you explicitly start fresh, a new cloud lineage is created without deleting the old files.\n\n{1}", CurrentSlot + 1, _recoveryDiagnostic);
-            return ToolkitLocalization.Text("save.recovery.unavailable-body", "File {0} is temporarily unavailable or could not be applied to the running game. Autosave is disabled and existing snapshot evidence remains preserved. Retry after closing any sync or backup tool that may be using the files.\n\n{1}", CurrentSlot + 1, _recoveryDiagnostic);
+                return ToolkitLocalization.Text("save.recovery.conflict-body", "File {0} has a confirmed integrity or cloud-authority conflict. Retry is the safest first action and every existing snapshot remains preserved. If you explicitly start fresh, a new cloud lineage is created without deleting the old files.\n\n{1}", CurrentSlot + 1, details);
+            return ToolkitLocalization.Text("save.recovery.unavailable-body", "File {0} is temporarily unavailable or could not be applied to the running game. Autosave is disabled and existing snapshot evidence remains preserved. Retry after closing any sync or backup tool that may be using the files.\n\n{1}", CurrentSlot + 1, details);
         }
 
         private static bool CanOfferFreshRecovery(SaveLoadStatus status)

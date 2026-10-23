@@ -30,7 +30,7 @@ namespace TimelessEchoes.UI.Toolkit
             var image = new Image { sprite = sprite, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore }; mask.Add(image); NativeSize(image); return image;
         }
         private static List<GearAffix> Affixes(GearItem item) => item?.affixes?.Where(a => a?.stat != null).ToList() ?? new List<GearAffix>();
-        private static string Amount(float value, bool percent) => CalcUtils.FormatNumber(value) + (percent ? "%" : "");
+        private static string Amount(float value, bool percent) => CalcUtils.FormatNumber(value) + (percent ? LocaleNumbers.PercentSuffix : "");
         private VisualElement Metric(VisualElement parent, string title, Sprite icon, string first, string second = null, int change = 0)
         {
             var row = new VisualElement { tooltip = title }; row.AddToClassList("forge-metric"); parent.Add(row);
@@ -52,7 +52,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (comparisonSlot != session.Slot || comparisonRows.childCount == 0)
             {
                 comparisonSlot = session.Slot; comparisonRows.Clear(); comparisonStats.Clear();
-                Metric(comparisonRows, session.Slot, null, ToolkitLocalization.Text("forge.new-item", "New item"), ToolkitLocalization.Text("forge.equipped", "Equipped")).AddToClassList("forge-metric-header");
+                Metric(comparisonRows, ToolkitLocalization.Text("forge.slot." + session.Slot, session.Slot), null, ToolkitLocalization.Text("forge.new-item", "New item"), ToolkitLocalization.Text("forge.equipped", "Equipped")).AddToClassList("forge-metric-header");
                 StatIconLookup.TryGetIcon(StatIconLookup.StatKey.Quality, out var quality);
                 comparisonQuality = Metric(comparisonRows, ToolkitLocalization.Text("forge.quality", "Quality"), quality, "—", "—");
                 // Keep one row per possible stat so rerolls never resize the page or shift its scroll position.
@@ -66,7 +66,7 @@ namespace TimelessEchoes.UI.Toolkit
                     comparisonStats.Add((def, Metric(comparisonRows, def.GetName(), icon, "—", "—")));
                 }
             }
-            UpdateComparisonMetric(comparisonQuality, pending == null ? "—" : pq.ToString("0.#") + "%", equipped == null ? "—" : eq.ToString("0.#") + "%", pending == null ? 0 : Math.Sign(pq - eq));
+            UpdateComparisonMetric(comparisonQuality, pending == null ? "—" : pq.ToString("0.#", LocaleNumbers.Culture) + LocaleNumbers.PercentSuffix, equipped == null ? "—" : eq.ToString("0.#", LocaleNumbers.Culture) + LocaleNumbers.PercentSuffix, pending == null ? 0 : Math.Sign(pq - eq));
             foreach (var entry in comparisonStats)
             {
                 var def = entry.stat;

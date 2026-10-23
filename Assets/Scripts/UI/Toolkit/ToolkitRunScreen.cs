@@ -121,6 +121,7 @@ namespace TimelessEchoes.UI.Toolkit
         { var button = Button(parent, name, "", action); ToolkitLocalization.Bind(button, key, english); return button; }
         private void LocalizationChanged()
         {
+            portraitResourcesDirty = true;
             nextRefresh = 0;
             foreach (var pair in resourceRows) pair.Value.tooltip = ToolkitLocalization.Name(pair.Key);
             RefreshTooltip();
@@ -217,6 +218,9 @@ namespace TimelessEchoes.UI.Toolkit
                 var target = GameManager.Instance.HeroIsDead ? deathReturn : retreat;
                 var point = root.WorldToLocal(new Vector2(target.worldBound.center.x, target.worldBound.yMax));
                 ivanReturnPointer.style.left = Mathf.Round(point.x - 12); ivanReturnPointer.style.top = Mathf.Round(point.y + 2 + 4 * (1 + Mathf.Cos(Time.unscaledTime * 5)));
+                // Orientation changes reparent the return controls later in the
+                // root. Keep the guidance above them without moving its target.
+                ivanReturnPointer.BringToFront();
             }
             if (Keyboard.current?.escapeKey.wasPressedThisFrame == true) { HideDetails(); SetHeroStatsOpen(false); }
             if (Time.unscaledTime >= nextRefresh) { nextRefresh = Time.unscaledTime + .1f; Refresh(); }
@@ -255,9 +259,14 @@ namespace TimelessEchoes.UI.Toolkit
             hud.style.left = portrait ? 8 : 12;
             hud.style.top = portrait ? (ToolkitResponsiveLayout.FocusView ? area.height - 84 : 8) : StyleKeyword.Auto;
             hud.style.bottom = portrait ? StyleKeyword.Auto : 12;
-            hud.style.width = portrait ? Mathf.Min(138, world.width - 220) : StyleKeyword.Auto;
-            // In landscape the five ability slots determine the shared HUD width.
-            abilityBar.style.width = portrait ? StyleKeyword.Null : StyleKeyword.Auto;
+            // Reserve the five-slot footprint even before abilities unlock. A hidden
+            // row must not make the health strip shrink to its text's intrinsic width.
+            hud.style.width = portrait ? Mathf.Min(138, world.width - 220) : 161;
+            abilityBar.style.width = portrait ? StyleKeyword.Null : Length.Percent(100);
+            for (var i = 0; i < slots.Count; i++)
+            {
+                slots[i].button.style.marginRight = portrait ? StyleKeyword.Null : i == slots.Count - 1 ? 0 : 4;
+            }
             heroStatsPanel.EnableInClassList("focus-stats-content", portrait && ToolkitResponsiveLayout.FocusView);
             if (portraitStatsScroll != null)
             {
@@ -419,12 +428,23 @@ namespace TimelessEchoes.UI.Toolkit
                 {
                     float end = Mathf.Max(1, tracker.LongestRun) * recipe.GetDuration();
                     if (tracker.CurrentRunDistance >= end) { row.text.text = ToolkitLocalization.Text("run.too-far", "Too Far"); row.icon.tintColor = Color.gray; continue; }
-                    if (remain > 0) { row.text.text = Mathf.FloorToInt(tracker.CurrentRunDistance / end * 100) + "%"; ((ToolkitBorderProgress)row.fill).Value=Mathf.Clamp01(1 - tracker.CurrentRunDistance / end); continue; }
+                    if (remain > 0) { row.text.text = Mathf.FloorToInt(tracker.CurrentRunDistance / end * 100) + LocaleNumbers.PercentSuffix; ((ToolkitBorderProgress)row.fill).Value=Mathf.Clamp01(1 - tracker.CurrentRunDistance / end); continue; }
                 }
-                if (remain > 0) { row.text.text = CalcUtils.FormatTime(remain, remain < 10, shortForm: true); ((ToolkitBorderProgress)row.fill).Value=Mathf.Clamp01(remain / recipe.GetDuration()); }
-                else if (cooldown > 0) { row.text.text = CalcUtils.FormatTime(cooldown, cooldown < 10, shortForm: true); row.icon.tintColor = Color.gray; ((ToolkitBorderProgress)row.fill).Value=Mathf.Clamp01(1 - cooldown / recipe.GetCooldown()); }
+                if (remain > 0) { row.text.text = CountdownText(remain); ((ToolkitBorderProgress)row.fill).Value=Mathf.Clamp01(remain / recipe.GetDuration()); }
+                else if (cooldown > 0) { row.text.text = CountdownText(cooldown); row.icon.tintColor = Color.gray; ((ToolkitBorderProgress)row.fill).Value=Mathf.Clamp01(1 - cooldown / recipe.GetCooldown()); }
             }
         }
+        // A clock avoids squeezing language-specific unit names into the small ability buttons.
+        private static string CountdownText(double seconds)
+        {
+            if (!LocaleNumbers.IsFinite(seconds) || seconds >= TimeSpan.MaxValue.TotalSeconds)
+                return LocaleNumbers.Format(seconds);
+            if (seconds < 10) return LocaleNumbers.Format(seconds, "0.00");
+            var whole = Math.Floor(seconds);
+            var minutes = Math.Floor(whole / 60);
+            return LocaleNumbers.Integer(minutes, false) + ":" + ((int)(whole % 60)).ToString("D2", LocaleNumbers.Culture);
+        }
+
         private void RefreshTooltip()
         {
             var recipe = tooltipSlot >= 0 ? BuffManager.Instance?.GetAssigned(tooltipSlot) : null;

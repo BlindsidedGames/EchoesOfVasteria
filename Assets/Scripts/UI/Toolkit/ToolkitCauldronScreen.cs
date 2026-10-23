@@ -103,7 +103,7 @@ namespace TimelessEchoes.UI.Toolkit
             quantityInput.RegisterValueChangedCallback(_ =>
             {
                 if (TryAmount(out var amount))
-                    quantityInput.SetValueWithoutNotify(amount.ToString("0", CultureInfo.InvariantCulture));
+                    quantityInput.SetValueWithoutNotify(LocaleNumbers.Input(amount));
                 conversionError.text = ""; RefreshConversion();
             });
             plusAmount = ToolkitGameplay.B(amountRow, "+", () => StepAmount(1), "amount-step");
@@ -128,10 +128,10 @@ namespace TimelessEchoes.UI.Toolkit
                 foodSlots.Add(slot);
             }
         }
-        private void SetAmount(double value) => quantityInput.value = Math.Floor(value).ToString("0", CultureInfo.InvariantCulture);
+        private void SetAmount(double value) => quantityInput.value = LocaleNumbers.Input(value);
         private bool TryAmount(out double amount)
         {
-            if (!double.TryParse(quantityInput.value, NumberStyles.Float, CultureInfo.InvariantCulture, out amount) ||
+            if (!LocaleNumbers.TryInput(quantityInput.value, out amount) ||
                 !CauldronConversion.IsFinite(amount)) return false;
             amount = Math.Floor(amount);
             return true;
@@ -149,7 +149,7 @@ namespace TimelessEchoes.UI.Toolkit
             selection.text = selected ? ToolkitLocalization.Name(selectedFood) : ToolkitLocalization.Text("cauldron.choose-food", "Choose a food");
             selectedFoodIcon.sprite = selected ? selectedFood.icon : null;
             selectedFoodIcon.style.display = selected ? DisplayStyle.Flex : DisplayStyle.None;
-            availableFood.text = selected ? ToolkitLocalization.Text("cauldron.available-food", "Available: {0} · {1} stew / unit", CalcUtils.FormatNumber(stock, true), CauldronConversion.UnitValue(selectedFood).ToString("G15", CultureInfo.InvariantCulture)) : "";
+            availableFood.text = selected ? ToolkitLocalization.Text("cauldron.available-food", "Available: {0} · {1} stew / unit", CalcUtils.FormatNumber(stock, true), LocaleNumbers.Format(CauldronConversion.UnitValue(selectedFood), "G15")) : "";
             var valid = TryAmount(out var amount) && selected && manager.CanAddToCauldron(selectedFood, amount);
             predicted.text = "+" + CalcUtils.FormatNumber(valid ? amount * CauldronConversion.UnitValue(selectedFood) : 0);
             addFood.SetEnabled(valid && !addingFood);
@@ -182,7 +182,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             LocalizedLabel(tastingColumn, "cauldron.tasting", "Tasting","heading");var eva=E(tastingColumn,"row eva tasting-eva");portrait=ToolkitGameplay.Icon(eva,definition.portrait.At(0),20);var info=E(eva,"eva-info");level=L(info,"","strong");xpFill=ToolkitGameplay.Bar(info);xp=L(info,"","small muted");
             var scroll=ToolkitGameplay.Scroll(tastingColumn,"tasting-scroll");scroll.verticalScrollerVisibility=ScrollerVisibility.Auto;ToolkitGameplay.StyleScroll(scroll);var summary=E(scroll,"brew-summary");pot=ToolkitGameplay.Icon(summary,definition.pot.At(0),46);stew=L(summary,"","amount");LocalizedLabel(summary, "cauldron.stew", "Stew","muted");
-            var rate=E(scroll,"row between readout");LocalizedLabel(rate, "cauldron.rolls-per-second", "Rolls / s","muted");L(rate,definition.config.rollsPerSecond.ToString("N0"),"strong");var cost=E(scroll,"row between readout");LocalizedLabel(cost, "cauldron.stew-per-roll", "Stew / roll","muted");rollCost=L(cost,"","strong");
+            var rate=E(scroll,"row between readout");LocalizedLabel(rate, "cauldron.rolls-per-second", "Rolls / s","muted");L(rate,definition.config.rollsPerSecond.ToString("N0", LocaleNumbers.Culture),"strong");var cost=E(scroll,"row between readout");LocalizedLabel(cost, "cauldron.stew-per-roll", "Stew / roll","muted");rollCost=L(cost,"","strong");
             taste=LocalizedButton(scroll,"cauldron.start-tasting","Start tasting",()=>manager.StartTasting(),"primary");stop=LocalizedButton(scroll,"cauldron.pause-tasting","Pause tasting",()=>manager.StopTasting());var heading=E(scroll,"row between odds-heading");LocalizedLabel(heading, "cauldron.reward-chances", "Reward chances","strong");ToolkitGameplay.B(heading,"i",ShowTastingDetails,"details-button");oddsList=E(scroll,"odds");
             stats = new Label();
         }
@@ -197,7 +197,7 @@ namespace TimelessEchoes.UI.Toolkit
             foreach(var weight in weights)
             {
                 var row=E(scroll,"row between odds-row");L(row,weight.label.Replace("Vast Surge","Surge"));
-                L(row,$"{(currentTotal>0?100*weight.current/currentTotal:0):0.00}% → {(nextTotal>0?100*weight.next/nextTotal:0):0.00}%","strong");
+                L(row,LocaleNumbers.Format($"{(currentTotal>0?100*weight.current/currentTotal:0):0.00}{LocaleNumbers.PercentSuffix} → {(nextTotal>0?100*weight.next/nextTotal:0):0.00}{LocaleNumbers.PercentSuffix}"),"strong");
             }
             LocalizedLabel(scroll, "cauldron.tasting-results", "Tasting results","heading");L(scroll,stats.text,"small");L(scroll,definition.rewardHelp,"small muted");
             LocalizedButton(d,"common.close","Close",CloseModal).Focus();
@@ -236,7 +236,7 @@ namespace TimelessEchoes.UI.Toolkit
             var current = manager.GetEffectiveWeightsAtLevel(manager.EvaLevel); var next = manager.GetEffectiveWeightsAtLevel(manager.EvaLevel + 1);
             weights = CauldronWeightsPresentation.BuildRows(current, next, definition.config);
             var total = CauldronWeightsPresentation.ComputeTotal(current);
-            if(oddsValues.Count!=weights.Count){oddsList.Clear();oddsValues.Clear();foreach(var w in weights){var row=E(oddsList,"row between odds-row");L(row,w.label.Replace("Vast Surge","Surge"));oddsValues.Add(L(row,"","strong"));}}for(int i=0;i<weights.Count;i++)oddsValues[i].text=total>0?(100*weights[i].current/total).ToString("0.0")+"%":"0%";
+            if(oddsValues.Count!=weights.Count){oddsList.Clear();oddsValues.Clear();foreach(var w in weights){var row=E(oddsList,"row between odds-row");L(row,w.label);oddsValues.Add(L(row,"","strong"));}}for(int i=0;i<weights.Count;i++)oddsValues[i].text=total>0?(100*weights[i].current/total).ToString("0.0", LocaleNumbers.Culture)+LocaleNumbers.PercentSuffix:LocaleNumbers.PercentPoints(0);
         }
         private void Changed() => dirty = true;
         private void InventoryChanged() { dirty = true; membershipDirty = true; }
@@ -246,7 +246,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void Stopped() { collections.Refresh(); dirty = true; }
         private void Loaded() { selectedFood = null; quantityInput.SetValueWithoutNotify("0"); collections.Rebuild(); membershipKey = collections.MembershipKey(); dirty = true; }
         private void QuestChanged(string _) { collections.Rebuild(); membershipKey = collections.MembershipKey(); dirty = true; }
-        private void LocaleChanged(UnityEngine.Localization.Locale _) { collections.Rebuild(); dirty = true; }
+        private void LocaleChanged(UnityEngine.Localization.Locale _) { collections.Rebuild(); oddsValues.Clear(); dirty = true; }
         private readonly ToolkitWindowLayout windowLayout = new();
         private void Layout()
         {

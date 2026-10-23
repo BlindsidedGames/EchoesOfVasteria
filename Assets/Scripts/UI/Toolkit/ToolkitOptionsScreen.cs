@@ -1,6 +1,7 @@
 using Screen = UnityEngine.Device.Screen;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Blindsided;
 using Blindsided.Utilities;
 using TimelessEchoes.Audio;
@@ -234,7 +235,15 @@ namespace TimelessEchoes.UI.Toolkit
             var language=ActionButton(row,"language",()=>OpenDialog("language"),22);Grow(language);
             var folder=ActionButton(row,"folder",()=>Application.OpenURL($"file://{Application.persistentDataPath}"),22);Grow(folder);
             language.style.display=folder.style.display=UnityEngine.Device.Application.isMobilePlatform?DisplayStyle.None:DisplayStyle.Flex;
-            Text(row,"version-label",7).AddToClassList("settings-version");
+            foreach (var button in row.Children().OfType<Button>())
+            {
+                button.style.height = StyleKeyword.Auto;
+                button.style.minHeight = 22;
+            }
+            row.style.alignItems = Align.Stretch;
+            var version = Text(row,"version-label",7);
+            version.AddToClassList("settings-version");
+            version.style.alignSelf = Align.Center;
         }
         private bool CanSave(int index) => Oracle.oracle != null && Oracle.oracle.CanBeginSaveMutation && (index == Oracle.oracle.CurrentSlot || safety[index]);
         private bool CanLoad(int index) => Oracle.oracle != null && Oracle.oracle.CanBeginSaveMutation && (safety[index] || ((GameManager.Instance == null || GameManager.Instance.CurrentMap == null) && index != Oracle.oracle.CurrentSlot));
@@ -297,9 +306,9 @@ namespace TimelessEchoes.UI.Toolkit
             root.Q("desktop-display-width").style.display = phone ? DisplayStyle.None : DisplayStyle.Flex;
             buttons["fullscreen"].style.display = buttons["windowed"].style.display = phone ? DisplayStyle.None : DisplayStyle.Flex;
             buttons["vsync"].style.display = phone ? DisplayStyle.None : DisplayStyle.Flex;
+            labels["display-title"].text = phone ? ToolkitLocalization.Text("options.performance", "Performance") : ToolkitLocalization.Text("display-title", "Display");
             if (phone)
             {
-                labels["display-title"].text = "Performance";
                 buttons["fps"].SetEnabled(true);
                 labels["fps-label"].text = ToolkitLocalization.Text("options.fps", "FPS: {0}", TargetFps == 0 ? 60 : TargetFps);
             }

@@ -45,7 +45,7 @@ namespace TimelessEchoes.UI.Toolkit
             theme.StyleScroll(Scroll); ToolkitGameplay.StyleScroll(Scroll);
             if (definition.presentation == ToolkitBookDefinition.Presentation.Credits)
             {
-                heading.text = "Credits"; Root.AddToClassList("eov-credits");
+                ToolkitLocalization.Bind(heading, "credits.title", "Credits"); Root.AddToClassList("eov-credits");
                 foreach (var credit in definition.sections) AddCredit(credit);
                 return;
             }
@@ -208,7 +208,7 @@ namespace TimelessEchoes.UI.Toolkit
             return new ToolkitBookDefinition.Text
             {
                 key = text.key, bold = text.bold, smallCaps = text.smallCaps,
-                fallback = string.Format(System.Globalization.CultureInfo.CurrentCulture, text.fallback, arguments),
+                fallback = string.Format(Blindsided.Utilities.LocaleNumbers.Culture, text.fallback, arguments),
                 localized = new LocalizedString(text.localized.TableReference, text.localized.TableEntryReference) { Arguments = arguments }
             };
         }

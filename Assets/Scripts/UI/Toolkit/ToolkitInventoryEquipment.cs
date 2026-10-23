@@ -1,3 +1,4 @@
+using Blindsided.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using TimelessEchoes.Gear;
@@ -78,11 +79,11 @@ namespace TimelessEchoes.UI.Toolkit
             var portraitColumn = ToolkitGameplay.E(previewArea, "inventory-character-column");
             void Turn(int step) { previewDirection = (previewDirection + step + 4) % 4; nextPreviewFrame = 0; UpdateEquipmentPreview(); }
             var left = ToolkitGameplay.B(portraitColumn, "‹", () => Turn(-1), "inventory-character-turn");
-            left.name = "inventory-character-left"; left.tooltip = "Turn left";
+            left.name = "inventory-character-left"; ToolkitLocalization.BindTooltip(left, "character.turn-left", "Turn left");
             var portrait = ToolkitGameplay.E(portraitColumn, "inventory-character-preview"); portrait.name = "inventory-character-preview";
             equipmentPreview = new CharacterImage(portrait, 1.8f);
             var right = ToolkitGameplay.B(portraitColumn, "›", () => Turn(1), "inventory-character-turn");
-            right.name = "inventory-character-right"; right.tooltip = "Turn right";
+            right.name = "inventory-character-right"; ToolkitLocalization.BindTooltip(right, "character.turn-right", "Turn right");
             var rows = ToolkitGameplay.E(previewArea, "inventory-equipment-rows");
             foreach (var key in equipmentController.Slots) {
                 var slot = key;
@@ -90,7 +91,8 @@ namespace TimelessEchoes.UI.Toolkit
                 var button = ToolkitGameplay.B(row, "", () => { selectedGearSlot = slot; RefreshEquipment(); }, "inventory-equipment-slot");
                 button.name = "inventory-gear-" + slot;
                 var gearIcon = ToolkitControls.Icon(null); gearIcon.AddToClassList("inventory-equipment-icon"); button.Add(gearIcon);
-                ToolkitGameplay.L(button, slot == "Chest" ? "Chest & trousers" : slot, "inventory-equipment-slot-name");
+                var slotLabel = ToolkitGameplay.L(button, "", "inventory-equipment-slot-name");
+                ToolkitLocalization.Bind(slotLabel, slot == "Chest" ? "inventory.chest-trousers" : "forge.slot." + slot, slot == "Chest" ? "Chest & trousers" : slot);
                 gearSlots.Add(slot, (button, gearIcon));
                 if (slot == "Weapon") continue;
                 var control = ToolkitGameplay.B(row, "", () => {
@@ -139,8 +141,8 @@ namespace TimelessEchoes.UI.Toolkit
             foreach (var pair in visibilityControls) {
                 var shown = settings.Get(pair.Key);
                 pair.Value.icon.SetShown(shown); pair.Value.button.EnableInClassList("shown", shown);
-                var label = pair.Key == "Chest" ? "chest & trousers" : pair.Key.ToLowerInvariant();
-                pair.Value.button.tooltip = (shown ? "Hide " : "Show ") + label;
+                var label = pair.Key == "Chest" ? ToolkitLocalization.Text("inventory.chest-trousers", "chest & trousers") : ToolkitLocalization.Text("forge.slot." + pair.Key, pair.Key);
+                pair.Value.button.tooltip = ToolkitLocalization.Text(shown ? "inventory.hide-item" : "inventory.show-item", shown ? "Hide {0}" : "Show {0}", label);
             }
             nextPreviewFrame = 0; UpdateEquipmentPreview();
             foreach (var pair in gearSlots)
@@ -148,11 +150,11 @@ namespace TimelessEchoes.UI.Toolkit
                 var item = equipmentController.GetEquipped(pair.Key);
                 pair.Value.icon.sprite = definition.equipmentArt.GearSprite(item, pair.Key);
                 pair.Value.button.EnableInClassList("active", pair.Key == selectedGearSlot);
-                pair.Value.button.tooltip = item != null ? item.GetName() : pair.Key + " - " + ToolkitLocalization.Text("inventory.empty-slot", "Nothing equipped");
+                pair.Value.button.tooltip = LocalizedEquipmentName(item, pair.Key);
             }
             equipmentContent.Clear();
             var selectedItem = equipmentController.GetEquipped(selectedGearSlot);
-            var heading = selectedItem == null ? selectedGearSlot : selectedItem.GetName();
+            var heading = LocalizedEquipmentName(selectedItem, selectedGearSlot);
             ToolkitGameplay.L(equipmentContent, heading, "heading");
             var selectedAffixes = selectedItem?.affixes?.Where(a => a?.stat != null).ToList() ?? new List<GearAffix>();
             if (selectedItem == null) ToolkitGameplay.L(equipmentContent, ToolkitLocalization.Text("inventory.empty-slot", "Nothing equipped"));
@@ -174,12 +176,19 @@ namespace TimelessEchoes.UI.Toolkit
             var visible = CharacterEquipmentAppearance.Resolve(profile);
             // Older saves use the authored default outfit until they have a modular appearance.
             if (!visible.Modular) { visible = catalog.defaults.Copy(); visible.Name = profile.Name; }
-            equipmentCharacterName.text = string.IsNullOrWhiteSpace(profile.Name) ? "Your character" : profile.Name;
+            equipmentCharacterName.text = string.IsNullOrWhiteSpace(profile.Name) ? ToolkitLocalization.Text("inventory.your-character", "Your character") : profile.Name;
             var direction = previewDirection == 0 ? "Down" : previewDirection == 2 ? "Up" : "Right";
             equipmentPreview.Set(visible, catalog.Frame("Idle_" + direction, Mathf.FloorToInt(Time.unscaledTime * 12)), showTool: false);
             // Left uses the authored right-facing frames, just as the world renderer does.
             var image = equipmentColumn.Q("character-image");
             if (image != null) image.style.scale = new Scale(new Vector3(previewDirection == 3 ? -1 : 1, 1, 1));
+        }
+        private static string LocalizedEquipmentName(GearItem item, string slot)
+        {
+            var reward = item == null ? null : TimelessEchoes.Quests.QuestEquipmentReward.GetDisplayName(item);
+            if (reward != null) return reward;
+            var slotName = ToolkitLocalization.Text("forge.slot." + slot, slot);
+            return item?.rarity ? ToolkitLocalization.Text("inventory.item-name", "{0} {1}", item.rarity.GetName(), slotName) : slotName;
         }
         private void EquipmentStat(StatDefSO stat, float value)
         {
@@ -192,7 +201,7 @@ namespace TimelessEchoes.UI.Toolkit
                 icon.style.marginRight = 4; row.Add(icon);
             }
             var label = ToolkitGameplay.L(row, stat.GetName()); label.style.flexGrow = 1;
-            ToolkitGameplay.L(row, "+" + value.ToString("0.##") + (stat.isPercent ? "%" : ""));
+            ToolkitGameplay.L(row, "+" + value.ToString("0.##", LocaleNumbers.Culture) + (stat.isPercent ? LocaleNumbers.PercentSuffix : ""));
         }
     }
 }

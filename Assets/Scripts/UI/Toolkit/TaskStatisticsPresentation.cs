@@ -92,7 +92,7 @@ namespace TimelessEchoes.UI.Toolkit
                     chance = Mathf.Clamp01(float.IsFinite(chance) ? chance : 0);
                     var next = TaskWeightService.TryGetNextThreshold(task, out var remaining) ? remaining : 0;
                     var compact = ToolkitResponsiveLayout.IsPortrait;
-                    var improvement = next > 0 ? ToolkitLocalization.Text(compact ? "statistics.task-improvement-compact" : "statistics.task-improvement", compact ? "Next boost: {0} tasks" : "Next improvement: {0} Tasks", CalcUtils.FormatNumber(next, true)) : ToolkitLocalization.Text("statistics.task-improvement-maxed", "Next improvement: Maxed");
+                    var improvement = next > 0 ? ToolkitLocalization.Text(compact ? "statistics.task-improvement-compact" : "statistics.task-improvement", compact ? "Tasks to boost: {0}" : "Tasks until next improvement: {0}", CalcUtils.FormatNumber(next, true)) : ToolkitLocalization.Text("statistics.task-improvement-maxed", "Next improvement: Maxed");
                     detail = ToolkitLocalization.Text(compact ? "statistics.task-chance-compact" : "statistics.task-chance", compact ? "Chance: {0:0.##}% ({1})\n{2}\n{3}" : "Spawn chance: {0:0.##}% ({1})\n{2}\n{3}", chance * 100, weightText, improvement, distance);
                 }
                 else detail = ToolkitLocalization.Text("statistics.task-no-chance", "Spawn chance: -- ({0})\nNext improvement: --\n{1}", weightText, distance);

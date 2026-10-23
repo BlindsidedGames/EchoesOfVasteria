@@ -23,7 +23,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 689627873280
-    m_Localized: "Despiertas como de un sue\xF1o; unas palabras suaves se desvanecen a lo lejos, llevadas por los vientos del tiempo. \n\"Emprende este viaje, ll\xE9valo hasta el final y te liberar\xE9 de este reino\" - Orin\n\n<b>Puedes empezar completando esta misi\xF3n, cerrando esta ventana y haciendo clic en \"Comenzar a cultivar\"</b>"
+    m_Localized: "Despiertas como de un sue\xF1o. Una voz se desvanece en la distancia.\n\n\xABCompleta este viaje y te liberar\xE9 de este reino\xBB. \u2014 Orin\n\nReclama esta recompensa y cierra Misiones para continuar."
     m_Metadata:
       m_Items: []
   - m_Id: 723614318592
@@ -47,7 +47,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4508550053888
-    m_Localized: "\"Carl el Segador se asegurar\xE1 de que no te alejes demasiado del pueblo. A medida que ayudes a sus habitantes, ir\xE1 soltando la correa\" - Orin\n\n<b>La distancia de siega es la distancia m\xE1xima que puedes recorrer. Puede mejorar mediante misiones o aumenta un 1% cuando te siegan.</b>"
+    m_Localized: "\xABCarl, la Parca, se asegura de que no te alejes demasiado del pueblo. Ayuda a los habitantes y te dar\xE1 m\xE1s libertad\xBB. \u2014 Orin\n\nTu distancia de la Parca es tu l\xEDmite de viaje. Algunas misiones lo aumentan. Que Carl te recoja en el l\xEDmite a\xF1ade un 1\_% en R\xEDo, Bosque y Minas; Tierras de cultivo no da ning\xFAn aumento. Tenebroso usa las bajas en lugar de la distancia."
     m_Metadata:
       m_Items: []
   - m_Id: 4510643011584
@@ -79,7 +79,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4904353939456
-    m_Localized: "\"En este reino, Ivan es tu hermano. Te ayudar\xE1 a mejorar tus atributos, pero tendr\xE1s que reunir los recursos que necesita\" - Orin\n\n<b>Esto desbloquea un nuevo men\xFA: la <link=\"help:forge\"><u><color=#EFB889>Forja</color></u></link>, que encontrar\xE1s en el men\xFA \"Habitantes\".</b>"
+    m_Localized: "\xABEn este reino, Ivan es tu hermano. Ll\xE9vale materiales y te forjar\xE1 equipo\xBB. \u2014 Orin\n\nAbre <link=\"help:forge\"><u><color=#EFB889>Pueblo \u2192 Forja</color></u></link> despu\xE9s de conocer a Ivan."
     m_Metadata:
       m_Items: []
   - m_Id: 4905721282560
@@ -107,7 +107,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5293610516480
-    m_Localized: "\"\xBFQu\xE9 tal, amigo? Acabo de volver de la mejor pesca de mi vida. \xBFC\xF3mo? \xBFNunca has pescado? Toma mi ca\xF1a de repuesto y pesca unos Flippy Floppy para Mildred. \xA1Se encuentran casi en cualquier parte!\" - Gill"
+    m_Localized: "\xAB\xBFQu\xE9 tal, compa? Acabo de tener la mejor pesca de mi vida. \xBFNunca has pescado? Toma mi ca\xF1a de repuesto. \xA1Atrapa unos Flippy Floppy para Mildred!\xBB \u2014 Gill"
     m_Metadata:
       m_Items: []
   - m_Id: 5294684258304
@@ -123,7 +123,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5495314595840
-    m_Localized: '"Toma mi hacha de repuesto y entra al bosque. Necesitaremos al menos 10 troncos para empezar esta estructura" - Barkley'
+    m_Localized: "\xABToma mi hacha de repuesto y ve al bosque. Necesitaremos al menos 10 troncos para empezar esta estructura\xBB. \u2014 Barkley"
     m_Metadata:
       m_Items: []
   - m_Id: 5496426086400
@@ -311,7 +311,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7955986563392
-    m_Localized: "\"Cuanto m\xE1s uses estas mejoras, m\xE1s natural te resultar\xE1 mi poder, y los ecos de tu pasado las lanzar\xE1n por ti\" - Orin\n\n<b>Lanzamiento de ecos = lanzamiento autom\xE1tico. Act\xEDvalo manteniendo pulsado el bot\xF3n o haciendo clic cuando no est\xE9s asignando en la pesta\xF1a de mejoras.</b>"
+    m_Localized: "Lanza mejoras 10 veces para desbloquear el lanzamiento autom\xE1tico de tu primer espacio de mejora y la mejora Experiencia adicional."
     m_Metadata:
       m_Items: []
   - m_Id: 7955987563392
@@ -427,15 +427,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956060563392
-    m_Localized:
+    m_Localized: 
     m_Metadata:
       m_Items: []
   - m_Id: 7956061563392
-    m_Localized:
+    m_Localized: 
     m_Metadata:
       m_Items: []
   - m_Id: 7956062563392
-    m_Localized:
+    m_Localized: 
     m_Metadata:
       m_Items: []
   - m_Id: 7956063563392
@@ -753,55 +753,55 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904135
-    m_Localized: "\xA1Nueva mejora!\u2014Velocidad de movimiento: +20%."
+    m_Localized: "\xA1Nueva mejora!\u2014Velocidad de movimiento: +20\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904138
-    m_Localized: 'Velocidad de movimiento: +20%<sprite=194>30%.'
+    m_Localized: "Velocidad de movimiento: +20\_%<sprite=194>30\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904141
-    m_Localized: 'Velocidad de movimiento: +30%<sprite=194>40%.'
+    m_Localized: "Velocidad de movimiento: +30\_%<sprite=194>40\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904144
-    m_Localized: 'Velocidad de movimiento: +40%<sprite=194>50%.'
+    m_Localized: "Velocidad de movimiento: +40\_%<sprite=194>50\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904147
-    m_Localized: "\xA1Nueva mejora!\u2014Velocidad de tareas: +25%."
+    m_Localized: "\xA1Nueva mejora!\u2014Velocidad de tareas: +25\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904150
-    m_Localized: 'Velocidad de tareas: +25%<sprite=194>50%.'
+    m_Localized: "Velocidad de tareas: +25\_%<sprite=194>50\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904153
-    m_Localized: 'Velocidad de tareas: +50%<sprite=194>75%.'
+    m_Localized: "Velocidad de tareas: +50\_%<sprite=194>75\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904156
-    m_Localized: 'Velocidad de tareas: +75%<sprite=194>100%.'
+    m_Localized: "Velocidad de tareas: +75\_%<sprite=194>100\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904159
-    m_Localized: 'Velocidad de tareas: +100%<sprite=194>150%.'
+    m_Localized: "Velocidad de tareas: +100\_%<sprite=194>150\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904162
-    m_Localized: 'Velocidad de tareas: +150%<sprite=194>200%.'
+    m_Localized: "Velocidad de tareas: +150\_%<sprite=194>200\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904165
-    m_Localized: "\xA1Nueva mejora!\u2014Potenciador de combate: da\xF1o +25%."
+    m_Localized: "\xA1Nueva mejora!\u2014Potenciador de combate: da\xF1o +25\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904168
-    m_Localized: "Potenciador de combate: da\xF1o +25%<sprite=194>50%; +25% de defensa."
+    m_Localized: "Potenciador de combate: da\xF1o +25\_%<sprite=194>50\_%; +25\_% de defensa."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904171
-    m_Localized: "Potenciador de combate: da\xF1o +50%, defensa +25%<sprite=194>75%, 50%"
+    m_Localized: "Potenciador de combate: da\xF1o +50\_%, defensa +25\_%<sprite=194>75\_%, 50\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904174
@@ -825,55 +825,55 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904189
-    m_Localized: "\xA1Nueva mejora!\u2014Regeneraci\xF3n: +40%."
+    m_Localized: "\xA1Nueva mejora!\u2014Regeneraci\xF3n: +40\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904192
-    m_Localized: "Regeneraci\xF3n: +40%<sprite=194>80%."
+    m_Localized: "Regeneraci\xF3n: +40\_%<sprite=194>80\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904195
-    m_Localized: "Regeneraci\xF3n: +80%<sprite=194>120%."
+    m_Localized: "Regeneraci\xF3n: +80\_%<sprite=194>120\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904198
-    m_Localized: "Regeneraci\xF3n: +120%<sprite=194>150%."
+    m_Localized: "Regeneraci\xF3n: +120\_%<sprite=194>150\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904201
-    m_Localized: "\xA1Nueva mejora!\u2014Tirada cr\xEDtica: probabilidad cr\xEDtica +10%."
+    m_Localized: "\xA1Nueva mejora!\u2014Tirada cr\xEDtica: probabilidad cr\xEDtica +10\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904204
-    m_Localized: "Tirada cr\xEDtica: 10%<sprite=194>15%."
+    m_Localized: "Tirada cr\xEDtica: 10\_%<sprite=194>15\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904207
-    m_Localized: "Tirada cr\xEDtica: 15%<sprite=194>20%."
+    m_Localized: "Tirada cr\xEDtica: 15\_%<sprite=194>20\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904210
-    m_Localized: "Tirada cr\xEDtica: 20%<sprite=194>25%."
+    m_Localized: "Tirada cr\xEDtica: 20\_%<sprite=194>25\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904213
-    m_Localized: "\xA1Nueva mejora!\u2014Multiplicador de recursos: +25% de recursos al completar tareas."
+    m_Localized: "\xA1Nueva mejora!\u2014Multiplicador de recursos: +25\_% de recursos al completar tareas."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904216
-    m_Localized: 'Multiplicador de recursos: 25%<sprite=194>50%.'
+    m_Localized: "Multiplicador de recursos: 25\_%<sprite=194>50\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904219
-    m_Localized: 'Multiplicador de recursos: 50%<sprite=194>70%.'
+    m_Localized: "Multiplicador de recursos: 50\_%<sprite=194>70\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904222
-    m_Localized: 'Multiplicador de recursos: 70%<sprite=194>100%.'
+    m_Localized: "Multiplicador de recursos: 70\_%<sprite=194>100\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834126098434
-    m_Localized: 'Multiplicador de recursos: 100%<sprite=194>150%.'
+    m_Localized: "Multiplicador de recursos: 100\_%<sprite=194>150\_%."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904132
@@ -1021,7 +1021,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904173
-    m_Localized: "\"\xBFAs\xED se dice, verdad?\" - Orin\n\n<b>Esta es otra funci\xF3n de Habitantes. Aqu\xED reunir\xE1s mucho poder.</b>"
+    m_Localized: "\xABAs\xED se dice, \xBFno?\xBB. \u2014 Orin\n\nAbre <link=\"help:cauldron\"><u><color=#EFB889>Pueblo \u2192 Caldero</color></u></link> para mezclar alimentos en estofado y recibir cartas."
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904175
@@ -1173,11 +1173,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 34882991914631168
-    m_Localized: "\xA1Por la mermelada! - Otra versi\xF3n"
+    m_Localized: "\xA1Por la mermelada!"
     m_Metadata:
       m_Items: []
   - m_Id: 34882991939796992
-    m_Localized: "\"Je, je, je, aventurero.  Soy la bruja que te ense\xF1ar\xE1 a cuidar la tierra.  \xBFQu\xE9? \xBFCre\xEDas que iba a prepararte pociones?  \xA1Fuera con esos estereotipos!  Y trae cincuenta r\xE1banos maduros.  Como prueba, definitivamente no para mi mermelada de r\xE1bano\" \u2014 Definitivamente no nuestra Eva"
+    m_Localized: "\xBFPodr\xEDas reunir 50 r\xE1banos de las Tierras de cultivo para mi mermelada?"
     m_Metadata:
       m_Items: []
   - m_Id: 34882991939796993
@@ -1201,11 +1201,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000001
-    m_Localized: "Flora y Tillman explican los Campos. Completa las tareas del cultivo correspondiente en tus aventuras para encontrar paquetes de semillas. Cada cosecha con insumos pagados mejora su experiencia compartida. Riega una vez para reducir a la mitad el tiempo de crecimiento. Los Campos solo crecen mientras el juego est\xE1 en ejecuci\xF3n."
+    m_Localized: "Construye tu primera parcela y planta el paquete de semillas de r\xE1bano de Flora y Tillman. Ri\xE9gala para reducir a la mitad el tiempo de crecimiento. Cosecha cultivos para subir tu nivel de Campos y desbloquear m\xE1s parcelas. Encuentra m\xE1s paquetes de semillas completando tareas de cultivos en las aventuras."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000002
-    m_Localized: "Activa el descubrimiento de semillas de los cultivos correspondientes. No otorga semillas, experiencia ni construcci\xF3n de bancales gratis."
+    m_Localized: "1 paquete de semillas de r\xE1bano. Desbloquea el hallazgo de semillas en las aventuras."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000010
@@ -1213,11 +1213,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000011
-    m_Localized: "Flora y Tillman: alcanza el nivel 1 de los gemelos y trae los materiales para que Barkley construya esta expansi\xF3n. Se requiere la construcci\xF3n anterior y acceso a las fuentes de recolecci\xF3n. Una entrega paga toda la obra."
+    m_Localized: "Alcanza el nivel 1 de Campos y re\xFAne los materiales para construir estas parcelas. C\xF3mpralas aqu\xED o en Campos."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000012
-    m_Localized: "Capacidad de los Campos: 1 bancal y 0 parcelas de huerto. Sin pagos adicionales ni temporizador de construcci\xF3n."
+    m_Localized: 'Capacidad de Campos: 1 parcela de cultivo.'
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000020
@@ -1225,11 +1225,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000021
-    m_Localized: "Flora y Tillman: alcanza el nivel 5 de los gemelos y trae los materiales para que Barkley construya esta expansi\xF3n. Se requiere la construcci\xF3n anterior y acceso a las fuentes de recolecci\xF3n. Una entrega paga toda la obra."
+    m_Localized: "Alcanza el nivel 10 de Campos y re\xFAne los materiales para construir estas parcelas. C\xF3mpralas aqu\xED o en Campos."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000022
-    m_Localized: "Capacidad de los Campos: 2 bancales y 0 parcelas de huerto. Sin pagos adicionales ni temporizador de construcci\xF3n."
+    m_Localized: 'Capacidad de Campos: 2 parcelas de cultivo.'
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000030
@@ -1237,11 +1237,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000031
-    m_Localized: "Flora y Tillman: alcanza el nivel 35 de los gemelos y trae los materiales para que Barkley construya esta expansi\xF3n. Se requiere la construcci\xF3n anterior y acceso a las fuentes de recolecci\xF3n. Una entrega paga toda la obra."
+    m_Localized: "Alcanza el nivel 35 de Campos y re\xFAne los materiales para construir estas parcelas. C\xF3mpralas aqu\xED o en Campos."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000032
-    m_Localized: "Capacidad de los Campos: 3 bancales y 0 parcelas de huerto. Sin pagos adicionales ni temporizador de construcci\xF3n."
+    m_Localized: 'Capacidad de Campos: 3 parcelas de cultivo.'
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000040
@@ -1249,11 +1249,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000041
-    m_Localized: "Flora y Tillman: alcanza el nivel 65 de los gemelos y trae los materiales para que Barkley construya esta expansi\xF3n. Se requiere la construcci\xF3n anterior y acceso a las fuentes de recolecci\xF3n. Una entrega paga toda la obra."
+    m_Localized: "Alcanza el nivel 65 de Campos y re\xFAne los materiales para construir estas parcelas. C\xF3mpralas aqu\xED o en Campos."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000042
-    m_Localized: "Capacidad de los Campos: 4 bancales y 0 parcelas de huerto. Sin pagos adicionales ni temporizador de construcci\xF3n."
+    m_Localized: 'Capacidad de Campos: 4 parcelas de cultivo.'
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000050
@@ -1261,11 +1261,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000051
-    m_Localized: "Flora y Tillman: alcanza el nivel 95 de los gemelos y trae los materiales para que Barkley construya esta expansi\xF3n. Se requiere la construcci\xF3n anterior y acceso a las fuentes de recolecci\xF3n. Una entrega paga toda la obra."
+    m_Localized: "Alcanza el nivel 95 de Campos y re\xFAne los materiales para construir estas parcelas. C\xF3mpralas aqu\xED o en Campos."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000052
-    m_Localized: "Capacidad de los Campos: 5 bancales y 0 parcelas de huerto. Sin pagos adicionales ni temporizador de construcci\xF3n."
+    m_Localized: 'Capacidad de Campos: 5 parcelas de cultivo.'
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000060
@@ -1273,11 +1273,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000061
-    m_Localized: "Flora y Tillman: alcanza el nivel 125 de los gemelos y trae los materiales para que Barkley construya esta expansi\xF3n. Se requiere la construcci\xF3n anterior y acceso a las fuentes de recolecci\xF3n. Una entrega paga toda la obra."
+    m_Localized: "Alcanza el nivel 125 de Campos y re\xFAne los materiales para construir estas parcelas. C\xF3mpralas aqu\xED o en Campos."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000062
-    m_Localized: "Capacidad de los Campos: 6 bancales y 0 parcelas de huerto. Sin pagos adicionales ni temporizador de construcci\xF3n."
+    m_Localized: 'Capacidad de Campos: 6 parcelas de cultivo.'
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000070
@@ -1285,11 +1285,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000071
-    m_Localized: "Flora y Tillman: alcanza el nivel 150 de los gemelos y trae los materiales para que Barkley construya esta expansi\xF3n. Se requiere la construcci\xF3n anterior y acceso a las fuentes de recolecci\xF3n. Una entrega paga toda la obra."
+    m_Localized: "Alcanza el nivel 5 de Campos y re\xFAne los materiales para construir estas parcelas. C\xF3mpralas aqu\xED o en Campos."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000072
-    m_Localized: "Capacidad de los Campos: 6 bancales y 2 parcelas de huerto. Sin pagos adicionales ni temporizador de construcci\xF3n."
+    m_Localized: "Desbloquea las parcelas de huerto 1\u20132."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000080
@@ -1297,11 +1297,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000081
-    m_Localized: "Flora y Tillman: alcanza el nivel 185 de los gemelos y trae los materiales para que Barkley construya esta expansi\xF3n. Se requiere la construcci\xF3n anterior y acceso a las fuentes de recolecci\xF3n. Una entrega paga toda la obra."
+    m_Localized: "Alcanza el nivel 50 de Campos y re\xFAne los materiales para construir estas parcelas. C\xF3mpralas aqu\xED o en Campos."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000082
-    m_Localized: "Capacidad de los Campos: 6 bancales y 4 parcelas de huerto. Sin pagos adicionales ni temporizador de construcci\xF3n."
+    m_Localized: "Desbloquea las parcelas de huerto 3\u20134."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000090
@@ -1309,11 +1309,79 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000091
-    m_Localized: "Flora y Tillman: alcanza el nivel 225 de los gemelos y trae los materiales para que Barkley construya esta expansi\xF3n. Se requiere la construcci\xF3n anterior y acceso a las fuentes de recolecci\xF3n. Una entrega paga toda la obra."
+    m_Localized: "Alcanza el nivel 110 de Campos y re\xFAne los materiales para construir estas parcelas. C\xF3mpralas aqu\xED o en Campos."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000092
-    m_Localized: "Capacidad de los Campos: 6 bancales y 6 parcelas de huerto. Sin pagos adicionales ni temporizador de construcci\xF3n."
+    m_Localized: "Desbloquea las parcelas de huerto 5\u20136."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159845896289914880
+    m_Localized: "\xA1Aqu\xED tienes tu primera ca\xF1a! Te mostrar\xE9 un lugar secreto para pescar junto al r\xEDo.\n\nTambi\xE9n encontr\xE9 estas botas viejas. Parecen de tu talla."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159845897237827584
+    m_Localized: "Tu primera ca\xF1a de pescar, acceso al R\xEDo y botas: +10 Movimiento, +25 Salud, +5 Defensa, +1 Regeneraci\xF3n (se equipan autom\xE1ticamente)."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159849588615417856
+    m_Localized: "Tu primera ca\xF1a de pescar, acceso al R\xEDo y un par de botas (se equipan autom\xE1ticamente)."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159850354524688384
+    m_Localized: "Reclama esta recompensa, cierra Misiones y elige <link=\"help:adventure\"><u><color=#EFB889>Aventura \u2192 Tierras de cultivo</color></u></link>. Tu h\xE9roe recoge los cultivos maduros autom\xE1ticamente. M\xE1s adelante, Flora y Tillman podr\xE1n ayudarte a cultivar los tuyos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159859916489232384
+    m_Localized: "Carl, la Parca, vigila qu\xE9 tan lejos viajas del pueblo. Por ahora, tu l\xEDmite de distancia es 50. Ayuda a los habitantes y desbloquea nuevas zonas para viajar m\xE1s lejos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159859916514398208
+    m_Localized: "Ya conoces tus l\xEDmites. Ayuda a los habitantes para obtener permiso de viajar m\xE1s lejos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159865356388274176
+    m_Localized: "Busca a Barkley junto al R\xEDo. Est\xE1 buscando la madera perfecta."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159865356442800128
+    m_Localized: "Ivan es tu hermano en este reino. Puede forjar equipo con los materiales que re\xFAnes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159880735105880064
+    m_Localized: Reclama esta recompensa y cierra la ventana de misiones para hablar con Eva.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159880735131045888
+    m_Localized: "Eva te prest\xF3 su regadera m\xE1gica. Re\xFAne cinco r\xE1banos en las Tierras de cultivo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159880735131045889
+    m_Localized: "\xA1Gracias por los r\xE1banos!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159890707516624896
+    m_Localized: "Encuentra a Ivan en el Bosque y regresa al pueblo. Te ense\xF1ar\xE1 a forjar tu primera espada."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159890707558567936
+    m_Localized: "La primera lecci\xF3n de Ivan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159890707558567937
+    m_Localized: "Ivan apart\xF3 materiales para tu primera espada. Ac\xE9ptalos y sigue su lecci\xF3n en la Forja."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159890707558567938
+    m_Localized: "Materiales para tu primer lingote y un n\xFAcleo b\xE1sico."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 160252005534273536
+    m_Localized: "Ll\xE9vale 5 Flippy Floppys a Mildred para desbloquear tus primeras mejoras de Eco. Elige un Eco de tareas para reunir recursos o un Eco de combate para luchar contra enemigos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 160252005576216576
+    m_Localized: "Mejoras de Eco de tareas y Eco de combate. Asigna una en Centro \u2192 Mejoras."
     m_Metadata:
       m_Items: []
   references:

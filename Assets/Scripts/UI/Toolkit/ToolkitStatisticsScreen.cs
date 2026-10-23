@@ -55,6 +55,7 @@ namespace TimelessEchoes.UI.Toolkit
             BuildMapTutorial();
             body = new VisualElement { name = "stats-body" }; body.AddToClassList("eov-stat-body"); root.Add(body);
             portraitSort = new DropdownField("Sort", new List<string> { "Default" }, 0) { name = "portrait-statistics-sort" };
+            ToolkitLocalization.Bind(portraitSort.labelElement, "statistics.sort-label", "Sort");
             portraitSort.AddToClassList("portrait-picker"); root.Add(portraitSort);
             portraitSort.RegisterValueChangedCallback(evt => { var i = portraitSortActions.FindIndex(a => a.title == evt.newValue); if (!syncingPortraitSelectors && i >= 0 && i < portraitSortActions.Count) portraitSortActions[i].action(); });
             footer = new VisualElement(); footer.AddToClassList("eov-stat-tabs"); root.Add(footer);

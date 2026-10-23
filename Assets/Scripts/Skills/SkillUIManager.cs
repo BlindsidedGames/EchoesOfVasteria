@@ -189,7 +189,7 @@ namespace TimelessEchoes.Skills
             if (levelText != null)
                 levelText.text = $"{skill.skillName} | Lvl {level}";
             if (experienceText != null)
-                experienceText.text = $"{current:N0} / {required:N0}";
+                experienceText.text = LocaleNumbers.Format($"{current:N0} / {required:N0}");
             if (experienceBar != null)
                 experienceBar.fillAmount = required > 0f ? Mathf.Clamp01(current / required) : 0f;
         }
@@ -369,7 +369,7 @@ namespace TimelessEchoes.Skills
                 float totalPercent = summary.ResourceBonusPercent;
                 if (controller != null && controller.Aggregator != null)
                     totalPercent += controller.Aggregator.GetGlobalResourceBonus();
-                lines.Add($"{totalPercent * 100f:0.#}% Bonus Resources");
+                lines.Add(LocaleNumbers.Format($"{totalPercent * 100f:0.#}{LocaleNumbers.PercentSuffix} Bonus Resources"));
             }
 
             if (summary.ExperienceBonusPercent > 0f)
@@ -377,7 +377,7 @@ namespace TimelessEchoes.Skills
                 float totalPercent = summary.ExperienceBonusPercent;
                 if (controller != null && controller.Aggregator != null)
                     totalPercent += controller.Aggregator.GetGlobalExperienceBonus();
-                lines.Add($"{totalPercent * 100f:0.#}% Bonus Experience");
+                lines.Add(LocaleNumbers.Format($"{totalPercent * 100f:0.#}{LocaleNumbers.PercentSuffix} Bonus Experience"));
             }
 
             foreach (var entry in summary.SpawnEchoes)
@@ -475,7 +475,7 @@ namespace TimelessEchoes.Skills
             string triggerSkill = GetEchoSpawnTriggerSkillLabel(entry, sourceSkill);
             string triggerSuffix = string.IsNullOrEmpty(triggerSkill) ? string.Empty : $" when {triggerSkill}";
 
-            return $"{entry.Chance * 100f:0.#}% Chance to spawn {subject}{triggerSuffix}";
+            return LocaleNumbers.Format($"{entry.Chance * 100f:0.#}{LocaleNumbers.PercentSuffix} Chance to spawn {subject}{triggerSuffix}");
         }
 
         private static string GetEchoSpawnTriggerSkillLabel(SpawnEchoEntry entry, Skill sourceSkill)

@@ -19,35 +19,35 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 188400156672
-    m_Localized: "La producci\xF3n de Alter-Echo se retir\xF3. Re\xFAne recursos en tus aventuras o cosecha cultivos plantados."
+    m_Localized: "La producci\xF3n de Alter-Eco se retir\xF3. Re\xFAne recursos en aventuras o cosecha los cultivos que plantaste."
     m_Metadata:
       m_Items: []
   - m_Id: 478381752320
-    m_Localized: "Las mejoras son poderes temporales que expiran cuando se agotan o al volver al pueblo.  Pueden lanzarse autom\xE1ticamente tras completar la misi\xF3n requerida para el espacio; el lanzamiento autom\xE1tico est\xE1 activado por defecto. Puedes desactivarlo haciendo clic en el espacio en la ventana de gesti\xF3n de mejoras.\n\nLos tiempos de recarga de las mejoras pueden reducirse mediante el <link=\"help:cauldron\"><u><color=#EFB889>Caldero</color></u></link> de Eva."
+    m_Localized: "Las <link=\"help:buffs\"><u><color=#EFB889>Mejoras</color></u></link> son poderes temporales. Terminan cuando se agota su duraci\xF3n o cuando regresas al pueblo.\n\nCompleta la misi\xF3n requerida de un espacio para desbloquear el lanzamiento autom\xE1tico, que empieza activado. Selecciona ese espacio en <link=\"help:buffs\"><u><color=#EFB889>Centro \u2192 Mejoras</color></u></link> para activarlo o desactivarlo.\n\nEl <link=\"help:cauldron\"><u><color=#EFB889>Caldero</color></u></link> de Eva puede reducir los tiempos de recarga de las mejoras."
     m_Metadata:
       m_Items: []
   - m_Id: 492340396032
-    m_Localized: "Caleb entrar\xE1 en combate autom\xE1ticamente y solo enfrentar\xE1 a los enemigos que se interpongan. \xA1Primero las tareas, luego la diversi\xF3n!\n\nD' = D \xD7 (1 - A / (A + N))\n\nD = da\xF1o entrante\nA = valor de defensa (limitado a 0 o m\xE1s)\nN = constante que controla los rendimientos decrecientes (por defecto = 25)\nD' = da\xF1o final recibido\n\nAl alcanzar tu baja 10, 100, 1,000 y 10,000 contra un enemigo espec\xEDfico, obtendr\xE1s un 25% de da\xF1o adicional contra ese enemigo.\nAl alcanzar tu baja 25,000 y 100,000 contra un enemigo espec\xEDfico, obtendr\xE1s un 50% de da\xF1o adicional contra ese enemigo."
+    m_Localized: "Tu personaje entrar\xE1 en combate autom\xE1ticamente y solo enfrentar\xE1 a los enemigos que se interpongan. \xA1Primero las tareas, luego la diversi\xF3n!\n\nD' = D \xD7 (1 - A / (A + N))\n\nD = da\xF1o entrante\nA = valor de defensa (limitado a 0 o m\xE1s)\nN = constante que controla los rendimientos decrecientes (por defecto = 25)\nD' = da\xF1o final recibido\n\nAl alcanzar tu baja 10, 100, 1,000 y 10,000 contra un enemigo espec\xEDfico, obtendr\xE1s un 25\_% de da\xF1o adicional contra ese enemigo.\nAl alcanzar tu baja 25,000 y 100,000 contra un enemigo espec\xEDfico, obtendr\xE1s un 50\_% de da\xF1o adicional contra ese enemigo."
     m_Metadata:
       m_Items: []
   - m_Id: 512217202688
-    m_Localized: "Los ecos son versiones alternativas de Caleb que se asoman a su realidad para ayudar en distintas circunstancias.\n\nCada eco puede tener una combinaci\xF3n de las habilidades de Caleb, pero la mayor\xEDa no las tendr\xE1 todas.\n\nLa principal diferencia en su comportamiento depende de si pueden combatir.\nLos ecos capaces de combatir tienen dos estilos seg\xFAn si tambi\xE9n pueden completar tareas. \n\nUn eco de combate que NO puede realizar tareas buscar\xE1 enemigos espec\xEDficamente.\nUn eco de combate que S\xCD puede realizar tareas dar\xE1 prioridad a las tareas y solo enfrentar\xE1 a los enemigos que lo vean.\n\nLos ecos sin combate no ser\xE1n objetivo de enemigos ni los atacar\xE1n.\n\nNota del desarrollador | Actualmente no hay ecos que hagan tanto combate como tareas. Los ecos de los hitos buscan espec\xEDficamente tareas de la habilidad de ese hito. Por ejemplo, un eco de Tala solo buscar\xE1 tareas de Tala."
+    m_Localized: "Los Ecos son versiones de tu h\xE9roe de otras realidades. Cada uno tiene sus propias habilidades.\n\nLos Ecos exclusivos de combate buscan enemigos. Los que pueden recolectar y luchar dan prioridad a las tareas y combaten cuando entran en una pelea. Los que no pueden luchar no atacan ni atraen enemigos.\n\nLos Ecos desbloqueados mediante hitos de habilidad buscan tareas de esa habilidad. Por ejemplo, un Eco de Tala busca tareas de Tala."
     m_Metadata:
       m_Items: []
   - m_Id: 532437942272
-    m_Localized: "Por cada baja que consigas en una aventura, tu bonificaci\xF3n de recursos aumenta un 2%. Durante el combate, se fija temporalmente en 0%.\n\n\xA1Intenta retirarte justo antes de que el combate se vuelva demasiado dif\xEDcil para obtener tantos recursos adicionales como sea posible!"
+    m_Localized: "Usa el control de regreso al pueblo durante una aventura para retirarte. Cada baja suma un 2\_% a tu bonificaci\xF3n de recursos por retirada, mostrada en el control.\n\nSi solicitas regresar durante un combate, tu h\xE9roe termina la pelea antes de irse.\n\nSolo recibes esta bonificaci\xF3n si regresas con vida. Morir o que Carl te recoja hace que la pierdas; conservas los recursos ya reunidos."
     m_Metadata:
       m_Items: []
   - m_Id: 698595295232
-    m_Localized: "Las tareas son el objetivo principal del viaje de Caleb. Reunir recursos para el pueblo es esencial para crecer.\n\nSe completan autom\xE1ticamente y lo har\xE1s m\xE1s r\xE1pido a medida que suban tus habilidades.\n\nLas tareas aparecen entre una distancia m\xEDnima y una m\xE1xima. Sin embargo, al superar la distancia m\xE1xima, su probabilidad de aparecer disminuye un 90%. Por ello, cuando todas las tareas superan su m\xE1ximo, el sistema de pesos se equilibra y todas quedan disponibles seg\xFAn sus pesos."
+    m_Localized: "Tu h\xE9roe completa tareas autom\xE1ticamente para reunir recursos. Los niveles de habilidad m\xE1s altos permiten terminarlas m\xE1s r\xE1pido.\n\nLas tareas tienen distancias m\xEDnimas y m\xE1ximas de aparici\xF3n. Al superar la distancia m\xE1xima de una tarea, su peso de aparici\xF3n baja un 90\_%. Si todas las tareas disponibles superan su m\xE1ximo, sus pesos relativos siguen determinando la frecuencia con que aparecen."
     m_Metadata:
       m_Items: []
   - m_Id: 505754247643136
-    m_Localized: "Las misiones tienen diferentes condiciones que deben cumplirse antes de entregarlas.\n\n<b>Informaci\xF3n</b> | Se completan al instante, ya sea para contar la historia o guiarte al principio.\n<b>Recolecci\xF3n</b> | Requieren reunir recursos y entregarlos para completarlas.\n<b>Bajas</b> | Elimina enemigos y vuelve a informar para completarlas.\n<b>Encuentro</b> | Requieren conocer a un personaje, la mayor\xEDa en distancias concretas."
+    m_Localized: "Cumple los requisitos de una misi\xF3n y entr\xE9gala en el pueblo.\n\n<b>Informaci\xF3n:</b> Lee o confirma la misi\xF3n para continuar la historia o el tutorial.\n<b>Recolecci\xF3n:</b> Lleva los recursos indicados. Entregar la misi\xF3n los consume.\n<b>Bajas:</b> Derrota a los enemigos requeridos y luego informa.\n<b>Encuentro:</b> Encuentra al personaje indicado y habla con \xE9l. Algunos solo aparecen al alcanzar cierta distancia."
     m_Metadata:
       m_Items: []
   - m_Id: 3785742338113536
-    m_Localized: "Al alcanzar ciertas distancias del pueblo, Carl segar\xE1 tu alma para impedir que te alejes demasiado. \nPuedes ver tu distancia m\xE1xima de siega en la pesta\xF1a General de las estad\xEDsticas.\n\nLa distancia de siega aumenta de las siguientes formas:\n<b>Ser segado</b> | Aumenta la distancia un 1% de tu m\xE1ximo actual. (Excepto en las Tierras de cultivo)\n<b><link=\"help:quests\"><u><color=#EFB889>Misiones</color></u></link></b> | Algunas misiones aumentan la distancia de siega."
+    m_Localized: "Carl termina tu aventura cuando alcanzas el l\xEDmite del mapa. Consulta los l\xEDmites en <link=\"help:statistics/general\"><u><color=#EFB889>Estad\xEDsticas \u2192 General</color></u></link>.\n\nQue te recoja en el l\xEDmite aumenta la distancia en un 1\_% en R\xEDo, Bosque y Minas. Tierras de cultivo no da ning\xFAn aumento. En Tenebroso, el nivel enemigo aumenta con las bajas y no hay l\xEDmite de bajas. Algunas misiones tambi\xE9n aumentan tu l\xEDmite de viaje."
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
@@ -93,7 +93,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9824133160779776
-    m_Localized: "La forja de Ivan es un lugar m\xE1gico. Ya sea que descanses en el pueblo o est\xE9s de aventura, puedes guiarlo mientras mejora sus habilidades de herrer\xEDa.\n\nAl forjar tienes dos opciones:\n\n<b>Detener por Vastium:</b> Se detiene siempre que salga una pieza de Vastium, aunque sea peor.\n\n<b>Coincidir atributos:</b> Cuando est\xE1 activado, la forja seguir\xE1 trabajando hasta que una mejora tenga exactamente los mismos tipos de atributos que tu equipo actual.\n\nLa calidad se representa con este icono: <sprite=206>\n\nAqu\xED fabricas equipo y eliges los mejores atributos para tu estilo. \nActualmente pueden salir 8 atributos en el equipo, y cada pieza garantiza uno espec\xEDfico.\n\n<sprite=198> = Da\xF1o.\n<sprite=200> = Velocidad de ataque.\n<sprite=199> = Probabilidad cr\xEDtica.\n<sprite=205> = Da\xF1o cr\xEDtico. \n\n<sprite=202> = Salud.\n<sprite=203> = Regeneraci\xF3n.\n<sprite=201> = Defensa.\n<sprite=204> = Movimiento.\n\n<sprite=192> = Mejora.\n<sprite=193> = Empeoramiento. \n<sprite=194> = Sin cambios.\n<sprite=195> El atributo no est\xE1 en el objeto nuevo.\n<sprite=196> El atributo no est\xE1 en el objeto anterior.\n\n<b>Arma</b> | Garantiza <sprite=198>\n<b>Casco</b> | Garantiza <sprite=202>\n<b>Pechera</b> | Garantiza <sprite=201>\n<b>Botas</b> | Garantizan <sprite=204>, exclusivo de este espacio.\n\nEl equipo se desmantela autom\xE1ticamente al fabricar una pieza nueva, seleccionar otro espacio o cerrar el juego.\n\nSeg\xFAn su rareza, una pieza puede tener hasta 5 atributos. \xA1Est\xE1 previsto a\xF1adir m\xE1s atributos en el futuro!"
+    m_Localized: "Abre <link=\"help:forge\"><u><color=#EFB889>Pueblo \u2192 Forja</color></u></link> para fabricar equipo, tanto en el pueblo como durante una aventura.\n\nOpciones de fabricaci\xF3n:\n\n<b>Detener en Vastium:</b> Siempre se detiene si obtienes una pieza de Vastium, aunque sea peor.\n\n<b>Coincidir estad\xEDsticas:</b> Con esta opci\xF3n activada, la forja contin\xFAa hasta obtener una mejora con exactamente los mismos tipos de estad\xEDsticas que tu pieza equipada.\n\nEste \xEDcono representa la calidad: <sprite=206>\n\nAqu\xED fabricas equipo y eliges las mejores estad\xEDsticas para tu personaje.\nEl equipo puede obtener 8 estad\xEDsticas distintas. Cada espacio garantiza una.\n\n<sprite=198> = Da\xF1o.\n<sprite=200> = Velocidad de ataque.\n<sprite=199> = Probabilidad de cr\xEDtico.\n<sprite=205> = Da\xF1o cr\xEDtico.\n\n<sprite=202> = Salud.\n<sprite=203> = Regeneraci\xF3n.\n<sprite=201> = Defensa.\n<sprite=204> = Movimiento.\n\n<sprite=192> = Mejora.\n<sprite=193> = Empeoramiento.\n<sprite=194> = Sin cambios.\n<sprite=195> La estad\xEDstica no est\xE1 en el objeto nuevo.\n<sprite=196> La estad\xEDstica no est\xE1 en el objeto anterior.\n\n<b>Arma</b> | Garantiza <sprite=198>\n<b>Casco</b> | Garantiza <sprite=202>\n<b>Pechera</b> | Garantiza <sprite=201>\n<b>Botas</b> | Garantiza <sprite=204>, exclusivo de este espacio.\n\nEl equipo se recicla autom\xE1ticamente al fabricar una pieza nueva, seleccionar otro espacio o cerrar el juego.\n\nSeg\xFAn su rareza, una pieza de equipo puede obtener hasta 5 estad\xEDsticas."
     m_Metadata:
       m_Items: []
   - m_Id: 9824133185945600
@@ -105,15 +105,775 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12027031164698624
-    m_Localized: "El <link=\"help:cauldron\"><u><color=#EFB889>Caldero</color></u></link> convierte los alimentos seleccionados en estofado. Eliges cu\xE1nto mezclar; el estofado obtenido depende del valor definido del alimento y su cantidad. Prueba el estofado para recibir cartas seg\xFAn los pesos de recompensa que muestra Eva.\n\nLas cartas de recursos mejoran la recolecci\xF3n real, los recursos que sueltan los enemigos y las cosechas del pueblo del recurso correspondiente. Sus umbrales de copias son 1, 25, 75, 200, 750, 1500, 3500 y 10000; las bonificaciones de rendimiento son 1%, 2%, 3%, 5%, 7%, 10%, 15% y 20%.\n\nCada categor\xEDa usa el nivel de carta m\xE1s bajo entre sus recursos desbloqueados. Las cartas sin obtener cuentan como nivel cero. Los niveles de categor\xEDa 1 a 8 a\xF1aden 2%, 5%, 10%, 15%, 20%, 30%, 40% y 50% de rendimiento a esa categor\xEDa. Las bonificaciones de carta y categor\xEDa se suman hasta un 70%. Las recompensas, semillas, reembolsos y conversiones no reciben estas bonificaciones.\n\nEstos niveles de carta son independientes de la rareza del recurso. Los beneficios existentes de recarga y poder de las cartas de mejoras no cambian. Completa todas las colecciones disponibles de recursos y mejoras para desbloquear Bendiciones eternas."
+    m_Localized: "El <link=\"help:cauldron\"><u><color=#EFB889>Caldero</color></u></link> convierte los alimentos seleccionados en estofado. T\xFA eliges cu\xE1nto mezclar; el estofado obtenido depende del valor y la cantidad del alimento. Pru\xE9balo para recibir cartas seg\xFAn las probabilidades mostradas.\n\nLas cartas de recursos mejoran la recolecci\xF3n, el bot\xEDn enemigo y las cosechas del pueblo del recurso correspondiente. Sus umbrales de copias son 1, 25, 75, 200, 750, 1,500, 3,500 y 10,000; las bonificaciones de rendimiento son 1\_%, 2\_%, 3\_%, 5\_%, 7\_%, 10\_%, 15\_% y 20\_%.\n\nUna categor\xEDa de recursos usa el nivel de carta m\xE1s bajo entre sus recursos desbloqueados. Las cartas que no tienes cuentan como nivel cero. Los niveles de categor\xEDa 1 a 8 a\xF1aden un 2\_%, 5\_%, 10\_%, 15\_%, 20\_%, 30\_%, 40\_% y 50\_% de rendimiento a esa categor\xEDa. Las bonificaciones de cartas y categor\xEDas se suman hasta un 70\_%. Las recompensas, semillas, reembolsos y conversiones no reciben estas bonificaciones.\n\nEstos niveles de cartas son independientes de la rareza de los recursos. Las cartas de mejoras potencian la recarga y la potencia. Completa todas las colecciones de recursos y mejoras disponibles para desbloquear Bendiciones eternas."
     m_Metadata:
       m_Items: []
   - m_Id: 18915029441462272
-    m_Localized: "Los objetos tienen una baja probabilidad de subir de nivel cada vez que los recolectas. Las cosechas de la granja del pueblo no pueden mejorar el nivel de los recursos.\nCada nivel por encima del primero otorga recursos adicionales cada vez que lo recolectas en el futuro.\n\nNo me entusiasma compartir esta informaci\xF3n contigo, pero aqu\xED va - Orin...\n\nNivel | Bonificaci\xF3n | Probabilidad\n<b>Nivel 1</b> - 0%\\tBase\n<b>Nivel 2</b> - 10%\\t1 /1,000\n<b>Nivel 3</b> - 20%\\t1 / 5,000\n<b>Nivel 4</b> - 30%\\t1 / 10,000\n<b>Nivel 5</b> - 50%\\t1 / 50,000\n<b>Nivel 6</b> - 75%\\t1 / 100,000\n<b>Nivel 7</b> - 100%\\t1 / 250,000\n<b>Nivel 8</b> - 150%\\t1 / 1,000,000"
+    m_Localized: "La recolecci\xF3n tiene una peque\xF1a probabilidad de aumentar el nivel de rareza de un recurso. Las cosechas del pueblo no pueden aumentar ese nivel.\nCada nivel por encima del primero aumenta de forma permanente la cantidad que re\xFAnes de ese recurso.\n\n\xABPreferir\xEDa guard\xE1rmelo, pero aqu\xED tienes\xBB. \u2014 Orin\n\nNivel | Bonificaci\xF3n | Probabilidad\n<b>Nivel 1</b> - 0\_%\tBase\n<b>Nivel 2</b> - 10\_%\t1 / 1,000\n<b>Nivel 3</b> - 20\_%\t1 / 5,000\n<b>Nivel 4</b> - 30\_%\t1 / 10,000\n<b>Nivel 5</b> - 50\_%\t1 / 50,000\n<b>Nivel 6</b> - 75\_%\t1 / 100,000\n<b>Nivel 7</b> - 100\_%\t1 / 250,000\n<b>Nivel 8</b> - 150\_%\t1 / 1,000,000"
     m_Metadata:
       m_Items: []
   - m_Id: 25772880722018304
     m_Localized: "Ingl\xE9s (en)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255181967360
+    m_Localized: Aventuras y mapas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299008
+    m_Localized: "Elige <link=\"help:adventure\"><u><color=#EFB889>Aventura</color></u></link> y luego un mapa para iniciar una partida. Tu h\xE9roe se mueve entre las tareas y re\xFAne recursos autom\xE1ticamente. Cada mapa tiene recursos diferentes.\n\nPara ver tus descubrimientos, abre <link=\"help:statistics/general\"><u><color=#EFB889>Estad\xEDsticas \u2192 General</color></u></link> y elige un mapa. Los mapas bloqueados indican c\xF3mo obtener m\xE1s informaci\xF3n."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299009
+    m_Localized: Las tareas de Agricultura solo aparecen en las Tierras de cultivo. Las <link="help:quests"><u><color=#EFB889>Misiones</color></u></link> y los encuentros con personajes desbloquean otras rutas.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299010
+    m_Localized: Tareas y habilidades
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299011
+    m_Localized: "Completa tareas para obtener recursos y EXP de habilidad.\n\nAbre <link=\"help:skills\"><u><color=#EFB889>Centro \u2192 Habilidades</color></u></link> y elige una habilidad para ver sus bonificaciones y desbloqueos.\n\nAbre <link=\"help:statistics/tasks\"><u><color=#EFB889>Estad\xEDsticas \u2192 Tareas</color></u></link> y usa Potenciar para que una tarea aparezca m\xE1s en su categor\xEDa. Esto tambi\xE9n aumenta un poco la frecuencia de esa categor\xEDa en el mapa."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299012
+    m_Localized: "Potenciar una tarea no la desbloquea ni cambia los mapas donde aparece. Los requisitos de mapa, distancia y progreso siguen vigentes.\n\nLos niveles de Combate desbloquean n\xFAcleos y cristales de nivel superior. Consulta los niveles necesarios en <link=\"help:skills/Combat\"><u><color=#EFB889>Centro \u2192 Habilidades \u2192 Combate</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299013
+    m_Localized: Misiones
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299014
+    m_Localized: "Abre <link=\"help:quests\"><u><color=#EFB889>Misiones</color></u></link> para ver tus objetivos. Cumple los requisitos de una misi\xF3n y entr\xE9gala en el pueblo para reclamar la recompensa. Las entregas de recursos consumen los objetos indicados.\n\nLas misiones fijadas aparecen durante la aventura. Las dem\xE1s permanecen en la lista de misiones."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299015
+    m_Localized: "Las <link=\"help:quests\"><u><color=#EFB889>Misiones</color></u></link> pueden pedir recursos, bajas de enemigos, conocer a un personaje o realizar una acci\xF3n del tutorial. Al cumplir los requisitos, la misi\xF3n queda lista para entregar. Solo puedes entregarla y recibir la recompensa en el pueblo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299016
+    m_Localized: Inventario y equipo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299017
+    m_Localized: "Abre <link=\"help:inventory\"><u><color=#EFB889>Centro \u2192 Inventario</color></u></link> para revisar tu equipo y recursos. Selecciona un objeto equipado para ver sus bonificaciones. Las bonificaciones totales incluyen todos los objetos equipados.\n\nCompara las estad\xEDsticas antes de reemplazar un objeto: uno m\xE1s raro no siempre es mejor.\n\nDurante una aventura, selecciona <link=\"help:hero-stats\"><u><color=#EFB889>Estad\xEDsticas</color></u></link> junto a tu barra de salud para ver tus estad\xEDsticas de combate actuales."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299018
+    m_Localized: Los recursos descubiertos aparecen antes que los desconocidos. Ambos grupos siguen un orden fijo.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299019
+    m_Localized: Combate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299020
+    m_Localized: "Tu h\xE9roe combate autom\xE1ticamente a los enemigos y luego retoma su tarea.\n\nDurante una aventura, selecciona <link=\"help:hero-stats\"><u><color=#EFB889>Estad\xEDsticas</color></u></link> junto a tu barra de salud para ver tus valores actuales. Abre <link=\"help:statistics/enemies\"><u><color=#EFB889>Estad\xEDsticas \u2192 Enemigos</color></u></link> para consultar las estad\xEDsticas enemigas y tus bonificaciones por bajas."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299021
+    m_Localized: "Da\xF1o recibido = da\xF1o entrante \xD7 {0:0.##} \xF7 (defensa + {0:0.##}). La defensa negativa cuenta como cero.\n\nDerrotar varias veces al mismo enemigo desbloquea da\xF1o adicional contra \xE9l. Consulta tu bonificaci\xF3n actual y el pr\xF3ximo hito en <link=\"help:statistics/enemies\"><u><color=#EFB889>Estad\xEDsticas \u2192 Enemigos</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299022
+    m_Localized: La Parca y el regreso
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299023
+    m_Localized: "<b>R\xEDo, Bosque y Minas</b>\nCarl termina tu aventura en el l\xEDmite de distancia. Que te recoja en ese l\xEDmite aumenta tu distancia compartida de la Parca en un 1\_%.\n\n<b>Tierras de cultivo</b>\nCarl termina la aventura en el l\xEDmite de distancia, pero no lo aumenta.\n\n<b>Tenebroso</b>\nEl nivel de los enemigos sube con tus bajas. No hay l\xEDmite de bajas ni de distancia de la Parca.\n\nAl terminar una aventura, conservas los recursos reunidos y el progreso de tus habilidades. Regresa al pueblo para entregar misiones y consulta el <link=\"help:run-summary\"><u><color=#EFB889>Resumen de aventura</color></u></link> para ver tus ganancias. La informaci\xF3n de los mapas est\xE1 en <link=\"help:statistics/general\"><u><color=#EFB889>Estad\xEDsticas \u2192 General</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299024
+    m_Localized: "<b>R\xEDo, Bosque y Minas</b>\nQue Carl te recoja en el l\xEDmite aumenta tu distancia compartida de la Parca en un 1\_% del l\xEDmite efectivo alcanzado, incluidas las mejoras de distancia. Algunas misiones tambi\xE9n permiten viajar m\xE1s lejos.\n\n<b>Tierras de cultivo</b>\nCarl termina la aventura en el l\xEDmite de distancia, pero no lo aumenta.\n\n<b>Tenebroso</b>\nEl nivel de los enemigos sube con las bajas. No hay l\xEDmite de bajas ni de distancia de la Parca."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299025
+    m_Localized: "Bonificaci\xF3n de retirada"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299026
+    m_Localized: "Usa el control de regreso al pueblo durante una aventura para retirarte. Cada baja suma un 2\_% a tu bonificaci\xF3n de recursos por retirada, mostrada en el control.\n\nSi solicitas regresar durante un combate, tu h\xE9roe termina la pelea antes de irse.\n\nSolo recibes esta bonificaci\xF3n si regresas con vida. Morir o que Carl te recoja hace que la pierdas; conservas los recursos ya reunidos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299027
+    m_Localized: "Tu bonificaci\xF3n de retirada depende de las bajas de la aventura actual y se otorga si regresas con vida. Morir o que Carl te recoja hace que pierdas la bonificaci\xF3n, pero no los recursos ya reunidos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299028
+    m_Localized: Forja
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299029
+    m_Localized: "Despu\xE9s de conocer a Ivan, abre <link=\"help:forge\"><u><color=#EFB889>Pueblo \u2192 Forja</color></u></link>.\n\n1. Funde los materiales necesarios para obtener lingotes.\n2. Selecciona un n\xFAcleo para determinar las probabilidades de rareza y el costo de materiales.\n3. Elige un espacio de equipo y luego Fabricar. Cada fabricaci\xF3n consume lingotes y un n\xFAcleo.\n4. Compara el resultado. Selecciona Equipar para reemplazar tu objeto actual.\n\nFuera de la lecci\xF3n de Ivan, un objeto fabricado se equipa autom\xE1ticamente si su espacio est\xE1 vac\xEDo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299030
+    m_Localized: "<b>Reciclaje</b>\nRevisa el resultado antes de fabricar de nuevo o cambiar de espacio: ambas acciones reciclan un resultado que no equipaste.\n\n<b>Automatizaci\xF3n \u2014 maestr\xEDa de <link=\"help:forge\"><u><color=#EFB889>Forja</color></u></link> de nivel 3</b>\nCon \xABRepetir fabricaci\xF3n\xBB, se sigue fabricando y se consumen materiales en cada intento.\n\nDetener por Vastium se detiene ante cualquier resultado de Vastium, aunque sea peor.\n\nCon Coincidir atributos activado, una mejora tambi\xE9n debe tener los mismos tipos de estad\xEDsticas que tu objeto equipado para detener la fabricaci\xF3n.\n\nConsulta los desbloqueos de n\xFAcleos y cristales en <link=\"help:skills/Combat\"><u><color=#EFB889>Centro \u2192 Habilidades \u2192 Combate</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299031
+    m_Localized: Mejoras
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299032
+    m_Localized: "Selecciona el \xEDcono de una mejora para ver sus efectos, duraci\xF3n y tiempo de recarga actuales. Estos valores incluyen tus mejoras.\n\nAbre <link=\"help:buffs\"><u><color=#EFB889>Centro \u2192 Mejoras</color></u></link> para asignarlas y gestionar el lanzamiento autom\xE1tico. Completa la misi\xF3n requerida de un espacio para desbloquear su lanzamiento autom\xE1tico.\n\nLas <link=\"help:buffs\"><u><color=#EFB889>Mejoras</color></u></link> terminan cuando se agota su duraci\xF3n o cuando regresas al pueblo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299033
+    m_Localized: El <link="help:cauldron"><u><color=#EFB889>Caldero</color></u></link> de Eva otorga cartas de mejoras que aumentan su potencia y mejoran sus tiempos de recarga.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299034
+    m_Localized: Caldero
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299035
+    m_Localized: "Abre <link=\"help:cauldron\"><u><color=#EFB889>Pueblo \u2192 Caldero</color></u></link>. Mezcla alimentos para hacer estofado y pru\xE9balo para recibir cartas. Revisa las probabilidades de recompensa antes de probarlo.\n\nLas cartas de recursos aumentan la cantidad que re\xFAnes de ese recurso. Las cartas de mejoras potencian las mejoras. Los niveles de cartas y los niveles de rareza de recursos son sistemas distintos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299036
+    m_Localized: "El nivel de una categor\xEDa es el nivel de carta m\xE1s bajo entre sus recursos desbloqueados. Una carta que no tienes cuenta como nivel cero.\n\nLas bonificaciones de cartas de recursos y de categor\xEDa se suman hasta un 70\_%. Se aplican a la recolecci\xF3n, el bot\xEDn enemigo y las cosechas del pueblo. No se aplican a recompensas, semillas, reembolsos ni conversiones.\n\nCompleta todas las colecciones de recursos y mejoras disponibles para desbloquear Bendiciones eternas."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299037
+    m_Localized: Ecos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299038
+    m_Localized: "Los Ecos son copias temporales de tu h\xE9roe que re\xFAnen recursos o combaten enemigos.\n\nLos reinos de Orin est\xE1n conectados. Las oleadas de energ\xEDa temporal permiten que Ecos de tu pasado crucen entre ellos para ayudarte. Al ayudar a los habitantes, aprender\xE1s a invocar Ecos.\n\nLos Ecos desbloqueados mediante hitos de una habilidad buscan tareas de esa habilidad. Consulta los hitos en <link=\"help:skills\"><u><color=#EFB889>Centro \u2192 Habilidades</color></u></link> o los efectos en la <link=\"help:buffs\"><u><color=#EFB889>mejora de invocaci\xF3n</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299039
+    m_Localized: Un Eco que puede recolectar y luchar da prioridad a las tareas y combate cuando entra en una pelea.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299040
+    m_Localized: Niveles de recursos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299041
+    m_Localized: "La recolecci\xF3n puede aumentar el nivel de rareza de un recurso y con ello la cantidad que obtienes de forma permanente.\n\nLas cosechas del pueblo reciben tu bonificaci\xF3n de nivel actual, pero no pueden aumentar ese nivel.\n\nLos paquetes de semillas no obtienen niveles ni bonificaciones de rareza.\n\nLos niveles de recursos, la rareza del equipo y los niveles de cartas del <link=\"help:cauldron\"><u><color=#EFB889>Caldero</color></u></link> son sistemas distintos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299042
+    m_Localized: "Los recursos comienzan en el nivel 1. Cada probabilidad de mejora se aplica al recoger un recurso v\xE1lido en el nivel anterior."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580385641598976
+    m_Localized: Detalles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687286226944
+    m_Localized: Biblioteca
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687336558592
+    m_Localized: Resumen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687336558593
+    m_Localized: Referencia
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687336558594
+    m_Localized: "Exploraci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687336558595
+    m_Localized: Equipo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687336558596
+    m_Localized: Apoyo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687344947200
+    m_Localized: Tierras de cultivo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335808
+    m_Localized: Agricultura
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335809
+    m_Localized: Pesca
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335810
+    m_Localized: "Miner\xEDa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335811
+    m_Localized: Tala
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335812
+    m_Localized: "Misi\xF3n lista para entregar"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335813
+    m_Localized: Arma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335814
+    m_Localized: Casco
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335815
+    m_Localized: Armadura
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335816
+    m_Localized: Botas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530112
+    m_Localized: "Da\xF1o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530113
+    m_Localized: Defensa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530114
+    m_Localized: Salud
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530115
+    m_Localized: Atributo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530116
+    m_Localized: Efecto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530117
+    m_Localized: "Da\xF1o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530118
+    m_Localized: "Da\xF1o infligido por golpe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530120
+    m_Localized: Velocidad de ataque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530121
+    m_Localized: Frecuencia de los ataques
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530123
+    m_Localized: "Probabilidad de cr\xEDtico"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530124
+    m_Localized: "Probabilidad de un golpe cr\xEDtico"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530126
+    m_Localized: "Da\xF1o cr\xEDtico"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530127
+    m_Localized: "Multiplicador de da\xF1o de los golpes cr\xEDticos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530129
+    m_Localized: Salud
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530130
+    m_Localized: "Da\xF1o que puede soportar tu personaje"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530132
+    m_Localized: Defensa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530133
+    m_Localized: "Reduce el da\xF1o recibido"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530135
+    m_Localized: "Regeneraci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530136
+    m_Localized: Restaura salud con el tiempo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530138
+    m_Localized: Movimiento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530139
+    m_Localized: Velocidad de desplazamiento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530141
+    m_Localized: Carl
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530142
+    m_Localized: Mapa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530143
+    m_Localized: "Progreso del l\xEDmite"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918720
+    m_Localized: Tierras de cultivo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918721
+    m_Localized: "Carl no aumenta el l\xEDmite"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918723
+    m_Localized: "R\xEDo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918724
+    m_Localized: "+1\_% si Carl te recoge en el l\xEDmite"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918726
+    m_Localized: Bosque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918727
+    m_Localized: "+1\_% si Carl te recoge en el l\xEDmite"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918729
+    m_Localized: Minas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918730
+    m_Localized: "+1\_% si Carl te recoge en el l\xEDmite"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918732
+    m_Localized: Tenebroso
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918733
+    m_Localized: "El nivel enemigo aumenta con las bajas; sin l\xEDmite de bajas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918735
+    m_Localized: Lingote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918736
+    m_Localized: "N\xFAcleo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918737
+    m_Localized: Espada
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918738
+    m_Localized: Espacio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918739
+    m_Localized: "Estad\xEDstica garantizada"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918740
+    m_Localized: Arma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918741
+    m_Localized: "Da\xF1o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918743
+    m_Localized: Casco
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918744
+    m_Localized: Salud
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918746
+    m_Localized: Armadura
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918747
+    m_Localized: Defensa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918749
+    m_Localized: Botas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918750
+    m_Localized: Movimiento (solo botas)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918752
+    m_Localized: Duplicador de recursos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918753
+    m_Localized: Velocidad de tareas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113024
+    m_Localized: Caldero de Eva
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113025
+    m_Localized: Nivel de carta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113026
+    m_Localized: Copias necesarias
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113027
+    m_Localized: "Rendimiento de recurso / categor\xEDa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113028
+    m_Localized: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113029
+    m_Localized: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113030
+    m_Localized: "1\_% / 2\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113031
+    m_Localized: 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113032
+    m_Localized: 25
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113033
+    m_Localized: "2\_% / 5\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501632
+    m_Localized: 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501633
+    m_Localized: 75
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501634
+    m_Localized: "3\_% / 10\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501635
+    m_Localized: 4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501636
+    m_Localized: 200
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501637
+    m_Localized: "5\_% / 15\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501638
+    m_Localized: 5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501639
+    m_Localized: 750
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501640
+    m_Localized: "7\_% / 20\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501641
+    m_Localized: 6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501642
+    m_Localized: 1,500
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501643
+    m_Localized: "10\_% / 30\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501644
+    m_Localized: 7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501645
+    m_Localized: 3,500
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501646
+    m_Localized: "15\_% / 40\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501647
+    m_Localized: 8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501648
+    m_Localized: 10,000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501649
+    m_Localized: "20\_% / 50\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501650
+    m_Localized: Eco de tareas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501651
+    m_Localized: Eco de combate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501652
+    m_Localized: "Funci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501653
+    m_Localized: Comportamiento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501654
+    m_Localized: Eco de tareas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501655
+    m_Localized: "Re\xFAne recursos; no ataca ni atrae enemigos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501657
+    m_Localized: Eco de combate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501658
+    m_Localized: Busca y combate enemigos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695936
+    m_Localized: Nivel de recurso
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695937
+    m_Localized: "Bonificaci\xF3n de rendimiento"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695938
+    m_Localized: Probabilidad de mejora
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695939
+    m_Localized: Nivel 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695940
+    m_Localized: "0\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695941
+    m_Localized: Nivel inicial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695942
+    m_Localized: Nivel 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695943
+    m_Localized: "10\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695944
+    m_Localized: 1 en 1,000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695945
+    m_Localized: Nivel 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695946
+    m_Localized: "20\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695947
+    m_Localized: 1 en 5,000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695948
+    m_Localized: Nivel 4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695949
+    m_Localized: "30\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695950
+    m_Localized: 1 en 10,000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695951
+    m_Localized: Nivel 5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695952
+    m_Localized: "50\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695953
+    m_Localized: 1 en 50,000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695954
+    m_Localized: Nivel 6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695955
+    m_Localized: "75\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695956
+    m_Localized: 1 en 100,000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695957
+    m_Localized: Nivel 7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695958
+    m_Localized: "100\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695959
+    m_Localized: 1 en 250,000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695960
+    m_Localized: Nivel 8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695961
+    m_Localized: "150\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695962
+    m_Localized: 1 en 1,000,000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427254829056
+    m_Localized: "<b>Tierras de cultivo</b>\nRecolecta cultivos aqu\xED. Las tareas de Agricultura no aparecen en otros mapas. El l\xEDmite de distancia de Carl no aumenta cuando te recoge en las Tierras de cultivo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427305160704
+    m_Localized: "<b>Agricultura</b>\nCosecha cultivos en las Tierras de cultivo para obtener alimentos y EXP de Agricultura. Cultivar tus propias plantas en <link=\"help:fields\"><u><color=#EFB889>Campos</color></u></link> es un sistema distinto. Consulta las bonificaciones y desbloqueos en <link=\"help:skills/Farming\"><u><color=#EFB889>Centro \u2192 Habilidades \u2192 Agricultura</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427305160705
+    m_Localized: "<b>Pesca</b>\nGill te da tu primera ca\xF1a. Las tareas de pesca otorgan peces y EXP de Pesca.\n\nConsulta los recursos descubiertos de cada mapa en <link=\"help:statistics/general\"><u><color=#EFB889>Estad\xEDsticas \u2192 General</color></u></link>, o las bonificaciones y desbloqueos en <link=\"help:skills/Fishing\"><u><color=#EFB889>Centro \u2192 Habilidades \u2192 Pesca</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427305160706
+    m_Localized: "<b>Miner\xEDa</b>\nExtrae minerales para ganar EXP de Miner\xEDa. F\xFAndelos en lingotes en la <link=\"help:forge\"><u><color=#EFB889>Forja</color></u></link> y \xFAsalos para fabricar equipo. Consulta los niveles para desbloquear minerales en <link=\"help:skills/Mining\"><u><color=#EFB889>Centro \u2192 Habilidades \u2192 Miner\xEDa</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427305160707
+    m_Localized: "<b>Tala</b>\nCorta madera para ganar EXP de Tala. Las misiones de Barkley te llevan al Bosque.\n\nConsulta los desbloqueos en <link=\"help:skills/Woodcutting\"><u><color=#EFB889>Centro \u2192 Habilidades \u2192 Tala</color></u></link>, o aumenta la frecuencia de tareas en <link=\"help:statistics/tasks\"><u><color=#EFB889>Estad\xEDsticas \u2192 Tareas</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427305160708
+    m_Localized: "<b>Lista para entregar</b>\nLa estrella marca una misi\xF3n cuyos requisitos se han cumplido. Regresa al pueblo y selecciona Entregar para reclamar la recompensa. Las entregas de recursos consumen los objetos indicados."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355008
+    m_Localized: "<b>Arma</b>\nTodas las armas fabricadas tienen una estad\xEDstica de da\xF1o. Compara sus otras estad\xEDsticas antes de reemplazar tu arma actual."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355009
+    m_Localized: "<b>Casco</b>\nTodos los cascos fabricados tienen una estad\xEDstica de salud. Sus otras estad\xEDsticas pueden mejorar el ataque, la defensa o la recuperaci\xF3n."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355010
+    m_Localized: "<b>Pechera</b>\nTodas las pecheras fabricadas tienen una estad\xEDstica de defensa. M\xE1s defensa reduce el da\xF1o recibido, con un beneficio adicional cada vez menor."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355011
+    m_Localized: "<b>Botas</b>\nTodos los pares de botas fabricados tienen una estad\xEDstica de movimiento que aumenta la velocidad de desplazamiento. Solo las botas pueden obtener movimiento."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355012
+    m_Localized: "<b>Da\xF1o</b>\nDa\xF1o por golpe antes de la defensa enemiga y otros modificadores. La velocidad de ataque determina la frecuencia de tus golpes. La probabilidad de cr\xEDtico determina cu\xE1ntos golpes son cr\xEDticos; el da\xF1o cr\xEDtico determina su potencia.\n\nDurante una aventura, selecciona <link=\"help:hero-stats\"><u><color=#EFB889>Estad\xEDsticas</color></u></link> junto a tu barra de salud para ver tus valores actuales."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355013
+    m_Localized: "<b>Defensa</b>\nReduce el da\xF1o recibido. Con {0:0.##} de defensa recibes la mitad del da\xF1o; con {1:0.##}, un cuarto. La defensa no evita todo el da\xF1o. Consulta la f\xF3rmula en <link=\"help:reference\"><u><color=#EFB889>Referencia</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355014
+    m_Localized: "<b>Salud</b>\nTu h\xE9roe muere cuando la salud llega a cero. El equipo puede aumentar la salud m\xE1xima y la regeneraci\xF3n restaura salud con el tiempo.\n\nDurante una aventura, selecciona <link=\"help:hero-stats\"><u><color=#EFB889>Estad\xEDsticas</color></u></link> junto a tu barra de salud para ver tus valores actuales."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355015
+    m_Localized: "<b>Carl</b>\nCarl termina tu aventura en el l\xEDmite de distancia del mapa. Conservas los recursos reunidos y el progreso de tus habilidades.\n\nR\xEDo, Bosque y Minas ganan un 1\_% de distancia cuando Carl te recoge en el l\xEDmite. Tierras de cultivo no aumenta. Tenebroso escala con las bajas y no tiene l\xEDmite de distancia de la Parca."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355016
+    m_Localized: "<b>Lingotes</b>\nFunde los materiales indicados para obtener lingotes. El n\xFAcleo seleccionado determina cu\xE1les y cu\xE1ntos necesitas para fabricar. Fundir produce materiales; Fabricar produce equipo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355017
+    m_Localized: "<b>N\xFAcleos</b>\nCada fabricaci\xF3n consume un n\xFAcleo. El n\xFAcleo seleccionado determina las probabilidades de rareza y el costo de materiales. Los niveles superiores de n\xFAcleos se desbloquean con niveles de Combate. Usa las conversiones de la <link=\"help:forge\"><u><color=#EFB889>Forja</color></u></link> para mejorar n\xFAcleos."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355018
+    m_Localized: "<b>Espada</b>\nSelecciona Arma y luego Fabricar. Todas las armas tienen una estad\xEDstica de da\xF1o. Compara el resultado y selecciona Equipar para reemplazar tu arma actual.\n\nFabricar de nuevo o cambiar de espacio recicla el resultado no equipado."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355019
+    m_Localized: "Selecciona una mejora arriba para ver sus efectos, duraci\xF3n y tiempo de recarga actuales abajo. Completa la misi\xF3n requerida de un espacio para desbloquear su lanzamiento autom\xE1tico."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355020
+    m_Localized: "Selecciona una mejora arriba para ver sus efectos, duraci\xF3n y tiempo de recarga actuales abajo. Completa la misi\xF3n requerida de un espacio para desbloquear su lanzamiento autom\xE1tico."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355021
+    m_Localized: "<b><link=\"help:cauldron\"><u><color=#EFB889>Caldero</color></u></link></b>\nElige los alimentos y la cantidad que mezclar\xE1s en el estofado. Pru\xE9balo para recibir cartas seg\xFAn las probabilidades mostradas. Las cartas de recursos aumentan el rendimiento de recolecci\xF3n; las de mejoras potencian las mejoras.\n\nConsulta los umbrales de cartas de recursos y categor\xEDas en <link=\"help:reference\"><u><color=#EFB889>Referencia</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355022
+    m_Localized: "<b>Eco de tareas</b>\nRe\xFAne recursos sin atacar ni atraer enemigos. Los Ecos desbloqueados mediante hitos de una habilidad buscan tareas de esa habilidad. Consulta <link=\"help:skills\"><u><color=#EFB889>el hito</color></u></link> o <link=\"help:buffs\"><u><color=#EFB889>la mejora de invocaci\xF3n</color></u></link> para ver su duraci\xF3n y habilidades.\n\nLos efectos, duraci\xF3n y tiempo de recarga de la invocaci\xF3n actual se muestran abajo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355023
+    m_Localized: "<b>Eco de combate</b>\nBusca enemigos y lucha contra ellos. Los Ecos exclusivos de combate no re\xFAnen recursos. Un Eco que puede recolectar y luchar da prioridad a las tareas y combate cuando entra en una pelea.\n\nLos efectos, duraci\xF3n y tiempo de recarga de la invocaci\xF3n actual se muestran abajo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164590655340417024
+    m_Localized: Notas del parche
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164590655378165760
+    m_Localized: "<b>Cambios actuales en desarrollo</b>\n\n<b>Inicio y progreso</b>\n\u2022 Se renovaron las primeras misiones y las presentaciones de personajes.\n\u2022 Gill gu\xEDa a los jugadores hacia el R\xEDo; Barkley los lleva hacia el Bosque.\n\u2022 Gill entrega Botas viejas. Ivan proporciona materiales y ense\xF1a a forjar y equipar la primera espada.\n\u2022 Los men\xFAs y tutoriales aparecen cuando sus sistemas se vuelven relevantes.\n\u2022 Las misiones solo pueden entregarse en el pueblo.\n\n<b>Interfaz</b>\n\u2022 Se redise\xF1\xF3 el Resumen de aventura y se agreg\xF3 un panel compacto de estad\xEDsticas durante las partidas.\n\u2022 El Inventario ahora muestra los objetos equipados y las bonificaciones de equipo.\n\u2022 Se agreg\xF3 desplazamiento por arrastre en toda la interfaz.\n\u2022 Se renov\xF3 la Biblioteca con navegaci\xF3n por temas, tablas de referencia y explicaciones de \xEDconos seleccionables.\n\n<b>Jugabilidad y correcciones</b>\n\u2022 Se redujo la densidad de tareas en la primera aventura en las Tierras de cultivo.\n\u2022 Las tareas de Agricultura aparecen solo en las Tierras de cultivo.\n\u2022 Los niveles de n\xFAcleos y cristales se desbloquean mediante niveles de Combate.\n\u2022 Se corrigieron superposiciones de barras de salud enemigas y problemas de animaci\xF3n de pesca.\n\u2022 Se eliminaron las clasificaciones.\n\nSelecciona <link=\"help:reference\"><u><color=#EFB889>Referencia</color></u></link> para ver las notas de actualizaci\xF3n anteriores."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164590655378165761
+    m_Localized: "<b>Notas de actualizaci\xF3n anteriores</b>\n\n\u2022 Se agregaron \xA1Por la mermelada! y Los viajes de Gilliver.\n\u2022 Se mejor\xF3 el mensaje de introducci\xF3n.\n\u2022 Se corrigieron los avisos de subida de nivel que mostraban valores inferiores a los esperados.\n\u2022 Se elimin\xF3 el bloque Calidad equipada de la Forja.\n\u2022 Las misiones fijadas muestran Lista para entregar en vez de Completa.\n\u2022 Se agreg\xF3 una pantalla de carga al cambiar de mapa.\n\u2022 Se agreg\xF3 el bot\xF3n Mezclar todo al Caldero.\n\u2022 Se actualiz\xF3 el sistema de b\xFAsqueda de rutas."
     m_Metadata:
       m_Items: []
   references:

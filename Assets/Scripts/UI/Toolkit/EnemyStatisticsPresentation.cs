@@ -34,13 +34,13 @@ namespace TimelessEchoes.UI.Toolkit
             string Number(double n) => CalcUtils.FormatNumber(n, true, 400, false);
             string Stat(int required, double value) => reveal >= required ? spawnable ? Number(value) : "-" : "???";
             var health = ToolkitLocalization.Text("statistics.enemy-health-damage", "Health: {0}\nDamage: {1}", Stat(2, enemy.GetMaxHealthForLevel(level)), Stat(1, enemy.GetDamageForLevel(level)));
-            var defense = reveal >= 3 ? spawnable ? ((1 - TimelessEchoes.Combat.ApplyDefense(1, enemy.GetDefenseForLevel(level))) * 100).ToString("0") + "%" : "-" : "???";
+            var defense = reveal >= 3 ? spawnable ? ((1 - TimelessEchoes.Combat.ApplyDefense(1, enemy.GetDefenseForLevel(level))) * 100).ToString("0", LocaleNumbers.Culture) + LocaleNumbers.PercentSuffix : "-" : "???";
             var defenseText = ToolkitLocalization.Text("statistics.enemy-defense-rate", "Defense: {0}\nAttack Rate: {1}", defense, Stat(4, enemy.attackSpeed));
             var movement = ToolkitLocalization.Text("statistics.enemy-movement-vision", "Movement: {0}\nVision: {1}", Stat(5, enemy.moveSpeed), Stat(6, enemy.visionRange));
             var showProgress = reveal < EnemyKillTracker.Thresholds.Length;
             var killsText = Number(kills); float progress = 0;
             if (showProgress) { var next = EnemyKillTracker.Thresholds[reveal]; killsText += " / " + Number(next); progress = Mathf.Clamp01((float)(kills / next)); }
-            return (kills > 0 ? ToolkitLocalization.Text("statistics.enemy-title", "{0} | {1}", ToolkitLocalization.Text("enemy." + enemy.name, enemy.enemyName), spawnable ? ToolkitLocalization.Text("statistics.enemy-level", "Lvl {0}", level) : ToolkitLocalization.Text("statistics.enemy-unavailable-level", "Lvl -")) : "???", health, defenseText, movement, ToolkitLocalization.Text("statistics.enemy-kills-bonus", "Kills: {0}\nBonus Damage: {1:0}%", killsText, bonus * 100), kills > 0 ? enemy.icon : null, showProgress, progress, new[] { Stat(2, enemy.GetMaxHealthForLevel(level)), Stat(1, enemy.GetDamageForLevel(level)), defense, Stat(4, enemy.attackSpeed), Stat(5, enemy.moveSpeed), Stat(6, enemy.visionRange), killsText, $"{bonus * 100:0}%" });
+            return (kills > 0 ? ToolkitLocalization.Text("statistics.enemy-title", "{0} | {1}", ToolkitLocalization.Text("enemy." + enemy.name, enemy.enemyName), spawnable ? ToolkitLocalization.Text("statistics.enemy-level", "Lvl {0}", level) : ToolkitLocalization.Text("statistics.enemy-unavailable-level", "Lvl -")) : "???", health, defenseText, movement, ToolkitLocalization.Text("statistics.enemy-kills-bonus", "Kills: {0}\nBonus Damage: {1:0}%", killsText, bonus * 100), kills > 0 ? enemy.icon : null, showProgress, progress, new[] { Stat(2, enemy.GetMaxHealthForLevel(level)), Stat(1, enemy.GetDamageForLevel(level)), defense, Stat(4, enemy.attackSpeed), Stat(5, enemy.moveSpeed), Stat(6, enemy.visionRange), killsText, LocaleNumbers.Format($"{bonus * 100:0}{LocaleNumbers.PercentSuffix}") });
         }
     }
 }

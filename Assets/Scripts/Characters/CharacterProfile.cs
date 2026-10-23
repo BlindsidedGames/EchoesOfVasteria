@@ -34,9 +34,9 @@ namespace TimelessEchoes.Characters
         public static bool TryName(string value, out string name, out string error)
         {
             name = (value ?? "").Trim().Normalize(NormalizationForm.FormC);
-            error = name.Length == 0 ? "Give your character a name." :
-                name.Any(char.IsControl) ? "Use a name without line breaks or control characters." :
-                new StringInfo(name).LengthInTextElements > 24 ? "Use a name of up to 24 characters." : null;
+            error = name.Length == 0 ? TimelessEchoes.UI.Toolkit.ToolkitLocalization.Text("character.name-required", "Give your character a name.") :
+                name.Any(char.IsControl) ? TimelessEchoes.UI.Toolkit.ToolkitLocalization.Text("character.name-controls", "Use a name without line breaks or control characters.") :
+                new StringInfo(name).LengthInTextElements > 24 ? TimelessEchoes.UI.Toolkit.ToolkitLocalization.Text("character.name-length", "Use a name of up to 24 characters.") : null;
             return error == null;
         }
     }
