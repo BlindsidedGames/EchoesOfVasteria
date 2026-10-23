@@ -12,6 +12,83 @@ namespace Tests.PlayMode
     public sealed partial class FieldsProductionPlayModeTests
     {
         [UnityTest]
+        public IEnumerator RightClickDismissalLeavesTheNextMenuClickable()
+        {
+            var owner = new GameObject("Right-click menu lifecycle");
+            var mouse = UnityEngine.InputSystem.InputSystem.AddDevice<UnityEngine.InputSystem.Mouse>();
+            PanelSettings navigationSettings = null;
+            try
+            {
+                owner.AddComponent<UnityEngine.EventSystems.EventSystem>();
+                owner.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+                var windows = owner.AddComponent<TimelessEchoes.UI.TownWindowManager>();
+                var optionsObject = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Options.prefab"));
+                optionsObject.transform.SetParent(owner.transform);
+                var options = optionsObject.GetComponent<ToolkitOptionsScreen>();
+                typeof(TimelessEchoes.UI.TownWindowManager).GetField("toolkitOptions", Private).SetValue(windows, options);
+                navigationSettings = ToolkitPanel.CreateSettings(
+                    AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>("Assets/UI/Toolkit/Runtime.tss"),
+                    AssetDatabase.LoadAssetAtPath<PanelTextSettings>("Assets/UI/Toolkit/TextSettings.asset"));
+                navigationSettings.sortingOrder = 150;
+                var navigationObject = new GameObject("Persistent navigation", typeof(UIDocument));
+                navigationObject.transform.SetParent(owner.transform);
+                var navigation = navigationObject.GetComponent<UIDocument>(); navigation.panelSettings = navigationSettings;
+                navigation.rootVisualElement.pickingMode = PickingMode.Ignore;
+                var open = new Button(() => windows.OpenWindow(TimelessEchoes.UI.TownWindowManager.Window.Options)) { text = "Settings" };
+                open.style.position = Position.Absolute; open.style.width = 100; open.style.height = 30;
+                navigation.rootVisualElement.Add(open);
+                IEnumerator Pointer(VisualElement element, Vector2 point, UnityEngine.InputSystem.LowLevel.MouseButton button, bool pressed)
+                {
+                    var scale = RuntimePanelUtils.ScreenToPanel(element.panel, Vector2.one);
+                    var state = new UnityEngine.InputSystem.LowLevel.MouseState {
+                        position = new Vector2(point.x / scale.x, UnityEngine.Screen.height - point.y / scale.y) };
+                    UnityEngine.InputSystem.InputSystem.QueueStateEvent(mouse, state.WithButton(button, pressed));
+                    yield return null; yield return null;
+                }
+                IEnumerator Click(Button button)
+                {
+                    var point = button.worldBound.center;
+                    yield return Pointer(button, point, UnityEngine.InputSystem.LowLevel.MouseButton.Left, false);
+                    yield return Pointer(button, point, UnityEngine.InputSystem.LowLevel.MouseButton.Left, true);
+                    yield return Pointer(button, point, UnityEngine.InputSystem.LowLevel.MouseButton.Left, false);
+                }
+                yield return null; yield return null;
+                foreach (var size in new[] { new Vector2Int(1920, 1080), new Vector2Int(1080, 1920) })
+                {
+                    PlayModeWindow.SetCustomRenderingResolution((uint)size.x, (uint)size.y, "Menu close lifecycle");
+                    yield return null; yield return null;
+                    yield return Click(open);
+                    Assert.True(options.IsOpen);
+                    var ui = optionsObject.GetComponent<UIDocument>().rootVisualElement;
+                    yield return Click(ui.Q<Button>("preferences-tab"));
+                    Assert.AreEqual(DisplayStyle.None, ui.Q("settings-saves").resolvedStyle.display,
+                        "Each orientation must begin on a different tab from the click being tested.");
+                    var tab = ui.Q<Button>("saves-tab");
+                    var point = tab.worldBound.center;
+                    yield return Pointer(tab, point, UnityEngine.InputSystem.LowLevel.MouseButton.Right, true);
+                    // Keep the press across the old 50 ms close poll, then release at the same screen position.
+                    yield return new WaitForSecondsRealtime(.12f);
+                    yield return Pointer(open, point, UnityEngine.InputSystem.LowLevel.MouseButton.Right, false);
+                    yield return new WaitForSecondsRealtime(.12f);
+                    Assert.False(options.IsOpen, "Right-click must dismiss Settings.");
+                    yield return Click(open);
+                    Assert.True(options.IsOpen, "The next navigation click must reopen Settings.");
+                    ui = optionsObject.GetComponent<UIDocument>().rootVisualElement;
+                    yield return Click(ui.Q<Button>("saves-tab"));
+                    Assert.AreEqual(DisplayStyle.Flex, ui.Q("settings-saves").resolvedStyle.display,
+                        "Right-click dismissal must not leave a stale pressed button routing all clicks to navigation.");
+                    windows.CloseAllWindows(); yield return null;
+                }
+            }
+            finally
+            {
+                Object.DestroyImmediate(owner);
+                if (navigationSettings) Object.DestroyImmediate(navigationSettings);
+                UnityEngine.InputSystem.InputSystem.RemoveDevice(mouse);
+            }
+        }
+
+        [UnityTest]
         public IEnumerator GuidanceSharedScrollingKeepsControlsIndependentAndNestedDragsLocal()
         {
             var owner = new GameObject("Protected shared scroll interaction", typeof(UIDocument));
