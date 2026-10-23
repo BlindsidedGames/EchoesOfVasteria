@@ -1,7 +1,8 @@
-using TimelessEchoes.UI.Toolkit;
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
 #define DISABLESTEAMWORKS
 #endif
+
+using TimelessEchoes.UI.Toolkit;
 
 using System;
 using System.Collections;
