@@ -1,3 +1,4 @@
+using Blindsided.Utilities;
 using TimelessEchoes.UI.Toolkit;
 using System.Globalization;
 using Sirenix.OdinInspector;
@@ -51,7 +52,7 @@ namespace TimelessEchoes.Skills
         public override string GetDescription(float magnitude, string skillName, bool isActive)
         {
             float percent = Mathf.Max(0f, magnitude) * 100f;
-            string formattedPercent = percent.ToString(percentageFormat, CultureInfo.InvariantCulture) + "%";
+            string formattedPercent = percent.ToString(percentageFormat, LocaleNumbers.Culture) + LocaleNumbers.PercentSuffix;
 
             if (applyToAllTasks)
                 return ToolkitLocalization.Text("milestone-effect." + name + ".globalDescriptionTemplate", globalDescriptionTemplate, formattedPercent);

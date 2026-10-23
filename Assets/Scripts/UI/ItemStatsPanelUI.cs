@@ -247,7 +247,7 @@ namespace TimelessEchoes.UI
                             $"Crafted\nMin Distance: {CalcUtils.FormatNumber(minDist)}\nBest gathered/min: {aePower}";
                     else if (tier > 1)
                         ui.bestPerMinuteText.text =
-                            $"Tier Bonus: {bonusPercent:0.#}%\nMin Distance: {CalcUtils.FormatNumber(minDist)}\nBest gathered/min: {aePower}";
+                            LocaleNumbers.Format($"Tier Bonus: {bonusPercent:0.#}{LocaleNumbers.PercentSuffix}\nMin Distance: {CalcUtils.FormatNumber(minDist)}\nBest gathered/min: {aePower}");
                     else
                         ui.bestPerMinuteText.text =
                             $"Min Distance: {CalcUtils.FormatNumber(minDist)}\nBest gathered/min: {aePower}";

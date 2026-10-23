@@ -10,6 +10,7 @@ namespace Blindsided.UGS
         // Sets the player's public display name (Player Accounts) and mirrors to Cloud Save
         public static async Task<(bool ok, string message)> SetUniqueAsync(string desiredName)
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipOnlineServices) return (false, "Online services are disabled for this session.");
             await UgsInitializer.EnsureInitializedAsync();
 
             try

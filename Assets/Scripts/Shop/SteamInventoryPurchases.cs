@@ -157,7 +157,7 @@ namespace TimelessEchoes.Shop
         {
             if (currency == null || currency.Length != 3) throw new ArgumentException("Invalid currency.");
             foreach (var character in currency) if (character < 'A' || character > 'Z') throw new ArgumentException("Invalid currency.");
-            return currency + " " + (amount / 100m).ToString("0.##", CultureInfo.CurrentCulture);
+            return currency + " " + (amount / 100m).ToString("0.##", Blindsided.Utilities.LocaleNumbers.Culture);
         }
         public async void Buy(string id)
         {

@@ -15,11 +15,15 @@ namespace TimelessEchoes
         private GameObject content;
         private RectTransform bubble;
         private TMP_Text bubbleText;
+        private TMP_FontAsset originalFont;
         private RectTransform tapTarget;
         private SpriteRenderer actor;
         private ToolkitNavigationScreen navigation;
         private ToolkitRunScreen runScreen;
         private float closesAt;
+
+        private void OnEnable() => ToolkitLocalization.Changed += RefreshJokeLocale;
+        private void OnDisable() => ToolkitLocalization.Changed -= RefreshJokeLocale;
 
         public void Initialize(DadJokeManager source, GameObject bubbleTemplate)
         {
@@ -74,6 +78,7 @@ namespace TimelessEchoes
             bubbleText = bubble.GetComponentInChildren<TMP_Text>(true);
             if (bubbleText)
             {
+                originalFont = bubbleText.font;
                 bubbleText.enabled = true;
                 bubbleText.raycastTarget = false;
                 bubbleText.transform.localScale = new Vector3(-1, 1, 1);
@@ -100,7 +105,8 @@ namespace TimelessEchoes
         private void ShowJoke()
         {
             if (!bubbleText) return;
-            bubbleText.text = manager.NextJoke();
+            manager.NextJoke();
+            RefreshJokeLocale();
             var textRect = bubbleText.rectTransform;
             textRect.pivot = new Vector2(.5f, .5f);
             textRect.anchorMin = Vector2.zero;
@@ -114,6 +120,19 @@ namespace TimelessEchoes
                 Mathf.Max(40, bubbleText.GetPreferredValues(bubbleText.text, 66, 0).y + 25));
             bubble.gameObject.SetActive(true);
             closesAt = Time.unscaledTime + 3;
+        }
+
+        private void RefreshJokeLocale()
+        {
+            if (!bubbleText || !manager) return;
+            var code = Blindsided.Utilities.LocaleNumbers.Code;
+            var localizedFont = code == "ja" ? Resources.Load<TMP_FontAsset>("Fonts/Localization/NotoCJK-jp TMP") :
+                code == "zh-CN" ? Resources.Load<TMP_FontAsset>("Fonts/Localization/NotoCJK-sc TMP") : null;
+            bubbleText.font = localizedFont ? localizedFont : originalFont;
+            bubbleText.text = manager.CurrentJoke;
+            if (bubble)
+                bubble.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,
+                    Mathf.Max(40, bubbleText.GetPreferredValues(bubbleText.text, 66, 0).y + 25));
         }
 
         private void LateUpdate()

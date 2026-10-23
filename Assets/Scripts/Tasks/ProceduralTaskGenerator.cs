@@ -8,7 +8,11 @@ using TimelessEchoes.Skills;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.Pool;
+#if UNITY_EDITOR
+using Random = TimelessEchoes.Platform.EditorCaptureRandom;
+#else
 using Random = UnityEngine.Random;
+#endif
 using static Blindsided.Oracle;
 
 namespace TimelessEchoes.Tasks
@@ -710,21 +714,21 @@ namespace TimelessEchoes.Tasks
             for (var i = 0; i < bottomCount; i++)
             {
                 for (var a = 0; a < 10; a++)
-                    if (TrySpawnTask(UnityEngine.Random.Range(localMinX, localMaxX), parent, false, true, false, false,
+                    if (TrySpawnTask(Random.Range(localMinX, localMaxX), parent, false, true, false, false,
                             scratchSpawnedTasks, scratchTaskPositions, scratchTaskMap)) break;
                 if (budget.Expired) { yield return null; budget.Restart(); }
             }
             for (var i = 0; i < middleCount; i++)
             {
                 for (var a = 0; a < 10; a++)
-                    if (TrySpawnTask(UnityEngine.Random.Range(localMinX, localMaxX), parent, false, false, true, false,
+                    if (TrySpawnTask(Random.Range(localMinX, localMaxX), parent, false, false, true, false,
                             scratchSpawnedTasks, scratchTaskPositions, scratchTaskMap)) break;
                 if (budget.Expired) { yield return null; budget.Restart(); }
             }
             for (var i = 0; i < topCount; i++)
             {
                 for (var a = 0; a < 10; a++)
-                    if (TrySpawnTask(UnityEngine.Random.Range(localMinX, localMaxX), parent, false, false, false, true,
+                    if (TrySpawnTask(Random.Range(localMinX, localMaxX), parent, false, false, false, true,
                             scratchSpawnedTasks, scratchTaskPositions, scratchTaskMap)) break;
                 if (budget.Expired) { yield return null; budget.Restart(); }
             }
@@ -733,7 +737,7 @@ namespace TimelessEchoes.Tasks
             for (var i = 0; i < enemyCount; i++)
             {
                 if (budget.Expired) { yield return null; budget.Restart(); }
-                var localX = UnityEngine.Random.Range(localMinX, localMaxX);
+                var localX = Random.Range(localMinX, localMaxX);
                 if (firstRiverRun && localX < 38f) continue;
                 var worldX = transform.position.x + localX;
                 var entry = PickEntry(enemies, worldX, e => TaskAllowed(e, true, true, true));

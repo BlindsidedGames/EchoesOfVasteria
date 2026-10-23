@@ -1,3 +1,4 @@
+using Blindsided.Utilities;
 using Screen = UnityEngine.Device.Screen;
 using System.Collections.Generic;
 
@@ -163,8 +164,8 @@ namespace TimelessEchoes.UI.Toolkit
             var inset = Frame(right, definition.inset); inset.AddToClassList("eov-skills-milestone-inset"); milestoneList = Scroll(inset, "milestones");
 
             portraitPages = new ToolkitPortraitPages(root, header, new[] { left }, null,
-                new ToolkitPortraitPages.Page("Progress", right),
-                new ToolkitPortraitPages.Page("Bonuses", summaryFrame));
+                new ToolkitPortraitPages.Page("skills.tab-progress", "Progress", right),
+                new ToolkitPortraitPages.Page("skills.tab-bonuses", "Bonuses", summaryFrame));
             controller.OnExperienceGained += Experience; controller.OnLevelUp += LevelUp;
 
             controller.OnMilestoneDataChanged += Changed; controller.OnActiveSlotsChanged += ActiveChanged;
@@ -256,7 +257,7 @@ namespace TimelessEchoes.UI.Toolkit
 
             var required = skill.xpForFirstLevel * Mathf.Pow(value, skill.xpLevelMultiplier);
 
-            level.text = ToolkitLocalization.Text("skills.level-heading", "<b><smallcaps>{0} | Lvl {1}</smallcaps></b>", ToolkitLocalization.Text("skill." + skill.name, skill.skillName), value); xp.text = $"<b><smallcaps>{current:N0} / {required:N0}</smallcaps></b>"; xpFill.style.width = Length.Percent(required > 0 ? Mathf.Clamp01(current / required) * 100 : 0);
+            level.text = ToolkitLocalization.Text("skills.level-heading", "<b><smallcaps>{0} | Lvl {1}</smallcaps></b>", ToolkitLocalization.Text("skill." + skill.name, skill.skillName), value); xp.text = LocaleNumbers.Format($"<b><smallcaps>{current:N0} / {required:N0}</smallcaps></b>"); xpFill.style.width = Length.Percent(required > 0 ? Mathf.Clamp01(current / required) * 100 : 0);
 
         }
 
@@ -273,7 +274,7 @@ namespace TimelessEchoes.UI.Toolkit
                 var selectorLevel = controller.GetProgress(definition.skills[i])?.Level ?? 1;
                 selectorIcons[i].sprite = TimelessEchoes.Characters.CharacterSkillTools.IconFor(definition.skills[i], selectorLevel, definition.icons[i]);
 
-                selectorLevels[i].text = ShowLevelText ? ToolkitLocalization.Text("skills.selector-level", "<b>Lvl: {0}</b>", selectorLevel) : "";
+                selectorLevels[i].text = ShowLevelText ? "<b>" + LocaleNumbers.Integer(selectorLevel) + "</b>" : "";
 
                 selectorLevels[i].style.fontSize = 6;
 
@@ -287,7 +288,7 @@ namespace TimelessEchoes.UI.Toolkit
 
             active.Clear();
             foreach (var item in controller.EnumerateActiveMilestones().Where(i => i.Definition != null))
-                AddSummaryLine(active, item.Skill != null && item.Skill != Current ? $"{item.Definition.DisplayName} ({item.Skill.skillName})" : item.Definition.DisplayName, MilestoneIcon(item.Definition, item.Skill));
+                AddSummaryLine(active, item.Skill != null && item.Skill != Current ? $"{item.Definition.DisplayName} ({ToolkitLocalization.Text("skill." + item.Skill.name, item.Skill.skillName)})" : item.Definition.DisplayName, MilestoneIcon(item.Definition, item.Skill));
 
             summaryTitle.text = ToolkitLocalization.Text("skills.bonuses-heading", "<b>{0} bonuses</b>", ToolkitLocalization.Text("skill." + Current.name, Current.skillName));
             var bonusRows = new List<SkillTotalsPresentation.BonusLine>();

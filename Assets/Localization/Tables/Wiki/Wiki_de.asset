@@ -19,35 +19,35 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 188400156672
-    m_Localized: Die Alter-Echo-Produktion wurde eingestellt. Sammle Ressourcen auf Abenteuern oder ernte angebaute Pflanzen.
+    m_Localized: Die Alter-Echo-Produktion wurde entfernt. Sammle Ressourcen auf Abenteuern oder ernte deine angebauten Pflanzen.
     m_Metadata:
       m_Items: []
   - m_Id: 478381752320
-    m_Localized: "<link=\"help:buffs\"><u><color=#EFB889>Zauber</color></u></link> sind zeitlich begrenzte Kr\xE4fte. Sie enden, wenn ihre Dauer abl\xE4uft oder du in die Stadt zur\xFCckkehrst. Nach dem n\xF6tigen Auftrag f\xFCr einen Platz k\xF6nnen sie automatisch gewirkt werden; standardm\xE4\xDFig ist das aktiviert. Klicke im Zaubermen\xFC auf den Platz, um es auszuschalten.\n\nDie Abklingzeit von Zaubern l\xE4sst sich mit Evas <link=\"help:cauldron\"><u><color=#EFB889>Kessel</color></u></link> verk\xFCrzen."
+    m_Localized: "<link=\"help:buffs\"><u><color=#EFB889>Zauber</color></u></link> sind vor\xFCbergehende Kr\xE4fte. Sie enden nach Ablauf ihrer Dauer oder bei der R\xFCckkehr in die Stadt.\n\nSchlie\xDFe die erforderliche Quest eines Platzes ab, um das automatische Wirken freizuschalten. Es ist anfangs eingeschaltet. W\xE4hle den Platz unter <link=\"help:buffs\"><u><color=#EFB889>Hauptmen\xFC \u2192 Zauber</color></u></link>, um es ein- oder auszuschalten.\n\nEvas <link=\"help:cauldron\"><u><color=#EFB889>Kessel</color></u></link> kann die Abklingzeiten von Zaubern verringern."
     m_Metadata:
       m_Items: []
   - m_Id: 492340396032
-    m_Localized: "Caleb k\xE4mpft automatisch und greift nur Gegner an, die im Weg sind! Erst Aufgaben, dann Vergn\xFCgen.\n\nD' = D \xD7 (1 - A / (A + N))\n\nD = eingehender Schaden\nA = Verteidigungswert (mindestens 0)\nN = Konstante f\xFCr den abnehmenden Nutzen (Standard = 25)\nD' = tats\xE4chlich erlittener Schaden\n\nNach dem 10., 100., 1,000. und 10,000. Sieg gegen einen bestimmten Gegner erh\xE4ltst du jeweils 25% Bonusschaden gegen diesen Gegner.\nNach dem 25,000. und 100,000. Sieg gegen einen bestimmten Gegner erh\xE4ltst du jeweils 50% Bonusschaden gegen diesen Gegner."
+    m_Localized: "Dein Charakter k\xE4mpft automatisch und greift nur Gegner an, die im Weg sind! Erst Aufgaben, dann Vergn\xFCgen.\n\nD' = D \xD7 (1 - A / (A + N))\n\nD = eingehender Schaden\nA = Verteidigungswert (mindestens 0)\nN = Konstante f\xFCr den abnehmenden Nutzen (Standard = 25)\nD' = tats\xE4chlich erlittener Schaden\n\nNach dem 10., 100., 1.000. und 10.000. besiegten Exemplar eines Gegnertyps erh\xE4ltst du jeweils 25\_% Bonusschaden gegen diesen Gegner.\nNach dem 25.000. und 100.000. besiegten Exemplar eines Gegnertyps erh\xE4ltst du jeweils 50\_% Bonusschaden gegen diesen Gegner."
     m_Metadata:
       m_Items: []
   - m_Id: 512217202688
-    m_Localized: "Echos sind alternative Versionen von Caleb, die unter verschiedenen Umst\xE4nden kurz in seine Realit\xE4t wechseln, um zu helfen.\n\nJedes Echo kann eine Kombination von Calebs F\xE4higkeiten besitzen. Die meisten haben aber nicht alle.\n\nDer wichtigste Unterschied im Verhalten ist, ob ein Echo k\xE4mpfen kann.\nKampff\xE4hige Echos verhalten sich unterschiedlich, je nachdem, ob sie auch Aufgaben erledigen k\xF6nnen. \n\nEin kampff\xE4higes Echo, das KEINE Aufgaben erledigen kann, sucht gezielt Gegner.\nEin kampff\xE4higes Echo, das Aufgaben erledigen KANN, bevorzugt Aufgaben und bek\xE4mpft nur Gegner, die es bemerken.\n\nEchos ohne Kampff\xE4higkeit werden von Gegnern nicht angegriffen und greifen sie nicht an.\n\nEntwicklerhinweis | Derzeit gibt es keine Echos, die k\xE4mpfen und Aufgaben erledigen k\xF6nnen. Echos aus Meilensteinen suchen gezielt Aufgaben ihrer jeweiligen F\xE4higkeit: Ein durch Holzf\xE4llen erzeugtes Echo sucht beispielsweise nur Holzf\xE4llaufgaben."
+    m_Localized: "Echos sind Versionen deines Helden aus anderen Realit\xE4ten. Jedes hat eigene F\xE4higkeiten.\n\nReine Kampf-Echos suchen Gegner. Echos, die sammeln und k\xE4mpfen k\xF6nnen, bevorzugen Aufgaben und k\xE4mpfen, sobald sie angegriffen werden. Echos ohne Kampff\xE4higkeiten greifen weder an noch ziehen sie Gegner an.\n\nDurch F\xE4higkeitsmeilensteine freigeschaltete Echos suchen Aufgaben dieser F\xE4higkeit. Ein Holzf\xE4ll-Echo sucht beispielsweise Holzf\xE4ll-Aufgaben."
     m_Metadata:
       m_Items: []
   - m_Id: 532437942272
-    m_Localized: "Jeder Sieg w\xE4hrend einer Reise erh\xF6ht deinen Ressourcenbonus um 2%. Im Kampf wird er vor\xFCbergehend auf 0% gesetzt.\n\nZieh dich m\xF6glichst kurz bevor die K\xE4mpfe zu schwer werden zur\xFCck, damit du so viele Bonusressourcen wie m\xF6glich erh\xE4ltst!"
+    m_Localized: "Nutze w\xE4hrend einer Reise die R\xFCckkehr-in-die-Stadt-Schaltfl\xE4che, um dich zur\xFCckzuziehen. Jeder besiegte Gegner erh\xF6ht deinen dort angezeigten Ressourcenbonus beim R\xFCckzug um 2\_%.\n\nWenn du w\xE4hrend eines Kampfes die R\xFCckkehr anforderst, beendet dein Held den Kampf vor dem Aufbruch.\n\nDu erh\xE4ltst diesen Bonus nur, wenn du lebend zur\xFCckkehrst. Tod oder R\xFCckholung durch den Schnitter kosten den Bonus; bereits gesammelte Ressourcen bleiben erhalten."
     m_Metadata:
       m_Items: []
   - m_Id: 698595295232
-    m_Localized: "Aufgaben sind das Hauptziel von Calebs Reise. Ressourcen f\xFCr die Stadt zu sammeln, ist entscheidend f\xFCr ihr Wachstum.\n\nAufgaben werden automatisch erledigt, und mit steigender F\xE4higkeitsstufe geht das schneller.\n\nAufgaben erscheinen zwischen einer Mindest- und einer H\xF6chstdistanz. Nach der H\xF6chstdistanz sinkt ihre Erscheinungswahrscheinlichkeit um 90%. Sobald alle Aufgaben ihre H\xF6chstdistanz erreicht haben, gleicht sich das Gewichtungssystem daher an: Ihre Verf\xFCgbarkeit richtet sich wieder nach ihren jeweiligen Gewichtungen."
+    m_Localized: "Dein Held erledigt automatisch Aufgaben, um Ressourcen zu sammeln. H\xF6here F\xE4higkeitsstufen helfen ihm, sie schneller abzuschlie\xDFen.\n\nAufgaben haben minimale und maximale Erscheinungsdistanzen. Jenseits der maximalen Distanz einer Aufgabe sinkt ihr Erscheinungsgewicht um 90\_%. Sind alle verf\xFCgbaren Aufgaben jenseits ihrer Maximaldistanz, bestimmen weiterhin ihre relativen Gewichte die H\xE4ufigkeit."
     m_Metadata:
       m_Items: []
   - m_Id: 505754247643136
-    m_Localized: "Auftr\xE4ge haben unterschiedliche Bedingungen, die vor der Abgabe erf\xFCllt sein m\xFCssen.\n\n<b>Information</b> | Diese Auftr\xE4ge werden sofort abgeschlossen und erz\xE4hlen die Geschichte oder f\xFChren dich ins Spiel ein.\n<b>Sammeln</b> | Sammle die verlangten Ressourcen und gib sie ab.\n<b>Siege</b> | Besiege Gegner und berichte anschlie\xDFend davon.\n<b>Begegnung</b> | Triff einen bestimmten Stadtbewohner. Die meisten findest du an bestimmten Entfernungen."
+    m_Localized: "Erf\xFClle die Anforderungen einer Quest und gib sie dann in der Stadt ab.\n\n<b>Information:</b> Lies oder best\xE4tige die Quest, um die Geschichte oder das Tutorial fortzusetzen.\n<b>Sammeln:</b> Bringe die aufgef\xFChrten Ressourcen. Bei der Abgabe werden sie verbraucht.\n<b>Besiegte Gegner:</b> Besiege die erforderlichen Gegner und erstatte anschlie\xDFend Bericht.\n<b>Begegnung:</b> Finde den genannten NSC und sprich mit ihm. Manche erscheinen erst ab einer bestimmten Entfernung."
     m_Metadata:
       m_Items: []
   - m_Id: 3785742338113536
-    m_Localized: "Wenn du bestimmte Entfernungen zur Stadt erreichst, erntet Carl deine Seele, damit du nicht zu weit wegkommst. \nDeine maximale Reisedistanz findest du in der <link=\"help:statistics/general\"><u><color=#EFB889>Statistik</color></u></link> im Reiter Allgemein.\n\nDie Reisedistanz steigt auf folgende Weise:\n<b>Seelenernte</b> | Erh\xF6ht die Distanz um 1% deiner aktuellen maximalen Reisedistanz. (Au\xDFer im Ackerland)\n<b><link=\"help:quests\"><u><color=#EFB889>Auftr\xE4ge</color></u></link></b> | Manche <link=\"help:quests\"><u><color=#EFB889>Auftr\xE4ge</color></u></link> erh\xF6hen deine Reisedistanz."
+    m_Localized: "Carl beendet deine Reise, wenn du die Kartengrenze erreichst. Die Grenzen der Karten findest du unter <link=\"help:statistics/general\"><u><color=#EFB889>Statistiken \u2192 Allgemein</color></u></link>.\n\nAn der Grenze zur\xFCckgeholt zu werden, erh\xF6ht die Distanz in Fluss, Wald und Minen um 1\_%. Ackerland gibt keine Steigerung. In Gruselwelt steigen die Gegnerstufen mit der Zahl besiegter Gegner, ohne Obergrenze f\xFCr besiegte Gegner. Manche Quests erh\xF6hen ebenfalls deine Reisegrenze."
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
@@ -93,7 +93,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9824133160779776
-    m_Localized: "Ivans <link=\"help:forge\"><u><color=#EFB889>Schmiede</color></u></link> ist ein magischer Ort. Ob du in der Stadt entspannst oder unterwegs bist: Du kannst ihm helfen, seine Schmiedekunst zu verbessern.\n\nBeim Schmieden stehen dir zwei Schalter zur Verf\xFCgung:\n\n<b>Bei Vastium stoppen:</b> Stoppt immer bei einem Vastium-Gegenstand, selbst wenn er schlechter ist.\n\n<b>Werte abgleichen:</b> Die <link=\"help:forge\"><u><color=#EFB889>Schmiede</color></u></link> arbeitet weiter, bis eine Verbesserung genau dieselben Werttypen wie dein ausger\xFCsteter Gegenstand hat.\n\nDieses Symbol steht f\xFCr Qualit\xE4t: <sprite=206>\n\nHier schmiedest du Ausr\xFCstung und w\xE4hlst die besten Werte f\xFCr deinen Spielstil. \nDerzeit k\xF6nnen 8 Werte auf Ausr\xFCstung erscheinen. Jeder Ausr\xFCstungstyp garantiert einen bestimmten Wert.\n\n<sprite=198> = Schaden.\n<sprite=200> = Angriffstempo.\n<sprite=199> = kritische Trefferchance.\n<sprite=205> = kritischer Schaden. \n\n<sprite=202> = Gesundheit.\n<sprite=203> = Regeneration.\n<sprite=201> = Verteidigung.\n<sprite=204> = Bewegungstempo.\n\n<sprite=192> = Verbesserung.\n<sprite=193> = Verschlechterung. \n<sprite=194> = Unver\xE4ndert.\n<sprite=195> Wert fehlt auf dem neuen Gegenstand.\n<sprite=196> Wert fehlt auf dem alten Gegenstand.\n\n<b>Waffe</b> | Garantiert <sprite=198>\n<b>Helm</b> | Garantiert <sprite=202>\n<b>Brust</b> | Garantiert <sprite=201>\n<b>Stiefel</b> | Garantieren <sprite=204>, exklusiv f\xFCr diesen Platz.\n\nAusr\xFCstung wird automatisch zerlegt, wenn du ein neues St\xFCck schmiedest, einen anderen Platz ausw\xE4hlst oder das Spiel schlie\xDFt.\n\nJe nach Seltenheit kann ein Ausr\xFCstungsteil bis zu 5 Werte haben. Weitere Werte sind f\xFCr die Zukunft geplant!"
+    m_Localized: "\xD6ffne <link=\"help:forge\"><u><color=#EFB889>Dorf \u2192 Schmiede</color></u></link>, um Ausr\xFCstung herzustellen \u2013 in der Stadt oder auf einem Abenteuer.\n\nHerstellungsoptionen:\n\n<b>Bei Vastium stoppen:</b> Stoppt immer bei einem Vastium-Gegenstand, selbst wenn er schlechter ist.\n\n<b>Werteabgleich:</b> Ist diese Option aktiv, arbeitet die Schmiede weiter, bis eine Verbesserung genau dieselben Wertetypen wie dein ausger\xFCsteter Gegenstand hat.\n\nQualit\xE4t wird durch dieses Symbol dargestellt: <sprite=206>\n\nHier stellst du Ausr\xFCstung her und w\xE4hlst die besten Werte f\xFCr deinen Charakter.\nAusr\xFCstung kann 8 verschiedene Werte erhalten. Jeder Platz garantiert einen davon.\n\n<sprite=198> = Schaden.\n<sprite=200> = Angriffstempo.\n<sprite=199> = Kritische Trefferchance.\n<sprite=205> = Kritischer Schaden.\n\n<sprite=202> = Leben.\n<sprite=203> = Regeneration.\n<sprite=201> = Verteidigung.\n<sprite=204> = Bewegung.\n\n<sprite=192> = Verbesserung.\n<sprite=193> = Verschlechterung.\n<sprite=194> = Keine \xC4nderung.\n<sprite=195> Wert fehlt auf dem neuen Gegenstand.\n<sprite=196> Wert fehlt auf dem alten Gegenstand.\n\n<b>Waffe</b> | Garantiert <sprite=198>\n<b>Helm</b> | Garantiert <sprite=202>\n<b>Brustpanzer</b> | Garantiert <sprite=201>\n<b>Stiefel</b> | Garantiert <sprite=204>, exklusiv f\xFCr diesen Platz.\n\nAusr\xFCstung wird automatisch verwertet, wenn du einen neuen Gegenstand herstellst, einen anderen Platz w\xE4hlst oder das Spiel schlie\xDFt.\n\nJe nach Seltenheit kann ein Ausr\xFCstungsgegenstand bis zu 5 Werte erhalten."
     m_Metadata:
       m_Items: []
   - m_Id: 9824133185945600
@@ -105,15 +105,777 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12027031164698624
-    m_Localized: "Der <link=\"help:cauldron\"><u><color=#EFB889>Kessel</color></u></link> wandelt ausgew\xE4hlte Lebensmittel in Eintopf um. Du bestimmst die Menge; der Ertrag h\xE4ngt vom festgelegten Lebensmittelwert und der Menge ab. Koste den Eintopf, um Karten nach Evas angezeigten Belohnungsgewichtungen zu erhalten.\n\nRessourcenkarten verbessern das tats\xE4chliche Sammeln, Gegnerbeute und Feldernten in der Stadt f\xFCr die jeweilige Ressource. Die Kartenschwellen sind 1, 25, 75, 200, 750, 1500, 3500 und 10000; die Ertragsboni sind 1%, 2%, 3%, 5%, 7%, 10%, 15% und 20%.\n\nEine Ressourcenkategorie verwendet die niedrigste Kartenstufe ihrer freigeschalteten Ressourcen. Fehlende Karten z\xE4hlen als Stufe null. Die Kategoriestufen 1 bis 8 geben 2%, 5%, 10%, 15%, 20%, 30%, 40% und 50% mehr Ertrag f\xFCr diese Kategorie. Karten- und Kategorieboni werden addiert, bis zu 70%. Belohnungen, Saatgut, Erstattungen und Umwandlungen erhalten diese Boni nicht.\n\nDiese Kartenstufen sind unabh\xE4ngig von der Ressourcenseltenheit. Bestehende Abklingzeit- und Kraftvorteile von Zauberkarten bleiben unver\xE4ndert. Vervollst\xE4ndige alle verf\xFCgbaren Ressourcen- und Zaubersammlungen, um Ewige Gaben freizuschalten."
+    m_Localized: "Der <link=\"help:cauldron\"><u><color=#EFB889>Kessel</color></u></link> wandelt ausgew\xE4hlte Nahrung in Eintopf um. Du w\xE4hlst die Menge; der erhaltene Eintopf h\xE4ngt von Menge und Wert der Nahrung ab. Koste Eintopf, um Karten gem\xE4\xDF den angezeigten Belohnungschancen zu erhalten.\n\nRessourcenkarten verbessern Sammeln, Gegnerbeute und Ernten in der Stadt f\xFCr die entsprechende Ressource. Ihre Exemplarschwellen sind 1, 25, 75, 200, 750, 1.500, 3.500 und 10.000; die Ertragsboni betragen 1\_%, 2\_%, 3\_%, 5\_%, 7\_%, 10\_%, 15\_% und 20\_%.\n\nEine Ressourcenkategorie verwendet die niedrigste Kartenstufe ihrer freigeschalteten Ressourcen. Nicht vorhandene Karten z\xE4hlen als Stufe null. Kategoriestufen 1 bis 8 erh\xF6hen den Ertrag dieser Kategorie um 2\_%, 5\_%, 10\_%, 15\_%, 20\_%, 30\_%, 40\_% und 50\_%. Karten- und Kategorieboni werden bis zu 70\_% addiert. Belohnungen, Samen, R\xFCckerstattungen und Umwandlungen erhalten diese Boni nicht.\n\nDiese Kartenstufen sind von der Ressourcenseltenheit getrennt. Zauberkarten verbessern Abklingzeiten und St\xE4rke. Vervollst\xE4ndige alle verf\xFCgbaren Ressourcen- und Zaubersammlungen, um Ewige Gaben freizuschalten."
     m_Metadata:
       m_Items: []
   - m_Id: 18915029441462272
-    m_Localized: "Gegenst\xE4nde haben bei jedem Sammeln eine geringe Chance, eine Seltenheitsstufe aufzusteigen. Ernten auf den Feldern der Stadt l\xF6sen solche Stufenaufstiege nicht aus.\nJede Stufe \xFCber der ersten gibt dir beim zuk\xFCnftigen Sammeln dieser Ressource einen Bonus.\n\nIch teile diese Information nur ungern mit dir, aber hier ist sie - Orin ...\n\nStufe | Bonus | Chance\n<b>Stufe 1</b> - 0%\\tBasis\n<b>Stufe 2</b> - 10%\\t1 /1,000\n<b>Stufe 3</b> - 20%\\t1 / 5,000\n<b>Stufe 4</b> - 30%\\t1 / 10,000\n<b>Stufe 5</b> - 50%\\t1 / 50,000\n<b>Stufe 6</b> - 75%\\t1 / 100,000\n<b>Stufe 7</b> - 100%\\t1 / 250,000\n<b>Stufe 8</b> - 150%\\t1 / 1,000,000"
+    m_Localized: "Beim Sammeln besteht eine geringe Chance, die Seltenheitsstufe einer Ressource zu erh\xF6hen. Ernten in der Stadt k\xF6nnen keine Ressourcenstufen erh\xF6hen.\nJede Stufe \xFCber der ersten erh\xF6ht dauerhaft die Menge, die du von dieser Ressource sammelst.\n\n\u201EIch w\xFCrde das lieber f\xFCr mich behalten, aber bitte.\u201C \u2014 Orin\n\nStufe | Bonus | Chance\n<b>Stufe 1</b> - 0\_%\tBasis\n<b>Stufe 2</b> - 10\_%\t1 / 1.000\n<b>Stufe 3</b> - 20\_%\t1 / 5.000\n<b>Stufe 4</b> - 30\_%\t1 / 10.000\n<b>Stufe 5</b> - 50\_%\t1 / 50.000\n<b>Stufe 6</b> - 75\_%\t1 / 100.000\n<b>Stufe 7</b> - 100\_%\t1 / 250.000\n<b>Stufe 8</b> - 150\_%\t1 / 1.000.000"
     m_Metadata:
       m_Items: []
   - m_Id: 25772880722018304
     m_Localized: Englisch (en)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255181967360
+    m_Localized: Abenteuer und Karten
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299008
+    m_Localized: "W\xE4hle <link=\"help:adventure\"><u><color=#EFB889>Abenteuer</color></u></link> und dann eine Karte, um eine Reise zu beginnen. Dein Held bewegt sich zwischen Aufgaben und sammelt automatisch Ressourcen. Jede Karte bietet andere Ressourcen.\n\n\xD6ffne <link=\"help:statistics/general\"><u><color=#EFB889>Statistiken \u2192 Allgemein</color></u></link> und w\xE4hle eine Karte, um deine Entdeckungen anzusehen. Gesperrte Karten zeigen, wie du mehr erfahren kannst."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299009
+    m_Localized: "Ackerbau-Aufgaben erscheinen nur im Ackerland. <link=\"help:quests\"><u><color=#EFB889>Auftr\xE4ge</color></u></link> und Begegnungen mit NSCs schalten weitere Routen frei."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299010
+    m_Localized: "Aufgaben und F\xE4higkeiten"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299011
+    m_Localized: "Erledige Aufgaben, um Ressourcen und F\xE4higkeits-EP zu erhalten.\n\n\xD6ffne <link=\"help:skills\"><u><color=#EFB889>Hauptmen\xFC \u2192 F\xE4higkeiten</color></u></link> und w\xE4hle eine F\xE4higkeit, um ihre Boni und Freischaltungen anzusehen.\n\n\xD6ffne <link=\"help:statistics/tasks\"><u><color=#EFB889>Statistiken \u2192 Aufgaben</color></u></link> und w\xE4hle Verst\xE4rken, damit eine Aufgabe innerhalb ihrer Kategorie h\xE4ufiger erscheint. Auch die Kategorie erscheint dadurch etwas h\xE4ufiger auf der Karte."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299012
+    m_Localized: "Das Verst\xE4rken einer Aufgabe schaltet sie nicht frei und \xE4ndert nicht, auf welchen Karten sie erscheint. Voraussetzungen f\xFCr Karte, Entfernung und Fortschritt gelten weiterhin.\n\nKampfstufen schalten h\xF6here Kern- und Kristallstufen frei. Die n\xF6tigen Stufen findest du unter <link=\"help:skills/Combat\"><u><color=#EFB889>Hauptmen\xFC \u2192 F\xE4higkeiten \u2192 Kampf</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299013
+    m_Localized: "Auftr\xE4ge"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299014
+    m_Localized: "\xD6ffne <link=\"help:quests\"><u><color=#EFB889>Auftr\xE4ge</color></u></link>, um deine Ziele anzusehen. Erf\xFClle die Anforderungen einer Quest und gib sie in der Stadt ab, um die Belohnung zu erhalten. Abgegebene Ressourcen werden verbraucht.\n\nAngeheftete Quests erscheinen w\xE4hrend einer Reise. Andere Quests bleiben in der Questliste."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299015
+    m_Localized: "<link=\"help:quests\"><u><color=#EFB889>Auftr\xE4ge</color></u></link> k\xF6nnen Ressourcen, besiegte Gegner, eine Begegnung oder eine Tutorialaktion verlangen. Sind alle Anforderungen erf\xFCllt, ist die Quest zur Abgabe bereit. Ihre Belohnung erh\xE4ltst du beim Abgeben, was nur in der Stadt m\xF6glich ist."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299016
+    m_Localized: "Inventar und Ausr\xFCstung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299017
+    m_Localized: "\xD6ffne <link=\"help:inventory\"><u><color=#EFB889>Hauptmen\xFC \u2192 Inventar</color></u></link>, um deine Ausr\xFCstung und Ressourcen anzusehen. W\xE4hle einen ausger\xFCsteten Gegenstand, um seine Boni zu sehen. Deine gesamten Ausr\xFCstungsboni umfassen alle ausger\xFCsteten Gegenst\xE4nde.\n\nVergleiche die Werte, bevor du einen Gegenstand ersetzt: Seltener bedeutet nicht immer besser.\n\nW\xE4hle w\xE4hrend einer Reise <link=\"help:hero-stats\"><u><color=#EFB889>Werte</color></u></link> neben deinem Lebensbalken, um deine aktuellen Kampfwerte zu sehen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299018
+    m_Localized: Entdeckte Ressourcen erscheinen vor unentdeckten. Beide Gruppen verwenden eine feste Reihenfolge.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299019
+    m_Localized: Kampf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299020
+    m_Localized: "Dein Held bek\xE4mpft Gegner automatisch und kehrt danach zu seiner Aufgabe zur\xFCck.\n\nW\xE4hle w\xE4hrend einer Reise <link=\"help:hero-stats\"><u><color=#EFB889>Werte</color></u></link> neben deinem Lebensbalken, um deine aktuellen Werte zu sehen. \xD6ffne <link=\"help:statistics/enemies\"><u><color=#EFB889>Statistiken \u2192 Gegner</color></u></link>, um Gegnerwerte und deine Boni f\xFCr besiegte Gegner anzusehen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299021
+    m_Localized: "Erlittener Schaden = eingehender Schaden \xD7 {0:0.##} \xF7 (Verteidigung + {0:0.##}). Negative Verteidigung z\xE4hlt als null.\n\nWiederholtes Besiegen desselben Gegnertyps schaltet Bonusschaden gegen ihn frei. Deinen aktuellen Bonus und n\xE4chsten Meilenstein findest du unter <link=\"help:statistics/enemies\"><u><color=#EFB889>Statistiken \u2192 Gegner</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299022
+    m_Localized: "Schnitter und R\xFCckkehr"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299023
+    m_Localized: "<b>Fluss, Wald und Minen</b>\nCarl beendet deine Reise an der Entfernungsgrenze. Wirst du dort zur\xFCckgeholt, steigt deine gemeinsame Schnitterdistanz um 1\_%.\n\n<b>Ackerland</b>\nCarl beendet deine Reise an der Entfernungsgrenze, aber der Schnitter erh\xF6ht sie hier nicht.\n\n<b>Gruselwelt</b>\nGegnerstufen steigen mit der Zahl besiegter Gegner. Es gibt weder eine Obergrenze f\xFCr besiegte Gegner noch ein Schnitterdistanzlimit.\n\nAm Ende einer Reise beh\xE4ltst du gesammelte Ressourcen und deinen F\xE4higkeitsfortschritt. Kehre in die Stadt zur\xFCck, um Quests abzugeben, und sieh dir deine Gewinne in der <link=\"help:run-summary\"><u><color=#EFB889>Reisezusammenfassung</color></u></link> an. Karteninformationen findest du unter <link=\"help:statistics/general\"><u><color=#EFB889>Statistiken \u2192 Allgemein</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299024
+    m_Localized: "<b>Fluss, Wald und Minen</b>\nWirst du an der Entfernungsgrenze zur\xFCckgeholt, steigt deine gemeinsame Schnitterdistanz um 1\_% der erreichten effektiven Grenze, einschlie\xDFlich Distanzzaubern. Manche Quests lassen dich ebenfalls weiter reisen.\n\n<b>Ackerland</b>\nCarl beendet die Reise an ihrer Entfernungsgrenze, erh\xF6ht sie dabei aber nicht.\n\n<b>Gruselwelt</b>\nGegnerstufen steigen mit der Zahl besiegter Gegner. Es gibt weder eine Obergrenze f\xFCr besiegte Gegner noch ein Schnitterdistanzlimit."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299025
+    m_Localized: "R\xFCckzugsbonus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299026
+    m_Localized: "Nutze w\xE4hrend einer Reise die R\xFCckkehr-in-die-Stadt-Schaltfl\xE4che, um dich zur\xFCckzuziehen. Jeder besiegte Gegner erh\xF6ht deinen dort angezeigten Ressourcenbonus beim R\xFCckzug um 2\_%.\n\nWenn du w\xE4hrend eines Kampfes die R\xFCckkehr anforderst, beendet dein Held den Kampf vor dem Aufbruch.\n\nDu erh\xE4ltst diesen Bonus nur, wenn du lebend zur\xFCckkehrst. Tod oder R\xFCckholung durch den Schnitter kosten den Bonus; bereits gesammelte Ressourcen bleiben erhalten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299027
+    m_Localized: "Dein R\xFCckzugsbonus basiert auf den in dieser Reise besiegten Gegnern und wird bei lebendiger R\xFCckkehr vergeben. Tod oder R\xFCckholung durch den Schnitter kosten den Bonus, aber nicht die bereits gesammelten Ressourcen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299028
+    m_Localized: Schmiede
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299029
+    m_Localized: "\xD6ffne nach deiner Begegnung mit Ivan <link=\"help:forge\"><u><color=#EFB889>Dorf \u2192 Schmiede</color></u></link>.\n\n1. Schmelze die ben\xF6tigten Materialien zu Barren.\n2. W\xE4hle einen Kern f\xFCr die Seltenheitschancen und Materialkosten.\n3. W\xE4hle einen Ausr\xFCstungsplatz und dann Schmieden. Jede Herstellung verbraucht Barren und einen Kern.\n4. Vergleiche das Ergebnis. W\xE4hle Ausr\xFCsten, um deinen aktuellen Gegenstand zu ersetzen.\n\nAu\xDFerhalb von Ivans Einf\xFChrung wird ein hergestellter Gegenstand automatisch ausger\xFCstet, wenn sein Platz leer ist."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299030
+    m_Localized: "<b>Verwerten</b>\nPr\xFCfe dein Ergebnis, bevor du erneut herstellst oder den Platz wechselst: Beide Aktionen verwerten ein nicht ausger\xFCstetes Ergebnis.\n\n<b>Automatisierung \u2014 Meisterschaftsstufe 3 der <link=\"help:forge\"><u><color=#EFB889>Schmiede</color></u></link></b>\nMit \u201ESchmieden wiederholen\u201C wird weiter geschmiedet; jeder Versuch verbraucht Materialien.\n\nBei Vastium stoppen h\xE4lt bei jedem Vastium-Ergebnis an, selbst wenn es schlechter ist.\n\nMit aktiviertem \u201EWerte abgleichen\u201C muss eine Verbesserung au\xDFerdem dieselben Wertetypen wie dein ausger\xFCsteter Gegenstand haben, damit die Herstellung stoppt.\n\nKern- und Kristallfreischaltungen findest du unter <link=\"help:skills/Combat\"><u><color=#EFB889>Hauptmen\xFC \u2192 F\xE4higkeiten \u2192 Kampf</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299031
+    m_Localized: Zauber
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299032
+    m_Localized: "W\xE4hle ein Zaubersymbol, um seine aktuellen Effekte, Dauer und Abklingzeit anzusehen. Deine Verbesserungen sind in diesen Werten enthalten.\n\n\xD6ffne <link=\"help:buffs\"><u><color=#EFB889>Hauptmen\xFC \u2192 Zauber</color></u></link>, um Zauber zuzuweisen und automatisches Wirken zu verwalten. Schlie\xDFe die erforderliche Quest eines Platzes ab, um automatisches Wirken daf\xFCr freizuschalten.\n\n<link=\"help:buffs\"><u><color=#EFB889>Zauber</color></u></link> enden nach Ablauf ihrer Dauer oder bei der R\xFCckkehr in die Stadt."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299033
+    m_Localized: "Evas <link=\"help:cauldron\"><u><color=#EFB889>Kessel</color></u></link> liefert Zauberkarten, die St\xE4rke und Abklingzeiten verbessern."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299034
+    m_Localized: Kessel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299035
+    m_Localized: "\xD6ffne <link=\"help:cauldron\"><u><color=#EFB889>Dorf \u2192 Kessel</color></u></link>. Verarbeite Nahrung zu Eintopf und koste ihn, um Karten zu erhalten. Pr\xFCfe vorher die Belohnungschancen.\n\nRessourcenkarten erh\xF6hen die Sammelmenge der jeweiligen Ressource. Zauberkarten verbessern Zauber. Kartenstufen und Seltenheitsstufen von Ressourcen sind getrennte Systeme."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299036
+    m_Localized: "Die Stufe einer Kategorie entspricht der niedrigsten Kartenstufe ihrer freigeschalteten Ressourcen. Eine nicht vorhandene Karte z\xE4hlt als Stufe null.\n\nRessourcenkarten- und Kategorieboni werden bis zu 70\_% addiert. Sie gelten f\xFCr Sammeln, Gegnerbeute und Ernten in der Stadt. Sie gelten nicht f\xFCr Belohnungen, Samen, R\xFCckerstattungen oder Umwandlungen.\n\nVervollst\xE4ndige alle verf\xFCgbaren Ressourcen- und Zaubersammlungen, um Ewige Gaben freizuschalten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299037
+    m_Localized: Echos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299038
+    m_Localized: "Echos sind vor\xFCbergehende Kopien deines Helden, die Ressourcen sammeln oder Gegner bek\xE4mpfen.\n\nOrins Welten sind miteinander verbunden. Sch\xFCbe zeitlicher Energie lassen Echos deiner Vergangenheit zwischen ihnen reisen, um dir zu helfen. Wenn du den Stadtbewohnern hilfst, kannst du selbst Echos beschw\xF6ren.\n\nDurch F\xE4higkeitsmeilensteine freigeschaltete Echos suchen Aufgaben dieser F\xE4higkeit. Meilensteine findest du unter <link=\"help:skills\"><u><color=#EFB889>Hauptmen\xFC \u2192 F\xE4higkeiten</color></u></link>, die Effekte beim <link=\"help:buffs\"><u><color=#EFB889>Beschw\xF6rungszauber</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299039
+    m_Localized: "Ein Echo, das sammeln und k\xE4mpfen kann, bevorzugt Aufgaben und k\xE4mpft, sobald es angegriffen wird."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299040
+    m_Localized: Ressourcenstufen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299041
+    m_Localized: "Sammeln kann die Seltenheitsstufe einer Ressource erh\xF6hen und so ihre Sammelmenge dauerhaft steigern.\n\nErnten in der Stadt erhalten deinen aktuellen Stufenbonus, k\xF6nnen die Stufe aber nicht erh\xF6hen.\n\nSamenp\xE4ckchen erhalten weder Seltenheitsstufen noch Seltenheitsboni.\n\nRessourcenstufen, Ausr\xFCstungsseltenheit und Kartenstufen im <link=\"help:cauldron\"><u><color=#EFB889>Kessel</color></u></link> sind getrennte Systeme."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299042
+    m_Localized: Ressourcen beginnen auf Stufe 1. Jede Aufstiegschance gilt beim Sammeln einer geeigneten Ressource auf der vorherigen Stufe.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580385641598976
+    m_Localized: Details
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687286226944
+    m_Localized: Bibliothek
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687336558592
+    m_Localized: "\xDCbersicht"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687336558593
+    m_Localized: Referenz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687336558594
+    m_Localized: Abenteuer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687336558595
+    m_Localized: "Ausr\xFCstung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687336558596
+    m_Localized: "Unterst\xFCtzung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687344947200
+    m_Localized: Ackerland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335808
+    m_Localized: Ackerbau
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335809
+    m_Localized: Angeln
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335810
+    m_Localized: Bergbau
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335811
+    m_Localized: "Holzf\xE4llen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335812
+    m_Localized: Quest zur Abgabe bereit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335813
+    m_Localized: Waffe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335814
+    m_Localized: Helm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335815
+    m_Localized: Brustpanzer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335816
+    m_Localized: Stiefel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530112
+    m_Localized: Schaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530113
+    m_Localized: Verteidigung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530114
+    m_Localized: Gesundheit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530115
+    m_Localized: Wert
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530116
+    m_Localized: Effekt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530117
+    m_Localized: Schaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530118
+    m_Localized: Schaden pro Treffer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530120
+    m_Localized: Angriffstempo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530121
+    m_Localized: "H\xE4ufigkeit der Angriffe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530123
+    m_Localized: Kritische Trefferchance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530124
+    m_Localized: Wahrscheinlichkeit eines kritischen Treffers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530126
+    m_Localized: Kritischer Schaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530127
+    m_Localized: Schadensmultiplikator bei kritischen Treffern
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530129
+    m_Localized: Gesundheit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530130
+    m_Localized: "Schaden, den dein Charakter \xFCberleben kann"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530132
+    m_Localized: Verteidigung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530133
+    m_Localized: Verringert eingehenden Schaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530135
+    m_Localized: Regeneration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530136
+    m_Localized: Stellt mit der Zeit Leben wieder her
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530138
+    m_Localized: Bewegung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530139
+    m_Localized: Reisetempo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530141
+    m_Localized: Carl
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530142
+    m_Localized: Karte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530143
+    m_Localized: Fortschritt der Grenze
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918720
+    m_Localized: Ackerland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918721
+    m_Localized: Keine Steigerung durch den Schnitter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918723
+    m_Localized: Fluss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918724
+    m_Localized: "+1\_% bei R\xFCckholung an der Grenze"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918726
+    m_Localized: Wald
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918727
+    m_Localized: "+1\_% bei R\xFCckholung an der Grenze"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918729
+    m_Localized: Minen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918730
+    m_Localized: "+1\_% bei R\xFCckholung an der Grenze"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918732
+    m_Localized: Gruselwelt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918733
+    m_Localized: Gegnerstufen steigen mit der Zahl besiegter Gegner; keine Obergrenze
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918735
+    m_Localized: Barren
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918736
+    m_Localized: Kern
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918737
+    m_Localized: Schwert
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918738
+    m_Localized: Platz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918739
+    m_Localized: Garantierter Wert
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918740
+    m_Localized: Waffe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918741
+    m_Localized: Schaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918743
+    m_Localized: Helm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918744
+    m_Localized: Gesundheit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918746
+    m_Localized: Brustpanzer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918747
+    m_Localized: Verteidigung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918749
+    m_Localized: Stiefel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918750
+    m_Localized: Bewegung (nur Stiefel)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918752
+    m_Localized: Ressourcenverdoppler
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918753
+    m_Localized: Aufgabentempo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113024
+    m_Localized: Evas Kessel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113025
+    m_Localized: Kartenstufe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113026
+    m_Localized: "Ben\xF6tigte Exemplare"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113027
+    m_Localized: Ressourcen- / Kategorieertrag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113028
+    m_Localized: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113029
+    m_Localized: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113030
+    m_Localized: "1\_% / 2\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113031
+    m_Localized: 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113032
+    m_Localized: 25
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113033
+    m_Localized: "2\_% / 5\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501632
+    m_Localized: 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501633
+    m_Localized: 75
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501634
+    m_Localized: "3\_% / 10\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501635
+    m_Localized: 4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501636
+    m_Localized: 200
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501637
+    m_Localized: "5\_% / 15\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501638
+    m_Localized: 5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501639
+    m_Localized: 750
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501640
+    m_Localized: "7\_% / 20\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501641
+    m_Localized: 6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501642
+    m_Localized: 1.500
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501643
+    m_Localized: "10\_% / 30\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501644
+    m_Localized: 7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501645
+    m_Localized: 3.500
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501646
+    m_Localized: "15\_% / 40\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501647
+    m_Localized: 8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501648
+    m_Localized: 10.000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501649
+    m_Localized: "20\_% / 50\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501650
+    m_Localized: Aufgaben-Echo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501651
+    m_Localized: Kampf-Echo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501652
+    m_Localized: Rolle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501653
+    m_Localized: Verhalten
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501654
+    m_Localized: Aufgaben-Echo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501655
+    m_Localized: Sammelt Ressourcen; greift nicht an und zieht keine Gegner an
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501657
+    m_Localized: Kampf-Echo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501658
+    m_Localized: "Sucht und bek\xE4mpft Gegner"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695936
+    m_Localized: Ressourcenstufe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695937
+    m_Localized: Ertragsbonus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695938
+    m_Localized: Aufstiegschance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695939
+    m_Localized: Stufe 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695940
+    m_Localized: "0\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695941
+    m_Localized: Anfangsstufe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695942
+    m_Localized: Stufe 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695943
+    m_Localized: "10\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695944
+    m_Localized: 1 zu 1.000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695945
+    m_Localized: Stufe 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695946
+    m_Localized: "20\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695947
+    m_Localized: 1 zu 5.000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695948
+    m_Localized: Stufe 4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695949
+    m_Localized: "30\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695950
+    m_Localized: 1 zu 10.000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695951
+    m_Localized: Stufe 5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695952
+    m_Localized: "50\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695953
+    m_Localized: 1 zu 50.000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695954
+    m_Localized: Stufe 6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695955
+    m_Localized: "75\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695956
+    m_Localized: 1 zu 100.000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695957
+    m_Localized: Stufe 7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695958
+    m_Localized: "100\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695959
+    m_Localized: 1 zu 250.000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695960
+    m_Localized: Stufe 8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695961
+    m_Localized: "150\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695962
+    m_Localized: 1 zu 1.000.000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427254829056
+    m_Localized: "<b>Ackerland</b>\nErnte hier Pflanzen. Ackerbau-Aufgaben erscheinen auf keinen anderen Karten. Carls Entfernungsgrenze steigt nicht, wenn er dich im Ackerland zur\xFCckholt."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427305160704
+    m_Localized: "<b>Ackerbau</b>\nErnte Pflanzen im Ackerland, um Erzeugnisse und Ackerbau-EP zu erhalten. Eigene Pflanzen \xFCber <link=\"help:fields\"><u><color=#EFB889>Felder</color></u></link> anzubauen ist ein separates System. Boni und Freischaltungen findest du unter <link=\"help:skills/Farming\"><u><color=#EFB889>Hauptmen\xFC \u2192 F\xE4higkeiten \u2192 Ackerbau</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427305160705
+    m_Localized: "<b>Angeln</b>\nGill gibt dir deine erste Angel. Angelaufgaben bringen Fische und Angel-EP.\n\nEntdeckte Ressourcen jeder Karte findest du unter <link=\"help:statistics/general\"><u><color=#EFB889>Statistiken \u2192 Allgemein</color></u></link>, Boni und Freischaltungen unter <link=\"help:skills/Fishing\"><u><color=#EFB889>Hauptmen\xFC \u2192 F\xE4higkeiten \u2192 Angeln</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427305160706
+    m_Localized: "<b>Bergbau</b>\nBaue Erz ab, um Bergbau-EP zu erhalten. Schmelze es in der <link=\"help:forge\"><u><color=#EFB889>Schmiede</color></u></link> zu Barren und stelle daraus Ausr\xFCstung her. Freischaltstufen f\xFCr Erze findest du unter <link=\"help:skills/Mining\"><u><color=#EFB889>Hauptmen\xFC \u2192 F\xE4higkeiten \u2192 Bergbau</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427305160707
+    m_Localized: "<b>Holzf\xE4llen</b>\nF\xE4lle B\xE4ume, um Holzf\xE4ll-EP zu erhalten. Barkleys Quests f\xFChren dich in den Wald.\n\nFreischaltungen findest du unter <link=\"help:skills/Woodcutting\"><u><color=#EFB889>Hauptmen\xFC \u2192 F\xE4higkeiten \u2192 Holzf\xE4llen</color></u></link>. Unter <link=\"help:statistics/tasks\"><u><color=#EFB889>Statistiken \u2192 Aufgaben</color></u></link> kannst du Aufgaben h\xE4ufiger erscheinen lassen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427305160708
+    m_Localized: "<b>Zur Abgabe bereit</b>\nDer Stern kennzeichnet eine Quest, deren Anforderungen erf\xFCllt sind. Kehre in die Stadt zur\xFCck und w\xE4hle Abgeben, um ihre Belohnung zu erhalten. Abgegebene Ressourcen werden verbraucht."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355008
+    m_Localized: '<b>Waffe</b>
+
+      Jede hergestellte Waffe hat einen Schadenswert. Vergleiche ihre anderen Werte, bevor du deine aktuelle Waffe ersetzt.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355009
+    m_Localized: "<b>Helm</b>\nJeder hergestellte Helm hat einen Lebenswert. Seine anderen Werte k\xF6nnen Angriff, Verteidigung oder Erholung verbessern."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355010
+    m_Localized: "<b>Brustpanzer</b>\nJeder hergestellte Brustpanzer hat einen Verteidigungswert. Mehr Verteidigung verringert eingehenden Schaden, wobei der zus\xE4tzliche Nutzen abnimmt."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355011
+    m_Localized: "<b>Stiefel</b>\nJedes hergestellte Paar Stiefel hat einen Bewegungswert, der dein Reisetempo erh\xF6ht. Nur Stiefel k\xF6nnen Bewegung als Wert erhalten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355012
+    m_Localized: "<b>Schaden</b>\nSchaden pro Treffer vor gegnerischer Verteidigung und anderen Modifikatoren. Das Angriffstempo bestimmt, wie oft du triffst. Die kritische Trefferchance bestimmt die H\xE4ufigkeit kritischer Treffer; kritischer Schaden bestimmt ihre St\xE4rke.\n\nW\xE4hle w\xE4hrend einer Reise <link=\"help:hero-stats\"><u><color=#EFB889>Werte</color></u></link> neben deinem Lebensbalken, um die aktuellen Werte zu sehen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355013
+    m_Localized: "<b>Verteidigung</b>\nVerringert eingehenden Schaden. Mit {0:0.##} Verteidigung erleidest du halben Schaden, mit {1:0.##} ein Viertel. Verteidigung verhindert Schaden nie vollst\xE4ndig. Die Formel findest du unter <link=\"help:reference\"><u><color=#EFB889>Referenz</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355014
+    m_Localized: "<b>Leben</b>\nDein Held stirbt, wenn sein Leben null erreicht. Ausr\xFCstung kann das maximale Leben erh\xF6hen, und Regeneration stellt Leben mit der Zeit wieder her.\n\nW\xE4hle w\xE4hrend einer Reise <link=\"help:hero-stats\"><u><color=#EFB889>Werte</color></u></link> neben deinem Lebensbalken, um die aktuellen Werte zu sehen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355015
+    m_Localized: "<b>Carl</b>\nCarl beendet deine Reise an der Entfernungsgrenze der Karte. Gesammelte Ressourcen und dein F\xE4higkeitsfortschritt bleiben erhalten.\n\nFluss, Wald und Minen erhalten 1\_% mehr Distanz, wenn Carl dich an der Grenze zur\xFCckholt. Ackerland erh\xE4lt keine Steigerung. Gruselwelt skaliert mit der Zahl besiegter Gegner und hat kein Schnitterdistanzlimit."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355016
+    m_Localized: "<b>Barren</b>\nSchmelze die aufgef\xFChrten Materialien zu Barren. Dein gew\xE4hlter Kern bestimmt Art und Menge der f\xFCr die Herstellung n\xF6tigen Barren. Schmelzen erzeugt Materialien; Schmieden erzeugt Ausr\xFCstung."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355017
+    m_Localized: "<b>Kerne</b>\nJede Herstellung verbraucht einen Kern. Der gew\xE4hlte Kern bestimmt Seltenheitschancen und Materialkosten. H\xF6here Kernstufen werden durch Kampfstufen freigeschaltet. Mit den Umwandlungen in der <link=\"help:forge\"><u><color=#EFB889>Schmiede</color></u></link> kannst du Kerne aufwerten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355018
+    m_Localized: "<b>Schwert</b>\nW\xE4hle Waffe und dann Schmieden. Jede Waffe hat einen Schadenswert. Vergleiche das Ergebnis und w\xE4hle Ausr\xFCsten, um deine aktuelle Waffe zu ersetzen.\n\nErneutes Herstellen oder ein Platzwechsel verwertet ein nicht ausger\xFCstetes Ergebnis."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355019
+    m_Localized: "W\xE4hle oben einen Zauber, um seine aktuellen Effekte, Dauer und Abklingzeit unten zu sehen. Schlie\xDFe die erforderliche Quest eines Platzes ab, um automatisches Wirken daf\xFCr freizuschalten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355020
+    m_Localized: "W\xE4hle oben einen Zauber, um seine aktuellen Effekte, Dauer und Abklingzeit unten zu sehen. Schlie\xDFe die erforderliche Quest eines Platzes ab, um automatisches Wirken daf\xFCr freizuschalten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355021
+    m_Localized: "<b><link=\"help:cauldron\"><u><color=#EFB889>Kessel</color></u></link></b>\nW\xE4hle Nahrung und Menge f\xFCr den Eintopf. Koste ihn, um Karten gem\xE4\xDF den angezeigten Belohnungschancen zu erhalten. Ressourcenkarten erh\xF6hen den Sammelertrag; Zauberkarten verbessern Zauber.\n\nSchwellenwerte f\xFCr Ressourcenkarten und Kategorien findest du unter <link=\"help:reference\"><u><color=#EFB889>Referenz</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355022
+    m_Localized: "<b>Aufgaben-Echo</b>\nSammelt Ressourcen, ohne Gegner anzugreifen oder anzuziehen. Durch F\xE4higkeitsmeilensteine freigeschaltete Echos suchen Aufgaben dieser F\xE4higkeit. Dauer und F\xE4higkeiten findest du beim <link=\"help:skills\"><u><color=#EFB889>Meilenstein</color></u></link> oder <link=\"help:buffs\"><u><color=#EFB889>Beschw\xF6rungszauber</color></u></link>.\n\nEffekte, Dauer und Abklingzeit der aktuellen Beschw\xF6rung werden unten angezeigt."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355023
+    m_Localized: "<b>Kampf-Echo</b>\nSucht und bek\xE4mpft Gegner. Reine Kampf-Echos sammeln keine Ressourcen. Ein Echo, das beides kann, bevorzugt Aufgaben und k\xE4mpft, sobald es angegriffen wird.\n\nEffekte, Dauer und Abklingzeit der aktuellen Beschw\xF6rung werden unten angezeigt."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164590655340417024
+    m_Localized: Patchnotizen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164590655378165760
+    m_Localized: "<b>Aktuelle Entwicklungs\xE4nderungen</b>\n\n<b>Spielbeginn und Fortschritt</b>\n\u2022 Erste Quests und Vorstellungen der NSCs \xFCberarbeitet.\n\u2022 Gill f\xFChrt Spieler zum Fluss; Barkley f\xFChrt sie in Richtung Wald.\n\u2022 Gill schenkt Alte Stiefel. Ivan stellt Materialien bereit und zeigt Spielern, wie sie ihr erstes Schwert schmieden und ausr\xFCsten.\n\u2022 Men\xFCs und Tutorials erscheinen, sobald ihre Systeme relevant werden.\n\u2022 Quests k\xF6nnen nur in der Stadt abgegeben werden.\n\n<b>Benutzeroberfl\xE4che</b>\n\u2022 Reisezusammenfassung \xFCberarbeitet und eine kompakte Werteanzeige w\xE4hrend der Reise hinzugef\xFCgt.\n\u2022 Das Inventar zeigt jetzt ausger\xFCstete Gegenst\xE4nde und Ausr\xFCstungsboni.\n\u2022 Scrollen durch Ziehen in der gesamten Oberfl\xE4che hinzugef\xFCgt.\n\u2022 Bibliothek mit Themennavigation, Referenztabellen und ausw\xE4hlbaren Symbolerkl\xE4rungen neu gestaltet.\n\n<b>Spiel und Fehlerbehebungen</b>\n\u2022 Aufgabendichte beim ersten Abenteuer im Ackerland verringert.\n\u2022 Ackerbau-Aufgaben erscheinen nur im Ackerland.\n\u2022 Kern- und Kristallstufen werden durch Kampfstufen freigeschaltet.\n\u2022 \xDCberlagerungen gegnerischer Lebensbalken und Fehler in Angelanimationen behoben.\n\u2022 Bestenlisten entfernt.\n\nW\xE4hle <link=\"help:reference\"><u><color=#EFB889>Referenz</color></u></link>, um fr\xFChere Patchnotizen zu lesen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164590655378165761
+    m_Localized: "<b>Fr\xFChere Patchnotizen</b>\n\n\u2022 F\xFCr die Marmelade! und Gillivers Reisen hinzugef\xFCgt.\n\u2022 Einf\xFChrungsnachricht verbessert.\n\u2022 Zu niedrige Werte in Stufenaufstiegsanzeigen korrigiert.\n\u2022 Bereich Ausger\xFCstete Qualit\xE4t aus der Schmiede entfernt.\n\u2022 Angeheftete Quests zeigen Zur Abgabe bereit statt Abgeschlossen.\n\u2022 Ladeanzeige beim Kartenwechsel hinzugef\xFCgt.\n\u2022 Schaltfl\xE4che Alles mischen zum Kessel hinzugef\xFCgt.\n\u2022 Wegfindungspaket aktualisiert."
     m_Metadata:
       m_Items: []
   references:

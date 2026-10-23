@@ -129,8 +129,8 @@ namespace TimelessEchoes.UI.Toolkit
             Blindsided.SaveData.StaticReferences.ActiveNpcMeetings.Add(marker);
             try
             {
-                meeting.Init(null, new[] { ToolkitLocalization.Text("intro." + marker, text) }, () =>
-                    Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Add(marker));
+                meeting.Init(null, new[] { text }, () =>
+                    Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Add(marker), new[] { "intro." + marker });
                 meeting.BeginDialogue();
                 while (meeting) yield return null;
             }

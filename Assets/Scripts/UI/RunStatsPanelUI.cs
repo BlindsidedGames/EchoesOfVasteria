@@ -202,11 +202,11 @@ namespace TimelessEchoes.UI
             if (runStatUI.distanceTasksResourcesText != null)
             {
                 var time = CalcUtils.FormatTime(record.Duration);
-                var dist = record.Distance.ToString("N0");
-                var tasks = record.TasksCompleted.ToString("N0");
-                var resources = record.ResourcesCollected.ToString("N0");
+                var dist = record.Distance.ToString("N0", LocaleNumbers.Culture);
+                var tasks = record.TasksCompleted.ToString("N0", LocaleNumbers.Culture);
+                var resources = record.ResourcesCollected.ToString("N0", LocaleNumbers.Culture);
                 var bonusCollected = Mathf.FloorToInt((float)record.BonusResourcesCollected);
-                var bonus = bonusCollected.ToString("N0");
+                var bonus = bonusCollected.ToString("N0", LocaleNumbers.Culture);
                 runStatUI.distanceTasksResourcesText.text =
                     $"Duration: {time}\nDistance: {dist}\nTasks: {tasks}\nResources: {resources}";
                 if (bonusCollected >= 1)
@@ -216,9 +216,9 @@ namespace TimelessEchoes.UI
 
             if (runStatUI.killsDamageDoneDamageTakenText != null)
             {
-                var kills = record.EnemiesKilled.ToString("N0");
-                var dealt = record.DamageDealtAsDouble.ToString("N0");
-                var taken = record.DamageTakenAsDouble.ToString("N0");
+                var kills = record.EnemiesKilled.ToString("N0", LocaleNumbers.Culture);
+                var dealt = record.DamageDealtAsDouble.ToString("N0", LocaleNumbers.Culture);
+                var taken = record.DamageTakenAsDouble.ToString("N0", LocaleNumbers.Culture);
                 runStatUI.killsDamageDoneDamageTakenText.text =
                     $"Kills: {kills}\nDamage Dealt: {dealt}\nDamage Taken: {taken}";
             }

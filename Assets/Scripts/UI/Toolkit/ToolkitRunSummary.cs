@@ -66,8 +66,8 @@ namespace TimelessEchoes.UI.Toolkit
             var facts = E(summaryOverview, "row summary-facts");
             SummaryFact(facts, "time", "run.summary.time-away", "Time away", CalcUtils.FormatTime(summaryData.Duration));
             SummaryFact(facts, "steps", "run.summary.steps", "Steps walked", CalcUtils.FormatNumber(summaryData.Steps, true));
-            SummaryFact(facts, "deaths", "run.summary.deaths-label", "Deaths", summaryData.Deaths.ToString("N0"));
-            SummaryFact(facts, "reaps", "run.summary.reaps-label", "Reaped by Carl", summaryData.Reaps.ToString("N0"));
+            SummaryFact(facts, "deaths", "run.summary.deaths-label", "Deaths", summaryData.Deaths.ToString("N0", LocaleNumbers.Culture));
+            SummaryFact(facts, "reaps", "run.summary.reaps-label", "Reaped by Carl", summaryData.Reaps.ToString("N0", LocaleNumbers.Culture));
             var limit = E(summaryOverview, "row summary-distance"); limit.name = "summary-reaping-distance";
             L(limit, ToolkitLocalization.Text("run.summary.limit", "Reaping distance"), "summary-distance-label");
             var changed = summaryData.StartingDistance > 0 && !Mathf.Approximately(summaryData.StartingDistance, summaryData.Distance);
@@ -75,11 +75,11 @@ namespace TimelessEchoes.UI.Toolkit
                 ToolkitLocalization.Text("run.summary.limit-value", "{0:N0} steps", summaryData.Distance);
             L(limit, value, "strong summary-distance-value").name = "summary-distance-value";
             if (changed)
-                L(limit, (summaryData.Distance > summaryData.StartingDistance ? "+" : "") + (summaryData.Distance - summaryData.StartingDistance).ToString("N0"), "summary-distance-change");
+                L(limit, (summaryData.Distance > summaryData.StartingDistance ? "+" : "") + (summaryData.Distance - summaryData.StartingDistance).ToString("N0", LocaleNumbers.Culture), "summary-distance-change");
             if (summaryData.Retreated && summaryData.RetreatBonusPercent > 0)
                 L(summaryOverview, ToolkitLocalization.Text("run.summary.retreat-bonus", "Returned with {0} kills · +{1:0}% resource bonus", summaryData.Kills, summaryData.RetreatBonusPercent), "summary-return-bonus");
             summaryResourceHeading.Q<Label>("summary-resources-title").text = ToolkitLocalization.Text("run.summary.resources", "Resources gathered");
-            summaryResourceCount.text = ToolkitLocalization.Text("run.summary.resource-types", "{0} types", summaryAmounts.Count);
+            summaryResourceCount.text = ToolkitLocalization.Text("run.summary.resource-types", "Types: {0}", summaryAmounts.Count);
             detailRows.Clear(); resourceRows.Clear();
             if (summaryAmounts.Count == 0)
                 L(detailRows, ToolkitLocalization.Text("run.summary.empty", "No resources gathered this outing."), "summary-empty muted");

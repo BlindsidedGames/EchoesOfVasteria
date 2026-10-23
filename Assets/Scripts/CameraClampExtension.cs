@@ -38,18 +38,17 @@ namespace TimelessEchoes
 
             var displayAspect = state.Lens.Aspect;
             var activityAspect = RunActivityArea.Aspect(displayAspect);
-            var portrait = Application.isPlaying && UI.Toolkit.ToolkitResponsiveLayout.IsPortrait && !UI.Toolkit.ToolkitResponsiveLayout.TownView;
-            if (!portrait || !state.Lens.Orthographic || displayAspect <= 0f) return;
+            var cropped = Application.isPlaying && !UI.Toolkit.ToolkitResponsiveLayout.TownView && displayAspect < activityAspect;
+            if (!cropped || !state.Lens.Orthographic || displayAspect <= 0f) return;
 
             // A screen-space dead zone would shrink in world units when the view
             // is cropped. Preserve the authored landscape tracking region while
             // the composer runs, then restore its serialized settings below.
             extra.AuthoredComposition = extra.Composer.Composition;
             extra.AuthoredLookaheadTime = extra.Composer.Lookahead.Time;
-            // Keep a real half-second of prediction in the zoomed portrait view.
+            // Keep a real half-second of prediction in a cropped view.
             // Scaling time by aspect made ordinary movement lag behind the hero.
-            extra.Composer.Lookahead.Time = UI.Toolkit.ToolkitResponsiveLayout.FocusView
-                ? .5f : extra.AuthoredLookaheadTime;
+            extra.Composer.Lookahead.Time = .5f;
             var composition = extra.AuthoredComposition;
             var widthScale = activityAspect / displayAspect;
             composition.DeadZone.Size.x *= widthScale;

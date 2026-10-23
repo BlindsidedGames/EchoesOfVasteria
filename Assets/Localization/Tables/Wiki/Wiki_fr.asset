@@ -19,35 +19,35 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 188400156672
-    m_Localized: "La production des Alter-\xC9chos a \xE9t\xE9 retir\xE9e. R\xE9coltez des ressources en aventure ou r\xE9coltez les cultures plant\xE9es."
+    m_Localized: "La production Alter-\xC9cho a \xE9t\xE9 supprim\xE9e. R\xE9colte des ressources en aventure ou moissonne les cultures que tu as plant\xE9es."
     m_Metadata:
       m_Items: []
   - m_Id: 478381752320
-    m_Localized: "Les buffs sont des pouvoirs temporaires. Ils expirent \xE0 la fin de leur dur\xE9e ou au retour en ville. Apr\xE8s avoir termin\xE9 la qu\xEAte requise pour un emplacement, vous pouvez les lancer automatiquement ; cette option est activ\xE9e par d\xE9faut. D\xE9sactivez-la en cliquant sur l\u2019emplacement dans la fen\xEAtre de gestion des buffs.\n\nLe <link=\"help:cauldron\"><u><color=#EFB889>Chaudron</color></u></link> d\u2019Eva peut r\xE9duire leurs temps de recharge."
+    m_Localized: "Les <link=\"help:buffs\"><u><color=#EFB889>Buffs</color></u></link> sont des pouvoirs temporaires. Ils prennent fin \xE0 l'expiration de leur dur\xE9e ou \xE0 ton retour en ville.\n\nTermine la qu\xEAte requise d'un emplacement pour d\xE9bloquer son lancement automatique, activ\xE9 par d\xE9faut. S\xE9lectionne cet emplacement dans <link=\"help:buffs\"><u><color=#EFB889>Accueil \u2192 Buffs</color></u></link> pour l'activer ou le d\xE9sactiver.\n\nLe <link=\"help:cauldron\"><u><color=#EFB889>Chaudron</color></u></link> d'Eva peut r\xE9duire les temps de recharge des buffs."
     m_Metadata:
       m_Items: []
   - m_Id: 492340396032
-    m_Localized: "Caleb combat automatiquement et n\u2019affronte que les ennemis qui lui barrent la route ! Les t\xE2ches d\u2019abord, le plaisir ensuite.\n\nD' = D \xD7 (1 - A / (A + N))\n\nD = d\xE9g\xE2ts entrants\nA = d\xE9fense (limit\xE9e \xE0 0 ou plus)\nN = constante contr\xF4lant les rendements d\xE9croissants (par d\xE9faut = 25)\nD' = d\xE9g\xE2ts finaux subis\n\nVotre 10e, 100e, 1,000e et 10,000e victoire contre un ennemi donn\xE9 vous accorde 25% de d\xE9g\xE2ts suppl\xE9mentaires contre cet ennemi.\nVotre 25,000e et 100,000e victoire vous accorde 50% de d\xE9g\xE2ts suppl\xE9mentaires contre cet ennemi."
+    m_Localized: "Ton personnage combat automatiquement et n\u2019affronte que les ennemis qui lui barrent la route ! Les t\xE2ches d\u2019abord, le plaisir ensuite.\n\nD' = D \xD7 (1 - A / (A + N))\n\nD = d\xE9g\xE2ts entrants\nA = d\xE9fense (limit\xE9e \xE0 0 ou plus)\nN = constante contr\xF4lant les rendements d\xE9croissants (par d\xE9faut = 25)\nD' = d\xE9g\xE2ts finaux subis\n\nVotre 10e, 100e, 1\u202F000e et 10\u202F000e \xE9limination contre un ennemi donn\xE9 vous accorde 25\_% de d\xE9g\xE2ts suppl\xE9mentaires contre cet ennemi.\nVotre 25\u202F000e et 100\u202F000e \xE9limination vous accorde 50\_% de d\xE9g\xE2ts suppl\xE9mentaires contre cet ennemi."
     m_Metadata:
       m_Items: []
   - m_Id: 512217202688
-    m_Localized: "Les \xC9chos sont d\u2019autres versions de Caleb qui p\xE9n\xE8trent bri\xE8vement dans sa r\xE9alit\xE9 pour l\u2019aider dans diverses situations.\n\nChaque \xC9cho peut poss\xE9der plusieurs comp\xE9tences de Caleb, mais la plupart ne les poss\xE8dent pas toutes.\n\nLeur comportement d\xE9pend surtout de leur capacit\xE9 \xE0 combattre.\nLes \xC9chos combattants ont deux comportements selon qu\u2019ils peuvent aussi accomplir des t\xE2ches.\n\nUn \xC9cho combattant INCAPABLE d\u2019accomplir des t\xE2ches recherche les ennemis.\nUn \xC9cho combattant CAPABLE d\u2019accomplir des t\xE2ches privil\xE9gie les t\xE2ches et n\u2019affronte que les ennemis qui le rep\xE8rent.\n\nLes \xC9chos non combattants ne ciblent pas les ennemis et ne sont pas cibl\xE9s par eux.\n\nNote du d\xE9veloppeur | Aucun \xC9cho actuel ne peut \xE0 la fois combattre et accomplir des t\xE2ches. Les \xC9chos des jalons recherchent les t\xE2ches de leur comp\xE9tence : par exemple, un \xC9cho de B\xFBcheronnage ne cherche que ces t\xE2ches."
+    m_Localized: "Les \xC9chos sont des versions de ton h\xE9ros issues d'autres r\xE9alit\xE9s. Chacun poss\xE8de ses propres capacit\xE9s.\n\nLes \xC9chos d\xE9di\xE9s au combat recherchent les ennemis. Ceux qui savent r\xE9colter et combattre privil\xE9gient les t\xE2ches, puis combattent lorsqu'ils sont engag\xE9s. Ceux qui ne peuvent pas combattre n'attaquent pas et n'attirent pas les ennemis.\n\nLes \xC9chos d\xE9bloqu\xE9s par les paliers d'une comp\xE9tence recherchent les t\xE2ches de cette comp\xE9tence. Par exemple, un \xC9cho de B\xFBcheronnage recherche les t\xE2ches de B\xFBcheronnage."
     m_Metadata:
       m_Items: []
   - m_Id: 532437942272
-    m_Localized: "Chaque ennemi tu\xE9 pendant une aventure augmente votre bonus de ressources de 2%. Pendant le combat, ce bonus est temporairement fix\xE9 \xE0 0%.\n\nEssayez de rentrer juste avant que les combats ne deviennent trop difficiles, pour obtenir autant de ressources bonus que possible !"
+    m_Localized: "Utilise la commande de retour en ville pendant une aventure pour battre en retraite. Chaque \xE9limination ajoute 2\_% \xE0 ton bonus de ressources de retraite, affich\xE9 sur la commande.\n\nSi tu demandes \xE0 rentrer pendant un combat, ton h\xE9ros le termine avant de partir.\n\nTu ne re\xE7ois ce bonus que si tu rentres en vie. Mourir ou \xEAtre fauch\xE9 le fait perdre ; tu conserves les ressources d\xE9j\xE0 r\xE9colt\xE9es."
     m_Metadata:
       m_Items: []
   - m_Id: 698595295232
-    m_Localized: "Les t\xE2ches sont l\u2019objectif principal du voyage de Caleb. R\xE9colter des ressources pour le village est essentiel \xE0 son d\xE9veloppement.\n\nElles sont accomplies automatiquement, de plus en plus vite \xE0 mesure que vos comp\xE9tences augmentent.\n\nChaque t\xE2che appara\xEEt entre une distance minimale et maximale. Au-del\xE0 de la distance maximale, sa probabilit\xE9 d\u2019apparition baisse de 90%. Une fois toutes les distances maximales atteintes, le syst\xE8me s\u2019\xE9quilibre : les t\xE2ches sont disponibles selon leurs pond\xE9rations."
+    m_Localized: "Ton h\xE9ros accomplit automatiquement des t\xE2ches pour r\xE9colter des ressources. Des niveaux de comp\xE9tence plus \xE9lev\xE9s permettent de les terminer plus vite.\n\nLes t\xE2ches ont des distances d'apparition minimales et maximales. Au-del\xE0 de la distance maximale d'une t\xE2che, son poids d'apparition diminue de 90\_%. Si toutes les t\xE2ches admissibles ont d\xE9pass\xE9 leur maximum, leurs poids relatifs d\xE9terminent toujours leur fr\xE9quence d'apparition."
     m_Metadata:
       m_Items: []
   - m_Id: 505754247643136
-    m_Localized: "Les qu\xEAtes ont plusieurs types de conditions \xE0 remplir avant de les rendre.\n\n<b>Information</b> | Ces qu\xEAtes se terminent imm\xE9diatement pour faire avancer l\u2019histoire ou guider vos premiers pas.\n<b>R\xE9colte</b> | R\xE9coltez les ressources demand\xE9es, puis remettez-les pour terminer.\n<b>Victoires</b> | \xC9liminez les ennemis, puis faites votre rapport.\n<b>Rencontre</b> | Rencontrez un personnage, g\xE9n\xE9ralement \xE0 une distance pr\xE9cise."
+    m_Localized: "Remplis les conditions d'une qu\xEAte, puis rends-la en ville.\n\n<b>Information :</b> Lis ou valide la qu\xEAte pour poursuivre l'histoire ou le didacticiel.\n<b>R\xE9colte :</b> Apporte les ressources indiqu\xE9es. Rendre la qu\xEAte les consomme.\n<b>\xC9liminations :</b> Vaincs les ennemis requis, puis fais ton rapport.\n<b>Rencontre :</b> Trouve le personnage nomm\xE9 et parle-lui. Certains n'apparaissent qu'\xE0 partir d'une certaine distance."
     m_Metadata:
       m_Items: []
   - m_Id: 3785742338113536
-    m_Localized: "\xC0 certaines distances du village, Carl fauche votre \xE2me pour vous emp\xEAcher de trop vous \xE9loigner.\nLa distance maximale de Fauche figure dans les statistiques de l\u2019onglet G\xE9n\xE9ral.\n\nElle augmente des fa\xE7ons suivantes :\n<b>\xCAtre fauch\xE9</b> | Augmente la distance de 1% de votre maximum actuel. (Sauf dans les Terres agricoles.)\n<b><link=\"help:quests\"><u><color=#EFB889>Qu\xEAtes</color></u></link></b> | Certaines qu\xEAtes augmentent la distance de Fauche."
+    m_Localized: "Carl met fin \xE0 ton aventure lorsque tu atteins la limite de la carte. Consulte <link=\"help:statistics/general\"><u><color=#EFB889>Statistiques \u2192 G\xE9n\xE9ral</color></u></link> pour voir les limites des cartes.\n\n\xCAtre fauch\xE9 \xE0 la limite augmente la distance de 1\_% dans la Rivi\xE8re, les Bois et les Mines. Les Terres agricoles ne donnent aucune augmentation. Dans Hant\xE9, le niveau des ennemis augmente avec les \xE9liminations, sans plafond de \xE9liminations. Certaines qu\xEAtes augmentent aussi ta limite de d\xE9placement."
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
@@ -93,7 +93,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9824133160779776
-    m_Localized: "La forge d\u2019Ivan est magique. En ville comme en aventure, vous pouvez le guider dans son apprentissage de forgeron.\n\nDeux options sont disponibles :\n\n<b>Arr\xEAt sur Vastium :</b> Arr\xEAte toujours la fabrication si vous obtenez une pi\xE8ce de Vastium, m\xEAme moins bonne.\n\n<b>Stats identiques :</b> Continue jusqu\u2019\xE0 obtenir une am\xE9lioration avec exactement les m\xEAmes types de statistiques que votre \xE9quipement actuel.\n\nCette ic\xF4ne repr\xE9sente la qualit\xE9 : <sprite=206>\n\nFabriquez votre \xE9quipement ici et choisissez les statistiques adapt\xE9es \xE0 votre style.\nIl existe actuellement 8 statistiques possibles, chaque pi\xE8ce en garantissant une.\n\n<sprite=198> = D\xE9g\xE2ts.\n<sprite=200> = Vitesse d\u2019attaque.\n<sprite=199> = Chances de critique.\n<sprite=205> = D\xE9g\xE2ts critiques.\n\n<sprite=202> = Sant\xE9.\n<sprite=203> = R\xE9g\xE9n\xE9ration.\n<sprite=201> = D\xE9fense.\n<sprite=204> = D\xE9placement.\n\n<sprite=192> = Am\xE9lioration.\n<sprite=193> = D\xE9gradation.\n<sprite=194> = Aucun changement.\n<sprite=195> Stat absente du nouvel objet.\n<sprite=196> Stat absente de l\u2019ancien objet.\n\n<b>Arme</b> | Garantit <sprite=198>\n<b>Casque</b> | Garantit <sprite=202>\n<b>Plastron</b> | Garantit <sprite=201>\n<b>Bottes</b> | Garantit <sprite=204>, exclusif \xE0 cet emplacement.\n\nL\u2019\xE9quipement est automatiquement recycl\xE9 lorsque vous fabriquez une nouvelle pi\xE8ce, changez d\u2019emplacement ou fermez le jeu.\n\nSelon sa raret\xE9, une pi\xE8ce peut avoir jusqu\u2019\xE0 5 statistiques. D\u2019autres statistiques sont pr\xE9vues !"
+    m_Localized: "Ouvre <link=\"help:forge\"><u><color=#EFB889>Village \u2192 Forge</color></u></link> pour fabriquer de l'\xE9quipement, en ville comme en aventure.\n\nOptions de fabrication :\n\n<b>Arr\xEAt au Vastium :</b> S'arr\xEAte toujours si tu obtiens un objet Vastium, m\xEAme moins bon.\n\n<b>Correspondance des stats :</b> Avec cette option, la forge continue jusqu'\xE0 obtenir une am\xE9lioration ayant exactement les m\xEAmes types de statistiques que ton objet \xE9quip\xE9.\n\nLa qualit\xE9 est repr\xE9sent\xE9e par cette ic\xF4ne : <sprite=206>\n\nC'est ici que tu fabriques de l'\xE9quipement et choisis les meilleures statistiques pour ton personnage.\nL'\xE9quipement peut recevoir 8 statistiques diff\xE9rentes. Chaque emplacement en garantit une.\n\n<sprite=198> = D\xE9g\xE2ts.\n<sprite=200> = Vitesse d'attaque.\n<sprite=199> = Chance de critique.\n<sprite=205> = D\xE9g\xE2ts critiques.\n\n<sprite=202> = Sant\xE9.\n<sprite=203> = R\xE9g\xE9n\xE9ration.\n<sprite=201> = D\xE9fense.\n<sprite=204> = D\xE9placement.\n\n<sprite=192> = Am\xE9lioration.\n<sprite=193> = R\xE9gression.\n<sprite=194> = Aucun changement.\n<sprite=195> Statistique absente du nouvel objet.\n<sprite=196> Statistique absente de l'ancien objet.\n\n<b>Arme</b> | Garantit <sprite=198>\n<b>Casque</b> | Garantit <sprite=202>\n<b>Plastron</b> | Garantit <sprite=201>\n<b>Bottes</b> | Garantit <sprite=204>, exclusif \xE0 cet emplacement.\n\nL'\xE9quipement est automatiquement recycl\xE9 lorsque tu fabriques une nouvelle pi\xE8ce, changes d'emplacement ou fermes le jeu.\n\nSelon sa raret\xE9, une pi\xE8ce d'\xE9quipement peut recevoir jusqu'\xE0 5 statistiques."
     m_Metadata:
       m_Items: []
   - m_Id: 9824133185945600
@@ -105,15 +105,775 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12027031164698624
-    m_Localized: "Le <link=\"help:cauldron\"><u><color=#EFB889>Chaudron</color></u></link> transforme les aliments s\xE9lectionn\xE9s en rago\xFBt. Choisissez la quantit\xE9 \xE0 m\xE9langer : le rago\xFBt obtenu d\xE9pend de la valeur d\xE9finie de l\u2019aliment et de sa quantit\xE9. Go\xFBtez-le pour recevoir des cartes selon les pond\xE9rations de r\xE9compense affich\xE9es par Eva.\n\nLes cartes de ressources am\xE9liorent les r\xE9coltes r\xE9elles, le butin des ennemis et les r\xE9coltes des Champs pour la ressource correspondante. Leurs seuils d\u2019exemplaires sont 1, 25, 75, 200, 750, 1500, 3500 et 10000 ; les bonus de rendement sont 1%, 2%, 3%, 5%, 7%, 10%, 15% et 20%.\n\nUne cat\xE9gorie utilise le palier de carte le plus bas parmi ses ressources d\xE9bloqu\xE9es. Une carte non poss\xE9d\xE9e compte comme palier z\xE9ro. Les paliers de cat\xE9gorie de 1 \xE0 8 ajoutent 2%, 5%, 10%, 15%, 20%, 30%, 40% et 50% de rendement \xE0 cette cat\xE9gorie. Les bonus de carte et de cat\xE9gorie s\u2019additionnent, jusqu\u2019\xE0 70%. Les r\xE9compenses, graines, remboursements et conversions n\u2019en b\xE9n\xE9ficient pas.\n\nCes paliers sont distincts de la raret\xE9 des ressources. Les avantages actuels des cartes de buffs sur la recharge et la puissance restent inchang\xE9s. Compl\xE9tez toutes les collections disponibles de ressources et de buffs pour d\xE9bloquer les Bienfaits \xE9ternels."
+    m_Localized: "Le <link=\"help:cauldron\"><u><color=#EFB889>Chaudron</color></u></link> transforme les aliments s\xE9lectionn\xE9s en rago\xFBt. Tu choisis la quantit\xE9 \xE0 m\xE9langer ; le rago\xFBt obtenu d\xE9pend de la valeur et de la quantit\xE9 des aliments. Go\xFBte-le pour recevoir des cartes selon les chances de r\xE9compense affich\xE9es.\n\nLes cartes de ressources am\xE9liorent la collecte, le butin ennemi et les r\xE9coltes en ville de la ressource correspondante. Leurs seuils d'exemplaires sont 1, 25, 75, 200, 750, 1\u202F500, 3\u202F500 et 10\u202F000 ; les bonus de rendement sont 1\_%, 2\_%, 3\_%, 5\_%, 7\_%, 10\_%, 15\_% et 20\_%.\n\nUne cat\xE9gorie de ressources utilise le plus bas palier de carte parmi ses ressources d\xE9bloqu\xE9es. Les cartes non poss\xE9d\xE9es comptent comme palier z\xE9ro. Les paliers de cat\xE9gorie 1 \xE0 8 ajoutent respectivement 2\_%, 5\_%, 10\_%, 15\_%, 20\_%, 30\_%, 40\_% et 50\_% de rendement \xE0 cette cat\xE9gorie. Les bonus de carte et de cat\xE9gorie s'additionnent jusqu'\xE0 70\_%. Les r\xE9compenses, graines, remboursements et conversions n'en b\xE9n\xE9ficient pas.\n\nCes paliers de cartes sont distincts de la raret\xE9 des ressources. Les cartes de buffs am\xE9liorent les temps de recharge et la puissance. Compl\xE8te toutes les collections disponibles de ressources et de buffs pour d\xE9bloquer les B\xE9n\xE9dictions \xE9ternelles."
     m_Metadata:
       m_Items: []
   - m_Id: 18915029441462272
-    m_Localized: "Les objets ont une faible chance de monter d\u2019un palier \xE0 chaque collecte. Les r\xE9coltes des Champs ne font pas augmenter le palier des ressources.\nChaque palier au-dessus du premier accorde davantage de ressources lors des collectes suivantes.\n\nJe n\u2019aime pas trop partager cette information, mais la voici. - Orin...\n\nPalier | Bonus | Chance\n<b>Palier 1</b> - 0%\\tBase\n<b>Palier 2</b> - 10%\\t1 /1,000\n<b>Palier 3</b> - 20%\\t1 / 5,000\n<b>Palier 4</b> - 30%\\t1 / 10,000\n<b>Palier 5</b> - 50%\\t1 / 50,000\n<b>Palier 6</b> - 75%\\t1 / 100,000\n<b>Palier 7</b> - 100%\\t1 / 250,000\n<b>Palier 8</b> - 150%\\t1 / 1,000,000"
+    m_Localized: "La collecte a une petite chance d'augmenter le palier de raret\xE9 d'une ressource. Les r\xE9coltes des cultures en ville ne peuvent pas faire monter ce palier.\nChaque palier au-del\xE0 du premier augmente d\xE9finitivement la quantit\xE9 de cette ressource que tu r\xE9coltes.\n\n\xAB Je pr\xE9f\xE9rerais garder \xE7a pour moi, mais voil\xE0. \xBB \u2014 Orin\n\nPalier | Bonus | Chance\n<b>Palier 1</b> - 0\_%\tBase\n<b>Palier 2</b> - 10\_%\t1 / 1\u202F000\n<b>Palier 3</b> - 20\_%\t1 / 5\u202F000\n<b>Palier 4</b> - 30\_%\t1 / 10\u202F000\n<b>Palier 5</b> - 50\_%\t1 / 50\u202F000\n<b>Palier 6</b> - 75\_%\t1 / 100\u202F000\n<b>Palier 7</b> - 100\_%\t1 / 250\u202F000\n<b>Palier 8</b> - 150\_%\t1 / 1\u202F000\u202F000"
     m_Metadata:
       m_Items: []
   - m_Id: 25772880722018304
     m_Localized: Anglais (en)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255181967360
+    m_Localized: Aventures et cartes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299008
+    m_Localized: "Choisis <link=\"help:adventure\"><u><color=#EFB889>Aventure</color></u></link>, puis une carte pour partir. Ton h\xE9ros se d\xE9place entre les t\xE2ches et r\xE9colte automatiquement des ressources. Chaque carte offre des ressources diff\xE9rentes.\n\nPour voir tes d\xE9couvertes, ouvre <link=\"help:statistics/general\"><u><color=#EFB889>Statistiques \u2192 G\xE9n\xE9ral</color></u></link> et choisis une carte. Les cartes verrouill\xE9es indiquent comment en apprendre davantage."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299009
+    m_Localized: "Les t\xE2ches d'agriculture n'apparaissent que dans les Terres agricoles. Les <link=\"help:quests\"><u><color=#EFB889>Qu\xEAtes</color></u></link> et les rencontres avec les habitants d\xE9bloquent d'autres routes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299010
+    m_Localized: "T\xE2ches et comp\xE9tences"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299011
+    m_Localized: "Termine des t\xE2ches pour obtenir des ressources et de l'XP de comp\xE9tence.\n\nOuvre <link=\"help:skills\"><u><color=#EFB889>Accueil \u2192 Comp\xE9tences</color></u></link> et choisis une comp\xE9tence pour voir ses bonus et d\xE9blocages.\n\nOuvre <link=\"help:statistics/tasks\"><u><color=#EFB889>Statistiques \u2192 T\xE2ches</color></u></link> et utilise Booster pour rendre une t\xE2che plus fr\xE9quente dans sa cat\xE9gorie. Le boost augmente aussi un peu la fr\xE9quence de cette cat\xE9gorie sur la carte."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299012
+    m_Localized: "Booster une t\xE2che ne la d\xE9bloque pas et ne change pas les cartes o\xF9 elle appara\xEEt. Les conditions de carte, de distance et de progression restent valables.\n\nLes niveaux de Combat d\xE9bloquent les paliers sup\xE9rieurs de noyaux et de cristaux. Consulte <link=\"help:skills/Combat\"><u><color=#EFB889>Accueil \u2192 Comp\xE9tences \u2192 Combat</color></u></link> pour voir les niveaux requis."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299013
+    m_Localized: "Qu\xEAtes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299014
+    m_Localized: "Ouvre les <link=\"help:quests\"><u><color=#EFB889>Qu\xEAtes</color></u></link> pour voir tes objectifs. Remplis les conditions d'une qu\xEAte, puis rends-la en ville pour r\xE9cup\xE9rer sa r\xE9compense. Remettre des ressources consomme les objets indiqu\xE9s.\n\nLes qu\xEAtes \xE9pingl\xE9es apparaissent pendant l'aventure. Les autres restent dans la liste des qu\xEAtes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299015
+    m_Localized: "Les <link=\"help:quests\"><u><color=#EFB889>Qu\xEAtes</color></u></link> peuvent demander des ressources, des \xE9liminations d'ennemis, une rencontre ou une action du didacticiel. Une fois les conditions remplies, la qu\xEAte est pr\xEAte \xE0 \xEAtre rendue. Tu re\xE7ois sa r\xE9compense en la rendant, uniquement en ville."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299016
+    m_Localized: "Inventaire et \xE9quipement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299017
+    m_Localized: "Ouvre <link=\"help:inventory\"><u><color=#EFB889>Accueil \u2192 Inventaire</color></u></link> pour examiner ton \xE9quipement et tes ressources. S\xE9lectionne un objet \xE9quip\xE9 pour voir ses bonus. Les bonus totaux d'\xE9quipement incluent tous les objets \xE9quip\xE9s.\n\nCompare les statistiques avant de remplacer un objet : un objet plus rare n'est pas toujours meilleur.\n\nPendant une aventure, s\xE9lectionne <link=\"help:hero-stats\"><u><color=#EFB889>Stats</color></u></link> \xE0 c\xF4t\xE9 de ta barre de sant\xE9 pour voir tes statistiques de combat actuelles."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299018
+    m_Localized: "Les ressources d\xE9couvertes apparaissent avant les autres. Les deux groupes suivent un ordre fixe."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299019
+    m_Localized: Combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299020
+    m_Localized: "Ton h\xE9ros combat automatiquement les ennemis, puis reprend sa t\xE2che.\n\nPendant une aventure, s\xE9lectionne <link=\"help:hero-stats\"><u><color=#EFB889>Stats</color></u></link> \xE0 c\xF4t\xE9 de ta barre de sant\xE9 pour voir tes statistiques actuelles. Ouvre <link=\"help:statistics/enemies\"><u><color=#EFB889>Statistiques \u2192 Ennemis</color></u></link> pour voir les statistiques ennemies et tes bonus de \xE9liminations."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299021
+    m_Localized: "D\xE9g\xE2ts subis = d\xE9g\xE2ts entrants \xD7 {0:0.##} \xF7 (d\xE9fense + {0:0.##}). Une d\xE9fense n\xE9gative compte pour z\xE9ro.\n\nVaincre plusieurs fois le m\xEAme ennemi d\xE9bloque des d\xE9g\xE2ts bonus contre lui. Consulte <link=\"help:statistics/enemies\"><u><color=#EFB889>Statistiques \u2192 Ennemis</color></u></link> pour voir ton bonus actuel et le prochain palier."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299022
+    m_Localized: Fauchage et retour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299023
+    m_Localized: "<b>Rivi\xE8re, Bois et Mines</b>\nCarl met fin \xE0 l'aventure \xE0 la limite de distance. \xCAtre fauch\xE9 \xE0 cette limite augmente ta distance de fauchage commune de 1\_%.\n\n<b>Terres agricoles</b>\nCarl met fin \xE0 l'aventure \xE0 la limite de distance, mais le fauchage n'augmente pas cette limite.\n\n<b>Hant\xE9</b>\nLe niveau des ennemis augmente avec tes \xE9liminations. Il n'y a ni plafond de \xE9liminations ni limite de fauchage.\n\nTu conserves les ressources r\xE9colt\xE9es et ta progression de comp\xE9tences \xE0 la fin d'une aventure. Retourne en ville pour rendre tes qu\xEAtes, puis consulte le <link=\"help:run-summary\"><u><color=#EFB889>R\xE9sum\xE9 de l\u2019aventure</color></u></link> pour voir tes gains. Les informations sur les cartes sont dans <link=\"help:statistics/general\"><u><color=#EFB889>Statistiques \u2192 G\xE9n\xE9ral</color></u></link>."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299024
+    m_Localized: "<b>Rivi\xE8re, Bois et Mines</b>\n\xCAtre fauch\xE9 \xE0 la limite de distance augmente ta distance de fauchage commune de 1\_% de la limite effective atteinte, buffs de distance inclus. Certaines qu\xEAtes permettent aussi d'aller plus loin.\n\n<b>Terres agricoles</b>\nCarl met fin \xE0 l'aventure \xE0 sa limite de distance, sans l'augmenter.\n\n<b>Hant\xE9</b>\nLe niveau des ennemis augmente avec les \xE9liminations. Il n'y a ni plafond de \xE9liminations ni limite de fauchage."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299025
+    m_Localized: Bonus de retraite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299026
+    m_Localized: "Utilise la commande de retour en ville pendant une aventure pour battre en retraite. Chaque \xE9limination ajoute 2\_% \xE0 ton bonus de ressources de retraite, affich\xE9 sur la commande.\n\nSi tu demandes \xE0 rentrer pendant un combat, ton h\xE9ros le termine avant de partir.\n\nTu ne re\xE7ois ce bonus que si tu rentres en vie. Mourir ou \xEAtre fauch\xE9 le fait perdre ; tu conserves les ressources d\xE9j\xE0 r\xE9colt\xE9es."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299027
+    m_Localized: "Ton bonus de retraite d\xE9pend des \xE9liminations de l'aventure en cours et t'est accord\xE9 si tu rentres en vie. Mourir ou \xEAtre fauch\xE9 fait perdre le bonus, mais pas les ressources d\xE9j\xE0 r\xE9colt\xE9es."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299028
+    m_Localized: Forge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299029
+    m_Localized: "Apr\xE8s avoir rencontr\xE9 Ivan, ouvre <link=\"help:forge\"><u><color=#EFB889>Village \u2192 Forge</color></u></link>.\n\n1. Fonds les mat\xE9riaux requis en lingots.\n2. Choisis un noyau pour d\xE9terminer les chances de raret\xE9 et le co\xFBt en mat\xE9riaux.\n3. Choisis un emplacement d'\xE9quipement, puis Fabriquer. Chaque fabrication consomme des lingots et un noyau.\n4. Compare le r\xE9sultat. S\xE9lectionne \xC9quiper pour remplacer ton objet actuel.\n\nEn dehors de la le\xE7on d'Ivan, un objet fabriqu\xE9 s'\xE9quipe automatiquement si son emplacement est vide."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299030
+    m_Localized: "<b>Recyclage</b>\nExamine le r\xE9sultat avant de fabriquer \xE0 nouveau ou de changer d'emplacement : ces deux actions recyclent le r\xE9sultat non \xE9quip\xE9.\n\n<b>Automatisation \u2014 niveau de ma\xEEtrise 3 de la <link=\"help:forge\"><u><color=#EFB889>Forge</color></u></link></b>\n\xAB R\xE9p\xE9ter la fabrication \xBB encha\xEEne les fabrications et consomme des mat\xE9riaux \xE0 chaque tentative.\n\nArr\xEAt sur Vastium s'arr\xEAte sur tout r\xE9sultat Vastium, m\xEAme moins bon.\n\nAvec Stats identiques, une am\xE9lioration doit aussi avoir les m\xEAmes types de statistiques que l'objet \xE9quip\xE9 pour arr\xEAter la fabrication.\n\nConsulte <link=\"help:skills/Combat\"><u><color=#EFB889>Accueil \u2192 Comp\xE9tences \u2192 Combat</color></u></link> pour les d\xE9blocages de noyaux et de cristaux."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299031
+    m_Localized: Buffs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299032
+    m_Localized: "S\xE9lectionne l'ic\xF4ne d'un buff pour voir ses effets, sa dur\xE9e et son temps de recharge actuels. Ces valeurs incluent tes am\xE9liorations.\n\nOuvre <link=\"help:buffs\"><u><color=#EFB889>Accueil \u2192 Buffs</color></u></link> pour assigner des buffs et g\xE9rer leur lancement automatique. Termine la qu\xEAte requise d'un emplacement pour d\xE9bloquer son lancement automatique.\n\nLes <link=\"help:buffs\"><u><color=#EFB889>Buffs</color></u></link> prennent fin \xE0 l'expiration de leur dur\xE9e ou \xE0 ton retour en ville."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299033
+    m_Localized: "Le <link=\"help:cauldron\"><u><color=#EFB889>Chaudron</color></u></link> d'Eva fournit des cartes de buffs qui am\xE9liorent leur puissance et leur temps de recharge."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299034
+    m_Localized: Chaudron
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299035
+    m_Localized: "Ouvre <link=\"help:cauldron\"><u><color=#EFB889>Village \u2192 Chaudron</color></u></link>. M\xE9lange de la nourriture en rago\xFBt, puis go\xFBte-le pour recevoir des cartes. V\xE9rifie les chances de r\xE9compense avant de go\xFBter.\n\nLes cartes de ressources augmentent la quantit\xE9 r\xE9colt\xE9e de cette ressource. Les cartes de buffs am\xE9liorent les buffs. Les niveaux de cartes et les paliers de raret\xE9 des ressources sont des syst\xE8mes distincts."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299036
+    m_Localized: "Le palier d'une cat\xE9gorie est le plus bas parmi les cartes de ses ressources d\xE9bloqu\xE9es. Une carte non poss\xE9d\xE9e compte comme palier z\xE9ro.\n\nLes bonus de carte de ressource et de cat\xE9gorie s'additionnent, jusqu'\xE0 70\_%. Ils s'appliquent \xE0 la r\xE9colte, au butin ennemi et aux cultures en ville. Ils ne s'appliquent pas aux r\xE9compenses, graines, remboursements ou conversions.\n\nCompl\xE8te toutes les collections de ressources et de buffs disponibles pour d\xE9bloquer les B\xE9n\xE9dictions \xE9ternelles."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299037
+    m_Localized: "\xC9chos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299038
+    m_Localized: "Les \xC9chos sont des copies temporaires de ton h\xE9ros qui r\xE9coltent des ressources ou combattent des ennemis.\n\nLes royaumes d'Orin sont reli\xE9s. Des vagues d'\xE9nergie temporelle permettent aux \xC9chos de ton pass\xE9 de les traverser pour t'aider. En aidant les habitants, tu apprends \xE0 invoquer toi-m\xEAme des \xC9chos.\n\nLes \xC9chos d\xE9bloqu\xE9s par les paliers d'une comp\xE9tence recherchent les t\xE2ches de cette comp\xE9tence. Consulte <link=\"help:skills\"><u><color=#EFB889>Accueil \u2192 Comp\xE9tences</color></u></link> pour les paliers, ou le <link=\"help:buffs\"><u><color=#EFB889>buff d'invocation</color></u></link> pour ses effets."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299039
+    m_Localized: "Un \xC9cho capable de r\xE9colter et de combattre privil\xE9gie les t\xE2ches, puis combat lorsqu'il est engag\xE9."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299040
+    m_Localized: Paliers de ressources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299041
+    m_Localized: "La r\xE9colte peut augmenter le palier de raret\xE9 d'une ressource, ce qui accro\xEEt d\xE9finitivement la quantit\xE9 obtenue.\n\nLes cultures en ville b\xE9n\xE9ficient du bonus de palier actuel, mais ne peuvent pas augmenter ce palier.\n\nLes sachets de graines ne gagnent ni paliers ni bonus de raret\xE9.\n\nLes paliers de ressources, la raret\xE9 d'\xE9quipement et les niveaux de cartes du <link=\"help:cauldron\"><u><color=#EFB889>Chaudron</color></u></link> sont des syst\xE8mes distincts."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580255232299042
+    m_Localized: "Les ressources commencent au palier 1. Chaque chance d'am\xE9lioration s'applique lorsque tu r\xE9coltes une ressource admissible au palier pr\xE9c\xE9dent."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164580385641598976
+    m_Localized: "D\xE9tails"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687286226944
+    m_Localized: "Biblioth\xE8que"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687336558592
+    m_Localized: Vue d'ensemble
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687336558593
+    m_Localized: "R\xE9f\xE9rence"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687336558594
+    m_Localized: Exploration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687336558595
+    m_Localized: "\xC9quipement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687336558596
+    m_Localized: Soutien
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687344947200
+    m_Localized: Terres agricoles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335808
+    m_Localized: Agriculture
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335809
+    m_Localized: "P\xEAche"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335810
+    m_Localized: Minage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335811
+    m_Localized: "B\xFBcheronnage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335812
+    m_Localized: "Qu\xEAte pr\xEAte \xE0 rendre"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335813
+    m_Localized: Arme
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335814
+    m_Localized: Casque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335815
+    m_Localized: Armure
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687353335816
+    m_Localized: Bottes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530112
+    m_Localized: "D\xE9g\xE2ts"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530113
+    m_Localized: "D\xE9fense"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530114
+    m_Localized: "Sant\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530115
+    m_Localized: Statistique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530116
+    m_Localized: Effet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530117
+    m_Localized: "D\xE9g\xE2ts"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530118
+    m_Localized: "D\xE9g\xE2ts inflig\xE9s par coup"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530120
+    m_Localized: Vitesse d'attaque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530121
+    m_Localized: "Fr\xE9quence des attaques"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530123
+    m_Localized: Chance de critique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530124
+    m_Localized: "Probabilit\xE9 d'un coup critique"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530126
+    m_Localized: "D\xE9g\xE2ts critiques"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530127
+    m_Localized: "Multiplicateur des d\xE9g\xE2ts critiques"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530129
+    m_Localized: "Sant\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530130
+    m_Localized: "D\xE9g\xE2ts que ton personnage peut supporter"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530132
+    m_Localized: "D\xE9fense"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530133
+    m_Localized: "R\xE9duit les d\xE9g\xE2ts subis"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530135
+    m_Localized: "R\xE9g\xE9n\xE9ration"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530136
+    m_Localized: "Restaure la sant\xE9 au fil du temps"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530138
+    m_Localized: "D\xE9placement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530139
+    m_Localized: "Vitesse de d\xE9placement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530141
+    m_Localized: Carl
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530142
+    m_Localized: Carte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687357530143
+    m_Localized: Progression de la limite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918720
+    m_Localized: Terres agricoles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918721
+    m_Localized: Aucune hausse due au fauchage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918723
+    m_Localized: "Rivi\xE8re"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918724
+    m_Localized: "+1\_% si fauch\xE9 \xE0 la limite"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918726
+    m_Localized: Bois
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918727
+    m_Localized: "+1\_% si fauch\xE9 \xE0 la limite"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918729
+    m_Localized: Mines
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918730
+    m_Localized: "+1\_% si fauch\xE9 \xE0 la limite"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918732
+    m_Localized: "Hant\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918733
+    m_Localized: "Niveau ennemi selon les \xE9liminations ; aucun plafond"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918735
+    m_Localized: Lingot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918736
+    m_Localized: Noyau
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918737
+    m_Localized: "\xC9p\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918738
+    m_Localized: Emplacement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918739
+    m_Localized: Statistique garantie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918740
+    m_Localized: Arme
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918741
+    m_Localized: "D\xE9g\xE2ts"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918743
+    m_Localized: Casque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918744
+    m_Localized: "Sant\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918746
+    m_Localized: Armure
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918747
+    m_Localized: "D\xE9fense"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918749
+    m_Localized: Bottes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918750
+    m_Localized: "D\xE9placement (bottes uniquement)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918752
+    m_Localized: Doubleur de ressources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687365918753
+    m_Localized: "Vitesse des t\xE2ches"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113024
+    m_Localized: Chaudron d'Eva
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113025
+    m_Localized: Palier de carte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113026
+    m_Localized: Exemplaires requis
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113027
+    m_Localized: "Rendement de ressource / cat\xE9gorie"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113028
+    m_Localized: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113029
+    m_Localized: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113030
+    m_Localized: "1\_% / 2\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113031
+    m_Localized: 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113032
+    m_Localized: 25
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687370113033
+    m_Localized: "2\_% / 5\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501632
+    m_Localized: 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501633
+    m_Localized: 75
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501634
+    m_Localized: "3\_% / 10\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501635
+    m_Localized: 4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501636
+    m_Localized: 200
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501637
+    m_Localized: "5\_% / 15\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501638
+    m_Localized: 5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501639
+    m_Localized: 750
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501640
+    m_Localized: "7\_% / 20\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501641
+    m_Localized: 6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501642
+    m_Localized: "1\u202F500"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501643
+    m_Localized: "10\_% / 30\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501644
+    m_Localized: 7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501645
+    m_Localized: "3\u202F500"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501646
+    m_Localized: "15\_% / 40\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501647
+    m_Localized: 8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501648
+    m_Localized: "10\u202F000"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501649
+    m_Localized: "20\_% / 50\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501650
+    m_Localized: "\xC9cho de t\xE2ches"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501651
+    m_Localized: "\xC9cho de combat"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501652
+    m_Localized: "R\xF4le"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501653
+    m_Localized: Comportement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501654
+    m_Localized: "\xC9cho de t\xE2ches"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501655
+    m_Localized: "R\xE9colte des ressources ; n'attaque pas et n'attire pas les ennemis"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501657
+    m_Localized: "\xC9cho de combat"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687378501658
+    m_Localized: Recherche et combat les ennemis
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695936
+    m_Localized: Palier de ressource
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695937
+    m_Localized: Bonus de rendement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695938
+    m_Localized: "Chance d'am\xE9lioration"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695939
+    m_Localized: Palier 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695940
+    m_Localized: "0\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695941
+    m_Localized: Palier initial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695942
+    m_Localized: Palier 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695943
+    m_Localized: "10\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695944
+    m_Localized: "1 sur 1\u202F000"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695945
+    m_Localized: Palier 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695946
+    m_Localized: "20\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695947
+    m_Localized: "1 sur 5\u202F000"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695948
+    m_Localized: Palier 4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695949
+    m_Localized: "30\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695950
+    m_Localized: "1 sur 10\u202F000"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695951
+    m_Localized: Palier 5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695952
+    m_Localized: "50\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695953
+    m_Localized: "1 sur 50\u202F000"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695954
+    m_Localized: Palier 6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695955
+    m_Localized: "75\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695956
+    m_Localized: "1 sur 100\u202F000"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695957
+    m_Localized: Palier 7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695958
+    m_Localized: "100\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695959
+    m_Localized: "1 sur 250\u202F000"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695960
+    m_Localized: Palier 8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695961
+    m_Localized: "150\_%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164584687382695962
+    m_Localized: "1 sur 1\u202F000\u202F000"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427254829056
+    m_Localized: "<b>Terres agricoles</b>\nR\xE9colte des cultures ici. Les t\xE2ches d'agriculture n'apparaissent pas sur les autres cartes. La limite de distance de Carl n'augmente pas quand il te fauche dans les Terres agricoles."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427305160704
+    m_Localized: "<b>Agriculture</b>\nR\xE9colte les cultures des Terres agricoles pour obtenir des r\xE9coltes et de l'XP d'Agriculture. Cultiver tes propres plantes dans les <link=\"help:fields\"><u><color=#EFB889>Champs</color></u></link> est un syst\xE8me distinct. Consulte <link=\"help:skills/Farming\"><u><color=#EFB889>Accueil \u2192 Comp\xE9tences \u2192 Agriculture</color></u></link> pour les bonus et d\xE9blocages."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427305160705
+    m_Localized: "<b>P\xEAche</b>\nGill t'offre ta premi\xE8re canne. Les t\xE2ches de p\xEAche donnent des poissons et de l'XP de P\xEAche.\n\nConsulte <link=\"help:statistics/general\"><u><color=#EFB889>Statistiques \u2192 G\xE9n\xE9ral</color></u></link> pour les ressources d\xE9couvertes sur chaque carte, ou <link=\"help:skills/Fishing\"><u><color=#EFB889>Accueil \u2192 Comp\xE9tences \u2192 P\xEAche</color></u></link> pour les bonus et d\xE9blocages."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427305160706
+    m_Localized: "<b>Minage</b>\nExtrais du minerai pour gagner de l'XP de Minage. Fonds-le en lingots \xE0 la <link=\"help:forge\"><u><color=#EFB889>Forge</color></u></link>, puis utilise-les pour fabriquer de l'\xE9quipement. Consulte <link=\"help:skills/Mining\"><u><color=#EFB889>Accueil \u2192 Comp\xE9tences \u2192 Minage</color></u></link> pour les niveaux de d\xE9blocage des minerais."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427305160707
+    m_Localized: "<b>B\xFBcheronnage</b>\nCoupe du bois pour gagner de l'XP de B\xFBcheronnage. Les qu\xEAtes de Barkley te m\xE8nent dans les Bois.\n\nConsulte <link=\"help:skills/Woodcutting\"><u><color=#EFB889>Accueil \u2192 Comp\xE9tences \u2192 B\xFBcheronnage</color></u></link> pour les d\xE9blocages, ou <link=\"help:statistics/tasks\"><u><color=#EFB889>Statistiques \u2192 T\xE2ches</color></u></link> pour augmenter la fr\xE9quence des t\xE2ches."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427305160708
+    m_Localized: "<b>Pr\xEAte \xE0 rendre</b>\nL'\xE9toile indique une qu\xEAte dont les conditions sont remplies. Retourne en ville et s\xE9lectionne Rendre pour r\xE9cup\xE9rer sa r\xE9compense. Remettre des ressources consomme les objets indiqu\xE9s."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355008
+    m_Localized: "<b>Arme</b>\nChaque arme fabriqu\xE9e poss\xE8de une statistique de d\xE9g\xE2ts. Compare ses autres statistiques avant de remplacer ton arme actuelle."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355009
+    m_Localized: "<b>Casque</b>\nChaque casque fabriqu\xE9 poss\xE8de une statistique de sant\xE9. Ses autres statistiques peuvent am\xE9liorer l'attaque, la d\xE9fense ou la r\xE9cup\xE9ration."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355010
+    m_Localized: "<b>Plastron</b>\nChaque plastron fabriqu\xE9 poss\xE8de une statistique de d\xE9fense. La d\xE9fense r\xE9duit les d\xE9g\xE2ts subis, avec des rendements d\xE9croissants."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355011
+    m_Localized: "<b>Bottes</b>\nChaque paire de bottes fabriqu\xE9e poss\xE8de une statistique de d\xE9placement, qui augmente la vitesse de voyage. Seules les bottes peuvent obtenir cette statistique."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355012
+    m_Localized: "<b>D\xE9g\xE2ts</b>\nD\xE9g\xE2ts par coup, avant la d\xE9fense ennemie et les autres modificateurs. La vitesse d'attaque d\xE9termine la fr\xE9quence des coups. La chance de critique d\xE9termine la fr\xE9quence des coups critiques ; les d\xE9g\xE2ts critiques d\xE9terminent leur puissance.\n\nPendant une aventure, s\xE9lectionne <link=\"help:hero-stats\"><u><color=#EFB889>Stats</color></u></link> \xE0 c\xF4t\xE9 de ta barre de sant\xE9 pour voir les valeurs actuelles."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355013
+    m_Localized: "<b>D\xE9fense</b>\nR\xE9duit les d\xE9g\xE2ts subis. Avec {0:0.##} de d\xE9fense, tu subis la moiti\xE9 des d\xE9g\xE2ts ; avec {1:0.##}, un quart. La d\xE9fense n'annule jamais totalement les d\xE9g\xE2ts. Consulte la <link=\"help:reference\"><u><color=#EFB889>R\xE9f\xE9rence</color></u></link> pour la formule."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355014
+    m_Localized: "<b>Sant\xE9</b>\nTon h\xE9ros meurt lorsque sa sant\xE9 atteint z\xE9ro. L'\xE9quipement peut augmenter la sant\xE9 maximale, et la r\xE9g\xE9n\xE9ration restaure la sant\xE9 au fil du temps.\n\nPendant une aventure, s\xE9lectionne <link=\"help:hero-stats\"><u><color=#EFB889>Stats</color></u></link> \xE0 c\xF4t\xE9 de ta barre de sant\xE9 pour voir les valeurs actuelles."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355015
+    m_Localized: "<b>Carl</b>\nCarl met fin \xE0 ton aventure \xE0 la limite de distance de la carte. Tu conserves les ressources r\xE9colt\xE9es et ta progression de comp\xE9tences.\n\nLa Rivi\xE8re, les Bois et les Mines gagnent 1\_% de distance lorsque Carl te fauche \xE0 la limite. Les Terres agricoles ne gagnent rien. Hant\xE9 progresse avec les \xE9liminations et n'a pas de limite de fauchage."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355016
+    m_Localized: "<b>Lingots</b>\nFonds les mat\xE9riaux indiqu\xE9s en lingots. Le noyau choisi d\xE9termine les lingots n\xE9cessaires \xE0 une fabrication et leur quantit\xE9. Fondre produit des mat\xE9riaux ; Fabriquer produit de l'\xE9quipement."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355017
+    m_Localized: "<b>Noyaux</b>\nChaque fabrication consomme un noyau. Le noyau choisi d\xE9termine les chances de raret\xE9 et le co\xFBt en mat\xE9riaux. Les paliers sup\xE9rieurs de noyaux se d\xE9bloquent avec les niveaux de Combat. Utilise les commandes de conversion de la <link=\"help:forge\"><u><color=#EFB889>Forge</color></u></link> pour am\xE9liorer les noyaux."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355018
+    m_Localized: "<b>\xC9p\xE9e</b>\nChoisis Arme, puis Fabriquer. Chaque arme poss\xE8de une statistique de d\xE9g\xE2ts. Compare le r\xE9sultat, puis s\xE9lectionne \xC9quiper pour remplacer ton arme actuelle.\n\nFabriquer \xE0 nouveau ou changer d'emplacement recycle le r\xE9sultat non \xE9quip\xE9."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355019
+    m_Localized: "S\xE9lectionne un buff ci-dessus pour voir ses effets, sa dur\xE9e et son temps de recharge actuels ci-dessous. Termine la qu\xEAte requise d'un emplacement pour d\xE9bloquer son lancement automatique."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355020
+    m_Localized: "S\xE9lectionne un buff ci-dessus pour voir ses effets, sa dur\xE9e et son temps de recharge actuels ci-dessous. Termine la qu\xEAte requise d'un emplacement pour d\xE9bloquer son lancement automatique."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355021
+    m_Localized: "<b><link=\"help:cauldron\"><u><color=#EFB889>Chaudron</color></u></link></b>\nChoisis la nourriture et la quantit\xE9 \xE0 m\xE9langer en rago\xFBt. Go\xFBte le rago\xFBt pour obtenir des cartes selon les chances de r\xE9compense affich\xE9es. Les cartes de ressources augmentent les r\xE9coltes ; les cartes de buffs am\xE9liorent les buffs.\n\nConsulte la <link=\"help:reference\"><u><color=#EFB889>R\xE9f\xE9rence</color></u></link> pour les seuils de cartes de ressources et de cat\xE9gories."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355022
+    m_Localized: "<b>\xC9cho de t\xE2ches</b>\nR\xE9colte des ressources sans attaquer ni attirer les ennemis. Les \xC9chos d\xE9bloqu\xE9s par les paliers d'une comp\xE9tence recherchent les t\xE2ches de cette comp\xE9tence. Consulte <link=\"help:skills\"><u><color=#EFB889>le palier</color></u></link> ou <link=\"help:buffs\"><u><color=#EFB889>le buff d'invocation</color></u></link> pour conna\xEEtre sa dur\xE9e et ses capacit\xE9s.\n\nLes effets, la dur\xE9e et le temps de recharge de l'invocation actuelle sont affich\xE9s ci-dessous."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164588427309355023
+    m_Localized: "<b>\xC9cho de combat</b>\nRecherche les ennemis et les combat. Les \xC9chos d\xE9di\xE9s au combat ne r\xE9coltent pas de ressources. Un \xC9cho capable de r\xE9colter et de combattre privil\xE9gie les t\xE2ches, puis combat lorsqu'il est engag\xE9.\n\nLes effets, la dur\xE9e et le temps de recharge de l'invocation actuelle sont affich\xE9s ci-dessous."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164590655340417024
+    m_Localized: "Notes de mise \xE0 jour"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164590655378165760
+    m_Localized: "<b>Modifications en cours de d\xE9veloppement</b>\n\n<b>D\xE9but du jeu et progression</b>\n\u2022 Refonte des premi\xE8res qu\xEAtes et des pr\xE9sentations des personnages.\n\u2022 Gill guide les joueurs vers la Rivi\xE8re ; Barkley les m\xE8ne vers les Bois.\n\u2022 Gill offre des Vieilles bottes. Ivan fournit des mat\xE9riaux et apprend aux joueurs \xE0 forger et \xE9quiper leur premi\xE8re \xE9p\xE9e.\n\u2022 Les menus et didacticiels apparaissent lorsque leurs syst\xE8mes deviennent utiles.\n\u2022 Les qu\xEAtes ne peuvent \xEAtre rendues qu'en ville.\n\n<b>Interface</b>\n\u2022 Refonte du R\xE9sum\xE9 de l\u2019aventure et ajout d'un panneau de statistiques compact pendant l'aventure.\n\u2022 L'Inventaire affiche d\xE9sormais les objets \xE9quip\xE9s et les bonus d'\xE9quipement.\n\u2022 Ajout du d\xE9filement par glissement dans toute l'interface.\n\u2022 Refonte de la Biblioth\xE8que avec navigation par sujet, tableaux de r\xE9f\xE9rence et explications d'ic\xF4nes s\xE9lectionnables.\n\n<b>Jeu et correctifs</b>\n\u2022 R\xE9duction de la densit\xE9 des t\xE2ches lors de la premi\xE8re aventure dans les Terres agricoles.\n\u2022 Les t\xE2ches d'agriculture apparaissent uniquement dans les Terres agricoles.\n\u2022 Les paliers de noyaux et de cristaux se d\xE9bloquent avec les niveaux de Combat.\n\u2022 Correction des superpositions de barres de sant\xE9 ennemies et de probl\xE8mes d'animation de p\xEAche.\n\u2022 Suppression des classements.\n\nS\xE9lectionne <link=\"help:reference\"><u><color=#EFB889>R\xE9f\xE9rence</color></u></link> pour les notes de mise \xE0 jour pr\xE9c\xE9dentes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164590655378165761
+    m_Localized: "<b>Notes de mise \xE0 jour pr\xE9c\xE9dentes</b>\n\n\u2022 Ajout de Pour la confiture ! et Les voyages de Gilliver.\n\u2022 Am\xE9lioration du message d'introduction.\n\u2022 Correction des alertes de niveau affichant des valeurs trop faibles.\n\u2022 Suppression du bloc Qualit\xE9 \xE9quip\xE9e de la Forge.\n\u2022 Les qu\xEAtes \xE9pingl\xE9es indiquent Pr\xEAte \xE0 rendre plut\xF4t que Termin\xE9e.\n\u2022 Ajout d'un \xE9cran de chargement lors des changements de carte.\n\u2022 Ajout du bouton Tout m\xE9langer au Chaudron.\n\u2022 Mise \xE0 jour du syst\xE8me de recherche de chemin."
     m_Metadata:
       m_Items: []
   references:

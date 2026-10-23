@@ -1,3 +1,4 @@
+using Blindsided.Utilities;
 using References.UI;
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Enemies;
@@ -170,8 +171,8 @@ namespace TimelessEchoes.UI
                     ? $"{hpTag} {Mathf.FloorToInt(heroHealth.CurrentHealth)} / {Mathf.FloorToInt(heroHealth.MaxHealth)}"
                     : string.Empty;
                 uiReferences.leftText.text =
-                    $"{defTag} {reductionPercent:0.#}%\n" +
-                    $"{regenTag} {regen:0.###} /s\n" +
+                    LocaleNumbers.Format($"{defTag} {reductionPercent:0.#}{LocaleNumbers.PercentSuffix}\n") +
+                    LocaleNumbers.Format($"{regenTag} {regen:0.###} /s\n") +
                     hpLine;
             }
 
@@ -181,11 +182,11 @@ namespace TimelessEchoes.UI
                 var atkTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.AttackRate);
                 var critTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.CritChance);
 
-                string dmgLine = $"{dmgTag} {totalDamage:0.##}";
+                string dmgLine = LocaleNumbers.Format($"{dmgTag} {totalDamage:0.##}");
                 uiReferences.middleText.text =
                     dmgLine + "\n" +
-                    $"{atkTag} {attack:0.###} /s\n" +
-                    $"{critTag} {critChance:0.#}%";
+                    LocaleNumbers.Format($"{atkTag} {attack:0.###} /s\n") +
+                    LocaleNumbers.Format($"{critTag} {critChance:0.#}{LocaleNumbers.PercentSuffix}");
             }
 
             if (uiReferences.rightText != null)
@@ -195,7 +196,7 @@ namespace TimelessEchoes.UI
                 var moveTag = StatIconLookup.GetIconTag(TimelessEchoes.Gear.HeroStatMapping.MoveSpeed);
                 const float baseSpeed = 3f;
                 float percent = (move / baseSpeed) * 100f;
-                uiReferences.rightText.text = $"{critDamageTag} {critDamage:0.#}%\n{moveTag} {percent:0.#}%";
+                uiReferences.rightText.text = LocaleNumbers.Format($"{critDamageTag} {critDamage:0.#}{LocaleNumbers.PercentSuffix}\n{moveTag} {percent:0.#}{LocaleNumbers.PercentSuffix}");
             }
         }
 

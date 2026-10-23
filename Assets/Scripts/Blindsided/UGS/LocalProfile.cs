@@ -10,6 +10,7 @@ namespace Blindsided.UGS
     {
         public static async Task<string> GetMyDisplayNameAsync()
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipOnlineServices) return null;
             // Ensure UGS is initialized and the player is signed in
             await UgsInitializer.EnsureInitializedAsync();
 

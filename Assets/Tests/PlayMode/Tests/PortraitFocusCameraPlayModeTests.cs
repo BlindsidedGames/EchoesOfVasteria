@@ -12,6 +12,50 @@ namespace Tests.PlayMode
     public sealed partial class FieldsProductionPlayModeTests
     {
         [UnityTest]
+        public IEnumerator TabletFillsDisplayAndRetainsOffscreenEchoTasksAcrossRotations()
+        {
+            var owner = new GameObject("Tablet activity area");
+            var inactive = new GameObject("Tablet echo"); inactive.SetActive(false);
+            try
+            {
+                var manager = owner.AddComponent<GameManager>(); manager.enabled = false;
+                typeof(GameManager).GetProperty("CurrentMap").SetValue(manager, owner);
+                typeof(GameManager).GetProperty("IsInTown").SetValue(manager, false);
+                var output = new GameObject("Tablet output", typeof(Camera)); output.transform.SetParent(owner.transform); output.tag = "MainCamera";
+                var camera = output.GetComponent<Camera>(); camera.orthographic = true; camera.orthographicSize = 9;
+                camera.transform.position = new Vector3(30, 0, -10);
+                output.AddComponent<AspectRatioBox>().targetCamera = camera;
+                var rig = new GameObject("Tablet camera rig", typeof(CinemachineCamera)); rig.transform.SetParent(owner.transform);
+                var controller = owner.AddComponent<TimelessEchoes.Tasks.TaskController>(); controller.enabled = false;
+                typeof(TimelessEchoes.Tasks.TaskController).GetField("mapCamera", Private).SetValue(controller, rig.GetComponent<CinemachineCamera>());
+                var echo = inactive.AddComponent<TimelessEchoes.Hero.EchoController>();
+                var target = new GameObject("Offscreen tablet task"); target.transform.SetParent(owner.transform);
+                controller.tasks.Add(new FocusTask { Target = target.transform });
+                foreach (var size in new[] { new Vector2Int(1920,1080), new Vector2Int(2752,2064), new Vector2Int(1206,2622), new Vector2Int(2752,2064), new Vector2Int(1280,800), new Vector2Int(1024,768), new Vector2Int(1920,1080) })
+                {
+                    UnityEditor.PlayModeWindow.SetCustomRenderingResolution((uint)size.x,(uint)size.y,"Tablet activity area");
+                    ToolkitResponsiveLayout.SetFocusView(size.y > size.x);
+                    for (var frame=0; frame<60 && (UnityEngine.Device.Screen.width!=size.x || UnityEngine.Device.Screen.height!=size.y); frame++)
+                        yield return new WaitForSecondsRealtime(.05f);
+                    Assert.AreEqual(size.x,UnityEngine.Device.Screen.width,"The requested resize must actually reach the drawable.");
+                    Assert.AreEqual(size.y,UnityEngine.Device.Screen.height);
+                    yield return new WaitForSecondsRealtime(.15f);
+                    if (size.x > size.y)
+                        Assert.That(camera.rect, Is.EqualTo(new Rect(0,0,1,1)), "Landscape must fill the display without letterboxing.");
+                    Assert.True(RunActivityArea.TryGetBounds(camera,out var min,out var max));
+                    Assert.That(max.x-min.x,Is.EqualTo(32f).Within(.01f),"Echo working width must stay at 16:9 across crops.");
+                    target.transform.position = new Vector3(45,0,0);
+                    if ((long)size.x * 9 < (long)size.y * 16)
+                        Assert.Greater(camera.WorldToViewportPoint(target.transform.position).x,1,$"Exercise a task outside the visible crop at {size}; camera aspect={camera.aspect}, pixels={camera.pixelRect}.");
+                    Assert.True(controller.HasVisibleTasksForHero(echo),"Echo must still be allowed to work at the far edge of its landscape area.");
+                    target.transform.position = new Vector3(47,0,0);
+                    Assert.False(controller.HasVisibleTasksForHero(echo),"Do not expand Echo work beyond the existing 16:9 area.");
+                }
+            }
+            finally { ToolkitResponsiveLayout.SetFocusView(false); Object.DestroyImmediate(inactive); Object.DestroyImmediate(owner); }
+        }
+
+        [UnityTest]
         public IEnumerator PortraitFocusPreservesComposerWorldDeadzoneAndAuthoredSettings()
         {
             var owner = new GameObject("Protected focus camera tracking");
@@ -83,10 +127,10 @@ namespace Tests.PlayMode
                 composer.Lookahead.Time = 1f;
                 composer.Lookahead.Smoothing = 30;
                 CinemachineCore.UniformDeltaTimeOverride = 1f / 60f;
-                foreach (var mode in new[] { 0, 1, 2 })
+                foreach (var mode in new[] { 0, 1, 2, 3 })
                 {
-                    var portrait = mode != 2;
-                    if (!portrait) UnityEditor.PlayModeWindow.SetCustomRenderingResolution(2556, 1179, "Landscape camera tracking");
+                    var portrait = mode < 2;
+                    if (!portrait) UnityEditor.PlayModeWindow.SetCustomRenderingResolution(mode == 3 ? 2752u : 2556u, mode == 3 ? 2064u : 1179u, "Landscape camera tracking");
                     ToolkitResponsiveLayout.SetFocusView(mode == 1);
                     for (var frame = 0; frame < 4; frame++) { yield return null; brain.ManualUpdate(); }
                     // Framing must never override the generated world's left edge.

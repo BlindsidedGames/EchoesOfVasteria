@@ -1249,7 +1249,7 @@ namespace TimelessEchoes.Gear.UI
                     // Check for stop conditions (always check, may stop early)
                     bool isUpgrade = UpgradeEvaluator.IsPotentialUpgrade(crafting, lastCrafted, eq);
                     bool isVastium = StaticReferences.StopAutocraftOnVastium &&
-                                     lastCrafted?.rarity?.GetName() == "Vastium";
+                                     lastCrafted?.rarity?.name == "Vastium";
                     bool isStopping = isUpgrade || isVastium;
 
                     // Throttled UI updates during autocraft

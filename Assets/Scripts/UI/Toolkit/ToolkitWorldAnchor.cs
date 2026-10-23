@@ -62,11 +62,11 @@ namespace TimelessEchoes.UI.Toolkit
                 var maximum = Mathf.FloorToInt(health.MaxHealth);
                 // Visible anchors refresh every frame. Only format when the displayed integers
                 // change, including after pooled enemies are healed or initialized again.
-                var negativeSign = CultureInfo.CurrentCulture.NumberFormat.NegativeSign;
+                var negativeSign = Blindsided.Utilities.LocaleNumbers.Code;
                 if (healthText == null || displayedHealth != current || displayedMaxHealth != maximum || healthNegativeSign != negativeSign)
                 {
                     displayedHealth = current; displayedMaxHealth = maximum; healthNegativeSign = negativeSign;
-                    healthText = $"{current} / {maximum}";
+                    healthText = $"{Blindsided.Utilities.LocaleNumbers.Integer(current)} / {Blindsided.Utilities.LocaleNumbers.Integer(maximum)}";
                 }
                 return healthText;
             }

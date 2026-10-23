@@ -1,3 +1,4 @@
+using Blindsided.Utilities;
 using System.Collections.Generic;
 using TimelessEchoes.Hero;
 using TimelessEchoes.Upgrades;
@@ -43,15 +44,15 @@ namespace TimelessEchoes.UI.Toolkit
             var snapshot = HeroStatSystem.GetSnapshot();
             var maximum = health ? health.MaxHealth : snapshot.maxHealth;
             var current = health ? health.CurrentHealth : maximum;
-            heroHealthText.text = $"{Mathf.FloorToInt(current)} / {Mathf.FloorToInt(maximum)}";
+            heroHealthText.text = $"{LocaleNumbers.Integer(Mathf.FloorToInt(current))} / {LocaleNumbers.Integer(Mathf.FloorToInt(maximum))}";
             bar.style.width = Length.Percent(maximum > 0 ? Mathf.Clamp01(current / maximum) * 100 : 0);
-            HeroValue(StatIconLookup.StatKey.Damage, (hero ? hero.Damage : snapshot.damage).ToString("0.##"));
-            HeroValue(StatIconLookup.StatKey.AttackRate, snapshot.attacksPerSecond.ToString("0.##") + "/s");
-            HeroValue(StatIconLookup.StatKey.CritChance, snapshot.critChancePercent.ToString("0.#") + "%");
-            HeroValue(StatIconLookup.StatKey.CritDamage, snapshot.critDamagePercent.ToString("0.#") + "%");
-            HeroValue(StatIconLookup.StatKey.Defense, ((1 - Mathf.Clamp01(Combat.ApplyDefense(1, snapshot.defense))) * 100).ToString("0.#") + "%");
-            HeroValue(StatIconLookup.StatKey.Regen, snapshot.healthRegenPerSecond.ToString("0.##") + "/s");
-            HeroValue(StatIconLookup.StatKey.MoveSpeed, (snapshot.movementSpeed / 3 * 100).ToString("0.#") + "%");
+            HeroValue(StatIconLookup.StatKey.Damage, (hero ? hero.Damage : snapshot.damage).ToString("0.##", LocaleNumbers.Culture));
+            HeroValue(StatIconLookup.StatKey.AttackRate, snapshot.attacksPerSecond.ToString("0.##", LocaleNumbers.Culture) + "/s");
+            HeroValue(StatIconLookup.StatKey.CritChance, snapshot.critChancePercent.ToString("0.#", LocaleNumbers.Culture) + LocaleNumbers.PercentSuffix);
+            HeroValue(StatIconLookup.StatKey.CritDamage, snapshot.critDamagePercent.ToString("0.#", LocaleNumbers.Culture) + LocaleNumbers.PercentSuffix);
+            HeroValue(StatIconLookup.StatKey.Defense, ((1 - Mathf.Clamp01(Combat.ApplyDefense(1, snapshot.defense))) * 100).ToString("0.#", LocaleNumbers.Culture) + LocaleNumbers.PercentSuffix);
+            HeroValue(StatIconLookup.StatKey.Regen, snapshot.healthRegenPerSecond.ToString("0.##", LocaleNumbers.Culture) + "/s");
+            HeroValue(StatIconLookup.StatKey.MoveSpeed, (snapshot.movementSpeed / 3 * 100).ToString("0.#", LocaleNumbers.Culture) + LocaleNumbers.PercentSuffix);
         }
 
         private void HeroValue(StatIconLookup.StatKey key, string text) => heroStatValues[key].text = text;

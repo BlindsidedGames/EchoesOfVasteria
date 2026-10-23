@@ -1,3 +1,4 @@
+using Blindsided.Utilities;
 using TimelessEchoes.UI.Toolkit;
 using System;
 using System.Globalization;
@@ -23,7 +24,7 @@ namespace TimelessEchoes.Skills
         public override string GetDescription(float magnitude, string skillName, bool isActive)
         {
             var percent = Mathf.Max(0f, magnitude) * 100f;
-            var formattedPercent = percent.ToString(percentageFormat, CultureInfo.InvariantCulture);
+            var formattedPercent = percent.ToString(percentageFormat, LocaleNumbers.Culture);
             var resolvedSkillName = string.IsNullOrWhiteSpace(skillName) ? ToolkitLocalization.Text("milestone.skill-fallback", "this skill") : skillName;
             return ToolkitLocalization.Text("milestone-effect." + name + ".descriptionTemplate", descriptionTemplate, formattedPercent, resolvedSkillName);
         }

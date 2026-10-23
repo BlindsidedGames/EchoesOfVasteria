@@ -13,6 +13,54 @@ namespace Tests.PlayMode
  public sealed partial class FieldsProductionPlayModeTests
  {
   [UnityTest]
+  public IEnumerator IvanReturnHandRendersAboveReturnOnDeathAcrossOrientations()
+  {
+   var owner=new GameObject("Ivan return guidance"); GameObject run=null;
+   try {
+    var manager=owner.AddComponent<TimelessEchoes.GameManager>(); manager.enabled=false;
+    typeof(TimelessEchoes.GameManager).GetProperty("CurrentMap").SetValue(manager,owner);
+    typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(manager,false);
+    Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Add("Ivan1");
+    oracle.saveData.Quests.Remove("Meeting Ivan");
+    run=CreateGuidanceRunView();
+    var ui=run.GetComponent<UIDocument>().rootVisualElement;
+    foreach(var size in new[]{new Vector2Int(1920,1080),new Vector2Int(1206,2622),new Vector2Int(2752,2064),new Vector2Int(1280,800),new Vector2Int(1024,768),new Vector2Int(1920,1080)}) {
+     PlayModeWindow.SetCustomRenderingResolution((uint)size.x,(uint)size.y,"Ivan return guidance");
+     yield return new WaitForSecondsRealtime(.3f);
+     Assert.True(manager.IvanReturnPending);
+     var hand=ui.Q<Image>("ivan-return-pointer"); var town=ui.Q<Button>("run-return"); var death=ui.Q<Button>("run-return-on-death");
+     Assert.AreEqual(DisplayStyle.Flex,hand.resolvedStyle.display);
+     if(size.x>size.y)
+      Assert.That(town.worldBound.yMin,Is.LessThan(20),"Landscape return controls must use the actual screen safe area, not the former letterbox inset.");
+     Assert.That(hand.worldBound.center.x,Is.EqualTo(town.worldBound.center.x).Within(1),"Keep the original hand position below Return To Town.");
+     Assert.Greater(hand.worldBound.yMin,town.worldBound.yMax);
+     Assert.False(hand.worldBound.Overlaps(town.worldBound),$"{size}: the hand obscures its target.");
+     Assert.True(ui.worldBound.Contains(hand.worldBound.min) && ui.worldBound.Contains(hand.worldBound.max),$"{size}: the hand leaves the HUD.");
+     Assert.False(hand.worldBound.Overlaps(ui.Q("run-health-strip").worldBound),$"{size}: the hand obscures health.");
+     Assert.AreEqual(PickingMode.Ignore,hand.pickingMode);
+     var hit=ui.panel.Pick(town.worldBound.center);
+     Assert.True(hit==town || town.Contains(hit),$"{size}: Return To Town must remain clickable.");
+     System.IO.Directory.CreateDirectory("Artifacts/ScreenshotStudio/ivan-guidance");
+     var path=$"Artifacts/ScreenshotStudio/ivan-guidance/hand-{size.x}.png";
+     ScreenCapture.CaptureScreenshot(path); yield return null;
+     if(size.x>size.y) {
+      var visible=new Texture2D(2,2); visible.LoadImage(System.IO.File.ReadAllBytes(path));
+      hand.style.opacity=0; yield return null;
+      var hiddenPath=$"Artifacts/ScreenshotStudio/ivan-guidance/hidden-{size.x}.png";
+      ScreenCapture.CaptureScreenshot(hiddenPath); yield return null;
+      var hidden=new Texture2D(2,2); hidden.LoadImage(System.IO.File.ReadAllBytes(hiddenPath));
+      var overlap=Rect.MinMaxRect(Mathf.Max(hand.worldBound.xMin,death.worldBound.xMin),Mathf.Max(hand.worldBound.yMin,death.worldBound.yMin),Mathf.Min(hand.worldBound.xMax,death.worldBound.xMax),Mathf.Min(hand.worldBound.yMax,death.worldBound.yMax));
+      var changed=0; var scale=ToolkitResponsiveLayout.Scale(size);
+      for(var y=(int)(overlap.yMin/scale);y<(int)(overlap.yMax/scale);y++)
+       for(var x=(int)(overlap.xMin/scale);x<(int)(overlap.xMax/scale);x++)
+        if(Vector4.Distance(visible.GetPixel(x,size.y-1-y),hidden.GetPixel(x,size.y-1-y))>.1f) changed++;
+      Object.DestroyImmediate(visible);Object.DestroyImmediate(hidden);hand.style.opacity=1;
+      Assert.Greater(changed,10,"The hand must render in front of Return On Death, not be concealed by it.");
+     }
+    }
+   } finally {if(run)Object.DestroyImmediate(run);Object.DestroyImmediate(owner);}
+  }
+  [UnityTest]
   public IEnumerator GuidancePointerMeetingReceivesClicksAcrossOrientations()
   {
    var owner=new GameObject("Meeting input check");

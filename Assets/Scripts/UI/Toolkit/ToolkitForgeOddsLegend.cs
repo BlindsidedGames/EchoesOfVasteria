@@ -1,3 +1,4 @@
+using Blindsided.Utilities;
 using System.Collections.Generic;
 using TimelessEchoes.Gear;
 using UnityEngine;
@@ -48,7 +49,7 @@ namespace TimelessEchoes.UI.Toolkit
                 labels.name.text = IsRarityKnown(entry.r) ? entry.r.GetName() : "???";
                 var percent = total > 0 ? ValidWeight(entry.w) / total * 100 : 0;
                 labels.name.parent.EnableInClassList("forge-odds-zero", percent <= 0);
-                labels.value.text = percent > 0 && percent < .001f ? "<0.001%" : percent.ToString("0.###") + "%";
+                labels.value.text = percent > 0 && percent < .001f ? "<" + LocaleNumbers.PercentPoints(.001, "0.###") : percent.ToString("0.###", LocaleNumbers.Culture) + LocaleNumbers.PercentSuffix;
             }
         }
     }

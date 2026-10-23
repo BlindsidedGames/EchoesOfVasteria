@@ -130,166 +130,123 @@ namespace Blindsided.Utilities
             { "{colorHighlight}", ColourHighlight }
         };
 
-        public static string FormatNumber(
-            double x,
-            bool hideDecimal = false,
-            float fontWeight = 400f,
-            bool useMspace = false,
-            float mspaceSize = 0.5f)
+        // Numeric values stay culture-independent; only their final presentation uses LocaleNumbers.
+        public static string FormatNumber(double x, bool hideDecimal = false, float fontWeight = 400f,
+            bool useMspace = false, float mspaceSize = 0.5f)
         {
-            // Prepare mspace tags.
-            var mspaceStart = useMspace ? $"<mspace={mspaceSize}em>" : "";
-            var mspaceEnd = useMspace ? "</mspace>" : "";
-
-            // Handle zero explicitly.
-            if (x == 0)
-            {
-                var zeroStr = hideDecimal ? "0" : "0.00";
-                return $"{mspaceStart}{zeroStr}{mspaceEnd}" +
-                       (Prefix.Length > 0 ? $"<font-weight={fontWeight}>{Prefix[0]}</font-weight>" : "");
-            }
-
-            // Use absolute value for logarithmic calculations.
+            if (!LocaleNumbers.IsFinite(x)) return LocaleNumbers.Format(x);
             var absX = Math.Abs(x);
-
-            // Determine engineering exponent group (each group represents a factor of 10^3).
-            var exponentGroup = Math.Max((int)Math.Floor(Math.Log10(absX) / 3), 0);
-
-            // Compute the mantissa by dividing x by 10^(3 * exponentGroup).
-            var scale = Math.Pow(10, exponentGroup * 3);
-            var mantissa = x / scale;
-
-            // To always show three significant digits, determine how many digits belong to the integer part.
-            var integerDigits = Math.Abs(mantissa) < 1
-                ? 1
-                : (int)Math.Floor(Math.Log10(Math.Abs(mantissa))) + 1;
-            var digitsAfterDecimal = Math.Max(0, 3 - integerDigits);
-
-            // Truncate the mantissa (rather than round) to maintain consistency.
-            var factor = Math.Pow(10, digitsAfterDecimal);
-            mantissa = Math.Truncate(mantissa * factor) / factor;
-
-            // Format the mantissa using fixed-point formatting.
-            var mantissaStr = mantissa.ToString("F" + digitsAfterDecimal);
-
-            // Insert mspace tags only around the decimal point to avoid extra spacing.
-            if (useMspace) mantissaStr = mantissaStr.Replace(".", $"{mspaceEnd}.{mspaceStart}");
-
-            // Depending on the global Notation setting, choose the output format.
-            if (Notation == NumberTypes.Scientific)
+            string number;
+            string suffix = "";
+            if (Notation == NumberTypes.Scientific && absX >= 1000)
+                number = ScientificTruncated(x);
+            else if (Notation == NumberTypes.Engineering && absX >= 1000)
             {
-                // For larger numbers, use standard scientific notation.
-                if (absX > 1000)
-                {
-                    var sciStr = x.ToString("0.00e0")
-                        .Replace(".", $"{mspaceEnd}.{mspaceStart}");
-                    return $"{mspaceStart}{sciStr}{mspaceEnd}";
-                }
-
-                // Otherwise, use the engineering mantissa with SI prefix.
-                return $"{mspaceStart}{mantissaStr}{Prefix[exponentGroup]}{mspaceEnd}";
+                var group = Math.Max(0, (int)Math.Floor(Math.Log10(absX) / 3));
+                var mantissa = x / Math.Pow(10, group * 3);
+                var integerDigits = Math.Abs(mantissa) < 1 ? 1 : (int)Math.Floor(Math.Log10(Math.Abs(mantissa))) + 1;
+            var digits = Math.Max(0, 3 - integerDigits);
+                number = LocaleNumbers.Format(Truncate(mantissa, digits), "F" + digits) + "e" +
+                    (group * 3).ToString(System.Globalization.CultureInfo.InvariantCulture);
             }
-
-            if (Notation == NumberTypes.Engineering)
+            else if (Notation != NumberTypes.Scientific && Notation != NumberTypes.Engineering)
             {
-                if (absX > 1000) return $"{mspaceStart}{mantissaStr}e{exponentGroup * 3}{mspaceEnd}";
-                return $"{mspaceStart}{mantissaStr}{Prefix[exponentGroup]}{mspaceEnd}";
+                if (!LocaleNumbers.CompactParts(x, hideDecimal, out number, out suffix))
+                    number = ScientificTruncated(x);
             }
+            else
+            {
+                var digits = hideDecimal ? 0 : absX < 10 ? 2 : absX < 100 ? 1 : 0;
+                number = LocaleNumbers.Format(Truncate(x, digits), "F" + digits);
+            }
+            var formatted = Monospace(number, useMspace, mspaceSize);
+            return suffix.Length == 0 ? formatted : formatted + "<font-weight=" +
+                fontWeight.ToString(System.Globalization.CultureInfo.InvariantCulture) + ">" + suffix + "</font-weight>";
+        }
 
-            // Default formatting.
-            if (exponentGroup < Prefix.Length)
-                return hideDecimal && absX < 100
-                    ? Math.Floor(x).ToString()
-                    : $"{mspaceStart}{mantissaStr}{mspaceEnd}" +
-                      $"<font-weight={fontWeight}>{Prefix[exponentGroup]}</font-weight>";
-            // Fallback for values beyond available prefixes.
-            var fallback = x.ToString("0.00e0")
-                .Replace(".", $"{mspaceEnd}.{mspaceStart}");
-            return $"{mspaceStart}{fallback}{mspaceEnd}";
+        private static double Truncate(double value, int decimalPlaces)
+        {
+            var factor = Math.Pow(10, decimalPlaces);
+            return Math.Truncate(value * factor) / factor;
+        }
+        private static string ScientificTruncated(double value)
+        {
+            if (value == 0) return LocaleNumbers.Format(0, "F2");
+            var exponent = (int)Math.Floor(Math.Log10(Math.Abs(value)));
+            // Division by 10^exponent can overflow/underflow for subnormal values. The framework's
+            // scientific conversion remains safe across the entire finite double range.
+            var invariant = value.ToString("E16", System.Globalization.CultureInfo.InvariantCulture);
+            var split = invariant.IndexOf('E');
+            var mantissa = double.Parse(invariant.Substring(0, split), System.Globalization.CultureInfo.InvariantCulture);
+            exponent = int.Parse(invariant.Substring(split + 1), System.Globalization.CultureInfo.InvariantCulture);
+            return LocaleNumbers.Format(Truncate(mantissa, 2), "F2") + "e" +
+                exponent.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        }
+        private static string Monospace(string value, bool enabled, float size)
+        {
+            if (!enabled) return value;
+            var start = "<mspace=" + size.ToString(System.Globalization.CultureInfo.InvariantCulture) + "em>";
+            const string end = "</mspace>";
+            var decimalSeparator = LocaleNumbers.Culture.NumberFormat.NumberDecimalSeparator;
+            return start + value.Replace(decimalSeparator, end + decimalSeparator + start) + end;
         }
 
         public static string FormatEnergy(double x, bool type)
         {
-            var sign = Math.Sign(x);
-            var e = Math.Max(0, Math.Log(sign * x) / Math.Log(10));
-            var o = 2 - (int)Math.Floor(e % 3);
-            e = Math.Floor(e / 3);
-            var m = x / Math.Pow(10, e * 3);
-            m = Math.Truncate(m * Math.Pow(10, o)) / Math.Pow(10, o);
-
-            var ms = $"{m}";
-            var d = ms.Length;
-            if (sign == -1) d--;
-
-            if (o == 2 && d == 1)
-                ms = $"{ms}.00";
-            if (o == 2 && d == 3)
-                ms = $"{ms}0";
-            if (o == 1 && d == 2)
-                ms = $"{ms}.0";
-
-            if (e < EnergyPrefixJ.Length) return type ? $"{ms}{EnergyPrefixJ[(int)e]}" : $"{ms}{EnergyPrefixW[(int)e]}";
-
-            return $"{ms}e{(int)e * 3}";
+            if (!LocaleNumbers.IsFinite(x)) return LocaleNumbers.Format(x);
+            if (x == 0) return LocaleNumbers.Format(0, "F2") + (type ? "J" : "W");
+            var group = Math.Max(0, (int)Math.Floor(Math.Log10(Math.Abs(x)) / 3));
+            var prefixes = type ? EnergyPrefixJ : EnergyPrefixW;
+            if (group >= prefixes.Length) return ScientificTruncated(x) + (type ? "J" : "W");
+            var mantissa = x / Math.Pow(10, group * 3);
+            var integerDigits = Math.Abs(mantissa) < 1 ? 1 : (int)Math.Floor(Math.Log10(Math.Abs(mantissa))) + 1;
+            var digits = Math.Max(0, 3 - integerDigits);
+            return LocaleNumbers.Format(Truncate(mantissa, digits), "F" + digits) + prefixes[group];
         }
 
-        public static string FormatUnits(
-            int units,
-            bool mspace = true,
-            float mspaceSize = 0.6f,
-            bool isMs = false)
-        {
-            var usemSpace = mspace ? $"<mspace={mspaceSize}em>" : "";
-            var endMSpace = mspace ? "</mspace>" : "";
-            return $"{usemSpace}{(isMs ? $"{units:D2}" : $"{units}")}{endMSpace}";
-        }
+        public static string FormatUnits(int units, bool mspace = true, float mspaceSize = 0.6f, bool isMs = false)
+            => Monospace(units.ToString(isMs ? "D2" : "0", LocaleNumbers.Culture), mspace, mspaceSize);
 
         public static string FormatTime(double time, bool showDecimal = false,
             bool mspace = true, float mspaceSize = 0.6f, bool shortForm = true,
             bool absolutevalue = true, string colourOverride = "")
         {
-            if (double.IsNaN(time))
+            if (!LocaleNumbers.IsFinite(time)) return $"{ColourRed}{LocaleNumbers.Format(time)}{EndColour}";
+            if (time >= TimeSpan.MaxValue.TotalSeconds || time <= -TimeSpan.MaxValue.TotalSeconds)
+                return $"{ColourRed}∞{EndColour}";
+            var span = TimeSpan.FromSeconds(Math.Abs(time));
+            var builder = new System.Text.StringBuilder();
+            if (!absolutevalue && time < 0) builder.Append('-');
+            void AppendUnit(int value, int unit, bool required = false)
             {
-                Debug.Log("The value is NaN.");
-                return $"{ColourRed}NaN{EndColour}";
+                if (value == 0 && !required) return;
+                if (builder.Length > 0 && builder[builder.Length - 1] != '-') builder.Append(' ');
+                string numeric = LocaleNumbers.Integer(value, false);
+                if (unit == 3 && showDecimal && span.Milliseconds != 0)
+                    numeric += LocaleNumbers.Culture.NumberFormat.NumberDecimalSeparator +
+                        (span.Milliseconds / 10).ToString("D2", LocaleNumbers.Culture);
+                builder.Append(Monospace(numeric, mspace, mspaceSize));
+                builder.Append(colourOverride).Append(LocaleNumbers.TimeUnit(unit, unit == 3 && showDecimal ? value + (span.Milliseconds / 10) / 100.0 : value, shortForm));
+                if (!string.IsNullOrEmpty(colourOverride)) builder.Append(EndColour);
             }
-
-            if (time > TimeSpan.MaxValue.TotalSeconds || time < -TimeSpan.MaxValue.TotalSeconds)
-                return $"{ColourRed}Infinity{EndColour}";
-            var outputTime = mspace ? $"<mspace={mspaceSize}em>" : "";
-            var timespan = TimeSpan.FromSeconds(Math.Abs(time));
-            outputTime += !absolutevalue && time < 0 ? "-" : "";
-            outputTime += timespan.Days == 0
-                ? ""
-                : $"{FormatUnits(timespan.Days, mspace, mspaceSize)}{colourOverride}{(shortForm ? "d" : $" {Plural("Day", timespan.Days)}")}{EndColour} ";
-            outputTime += timespan.Hours == 0
-                ? ""
-                : $"{FormatUnits(timespan.Hours, mspace, mspaceSize)}{colourOverride}{(shortForm ? "h" : $" {Plural("Hour", timespan.Hours)}")}{EndColour} ";
-            outputTime += timespan.Minutes == 0
-                ? ""
-                : $"{FormatUnits(timespan.Minutes, mspace, mspaceSize)}{colourOverride}{(shortForm ? "m" : $" {Plural("Minute", timespan.Minutes)}")}{EndColour} ";
-            var shownDecimal = timespan.Milliseconds == 0 || !showDecimal
-                ? ""
-                : $"{(mspace ? $"</mspace>.<mspace={mspaceSize}em>" : ".")}{FormatUnits(timespan.Milliseconds / 10, mspace, mspaceSize, true)}";
-            outputTime +=
-                $"{FormatUnits(timespan.Seconds, mspace, mspaceSize)}{shownDecimal}{colourOverride}{(shortForm ? "s" : $" {Plural("Second", timespan.Seconds)}")}{EndColour} ";
-            outputTime += mspace ? "</mspace>" : "";
-            return outputTime;
+            AppendUnit(span.Days, 0);
+            AppendUnit(span.Hours, 1);
+            AppendUnit(span.Minutes, 2);
+            AppendUnit(span.Seconds, 3, true);
+            return builder.ToString();
         }
 
         public static string FormatProduction(double production, bool invert = false)
         {
-            if (TimeScale == 0) return $"{ColourRed}N/A{EndColour}";
-            return
-                $"{(invert ? FormatNumber(UseScaledTimeForValues ? production : production / TimeScale) : FormatNumber(UseScaledTimeForValues ? production : production * TimeScale))}";
+            if (TimeScale == 0) return $"{ColourRed}{LocaleNumbers.Unavailable}{EndColour}";
+            return FormatNumber(invert ? (UseScaledTimeForValues ? production : production / TimeScale) :
+                (UseScaledTimeForValues ? production : production * TimeScale));
         }
 
         public static string FormatTimeRemaining(double timeRemaining, bool showDecimal = false, bool shortForm = true,
             bool na = true)
         {
-            if (TimeScale == 0)
-                return
-                    $"{ColourRed}{(na ? $"{ColourRed}N/A{EndColour}" : $"{ColourRed}Infinity{EndColour}")}{EndColour}";
+            if (TimeScale == 0) return $"{ColourRed}{(na ? LocaleNumbers.Unavailable : "∞")}{EndColour}";
             return FormatTime(UseScaledTimeForValues ? timeRemaining : timeRemaining / TimeScale, showDecimal,
                 shortForm: shortForm);
         }
@@ -357,7 +314,7 @@ namespace Blindsided.Utilities
                 exponent
             ));
 
-            // Because we used Floor, n can be negative if the user can’t afford even 1.
+            // Because we used Floor, n can be negative if the user canâ€™t afford even 1.
             // Typically, we clamp it at 0 or return 0 if the value is negative.
             if (n < 0) n = 0;
 

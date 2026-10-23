@@ -49,8 +49,8 @@ namespace TimelessEchoes.UI
         public string FormatText()
         {
             if (killMode)
-                return $"{CalcUtils.FormatNumber(kills, true)} / {CalcUtils.FormatNumber(threshold, true)} | +{CalcUtils.FormatNumber(Mathf.Max(0, level - 1) * levelsPerTier, true)} Enemy levels\n{distance:N0} Distance";
-            return showBase ? $"{distance:N0} / {maximum:N0} ({baseMaximum:N0})" : $"{distance:N0} / {maximum:N0}";
+                return Toolkit.ToolkitLocalization.Text("run.kill-progress", "{0} / {1} | +{2} Enemy levels\n{3:N0} Distance", CalcUtils.FormatNumber(kills, true), CalcUtils.FormatNumber(threshold, true), CalcUtils.FormatNumber(Mathf.Max(0, level - 1) * levelsPerTier, true), distance);
+            return showBase ? LocaleNumbers.Format($"{distance:N0} / {maximum:N0} ({baseMaximum:N0})") : LocaleNumbers.Format($"{distance:N0} / {maximum:N0}");
         }
     }
 }

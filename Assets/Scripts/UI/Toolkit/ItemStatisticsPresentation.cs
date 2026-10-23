@@ -18,7 +18,7 @@ namespace TimelessEchoes.UI.Toolkit
         internal static string Number(double value)
         {
             var formatted = CalcUtils.FormatNumber(value);
-            var separator = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+            var separator = Blindsided.Utilities.LocaleNumbers.Culture.NumberFormat.NumberDecimalSeparator;
             return System.Text.RegularExpressions.Regex.Replace(formatted,
                 @"(\d+)" + System.Text.RegularExpressions.Regex.Escape(separator) + @"(\d+)",
                 match => { var fraction = match.Groups[2].Value.TrimEnd('0'); return match.Groups[1].Value + (fraction.Length > 0 ? separator + fraction : ""); });

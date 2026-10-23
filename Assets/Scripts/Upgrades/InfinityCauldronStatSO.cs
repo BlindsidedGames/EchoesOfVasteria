@@ -23,7 +23,7 @@ namespace TimelessEchoes.Upgrades
         [Tooltip("Decimal places to show for effect values in UI.")]
         [Min(0)] [SerializeField] private int decimalPlaces = 2;
 
-        public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
+        public string DisplayName => TimelessEchoes.UI.Toolkit.ToolkitLocalization.Text("stat." + Stat, string.IsNullOrWhiteSpace(displayName) ? name : displayName);
         public Sprite Icon => icon;
         public HeroStatMapping Stat => stat;
         // Backward-compatibility shims for removed fields

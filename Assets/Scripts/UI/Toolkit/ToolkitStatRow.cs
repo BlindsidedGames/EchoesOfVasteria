@@ -46,7 +46,7 @@ namespace TimelessEchoes.UI.Toolkit
                     for (var line = 0; line < 2; line++)
                     {
                         var index = col * 2 + line;
-                        var metric = ToolkitGameplay.E(column, "enemy-stat-metric"); metric.tooltip = names[index];
+                        var metric = ToolkitGameplay.E(column, "enemy-stat-metric"); ToolkitLocalization.BindTooltip(metric, "statistics.enemy-stat." + index, names[index]);
                         Sprite sprite = null;
                         if (index == 5) sprite = Resources.Load<Sprite>("UI/Icons/VisibilityShown");
                         else if (keys[index].HasValue) StatIconLookup.TryGetIcon(keys[index].Value, out sprite);
@@ -58,7 +58,7 @@ namespace TimelessEchoes.UI.Toolkit
                             image.style.height = sprite.rect.height * 16 / sprite.pixelsPerUnit;
                             image.style.flexShrink = 0; symbolCrop.Add(image);
                         }
-                        if (!sprite || index == 7) ToolkitGameplay.L(metric, index == 7 ? "Bonus" : names[index], "enemy-stat-name");
+                        if (!sprite || index == 7) { var label = ToolkitGameplay.L(metric, "", "enemy-stat-name"); ToolkitLocalization.Bind(label, "statistics.enemy-stat." + index, names[index]); }
                         EnemyValues[index] = ToolkitGameplay.L(metric, "", "enemy-stat-value");
                     }
                 }
@@ -67,7 +67,7 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 Toggle = ToolkitControls.Button("toggle-" + name, toggle, null); Toggle.AddToClassList("eov-stat-entry-toggle");
                 ToggleIcon = ToolkitControls.Icon(null); ToggleIcon.style.width = 32; ToggleIcon.style.height = 16; Toggle.Add(ToggleIcon);
-                ToolkitGameplay.L(Toggle, "Boost", "task-boost-label");
+                var boostLabel = ToolkitGameplay.L(Toggle, "", "task-boost-label"); ToolkitLocalization.Bind(boostLabel, "statistics.boost", "Boost");
                 Root.Add(Toggle);
             }
             progress = new VisualElement(); progress.AddToClassList("eov-stat-entry-progress"); progress.AddToClassList("track"); content.Add(progress);

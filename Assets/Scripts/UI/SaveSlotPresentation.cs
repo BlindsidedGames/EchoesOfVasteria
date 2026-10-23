@@ -78,7 +78,7 @@ namespace TimelessEchoes.UI
             }
             else
                 LastPlayed = lastPlayed.HasValue
-                    ? ToolkitLocalization.Text("save.last-played", "Last Played: {0} \u2022 {1} ago", lastPlayed.Value.ToLocalTime().ToString("g", CultureInfo.CurrentCulture), CalcUtils.FormatTime((DateTime.UtcNow-lastPlayed.Value).TotalSeconds, shortForm: true))
+                    ? ToolkitLocalization.Text("save.last-played", "Last Played: {0} \u2022 {1} ago", lastPlayed.Value.ToLocalTime().ToString("g", LocaleNumbers.Culture), CalcUtils.FormatTime((DateTime.UtcNow-lastPlayed.Value).TotalSeconds, shortForm: true))
                     : ToolkitLocalization.Text("save.last-played-never", "Last Played: Never");
             Title = current ? ToolkitLocalization.Text("save.active-title", "File {0} | {1:0}% - Active", index + 1, completion) : ToolkitLocalization.Text("save.title", "File {0} | {1:0}%", index + 1, completion);
             var version = current ? oracle.saveData.GameVersionCreated : createdVersion;

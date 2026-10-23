@@ -499,7 +499,7 @@ namespace TimelessEchoes.UI
                 }
                 else if (hasChanceInfo)
                 {
-                    var chancePercent = (spawnChance * 100f).ToString("0.##");
+                    var chancePercent = (spawnChance * 100f).ToString("0.##", LocaleNumbers.Culture);
                     string nextLine = nextImprovement > 0
                         ? $"Next improvement: {CalcUtils.FormatNumber(nextImprovement, true)} Tasks"
                         : "Next improvement: Maxed";

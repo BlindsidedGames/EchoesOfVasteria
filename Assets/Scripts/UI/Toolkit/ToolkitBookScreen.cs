@@ -133,14 +133,8 @@ namespace TimelessEchoes.UI.Toolkit
             var bottom = Mathf.Max(6, deviceSafeArea.yMin * scale);
             var availableWidth = width - left - right;
             var availableHeight = height - top - bottom;
-            // A narrow safe area needs vertical letterboxing, as in ScreenSafeArea.
-            if (availableWidth / availableHeight < minimum)
-            {
-                var inset = (availableHeight - availableWidth / minimum) * .5f;
-                top += inset;
-                bottom += inset;
-                availableHeight = height - top - bottom;
-            }
+            // Narrow windows use the full safe height. The camera crops the
+            // scene independently; UI padding must not reintroduce letterboxing.
             var maximum = Mathf.Lerp(minimum, 32f / 9f, Mathf.Clamp01(ratio));
             if (Mathf.Abs(screen.x / (float)screen.y - minimum) >= .0005f && availableWidth / availableHeight > maximum)
             {

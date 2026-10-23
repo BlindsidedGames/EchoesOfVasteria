@@ -17,8 +17,30 @@ namespace TimelessEchoes.Platform
         public static TestMode Mode { get; private set; }
         public static bool ChoiceReady { get; private set; }
         public static bool AwaitingActivation { get; set; }
-        public static bool SkipGameCenter => Enabled && ChoiceReady && (Mode == TestMode.NoGameCenterSignIn || Mode == TestMode.Minimal);
-        public static bool SkipOnlineServices => Enabled && ChoiceReady && (Mode == TestMode.NoOnlineServices || Mode == TestMode.Minimal);
+        public static bool SkipGameCenter => EditorScreenshotSession || Enabled && ChoiceReady && (Mode == TestMode.NoGameCenterSignIn || Mode == TestMode.Minimal);
+        public static bool SkipOnlineServices => EditorScreenshotSession || Enabled && ChoiceReady && (Mode == TestMode.NoOnlineServices || Mode == TestMode.Minimal);
+        public static bool EditorScreenshotSession
+        {
+            get
+            {
+#if UNITY_EDITOR
+                return UnityEditor.SessionState.GetBool("EOV.ScreenshotStudio.Active", false);
+#else
+                return false;
+#endif
+            }
+        }
+        public static string EditorScreenshotRoot
+        {
+            get
+            {
+#if UNITY_EDITOR
+                return EditorScreenshotSession ? UnityEditor.SessionState.GetString("EOV.ScreenshotStudio.Root", "") : null;
+#else
+                return null;
+#endif
+            }
+        }
         public static bool SkipMainUi => Enabled && ChoiceReady && (Mode == TestMode.NoMainUi || Mode == TestMode.Minimal);
         private static TaskCompletionSource<bool> selection = new();
         public static Task WaitForSelection() => !Enabled || ChoiceReady ? Task.CompletedTask : selection.Task;

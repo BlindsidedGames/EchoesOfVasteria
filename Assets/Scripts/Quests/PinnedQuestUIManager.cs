@@ -179,7 +179,7 @@ namespace TimelessEchoes.Quests
 
         private string FormatForQuest(QuestData data, double value)
         {
-            return data != null && data.useN0ForPinnedNumbers ? value.ToString("N0") : CalcUtils.FormatNumber(value, true);
+            return data != null && data.useN0ForPinnedNumbers ? value.ToString("N0", Blindsided.Utilities.LocaleNumbers.Culture) : CalcUtils.FormatNumber(value, true);
         }
     }
 }

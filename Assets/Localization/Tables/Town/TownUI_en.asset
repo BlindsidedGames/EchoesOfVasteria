@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
   m_Name: TownUI_en
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   m_LocaleId:
     m_Code: en
   m_SharedData: {fileID: 11400000, guid: 79e2dd3ef4efaf5459ce0f738238ca3e, type: 2}
@@ -737,7 +737,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003684
-    m_Localized: 'Next improvement: {0} Tasks'
+    m_Localized: 'Tasks until next improvement: {0}'
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003683
@@ -827,7 +827,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003667
-    m_Localized: '{0} resources'
+    m_Localized: 'Resources: {0}'
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003666
@@ -1539,7 +1539,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003474
-    m_Localized: Provides a {0}% chance to summon an Echo that perform {1} tasks for {2:0.#} seconds.
+    m_Localized: Provides a {0}% chance to summon an Echo that performs {1} tasks for {2:0.#} seconds.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003473
@@ -1547,7 +1547,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003472
-    m_Localized: Provides a {0}% chance to summon an Echo that assist in combat for {1:0.#} seconds.
+    m_Localized: Provides a {0}% chance to summon an Echo that assists in combat for {1:0.#} seconds.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003471
@@ -2530,7 +2530,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003233
-    m_Localized: Wartermelone
+    m_Localized: Watermelone
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003232
@@ -4182,7 +4182,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164286682276433926
-    m_Localized: '{0} types'
+    m_Localized: 'Types: {0}'
     m_Metadata:
       m_Items: []
   - m_Id: 164286682276433927
@@ -4711,6 +4711,832 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 166373263325925376
     m_Localized: Skip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510977933250560
+    m_Localized: Stats
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510980684713984
+    m_Localized: Summary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510984925155328
+    m_Localized: Nothing gathered yet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510989383700480
+    m_Localized: Repeat craft
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510991736705024
+    m_Localized: New item
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510993867411456
+    m_Localized: Weapon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510995939397632
+    m_Localized: Helmet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510997961052160
+    m_Localized: Chest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166510999978512384
+    m_Localized: Boots
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512173024677888
+    m_Localized: Resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512175142801408
+    m_Localized: Equipment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512177218981888
+    m_Localized: Equipped items
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512179261607936
+    m_Localized: Total equipment bonuses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512181262290944
+    m_Localized: Owned resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512183292334080
+    m_Localized: Nothing equipped
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512185448206336
+    m_Localized: Equip an item to gain its bonuses.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512189768339456
+    m_Localized: chest & trousers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512191823548416
+    m_Localized: '{0} {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512193908117504
+    m_Localized: Your character
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512195942354944
+    m_Localized: Eternal Boons
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512197947232256
+    m_Localized: Max all collections to unlock Eternal Boons.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166512199947915264
+    m_Localized: 'Cards: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885895647232
+    m_Localized: Adventurer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395968
+    m_Localized: Technical details were recorded for support.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395969
+    m_Localized: The saved characters could not be read. The existing file has been preserved.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395970
+    m_Localized: Your character preset could not be saved. Please try again.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395971
+    m_Localized: Give your character a name.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395972
+    m_Localized: Use a name without line breaks or control characters.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395973
+    m_Localized: Use a name of up to 24 characters.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395974
+    m_Localized: "Reaping Distance: {0} \u2192 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395975
+    m_Localized: 'Category Yield: +{0} {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395976
+    m_Localized: +{0} {1} Yield (gathering and harvests)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395977
+    m_Localized: Buffs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395978
+    m_Localized: 'Global Buff Power: +{0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395979
+    m_Localized: 'Cooldown: -{0} | Power: +{1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395980
+    m_Localized: Eternal Boon Formula
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395981
+    m_Localized: Tier {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395982
+    m_Localized: 'Effect: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395983
+    m_Localized: 'Done: {0}
+
+      Time: {1}
+
+      XP: {2}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395984
+    m_Localized: Credits
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395985
+    m_Localized: Create your character
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395986
+    m_Localized: Turn left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395987
+    m_Localized: Turn right
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395988
+    m_Localized: Previous animation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395989
+    m_Localized: Idle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395990
+    m_Localized: Next animation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395991
+    m_Localized: Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395992
+    m_Localized: None
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395993
+    m_Localized: Style {0} of {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395994
+    m_Localized: Previous style
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395995
+    m_Localized: Next style
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395996
+    m_Localized: Saved characters
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395997
+    m_Localized: Preset {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395998
+    m_Localized: Save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933395999
+    m_Localized: Save current character to slot {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396000
+    m_Localized: Start game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396001
+    m_Localized: Saved to preset {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396002
+    m_Localized: Empty {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396003
+    m_Localized: No character saved
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396004
+    m_Localized: Load {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396005
+    m_Localized: Your character could not be saved. Please try again.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396006
+    m_Localized: Automation unlocks at Ivan level {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396007
+    m_Localized: Discover more cores as your Combat level increases.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396008
+    m_Localized: Repeat crafting until an upgrade or another stop condition is reached.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396009
+    m_Localized: Show {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396010
+    m_Localized: Hide inventory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396011
+    m_Localized: Show inventory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396012
+    m_Localized: Return to town to hand in this quest.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396013
+    m_Localized: Auto pin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396014
+    m_Localized: Select a bar for details
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396015
+    m_Localized: Latest {0} runs{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396016
+    m_Localized: Show or hide combat stats
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396017
+    m_Localized: Next
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396018
+    m_Localized: You keep the resources gathered during your adventure.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396019
+    m_Localized: Close the summary to continue.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396020
+    m_Localized: Continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396021
+    m_Localized: 'Next: {0} at level {1}.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396022
+    m_Localized: Boost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396023
+    m_Localized: The save is too large or could not be prepared for export.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396024
+    m_Localized: The export exceeds the limit of {0:N0} characters. Nothing was copied.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396025
+    m_Localized: Enter a save to import.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396026
+    m_Localized: The import exceeds the limit of {0:N0} characters.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396027
+    m_Localized: This text is not a supported save export.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396028
+    m_Localized: The save data is incomplete or damaged. Paste the complete export and try again.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396029
+    m_Localized: The save could not be read.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396030
+    m_Localized: This save uses format {0}; this game supports format {1}. Update the game before importing.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396031
+    m_Localized: The save could not be upgraded to this game version. Your existing progress was not replaced.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396032
+    m_Localized: The game is not ready to import a save. Try again after loading finishes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396033
+    m_Localized: The imported save could not be activated safely. Retry after loading finishes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396034
+    m_Localized: The import could not be completed. Please try again. Technical details were recorded for support.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396035
+    m_Localized: Your character
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396036
+    m_Localized: Save character
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396037
+    m_Localized: Hide {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396038
+    m_Localized: Run
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396039
+    m_Localized: Fish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396040
+    m_Localized: Mine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396041
+    m_Localized: Water
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396042
+    m_Localized: Combat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396043
+    m_Localized: Hair
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396044
+    m_Localized: Top
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396045
+    m_Localized: Trousers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396046
+    m_Localized: Shoes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396047
+    m_Localized: Farmer Hat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396048
+    m_Localized: Farmer Pants
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396049
+    m_Localized: Farmer Shirt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396050
+    m_Localized: Hair 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396051
+    m_Localized: Hair 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396052
+    m_Localized: Hair 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396053
+    m_Localized: Hair 4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396054
+    m_Localized: Hair 5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396055
+    m_Localized: Hair 6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396056
+    m_Localized: Lumberjack Shirt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396057
+    m_Localized: Pants
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396058
+    m_Localized: Royal Pants
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396059
+    m_Localized: Royal Shirt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396060
+    m_Localized: Shirt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396061
+    m_Localized: Shoes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396062
+    m_Localized: White and Brown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396063
+    m_Localized: Dark Brown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396064
+    m_Localized: Light Brown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396065
+    m_Localized: Auburn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396066
+    m_Localized: Black
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396067
+    m_Localized: Blonde
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396068
+    m_Localized: Brown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396069
+    m_Localized: Ginger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396070
+    m_Localized: Grey
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396071
+    m_Localized: Blue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396072
+    m_Localized: Green
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396073
+    m_Localized: Orange
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396074
+    m_Localized: Pink
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396075
+    m_Localized: Purple
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396076
+    m_Localized: Red
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396077
+    m_Localized: White
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396078
+    m_Localized: Bronze
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396079
+    m_Localized: Gold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396080
+    m_Localized: Iron
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396081
+    m_Localized: Health
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396082
+    m_Localized: Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396083
+    m_Localized: Defense
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396084
+    m_Localized: Attack Rate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396085
+    m_Localized: Movement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396086
+    m_Localized: Vision
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396087
+    m_Localized: Kills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396088
+    m_Localized: Bonus Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396089
+    m_Localized: Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396090
+    m_Localized: Attack Rate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396091
+    m_Localized: Defense
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396092
+    m_Localized: Health
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396093
+    m_Localized: Regen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396094
+    m_Localized: Move Speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396095
+    m_Localized: Critical Chance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396096
+    m_Localized: Critical Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396097
+    m_Localized: Complete 1/1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396098
+    m_Localized: Meet an NPC
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396099
+    m_Localized: 'Kill {0}:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396100
+    m_Localized: 'Kill enemies:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396101
+    m_Localized: 'Kill:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396102
+    m_Localized: 'Run Distance:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396103
+    m_Localized: 'Steps Taken:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396104
+    m_Localized: 'Cast Buffs:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396105
+    m_Localized: 'Cast {0}:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396106
+    m_Localized: 'Manually cast {0}:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396107
+    m_Localized: 'Critical hits:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396108
+    m_Localized: 'Gather resources:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396109
+    m_Localized: 'Tasks completed:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396110
+    m_Localized: 'Mix Resources:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396111
+    m_Localized: 'Forge and equip a sword:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396112
+    m_Localized: Quality {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396113
+    m_Localized: Slimes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396114
+    m_Localized: Pink Slimes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396115
+    m_Localized: Slimes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396116
+    m_Localized: Skeleton Mages
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396117
+    m_Localized: Skeleton Mages
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396118
+    m_Localized: Skeleton Archers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396119
+    m_Localized: Skeleton Mages
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396120
+    m_Localized: Slimes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396121
+    m_Localized: Skeleton Swordsmen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396122
+    m_Localized: Skeleton Archers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166516885933396123
+    m_Localized: Skeleton Swordsmen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166517708725817344
+    m_Localized: Performance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166517708788731904
+    m_Localized: Ready to turn in
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166517708788731905
+    m_Localized: '{0} / {1} | +{2} Enemy levels
+
+      {3:N0} Distance'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166517708788731906
+    m_Localized: The operation could not be completed. Please try again.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147309613056
+    m_Localized: Materials
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147418664960
+    m_Localized: Progress
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147418664961
+    m_Localized: Bonuses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147418664962
+    m_Localized: Sort
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147418664963
+    m_Localized: Echo Lifetime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166524147422859264
+    m_Localized: Inventory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630746193920
+    m_Localized: Area
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525568
+    m_Localized: 'Tasks to boost: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525569
+    m_Localized: 'Chance: {0:0.##}% ({1})
+
+      {2}
+
+      {3}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525570
+    m_Localized: Farmlands
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525571
+    m_Localized: River
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525572
+    m_Localized: Woods
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525573
+    m_Localized: Mines
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525574
+    m_Localized: Spooky
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525575
+    m_Localized: Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525576
+    m_Localized: Attack speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525577
+    m_Localized: Crit chance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525578
+    m_Localized: Crit damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525579
+    m_Localized: Movement speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525580
+    m_Localized: Damage reduction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525581
+    m_Localized: Health regen
     m_Metadata:
       m_Items: []
   references:

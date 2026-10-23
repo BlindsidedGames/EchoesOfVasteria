@@ -201,7 +201,7 @@
 .gameplay.portrait .portrait-resource-row Label {font-size:11px;}
 .gameplay .portrait-picker, .gameplay .portrait-graph-pickers {display:none;}
 .gameplay.portrait .portrait-picker {display:flex;margin:0 0 8px 0;flex-shrink:0;}
-.gameplay.portrait .portrait-picker > Label {min-width:32px;max-width:50px;align-self:center;font-size:11px;margin-right:6px;}
+.gameplay.portrait .portrait-picker > Label {min-width:32px;max-width:80px;flex-shrink:0;white-space:nowrap;align-self:center;font-size:11px;margin-right:6px;}
 .gameplay.portrait .portrait-picker .unity-base-popup-field__input {flex-grow:1;background-color:var(--control);border-width:1px;border-color:var(--line);border-radius:0;}
 .gameplay.portrait .portrait-picker .unity-base-popup-field__text {font-size:12px;color:var(--text);}
 .gameplay.portrait.eov-statistics > .eov-stat-tabs {display:none;}
@@ -288,8 +288,8 @@
 .gameplay.portrait .enemy-stat-value {font-size:10px;}
 .gameplay.portrait .eov-stat-entry-field {width:50%;flex-basis:50%;margin:4px 0;font-size:10px;}
 .gameplay.portrait .eov-task-entry {position:relative;min-height:96px;}
-.gameplay.portrait .eov-task-entry .eov-stat-entry-header {padding-right:70px;}
-.gameplay.portrait .eov-task-entry .eov-stat-entry-toggle {position:absolute;right:0;top:8px;width:64px;min-width:64px;min-height:28px;height:28px;padding:4px;}
+.gameplay.portrait .eov-task-entry .eov-stat-entry-header {padding-right:90px;}
+.gameplay.portrait .eov-task-entry .eov-stat-entry-toggle {position:absolute;right:0;top:8px;width:84px;min-width:84px;min-height:28px;height:28px;padding:4px;}
 .gameplay.portrait .eov-stat-entry-toggle Image {display:none;}
 .gameplay.portrait .task-boost-label {font-size:10px;white-space:nowrap;}
 .gameplay.portrait .graph-units {width:100%;margin:0;}

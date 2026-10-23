@@ -15,7 +15,7 @@ namespace TimelessEchoes.UI.Toolkit
             portraitResourcesDirty = true;
             portraitResources = ToolkitGameplay.E(root, "portrait-run-resources");
             portraitResources.style.position = Position.Absolute;
-            ToolkitGameplay.L(portraitResources, "Resources gathered", "heading");
+            LocalizedLabel(portraitResources, "run.summary.resources", "Resources gathered", "heading");
             portraitResourceList = ToolkitGameplay.Scroll(portraitResources, "portrait-resource-list");
             portraitResourceList.style.flexGrow = 1;
             portraitResourceList.style.minHeight = 0;
@@ -40,7 +40,7 @@ namespace TimelessEchoes.UI.Toolkit
                 name.style.flexGrow = 1;
                 ToolkitGameplay.L(row, CalcUtils.FormatNumber(entry.Value, true), "strong");
             }
-            if (runResources.Count == 0) ToolkitGameplay.L(portraitResourceList, "Nothing gathered yet", "muted");
+            if (runResources.Count == 0) LocalizedLabel(portraitResourceList, "run.portrait.empty", "Nothing gathered yet", "muted");
         }
     }
 }
