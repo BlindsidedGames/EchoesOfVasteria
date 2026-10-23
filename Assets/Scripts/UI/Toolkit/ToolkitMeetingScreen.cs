@@ -27,6 +27,7 @@ namespace TimelessEchoes.UI.Toolkit
         private bool initialized, completed;
         private bool continueAfterDialogue;
         private ToolkitNavigationScreen lessonNavigation;
+        private bool guidanceStarted;
         private IDisposable conversationWait;
         private Rect lastArea;
         private int lastIndex = -1;
@@ -51,7 +52,19 @@ namespace TimelessEchoes.UI.Toolkit
         private void OnEnable() { if (initialized && !completed) Show(); }
         public void BeginDialogue() => view?.Advance();
 
-        public void GuideNavigation(ToolkitNavigationScreen navigation) => lessonNavigation = navigation;
+        public void GuideNavigation(ToolkitNavigationScreen navigation, Action skipped = null)
+        {
+            lessonNavigation = navigation;
+            view.AddSkipAction(() => { skipped?.Invoke(); Finish(); });
+            if (!navigation) return;
+            view.BeforeAdvance = () =>
+            {
+                if (guidanceStarted) return !navigation.RefresherDestinationOpen;
+                guidanceStarted = true;
+                navigation.SetRefresherGuidanceActive(true);
+                return true;
+            };
+        }
 
         public void SetPortraitAnimation(IReadOnlyList<Sprite> frames, float framesPerSecond)
         {
@@ -112,8 +125,8 @@ namespace TimelessEchoes.UI.Toolkit
                 {
                     // Dropdowns and their tutorial hand must remain visible and clickable.
                     // Restore the explanation once the player selects a destination.
-                    view.Root.style.display = lessonNavigation.HasOpenMenu ? DisplayStyle.None : DisplayStyle.Flex;
-                    view.AdvanceButton.SetEnabled(lessonNavigation.RefresherDestinationOpen);
+                    view.Root.style.display = !guidanceStarted || lessonNavigation.RefresherDestinationOpen ? DisplayStyle.Flex : DisplayStyle.None;
+                    view.AdvanceButton.SetEnabled(true);
                 }
                 meetHand.style.display = view.AwaitingMeet && definition.tutorialHand ? DisplayStyle.Flex : DisplayStyle.None;
                 if (view.AwaitingMeet)
@@ -164,6 +177,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void OnDestroy()
         {
             Visible.Remove(this);
+            if (lessonNavigation) lessonNavigation.EndRefresherNavigation();
             conversationWait?.Dispose(); conversationWait = null;
             view?.Dispose();
             if (panel) Destroy(panel);

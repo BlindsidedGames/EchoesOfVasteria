@@ -213,6 +213,9 @@ namespace Tests.PlayMode
         [UnityTest]
         public IEnumerator FirstForgeLoadingBackdropIsOpaqueAndCoversThePanelViewport()
         {
+            var previousLight = ToolkitColorTheme.IsLight;
+            var preferenceExisted = PlayerPrefs.HasKey("EoV.Interface.LightMode");
+            var previousPreference = PlayerPrefs.GetInt("EoV.Interface.LightMode");
             var owner = new GameObject("Protected loading owner");
             var view = new GameObject("Protected loading screen", typeof(UIDocument)); view.SetActive(false);
             try
@@ -233,9 +236,22 @@ namespace Tests.PlayMode
                 Assert.That(backdrop.worldBound.yMin, Is.EqualTo(viewport.yMin).Within(.1f));
                 Assert.That(backdrop.worldBound.width, Is.EqualTo(viewport.width).Within(.1f));
                 Assert.That(backdrop.worldBound.height, Is.EqualTo(viewport.height).Within(.1f));
+                foreach (var light in new[] { false, true })
+                {
+                    ToolkitColorTheme.SetLight(light); yield return null; yield return null;
+                    var color = backdrop.resolvedStyle.backgroundColor;
+                    Assert.Less(Mathf.Max(color.r, color.g, color.b), .2f, "Loading stays dark, without HDR colour values, in either appearance.");
+                    Assert.AreEqual(1, color.a);
+                }
                 CaptureFeedback("opaque-full-screen-loading.png"); yield return null; yield return null;
             }
-            finally { Object.DestroyImmediate(view); Object.DestroyImmediate(owner); }
+            finally {
+                Object.DestroyImmediate(view); Object.DestroyImmediate(owner);
+                ToolkitColorTheme.SetLight(previousLight);
+                if (preferenceExisted) PlayerPrefs.SetInt("EoV.Interface.LightMode", previousPreference);
+                else PlayerPrefs.DeleteKey("EoV.Interface.LightMode");
+                PlayerPrefs.Save();
+            }
         }
     }
 }

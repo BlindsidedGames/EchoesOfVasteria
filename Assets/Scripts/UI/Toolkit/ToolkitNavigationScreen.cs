@@ -59,6 +59,7 @@ namespace TimelessEchoes.UI.Toolkit
         private string highlightedEntryId;
         private Entry refresherEntry;
         private int refresherTab = -1;
+        private bool refresherGuidanceActive;
         private float questHighlightStartedAt;
         public Group OpenGroup => openGroup;
 
@@ -80,18 +81,35 @@ namespace TimelessEchoes.UI.Toolkit
             var entry = System.Array.Find(navigationEntries, e => e.id == id);
             if (entry == null || !ToolkitVisibilityRule.All(entry.visibility) || !windows || !windows.CanOpenWindow(entry.window)) return false;
             refresherEntry = entry;
+            refresherGuidanceActive = false;
             refresherTab = parts.Length > 1 ? parts[1] switch { "general" => 0, "graphs" => 2, "tasks" => 4, _ => -1 } : -1;
             CloseMenu();
             windows.CloseAllWindows();
-            RefreshTutorialPrompt();
+            Refresh();
             return true;
+        }
+
+        public void SetRefresherGuidanceActive(bool active)
+        {
+            refresherGuidanceActive = active;
+            Refresh();
+        }
+
+        private bool RefresherAllows(Entry entry)
+        {
+            if (refresherEntry == null) return true;
+            if (!refresherGuidanceActive) return false;
+            return entry == refresherEntry ||
+                refresherEntry.group != Group.Toolbar && entry.action == ParentAction(refresherEntry.group) ||
+                refresherTab >= 0 && entry.statisticsTab == refresherTab;
         }
 
         public void EndRefresherNavigation()
         {
             refresherEntry = null;
             refresherTab = -1;
-            RefreshTutorialPrompt();
+            refresherGuidanceActive = false;
+            Refresh();
         }
 
         private void OnEnable()
@@ -350,7 +368,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void Activate(Entry entry)
         {
-            if (!ToolkitVisibilityRule.All(entry.visibility)) return;
+            if (!ToolkitVisibilityRule.All(entry.visibility) || !RefresherAllows(entry)) return;
             if (entry.id == "shop" && !TimelessEchoes.Shop.ShopService.Ensure().Unlocked) return;
             moreOpen = false; if (morePopup != null) morePopup.style.display = DisplayStyle.None;
             if (!windows) windows = TownWindowManager.Instance;
@@ -505,8 +523,8 @@ namespace TimelessEchoes.UI.Toolkit
                     var label = buttons[entry].Q<Label>("fields-navigation-label");
                     if (label != null) label.text = FarmContent.Load()?.DisplayName ?? "Fields";
                 }
-                buttons[entry].SetEnabled(entry.action != NavAction.Window || windows == null ||
-                    windows.IsWindowOpen(entry.window) || windows.CanOpenWindow(entry.window));
+                buttons[entry].SetEnabled(RefresherAllows(entry) && (entry.action != NavAction.Window || windows == null ||
+                    windows.IsWindowOpen(entry.window) || windows.CanOpenWindow(entry.window)));
                 var selected = entry.action == NavAction.Window && windows && windows.IsWindowOpen(entry.window);
                 if (entry.id == "hub") selected = openGroup == Group.Hub || HubWindowOpen();
                 if (entry.id == "stats") selected = openGroup == Group.Statistics || windows && windows.IsWindowOpen(TownWindowManager.Window.Stats);
@@ -586,7 +604,7 @@ namespace TimelessEchoes.UI.Toolkit
             var needsStatisticsSection = ToolkitResponsiveLayout.IsPortrait && statistics && statistics.SelectedTab != statisticsSection;
             if (!runScreen) runScreen = FindAnyObjectByType<ToolkitRunScreen>();
             if (refresherEntry != null)
-                desired = RefresherDestinationOpen ? null : refresherTab >= 0 && openGroup == Group.Statistics ?
+                desired = !refresherGuidanceActive || RefresherDestinationOpen ? null : refresherTab >= 0 && openGroup == Group.Statistics ?
                     "statistics-section-" + refresherTab : refresherEntry.id;
             else if (ActiveNpcMeetings.Count > 0 || (runScreen && runScreen.HasOpenDetails)) desired = null;
             else if (highlightQuestsUntilOpened) desired = "quests";

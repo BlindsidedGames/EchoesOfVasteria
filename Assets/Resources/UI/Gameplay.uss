@@ -7,14 +7,14 @@
 .gameplay.dark .eov-skill-selector-level,.gameplay.dark .eov-skill-info .eov-skill-text {color:#ead4aa;}
 .gameplay.dark .eov-navigation-progress-text,.gameplay.dark .eov-navigation-progress-distance {color:#ead4aa;}
 .gameplay.dark .eov-pinned-background {background-color:rgba(0,0,0,.502);}
-.gameplay.dark.loading-screen {background-color:rgb(30.6,19.125,15.3);}
-.gameplay.dark .loading-track {background-color:rgb(30.6,19.125,15.3);}
-.gameplay.dark .loading-fill {background-color:rgb(119.85,183.6,66.3);}
-.gameplay.dark .toast-duration-fill {background-color:rgb(119.85,183.6,66.3);}
-.gameplay.dark .graph-outcome-retreated {background-color:rgb(183.6,168.3,155.55);}
-.gameplay.dark .graph-outcome-reaped {background-color:rgb(178.5,137.7,201.45);}
-.gameplay.dark .graph-outcome-died {background-color:rgb(209.1,102,102);}
-.gameplay.dark .graph-outcome-abandoned {background-color:rgb(109.65,107.1,109.65);}
+.gameplay.dark.loading-screen {background-color:#1f130f;}
+.gameplay.dark .loading-track {background-color:#1f130f;}
+.gameplay.dark .loading-fill {background-color:#78b842;}
+.gameplay.dark .toast-duration-fill {background-color:#78b842;}
+.gameplay.dark .graph-outcome-retreated {background-color:#b8a89c;}
+.gameplay.dark .graph-outcome-reaped {background-color:#b28ac9;}
+.gameplay.dark .graph-outcome-died {background-color:#d16666;}
+.gameplay.dark .graph-outcome-abandoned {background-color:#6e6b6e;}
 .gameplay.dark .hero-surface.button.active {background-color:var(--accent);color:var(--on-accent);}
 .gameplay { position:absolute; left:0; right:0; top:0; bottom:0; overflow:hidden; --space-tight:2px; --space-control:4px; --space-section:8px; --space-panel:12px; --body:8px; --small:6.5px; --heading:10.5px; --title:16px; --amount:19px; font-size:var(--body); color:var(--text); }
 .gameplay.dark { --surface:#292426; --text:#f5e4d6; --muted:#c8aea1; --control:#3c3032; --hover:#514042; --line:#74514a; --accent:#efb984; --on-accent:#302126; --selected:#674635; --field:#382e31; --health:#63c64d; }
@@ -1199,3 +1199,11 @@
 .gameplay .town-statistics-roll { width:48%; margin-right:2%; }
 .gameplay.portrait .town-statistics-roll { width:100%; margin-right:0; }
 .gameplay .town-statistics-since-update { margin-bottom:4px; }
+
+/* Guided lessons keep their skip action directly below Next in both layouts. */
+.gameplay.meeting-guided .meeting-actions {position:absolute;left:0;top:0;width:40px;flex-direction:column;}
+.gameplay.meeting-guided .meeting-actions #advance,
+.gameplay.meeting-guided .meeting-skip {position:relative;left:auto;top:auto;width:100%;height:auto;min-height:22px;margin:0;}
+.gameplay.meeting-guided .meeting-skip {margin-top:4px;font-size:6.5px;padding:3px 1px;}
+
+.gameplay.meeting-guided .eov-meeting-dialogue-frame {left:44px;}

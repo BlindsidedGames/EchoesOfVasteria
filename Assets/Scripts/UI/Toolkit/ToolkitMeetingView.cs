@@ -26,6 +26,22 @@ namespace TimelessEchoes.UI.Toolkit
             bool richText, float scale) textMeasurementKey;
         public VisualElement Root { get; }
         public Button AdvanceButton { get; }
+        public Func<bool> BeforeAdvance { private get; set; }
+        private VisualElement guidedActions;
+        private Button skipButton;
+        private VisualElement ActionElement => guidedActions ?? (VisualElement)AdvanceButton;
+
+        public void AddSkipAction(Action skip)
+        {
+            if (guidedActions != null) return;
+            Root.AddToClassList("meeting-guided");
+            guidedActions = new VisualElement(); guidedActions.AddToClassList("meeting-actions");
+            var parent = AdvanceButton.parent;
+            parent.Insert(parent.IndexOf(AdvanceButton), guidedActions);
+            guidedActions.Add(AdvanceButton);
+            skipButton = ToolkitGameplay.B(guidedActions, ToolkitLocalization.Text("meeting.skip", "Skip"), skip, "meeting-skip");
+            skipButton.name = "meeting-skip";
+        }
         public bool AwaitingMeet => index < 0;
 
         public ToolkitMeetingView(ToolkitTheme theme, VisualTreeAsset template, Sprite portrait,
@@ -105,7 +121,7 @@ namespace TimelessEchoes.UI.Toolkit
                 Root.Add(contentColumn);
                 portraitColumn.Add(portraitFrame);
                 contentColumn.Add(dialogueFrame);
-                contentColumn.Add(AdvanceButton);
+                contentColumn.Add(ActionElement);
                 dialogueFrame.Add(dialogueScroll);
                 dialogueScroll.Add(Root.Q("dialogue-inset"));
             }
@@ -115,7 +131,7 @@ namespace TimelessEchoes.UI.Toolkit
                 dialogueScroll.RemoveFromHierarchy();
                 Root.Add(portraitFrame);
                 Root.Add(dialogueFrame);
-                Root.Add(AdvanceButton);
+                Root.Add(ActionElement);
                 portraitColumn.RemoveFromHierarchy();
                 contentColumn.RemoveFromHierarchy();
             }
@@ -141,7 +157,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (!float.IsFinite(width) || width <= 0) return;
             var textHeight = MeasureDialogueHeight(width);
             var minimum = noPortrait ? 76 : 96;
-            height = Mathf.RoundToInt(Mathf.Clamp(Mathf.Ceil(textHeight) + 64, minimum, availableHeight));
+            height = Mathf.RoundToInt(Mathf.Clamp(Mathf.Ceil(textHeight) + (guidedActions != null ? 104 : 64), minimum, availableHeight));
             Root.style.height = height;
             Root.style.top = safe.yMax - ToolkitResponsiveLayout.WindowBottom - height - 8 - navigationClearance;
         }
@@ -166,6 +182,7 @@ namespace TimelessEchoes.UI.Toolkit
         public void Advance()
         {
             if (disposed || completed) return;
+            if (index >= 0 && BeforeAdvance?.Invoke() == true) return;
             Audio.AudioManager.Instance?.PlayUIButtonClick();
             if (index >= 0 && index >= lines.Count - 1)
             {
@@ -180,6 +197,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void Refresh()
         {
+            if (skipButton != null) skipButton.text = ToolkitLocalization.Text("meeting.skip", "Skip");
             hasTextMeasurement = false; // Locale/font fallback refreshes can change metrics without changing the text.
             var started = index >= 0;
             Root.EnableInClassList("meeting-awaiting", !started);

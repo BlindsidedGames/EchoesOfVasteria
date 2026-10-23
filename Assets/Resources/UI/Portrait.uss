@@ -369,3 +369,10 @@
 .gameplay.portrait.eov-forge .forge-conversion-body .eov-number-field {width:auto;min-width:0;max-width:none;height:30px;flex-grow:0;flex-shrink:0;margin:0 0 4px 0;}
 .gameplay.portrait.eov-forge .eov-forge-conversion-control {min-width:44px;min-height:64px;flex-basis:0;flex-grow:1;flex-direction:column;flex-wrap:nowrap;margin:0 0 0 4px;align-items:stretch;}
 .gameplay.portrait.eov-forge .eov-forge-conversion-control .eov-forge-button {width:auto;min-width:0;height:30px;min-height:30px;margin:0;}
+
+.gameplay.portrait.meeting-guided .meeting-actions {position:relative;left:auto;top:auto;width:96px;align-self:flex-end;margin-top:8px;}
+.gameplay.portrait.meeting-guided .meeting-actions #advance,
+.gameplay.portrait.meeting-guided .meeting-skip {min-height:30px;align-self:stretch;margin:0;padding:4px;}
+.gameplay.portrait.meeting-guided .meeting-skip {margin-top:4px;font-size:10px;}
+
+.gameplay.portrait.meeting-guided .eov-meeting-dialogue-frame {left:auto;}

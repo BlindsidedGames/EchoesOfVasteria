@@ -37,6 +37,9 @@ namespace Tests.PlayMode
                 var gm = owner.AddComponent<TimelessEchoes.GameManager>(); gm.enabled = false;
                 typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(gm, true);
                 var template = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Intro.prefab").GetComponent<ToolkitOrinIntroduction>();
+                var firstQuest = (QuestData)typeof(ToolkitOrinIntroduction).GetField("firstQuest", Private).GetValue(template);
+                oracle.saveData.Quests[firstQuest.questId] = new GameData.QuestRecord { Completed = true };
+
                 foreach (var entry in AssetDatabase.LoadAssetAtPath<ToolkitNavigationDefinition>("Assets/UI/Toolkit/Navigation.asset").entries)
                     foreach (var rule in entry.visibility)
                         if (rule.quest) oracle.saveData.Quests[rule.quest.questId] = new GameData.QuestRecord { Completed = true };
@@ -52,6 +55,10 @@ namespace Tests.PlayMode
                 var general = oracle.saveData.General;
                 general.ReturningPlayerIntroductionComplete = true;
                 general.ReturningPlayerLessonsChoiceMade = true;
+                general.InventoryTutorialStage = 3; general.HubTutorialStage = 3;
+                general.BuffTutorialStage = 2; general.MapStatisticsTutorialStage = 9;
+                general.TaskBoostTutorialStage = 2; general.GraphsViewed = true;
+                oracle.saveData.CompletedNpcTasks.Add(Resources.Load<ToolkitNpcIntroduction>("NPC Introductions/Eva the Witch").npcId);
                 foreach (var portrait in new[] { false, true })
                 foreach (var stage in new[] { 1, 6, 7, 8 })
                 {
@@ -65,10 +72,16 @@ namespace Tests.PlayMode
                     var card = meeting.GetComponent<UIDocument>().rootVisualElement.Q(className: "eov-meeting");
                     var next = card.Q<Button>("advance");
                     Assert.False(manager.HasOpenWindow, "Teach navigation instead of silently opening the destination.");
-                    Assert.False(next.enabledInHierarchy, "Read the lesson after reaching its panel.");
+                    Assert.True(next.enabledInHierarchy, "Next starts guidance after the explanation is read.");
                     var parent = navRoot.Q<Button>(stage == 1 ? "hub" : "stats");
                     var hand = navRoot.Q("tutorial-pointer-" + parent.name);
+                    Assert.AreEqual(DisplayStyle.None, hand.resolvedStyle.display, "The pointer waits until Next dismisses the text.");
+                    Assert.False(parent.enabledInHierarchy, "Navigation waits until the explanation is dismissed.");
+                    FieldsClick(next); yield return new WaitForSecondsRealtime(.1f);
+                    Assert.AreEqual(DisplayStyle.None, card.resolvedStyle.display, $"Stage {stage}, portrait {portrait}: Next dismisses explanation.");
                     Assert.AreEqual(DisplayStyle.Flex, hand.resolvedStyle.display);
+                    Assert.True(parent.enabledInHierarchy);
+                    Assert.False(navRoot.Q<Button>("adventure").enabledInHierarchy, "Only the route to this lesson is available.");
                     Assert.IsNull(card.panel.Pick(parent.worldBound.center), "The dialogue must not intercept the menu button.");
                     using (var move = PointerMoveEvent.GetPooled(new Event { type = EventType.MouseMove, mousePosition = parent.worldBound.center })) parent.SendEvent(move);
                     FieldsClick(parent); yield return new WaitForSecondsRealtime(.1f);
@@ -80,8 +93,13 @@ namespace Tests.PlayMode
                     Assert.True(manager.HasOpenWindow, $"Stage {stage}, portrait {portrait}: selected destination opens.");
                     Assert.AreEqual(DisplayStyle.Flex, card.resolvedStyle.display);
                     Assert.True(next.enabledInHierarchy);
+                    var skip = card.Q<Button>("meeting-skip"); Assert.NotNull(skip);
+                    Assert.GreaterOrEqual(skip.worldBound.yMin, next.worldBound.yMax, "Skip sits below Next.");
+                    FieldsClick(skip); yield return new WaitForSecondsRealtime(.1f);
+                    Assert.AreEqual(0, general.ReturningPlayerLessonStage, "Skip ends remaining refresher lessons.");
+                    Assert.True(navRoot.Q<Button>("adventure").enabledInHierarchy, "Skipping restores normal navigation.");
                     Object.DestroyImmediate(speakerObject); speakerObject = null;
-                    Object.DestroyImmediate(meeting.gameObject);
+                    if (meeting) Object.DestroyImmediate(meeting.gameObject);
                     manager.CloseAllWindows(); yield return null;
                 }
             }
@@ -156,6 +174,8 @@ namespace Tests.PlayMode
                     var action = ui.Q<Button>(replay ? "dialog-primary" : "dialog-secondary");
                     Assert.True(action.enabledInHierarchy);
                     Assert.Greater(action.worldBound.width, 0);
+                    var hit = ui.panel.Pick(action.worldBound.center);
+                    Assert.True(hit == action || action.Contains(hit), $"Welcome button {action.name} at {action.worldBound} hit {hit?.name}; portrait {portrait}, replay {replay}");
                     FieldsClick(action);
                     yield return new WaitForSecondsRealtime(.2f);
                     Assert.True(oracle.saveData.General.ReturningPlayerLessonsChoiceMade);
