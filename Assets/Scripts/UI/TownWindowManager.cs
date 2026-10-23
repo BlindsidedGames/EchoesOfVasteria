@@ -8,7 +8,6 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 using EventHandler = Blindsided.EventHandler;
 using TimelessEchoes.Upgrades;
-using System.Collections;
 
 namespace TimelessEchoes.UI
 {
@@ -138,7 +137,6 @@ namespace TimelessEchoes.UI
 
         private bool _cauldronStopHooked;
         private bool _cauldronTastingStartedThisSession;
-        private Coroutine _pollCloseWindowsCoroutine;
         private void HookCauldronStop()
         {
             if (_cauldronStopHooked) return;
@@ -260,9 +258,6 @@ namespace TimelessEchoes.UI
         [SerializeField] [Space] private Button beginAdventureButton;
         [SerializeField] [Space] private GameObject beginAdventureDropdown;
 
-        private bool _rightMouseWasDown;
-
-
         private void Awake()
         {
             Instance = this;
@@ -303,18 +298,12 @@ namespace TimelessEchoes.UI
         {
             _cauldronTastingStartedThisSession = false;
             EventHandler.OnLoadData += HandleLoadData;
-            _pollCloseWindowsCoroutine = StartCoroutine(PollCloseAllWindowsCoroutine());
             HookCauldronStop();
         }
 
         private void OnDisable()
         {
             EventHandler.OnLoadData -= HandleLoadData;
-            if (_pollCloseWindowsCoroutine != null)
-            {
-                StopCoroutine(_pollCloseWindowsCoroutine);
-                _pollCloseWindowsCoroutine = null;
-            }
             UnhookCauldronStop();
             _cauldronTastingStartedThisSession = false;
         }
@@ -360,27 +349,6 @@ namespace TimelessEchoes.UI
 
             if (Instance == this)
                 Instance = null;
-        }
-
-        private void PollCloseAllWindows()
-        {
-            var mouse = Mouse.current;
-            if (mouse == null)
-                return;
-
-            var isDown = mouse.rightButton.isPressed;
-            if (isDown && !_rightMouseWasDown) CloseAllWindows();
-            _rightMouseWasDown = isDown;
-        }
-
-        private IEnumerator PollCloseAllWindowsCoroutine()
-        {
-            var wait = new WaitForSecondsRealtime(0.05f);
-            while (true)
-            {
-                PollCloseAllWindows();
-                yield return wait;
-            }
         }
 
         private void HandleLoadData()
@@ -585,6 +553,11 @@ namespace TimelessEchoes.UI
 
         private void LateUpdate()
         {
+            // Let EventSystem deliver pointer-up before destroying the receiving panel.
+            // Closing on down loses that release and leaves UI Toolkit's right-button
+            // bit set, so later left-clicks retain soft capture on the navigation panel.
+            if (Mouse.current?.rightButton.wasReleasedThisFrame == true)
+                CloseAllWindows();
             if (toolkitResources == null || !toolkitResources.IsOpen || toolkitResources.ManualLayout) return;
             var area = Toolkit.ToolkitWindowLayout.SafeArea;
             var width = Mathf.Min(640, Mathf.Max(0, area.width - 24));

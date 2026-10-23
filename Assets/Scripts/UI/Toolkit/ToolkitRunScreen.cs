@@ -218,7 +218,7 @@ namespace TimelessEchoes.UI.Toolkit
                 var point = root.WorldToLocal(new Vector2(target.worldBound.center.x, target.worldBound.yMax));
                 ivanReturnPointer.style.left = Mathf.Round(point.x - 12); ivanReturnPointer.style.top = Mathf.Round(point.y + 2 + 4 * (1 + Mathf.Cos(Time.unscaledTime * 5)));
             }
-            if (Mouse.current?.rightButton.wasPressedThisFrame == true || Keyboard.current?.escapeKey.wasPressedThisFrame == true) { HideDetails(); SetHeroStatsOpen(false); }
+            if (Keyboard.current?.escapeKey.wasPressedThisFrame == true) { HideDetails(); SetHeroStatsOpen(false); }
             if (Time.unscaledTime >= nextRefresh) { nextRefresh = Time.unscaledTime + .1f; Refresh(); }
             SetVisible(focusControls, ToolkitResponsiveLayout.IsPortrait && canFocus && !HasOpenDetails);
             var world = ToolkitResponsiveLayout.WorldArea;
@@ -236,6 +236,16 @@ namespace TimelessEchoes.UI.Toolkit
                 SetVisible(breakdown, false);
             }
         }
+        private void LateUpdate()
+        {
+            // Match town-window dismissal: finish the pointer gesture before hiding UI.
+            if (root != null && Mouse.current?.rightButton.wasReleasedThisFrame == true)
+            {
+                HideDetails();
+                SetHeroStatsOpen(false);
+            }
+        }
+
         private void ConfigurePortraitHud(Rect area)
         {
             var portrait = ToolkitResponsiveLayout.IsPortrait;
