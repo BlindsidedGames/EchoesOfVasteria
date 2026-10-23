@@ -96,10 +96,14 @@ namespace Tests.PlayMode
                     var skip = card.Q<Button>("meeting-skip"); Assert.NotNull(skip);
                     Assert.GreaterOrEqual(skip.worldBound.yMin, next.worldBound.yMax, "Skip sits below Next.");
                     FieldsClick(skip); yield return new WaitForSecondsRealtime(.1f);
-                    Assert.AreEqual(0, general.ReturningPlayerLessonStage, "Skip ends remaining refresher lessons.");
-                    Assert.True(navRoot.Q<Button>("adventure").enabledInHierarchy, "Skipping restores normal navigation.");
+                    var nextStage = stage == 8 ? 0 : stage + 1;
+                    Assert.AreEqual(nextStage, general.ReturningPlayerLessonStage, "Skip advances only the current lesson.");
+                    if (nextStage == 0)
+                        Assert.True(navRoot.Q<Button>("adventure").enabledInHierarchy, "The final lesson restores normal navigation.");
+                    else
+                        Assert.NotNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>(), "The next lesson remains available.");
                     Object.DestroyImmediate(speakerObject); speakerObject = null;
-                    if (meeting) Object.DestroyImmediate(meeting.gameObject);
+                    foreach (var remaining in Object.FindObjectsByType<ToolkitMeetingScreen>()) Object.DestroyImmediate(remaining.gameObject);
                     manager.CloseAllWindows(); yield return null;
                 }
             }

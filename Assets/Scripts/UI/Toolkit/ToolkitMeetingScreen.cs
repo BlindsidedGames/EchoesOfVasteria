@@ -52,10 +52,10 @@ namespace TimelessEchoes.UI.Toolkit
         private void OnEnable() { if (initialized && !completed) Show(); }
         public void BeginDialogue() => view?.Advance();
 
-        public void GuideNavigation(ToolkitNavigationScreen navigation, Action skipped = null)
+        public void GuideNavigation(ToolkitNavigationScreen navigation)
         {
             lessonNavigation = navigation;
-            view.AddSkipAction(() => { skipped?.Invoke(); Finish(); });
+            view.AddSkipAction(Finish);
             if (!navigation) return;
             view.BeforeAdvance = () =>
             {

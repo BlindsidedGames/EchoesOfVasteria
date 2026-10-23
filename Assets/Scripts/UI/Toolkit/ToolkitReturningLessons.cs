@@ -76,7 +76,6 @@ namespace TimelessEchoes.UI.Toolkit
                     var navigation = FindAnyObjectByType<ToolkitNavigationScreen>();
                     ToolkitMeetingScreen meeting = null;
                     var finished = false;
-                    var skipped = false;
                     try
                     {
                         var guiding = navigation && navigation.BeginRefresherNavigation(lesson.route);
@@ -84,7 +83,7 @@ namespace TimelessEchoes.UI.Toolkit
                         meeting = Instantiate(meetingPrefab).GetComponent<ToolkitMeetingScreen>();
                         meeting.Init(null, new[] { lesson.text }, () => finished = true,
                             new[] { "intro.refresher." + lesson.key }, true);
-                        meeting.GuideNavigation(guiding ? navigation : null, () => skipped = true);
+                        meeting.GuideNavigation(guiding ? navigation : null);
                         meeting.BeginDialogue();
                         while (meeting && !finished) yield return null;
                     }
@@ -95,7 +94,7 @@ namespace TimelessEchoes.UI.Toolkit
                     }
                     if (!finished) yield break;
                     TownWindowManager.Instance?.CloseAllWindows();
-                    general.ReturningPlayerLessonStage = skipped || index + 1 == ReturningTour.Length ? 0 : index + 2;
+                    general.ReturningPlayerLessonStage = index + 1 == ReturningTour.Length ? 0 : index + 2;
                     Blindsided.EventHandler.SaveData();
                     yield return null;
                 }
