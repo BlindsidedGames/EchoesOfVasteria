@@ -11,18 +11,28 @@ namespace TimelessEchoes.Shop
     {
         public event Action Changed;
         private string statusKey, statusEnglish = "";
-        public string Status => string.IsNullOrEmpty(statusEnglish) ? "" : ToolkitLocalization.Text(statusKey, statusEnglish);
+        public string Status => steam ? steam.Status : string.IsNullOrEmpty(statusEnglish) ? "" : ToolkitLocalization.Text(statusKey, statusEnglish);
         private void SetStatus(string key, string english) { statusKey = "shop.status." + key; statusEnglish = english; }
-        public bool Busy { get; private set; }
+        private bool busy;
+        public bool Busy { get => steam ? steam.Busy : busy; private set => busy = value; }
         public bool IsTestStore => Application.isEditor;
-        public bool Supported => Application.isEditor || Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.Android;
+        public bool Supported => Application.isEditor || Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.Android || SteamInventoryPurchases.Supported;
+        private SteamInventoryPurchases steam;
         private ShopService shop;
         private StoreController store;
         private bool connecting, connected;
         private readonly Dictionary<string, Product> products = new();
-        public void Initialize(ShopService owner) => shop = owner;
+        public void Initialize(ShopService owner)
+        {
+            shop = owner;
+            if (!SteamInventoryPurchases.Supported) return;
+            steam = gameObject.AddComponent<SteamInventoryPurchases>();
+            steam.Initialize(owner); steam.Changed += SteamChanged;
+        }
+        private void SteamChanged() => Changed?.Invoke();
         public string Price(string id)
         {
+            if (steam) return steam.Price(id);
             if (!products.TryGetValue(id, out var product)) return null;
             if (!IsTestStore) return product.metadata.localizedPriceString;
             var index = Array.IndexOf(shop.Settings.supporterProductIds, id);
@@ -30,9 +40,10 @@ namespace TimelessEchoes.Shop
                 : index >= 0 ? shop.Settings.supporterBasePrices[index] : 0;
             return "A$" + price.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
         }
-        public bool Available(string id) => connected && !Busy && products.TryGetValue(id, out var product) && product.availableToPurchase;
+        public bool Available(string id) => steam ? steam.Available(id) : connected && !Busy && products.TryGetValue(id, out var product) && product.availableToPurchase;
         public async void Connect()
         {
+            if (steam) { steam.Connect(); return; }
             if (connecting || connected || !Supported) return;
             connecting = true; SetStatus("connecting", "Connecting to store…"); Changed?.Invoke();
             try
@@ -68,6 +79,7 @@ namespace TimelessEchoes.Shop
         private void Disconnected(StoreConnectionFailureDescription _) { connecting = connected = Busy = false; SetStatus("disconnected", "Store disconnected."); Detach(); Changed?.Invoke(); }
         public void Buy(string id)
         {
+            if (steam) { steam.Buy(id); return; }
             if (!Available(id) || id == shop.Settings.permanentProductId && shop.PermanentOwned) return;
             Busy = true; SetStatus("waiting", "Waiting for purchase…"); Changed?.Invoke();
             try { store.PurchaseProduct(products[id]); } catch { Busy = false; SetStatus("could-not-start", "Purchase could not start."); Changed?.Invoke(); }
@@ -109,6 +121,7 @@ namespace TimelessEchoes.Shop
         private void RestoreFailed(PurchasesFetchFailureDescription _) { Busy = false; SetStatus("restore-failed", "Restore unavailable. Try again later."); Changed?.Invoke(); }
         public void Restore()
         {
+            if (steam) { steam.Restore(); return; }
             if (Busy) return;
             if (!connected) { Connect(); return; }
             Busy = true; SetStatus("restoring", "Restoring purchases…"); Changed?.Invoke();
@@ -126,6 +139,6 @@ namespace TimelessEchoes.Shop
             store.OnPurchasesFetched -= Restored; store.OnPurchasesFetchFailed -= RestoreFailed;
             store.OnCheckEntitlement -= EntitlementChecked; store.OnStoreDisconnected -= Disconnected; store = null;
         }
-        private void OnDestroy() => Detach();
+        private void OnDestroy() { if (steam) steam.Changed -= SteamChanged; Detach(); }
     }
 }

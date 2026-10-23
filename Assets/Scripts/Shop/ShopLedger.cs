@@ -23,6 +23,12 @@ namespace TimelessEchoes.Shop
             catch { return false; }
             Current = next; return true;
         }
+        public bool GrantLegacyAndroidInstall(long firstInstallMilliseconds, DateTimeOffset cutoff)
+        {
+            if (Current.OriginalOwner) return true;
+            if (firstInstallMilliseconds <= 0 || firstInstallMilliseconds >= cutoff.ToUnixTimeMilliseconds()) return false;
+            return Update(next => next.OriginalOwner = true);
+        }
         public bool Fulfill(ShopSettings settings, string productId, string transactionId)
         {
             if (string.IsNullOrEmpty(transactionId)) return false;
@@ -34,6 +40,13 @@ namespace TimelessEchoes.Shop
                 var transactions = new List<string>(next.Transactions ?? Array.Empty<string>()) { transactionId };
                 next.Transactions = transactions.ToArray(); next.SupporterPurchases++;
             });
+        }
+        // Steam retains purchased items. Restoring a stack must not count it again.
+        public bool ApplySteamInventory(bool permanent, int supporters)
+        {
+            if (supporters < 0) return false;
+            if (Current.Permanent == permanent && Current.SupporterPurchases == supporters) return true;
+            return Update(next => { next.Permanent = permanent; next.SupporterPurchases = supporters; });
         }
     }
 }

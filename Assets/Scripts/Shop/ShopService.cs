@@ -12,7 +12,8 @@ namespace TimelessEchoes.Shop
         public string[] supporterProductIds;
         public double permanentBasePrice;
         public double[] supporterBasePrices;
-        public uint steamPermanentDlcAppId;
+        public int steamPermanentItemDefId;
+        public int[] steamSupporterItemDefIds;
         public static ShopSettings Load()
         {
             var asset = Resources.Load<TextAsset>("Shop/settings");
@@ -51,7 +52,20 @@ namespace TimelessEchoes.Shop
         private ShopLedger ledger;
         private ShopOwnership ownership => ledger.Current;
         private bool started, applicationPaused;
-        private string OwnershipPath => Path.Combine(Application.persistentDataPath, Application.isEditor ? "shop-editor-ownership.json" : "shop-ownership.json");
+        private string OwnershipPath => Path.Combine(Application.persistentDataPath, Application.isEditor ? "shop-editor-ownership.json" : SteamInventoryPurchases.Supported ? "shop-steam-unverified.json" : "shop-ownership.json");
+        private string steamAccount;
+        public void SelectSteamAccount(string account)
+        {
+            if (steamAccount == account) return;
+            if (!ulong.TryParse(account, out var id) || id == 0) throw new ArgumentException("Invalid Steam account.");
+            ledger = new ShopLedger(Path.Combine(Application.persistentDataPath, "shop-steam-" + account + ".json"));
+            steamAccount = account; Changed?.Invoke();
+        }
+        public bool ApplySteamInventory(bool permanent, int supporters)
+        {
+            if (steamAccount == null || !ledger.ApplySteamInventory(permanent, supporters)) return false;
+            Changed?.Invoke(); return true;
+        }
         private void Awake()
         {
             if (Instance && Instance != this) { Destroy(gameObject); return; }
@@ -94,6 +108,11 @@ namespace TimelessEchoes.Shop
             if (ownership.Permanent == owned) return true;
             var result = ledger.Update(next => next.Permanent = owned);
             if (result) Changed?.Invoke(); return result;
+        }
+        public void GrantLegacyAndroidInstall(long firstInstallMilliseconds, DateTimeOffset cutoff)
+        {
+            var owned = ownership.OriginalOwner;
+            if (ledger.GrantLegacyAndroidInstall(firstInstallMilliseconds, cutoff) && !owned) Changed?.Invoke();
         }
         public void SetOriginalOwner(bool eligible)
         {
