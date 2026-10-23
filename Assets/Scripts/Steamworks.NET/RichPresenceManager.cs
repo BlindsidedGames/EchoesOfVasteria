@@ -2,10 +2,7 @@
 #define DISABLESTEAMWORKS
 #endif
 using UnityEngine;
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-using System;
-using System.Runtime.InteropServices;
-#endif
+using TimelessEchoes.Platform;
 #if !DISABLESTEAMWORKS
 using Steamworks;
 #endif
@@ -19,15 +16,6 @@ namespace TimelessEchoes
     /// </summary>
     public class RichPresenceManager : MonoBehaviour
     {
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        private static extern IntPtr GetActiveWindow();
-
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        private static extern bool SetWindowText(IntPtr hWnd, string text);
-
-#endif
-
 #if !DISABLESTEAMWORKS
         private static RichPresenceManager instance;
 
@@ -111,11 +99,7 @@ namespace TimelessEchoes
 
         private void SetWindowTitle(string status)
         {
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-            var handle = GetActiveWindow();
-            if (handle != IntPtr.Zero)
-                SetWindowText(handle, $"{Application.productName} - {status}");
-#endif
+            GameBranding.SetWindowTitle(status);
         }
 
 #endif
