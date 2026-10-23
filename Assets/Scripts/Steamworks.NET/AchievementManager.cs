@@ -6,6 +6,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Blindsided.SaveData;
 using static Blindsided.EventHandler;
 using static Blindsided.Oracle;
@@ -51,6 +52,8 @@ namespace TimelessEchoes
         private readonly HashSet<string> pendingMobileUnlocks = new HashSet<string>();
         // Per-session cache to avoid re-reporting the same achievement repeatedly during a play session
         private readonly HashSet<string> unlockedMobileThisSession = new HashSet<string>();
+        private readonly HashSet<string> reportingMobile = new HashSet<string>();
+        private float nextMobileEvaluation;
         private TimelessEchoes.Stats.GameplayStatTracker tracker;
 #endif
 
@@ -71,23 +74,6 @@ namespace TimelessEchoes
 
 #if UNITY_ANDROID || UNITY_IOS
             tracker = TimelessEchoes.Stats.GameplayStatTracker.Instance;
-            if (tracker != null)
-            {
-                tracker.OnDistanceAdded += OnMobileDistanceAdded;
-                tracker.OnRunEnded += OnMobileRunEnded;
-                tracker.OnTaskCompletedEvent += OnMobileTaskCompleted;
-            }
-            var bm = TimelessEchoes.Buffs.BuffManager.Instance;
-            if (bm != null)
-            {
-                bm.OnBuffCast += OnMobileBuffCast;
-            }
-            var gm = GameManager.Instance;
-            if (gm != null)
-            {
-                gm.HeroDied += OnMobileHeroDied;
-            }
-
             // Subscribe to auth changes to flush queued unlocks
             if (!TimelessEchoes.Platform.StartupDiagnostics.SkipGameCenter)
             {
@@ -104,22 +90,6 @@ namespace TimelessEchoes
 
 #if UNITY_ANDROID || UNITY_IOS
             GameServices.OnAuthStatusChange -= OnAuthStatusChange;
-            if (tracker != null)
-            {
-                tracker.OnDistanceAdded -= OnMobileDistanceAdded;
-                tracker.OnRunEnded -= OnMobileRunEnded;
-                tracker.OnTaskCompletedEvent -= OnMobileTaskCompleted;
-            }
-            var bm = TimelessEchoes.Buffs.BuffManager.Instance;
-            if (bm != null)
-            {
-                bm.OnBuffCast -= OnMobileBuffCast;
-            }
-            var gm = GameManager.Instance;
-            if (gm != null)
-            {
-                gm.HeroDied -= OnMobileHeroDied;
-            }
 #endif
         }
 
@@ -229,25 +199,21 @@ namespace TimelessEchoes
         }
 
 #if UNITY_ANDROID || UNITY_IOS
-        private void OnMobileDistanceAdded(float _)
+        private void Update()
         {
+            if (Time.unscaledTime < nextMobileEvaluation) return;
+            nextMobileEvaluation = Time.unscaledTime + 5f;
+            if (oracle == null || !oracle.HasLoadedCurrentSlotData) return;
+            // Town levels and kills can change without a movement/task event.
+            CheckExistingAchievements();
             EvaluateMobileStatMilestones();
+            FlushPendingMobile();
         }
-        private void OnMobileRunEnded(bool _)
+
+        private void FlushPendingMobile()
         {
-            EvaluateMobileStatMilestones();
-        }
-        private void OnMobileTaskCompleted()
-        {
-            EvaluateMobileStatMilestones();
-        }
-        private void OnMobileBuffCast(TimelessEchoes.Buffs.BuffRecipe _, bool __)
-        {
-            EvaluateMobileStatMilestones();
-        }
-        private void OnMobileHeroDied()
-        {
-            EvaluateMobileStatMilestones();
+            if (!GameServices.IsAuthenticated || pendingMobileUnlocks.Count == 0) return;
+            foreach (var id in pendingMobileUnlocks.ToArray()) TryUnlockMobile(id);
         }
 
         private void OnAuthStatusChange(GameServicesAuthStatusChangeResult result, VoxelBusters.CoreLibrary.Error error)
@@ -255,40 +221,30 @@ namespace TimelessEchoes
             if (TimelessEchoes.Platform.StartupDiagnostics.SkipGameCenter) return;
             if (result.AuthStatus != LocalPlayerAuthStatus.Authenticated) return;
 
-            // Flush queued unlocks
-            foreach (var apiName in pendingMobileUnlocks)
-            {
-                GameServices.ReportAchievementProgress(apiName, 100.0, null);
-            }
-            pendingMobileUnlocks.Clear();
-
-            // Re-evaluate stat-based achievements now that we are signed in
+            FlushPendingMobile();
+            CheckExistingAchievements();
             EvaluateMobileStatMilestones();
         }
 
         private void TryUnlockMobile(string apiName)
         {
-            if (TimelessEchoes.Platform.StartupDiagnostics.SkipGameCenter) return;
-            // Per-session de-duplication: once an achievement has been unlocked (or queued) this session,
-            // avoid re-reporting.
-            if (unlockedMobileThisSession.Contains(apiName))
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipGameCenter ||
+                unlockedMobileThisSession.Contains(apiName) || reportingMobile.Contains(apiName)) return;
+            if (!GameServices.IsAuthenticated)
             {
+                if (pendingMobileUnlocks.Add(apiName))
+                    MobileAuthDebouncer.RequestSilentAuth("AchievementUnlock");
                 return;
             }
 
-            if (GameServices.IsAuthenticated)
+            pendingMobileUnlocks.Remove(apiName);
+            reportingMobile.Add(apiName);
+            GameServices.ReportAchievementProgress(apiName, 100.0, (success, error) =>
             {
-                GameServices.ReportAchievementProgress(apiName, 100.0, null);
-                unlockedMobileThisSession.Add(apiName);
-            }
-            else
-            {
-                // Defer until signed in and trigger silent auth
-                pendingMobileUnlocks.Add(apiName);
-                // Mark as handled for this session to prevent repeated queuing
-                unlockedMobileThisSession.Add(apiName);
-                MobileAuthDebouncer.RequestSilentAuth("AchievementUnlock");
-            }
+                reportingMobile.Remove(apiName);
+                if (success) unlockedMobileThisSession.Add(apiName);
+                else pendingMobileUnlocks.Add(apiName);
+            });
         }
 
         private void EvaluateMobileStatMilestones()
@@ -296,58 +252,17 @@ namespace TimelessEchoes
             // Lazy fetch tracker
             tracker ??= TimelessEchoes.Stats.GameplayStatTracker.Instance;
 
-            // Distance milestones (use both HighestDistance and CurrentRunDistance safeguards)
-            float highest = tracker != null ? Mathf.Max(tracker.HighestDistance, tracker.CurrentRunDistance) : 0f;
-            if (highest >= 100f) TryUnlockMobile("Reached100");
-            if (highest >= 1000f) TryUnlockMobile("Reached1000");
-            if (highest >= 10000f) TryUnlockMobile("Reached10000");
-
-            // Total kilometers
-            double km = tracker != null ? tracker.DistanceTravelled / 1000.0 : 0.0;
-            if (km >= 1.0) TryUnlockMobile("Kilometers1");
-            if (km >= 100.0) TryUnlockMobile("Kilometers100");
-            if (km >= 1000.0) TryUnlockMobile("Kilometers1000");
-
-            // Tasks completed
-            int tasks = tracker != null ? tracker.TasksCompleted : 0;
-            if (tasks >= 100) TryUnlockMobile("Tasks100");
-            if (tasks >= 5000) TryUnlockMobile("Tasks5k");
-            if (tasks >= 25000) TryUnlockMobile("Tasks25k");
-
-            // Buffs cast thresholds: 10, 100, 1000, 2500, 9001
-            int buffs = tracker != null ? tracker.BuffsCast : 0;
-            if (buffs >= 10) TryUnlockMobile("Buffs1");
-            if (buffs >= 100) TryUnlockMobile("Buffs2");
-            if (buffs >= 1000) TryUnlockMobile("Buffs3");
-            if (buffs >= 2500) TryUnlockMobile("Buffs4");
-            if (buffs >= 9001) TryUnlockMobile("Buffs5");
-
-            // Deaths thresholds: 10, 250, 1000
-            int deaths = tracker != null ? tracker.Deaths : 0;
-            if (deaths >= 10) TryUnlockMobile("Die10");
-            if (deaths >= 250) TryUnlockMobile("Die250");
-            if (deaths >= 1000) TryUnlockMobile("Die1000");
-
-            // Eva/Ivan level milestones (from save data)
-            int evaLevel = 0;
-            int ivanLevel = 0;
-            if (Blindsided.Oracle.oracle != null && Blindsided.Oracle.oracle.saveData != null)
-            {
-                evaLevel = Mathf.Max(Blindsided.Oracle.oracle.saveData.CauldronEvaLevel, 0);
-                ivanLevel = Mathf.Max(Blindsided.Oracle.oracle.saveData.CraftingMasteryLevel, 0);
-            }
-
-            if (evaLevel >= 10) TryUnlockMobile("EvaLevel10");
-            if (evaLevel >= 50) TryUnlockMobile("EvaLevel50");
-            if (evaLevel >= 100) TryUnlockMobile("EvaLevel100");
-            if (evaLevel >= 200) TryUnlockMobile("EvaLevel200");
-            if (evaLevel >= 500) TryUnlockMobile("EvaLevel500");
-
-            if (ivanLevel >= 10) TryUnlockMobile("IvanLevel10");
-            if (ivanLevel >= 50) TryUnlockMobile("IvanLevel50");
-            if (ivanLevel >= 100) TryUnlockMobile("IvanLevel100");
-            if (ivanLevel >= 500) TryUnlockMobile("IvanLevel500");
-            if (ivanLevel >= 1000) TryUnlockMobile("IvanLevel1000");
+            var data = oracle != null ? oracle.saveData : null;
+            var progress = new AchievementProgress(
+                highestDistance: tracker != null ? Mathf.Max(tracker.HighestDistance, tracker.CurrentRunDistance) : 0,
+                kilometers: tracker != null ? tracker.DistanceTravelled / 1000.0 : 0,
+                tasks: tracker != null ? tracker.TasksCompleted : 0,
+                buffs: tracker != null ? tracker.BuffsCast : 0,
+                deaths: tracker != null ? tracker.Deaths : 0,
+                kills: tracker != null ? tracker.TotalKills : 0,
+                evaLevel: data?.CauldronEvaLevel ?? 0,
+                ivanLevel: data?.CraftingMasteryLevel ?? 0);
+            AchievementMilestones.ReportEarned(progress, TryUnlockMobile);
         }
 #endif
     }
