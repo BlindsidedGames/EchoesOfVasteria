@@ -82,8 +82,8 @@ namespace TimelessEchoes.UI.Toolkit
                         yield return null;
                         meeting = Instantiate(meetingPrefab).GetComponent<ToolkitMeetingScreen>();
                         meeting.Init(null, new[] { lesson.text }, () => finished = true,
-                            new[] { "intro.refresher." + lesson.key }, index < ReturningTour.Length - 1);
-                        if (guiding) meeting.GuideNavigation(navigation);
+                            new[] { "intro.refresher." + lesson.key }, true);
+                        meeting.GuideNavigation(guiding ? navigation : null);
                         meeting.BeginDialogue();
                         while (meeting && !finished) yield return null;
                     }

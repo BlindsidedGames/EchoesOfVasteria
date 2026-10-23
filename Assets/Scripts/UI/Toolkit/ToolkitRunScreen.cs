@@ -245,7 +245,9 @@ namespace TimelessEchoes.UI.Toolkit
             hud.style.left = portrait ? 8 : 12;
             hud.style.top = portrait ? (ToolkitResponsiveLayout.FocusView ? area.height - 84 : 8) : StyleKeyword.Auto;
             hud.style.bottom = portrait ? StyleKeyword.Auto : 12;
-            hud.style.width = portrait ? Mathf.Min(138, world.width - 220) : 154;
+            hud.style.width = portrait ? Mathf.Min(138, world.width - 220) : StyleKeyword.Auto;
+            // In landscape the five ability slots determine the shared HUD width.
+            abilityBar.style.width = portrait ? StyleKeyword.Null : StyleKeyword.Auto;
             heroStatsPanel.EnableInClassList("focus-stats-content", portrait && ToolkitResponsiveLayout.FocusView);
             if (portraitStatsScroll != null)
             {
@@ -273,7 +275,7 @@ namespace TimelessEchoes.UI.Toolkit
             heroStatsPanel.style.backgroundColor = portrait ? Color.clear : ToolkitColorTheme.HudSurface;
             if (portraitRun == portrait) return;
             portraitRun = portrait;
-            health.style.width = portrait ? Length.Percent(100) : 154;
+            health.style.width = Length.Percent(100);
             health.style.height = portrait ? 36 : 24;
             health.style.borderLeftWidth = health.style.borderRightWidth = health.style.borderTopWidth = health.style.borderBottomWidth = portrait ? 0 : .5f;
             health.style.paddingLeft = portrait ? 0 : 5;
@@ -283,7 +285,7 @@ namespace TimelessEchoes.UI.Toolkit
             heroStatsPanel.EnableInClassList("portrait-stats-content", portrait);
             heroStatsPanel.style.position = portrait ? Position.Relative : Position.Absolute;
             heroStatsPanel.style.bottom = portrait ? StyleKeyword.Auto : Length.Percent(100);
-            heroStatsPanel.style.width = portrait ? Length.Percent(100) : 154;
+            heroStatsPanel.style.width = Length.Percent(100);
             heroStatsPanel.style.marginBottom = portrait ? 0 : 4;
             heroStatsPanel.style.borderLeftWidth = heroStatsPanel.style.borderRightWidth = heroStatsPanel.style.borderTopWidth = heroStatsPanel.style.borderBottomWidth = portrait ? 0 : .5f;
             heroHealthText.style.fontSize = portrait ? 9 : 8;
@@ -341,7 +343,7 @@ namespace TimelessEchoes.UI.Toolkit
             }
             heroStatsPanel.style.position = portrait ? Position.Relative : Position.Absolute;
             heroStatsPanel.style.bottom = portrait ? StyleKeyword.Auto : Length.Percent(100);
-            heroStatsPanel.style.width = portrait ? Length.Percent(100) : 154;
+            heroStatsPanel.style.width = Length.Percent(100);
             foreach (var label in heroStatsPanel.Query<Label>().ToList())
                 label.style.fontSize = portrait ? 10 : label == heroCharacterName ? 9 : 8;
             foreach (var value in heroStatValues.Values) value.parent.style.height = portrait ? 26 : 13;

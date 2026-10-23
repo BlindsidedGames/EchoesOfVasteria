@@ -314,6 +314,7 @@ namespace Tests.PlayMode
         private static void FieldsClick(Button button)
         {
             Assert.NotNull(button);
+            using (var move = PointerMoveEvent.GetPooled(new Event { type = EventType.MouseMove, mousePosition = button.worldBound.center })) button.SendEvent(move);
             using (var down = PointerDownEvent.GetPooled(new Event { type = EventType.MouseDown, button = 0, mousePosition = button.worldBound.center })) button.SendEvent(down);
             using (var up = PointerUpEvent.GetPooled(new Event { type = EventType.MouseUp, button = 0, mousePosition = button.worldBound.center })) button.SendEvent(up);
         }

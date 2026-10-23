@@ -86,8 +86,8 @@ namespace TimelessEchoes.UI.Toolkit
         private void BuildHeroHud()
         {
             var healthStrip = new VisualElement { name = "run-health-strip" };
-            hud.style.width = 154;
-            healthStrip.style.width = 154; healthStrip.style.height = 24;
+            hud.style.width = StyleKeyword.Auto;
+            healthStrip.style.width = Length.Percent(100); healthStrip.style.height = 24;
             healthStrip.style.flexDirection = FlexDirection.Row; healthStrip.style.alignItems = Align.Center;
             healthStrip.style.paddingLeft = 5; healthStrip.style.paddingRight = 3;
             HeroSurface(healthStrip); hud.Add(healthStrip);
@@ -116,7 +116,7 @@ namespace TimelessEchoes.UI.Toolkit
 
             heroStatsPanel = new VisualElement { name = "run-stats-panel" };
             heroStatsPanel.style.position = Position.Absolute; heroStatsPanel.style.left = 0; heroStatsPanel.style.bottom = Length.Percent(100); heroStatsPanel.style.marginBottom = 4;
-            heroStatsPanel.style.width = 154; heroStatsPanel.style.paddingLeft = heroStatsPanel.style.paddingRight = 7;
+            heroStatsPanel.style.width = Length.Percent(100); heroStatsPanel.style.paddingLeft = heroStatsPanel.style.paddingRight = 7;
             heroStatsPanel.style.paddingTop = heroStatsPanel.style.paddingBottom = 5;
             heroStatsOpen = false; heroStatsPanel.style.display = DisplayStyle.None;
             HeroSurface(heroStatsPanel); hud.Add(heroStatsPanel);
