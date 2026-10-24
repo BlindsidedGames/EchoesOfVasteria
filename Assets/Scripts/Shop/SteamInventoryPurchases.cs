@@ -38,11 +38,14 @@ namespace TimelessEchoes.Shop
         private Callback<MicroTxnAuthorizationResponse_t> authorization;
         private readonly HashSet<ulong> declinedOrders = new();
         private bool dirty;
+        private bool connected;
         private CSteamID account;
+        private bool Connected => connected && SteamManager.Initialized && SteamUser.BLoggedOn() && SteamUser.GetSteamID() == account;
+        private bool CatalogLoaded => prices.ContainsKey(shop.Settings.permanentProductId) && Array.TrueForAll(shop.Settings.supporterProductIds, prices.ContainsKey);
         private void SetStatus(string key, string english) { statusKey = key; statusEnglish = english; Changed?.Invoke(); }
         public void Initialize(ShopService owner) => shop = owner;
         public string Price(string id) => prices.TryGetValue(id, out var price) ? price : null;
-        public bool Available(string id) => !Busy && prices.ContainsKey(id) && SteamManager.Initialized && SteamUser.BLoggedOn() && SteamUtils.IsOverlayEnabled();
+        public bool Available(string id) => !Busy && Connected && prices.ContainsKey(id) && SteamUtils.IsOverlayEnabled();
         private int Definition(string id)
         {
             if (id == shop.Settings.permanentProductId) return shop.Settings.steamPermanentItemDefId;
@@ -52,7 +55,14 @@ namespace TimelessEchoes.Shop
         private void Identify()
         {
             if (!SteamManager.Initialized) throw new InvalidOperationException("Steam unavailable.");
-            account = SteamUser.GetSteamID();
+            var current = SteamUser.GetSteamID();
+            if (account != current)
+            {
+                connected = false;
+                prices.Clear();
+                declinedOrders.Clear();
+            }
+            account = current;
             shop.SelectSteamAccount(account.ToString());
             delivered ??= Callback<SteamInventoryResultReady_t>.Create(result =>
             {
@@ -130,7 +140,7 @@ namespace TimelessEchoes.Shop
         private static int Quantity(Dictionary<int, int> items, int definition) => items.TryGetValue(definition, out var count) ? count : 0;
         public async void Connect()
         {
-            if (Busy) return;
+            if (Busy || Connected && CatalogLoaded) return;
             Busy = true; SetStatus("connecting", "Connecting to store…");
             try
             {
@@ -145,11 +155,12 @@ namespace TimelessEchoes.Shop
                 foreach (var id in ids)
                     if (Definition(id) > 0 && SteamInventory.GetItemPrice(new SteamItemDef_t(Definition(id)), out var price, out _))
                         prices[id] = FormatPrice(price, result.m_rgchCurrency);
+                connected = true;
                 if (SteamUtils.IsOverlayEnabled()) SetStatus("none", "");
                 else SetStatus("unavailable", "Store unavailable. Try again later.");
             }
             catch (OperationCanceledException) { }
-            catch { if (this) { prices.Clear(); SetStatus("unavailable", "Store unavailable. Try again later."); } }
+            catch { if (this) { connected = false; prices.Clear(); SetStatus("unavailable", "Store unavailable. Try again later."); } }
             finally { Busy = false; if (this) Changed?.Invoke(); }
         }
         // Steam prices are hundredths in every currency, including JPY and KWD.
@@ -192,17 +203,37 @@ namespace TimelessEchoes.Shop
             catch { if (this) SetStatus("unsuccessful", "Purchase cancelled or unsuccessful. Nothing was unlocked."); }
             finally { Busy = false; if (this) Changed?.Invoke(); }
         }
-        public async void Restore()
+        public void Restore() => RefreshOwnership(true);
+        private async void RefreshOwnership(bool userInitiated)
         {
             if (Busy) return;
-            Busy = true; SetStatus("restoring", "Restoring purchases…");
-            try { Identify(); dirty = false; await Inventory(account); GetComponent<LegacyShopOwner>()?.Check(); SetStatus("restored", "Purchases restored."); }
+            Busy = true;
+            if (userInitiated) SetStatus("restoring", "Restoring purchases…");
+            try
+            {
+                Identify(); dirty = false;
+                await Inventory(account);
+                GetComponent<LegacyShopOwner>()?.Check();
+                if (userInitiated) SetStatus("restored", "Purchases restored.");
+            }
             catch (OperationCanceledException) { }
-            catch { if (this) SetStatus("restore-failed", "Restore unavailable. Try again later."); }
+            catch (Exception error)
+            {
+                if (this)
+                {
+                    if (userInitiated) SetStatus("restore-failed", "Restore unavailable. Try again later.");
+                    else Debug.LogWarning("Steam ownership sync failed: " + error.Message);
+                }
+            }
             finally { Busy = false; if (this) Changed?.Invoke(); }
         }
-        private void Update() { if (dirty && !Busy) Restore(); }
-        private void OnApplicationFocus(bool focused) { if (focused && shop && shop.Unlocked) Connect(); }
+        private void Update() { if (dirty && !Busy) RefreshOwnership(false); }
+        private void OnApplicationFocus(bool focused)
+        {
+            if (!focused || !shop || !shop.Unlocked) return;
+            if (Connected && CatalogLoaded) dirty = true;
+            else Connect();
+        }
         private bool stopping;
         private bool quitting;
         private void OnApplicationQuit() => quitting = true;

@@ -16,8 +16,9 @@ namespace TimelessEchoes.UI.Toolkit
         [SerializeField] private TownWindowManager windows;
         private PanelSettings panel;
         private VisualElement root, confirmation;
-        private Button open, confirm;
+        private Button open, confirm, discord;
         private bool confirming;
+        private ToolkitNavigationScreen navigation;
         private readonly GameQuitRequest request = new();
         private readonly List<ToolkitTextBinding> bindings = new();
 
@@ -31,6 +32,15 @@ namespace TimelessEchoes.UI.Toolkit
             document.rootVisualElement.pickingMode = PickingMode.Ignore;
             root = new VisualElement { name = "quit-controls", pickingMode = PickingMode.Ignore };
             root.AddToClassList("eov-quit"); theme.Apply(root);ToolkitGameplay.Apply(root,theme);
+            root.style.alignItems = Align.Center;
+            discord = MakeButton("discord", definition.discord, 24, () => Application.OpenURL(definition.discordUrl));
+            discord.tooltip = "Discord";
+            discord.style.height = 24;
+            discord.style.marginRight = 4;
+            var discordIcon = new Image { sprite = definition.discord, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
+            discordIcon.style.width = 16; discordIcon.style.height = 16;
+            discord.Add(discordIcon);
+            root.Add(discord);
             open = MakeButton("quit-open", definition.quit, definition.iconSize, () => SetConfirmation(true));
             root.Add(open);
             confirmation = new VisualElement { name = "quit-confirmation", pickingMode = PickingMode.Ignore };
@@ -81,12 +91,21 @@ namespace TimelessEchoes.UI.Toolkit
         private void Update()
         {
             if (root == null) return;
-            var visible = Screen.fullScreen && !UnityEngine.Device.Application.isMobilePlatform && !ToolkitResponsiveLayout.IsPortrait && (GameManager.Instance == null || GameManager.Instance.CurrentMap == null)
-                && (!windows || !windows.HasOpenWindow);
-            if (!visible && confirming) SetConfirmation(false);
-            root.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+            if (!windows) windows = TownWindowManager.Instance;
+            if (!navigation) navigation = FindAnyObjectByType<ToolkitNavigationScreen>();
+            var inTown = ToolkitResponsiveLayout.TownView;
+            var showControls = inTown && (!windows || !windows.HasOpenWindow) && (!navigation || !navigation.HasOpenMenu);
+            var showQuit = showControls && Screen.fullScreen && !UnityEngine.Device.Application.isMobilePlatform && !ToolkitResponsiveLayout.IsPortrait;
+            if (!showQuit && confirming) SetConfirmation(false);
+            open.style.display = showQuit && !confirming ? DisplayStyle.Flex : DisplayStyle.None;
+            confirmation.style.display = showQuit && confirming ? DisplayStyle.Flex : DisplayStyle.None;
+            discord.style.marginRight = showQuit ? 4 : 0;
+            var touchSize = ToolkitResponsiveLayout.IsPortrait ? 32 : 24;
+            discord.style.width = touchSize; discord.style.height = touchSize;
+            root.style.display = showControls ? DisplayStyle.Flex : DisplayStyle.None;
             var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height), Screen.safeArea, UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);
-            root.style.left = area.xMax; root.style.top = area.y;
+            root.style.left = area.xMax - (ToolkitResponsiveLayout.IsPortrait ? 6 : 0);
+            root.style.top = area.y + (ToolkitResponsiveLayout.IsPortrait ? 6 : 0);
         }
 
         private void OnDisable()

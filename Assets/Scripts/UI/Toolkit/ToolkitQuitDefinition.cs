@@ -6,6 +6,8 @@ namespace TimelessEchoes.UI.Toolkit
     public sealed class ToolkitQuitDefinition : ScriptableObject
     {
         public Sprite quit, confirm, cancel;
+        public Sprite discord;
+        public string discordUrl;
         public ToolkitBookDefinition.Text confirmText, cancelText;
         public float iconSize = 16, buttonWidth = 47, spacing = 1, fontSize = 8;
     }

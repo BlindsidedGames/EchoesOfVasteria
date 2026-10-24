@@ -29,7 +29,7 @@ namespace TimelessEchoes.UI.Toolkit
         private PanelSettings panel;
         private VisualElement root, popup, autoPinGroup;
         private VisualElement menuDismiss;
-        private Button autoPin, discord, moreButton;
+        private Button autoPin, moreButton;
         private Label portraitMenuTitle;
         private VisualElement portraitMenuHeader, portraitMoreHeader;
         private ScrollView portraitGroupScroll, portraitMoreScroll;
@@ -285,13 +285,6 @@ namespace TimelessEchoes.UI.Toolkit
             label.AddToClassList("eov-navigation-auto-pin-label"); autoPinGroup.Add(label);
             bindings.Add(new ToolkitTextBinding(label, definition.autoPinLabel));
             context.Add(autoPinGroup);
-            discord = new Button(() => Application.OpenURL(definition.discordUrl)) { name = "discord" };
-            discord.AddToClassList("eov-navigation-button"); discord.style.width = 22;
-            discord.AddToClassList("button");
-            var icon = new Image { sprite = definition.discord, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
-            icon.AddToClassList("eov-navigation-icon"); discord.Add(icon);
-            discord.style.marginRight = 2;
-            root.Q("navigation-close").Insert(0, discord);
         }
 
         public void FollowHelpAfterDialogue(string route) => StartCoroutine(FollowAfterDialogue(route));
@@ -545,7 +538,6 @@ namespace TimelessEchoes.UI.Toolkit
             SetVisible(questAttention, QuestManager.Instance != null && QuestManager.Instance.HasQuestsReadyForTurnIn());
             SetVisible(hubQuestAttention, QuestManager.Instance != null && QuestManager.Instance.HasQuestsReadyForTurnIn());
             SetVisible(autoPinGroup, !ToolkitResponsiveLayout.IsPortrait && windows != null && windows.IsWindowOpen(TownWindowManager.Window.Quests));
-            SetVisible(discord, windows != null && windows.IsWindowOpen(TownWindowManager.Window.Options));
             var inRun = GameManager.Instance != null && GameManager.Instance.CurrentMap != null;
             SetVisible(progressRoot, inRun);
             root.EnableInClassList("portrait-focus", ToolkitResponsiveLayout.IsPortrait && ToolkitResponsiveLayout.FocusView);
