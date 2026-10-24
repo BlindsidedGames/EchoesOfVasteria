@@ -105,7 +105,8 @@ namespace BuildTools
                 scenes = scenes,
                 locationPathName = locationPathName,
                 target = target,
-                options = BuildOptions.None
+                // Compress player data losslessly without changing imported texture quality.
+                options = BuildOptions.CompressWithLz4HC
             };
 
             try
