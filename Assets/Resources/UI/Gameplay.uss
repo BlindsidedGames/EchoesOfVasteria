@@ -84,7 +84,9 @@
 .gameplay .conversion-input .unity-base-field__input {min-height:27px;border-width:0.5px;border-color:var(--line);}
 .gameplay .conversion-input .unity-text-field__input {-unity-text-align:middle-center;}
 .gameplay .mix-preview {flex-direction:row;justify-content:center;align-items:center;min-height:27px;}
-.gameplay .mix-selected {min-height:24px;padding:3px 5px;margin-left:8px;font-size:var(--small);}
+.gameplay .mix-actions {flex-shrink:0;margin-top:4px;}
+.gameplay .mix-actions .button {margin:0;}
+.gameplay .mix-actions .mix-selected {min-height:30px;padding:var(--space-control);margin-bottom:6px;}
 .gameplay .mix-all-main {min-height:30px;}
 .gameplay .mix-preview .mix-label {white-space:nowrap;-unity-font-style:bold;}
 .gameplay .mix-caption {margin-right:4px;}
@@ -451,6 +453,16 @@
 .gameplay.live-cauldron {padding:var(--space-panel);background-color:var(--surface);border-width:.5px;border-color:var(--panel-edge);border-top-color:var(--panel-light);}
 .gameplay .collection-detail {position:absolute;left:25%;right:25%;bottom:12px;padding:var(--space-section);max-height:65%;}
 .gameplay .collection-detail Label {font-size:var(--small);white-space:normal;}
+.gameplay .collection-dialog {width:310px;padding:12px;}
+.gameplay .collection-dialog .collection-details-text {font-size:12px;white-space:normal;}
+.gameplay .collection-dialog .collection-details-title {font-size:14px;-unity-font-style:bold;margin-bottom:12px;}
+.gameplay .collection-dialog .collection-detail-row {align-items:flex-start;margin-bottom:8px;}
+.gameplay .collection-dialog .collection-detail-name {font-size:12px;flex-grow:1;flex-shrink:1;min-width:0;}
+.gameplay .collection-dialog .collection-detail-value {font-size:12px;margin-left:12px;white-space:nowrap;}
+.gameplay .collection-dialog .collection-detail-total {border-top-width:.5px;border-top-color:var(--line);padding-top:8px;}
+.gameplay .collection-dialog .collection-detail-next {margin-top:4px;}
+.gameplay .collection-dialog .scroll {flex-shrink:1;}
+.gameplay .collection-dialog .button {min-height:32px;font-size:12px;margin-top:12px;}
 .gameplay .ledger-entry {flex-shrink:0;}
 
 .gameplay.eov-navigation {height:38px;overflow:visible;}
