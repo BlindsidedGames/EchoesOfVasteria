@@ -43,7 +43,7 @@ namespace Tests.PlayMode
                 foreach (var entry in AssetDatabase.LoadAssetAtPath<ToolkitNavigationDefinition>("Assets/UI/Toolkit/Navigation.asset").entries)
                     foreach (var rule in entry.visibility)
                         if (rule.quest) oracle.saveData.Quests[rule.quest.questId] = new GameData.QuestRecord { Completed = true };
-                foreach (var item in new[] { ("Quests", "toolkitQuests"), ("Statistics", "toolkitStatistics") })
+                foreach (var item in new[] { ("Quests", "toolkitQuests"), ("Statistics", "toolkitStatistics"), ("Options", "toolkitOptions") })
                 {
                     var view = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/" + item.Item1 + ".prefab"));
                     views.Add(view);
@@ -77,6 +77,19 @@ namespace Tests.PlayMode
                     var hand = navRoot.Q("tutorial-pointer-" + parent.name);
                     Assert.AreEqual(DisplayStyle.None, hand.resolvedStyle.display, "The pointer waits until Next dismisses the text.");
                     Assert.True(parent.enabledInHierarchy, "The intended destination can also start this lesson.");
+                    var settings = navRoot.Q<Button>("options");
+                    Assert.True(settings.enabledInHierarchy, "Settings stays available during returning-player lessons.");
+                    FieldsClick(settings);
+                    yield return new WaitForSecondsRealtime(.1f);
+                    Assert.True(manager.IsWindowOpen(TownWindowManager.Window.Options));
+                    Assert.AreEqual(stage, general.ReturningPlayerLessonStage, "Settings cannot advance a refresher lesson.");
+                    Assert.AreEqual(DisplayStyle.None, card.resolvedStyle.display);
+                    FieldsClick(navRoot.Q<Button>(portrait ? "options" : "close"));
+                    yield return new WaitForSecondsRealtime(.1f);
+                    Assert.False(manager.HasOpenWindow);
+                    Assert.AreEqual(stage, general.ReturningPlayerLessonStage);
+                    Assert.AreEqual(DisplayStyle.Flex, card.resolvedStyle.display);
+                    Assert.AreEqual(DisplayStyle.None, hand.resolvedStyle.display, "Settings cannot start tutorial guidance.");
                     if (portrait) FieldsClick(parent); else FieldsClick(next);
                     yield return new WaitForSecondsRealtime(.1f);
                     Assert.AreEqual(DisplayStyle.None, card.resolvedStyle.display, $"Stage {stage}, portrait {portrait}: Next dismisses explanation.");

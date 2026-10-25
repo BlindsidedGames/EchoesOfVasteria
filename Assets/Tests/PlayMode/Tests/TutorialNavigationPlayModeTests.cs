@@ -20,7 +20,7 @@ namespace Tests.PlayMode
         public IEnumerator TutorialDestinationButtonsAdvanceOnceAndOpenTheNamedPageAcrossLayouts()
         {
             var owner = new GameObject("Tutorial navigation services");
-            GameObject nav = null, stats = null, quests = null, meeting = null;
+            GameObject nav = null, stats = null, quests = null, options = null, meeting = null;
             try
             {
                 owner.AddComponent<ResourceManager>();
@@ -36,8 +36,10 @@ namespace Tests.PlayMode
                         if (rule.quest) oracle.saveData.Quests[rule.quest.questId] = new GameData.QuestRecord { Completed = true };
                 stats = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Statistics.prefab"));
                 quests = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Quests.prefab"));
+                options = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Options.prefab"));
                 typeof(TownWindowManager).GetField("toolkitStatistics", Private).SetValue(windows, stats.GetComponent<ToolkitStatisticsScreen>());
                 typeof(TownWindowManager).GetField("toolkitQuests", Private).SetValue(windows, quests.GetComponent<ToolkitQuestsScreen>());
+                typeof(TownWindowManager).GetField("toolkitOptions", Private).SetValue(windows, options.GetComponent<ToolkitOptionsScreen>());
                 nav = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Navigation.prefab"));
                 var navigation = nav.GetComponent<ToolkitNavigationScreen>();
                 var ui = nav.GetComponent<UIDocument>().rootVisualElement;
@@ -56,7 +58,19 @@ namespace Tests.PlayMode
                         yield return new WaitForSecondsRealtime(.15f); navigation.Refresh();
                         var target = ui.Q<Button>(route == "quests" ? "hub" : "stats");
                         Assert.True(target.enabledInHierarchy, "A tutorial must leave its destination clickable: " + route);
-                        Assert.False(ui.Q<Button>("options").enabledInHierarchy, "Unrelated navigation stays locked.");
+                        var settings = ui.Q<Button>("options");
+                        Assert.True(settings.enabledInHierarchy, "Appearance settings must remain available during a tutorial.");
+                        FieldsClick(settings);
+                        yield return new WaitForSecondsRealtime(.15f);
+                        Assert.True(options.GetComponent<ToolkitOptionsScreen>().IsOpen);
+                        Assert.AreEqual(0, completed, "Opening Settings must not complete the lesson.");
+                        var card = meeting.GetComponent<UIDocument>().rootVisualElement.Q(className: "eov-meeting");
+                        Assert.AreEqual(DisplayStyle.None, card.resolvedStyle.display, "Dialogue must not cover Settings.");
+                        FieldsClick(ui.Q<Button>(size.x < size.y ? "options" : "close"));
+                        yield return new WaitForSecondsRealtime(.15f);
+                        Assert.False(options.GetComponent<ToolkitOptionsScreen>().IsOpen);
+                        Assert.AreEqual(0, completed, "Closing Settings must leave the lesson pending.");
+                        Assert.AreEqual(DisplayStyle.Flex, card.resolvedStyle.display, "The same lesson returns after Settings closes.");
                         FieldsClick(target); FieldsClick(target);
                         yield return new WaitForSecondsRealtime(.2f);
                         Assert.AreEqual(1, completed, "The destination click completes the same dialogue action exactly once.");
@@ -93,6 +107,7 @@ namespace Tests.PlayMode
                 if (nav) Object.DestroyImmediate(nav);
                 if (stats) Object.DestroyImmediate(stats);
                 if (quests) Object.DestroyImmediate(quests);
+                if (options) Object.DestroyImmediate(options);
                 Object.DestroyImmediate(owner);
             }
         }

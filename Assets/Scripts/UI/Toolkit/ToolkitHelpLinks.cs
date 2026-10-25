@@ -27,7 +27,7 @@ namespace TimelessEchoes.UI.Toolkit
             // Remember authored/localized markup, so repeated switches never rewrite source data.
             if (text.text != state.renderedText) state.sourceText = text.text;
             var source = state.sourceText ?? string.Empty;
-            var display = ToolkitColorTheme.IsLight ? LinkColour.Replace(source, "<color=#743F39>") : source;
+            var display = ToolkitColorTheme.IsLight ? LinkColour.Replace(source, "<color=#533039>") : source;
             if (text.text != display) text.text = display;
             state.renderedText = display;
         }

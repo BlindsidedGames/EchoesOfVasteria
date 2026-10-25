@@ -251,6 +251,7 @@ namespace TimelessEchoes.UI.Toolkit
             var text = started && index < lines.Count ? (index < lineKeys.Count && !string.IsNullOrEmpty(lineKeys[index])
                 ? ToolkitLocalization.Text(lineKeys[index], lines[index]) : lines[index]) : string.Empty;
             dialogue.text = ToolkitResponsiveLayout.IsPortrait ? text : "<b><smallcaps>" + text + "</smallcaps></b>";
+            ToolkitHelpLinks.Attach(dialogue, FollowNavigation);
             meetLabel.style.display = !started ? DisplayStyle.Flex : DisplayStyle.None;
             nextLabel.style.display = started && index < lines.Count - 1 ? DisplayStyle.Flex : DisplayStyle.None;
             closeLabel.style.display = started && index >= lines.Count - 1 ? DisplayStyle.Flex : DisplayStyle.None;
