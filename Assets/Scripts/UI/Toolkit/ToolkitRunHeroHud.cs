@@ -24,6 +24,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void SetHeroStatsOpen(bool open)
         {
+            if (open && ToolkitMeetingScreen.TryFollowNavigation("hero-stats")) return;
             if (open)
             {
                 // Give Stats ownership of the dock without changing the player's
@@ -63,7 +64,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private Label HeroText(VisualElement parent, string text, int size = 8)
         {
-            var label = new Label(text); label.AddToClassList("hero-text"); label.style.fontSize = size;
+            var label = new Label(text); label.AddToClassList("hero-text"); ToolkitControls.SetTextSize(label, size);
             label.style.marginTop = label.style.marginBottom = label.style.marginLeft = label.style.marginRight = 0;
             parent.Add(label); return label;
         }
@@ -110,7 +111,7 @@ namespace TimelessEchoes.UI.Toolkit
             var toggle = heroStatsToggle;
             ToolkitLocalization.Bind(toggle, "run.stats", "Stats");
             toggle.RegisterCallback<ClickEvent>(_ => TimelessEchoes.Audio.AudioManager.Instance?.PlayUIButtonClick());
-            ToolkitLocalization.BindTooltip(toggle, "run.stats-tooltip", "Show or hide combat stats"); toggle.style.fontSize = 8;
+            ToolkitLocalization.BindTooltip(toggle, "run.stats-tooltip", "Show or hide combat stats"); ToolkitControls.SetTextSize(toggle, 8);
             toggle.style.minWidth = 31; toggle.style.height = 18; toggle.style.marginLeft = toggle.style.marginRight = toggle.style.marginTop = toggle.style.marginBottom = 0;
             toggle.style.paddingLeft = toggle.style.paddingRight = toggle.style.paddingTop = toggle.style.paddingBottom = 0;
             HeroSurface(toggle); healthStrip.Add(toggle);

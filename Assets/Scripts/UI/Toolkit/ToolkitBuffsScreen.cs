@@ -29,7 +29,7 @@ namespace TimelessEchoes.UI.Toolkit
         private Label instruction;
         private readonly Button[] slots=new Button[5];
         private readonly Image[] icons=new Image[5],autoIcons=new Image[5];
-        private readonly Label[] locked=new Label[5];
+        private readonly VisualElement[] locked=new VisualElement[5];
         private readonly List<(BuffRecipe recipe,VisualElement root,Button assign,Label effects,Label timing)> rows=new();
         private BuffRecipe selected;
         private bool inRun,rebuild;
@@ -51,7 +51,7 @@ namespace TimelessEchoes.UI.Toolkit
                 var index=i;
                 var button=MakeButton("assign-slot-"+i,()=>AssignSlot(index),definition.slot);button.AddToClassList("eov-buffs-slot");button.AddToClassList("button");slotRow.Add(button);slots[i]=button;
                 icons[i]=new Image{pickingMode=PickingMode.Ignore,scaleMode=ScaleMode.ScaleToFit};icons[i].AddToClassList("eov-buffs-slot-icon");button.Add(icons[i]);
-                locked[i]=Label("",5);locked[i].AddToClassList("eov-buffs-slot-locked");button.Add(locked[i]);
+                locked[i]=new ToolkitLockIcon { name="buff-slot-lock-"+i };button.Add(locked[i]);
                 autoIcons[i]=new Image{sprite=definition.autoCast,scaleMode=ScaleMode.ScaleToFit,tintColor=definition.autoCastTint,pickingMode=PickingMode.Ignore};autoIcons[i].AddToClassList("eov-buffs-auto");button.Add(autoIcons[i]);
             }
             var instructions=new VisualElement();instructions.AddToClassList("eov-buffs-instructions");header.Add(instructions);
@@ -64,7 +64,7 @@ namespace TimelessEchoes.UI.Toolkit
             Blindsided.EventHandler.OnLoadData+=Loaded;Blindsided.EventHandler.OnQuestHandin+=QuestChanged;Blindsided.EventHandler.OnRunStarted+=RunStarted;Blindsided.EventHandler.OnRunEnded+=RunEnded;
             BuildRows();Layout();Refresh();return true;
         }
-        internal static Label Label(string text,float size){var label=new Label(text){pickingMode=PickingMode.Ignore};label.AddToClassList("eov-buffs-label");label.style.fontSize=Mathf.Max(7,size);return label;}
+        internal static Label Label(string text,float size){var label=new Label(text){pickingMode=PickingMode.Ignore};label.AddToClassList("eov-buffs-label");ToolkitControls.SetTextSize(label, size);return label;}
         internal static Button MakeButton(string name,System.Action click,Sprite sprite){var button=ToolkitControls.Button(name,click,sprite);button.AddToClassList("eov-buffs-button");button.style.backgroundImage=StyleKeyword.None;return button;}
         private static Image NativeIcon(VisualElement parent,Sprite sprite)
         {
@@ -115,7 +115,8 @@ namespace TimelessEchoes.UI.Toolkit
                 slots[i].EnableInClassList("awaiting-assignment",selected&&unlocked);
                 slots[i].EnableInClassList("buff-slot-auto",manager.IsSlotAutoCasting(i));
                 autoIcons[i].style.display=manager.IsSlotAutoCasting(i)?DisplayStyle.Flex:DisplayStyle.None;
-                locked[i].text=!unlocked?ToolkitLocalization.Text("common.locked", "Locked"):"";
+                locked[i].style.display=!unlocked?DisplayStyle.Flex:DisplayStyle.None;
+                icons[i].style.display=unlocked&&recipe?DisplayStyle.Flex:DisplayStyle.None;
                 slots[i].tooltip=!unlocked?ToolkitLocalization.Text("buffs.slot-locked", "Slot locked"):recipe?
                     manager.IsAutoSlotUnlocked(i)?manager.IsSlotAutoCasting(i)?ToolkitLocalization.Text("buffs.slot-autocast-on", "{0} · Autocast on", recipe.GetDisplayName()):ToolkitLocalization.Text("buffs.slot-autocast-off", "{0} · Autocast off", recipe.GetDisplayName()):ToolkitLocalization.Text("buffs.slot-autocast-locked", "{0} · Autocast locked", recipe.GetDisplayName()):ToolkitLocalization.Text("buffs.slot-empty", "Empty slot");
             }

@@ -1247,8 +1247,8 @@ namespace TimelessEchoes.Gear.UI
                     var eq = equipment?.GetEquipped(lastCrafted.slot);
 
                     // Check for stop conditions (always check, may stop early)
-                    bool isUpgrade = UpgradeEvaluator.IsPotentialUpgrade(crafting, lastCrafted, eq);
-                    bool isVastium = StaticReferences.StopAutocraftOnVastium &&
+                    bool isUpgrade = !StaticReferences.NeverStopAutocraft && UpgradeEvaluator.IsPotentialUpgrade(crafting, lastCrafted, eq);
+                    bool isVastium = !StaticReferences.NeverStopAutocraft && StaticReferences.StopAutocraftOnVastium &&
                                      lastCrafted?.rarity?.name == "Vastium";
                     bool isStopping = isUpgrade || isVastium;
 

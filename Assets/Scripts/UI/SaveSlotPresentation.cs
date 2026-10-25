@@ -82,7 +82,7 @@ namespace TimelessEchoes.UI
                     : ToolkitLocalization.Text("save.last-played-never", "Last Played: Never");
             Title = current ? ToolkitLocalization.Text("save.active-title", "File {0} | {1:0}% - Active", index + 1, completion) : ToolkitLocalization.Text("save.title", "File {0} | {1:0}%", index + 1, completion);
             var version = current ? oracle.saveData.GameVersionCreated : createdVersion;
-            LastPlayed += "\n<size=80%>" + ToolkitLocalization.Text("save.created-version", "Created with version: {0}", string.IsNullOrEmpty(version) ? ToolkitLocalization.Text("common.unknown", "Unknown") : version) + "</size>";
+            LastPlayed += "\n" + ToolkitLocalization.Text("save.created-version", "Created with version: {0}", string.IsNullOrEmpty(version) ? ToolkitLocalization.Text("common.unknown", "Unknown") : version);
         }
 
         private static string FormatPlaytime(double value) => value > 0

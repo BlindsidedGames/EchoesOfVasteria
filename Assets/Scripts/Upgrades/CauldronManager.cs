@@ -79,8 +79,7 @@ namespace TimelessEchoes.Upgrades
         // Config hot-reload sync (once per second)
         private float _nextConfigSyncTime;
 
-        // Fixed tick interval for tasting coroutine (decoupled from rollsPerSecond for UI responsiveness)
-        // The time-accumulation in TasteTick handles any rollsPerSecond value automatically
+        // Poll independently of the level-based tasting rate; elapsed time determines tastes.
         private const float UI_TICK_INTERVAL = 0.1f; // 10 Hz
 
         // Multi-roll per frame support
@@ -151,6 +150,8 @@ namespace TimelessEchoes.Upgrades
         }
 
         public bool IsTasting => tastingActive;
+        public int TastesPerSecond => GetTastesPerSecond(EvaLevel);
+        public static int GetTastesPerSecond(int evaLevel) => evaLevel >= 42 ? 100 : evaLevel >= 12 ? 10 : 2;
 
         public int EvaLevel
         {
@@ -387,7 +388,7 @@ namespace TimelessEchoes.Upgrades
         private void OnEnable()
         {
             // Start tasting coroutine at fixed 10 Hz; TasteTick's time-accumulation
-            // handles any rollsPerSecond value automatically
+            // handles the level-based tasting rate automatically
             tasteTickCoroutine = StartCoroutine(TasteTickCoroutine());
             // Reset session stats on save load
             EventHandler.OnLoadData += ResetSessionStats;
@@ -399,11 +400,11 @@ namespace TimelessEchoes.Upgrades
             else
                 resourceSubscribeRoutine = StartCoroutine(WaitAndSubscribeResourceManager());
             EventHandler.OnQuestHandin += OnQuestHandinHandler;
-            TryAutoStartTasting();
         }
 
         private void OnDisable()
         {
+            StopTasting(false);
             if (tasteTickCoroutine != null)
             {
                 StopCoroutine(tasteTickCoroutine);
@@ -445,7 +446,6 @@ namespace TimelessEchoes.Upgrades
         {
             OnStewChanged?.Invoke();
             OnResourcesMixed?.Invoke(quantity);
-            TryAutoStartTasting();
         }
 
         public double GetStewCostPerRoll()
@@ -487,22 +487,10 @@ namespace TimelessEchoes.Upgrades
             return Math.Max(baseCount, scaled);
         }
 
-        private bool HasStewForNextRoll()
-        {
-            return Stew >= GetStewCostPerRoll();
-        }
-
-        private void TryAutoStartTasting()
-        {
-            if (tastingActive) return;
-            if (!HasStewForNextRoll()) return;
-            StartTasting();
-        }
-
         private void HandleSaveDataLoaded()
         {
+            StopTasting(false);
             SyncEvaProgressionFromSave();
-            TryAutoStartTasting();
         }
 
         private void SyncEvaProgressionFromSave()
@@ -527,7 +515,6 @@ namespace TimelessEchoes.Upgrades
             // Update stew change throttle interval from config
             _stewChangeThrottle?.SetInterval(config.stewChangeThrottleInterval);
 
-            // Note: rollsPerSecond changes are handled automatically by TasteTick's time-accumulation.
             // The coroutine runs at fixed 10 Hz for consistent UI responsiveness.
         }
 
@@ -537,21 +524,25 @@ namespace TimelessEchoes.Upgrades
             if (tastingActive) return;
             tastingActive = true;
             _lastTasteTime = Time.unscaledTime;
-            _accumulatedTasteTime = 0f;
+            _accumulatedTasteTime = 1f / TastesPerSecond;
             ResetSessionStats();
             OnTasteSessionStarted?.Invoke();
             OnSessionCardsChanged?.Invoke(sessionCardsGained);
             var statsHandler = OnStatsChanged;
             if (statsHandler != null)
                 statsHandler(GetStatsSnapshot());
+            // The pressed action tastes once now; later tastes follow the normal interval.
+            TasteTick();
         }
 
-        public void StopTasting()
+        public void StopTasting() => StopTasting(true);
+
+        private void StopTasting(bool save)
         {
             if (!tastingActive) return;
             tastingActive = false;
             OnTasteSessionStopped?.Invoke();
-            TrySave();
+            if (save) TrySave();
         }
 
         private void TasteTick()
@@ -566,7 +557,7 @@ namespace TimelessEchoes.Upgrades
 
             // Accumulate time and calculate rolls to process
             _accumulatedTasteTime += deltaTime;
-            var rollInterval = 1f / Mathf.Max(1f, config.rollsPerSecond);
+            var rollInterval = 1f / TastesPerSecond;
             var rollsToProcess = Mathf.FloorToInt(_accumulatedTasteTime / rollInterval);
 
             if (rollsToProcess <= 0) return;

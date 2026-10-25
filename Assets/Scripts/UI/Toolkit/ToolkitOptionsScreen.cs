@@ -106,13 +106,13 @@ namespace TimelessEchoes.UI.Toolkit
         private Label Text(VisualElement parent, string id, float size = 8)
         {
             var label = new Label { name = id, pickingMode = PickingMode.Ignore }; label.AddToClassList("eov-options-label");
-            label.style.fontSize = Mathf.Max(7,size); parent.Add(label);
+            ToolkitControls.SetTextSize(label, size); parent.Add(label);
             // Computed labels own their localized templates; an asynchronous definition
             // callback must not overwrite slot state, FPS or duration arguments.
             var computed = id.StartsWith("slot-") || id.StartsWith("save-") && id.EndsWith("-label")
                 || id.StartsWith("load-") && id.EndsWith("-label") || id == "fps-label"
                 || id == "drops-label" || id == "player-damage-label" || id == "enemy-damage-label"
-                || id == "language-label";
+                || id == "language-label" || id == "version-label";
             if (!computed) bindings.Add(new ToolkitTextBinding(label, definition.Text(id)));
             labels[id] = label; return label;
         }
@@ -242,6 +242,7 @@ namespace TimelessEchoes.UI.Toolkit
             }
             row.style.alignItems = Align.Stretch;
             var version = Text(row,"version-label",7);
+            version.text = "v" + Application.version;
             version.AddToClassList("settings-version");
             version.style.alignSelf = Align.Center;
         }
@@ -327,7 +328,7 @@ namespace TimelessEchoes.UI.Toolkit
             UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocaleChanged -= RefreshLanguage;
             if (dialogs) dialogs.Imported -= RefreshSlots;
             foreach (var binding in bindings) binding.Dispose(); bindings.Clear(); buttons.Clear(); sliders.Clear(); labels.Clear();
-            dialogs?.Hide(); Array.Clear(safety,0,safety.Length);
+            if (dialogs) dialogs.Hide(); Array.Clear(safety,0,safety.Length);
             root?.RemoveFromHierarchy(); widthPreview?.RemoveFromHierarchy(); root = null; widthPreview = null; scroll = null;
             ToolkitPanel.Release(GetComponent<UIDocument>(), ref panel);
         }

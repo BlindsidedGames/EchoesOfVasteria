@@ -85,6 +85,7 @@ namespace TimelessEchoes.Tasks
         public class BonusDrop
         {
             public Resource resource;
+            [Tooltip("Fixed chance for ordinary bonuses. Sapling chances use the Fields seed curve, with separate fruit and timber tiers.")]
             [MinValue(0f), MaxValue(1f)] public float chance;
             public Vector2Int range = new(1, 1);
         }

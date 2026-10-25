@@ -79,7 +79,11 @@ namespace TimelessEchoes.UI.Toolkit
             var pending = session.HasResult ? session.Pending : null;
             RefreshComparison(pending, equipment.GetEquipped(session.Slot));
             resultIcon.sprite = definition.GearSprite(pending, session.Slot); resultTier.text = pending?.rarity ? ToolkitLocalization.Text("inventory.tier", "Tier {0}", Mathf.Clamp(pending.rarity.tierIndex + 1, 1, 8)) : "—";
-            ToolkitGameplay.SetToggle(stopIcon,StopAutocraftOnVastium);ToolkitGameplay.SetToggle(lockIcon,LockAutocraftStatSet);ToolkitGameplay.SetToggle(repeatIcon,repeatCraft);
+            ToolkitGameplay.SetToggle(stopIcon,StopAutocraftOnVastium);ToolkitGameplay.SetToggle(lockIcon,LockAutocraftStatSet);ToolkitGameplay.SetToggle(repeatIcon,repeatCraft || NeverStopAutocraft);
+            ToolkitGameplay.SetToggle(neverStopIcon,NeverStopAutocraft);
+            stopIcon.parent.SetEnabled(!NeverStopAutocraft);
+            lockIcon.parent.SetEnabled(!NeverStopAutocraft);
+            repeatIcon.parent.SetEnabled(!NeverStopAutocraft);
             var weights = RarityOddsCalculator.BuildRarityWeightInfo(core).weights;
             odds.SetWeights(weights, RarityColour); RefreshOddsLegend(weights);
             foreach (var entry in conversions) RefreshConversion(entry.Key, entry.Value);

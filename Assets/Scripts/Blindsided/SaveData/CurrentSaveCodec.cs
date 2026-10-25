@@ -9,12 +9,15 @@ using Sirenix.Serialization;
 [assembly: RegisterFormatter(typeof(Blindsided.SaveData.SkillProgressCompatibilityFormatter))]
 namespace Blindsided.SaveData
 {
-    /// <summary>New writes omit obsolete purchases and cached eligibility. Legacy reads remain permissive.</summary>
+    /// <summary>New writes omit obsolete state and local UI preferences. Legacy reads remain permissive.</summary>
     public static class CurrentSaveCodec
     {
         private static readonly ISerializationPolicy Policy = new CustomSerializationPolicy(
             "Echoes.CurrentSave.Schema8", true, member =>
                 member is FieldInfo field && field.IsPublic && !field.IsNotSerialized &&
+                !(field.DeclaringType == typeof(GameData.Preferences) &&
+                  (field.Name == nameof(GameData.Preferences.LastSelectedCauldronFood) ||
+                   field.Name == nameof(GameData.Preferences.CauldronFoodAmounts))) &&
                 (field.DeclaringType != typeof(GameData.ForgeStats) ||
                  field.Name == nameof(GameData.ForgeStats.TotalCrafts) ||
                  field.Name == nameof(GameData.ForgeStats.TotalSalvaged) ||

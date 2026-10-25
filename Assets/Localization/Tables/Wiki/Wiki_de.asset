@@ -35,7 +35,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 532437942272
-    m_Localized: "Nutze w\xE4hrend einer Reise die R\xFCckkehr-in-die-Stadt-Schaltfl\xE4che, um dich zur\xFCckzuziehen. Jeder besiegte Gegner erh\xF6ht deinen dort angezeigten Ressourcenbonus beim R\xFCckzug um 2\_%.\n\nWenn du w\xE4hrend eines Kampfes die R\xFCckkehr anforderst, beendet dein Held den Kampf vor dem Aufbruch.\n\nDu erh\xE4ltst diesen Bonus nur, wenn du lebend zur\xFCckkehrst. Tod oder R\xFCckholung durch den Schnitter kosten den Bonus; bereits gesammelte Ressourcen bleiben erhalten."
+    m_Localized: "W\xE4hle w\xE4hrend einer Reise \u201EZur\xFCck zur Stadt\u201C. Jeder besiegte Gegner erh\xF6ht den dort angezeigten Ressourcenbonus um 2\_%.\n\nIm Kampf beendet dein Held erst den Kampf, bevor er zur\xFCckkehrt.\n\nDen Bonus erh\xE4ltst du nur bei lebendiger R\xFCckkehr. Bei Tod oder R\xFCckholung durch den Schnitter verf\xE4llt er; bereits gesammelte Ressourcen beh\xE4ltst du."
     m_Metadata:
       m_Items: []
   - m_Id: 698595295232
@@ -189,15 +189,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299025
-    m_Localized: "R\xFCckzugsbonus"
+    m_Localized: Ressourcenbonus
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299026
-    m_Localized: "Nutze w\xE4hrend einer Reise die R\xFCckkehr-in-die-Stadt-Schaltfl\xE4che, um dich zur\xFCckzuziehen. Jeder besiegte Gegner erh\xF6ht deinen dort angezeigten Ressourcenbonus beim R\xFCckzug um 2\_%.\n\nWenn du w\xE4hrend eines Kampfes die R\xFCckkehr anforderst, beendet dein Held den Kampf vor dem Aufbruch.\n\nDu erh\xE4ltst diesen Bonus nur, wenn du lebend zur\xFCckkehrst. Tod oder R\xFCckholung durch den Schnitter kosten den Bonus; bereits gesammelte Ressourcen bleiben erhalten."
+    m_Localized: "Jeder besiegte Gegner erh\xF6ht deinen Ressourcenmultiplikator um 0,02\xD7, bis maximal 10\xD7. Er bleibt erhalten, wenn du stirbst, vom Schnitter zur\xFCckgeholt wirst oder ohne R\xFCckkehr in die Stadt erneut startest.\n\nBei der R\xFCckkehr in die Stadt wird er einmal auf die seit deinem letzten Aufbruch gesammelten Ressourcen angewendet. Die n\xE4chste Reise beginnt bei 1\xD7."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299027
-    m_Localized: "Dein R\xFCckzugsbonus basiert auf den in dieser Reise besiegten Gegnern und wird bei lebendiger R\xFCckkehr vergeben. Tod oder R\xFCckholung durch den Schnitter kosten den Bonus, aber nicht die bereits gesammelten Ressourcen."
+    m_Localized: "50 besiegte Gegner ergeben zum Beispiel 2\xD7 Ressourcen; bei 450 erreichst du die Obergrenze von 10\xD7. Bonusressourcen erhalten keinen weiteren Bonus."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299028
@@ -337,7 +337,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164584687357530114
-    m_Localized: Gesundheit
+    m_Localized: Leben
     m_Metadata:
       m_Items: []
   - m_Id: 164584687357530115
@@ -381,7 +381,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164584687357530129
-    m_Localized: Gesundheit
+    m_Localized: Leben
     m_Metadata:
       m_Items: []
   - m_Id: 164584687357530130
@@ -497,7 +497,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164584687365918744
-    m_Localized: Gesundheit
+    m_Localized: Leben
     m_Metadata:
       m_Items: []
   - m_Id: 164584687365918746
@@ -871,11 +871,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164590655378165760
-    m_Localized: "<b>Aktuelle Entwicklungs\xE4nderungen</b>\n\n<b>Spielbeginn und Fortschritt</b>\n\u2022 Erste Quests und Vorstellungen der NSCs \xFCberarbeitet.\n\u2022 Gill f\xFChrt Spieler zum Fluss; Barkley f\xFChrt sie in Richtung Wald.\n\u2022 Gill schenkt Alte Stiefel. Ivan stellt Materialien bereit und zeigt Spielern, wie sie ihr erstes Schwert schmieden und ausr\xFCsten.\n\u2022 Men\xFCs und Tutorials erscheinen, sobald ihre Systeme relevant werden.\n\u2022 Quests k\xF6nnen nur in der Stadt abgegeben werden.\n\n<b>Benutzeroberfl\xE4che</b>\n\u2022 Reisezusammenfassung \xFCberarbeitet und eine kompakte Werteanzeige w\xE4hrend der Reise hinzugef\xFCgt.\n\u2022 Das Inventar zeigt jetzt ausger\xFCstete Gegenst\xE4nde und Ausr\xFCstungsboni.\n\u2022 Scrollen durch Ziehen in der gesamten Oberfl\xE4che hinzugef\xFCgt.\n\u2022 Bibliothek mit Themennavigation, Referenztabellen und ausw\xE4hlbaren Symbolerkl\xE4rungen neu gestaltet.\n\n<b>Spiel und Fehlerbehebungen</b>\n\u2022 Aufgabendichte beim ersten Abenteuer im Ackerland verringert.\n\u2022 Ackerbau-Aufgaben erscheinen nur im Ackerland.\n\u2022 Kern- und Kristallstufen werden durch Kampfstufen freigeschaltet.\n\u2022 \xDCberlagerungen gegnerischer Lebensbalken und Fehler in Angelanimationen behoben.\n\u2022 Bestenlisten entfernt.\n\nW\xE4hle <link=\"help:reference\"><u><color=#EFB889>Referenz</color></u></link>, um fr\xFChere Patchnotizen zu lesen."
+    m_Localized: "<b>Version 1.5.2</b>\n\n\u2022 Der Ressourcenmultiplikator bleibt jetzt nach Toden und weiteren L\u00e4ufen bis zur R\u00fcckkehr in die Stadt erhalten, bis maximal 10\u00d7.\n\u2022 Nahrung ergibt mehr Eintopf. Hochwertige Zutaten bringen einen gr\u00f6\u00dferen Zuwachs.\n\u2022 H\u00e4hnchen-, Schweine-, Hammelfleisch und Steak ergeben 50 % mehr Eintopf.\n\u2022 \u201eAlles mischen\u201c ist im Kessel zur\u00fcck, zeigt die Eintopfmenge vorab und merkt sich die gew\u00e4hlte Menge pro Zutat.\n\u2022 Die Schmiede hat \u201eNie stoppen\u201c. Damit gelten die anderen Stoppregeln nicht; sie schmiedet weiter, solange Material vorhanden ist.\n\u2022 Held und Echos haben dieselben Chancen auf Samen und Setzlinge. Sp\u00e4tere Sorten sind seltener, mit getrennten Abstufungen f\u00fcr Feldfr\u00fcchte, Obstb\u00e4ume und Nutzb\u00e4ume.\n\u2022 Quests k\u00f6nnen nur in der Stadt abgegeben werden.\n\u2022 Kleine Texte wurden vergr\u00f6\u00dfert, besonders in den Quests.\n\u2022 Questbelohnungen verwenden einheitliche Symbole, auch Samenpakete. Zu gro\u00dfe Setzlingssymbole wurden verkleinert und L\u00fccken zwischen Feldgrafiken geschlossen.\n\u2022 Lauf\u00fcbersicht und Ressourcenliste zeigen kompakte Werte, R\u00fcckkehrmengen und Ressourcenboni. Im Querformat nutzen Listen zwei oder drei Spalten.\n\u2022 Taschenuhren wechseln ihre Stufe mit der Zeit au\u00dferhalb der Stadt, Truhen mit der gesammelten Ressourcenmenge.\n\u2022 Im Hochformat lassen sich Quests und Ressourcen besser scrollen; die untere Navigation bleibt erreichbar.\n\u2022 NSC-Begegnungen zeigen Namen. Leben, Werte, F\u00e4higkeiten und Zoom bleiben sichtbar, w\u00e4hrend du wartest.\n\u2022 Ben\u00f6tigte Tutorial-Schaltfl\u00e4chen sind wieder bedienbar. Men\u00fcverkn\u00fcpfungen k\u00f6nnen die Lektion fortsetzen; die aktive Men\u00fctaste kann ein Fenster auf Aufforderung schlie\u00dfen.\n\u2022 Die Bibliothek \u00f6ffnet die Themen\u00fcbersicht. Patchnotes haben ein Tagebuchsymbol.\n\u2022 Gesperrte Zauberpl\u00e4tze zeigen ein Schlosssymbol statt Text.\n\u2022 \u00dcbersetzungen wurden gek\u00fcrzt und korrigiert, Materialnamen vereinheitlicht."
     m_Metadata:
       m_Items: []
   - m_Id: 164590655378165761
-    m_Localized: "<b>Fr\xFChere Patchnotizen</b>\n\n\u2022 F\xFCr die Marmelade! und Gillivers Reisen hinzugef\xFCgt.\n\u2022 Einf\xFChrungsnachricht verbessert.\n\u2022 Zu niedrige Werte in Stufenaufstiegsanzeigen korrigiert.\n\u2022 Bereich Ausger\xFCstete Qualit\xE4t aus der Schmiede entfernt.\n\u2022 Angeheftete Quests zeigen Zur Abgabe bereit statt Abgeschlossen.\n\u2022 Ladeanzeige beim Kartenwechsel hinzugef\xFCgt.\n\u2022 Schaltfl\xE4che Alles mischen zum Kessel hinzugef\xFCgt.\n\u2022 Wegfindungspaket aktualisiert."
+    m_Localized: "<b>Fr\xFChere Updates</b>\n\n<b>Spielbeginn und Fortschritt</b>\n\u2022 Erste Quests und Vorstellungen der NSCs \xFCberarbeitet.\n\u2022 Gill f\xFChrt Spieler zum Fluss; Barkley f\xFChrt sie in Richtung Wald.\n\u2022 Gill schenkt Alte Stiefel. Ivan stellt Materialien bereit und zeigt Spielern, wie sie ihr erstes Schwert schmieden und ausr\xFCsten.\n\u2022 Men\xFCs und Tutorials erscheinen, sobald ihre Systeme relevant werden.\n\u2022 Quests k\xF6nnen nur in der Stadt abgegeben werden.\n\n<b>Benutzeroberfl\xE4che</b>\n\u2022 Reisezusammenfassung \xFCberarbeitet und eine kompakte Werteanzeige w\xE4hrend der Reise hinzugef\xFCgt.\n\u2022 Das Inventar zeigt jetzt ausger\xFCstete Gegenst\xE4nde und Ausr\xFCstungsboni.\n\u2022 Scrollen durch Ziehen in der gesamten Oberfl\xE4che hinzugef\xFCgt.\n\u2022 Bibliothek mit Themennavigation, Referenztabellen und ausw\xE4hlbaren Symbolerkl\xE4rungen neu gestaltet.\n\n<b>Spiel und Fehlerbehebungen</b>\n\u2022 Aufgabendichte beim ersten Abenteuer im Ackerland verringert.\n\u2022 Ackerbau-Aufgaben erscheinen nur im Ackerland.\n\u2022 Kern- und Kristallstufen werden durch Kampfstufen freigeschaltet.\n\u2022 \xDCberlagerungen gegnerischer Lebensbalken und Fehler in Angelanimationen behoben.\n\u2022 Bestenlisten entfernt.\n\n<b>Fr\xFChere Patchnotizen</b>\n\n\u2022 F\xFCr die Marmelade! und Gillivers Reisen hinzugef\xFCgt.\n\u2022 Einf\xFChrungsnachricht verbessert.\n\u2022 Zu niedrige Werte in Stufenaufstiegsanzeigen korrigiert.\n\u2022 Bereich Ausger\xFCstete Qualit\xE4t aus der Schmiede entfernt.\n\u2022 Angeheftete Quests zeigen Zur Abgabe bereit statt Abgeschlossen.\n\u2022 Ladeanzeige beim Kartenwechsel hinzugef\xFCgt.\n\u2022 Schaltfl\xE4che Alles mischen zum Kessel hinzugef\xFCgt.\n\u2022 Wegfindungspaket aktualisiert."
     m_Metadata:
       m_Items: []
   references:

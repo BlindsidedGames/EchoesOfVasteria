@@ -26,12 +26,12 @@ namespace Tests.PlayMode
                 oracle.saveData.CompletedNpcTasks.Add("Gill1");
                 quests.OnNpcMet("Gill1");
                 Assert.True(quests.IsQuestInProgress(quest.questId));
+                var location = locationObject.AddComponent<TimelessEchoes.GameManager>(); location.enabled = false;
                 Assert.False(quests.TryTurnInQuest(quest.questId), "A missing equipment owner must leave the reward claimable.");
                 Assert.False(quests.IsQuestCompleted(quest));
 
                 var equipment = equipmentObject.AddComponent<EquipmentController>();
                 Blindsided.EventHandler.LoadData();
-                var location = locationObject.AddComponent<TimelessEchoes.GameManager>(); location.enabled = false;
                 typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(location, false);
                 Assert.False(quests.TryTurnInQuest(quest.questId), "Gill promised to give the equipment in town.");
                 Assert.False(quests.IsQuestCompleted(quest));

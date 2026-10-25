@@ -34,7 +34,7 @@ namespace TimelessEchoes.UI.Toolkit
                 fill = new VisualElement { pickingMode = PickingMode.Ignore }; fill.style.height = 2; fill.AddToClassList("toast-duration-fill"); root.Add(fill);
             }
             localizedKey = null; localizedArguments = null; localizedMessage = null;
-            icon.sprite = sprite;  text.text = message;
+            icon.sprite = sprite;  text.text = ToolkitControls.WithoutInlineTextSize(message);
             duration = Mathf.Max(.01f, seconds); expires = Time.unscaledTime + duration; root.style.display = DisplayStyle.Flex;
         }
         /// <summary>Show a table-backed message without changing the notification lifetime or gameplay.</summary>
@@ -54,7 +54,7 @@ namespace TimelessEchoes.UI.Toolkit
             if ((localizedKey != null || localizedMessage != null) && localizationRevision != ToolkitLocalization.Revision)
             {
                 localizationRevision = ToolkitLocalization.Revision;
-                text.text = localizedMessage != null ? localizedMessage() : ToolkitLocalization.Text(localizedKey, localizedEnglish, localizedArguments);
+                text.text = ToolkitControls.WithoutInlineTextSize(localizedMessage != null ? localizedMessage() : ToolkitLocalization.Text(localizedKey, localizedEnglish, localizedArguments));
             }
             var portrait = ToolkitResponsiveLayout.IsPortrait;
             var area = portrait ? ToolkitResponsiveLayout.SafeScreenArea : ToolkitWindowLayout.SafeArea;

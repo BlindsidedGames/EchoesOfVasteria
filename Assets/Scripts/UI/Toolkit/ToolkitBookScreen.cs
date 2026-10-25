@@ -41,7 +41,10 @@ namespace TimelessEchoes.UI.Toolkit
             }
             document.panelSettings = panel;
             document.rootVisualElement.pickingMode = PickingMode.Ignore;
-            view = new ToolkitBookView(definition, theme, template, selectedSection, referenceSelected, selectedIllustrations);
+            var library = definition.presentation == ToolkitBookDefinition.Presentation.Library;
+            view = new ToolkitBookView(definition, theme, template, library ? null : selectedSection,
+                !library && referenceSelected, selectedIllustrations);
+            if (library) scrollOffset = Vector2.zero;
             view.Root.style.position = Position.Absolute;
             document.rootVisualElement.Add(view.Root);
             ApplyLayout();

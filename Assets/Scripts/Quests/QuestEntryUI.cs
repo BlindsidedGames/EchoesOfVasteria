@@ -36,6 +36,7 @@ namespace TimelessEchoes.Quests
         // Legacy cost UI removed
 
         private Action onTurnIn;
+        private QuestData questData;
         private bool entryCompleted;
         private bool pinnedState;
         private bool rewardHasQuestData;
@@ -46,6 +47,7 @@ namespace TimelessEchoes.Quests
         public void Setup(QuestData data, Action turnIn, bool showRequirements = true, bool completed = false)
         {
             onTurnIn = turnIn;
+            questData = data;
             entryCompleted = completed;
             pinnedState = false;
 
@@ -160,7 +162,7 @@ namespace TimelessEchoes.Quests
         {
             pct = Mathf.Clamp01(pct);
             if (turnInButton != null)
-                turnInButton.interactable = pct >= 1f;
+                turnInButton.interactable = pct >= 1f && QuestManager.Instance != null && QuestManager.Instance.CanTurnInAtCurrentLocation(questData);
             if (turnInText != null)
                 turnInText.text = pct >= 1f ? completedActionLabel : TimelessEchoes.UI.Toolkit.ToolkitLocalization.Text("quests.incomplete", "Incomplete");
         }

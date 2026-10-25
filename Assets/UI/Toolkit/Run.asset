@@ -21,6 +21,63 @@ MonoBehaviour:
   healthTrack: {fileID: 9035060615272221303, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
   healthFill: {fileID: -5961661648687546396, guid: 1fd662efbd65948b38ca87c1bc1bab06, type: 3}
   dadJokeBubble: {fileID: 3346837577694019691, guid: e3788460b5b4c4678b402c3db13ccc3a, type: 3}
+  reaperIcon: {fileID: 21300000, guid: c2d1192ad3efaa7478850c4a851acf38, type: 3}
+  scytheIcon: {fileID: 21300000, guid: 284931f98c71f3f48a602548edb6e5ff, type: 3}
+  graveIcon: {fileID: -3726469635597064741, guid: 7b8d6db7b9c894d4588839285a62ad3c, type: 3}
+  killsIcon: {fileID: -1557160357, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+  bonusIcon: {fileID: -1279197035, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+  timeIcon: {fileID: -1987869302, guid: 7ce3c2f0c22044245a6642d3f0b83e04, type: 3}
+  stepsIcon: {fileID: -757387047, guid: 2d1ea1fa2e7dca4448ad7af961b8896b, type: 3}
+  timeIconTiers:
+  - name: Bronze
+    minimum: 0
+    icon: {fileID: -1987869302, guid: 7ce3c2f0c22044245a6642d3f0b83e04, type: 3}
+  - name: Iron
+    minimum: 300
+    icon: {fileID: -2059179518, guid: 7ce3c2f0c22044245a6642d3f0b83e04, type: 3}
+  - name: Gold
+    minimum: 900
+    icon: {fileID: -181841388, guid: 7ce3c2f0c22044245a6642d3f0b83e04, type: 3}
+  - name: Fire
+    minimum: 3600
+    icon: {fileID: 1863166629, guid: 7ce3c2f0c22044245a6642d3f0b83e04, type: 3}
+  - name: Lirium
+    minimum: 10800
+    icon: {fileID: 59968631, guid: 7ce3c2f0c22044245a6642d3f0b83e04, type: 3}
+  - name: Copium
+    minimum: 21600
+    icon: {fileID: 58673995, guid: 7ce3c2f0c22044245a6642d3f0b83e04, type: 3}
+  - name: Crimsonite
+    minimum: 43200
+    icon: {fileID: 486454515, guid: 7ce3c2f0c22044245a6642d3f0b83e04, type: 3}
+  - name: Vastium
+    minimum: 86400
+    icon: {fileID: -1585212585, guid: 7ce3c2f0c22044245a6642d3f0b83e04, type: 3}
+  resourceIconTiers:
+  - name: Bronze
+    minimum: 0
+    icon: {fileID: -7070875390197807606, guid: 1ec0b90faf4188545ba0f1bd405b6df3, type: 3}
+  - name: Iron
+    minimum: 100
+    icon: {fileID: -987686138164254292, guid: 151f0f2575d0eb14f8357b530959f372, type: 3}
+  - name: Gold
+    minimum: 1000
+    icon: {fileID: -2238842246251146030, guid: 337426889e46c764cb0e793986b7ef37, type: 3}
+  - name: Fire
+    minimum: 10000
+    icon: {fileID: 752469611, guid: 6a1eba8e86be0ce4884405f559395edb, type: 3}
+  - name: Lirium
+    minimum: 100000
+    icon: {fileID: 931018621, guid: 6a1eba8e86be0ce4884405f559395edb, type: 3}
+  - name: Copium
+    minimum: 1000000
+    icon: {fileID: 776162574, guid: 6a1eba8e86be0ce4884405f559395edb, type: 3}
+  - name: Crimsonite
+    minimum: 10000000
+    icon: {fileID: -6654411221075461266, guid: 6a1eba8e86be0ce4884405f559395edb, type: 3}
+  - name: Vastium
+    minimum: 100000000
+    icon: {fileID: 1740307149, guid: 6a1eba8e86be0ce4884405f559395edb, type: 3}
   tutorialHand: {fileID: -6133907437499239528, guid: 27d08327615764bc9a976be93fb999d3, type: 3}
   fullscreenIcon: {fileID: -3328043578375490445, guid: 09816a9a266ff495a9997c0577b78a50, type: 3}
   restoreViewIcon: {fileID: -3405493313086126665, guid: 09816a9a266ff495a9997c0577b78a50, type: 3}

@@ -117,7 +117,10 @@ namespace TimelessEchoes.Upgrades
             float Rand() => rand != null ? rand() : UnityEngine.Random.value;
             foreach (var drop in drops)
             {
-                if (drop?.resource == null || drop.chance <= 0 || Rand() >= Mathf.Clamp01(drop.chance)) continue;
+                if (drop?.resource == null) continue;
+                var content = TimelessEchoes.Farming.FarmContent.Load();
+                var chance = content ? content.BonusDropChance(drop.resource, drop.chance) : drop.chance;
+                if (chance <= 0 || Rand() >= Mathf.Clamp01(chance)) continue;
                 var min = Mathf.Max(0, drop.range.x); var max = Mathf.Max(min, drop.range.y);
                 var t = Rand(); t *= t;
                 var count = Mathf.Clamp(Mathf.FloorToInt(Mathf.Lerp(min, max + 1, t)), min, max);

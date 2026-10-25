@@ -175,7 +175,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003818
-    m_Localized: "Gesundheitsregeneration +{0}\_%"
+    m_Localized: "Regeneration +{0}\_%"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003817
@@ -219,7 +219,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003807
-    m_Localized: Gesundheit
+    m_Localized: Leben
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003806
@@ -439,7 +439,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003752
-    m_Localized: '{0} {1}'
+    m_Localized: '{1} ({0})'
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003751
@@ -455,7 +455,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003748
-    m_Localized: "Ausgew\xE4hlt"
+    m_Localized: Spezialisiert
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003747
@@ -771,7 +771,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003677
-    m_Localized: Seelenernten
+    m_Localized: "Vom Schnitter zur\xFCckgeholt"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003676
@@ -919,7 +919,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003640
-    m_Localized: Gesundheit
+    m_Localized: Leben
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003639
@@ -1103,7 +1103,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003594
-    m_Localized: Seele geerntet
+    m_Localized: "Vom Schnitter zur\xFCckgeholt"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003593
@@ -1167,7 +1167,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003563
-    m_Localized: Reisezusammenfassung
+    m_Localized: "Reise\xFCbersicht"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003562
@@ -1187,7 +1187,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003558
-    m_Localized: Deine Seele wurde geerntet ...
+    m_Localized: "Carl hat dich zur\xFCckgeholt ..."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003557
@@ -1211,7 +1211,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003552
-    m_Localized: Zusammenfassung ansehen
+    m_Localized: "\xDCbersicht"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003551
@@ -1459,7 +1459,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003489
-    m_Localized: "{0} \xB7 Rang {1}"
+    m_Localized: "{0} \xB7 Stufe {1}"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003488
@@ -1539,15 +1539,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003469
-    m_Localized: Warum haben norwegische Schiffe Barcodes? Damit man sie im Hafen skandinavieren kann.
+    m_Localized: "Warum k\xF6nnen Seer\xE4uber keinen Kreis berechnen? Weil sie Pi raten."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003468
-    m_Localized: "Zwei Papageien sitzen auf einer Stange.\nSagt einer zum anderen: \u201ERiechst du auch Fisch?\u201C"
+    m_Localized: Was sagt ein Papagei beim Zahnarzt? Aua, das kannst du laut sagen!
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003467
-    m_Localized: "Warum h\xF6rt man Pterry den Pterodaktylus nicht auf der Toilette?\nSein \u201EP\u201C ist stumm."
+    m_Localized: Was nimmt ein Dinosaurier gegen Kopfschmerzen? Ein Din-Aspirin.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003466
@@ -1557,7 +1557,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003465
-    m_Localized: "Warum hat ein Kreis 360\xB0?\nEr hat viel zu lange studiert."
+    m_Localized: "Warum ist ein Kreis so hei\xDF? Er hat 360 Grad."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003464
@@ -1567,7 +1567,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003463
-    m_Localized: "Fahrstuhlwitze dr\xFCcken bei mir die falschen Kn\xF6pfe.\nSie ziehen mich runter.\n\nAuf so vielen Ebenen sind sie schlecht."
+    m_Localized: Fahrstuhlwitze? Die sind auf so vielen Ebenen schlecht.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003462
@@ -1591,19 +1591,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003457
-    m_Localized: 'Welcher Baum passt in deine Hand?
-
-      Eine handliche Palme.'
+    m_Localized: Welcher Baum passt in deine Hand? Ein Bonsai.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003456
-    m_Localized: "Wie nennt man einen Lehrer, der nie \xF6ffentlich pupst?\nEinen Privat-Tutor."
+    m_Localized: Wie nennt man einen Lehrer, der nur zu Hause pupst? Einen Privatpupser.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003455
-    m_Localized: 'Warum warf das Kind Butter aus dem Fenster?
-
-      Es wollte einen Butter-Flieger sehen.'
+    m_Localized: Warum vertraut man der Butter keine Geheimnisse an? Sie schmiert einem alles aufs Brot.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003454
@@ -1617,11 +1613,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003452
-    m_Localized: "Was unterscheidet eine hei\xDFe S\xFC\xDFkartoffel von einem Schwein, das aus dem Fenster geworfen wird?\nDie eine ist eine hei\xDFe Knolle, das andere ein fliegender Schinken. "
+    m_Localized: Was sagt ein Schwein beim Fallschirmspringen? Schwein gehabt!
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003451
-    m_Localized: "Warum fliegen M\xF6wen am Meer?\nAn der Bucht w\xE4ren sie Buchteln."
+    m_Localized: "Was denkt eine M\xF6we beim Anblick eines Bagels? Endlich ein essbarer Rettungsring!"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003450
@@ -1629,7 +1625,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003449
-    m_Localized: "Neben mir sitzt bei der Arbeit eine Kaffeebohne. Wir schaffen nicht viel \u2014 sie redet einen ganzen Latte."
+    m_Localized: Warum steht der Kaffee bei der Arbeit so unter Druck? Er ist ein Espresso.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003448
@@ -1641,11 +1637,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003446
-    m_Localized: Wann wird ein Witz zum Papawitz? Wenn sein Vater offensichtlich wird.
+    m_Localized: Wann wird ein Witz zum Papawitz? Wenn der Nachwuchs nur noch die Augen verdreht.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003445
-    m_Localized: "Neulich stand jemand auf einem Br\xF6tchen. Bei ihm lief's rund."
+    m_Localized: "Warum arbeitet der B\xE4cker so viel? Er muss seine Br\xF6tchen verdienen."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003444
@@ -1657,19 +1653,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003442
-    m_Localized: "Ich kenne 25 Buchstaben des Alphabets. Beim Y wei\xDF ich nicht, warum."
+    m_Localized: "Welcher Buchstabe ist ein Getr\xE4nk? Das T."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003441
-    m_Localized: Was passiert, wenn dich jemand mit hoher Frequenz ohrfeigt? Es hertzt.
+    m_Localized: Warum hat das Radio Liebeskummer? Es hat zu viele Hertz.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003440
-    m_Localized: "Ich habe meinen Nachbarn in einen Kernreaktor geworfen, und jetzt ist er tot. Was soll ich tun?! Barium \u2014 begrab ihn."
+    m_Localized: "Kennst du einen Witz \xFCber Natrium? Na."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003439
-    m_Localized: Wie nennt man einen bewaffneten Fisch? Eine Hecht-Lanze.
+    m_Localized: Welcher Fisch ist bewaffnet? Der Schwertfisch.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003438
@@ -1677,7 +1673,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003437
-    m_Localized: "Was bestellte Batman an der Bar? Nur Eis \u2014 Gerechtigkeit auf Eis."
+    m_Localized: Was bestellt Batman an der Bar? Einen Batida.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003436
@@ -1693,15 +1689,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003433
-    m_Localized: "Ich, als Eins, mag r\xF6mische Zahlen."
+    m_Localized: "R\xF6mische Zahlen? F\xFCr mich sind sie die Nummer I."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003432
-    m_Localized: "Laderaum? Nein. Das Auto f\xE4hrt auf der Stra\xDFe."
+    m_Localized: Warum fliegt das Auto zum Mond? Auf der Erde gab es keinen Parkplatz.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003431
-    m_Localized: "Wie hei\xDFt eine Frau mit einem Bein? Eileen \u2014 sie lehnt sich an."
+    m_Localized: "Warum sind Einbeinige morgens so gut gelaunt? Sie stehen immer mit dem richtigen Fu\xDF auf."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003430
@@ -2001,7 +1997,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003356
-    m_Localized: Gesundheit
+    m_Localized: Leben
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003355
@@ -2065,7 +2061,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003340
-    m_Localized: Gesundheit
+    m_Localized: Leben
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003339
@@ -2721,7 +2717,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003176
-    m_Localized: Gesundheit
+    m_Localized: Leben
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003175
@@ -2891,7 +2887,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003135
-    m_Localized: Deine Seele wurde geerntet ...
+    m_Localized: "Carl hat dich zur\xFCckgeholt ..."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003134
@@ -2931,7 +2927,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003125
-    m_Localized: '{0}-mal gestorben, {1}-mal von Carl geerntet'
+    m_Localized: "{0}-mal gestorben, {1}-mal von Carl zur\xFCckgeholt"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003124
@@ -2963,7 +2959,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003117
-    m_Localized: "Bei Datei {0} besteht ein best\xE4tigter Integrit\xE4tskonflikt oder ein Konflikt mit der ma\xDFgeblichen Cloud-Version. Ein erneuter Versuch ist zun\xE4chst am sichersten; alle vorhandenen Sicherungen bleiben erhalten. Wenn du ausdr\xFCcklich neu beginnst, wird eine neue Cloud-Abstammung erstellt, ohne alte Dateien zu l\xF6schen.\n\n{1}"
+    m_Localized: "Bei Datei {0} besteht ein Integrit\xE4tskonflikt oder ein Konflikt mit der ma\xDFgeblichen Cloud-Version. Versuche es zuerst erneut; alle vorhandenen Sicherungen bleiben erhalten. Wenn du neu beginnst, wird eine neue Cloud-Spielstandreihe erstellt, ohne alte Dateien zu l\xF6schen.\n\n{1}"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003116
@@ -3147,11 +3143,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003071
-    m_Localized: "Aber f\xFCr mein Haus brauche ich das perfekte Bauholz ..."
+    m_Localized: "Triff mich in der Stadt. Ich habe eine Ersatzaxt f\xFCr dich, und im Wald gibt es gutes Bauholz."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003070
-    m_Localized: "Ich bin hierhergekommen, um ein paar B\xE4ume zu f\xE4llen. "
+    m_Localized: "Ich suche Bauholz f\xFCr mein Haus."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003069
@@ -3191,15 +3187,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003060
-    m_Localized: "Hier, ein Schwert von mir! Ich gehe zur\xFCck in die Stadt."
+    m_Localized: "Ich lege Materialien f\xFCr dein erstes Schwert bereit."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003059
-    m_Localized: "Ich glaube, Ausr\xFCstung zu schmieden liegt mir besser, als diese Kerle zu bek\xE4mpfen. "
+    m_Localized: Triff mich in der Stadt. Ich bringe die Materialien mit und zeige dir, wie du dein erstes Schwert schmiedest.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003058
-    m_Localized: 'Ah, da bist du ja, Bruder! '
+    m_Localized: "Waffen herzustellen liegt mir mehr, als damit zu k\xE4mpfen."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003057
@@ -3251,7 +3247,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003045
-    m_Localized: Finde zuerst auf einem Abenteuer ein Radieschen-Saatgutpaket.
+    m_Localized: "Finde zuerst auf einem Abenteuer ein Radieschen-Samenp\xE4ckchen."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003044
@@ -3474,14 +3470,6 @@ MonoBehaviour:
     m_Localized: 'Technishift '
     m_Metadata:
       m_Items: []
-  - m_Id: 87000000000002009
-    m_Localized: Soundeffekte
-    m_Metadata:
-      m_Items: []
-  - m_Id: 87000000000002010
-    m_Localized: dqssq
-    m_Metadata:
-      m_Items: []
   - m_Id: 87000000000002011
     m_Localized: "Hauptk\xFCnstler | Schau auf Itch.io vorbei!"
     m_Metadata:
@@ -3621,7 +3609,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002044
-    m_Localized: Seelenernte
+    m_Localized: Schnitter
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002045
@@ -3865,71 +3853,71 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004002
-    m_Localized: "Saatgutp\xE4ckchen: Radieschen"
+    m_Localized: "Samenp\xE4ckchen: Radieschen"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004003
-    m_Localized: "Saatgutp\xE4ckchen: Mais"
+    m_Localized: "Samenp\xE4ckchen: Mais"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004004
-    m_Localized: "Saatgutp\xE4ckchen: Weizen"
+    m_Localized: "Samenp\xE4ckchen: Weizen"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004005
-    m_Localized: "Saatgutp\xE4ckchen: Watermelone"
+    m_Localized: "Samenp\xE4ckchen: Watermelone"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004006
-    m_Localized: "Saatgutp\xE4ckchen: Karotte"
+    m_Localized: "Samenp\xE4ckchen: Karotte"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004007
-    m_Localized: "Saatgutp\xE4ckchen: Kartoffel"
+    m_Localized: "Samenp\xE4ckchen: Kartoffel"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004008
-    m_Localized: "Saatgutp\xE4ckchen: Tomate"
+    m_Localized: "Samenp\xE4ckchen: Tomate"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004009
-    m_Localized: "Saatgutp\xE4ckchen: Salat"
+    m_Localized: "Samenp\xE4ckchen: Salat"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004010
-    m_Localized: "Saatgutp\xE4ckchen: Gurke"
+    m_Localized: "Samenp\xE4ckchen: Gurke"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004011
-    m_Localized: "Saatgutp\xE4ckchen: Lauch"
+    m_Localized: "Samenp\xE4ckchen: Lauch"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004012
-    m_Localized: "Saatgutp\xE4ckchen: Pastinake"
+    m_Localized: "Samenp\xE4ckchen: Pastinake"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004013
-    m_Localized: "Saatgutp\xE4ckchen: Paprika"
+    m_Localized: "Samenp\xE4ckchen: Paprika"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004014
-    m_Localized: "Saatgutp\xE4ckchen: Chillie"
+    m_Localized: "Samenp\xE4ckchen: Chillie"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004015
-    m_Localized: "Saatgutp\xE4ckchen: Pumking"
+    m_Localized: "Samenp\xE4ckchen: Pumking"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004016
-    m_Localized: "Saatgutp\xE4ckchen: Erdbeere"
+    m_Localized: "Samenp\xE4ckchen: Erdbeere"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004017
-    m_Localized: "Saatgutp\xE4ckchen: Funion"
+    m_Localized: "Samenp\xE4ckchen: Funion"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004018
-    m_Localized: "Saatgutp\xE4ckchen: R\xFCbe"
+    m_Localized: "Samenp\xE4ckchen: R\xFCbe"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004019
@@ -3969,7 +3957,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004028
-    m_Localized: "+50\_% Abenteuerressourcen in jedem Spielstand. Kein Nachladen n\xF6tig."
+    m_Localized: "+50\_% Abenteuerressourcen in jedem Spielstand. Keine Verl\xE4ngerung n\xF6tig."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004029
@@ -4153,7 +4141,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004074
-    m_Localized: Finde Saatgutpakete bei Ernteaufgaben auf Abenteuern.
+    m_Localized: "Finde Samenp\xE4ckchen bei Ernteaufgaben auf Abenteuern."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004075
@@ -4165,7 +4153,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004077
-    m_Localized: 'Felder-Stufe {0}: Erntet und pflanzt mit einem passenden Saatgutpaket oder Setzling nach. Stoppt ohne Vorrat. Ab Stufe {1} wird jede neue Pflanzung automatisch gegossen, auch bei ausgeschaltetem Auto.'
+    m_Localized: "Felder-Stufe {0}: Erntet und pflanzt mit einem passenden Samenp\xE4ckchen oder Setzling nach. Stoppt, wenn der Vorrat aufgebraucht ist. Ab Stufe {1} wird jede neue Pflanzung automatisch gegossen, auch bei ausgeschaltetem Auto."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004078
@@ -4337,7 +4325,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166127623698255875
-    m_Localized: "Buffs helfen deinem Helden beim Sammeln, K\xE4mpfen und Beschw\xF6ren von Echos. Hier siehst du Wirkung und Kosten jedes Buffs. F\xFCr diese Lektion musst du nichts wirken."
+    m_Localized: "Zauber helfen deinem Helden beim Sammeln, K\xE4mpfen und Beschw\xF6ren von Echos. Hier siehst du Wirkung und Kosten jedes Zaubers. F\xFCr diese Lektion musst du nichts wirken."
     m_Metadata:
       m_Items: []
   - m_Id: 166127623698255876
@@ -4345,11 +4333,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166127623698255877
-    m_Localized: "Fertigkeiten zeigen deine Stufen, Boni und n\xE4chsten Freischaltungen. W\xE4hle eine Fertigkeit aus, um ihren Fortschritt zu sehen."
+    m_Localized: "F\xE4higkeiten zeigen deine Stufen, Boni und n\xE4chsten Freischaltungen. W\xE4hle eine F\xE4higkeit aus, um ihren Fortschritt zu sehen."
     m_Metadata:
       m_Items: []
   - m_Id: 166127623698255878
-    m_Localized: "In der Schmiede schmilzt du Materialien zu Kernen und stellst damit Ausr\xFCstung her. Unerw\xFCnschte Gegenst\xE4nde kannst du zerlegen. F\xFCr diese Auffrischung musst du nichts herstellen, ausr\xFCsten oder ausgeben."
+    m_Localized: "Schmelze in der Schmiede Materialien zu Barren und stelle daraus mit Kernen Ausr\xFCstung her. Ungewollte Ausr\xFCstung kannst du zerlegen. F\xFCr diese Auffrischung musst du nichts herstellen, ausr\xFCsten oder ausgeben."
     m_Metadata:
       m_Items: []
   - m_Id: 166127623698255879
@@ -4357,7 +4345,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166127623698255880
-    m_Localized: "Diagramme zeigen deine letzten Durchl\xE4ufe. Damit kannst du deine Ergebnisse im Laufe der Zeit vergleichen."
+    m_Localized: Diagramme zeigen deine letzten Reisen. Damit kannst du deine Ergebnisse im Laufe der Zeit vergleichen.
     m_Metadata:
       m_Items: []
   - m_Id: 166127623698255881
@@ -4661,7 +4649,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164290767910211584
-    m_Localized: "\xD6ffne <link=\"help:statistics/graphs\"><u><color=#EFB889>Statistiken (das Balkendiagramm-Symbol), dann Diagramme</color></u></link>, um deine letzten Reisen anzusehen."
+    m_Localized: "\xD6ffne <link=\"help:statistics/graphs\"><u><color=#EFB889><sprite=\"NavigationInlineSprites\" name=\"statistics\" tint=1> \u2192 Diagramme</color></u></link>, um deine letzten Reisen anzusehen."
     m_Metadata:
       m_Items: []
   - m_Id: 164297665183092736
@@ -4713,7 +4701,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166027245250023433
-    m_Localized: "\xD6ffne <link=\"help:statistics/tasks\"><u><color=#EFB889>Statistiken (das Balkendiagramm-Symbol), dann Aufgaben</color></u></link>, um auszuw\xE4hlen, welche Aufgaben h\xE4ufiger erscheinen."
+    m_Localized: "\xD6ffne <link=\"help:statistics/tasks\"><u><color=#EFB889><sprite=\"NavigationInlineSprites\" name=\"statistics\" tint=1> \u2192 Aufgaben</color></u></link>, um auszuw\xE4hlen, welche Aufgaben h\xE4ufiger erscheinen."
     m_Metadata:
       m_Items: []
   - m_Id: 166027246403457024
@@ -5185,7 +5173,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166516885933396081
-    m_Localized: Gesundheit
+    m_Localized: Leben
     m_Metadata:
       m_Items: []
   - m_Id: 166516885933396082
@@ -5229,7 +5217,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166516885933396092
-    m_Localized: Gesundheit
+    m_Localized: Leben
     m_Metadata:
       m_Items: []
   - m_Id: 166516885933396093
@@ -5456,6 +5444,154 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 166527630796525581
     m_Localized: Regeneration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525582
+    m_Localized: Alles mischen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525583
+    m_Localized: Nie stoppen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525584
+    m_Localized: Weiter schmieden und zerlegen, auch Verbesserungen und Vastium, bis du stoppst oder die Materialien ausgehen.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525585
+    m_Localized: 'Zeit: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525586
+    m_Localized: 'Kill-Bonus: +{0}{1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525587
+    m_Localized: '{0} / Min.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525588
+    m_Localized: "Bei R\xFCckkehr: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525589
+    m_Localized: "Dist/m: {0:N0} \xB7 DPS: {1:N0} \xB7 Kills/m: {2:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525590
+    m_Localized: Barkley
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525591
+    m_Localized: Ivan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525592
+    m_Localized: Gill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525593
+    m_Localized: Flora und Tillman
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525594
+    m_Localized: Der alte Haudegen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525595
+    m_Localized: Eva
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525596
+    m_Localized: Orin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525597
+    m_Localized: Carl
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167113903412219904
+    m_Localized: Alles mischen {0} {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167116493634015232
+    m_Localized: "Ressourcen \xD7{0:0.##}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167116493675958272
+    m_Localized: "R\xFCckzug vorgemerkt \xB7 \xD7{0:0.##}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167116493675958273
+    m_Localized: "Reise\xFCbersicht\n<size=75%>Ressourcen \xD7{0:0.##}</size>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167116493675958274
+    m_Localized: "Besiegt: {0:N0} \xB7 Ressourcen \xD7{1:0.##}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167117468855832576
+    m_Localized: 'Besiegt: {0:N0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167121096459030528
+    m_Localized: Besiegt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167121096517750784
+    m_Localized: Bonus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167121096517750785
+    m_Localized: Zeit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167121096517750786
+    m_Localized: Schritte
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167121096517750787
+    m_Localized: Tode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167121096517750788
+    m_Localized: "R\xFCckholungen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167121096517750789
+    m_Localized: Distanz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167134370185482240
+    m_Localized: Gesamt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167145578645032960
+    m_Localized: Mischen {0} {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167146414368493568
+    m_Localized: Verkostungen / s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167146414414630912
+    m_Localized: / Verkostung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167146414414630913
+    m_Localized: "Verf\xFCgbar: {0} \xB7"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167146414414630914
+    m_Localized: "{0} / St\xFCck"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167153080262594560
+    m_Localized: Probieren
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167153080312926208
+    m_Localized: Pause
     m_Metadata:
       m_Items: []
   references:

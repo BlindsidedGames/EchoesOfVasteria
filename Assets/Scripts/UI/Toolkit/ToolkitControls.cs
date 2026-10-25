@@ -21,10 +21,22 @@ namespace TimelessEchoes.UI.Toolkit
 
         public static Label Text(string value, TextRole role = TextRole.Body)
         {
-            var label = new Label(value) { pickingMode = PickingMode.Ignore };
+            var label = new Label(WithoutInlineTextSize(value)) { pickingMode = PickingMode.Ignore };
             label.AddToClassList("eov-text");
             SetTextRole(label, role);
             return label;
+        }
+
+        public static string WithoutInlineTextSize(string text) =>
+            System.Text.RegularExpressions.Regex.Replace(text ?? string.Empty, @"</?size(?:=[^>]+)?>", string.Empty,
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+        // Authored sizes select a responsive role rather than fixing a pixel size.
+        public static void SetTextSize(TextElement text, float size)
+        {
+            text.style.fontSize = StyleKeyword.Null;
+            SetTextRole(text, size <= 7 ? TextRole.Caption : size <= 8 ? TextRole.Body :
+                size <= 10 ? TextRole.Subheading : TextRole.Heading);
         }
 
         public static void SetTextRole(TextElement text, TextRole role)

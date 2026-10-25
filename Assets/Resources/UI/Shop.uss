@@ -10,7 +10,7 @@
 .gameplay.shop-ui .shop-offers > .shop-card > .button {margin-top:auto;}
 .gameplay.shop-ui .shop-card .heading {font-size:13px;margin-bottom:4px;white-space:normal;}
 .gameplay.shop-ui .shop-description {font-size:10px;white-space:normal;margin-bottom:6px;}
-.gameplay.shop-ui .muted {font-size:9px;white-space:normal;}
+.gameplay.shop-ui .muted {font-size:var(--body);white-space:normal;}
 .gameplay.shop-ui .shop-actions {margin-top:8px;flex-shrink:0;}
 .gameplay.shop-ui .shop-actions > .button {flex-grow:1;flex-basis:0;margin-right:6px;}
 .gameplay.shop-ui .shop-actions > .shop-action-last {margin-right:0;}

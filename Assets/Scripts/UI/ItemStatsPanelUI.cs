@@ -208,9 +208,9 @@ namespace TimelessEchoes.UI
                 {
                     var tier = resourceManager != null ? resourceManager.GetTier(res) : 1;
                     if (tier > 1)
-                        ui.entryNameText.text = $"{res.name} | T{tier}";
+                        ui.entryNameText.text = $"{TimelessEchoes.UI.Toolkit.ToolkitLocalization.Name(res)} | T{tier}";
                     else
-                        ui.entryNameText.text = res.name;
+                        ui.entryNameText.text = TimelessEchoes.UI.Toolkit.ToolkitLocalization.Name(res);
                 }
                 else
                 {

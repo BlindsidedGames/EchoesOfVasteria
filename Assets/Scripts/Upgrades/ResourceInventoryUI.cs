@@ -226,7 +226,7 @@ namespace TimelessEchoes.Upgrades
                         }
                         if (resolvedTier < 1) resolvedTier = 1; // force to 1 if zero or less
 
-                        selectedResourceNameText.text = $"{res.name} - Tier {resolvedTier}";
+                        selectedResourceNameText.text = $"{TimelessEchoes.UI.Toolkit.ToolkitLocalization.Name(res)} - {TimelessEchoes.UI.Toolkit.ToolkitLocalization.Text("inventory.tier", "Tier {0}", resolvedTier)}";
                     }
                     else
                     {

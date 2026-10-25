@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using static Blindsided.Oracle;
 using static Blindsided.SaveData.GameData;
@@ -29,6 +30,8 @@ namespace Blindsided.SaveData
         private const string SafeAreaRatioKey = "SafeAreaRatio";
         private const string MuteWhenUnfocusedKey = "MuteWhenUnfocused";
         private const string FastCraftModeKey = "FastCraftMode";
+        private const string CauldronFoodKey = "Cauldron.LastFood";
+        private const string CauldronAmountPrefix = "Cauldron.Amount.";
         public static Dictionary<string, int> UpgradeLevels => oracle.saveData.UpgradeLevels;
         public static Dictionary<string, ResourceEntry> Resources => oracle.saveData.Resources;
         public static Dictionary<string, double> EnemyKills => oracle.saveData.EnemyKills;
@@ -181,6 +184,38 @@ namespace Blindsided.SaveData
             set => oracle.saveData.SavedPreferences.UseScaledTimeForValues = value;
         }
 
+        public static string LastSelectedCauldronFood
+        {
+            get => PlayerPrefs.GetString(CauldronFoodKey, "");
+            set => PlayerPrefs.SetString(CauldronFoodKey, value ?? "");
+        }
+
+        public static double GetCauldronFoodAmount(string food)
+        {
+            return double.TryParse(PlayerPrefs.GetString(CauldronAmountPrefix + food, ""),
+                NumberStyles.Float, CultureInfo.InvariantCulture, out var amount) &&
+                amount >= 0 && !double.IsNaN(amount) && !double.IsInfinity(amount) ? Math.Floor(amount) : 1;
+        }
+
+        public static void SetCauldronFoodAmount(string food, double amount)
+        {
+            if (string.IsNullOrEmpty(food) || amount < 0 || double.IsNaN(amount) || double.IsInfinity(amount)) return;
+            PlayerPrefs.SetString(CauldronAmountPrefix + food, Math.Floor(amount).ToString("R", CultureInfo.InvariantCulture));
+        }
+
+        public static void MigrateCauldronFoodPreferences(Preferences preferences)
+        {
+            if (preferences == null || (preferences.CauldronFoodAmounts == null && string.IsNullOrEmpty(preferences.LastSelectedCauldronFood))) return;
+            if (!PlayerPrefs.HasKey(CauldronFoodKey) && !string.IsNullOrEmpty(preferences.LastSelectedCauldronFood))
+                LastSelectedCauldronFood = preferences.LastSelectedCauldronFood;
+            if (preferences.CauldronFoodAmounts != null)
+                foreach (var pair in preferences.CauldronFoodAmounts)
+                    if (!PlayerPrefs.HasKey(CauldronAmountPrefix + pair.Key)) SetCauldronFoodAmount(pair.Key, pair.Value);
+            preferences.LastSelectedCauldronFood = null;
+            preferences.CauldronFoodAmounts = null;
+            PlayerPrefs.Save();
+        }
+
         public static float MasterVolume
         {
             get => PlayerPrefs.GetFloat(MasterVolumeKey, 1f);
@@ -307,6 +342,12 @@ namespace Blindsided.SaveData
                 PlayerPrefs.SetInt(StopAutocraftOnVastiumKey, value ? 1 : 0);
                 PlayerPrefs.Save();
             }
+        }
+
+        public static bool NeverStopAutocraft
+        {
+            get => oracle?.saveData?.SavedPreferences?.NeverStopAutocraft ?? false;
+            set => oracle.saveData.SavedPreferences.NeverStopAutocraft = value;
         }
 
         // Stat Matching (formerly "Lock Stats"): when enabled, forge autocraft only stops

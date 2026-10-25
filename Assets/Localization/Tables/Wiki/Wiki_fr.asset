@@ -27,7 +27,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 492340396032
-    m_Localized: "Ton personnage combat automatiquement et n\u2019affronte que les ennemis qui lui barrent la route ! Les t\xE2ches d\u2019abord, le plaisir ensuite.\n\nD' = D \xD7 (1 - A / (A + N))\n\nD = d\xE9g\xE2ts entrants\nA = d\xE9fense (limit\xE9e \xE0 0 ou plus)\nN = constante contr\xF4lant les rendements d\xE9croissants (par d\xE9faut = 25)\nD' = d\xE9g\xE2ts finaux subis\n\nVotre 10e, 100e, 1\u202F000e et 10\u202F000e \xE9limination contre un ennemi donn\xE9 vous accorde 25\_% de d\xE9g\xE2ts suppl\xE9mentaires contre cet ennemi.\nVotre 25\u202F000e et 100\u202F000e \xE9limination vous accorde 50\_% de d\xE9g\xE2ts suppl\xE9mentaires contre cet ennemi."
+    m_Localized: "Ton personnage combat automatiquement et n\u2019affronte que les ennemis qui lui barrent la route ! Les t\xE2ches d\u2019abord, le plaisir ensuite.\n\nD' = D \xD7 (1 - A / (A + N))\n\nD = d\xE9g\xE2ts entrants\nA = d\xE9fense (limit\xE9e \xE0 0 ou plus)\nN = constante contr\xF4lant les rendements d\xE9croissants (par d\xE9faut = 25)\nD' = d\xE9g\xE2ts finaux subis\n\nTa 10e, 100e, 1\u202F000e et 10\u202F000e \xE9limination contre un ennemi donn\xE9 te rapporte 25\_% de d\xE9g\xE2ts suppl\xE9mentaires contre cet ennemi.\nTa 25\u202F000e et 100\u202F000e \xE9limination te rapporte 50\_% de d\xE9g\xE2ts suppl\xE9mentaires contre cet ennemi."
     m_Metadata:
       m_Items: []
   - m_Id: 512217202688
@@ -47,7 +47,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3785742338113536
-    m_Localized: "Carl met fin \xE0 ton aventure lorsque tu atteins la limite de la carte. Consulte <link=\"help:statistics/general\"><u><color=#EFB889>Statistiques \u2192 G\xE9n\xE9ral</color></u></link> pour voir les limites des cartes.\n\n\xCAtre fauch\xE9 \xE0 la limite augmente la distance de 1\_% dans la Rivi\xE8re, les Bois et les Mines. Les Terres agricoles ne donnent aucune augmentation. Dans Hant\xE9, le niveau des ennemis augmente avec les \xE9liminations, sans plafond de \xE9liminations. Certaines qu\xEAtes augmentent aussi ta limite de d\xE9placement."
+    m_Localized: "Carl met fin \xE0 ton aventure lorsque tu atteins la limite de la carte. Consulte <link=\"help:statistics/general\"><u><color=#EFB889>Statistiques \u2192 G\xE9n\xE9ral</color></u></link> pour voir les limites des cartes.\n\n\xCAtre fauch\xE9 \xE0 la limite augmente la distance de 1\_% dans la Rivi\xE8re, les Bois et les Mines. Les Terres agricoles ne donnent aucune augmentation. Dans Hant\xE9, le niveau des ennemis augmente avec les \xE9liminations, sans plafond d\u2019\xE9liminations. Certaines qu\xEAtes augmentent aussi ta limite de d\xE9placement."
     m_Metadata:
       m_Items: []
   - m_Id: 6939642239008768
@@ -169,7 +169,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299020
-    m_Localized: "Ton h\xE9ros combat automatiquement les ennemis, puis reprend sa t\xE2che.\n\nPendant une aventure, s\xE9lectionne <link=\"help:hero-stats\"><u><color=#EFB889>Stats</color></u></link> \xE0 c\xF4t\xE9 de ta barre de sant\xE9 pour voir tes statistiques actuelles. Ouvre <link=\"help:statistics/enemies\"><u><color=#EFB889>Statistiques \u2192 Ennemis</color></u></link> pour voir les statistiques ennemies et tes bonus de \xE9liminations."
+    m_Localized: "Ton h\xE9ros combat automatiquement les ennemis, puis reprend sa t\xE2che.\n\nPendant une aventure, s\xE9lectionne <link=\"help:hero-stats\"><u><color=#EFB889>Stats</color></u></link> \xE0 c\xF4t\xE9 de ta barre de sant\xE9 pour voir tes statistiques actuelles. Ouvre <link=\"help:statistics/enemies\"><u><color=#EFB889>Statistiques \u2192 Ennemis</color></u></link> pour voir les statistiques ennemies et tes bonus d\u2019\xE9liminations."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299021
@@ -181,23 +181,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299023
-    m_Localized: "<b>Rivi\xE8re, Bois et Mines</b>\nCarl met fin \xE0 l'aventure \xE0 la limite de distance. \xCAtre fauch\xE9 \xE0 cette limite augmente ta distance de fauchage commune de 1\_%.\n\n<b>Terres agricoles</b>\nCarl met fin \xE0 l'aventure \xE0 la limite de distance, mais le fauchage n'augmente pas cette limite.\n\n<b>Hant\xE9</b>\nLe niveau des ennemis augmente avec tes \xE9liminations. Il n'y a ni plafond de \xE9liminations ni limite de fauchage.\n\nTu conserves les ressources r\xE9colt\xE9es et ta progression de comp\xE9tences \xE0 la fin d'une aventure. Retourne en ville pour rendre tes qu\xEAtes, puis consulte le <link=\"help:run-summary\"><u><color=#EFB889>R\xE9sum\xE9 de l\u2019aventure</color></u></link> pour voir tes gains. Les informations sur les cartes sont dans <link=\"help:statistics/general\"><u><color=#EFB889>Statistiques \u2192 G\xE9n\xE9ral</color></u></link>."
+    m_Localized: "<b>Rivi\xE8re, Bois et Mines</b>\nCarl met fin \xE0 l'aventure \xE0 la limite de distance. \xCAtre fauch\xE9 \xE0 cette limite augmente ta distance de fauchage commune de 1\_%.\n\n<b>Terres agricoles</b>\nCarl met fin \xE0 l'aventure \xE0 la limite de distance, mais le fauchage n'augmente pas cette limite.\n\n<b>Hant\xE9</b>\nLe niveau des ennemis augmente avec tes \xE9liminations. Il n'y a ni plafond d\u2019\xE9liminations ni limite de fauchage.\n\nTu conserves les ressources r\xE9colt\xE9es et ta progression de comp\xE9tences \xE0 la fin d'une aventure. Retourne en ville pour rendre tes qu\xEAtes, puis consulte le <link=\"help:run-summary\"><u><color=#EFB889>R\xE9sum\xE9 de l\u2019aventure</color></u></link> pour voir tes gains. Les informations sur les cartes sont dans <link=\"help:statistics/general\"><u><color=#EFB889>Statistiques \u2192 G\xE9n\xE9ral</color></u></link>."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299024
-    m_Localized: "<b>Rivi\xE8re, Bois et Mines</b>\n\xCAtre fauch\xE9 \xE0 la limite de distance augmente ta distance de fauchage commune de 1\_% de la limite effective atteinte, buffs de distance inclus. Certaines qu\xEAtes permettent aussi d'aller plus loin.\n\n<b>Terres agricoles</b>\nCarl met fin \xE0 l'aventure \xE0 sa limite de distance, sans l'augmenter.\n\n<b>Hant\xE9</b>\nLe niveau des ennemis augmente avec les \xE9liminations. Il n'y a ni plafond de \xE9liminations ni limite de fauchage."
+    m_Localized: "<b>Rivi\xE8re, Bois et Mines</b>\n\xCAtre fauch\xE9 \xE0 la limite de distance augmente ta distance de fauchage commune de 1\_% de la limite effective atteinte, buffs de distance inclus. Certaines qu\xEAtes permettent aussi d'aller plus loin.\n\n<b>Terres agricoles</b>\nCarl met fin \xE0 l'aventure \xE0 sa limite de distance, sans l'augmenter.\n\n<b>Hant\xE9</b>\nLe niveau des ennemis augmente avec les \xE9liminations. Il n'y a ni plafond d\u2019\xE9liminations ni limite de fauchage."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299025
-    m_Localized: Bonus de retraite
+    m_Localized: Bonus de ressources
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299026
-    m_Localized: "Utilise la commande de retour en ville pendant une aventure pour battre en retraite. Chaque \xE9limination ajoute 2\_% \xE0 ton bonus de ressources de retraite, affich\xE9 sur la commande.\n\nSi tu demandes \xE0 rentrer pendant un combat, ton h\xE9ros le termine avant de partir.\n\nTu ne re\xE7ois ce bonus que si tu rentres en vie. Mourir ou \xEAtre fauch\xE9 le fait perdre ; tu conserves les ressources d\xE9j\xE0 r\xE9colt\xE9es."
+    m_Localized: "Chaque \xE9limination ajoute 0,02\xD7 \xE0 ton multiplicateur de ressources, jusqu\u2019\xE0 10\xD7. Il est conserv\xE9 si tu meurs, si tu es fauch\xE9 ou si tu recommences sans rentrer en ville.\n\nAu retour en ville, il s\u2019applique une seule fois aux ressources r\xE9colt\xE9es depuis ton dernier d\xE9part. L\u2019aventure suivante commence \xE0 1\xD7."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299027
-    m_Localized: "Ton bonus de retraite d\xE9pend des \xE9liminations de l'aventure en cours et t'est accord\xE9 si tu rentres en vie. Mourir ou \xEAtre fauch\xE9 fait perdre le bonus, mais pas les ressources d\xE9j\xE0 r\xE9colt\xE9es."
+    m_Localized: "Par exemple, 50 \xE9liminations donnent 2\xD7 les ressources ; 450 atteignent le plafond de 10\xD7. Les ressources bonus ne re\xE7oivent pas de bonus suppl\xE9mentaire."
     m_Metadata:
       m_Items: []
   - m_Id: 164580255232299028
@@ -321,7 +321,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164584687353335815
-    m_Localized: Armure
+    m_Localized: Plastron
     m_Metadata:
       m_Items: []
   - m_Id: 164584687353335816
@@ -501,7 +501,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164584687365918746
-    m_Localized: Armure
+    m_Localized: Plastron
     m_Metadata:
       m_Items: []
   - m_Id: 164584687365918747
@@ -869,11 +869,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164590655378165760
-    m_Localized: "<b>Modifications en cours de d\xE9veloppement</b>\n\n<b>D\xE9but du jeu et progression</b>\n\u2022 Refonte des premi\xE8res qu\xEAtes et des pr\xE9sentations des personnages.\n\u2022 Gill guide les joueurs vers la Rivi\xE8re ; Barkley les m\xE8ne vers les Bois.\n\u2022 Gill offre des Vieilles bottes. Ivan fournit des mat\xE9riaux et apprend aux joueurs \xE0 forger et \xE9quiper leur premi\xE8re \xE9p\xE9e.\n\u2022 Les menus et didacticiels apparaissent lorsque leurs syst\xE8mes deviennent utiles.\n\u2022 Les qu\xEAtes ne peuvent \xEAtre rendues qu'en ville.\n\n<b>Interface</b>\n\u2022 Refonte du R\xE9sum\xE9 de l\u2019aventure et ajout d'un panneau de statistiques compact pendant l'aventure.\n\u2022 L'Inventaire affiche d\xE9sormais les objets \xE9quip\xE9s et les bonus d'\xE9quipement.\n\u2022 Ajout du d\xE9filement par glissement dans toute l'interface.\n\u2022 Refonte de la Biblioth\xE8que avec navigation par sujet, tableaux de r\xE9f\xE9rence et explications d'ic\xF4nes s\xE9lectionnables.\n\n<b>Jeu et correctifs</b>\n\u2022 R\xE9duction de la densit\xE9 des t\xE2ches lors de la premi\xE8re aventure dans les Terres agricoles.\n\u2022 Les t\xE2ches d'agriculture apparaissent uniquement dans les Terres agricoles.\n\u2022 Les paliers de noyaux et de cristaux se d\xE9bloquent avec les niveaux de Combat.\n\u2022 Correction des superpositions de barres de sant\xE9 ennemies et de probl\xE8mes d'animation de p\xEAche.\n\u2022 Suppression des classements.\n\nS\xE9lectionne <link=\"help:reference\"><u><color=#EFB889>R\xE9f\xE9rence</color></u></link> pour les notes de mise \xE0 jour pr\xE9c\xE9dentes."
+    m_Localized: "<b>Version 1.5.2</b>\n\n\u2022 Le multiplicateur de ressources reste actif apr\u00e8s une mort et les exp\u00e9ditions suivantes, jusqu\u2019au retour en ville, avec un maximum de \u00d710.\n\u2022 Les aliments donnent plus de rago\u00fbt, surtout les ingr\u00e9dients de grande valeur.\n\u2022 Le poulet, le porc, le mouton et le steak donnent 50 % de rago\u00fbt en plus.\n\u2022 \u00ab Tout m\u00e9langer \u00bb est de retour au chaudron, affiche le rago\u00fbt pr\u00e9vu et m\u00e9morise la quantit\u00e9 choisie pour chaque aliment.\n\u2022 La forge dispose de \u00ab Ne jamais arr\u00eater \u00bb. Cette option ignore les autres r\u00e8gles d\u2019arr\u00eat et continue tant qu\u2019il reste des mat\u00e9riaux.\n\u2022 Le h\u00e9ros et les \u00c9chos ont les m\u00eames chances de trouver des graines et des jeunes arbres. Les vari\u00e9t\u00e9s avanc\u00e9es sont plus rares, avec des progressions distinctes pour les cultures, les arbres fruitiers et les arbres \u00e0 bois.\n\u2022 Les qu\u00eates se rendent uniquement en ville.\n\u2022 Les petits textes ont \u00e9t\u00e9 agrandis, notamment dans les qu\u00eates.\n\u2022 Les r\u00e9compenses de qu\u00eate utilisent des ic\u00f4nes coh\u00e9rentes, y compris les sachets de graines. Les ic\u00f4nes de jeunes arbres ont \u00e9t\u00e9 r\u00e9duites et les espaces entre les parcelles corrig\u00e9s.\n\u2022 Le bilan d\u2019exp\u00e9dition et la liste des ressources affichent des statistiques compactes, les totaux au retour et les bonus. En paysage, les listes utilisent deux ou trois colonnes.\n\u2022 Les montres \u00e0 gousset changent de palier selon le temps pass\u00e9 hors de la ville, et les coffres selon la quantit\u00e9 de ressources accumul\u00e9e.\n\u2022 Le d\u00e9filement des qu\u00eates et des ressources en portrait laisse la navigation du bas accessible.\n\u2022 Les rencontres affichent le nom des PNJ. Vie, statistiques, capacit\u00e9s et zoom restent visibles pendant l\u2019attente.\n\u2022 Les boutons n\u00e9cessaires aux tutoriels sont de nouveau utilisables. Les raccourcis de menu peuvent faire avancer la le\u00e7on, et le bouton du menu actif peut fermer la fen\u00eatre demand\u00e9e.\n\u2022 La biblioth\u00e8que s\u2019ouvre sur les sujets. Les notes de mise \u00e0 jour ont une ic\u00f4ne de journal.\n\u2022 Les emplacements de bonus verrouill\u00e9s affichent un cadenas plut\u00f4t que du texte.\n\u2022 Les traductions ont \u00e9t\u00e9 raccourcies et corrig\u00e9es, et les noms des mat\u00e9riaux harmonis\u00e9s."
     m_Metadata:
       m_Items: []
   - m_Id: 164590655378165761
-    m_Localized: "<b>Notes de mise \xE0 jour pr\xE9c\xE9dentes</b>\n\n\u2022 Ajout de Pour la confiture ! et Les voyages de Gilliver.\n\u2022 Am\xE9lioration du message d'introduction.\n\u2022 Correction des alertes de niveau affichant des valeurs trop faibles.\n\u2022 Suppression du bloc Qualit\xE9 \xE9quip\xE9e de la Forge.\n\u2022 Les qu\xEAtes \xE9pingl\xE9es indiquent Pr\xEAte \xE0 rendre plut\xF4t que Termin\xE9e.\n\u2022 Ajout d'un \xE9cran de chargement lors des changements de carte.\n\u2022 Ajout du bouton Tout m\xE9langer au Chaudron.\n\u2022 Mise \xE0 jour du syst\xE8me de recherche de chemin."
+    m_Localized: "<b>Mises \xE0 jour pr\xE9c\xE9dentes</b>\n\n<b>D\xE9but du jeu et progression</b>\n\u2022 Refonte des premi\xE8res qu\xEAtes et des pr\xE9sentations des personnages.\n\u2022 Gill guide les joueurs vers la Rivi\xE8re ; Barkley les m\xE8ne vers les Bois.\n\u2022 Gill offre des Vieilles bottes. Ivan fournit des mat\xE9riaux et apprend aux joueurs \xE0 forger et \xE9quiper leur premi\xE8re \xE9p\xE9e.\n\u2022 Les menus et didacticiels apparaissent lorsque leurs syst\xE8mes deviennent utiles.\n\u2022 Les qu\xEAtes ne peuvent \xEAtre rendues qu'en ville.\n\n<b>Interface</b>\n\u2022 Refonte du R\xE9sum\xE9 de l\u2019aventure et ajout d'un panneau de statistiques compact pendant l'aventure.\n\u2022 L'Inventaire affiche d\xE9sormais les objets \xE9quip\xE9s et les bonus d'\xE9quipement.\n\u2022 Ajout du d\xE9filement par glissement dans toute l'interface.\n\u2022 Refonte de la Biblioth\xE8que avec navigation par sujet, tableaux de r\xE9f\xE9rence et explications d'ic\xF4nes s\xE9lectionnables.\n\n<b>Jeu et correctifs</b>\n\u2022 R\xE9duction de la densit\xE9 des t\xE2ches lors de la premi\xE8re aventure dans les Terres agricoles.\n\u2022 Les t\xE2ches d'agriculture apparaissent uniquement dans les Terres agricoles.\n\u2022 Les paliers de noyaux et de cristaux se d\xE9bloquent avec les niveaux de Combat.\n\u2022 Correction des superpositions de barres de sant\xE9 ennemies et de probl\xE8mes d'animation de p\xEAche.\n\u2022 Suppression des classements.\n\n<b>Notes de mise \xE0 jour pr\xE9c\xE9dentes</b>\n\n\u2022 Ajout de Pour la confiture ! et Les voyages de Gilliver.\n\u2022 Am\xE9lioration du message d'introduction.\n\u2022 Correction des alertes de niveau affichant des valeurs trop faibles.\n\u2022 Suppression du bloc Qualit\xE9 \xE9quip\xE9e de la Forge.\n\u2022 Les qu\xEAtes \xE9pingl\xE9es indiquent Pr\xEAte \xE0 rendre plut\xF4t que Termin\xE9e.\n\u2022 Ajout d'un \xE9cran de chargement lors des changements de carte.\n\u2022 Ajout du bouton Tout m\xE9langer au Chaudron.\n\u2022 Mise \xE0 jour du syst\xE8me de recherche de chemin."
     m_Metadata:
       m_Items: []
   references:

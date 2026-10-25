@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Cauldron
   m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.UI.Toolkit.ToolkitCauldronDefinition
   config: {fileID: 11400000, guid: 186138e47430c524ba2bca88b5d3da25, type: 2}
+  stewIcon: {fileID: -501232103, guid: 04f4b575d98c7f34b82ec23461b902d2, type: 3}
   portrait:
     frames:
     - {fileID: -8960004934634566726, guid: 4aab3c3cf1e0d1144909abdf06d7d04b, type: 3}
@@ -59,8 +60,3 @@ MonoBehaviour:
     - 0.9166667
     - 1
     duration: 1.0166667
-  rewardHelp: 'Low Card<sprite=9>Gives your lowest card by count.
-
-    Eva''s blessing<sprite=9>Provides 2 random cards at equal chances.
-
-    The Vast One''s Surge<sprite=9>Provides 10 random cards at equal chances.'

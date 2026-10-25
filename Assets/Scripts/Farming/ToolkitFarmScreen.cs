@@ -55,8 +55,8 @@ namespace TimelessEchoes.UI.Toolkit
             public VisualElement Root, Art, Fill;
             public Button Select;
             public Label Title, Status, Requirement, ProgressStatus;
-            public Image[] Soil, Plants;
-            public Image[] WetSoils;
+            public Image[] Plants;
+            public FieldsSoilView Soil, WetSoil;
             public bool Orchard, Preview;
         }
         private sealed class OrchardPair { public string First, Second; public VisualElement Root, Slots; public Label Title, Requirement; public Button LockedSelect; }
@@ -223,19 +223,21 @@ namespace TimelessEchoes.UI.Toolkit
             tile.Requirement = L(plotHeader, "", "fields-level-requirement");
             var body = E(tile.Select, "row fields-plot-body"); tile.Art = E(body, "fields-plot-art"); tile.Art.name = "bed-art";
             var size = bed.Orchard ? 2 : 3;
-            tile.Soil = new Image[size * size]; tile.WetSoils = new Image[size * size];
+            tile.Soil = new FieldsSoilView(); tile.Art.Add(tile.Soil);
+            tile.WetSoil = new FieldsSoilView(); tile.Art.Add(tile.WetSoil);
+            foreach (var soil in new[] { tile.Soil, tile.WetSoil })
+            {
+                soil.style.left = bed.Orchard ? 4 : 0;
+                soil.style.top = bed.Orchard ? 16 : register ? 8 : 0;
+            }
             tile.Plants = new Image[bed.Orchard ? 1 : 9];
-            for (var i = 0; i < tile.Soil.Length; i++)
+            if (!bed.Orchard) for (var i = 0; i < tile.Plants.Length; i++)
             {
                 var spot = new VisualElement { pickingMode = PickingMode.Ignore }; tile.Art.Add(spot);
-                spot.style.position = Position.Absolute;
-                spot.style.left = (bed.Orchard ? 4 : 0) + i % size * 8;
-                spot.style.top = (bed.Orchard ? 16 : register ? 8 : 0) + i / size * 8;
-                spot.style.width = 8; spot.style.height = 8;
-                tile.Soil[i] = CreateArtImage(spot); tile.WetSoils[i] = CreateArtImage(spot);
-                foreach (var image in new[] { tile.Soil[i], tile.WetSoils[i] })
-                { image.style.width = 8; image.style.height = 8; image.style.bottom = 0; }
-                if (!bed.Orchard) tile.Plants[i] = CreateArtImage(spot);
+                spot.style.position = Position.Absolute; spot.style.left = i % size * 8;
+                spot.style.top = (register ? 8 : 0) + i / size * 8;
+                spot.style.width = spot.style.height = 8;
+                tile.Plants[i] = CreateArtImage(spot);
             }
             if (bed.Orchard) tile.Plants[0] = CreateArtImage(tile.Art);
             var info = E(body, "column fields-plot-info");
@@ -476,19 +478,13 @@ namespace TimelessEchoes.UI.Toolkit
             var sprite = !bed.Planted ? null : recipe?.stages?.Length == 4 ? recipe.stages[stage] : bed.Orchard && stage < 3 && appearance ? appearance.treeStages[stage] : bed.Icon;
             var size = bed.Orchard ? 2 : 3;
             var previewCropInset = tile.Preview && !bed.Orchard && sprite ? PreviewCropInset(sprite) : 0;
-            for (var i = 0; i < tile.Soil.Length; i++)
+            tile.Soil.Configure(appearance ? appearance.dry : null, size);
+            tile.WetSoil.Configure(appearance ? appearance.wet : null, size);
+            Visible(tile.WetSoil, bed.Watered);
+            if (tile.Preview && !bed.Orchard)
             {
-                var x = i % size; var y = i / size;
-                if (tile.Preview && !bed.Orchard)
-                    tile.Soil[i].parent.style.top = previewCropInset + y * 8;
-                var corner = (x == 0 || x == size - 1) && (y == 0 || y == size - 1);
-                var index = corner ? 0 : y == 0 || y == size - 1 ? 1 : x == 0 || x == size - 1 ? 2 : 3;
-                var flip = new Scale(new Vector3((index == 0 || index == 2) && x == size - 1 ? -1 : 1,
-                    (index == 0 || index == 1) && y == size - 1 ? -1 : 1, 1));
-                tile.Soil[i].sprite = appearance ? appearance.dry[index] : null;
-                tile.WetSoils[i].sprite = appearance ? appearance.wet[index] : null;
-                tile.Soil[i].style.scale = tile.WetSoils[i].style.scale = flip;
-                Visible(tile.WetSoils[i], bed.Watered);
+                tile.Soil.style.top = tile.WetSoil.style.top = previewCropInset;
+                for (var i = 0; i < tile.Plants.Length; i++) tile.Plants[i].parent.style.top = previewCropInset + i / size * 8;
             }
             for (var i = 0; i < tile.Plants.Length; i++)
             {

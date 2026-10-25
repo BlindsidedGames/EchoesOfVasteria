@@ -40,7 +40,7 @@ namespace TimelessEchoes.UI.Toolkit
                     QuestManager.Instance?.OnNpcMet(npcId);
                     NPC.NpcObjectStateController.Instance?.UpdateObjectStates();
                     finished = true;
-                }, lineKeys);
+                }, lineKeys, npcId: npcId);
                 if (portraitFrames != null && portraitFrames.Length > 0)
                     meeting.SetPortraitAnimation(portraitFrames, portraitFramesPerSecond);
                 meeting.BeginDialogue();
