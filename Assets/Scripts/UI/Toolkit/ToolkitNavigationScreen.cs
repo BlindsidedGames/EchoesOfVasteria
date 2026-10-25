@@ -57,6 +57,7 @@ namespace TimelessEchoes.UI.Toolkit
         private bool highlightQuestsUntilOpened;
         private readonly Dictionary<string, VisualElement> tutorialPrompts = new();
         private string highlightedEntryId;
+        private bool tutorialCloseWindow;
         private Entry refresherEntry;
         private int refresherTab = -1;
         private bool refresherGuidanceActive;
@@ -98,11 +99,37 @@ namespace TimelessEchoes.UI.Toolkit
         private bool RefresherAllows(Entry entry)
         {
             if (refresherEntry == null) return true;
-            if (!refresherGuidanceActive) return false;
             return entry == refresherEntry ||
                 refresherEntry.group != Group.Toolbar && entry.action == ParentAction(refresherEntry.group) ||
                 refresherTab >= 0 && entry.statisticsTab == refresherTab;
         }
+
+        private bool NavigationAllows(Entry entry)
+        {
+            if (!RefresherAllows(entry)) return false;
+            if (refresherEntry != null) return true;
+            if (ToolkitMeetingScreen.HasOpenDialogue)
+                return ToolkitMeetingScreen.AllowsNavigation(route => DialogueRouteMatches(entry, route));
+            if (BuffIntroductionGuidance.Stage == 3 && GameManager.Instance && GameManager.Instance.CurrentMap && !GameManager.Instance.HeroIsDead) return false;
+            return highlightedEntryId == null || entry.id == highlightedEntryId || TutorialWindowClose(entry);
+        }
+
+        private bool DialogueRouteMatches(Entry entry, string route)
+        {
+            var parts = route.Split('/');
+            var id = parts[0] == "statistics" ? "stats" : parts[0] == "fields" ? "farm" : parts[0];
+            if (entry.id == id) return true;
+            var target = System.Array.Find(navigationEntries, candidate => candidate.id == id);
+            if (target == null) return false;
+            if (target.group != Group.Toolbar && entry.action == ParentAction(target.group)) return true;
+            var tab = parts.Length == 2 ? parts[1] switch { "general" => 0, "graphs" => 2, "enemies" => 3, "tasks" => 4, "items" => 5, "town" or "forging" => 6, _ => -1 } : -1;
+            return id == "stats" && tab >= 0 && entry.statisticsTab == tab;
+        }
+
+        private bool TutorialWindowClose(Entry entry) => tutorialCloseWindow && windows &&
+            (entry.action == NavAction.Window && windows.IsWindowOpen(entry.window) ||
+             entry.id == "stats" && windows.IsWindowOpen(TownWindowManager.Window.Stats) ||
+             entry.id == "hub" && HubWindowOpen() || entry.id == "townsfolk" && TownWindowOpen());
 
         public void EndRefresherNavigation()
         {
@@ -293,6 +320,12 @@ namespace TimelessEchoes.UI.Toolkit
             // Let the existing dialogue completion record its tutorial stage and
             // release its modal before asking the normal navigation gates to open.
             yield return null; yield return null;
+            if (route == "return-town")
+            {
+                var game = GameManager.Instance;
+                if (game && game.HeroIsDead) game.RequestReturnAfterDeath(); else game?.RequestRetreat();
+                yield break;
+            }
             ToolkitHelpLinks.Follow(route);
         }
 
@@ -320,7 +353,7 @@ namespace TimelessEchoes.UI.Toolkit
                 if (entryId == "hero-stats") return run.ShowHeroStats();
                 if (GameManager.Instance.CurrentMap) run.ShowBreakdown();
                 else summary.ShowWindow();
-                return run.HasOpenDetails;
+                return run.HasOpenDetails || (ToolkitResponsiveLayout.IsPortrait && GameManager.Instance.CurrentMap);
             }
             var entry = System.Array.Find(navigationEntries, e => e.id == entryId);
             if (entry == null || entry.action is not (NavAction.Window or NavAction.AdventureMenu or NavAction.HubMenu or NavAction.TownsfolkMenu or NavAction.StatisticsMenu) ||
@@ -361,7 +394,10 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void Activate(Entry entry)
         {
-            if (!ToolkitVisibilityRule.All(entry.visibility) || !RefresherAllows(entry)) return;
+            if (!ToolkitVisibilityRule.All(entry.visibility) || !NavigationAllows(entry)) return;
+            if (ToolkitMeetingScreen.TryFollowNavigation(route => DialogueRouteMatches(entry, route))) return;
+            if (refresherEntry != null && ToolkitMeetingScreen.AdvanceRefresherNavigation(this)) return;
+            if (TutorialWindowClose(entry)) { windows.CloseAllWindows(); CloseMenu(); Refresh(); return; }
             if (entry.id == "shop" && !TimelessEchoes.Shop.ShopService.Ensure().Unlocked) return;
             moreOpen = false; if (morePopup != null) morePopup.style.display = DisplayStyle.None;
             if (!windows) windows = TownWindowManager.Instance;
@@ -516,7 +552,7 @@ namespace TimelessEchoes.UI.Toolkit
                     var label = buttons[entry].Q<Label>("fields-navigation-label");
                     if (label != null) label.text = FarmContent.Load()?.DisplayName ?? "Fields";
                 }
-                buttons[entry].SetEnabled(RefresherAllows(entry) && (entry.action != NavAction.Window || windows == null ||
+                buttons[entry].SetEnabled(NavigationAllows(entry) && (entry.action != NavAction.Window || windows == null ||
                     windows.IsWindowOpen(entry.window) || windows.CanOpenWindow(entry.window)));
                 var selected = entry.action == NavAction.Window && windows && windows.IsWindowOpen(entry.window);
                 if (entry.id == "hub") selected = openGroup == Group.Hub || HubWindowOpen();
@@ -641,6 +677,7 @@ namespace TimelessEchoes.UI.Toolkit
                 desired = windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Adventure ? "map-3" : "adventure";
             else if (data != null && inTown && QuestUtils.QuestCompleted("Another Magicool Gift") && !data.CompletedNpcTasks.Contains("Ivan1"))
                 desired = windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Adventure ? "map-1" : "adventure";
+            tutorialCloseWindow = desired == "close" && windows && windows.HasOpenWindow;
             if (ToolkitResponsiveLayout.IsPortrait && desired == "close" && windows)
                 desired = HubWindowOpen() ? "hub" : windows.IsWindowOpen(TownWindowManager.Window.Quests) ? "quests" :
                     windows.IsWindowOpen(TownWindowManager.Window.Stats) ? "stats" :

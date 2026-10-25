@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using Blindsided;
 using Blindsided.SaveData;
-using TimelessEchoes.Hero;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.UI;
 using TimelessEchoes.UI.Toolkit;
@@ -38,7 +37,7 @@ namespace TimelessEchoes.Farming
         private readonly Dictionary<Resource, float> yieldPreviewBonuses = new();
         public string LastError => lastError == null ? null : ErrorText(lastError);
         public event Action Changed;
-        private bool InTown => Ready && GameManager.Instance != null && GameManager.Instance.IsInTown;
+        private bool InTown => Ready && GameManager.Instance != null && GameManager.Instance.IsInTown && !GameManager.Instance.RunLoadingActive;
         private void Awake() { Instance = this; lastMonotonic = Time.realtimeSinceStartupAsDouble; }
         private void OnEnable() { Blindsided.EventHandler.OnLoadData += Loaded; Blindsided.EventHandler.OnSaveData += CaptureGrowth; }
         private void OnDisable() { Blindsided.EventHandler.OnLoadData -= Loaded; Blindsided.EventHandler.OnSaveData -= CaptureGrowth; }
@@ -105,6 +104,7 @@ namespace TimelessEchoes.Farming
             "NoReadyBeds" => ToolkitLocalization.Text("fields.error.NoReadyBeds", "No beds are ready to harvest."),
             "NoMatchingSeeds" => ToolkitLocalization.Text("fields.error.NoMatchingSeeds", "You need 1 matching seed pack to sow a field."),
             "NoMatchingSapling" => ToolkitLocalization.Text("fields.error.NoMatchingSapling", "Find a matching sapling on an adventure first."),
+            "TownOnly" => ToolkitLocalization.Text("quests.return-to-town", "Return to town to hand in this quest."),
             "NoRadishSeeds" => ToolkitLocalization.Text("fields.error.NoRadishSeeds", "Find a Radish seed pack on an adventure first."),
             "BedOccupied" => ToolkitLocalization.Text("fields.error.BedOccupied", "This bed already has a crop growing."),
             "BedLocked" => ToolkitLocalization.Text("fields.error.BedLocked", "Prepare the beds before planting."),
@@ -133,10 +133,15 @@ namespace TimelessEchoes.Farming
             QuestManager.Instance?.RefreshFieldsProgression();
             Changed?.Invoke();
         }
-        // The introduction is acknowledged through the town noticeboard.
-        // Construction and tending are available during adventures as well as in town.
-        public bool BuildQuest(string questId) => Execute(state => FarmCommands.BuildFields(Oracle.oracle.saveData, questId,
-            FarmJournal.NextOperation(state, "build:" + questId), DateTime.UtcNow, Content));
+        // Quest acknowledgement and construction share the noticeboard's town-only rule.
+        // Tending existing plots remains available during adventures.
+        public bool BuildQuest(string questId)
+        {
+            if (!InTown)
+            { lastError = "TownOnly"; Changed?.Invoke(); return false; }
+            return Execute(state => FarmCommands.BuildFields(Oracle.oracle.saveData, questId,
+                FarmJournal.NextOperation(state, "build:" + questId), DateTime.UtcNow, Content));
+        }
         public bool PrepareBeds() => BuildQuest("Farm.Garden.Build01.v1");
         public bool Plant(string bedId) => Plant(bedId, FarmCommands.RadishRecipeId);
         public bool Plant(string bedId, string recipeId) => Execute(state => FarmCommands.PlantRecipe(Oracle.oracle.saveData, bedId, recipeId,
@@ -160,12 +165,12 @@ namespace TimelessEchoes.Farming
             internal StagedTaskCredit(FarmService source, GameData owner, int slot, string operationId)
             { Source = source; Owner = owner; Slot = slot; OperationId = operationId; }
         }
-        public StagedTaskCredit StageCompletedTask(StagedTaskCredit existing, TaskData task, HeroBase hero)
+        public StagedTaskCredit StageCompletedTask(StagedTaskCredit existing, TaskData task)
         {
             // Retain the completed task's token even after its individual receipt is compacted.
             // An old-owner handle is deliberately not reminted for a newly selected bank.
             if (existing != null) return existing;
-            if (!Ready || InTown || hero == null || hero != HeroController.Instance || hero.IsEcho || task == null || !Content ||
+            if (!Ready || InTown || task == null || !Content ||
                 !FarmContent.Completed(Oracle.oracle.saveData, FarmContent.IntroductionId)) return null;
             var recipe = Content.recipes.FirstOrDefault(r => !r.orchard && r.source == task);
             if (recipe == null || !Content.CanPlant(Oracle.oracle.saveData, recipe)) return null;
@@ -270,8 +275,8 @@ namespace TimelessEchoes.Farming
                 builds.Add(new FarmBuildPresentation { QuestId=build.questId,Title=QuestTitle(build.questId, build.title),TwinsLevel=build.twinsLevel,Completed=completed,
                     GardenCapacity=build.gardenCapacity,OrchardCapacity=build.orchardCapacity,
                     Materials=build.costs.Select(c=>new FarmMaterialPresentation { Title=ToolkitLocalization.Name(c.resource),Icon=c.resource.icon,Owned=Amount(c.resource),Required=c.amount }).ToArray(),
-                    Costs=costText,CanTurnIn=Ready && !completed && gate==null && materials,
-                    Status=completed ? ToolkitLocalization.Text("fields.built", "Built") : gate ?? (materials ? ToolkitLocalization.Text("fields.ready-build", "Ready to build") : ToolkitLocalization.Text("fields.gather-materials", "Gather the construction materials")) });
+                    Costs=costText,CanTurnIn=InTown && !completed && gate==null && materials,
+                    Status=completed ? ToolkitLocalization.Text("fields.built", "Built") : gate ?? (!InTown ? ToolkitLocalization.Text("quests.return-to-town", "Return to town to hand in this quest.") : materials ? ToolkitLocalization.Text("fields.ready-build", "Ready to build") : ToolkitLocalization.Text("fields.gather-materials", "Gather the construction materials")) });
             }
             var radish = recipes.FirstOrDefault(r => r.Id == FarmCommands.RadishRecipeId);
             return new FarmPresentationSnapshot

@@ -164,19 +164,25 @@ namespace Tests.PlayMode
     var buffs=owner.AddComponent<TimelessEchoes.Buffs.BuffManager>(); buffs.enabled=false;
     buffs.AssignBuff(0,recipe); buffs.UnlockAutoSlots(1);
     run=CreateGuidanceRunView();
-    var arrow=run.GetComponent<UIDocument>().rootVisualElement.Q<Image>("first-echo-arrow");
+    var hand=run.GetComponent<UIDocument>().rootVisualElement.Q<Image>("first-echo-hand");
     bool automaticObserved=false; buffs.OnBuffCast+=(_,automatic)=>automaticObserved|=automatic;
     foreach(var size in new[]{new Vector2Int(1170,2532),new Vector2Int(1920,1080)}) {
      buffs.enabled=false; buffs.ClearActiveBuffs(); automaticObserved=false;
      oracle.saveData.General.BuffTutorialStage=3;
      PlayModeWindow.SetCustomRenderingResolution((uint)size.x,(uint)size.y,"Autocast prompt check");
-     yield return null; yield return null;
-     Assert.AreEqual(DisplayStyle.Flex,arrow.style.display.value);
+     yield return new WaitForSecondsRealtime(.2f);
+     Assert.AreEqual(DisplayStyle.Flex,hand.style.display.value);
+     var target=run.GetComponent<UIDocument>().rootVisualElement.Q<Button>("run-buff-0");
+     var fingertip=new Vector2(hand.worldBound.xMin+hand.worldBound.width*6.5f/16,hand.worldBound.yMin+hand.worldBound.height*2f/16);
+     Assert.That(fingertip.x,Is.EqualTo(target.worldBound.center.x).Within(1),"The fingertip, rather than the image box, must be centered on the ability.");
+     var pointerScale=hand.worldBound.height/24;
+     Assert.That(fingertip.y-target.worldBound.yMax,Is.InRange(-2*pointerScale,pointerScale),"The fingertip must touch the lower button edge, including throughout its gentle bob.");
+     Assert.AreEqual(PickingMode.Ignore,hand.pickingMode,"The overlay must not intercept the ability or disabled controls beneath it.");
      buffs.enabled=true;
      yield return null; yield return null;
      Assert.True(automaticObserved,"The check must exercise the automatic casting path.");
      Assert.AreEqual(4,oracle.saveData.General.BuffTutorialStage);
-     Assert.AreEqual(DisplayStyle.None,arrow.style.display.value);
+     Assert.AreEqual(DisplayStyle.None,hand.style.display.value);
     }
    } finally {if(run)Object.DestroyImmediate(run);Object.DestroyImmediate(owner);}
   }

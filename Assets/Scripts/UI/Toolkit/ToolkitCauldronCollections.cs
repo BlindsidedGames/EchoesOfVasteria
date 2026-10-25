@@ -47,7 +47,7 @@ namespace TimelessEchoes.UI.Toolkit
             this.content = content; this.tooltip = tooltip;
             tooltipText = new Label { name = "collection-tooltip-text", pickingMode = PickingMode.Ignore };
             tooltipText.AddToClassList("eov-cauldron-tooltip-text"); tooltip.Add(tooltipText);
-            tabs=E(tabParent,"row tabs");tabParent.Insert(1,tabs);
+            tabs=E(tabParent,"row tabs");tabParent.Insert(0,tabs);
             foreach(var name in new[]{"Resources","Buffs","Eternal"})
             {
                 string selected=name;
@@ -55,7 +55,7 @@ namespace TimelessEchoes.UI.Toolkit
                 button.userData=name;
                 ToolkitLocalization.Bind(button,name=="Resources"?"inventory.resources":name=="Buffs"?"cauldron.reward-buffs":"cauldron.reward-eternal",name);
             }
-            legend=E(tabParent,"row legend");tabParent.Insert(2,legend);for(int i=1;i<=8;i++)L(legend,LocaleNumbers.Integer(i, false),"tier-swatch rarity-badge tier-"+i);HideTooltip();
+            legend=E(tabParent,"row legend");tabParent.Insert(1,legend);for(int i=1;i<=8;i++)L(legend,LocaleNumbers.Integer(i, false),"tier-swatch rarity-badge tier-"+i);HideTooltip();
         }
         private void SelectTab(){foreach(var section in sections)section.border.style.display=(activeTab=="Resources"?!section.buffs&&!section.infinity:activeTab=="Buffs"?section.buffs:section.infinity)?DisplayStyle.Flex:DisplayStyle.None;foreach(var button in tabs.Query<Button>().ToList())button.EnableInClassList("active",(string)button.userData==activeTab);legend.style.visibility=activeTab=="Eternal"?Visibility.Hidden:Visibility.Visible;if(empty!=null)empty.style.display=activeTab=="Eternal"&&!manager.IsInfinityActive()?DisplayStyle.Flex:DisplayStyle.None;}
 

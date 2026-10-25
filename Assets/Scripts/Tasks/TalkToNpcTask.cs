@@ -58,7 +58,7 @@ namespace TimelessEchoes.Tasks
             var toolkit = meetingInstance.GetComponent<TimelessEchoes.UI.Toolkit.ToolkitMeetingScreen>();
             if (toolkit != null)
             {
-                toolkit.Init(npcSprite, lines, OnMeetingFinished, lineKeys);
+                toolkit.Init(npcSprite, lines, OnMeetingFinished, lineKeys, npcId: npcId);
                 return;
             }
             var controller = meetingInstance.GetComponent<MeetingController>();

@@ -19,6 +19,8 @@ namespace TimelessEchoes.Quests
         public LocalizedString questName;
         public LocalizedString description;
         public LocalizedString rewardDescription;
+        [Tooltip("Optional resource icon for the reward text. Display only; does not grant an item.")]
+        public Resource rewardDisplayResource;
         public string npcId;
         [Tooltip("This quest must be handed in after returning to town.")]
         public bool requiresTown;

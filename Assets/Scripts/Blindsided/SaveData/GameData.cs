@@ -211,9 +211,14 @@ namespace Blindsided.SaveData
             public double ChunkCraftAmount = 1;
             public double CoreCraftAmount = 1;
 
+            // Read compatibility for early 1.5.2 saves. New writes omit these local UI preferences.
+            public string LastSelectedCauldronFood;
+            public Dictionary<string, double> CauldronFoodAmounts;
+
             // Stat Matching (formerly "Lock Stats"): when enabled, autocraft only stops
             // on upgrades that match the equipped affix stat set. Default: OFF.
             public bool LockAutocraftStatSet = false;
+            public bool NeverStopAutocraft = false;
 
             /// <summary>
             ///     Automatically pin new quests when they become active.

@@ -11,6 +11,22 @@ namespace Tests.EditMode
 {
     public sealed class CauldronConversionTests
     {
+        [TestCase("Flippy Floppy", 100d)]
+        [TestCase("Radish", 100d)]
+        [TestCase("Chicken", 150d)]
+        [TestCase("Pork", 150d)]
+        [TestCase("Mutton", 150d)]
+        [TestCase("Steak", 150d)]
+        [TestCase("Snapjaw Jr.", 400d)]
+        [TestCase("Strawberry", 900d)]
+        [TestCase("Bloopicus Maximus", 1600d)]
+        public void AuthoredFoodYieldsRewardLaterIngredients(string foodName, double stewPerThousand)
+        {
+            var food = Array.Find(Resources.LoadAll<Resource>(""), r => r.name == foodName);
+            Assert.IsNotNull(food);
+            Assert.AreEqual(stewPerThousand, CauldronConversion.UnitValue(food) * 1000, 1e-9);
+        }
+
         private GameData State(double food = 100, double stew = 0) => new GameData
         {
             CauldronStew = stew,

@@ -185,7 +185,7 @@ namespace TimelessEchoes.UI.Toolkit
                 slot.icon.sprite = manager.IsUnlocked(resource) ? resource.icon : resource.UnknownIcon;
                 var art = slot.icon.sprite;
                 if (forgePresentation && art) { slot.icon.style.width = art.rect.width * 16 / art.pixelsPerUnit; slot.icon.style.height = art.rect.height * 16 / art.pixelsPerUnit; }
-                slot.button.tooltip = manager.IsUnlocked(resource) ? ToolkitLocalization.Text("inventory.resource-tier-tooltip", "{0} · Tier {1}", ToolkitLocalization.Name(resource), tier) : ToolkitLocalization.Text("common.undiscovered", "Undiscovered");
+                slot.button.tooltip = manager.IsUnlocked(resource) ? ToolkitLocalization.Text("inventory.resource-tier-tooltip", "{0} · Tier {1}", ToolkitLocalization.Name(resource), tier) : "";
                 slot.count.text = forgePresentation ? FormatNumber(manager.GetAmount(resource), true) : "<b>" + FormatNumber(manager.GetAmount(resource), true) + "</b>";
                 slot.button.EnableInClassList("resource-selected", i == selected);
                 slot.selection.style.display = i == selected && !forgePresentation ? DisplayStyle.Flex : DisplayStyle.None;
@@ -201,7 +201,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (forgePresentation)
             {
                 var known = manager.IsUnlocked(definition.resources[index]);
-                selectedName.text = known ? ToolkitLocalization.Name(definition.resources[index]) : ToolkitLocalization.Text("common.undiscovered", "Undiscovered");
+                selectedName.text = known ? ToolkitLocalization.Name(definition.resources[index]) : "???";
                 selectedRarity.style.display = known ? DisplayStyle.Flex : DisplayStyle.None;
                 selectedTier.text = ToolkitLocalization.Text("inventory.tier", "Tier {0}", Tier(definition.resources[index]));
                 for (int tier=1;tier<=8;tier++) selectedRarity.EnableInClassList("tier-"+tier,tier==Tier(definition.resources[index]));
@@ -216,13 +216,10 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void FitName()
         {
-            selectedName.style.fontSize = 8;
-            if (embedded && !forgePresentation)
-            {
-                selectedName.style.fontSize = 5.87f;
-                var width = selectedName.MeasureTextSize(selectedName.text, 0, VisualElement.MeasureMode.Undefined, 0, VisualElement.MeasureMode.Undefined).x;
-                if (width > 172) selectedName.style.fontSize = 5.87f * 172 / width;
-            }
+            ToolkitControls.SetTextSize(selectedName, 8);
+            selectedName.tooltip = selectedName.text;
+            selectedName.style.overflow = Overflow.Hidden;
+            selectedName.style.textOverflow = TextOverflow.Ellipsis;
         }
         private readonly ToolkitWindowLayout windowLayout = new();
         private void Layout()

@@ -109,7 +109,7 @@ namespace TimelessEchoes.UI.Toolkit
                     d.button.EnableInClassList("known", discovered);
                     d.button.Q<Image>().style.display = discovered ? DisplayStyle.Flex : DisplayStyle.None;
                     d.button.Q<Label>().text = discovered ? "" : "?";
-                    d.button.tooltip = discovered ? (d.resource ? ToolkitLocalization.Name(d.resource) : ToolkitLocalization.Text("enemy." + d.enemy.name, d.enemy.enemyName)) : ToolkitLocalization.Text("common.undiscovered", "Undiscovered");
+                    d.button.tooltip = discovered ? (d.resource ? ToolkitLocalization.Name(d.resource) : ToolkitLocalization.Text("enemy." + d.enemy.name, d.enemy.enemyName)) : "";
                 }
                 if (journalDiscoveryCount != null) journalDiscoveryCount.text = ToolkitLocalization.Text("journal.discovery-count", "{0} / {1} discovered", known, journalDiscoveries.Count);
             }
@@ -184,7 +184,7 @@ namespace TimelessEchoes.UI.Toolkit
             var heading = ToolkitGameplay.E(journalCollection, "journal-collection-heading");
             Text(heading, ToolkitLocalization.Text("journal.found-here", "Found here"), 8).AddToClassList("journal-section-title");
             journalDiscoveryCount = Text(heading, "", 6); journalDiscoveryCount.AddToClassList("journal-note");
-            journalDiscoveryCount.tooltip = ToolkitLocalization.Text("journal.discoveries-help", "Discoveries are shared across all maps. These are configured drop pools; availability depends on progression.");
+            journalDiscoveryCount.tooltip = ToolkitLocalization.Text("journal.discoveries-help", "Discoveries are shared across all maps. This list shows possible drops; availability depends on your progress.");
             var groups = ToolkitGameplay.E(journalCollection, "journal-collection-groups");
             var foes = ToolkitGameplay.E(groups, "journal-foes");
             Text(foes, ToolkitLocalization.Text("journal.enemies", "Enemies"), 7).AddToClassList("journal-collection-label");

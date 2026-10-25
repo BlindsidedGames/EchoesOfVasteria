@@ -1525,6 +1525,7 @@ namespace Blindsided
                 throw new ArgumentNullException(nameof(candidate));
 
             NormalizeLoadedData(candidate);
+            StaticReferences.MigrateCauldronFoodPreferences(candidate.SavedPreferences);
             // Backfill created version if missing (legacy saves or fresh new games)
             if (string.IsNullOrEmpty(candidate.GameVersionCreated))
                 candidate.GameVersionCreated = Application.version;

@@ -9,8 +9,13 @@ namespace TimelessEchoes.Upgrades
     {
         public static bool IsFinite(double value) => !double.IsNaN(value) && !double.IsInfinity(value);
 
-        public static double UnitValue(Resource resource) => resource != null
-            ? resource.baseValue * resource.valueMultiplier / 100d : 0;
+        public static double UnitValue(Resource resource)
+        {
+            if (resource == null || resource.baseValue <= 0 || resource.valueMultiplier <= 0) return 0;
+            // Ten early foods buy one taste. Squaring food quality rewards later
+            // ingredients enough to offset their longer gathering times.
+            return resource.baseValue * resource.valueMultiplier * resource.valueMultiplier / 10d;
+        }
 
         public static bool TryPrepare(GameData captured, string resourceName, double quantity,
             double unitValue, long sequence, IEnumerable<string> questIds,

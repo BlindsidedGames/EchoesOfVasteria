@@ -896,9 +896,7 @@ namespace TimelessEchoes.Quests
         }
 
         public bool CanTurnInAtCurrentLocation(QuestData quest) => quest != null &&
-            (quest.questId.StartsWith("Farm.Garden.Build", StringComparison.Ordinal) ||
-             quest.questId.StartsWith("Farm.Orchard.Build", StringComparison.Ordinal) ||
-             GameManager.Instance == null || GameManager.Instance.IsInTown);
+            GameManager.Instance != null && GameManager.Instance.IsInTown && !GameManager.Instance.RunLoadingActive;
 
         public bool NeedsAcceptance(QuestData quest) => quest != null && quest.acceptanceQuest &&
             active.ContainsKey(quest.questId) &&

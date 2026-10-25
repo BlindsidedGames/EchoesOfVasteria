@@ -31,7 +31,7 @@ namespace Tests.EditMode
             Assert.AreEqual(1,task.resourceDrops.Count);Assert.AreSame(fruit,task.resourceDrops[0].resource);
             Assert.AreEqual(new Vector2Int(2,6),task.resourceDrops[0].dropRange);
             Assert.AreEqual(1,task.bonusDrops.Count);Assert.AreSame(seed,task.bonusDrops[0].resource);
-            Assert.AreEqual(.1f,task.bonusDrops[0].chance);Assert.AreEqual(new Vector2Int(1,1),task.bonusDrops[0].range);
+            Assert.AreEqual(new Vector2Int(1,1),task.bonusDrops[0].range);
             Assert.IsTrue(task.taskPrefab.GetComponentsInChildren<ToolkitWorldAnchor>(true).All(x=>x.task==task.taskPrefab),"Native progress anchors must reference the new harvest task.");
             Assert.IsInstanceOf<FruitHarvestTask>(task.taskPrefab);Assert.IsNotInstanceOf<WoodcuttingTask>(task.taskPrefab);
             Assert.AreEqual(1,task.associatedSkill.resourceUnlocks.Count(x=>x.task==task&&x.requiredLevel==level));

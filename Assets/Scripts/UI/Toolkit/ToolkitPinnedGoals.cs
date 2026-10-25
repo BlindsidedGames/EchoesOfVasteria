@@ -47,7 +47,7 @@ namespace TimelessEchoes.UI.Toolkit {
     else
     {
      var label = new Label(line) { pickingMode=PickingMode.Ignore, enableRichText=true };
-     label.style.fontSize=size;
+     ToolkitControls.SetTextSize(label, size);
      label.style.unityTextAlign=rightAligned?TextAnchor.MiddleRight:TextAnchor.MiddleLeft;
      content.Add(label);
     }
@@ -120,6 +120,8 @@ namespace TimelessEchoes.UI.Toolkit {
   {
    PortraitBottom = 0;
    if(root == null)return;
+   var controlsEnabled = BuffIntroductionGuidance.Stage != 3 && !ToolkitMeetingScreen.HasOpenDialogue;
+   toggle.SetEnabled(controlsEnabled); portraitCard.SetEnabled(controlsEnabled);
    var portrait = ToolkitResponsiveLayout.IsPortrait;
    if(previousPortrait != portrait) { previousPortrait = portrait; dirty = true; }
    if(dirty && oracle != null) { dirty = false; Refresh(); }

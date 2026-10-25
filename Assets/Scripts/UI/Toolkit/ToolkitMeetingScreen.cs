@@ -19,6 +19,7 @@ namespace TimelessEchoes.UI.Toolkit
         private PanelSettings panel;
         private ToolkitMeetingView view;
         private Sprite portrait;
+        private string npcId;
         private IReadOnlyList<Sprite> portraitFrames;
         private Image animatedPortrait, meetHand;
         private float portraitFramesPerSecond, portraitAnimationStartedAt;
@@ -28,18 +29,46 @@ namespace TimelessEchoes.UI.Toolkit
         private bool continueAfterDialogue;
         private ToolkitNavigationScreen lessonNavigation;
         private bool guidanceStarted;
+        private string navigationShortcut;
         private IDisposable conversationWait;
         private Rect lastArea;
         private int lastIndex = -1;
         private bool lastPortrait;
         public static bool HasVisibleMeeting => Visible.Count > 0;
-        public static bool HasOpenDialogue => Visible.Exists(meeting => meeting && meeting.view != null && !meeting.view.AwaitingMeet);
+        private static ToolkitMeetingScreen ActiveDialogue => Visible.Find(meeting => meeting && !meeting.completed && meeting.view != null && !meeting.view.AwaitingMeet);
+        public static bool HasOpenDialogue => ActiveDialogue != null;
+
+        public static bool AllowsNavigation(Func<string, bool> matches) => ActiveDialogue?.view.FindNavigationRoute(matches) != null;
+        public static bool AllowsNavigation(string route) => AllowsNavigation(candidate => candidate == route);
+        public static bool TryFollowNavigation(string route) => TryFollowNavigation(candidate => candidate == route);
+
+        public static bool TryFollowNavigation(Func<string, bool> matches)
+        {
+            var meeting = ActiveDialogue;
+            var route = meeting?.view.FindNavigationRoute(matches);
+            return route != null && meeting.view.FollowNavigation(route);
+        }
+
+        public void SetNavigationShortcut(string route)
+        {
+            navigationShortcut = route;
+            view?.SetNavigationShortcut(route);
+        }
+
+        public static bool AdvanceRefresherNavigation(ToolkitNavigationScreen navigation)
+        {
+            var meeting = ActiveDialogue;
+            if (!meeting || meeting.lessonNavigation != navigation) return false;
+            if (!meeting.guidanceStarted || navigation.RefresherDestinationOpen) meeting.view.Advance();
+            return meeting.completed;
+        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => Visible.Clear();
 
-        public void Init(Sprite npcPortrait, IReadOnlyList<string> dialogue, Action onFinished, IReadOnlyList<string> localizedLineKeys = null, bool continueAfterDialogue = false)
+        public void Init(Sprite npcPortrait, IReadOnlyList<string> dialogue, Action onFinished, IReadOnlyList<string> localizedLineKeys = null, bool continueAfterDialogue = false, string npcId = null)
         {
+            this.npcId = npcId;
             portrait = npcPortrait;
             lines = dialogue;
             lineKeys = localizedLineKeys;
@@ -92,6 +121,8 @@ namespace TimelessEchoes.UI.Toolkit
             document.panelSettings = panel;
             document.rootVisualElement.pickingMode = PickingMode.Ignore;
             view ??= new ToolkitMeetingView(theme, template, portrait, definition, lines, Finish, lineKeys, continueAfterDialogue);
+            view.SetNavigationShortcut(navigationShortcut);
+            view.SetSpeaker(npcId);
             document.rootVisualElement.Add(view.Root);
             if (meetHand == null)
             {

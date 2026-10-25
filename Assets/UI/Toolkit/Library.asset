@@ -1388,7 +1388,7 @@ MonoBehaviour:
       key: help.retreating.title
       bold: 0
       smallCaps: 0
-      fallback: Retreat Bonus
+      fallback: "Resource bonus"
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -1402,13 +1402,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: 'Use the return-to-town control during a run to retreat. Each kill adds 2% to your retreat resource bonus, shown on the control.
-
-
-        If you request a return during combat, your hero finishes the fight before leaving.
-
-
-        You only receive this bonus if you return alive. Dying or being reaped forfeits it; you still keep the resources already gathered.'
+      fallback: "Each kill adds 0.02\u00d7 to your resource multiplier, up to 10\u00d7. The multiplier carries over when you die, are reaped, or retry without returning to town.\n\nReturning to town applies it once to the resources gathered since you last left town. Your next outing starts at 1\u00d7."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -1422,7 +1416,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: Your retreat bonus comes from kills in the current run and is awarded when you return alive. Dying or being reaped forfeits the bonus, but does not remove the resources already gathered.
+      fallback: "For example, 50 kills give 2\u00d7 resources; 450 kills reach the 10\u00d7 cap. Bonus resources do not earn another bonus."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -3326,7 +3320,7 @@ MonoBehaviour:
     visibility: []
   - id: help-patchnotes
     group: 2
-    icon: {fileID: -15454793016451926, guid: 1d379f5925be2cb4596f1d9b8ea6eab4, type: 3}
+    icon: {fileID: 21300000, guid: 6b53b25b61542e74a8bbebd556963be7, type: 3}
     title:
       key:
       bold: 0
@@ -3345,7 +3339,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: "<b>Current development changes</b>\n\n<b>Opening and progression</b>\n\u2022 Reworked the opening quests and NPC introductions.\n\u2022 Gill leads players to the River; Barkley leads them toward the Woods.\n\u2022 Gill rewards Old Boots. Ivan supplies materials and teaches players to forge and equip their first sword.\n\u2022 Menus and tutorials appear as their systems become relevant.\n\u2022 Quests can only be turned in while in town.\n\n<b>Interface</b>\n\u2022 Redesigned the Run Summary and added a compact in-run Stats panel.\n\u2022 Inventory now shows equipped items and equipment bonuses.\n\u2022 Added drag scrolling throughout the interface.\n\u2022 Rebuilt the Library with topic navigation, reference tables, and selectable icon explanations.\n\n<b>Gameplay and fixes</b>\n\u2022 Reduced task density on the first Farmlands adventure.\n\u2022 Farming tasks appear only in Farmlands.\n\u2022 Core and crystal tiers unlock through Combat levels.\n\u2022 Fixed enemy health-bar overlays and fishing animation issues.\n\u2022 Removed leaderboards.\n\nSelect <link=\"help:reference\"><u><color=#EFB889>Reference</color></u></link> for earlier patch notes."
+      fallback: "<b>Version 1.5.2</b>\n\n\u2022 Your resource multiplier now survives deaths and repeat runs until you return to town, capped at 10\u00d7.\n\u2022 Food produces more stew, with bigger gains from higher-value ingredients.\n\u2022 Chicken, pork, mutton and steak produce 50% more stew.\n\u2022 Restored the Cauldron's Mix All button, added a stew preview, and made it remember the amount selected for each food.\n\u2022 Added Never stop to the Forge. It overrides the other stop rules and keeps crafting while materials are available.\n\u2022 The hero and Echoes now have the same chances to find seeds and saplings. Later varieties are rarer, with separate progressions for crops, fruit trees and timber trees.\n\u2022 Quests can only be turned in while in town.\n\u2022 Increased small text sizes throughout the game, especially in Quests.\n\u2022 Made quest reward icons consistent, including seed packs. Reduced oversized sapling icons and fixed gaps between Fields plots.\n\u2022 Reworked the run summary and live resource list with compact stats, return totals and resource bonuses. Landscape lists use two or three columns.\n\u2022 Added pocket watches that change tier with time away and chests that change tier as your resource total grows.\n\u2022 Improved portrait scrolling in Quests and resource lists so the bottom navigation stays accessible.\n\u2022 NPC meetings show names and keep health, stats, abilities and zoom controls visible while you wait.\n\u2022 Fixed tutorial controls being disabled when you need to press them. Menu shortcuts can advance their lesson, and pressing the active menu button can close the window when prompted.\n\u2022 Library now opens on Topics. Added a journal icon for patch notes.\n\u2022 Replaced Locked text on buff slots with padlock icons.\n\u2022 Shortened and corrected translations, and made material names consistent across the interface."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki
@@ -3359,7 +3353,7 @@ MonoBehaviour:
       key:
       bold: 0
       smallCaps: 0
-      fallback: "<b>Earlier patch notes</b>\n\n\u2022 Added For the Jam! and Gilliver's Travels.\n\u2022 Improved the introduction message.\n\u2022 Fixed level-up alerts showing lower values than expected.\n\u2022 Removed the Forge's Quality Equipped block.\n\u2022 Pinned quests show Ready to turn in instead of Complete.\n\u2022 Added a loading overlay when changing maps.\n\u2022 Added the Cauldron's Mix All button.\n\u2022 Updated the pathfinding package."
+      fallback: "<b>Previous updates</b>\n\n<b>Opening and progression</b>\n\u2022 Reworked the opening quests and NPC introductions.\n\u2022 Gill leads players to the River; Barkley leads them toward the Woods.\n\u2022 Gill rewards Old Boots. Ivan supplies materials and teaches players to forge and equip their first sword.\n\u2022 Menus and tutorials appear as their systems become relevant.\n\u2022 Quests can only be turned in while in town.\n\n<b>Interface</b>\n\u2022 Redesigned the Run Summary and added a compact in-run Stats panel.\n\u2022 Inventory now shows equipped items and equipment bonuses.\n\u2022 Added drag scrolling throughout the interface.\n\u2022 Rebuilt the Library with topic navigation, reference tables, and selectable icon explanations.\n\n<b>Gameplay and fixes</b>\n\u2022 Reduced task density on the first Farmlands adventure.\n\u2022 Farming tasks appear only in Farmlands.\n\u2022 Core and crystal tiers unlock through Combat levels.\n\u2022 Fixed enemy health-bar overlays and fishing animation issues.\n\u2022 Removed leaderboards.\n\n<b>Earlier patch notes</b>\n\n\u2022 Added For the Jam! and Gilliver's Travels.\n\u2022 Improved the introduction message.\n\u2022 Fixed level-up alerts showing lower values than expected.\n\u2022 Removed the Forge's Quality Equipped block.\n\u2022 Pinned quests show Ready to turn in instead of Complete.\n\u2022 Added a loading overlay when changing maps.\n\u2022 Added the Cauldron's Mix All button.\n\u2022 Updated the pathfinding package."
       localized:
         m_TableReference:
           m_TableCollectionName: Wiki

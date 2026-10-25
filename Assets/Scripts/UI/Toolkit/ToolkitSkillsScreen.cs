@@ -199,7 +199,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         {
 
-            var label = new Label(text) { pickingMode = PickingMode.Ignore }; label.AddToClassList("eov-skill-text"); label.style.fontSize = Mathf.Max(7,size);
+            var label = new Label(ToolkitControls.WithoutInlineTextSize(text)) { pickingMode = PickingMode.Ignore }; label.AddToClassList("eov-skill-text"); ToolkitControls.SetTextSize(label, size);
 
             label.RegisterCallback<GeometryChangedEvent>(_ => FitLineHeight(label)); parent.Add(label); return label;
 
@@ -276,7 +276,7 @@ namespace TimelessEchoes.UI.Toolkit
 
                 selectorLevels[i].text = ShowLevelText ? "<b>" + LocaleNumbers.Integer(selectorLevel) + "</b>" : "";
 
-                selectorLevels[i].style.fontSize = 6;
+                ToolkitControls.SetTextSize(selectorLevels[i], 6);
 
                 selections[i].style.display = i == selected ? DisplayStyle.Flex : DisplayStyle.None;
 

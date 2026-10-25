@@ -26,7 +26,7 @@ namespace TimelessEchoes.UI.Toolkit
         private bool repeatCraft;
         private VisualElement automationControls;
         private Label automationLock;
-        private Image resultIcon, costCore, costIngot, craftArrow, stopIcon, lockIcon, repeatIcon;
+        private Image resultIcon, costCore, costIngot, craftArrow, stopIcon, lockIcon, repeatIcon, neverStopIcon;
         private VisualElement lockedCore;
         private Image lockedCoreIcon;
         private Label coreCost, ingotCost;
@@ -130,6 +130,8 @@ namespace TimelessEchoes.UI.Toolkit
             var toggles = Row(automationControls); toggles.AddToClassList("forge-toggles"); stopIcon = Toggle(toggles, "forge-stop-vastium", "forge.stop-vastium", "Stop for Vastium", () => { StopAutocraftOnVastium = !StopAutocraftOnVastium; MarkDirty(); }); lockIcon = Toggle(toggles, "forge-lock-stats", "forge.stat-matching", "Stat Matching", () => { LockAutocraftStatSet = !LockAutocraftStatSet; MarkDirty(); });
             repeatIcon = Toggle(toggles, "forge-repeat-craft", "forge.repeat-craft", "Repeat craft", () => { repeatCraft = !repeatCraft; if (!repeatCraft) session.StopAutoCrafting(); MarkDirty(); });
             ToolkitLocalization.BindTooltip(repeatIcon.parent, "forge.repeat-craft-help", "Repeat crafting until an upgrade or another stop condition is reached.");
+            neverStopIcon = Toggle(toggles, "forge-never-stop", "forge.never-stop", "Never stop", () => { NeverStopAutocraft = !NeverStopAutocraft; MarkDirty(); });
+            ToolkitLocalization.BindTooltip(neverStopIcon.parent, "forge.never-stop-help", "Keep crafting and salvaging until stopped or out of materials, including upgrades and Vastium.");
             automationLock = Label(automationArea, ""); automationLock.name = "forge-automation-locked";
             automationLock.style.position = Position.Absolute;
             automationLock.style.left = automationLock.style.right = automationLock.style.top = automationLock.style.bottom = 0;
@@ -148,7 +150,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void CraftSelected()
         {
             if (session.IsAutoCrafting) session.StopAutoCrafting();
-            else if (repeatCraft && session.AutomationUnlocked) session.StartAutoCrafting();
+            else if ((repeatCraft || NeverStopAutocraft) && session.AutomationUnlocked) session.StartAutoCrafting();
             else session.Craft();
         }
         private VisualElement Panel(VisualElement parent, string className) { var panel = new VisualElement(); panel.AddToClassList(className); panel.AddToClassList("eov-forge-panel");  parent.Add(panel); return panel; }

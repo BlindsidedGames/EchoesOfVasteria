@@ -82,9 +82,9 @@ namespace TimelessEchoes.UI.Toolkit
                 }
                 groups.Add((group, sections));
             }
-            var initial = definition.sections.FirstOrDefault(s => s.id == previousSection && ToolkitVisibilityRule.All(s.visibility))
-                ?? definition.sections.FirstOrDefault(s => ToolkitVisibilityRule.All(s.visibility));
+            var initial = definition.sections.FirstOrDefault(s => s.id == previousSection && ToolkitVisibilityRule.All(s.visibility));
             if (initial != null) Select(initial, previousReference);
+            else ShowTopics();
             RefreshVisibility();
             ToolkitLocalization.Changed += LocaleChanged;
         }
@@ -93,15 +93,28 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (portraitTopics == null) return;
             var portrait = ToolkitResponsiveLayout.IsPortrait;
+            var showTopics = topicsOpen || selected == null;
             var tabs = overview.parent;
             if (portrait && tabs.parent != Root) Root.Add(tabs);
             else if (!portrait && tabs.parent == Root) portraitArticle.Insert(1, tabs);
-            tabs.style.display = portrait && topicsOpen ? DisplayStyle.None : DisplayStyle.Flex;
+            tabs.style.display = showTopics ? DisplayStyle.None : DisplayStyle.Flex;
             Root.style.paddingBottom = portrait ? 48 : StyleKeyword.Null;
-            portraitTopics.style.display = portrait ? DisplayStyle.Flex : DisplayStyle.None;
+            portraitTopics.style.display = portrait && selected != null ? DisplayStyle.Flex : DisplayStyle.None;
             portraitTopics.text = topicsOpen ? ToolkitLocalization.Text("library.back-to-article", "Back to article") : ToolkitLocalization.Text("library.browse-topics", "Browse topics");
-            topicIndex.style.display = !portrait || topicsOpen ? DisplayStyle.Flex : DisplayStyle.None;
-            portraitArticle.style.display = portrait && topicsOpen ? DisplayStyle.None : DisplayStyle.Flex;
+            topicIndex.style.display = !portrait || showTopics ? DisplayStyle.Flex : DisplayStyle.None;
+            portraitArticle.style.display = showTopics ? DisplayStyle.None : DisplayStyle.Flex;
+            Root.EnableInClassList("library-topics-home", showTopics);
+        }
+
+        private void ShowTopics()
+        {
+            selected = null; ReferenceSelected = false; topicsOpen = true;
+            illustrationBinding?.Dispose(); illustrationBinding = null;
+            foreach (var binding in articleBindings) binding.Dispose(); articleBindings.Clear();
+            foreach (var topic in topics) topic.Value.RemoveFromClassList("active");
+            articleTitle.text = ""; articleIcon.sprite = null; articleContent.Clear();
+            selectedBuff = null; buffEffects = null;
+            RefreshPortrait();
         }
         private static ToolkitBookDefinition.Text LocalText(string key, string fallback) => new()
         { fallback = fallback, localized = new LocalizedString("Wiki", key) };
@@ -237,9 +250,7 @@ namespace TimelessEchoes.UI.Toolkit
             foreach (var group in groups) group.root.style.display = group.sections.Any(s => ToolkitVisibilityRule.All(s.visibility)) ? DisplayStyle.Flex : DisplayStyle.None;
             if (selected != null && !ToolkitVisibilityRule.All(selected.visibility))
             {
-                var first = definition.sections.FirstOrDefault(s => ToolkitVisibilityRule.All(s.visibility));
-                if (first != null) Select(first, false);
-                else { selected = null; articleTitle.text = ""; articleIcon.sprite = null; articleContent.Clear(); }
+                ShowTopics();
             }
         }
 

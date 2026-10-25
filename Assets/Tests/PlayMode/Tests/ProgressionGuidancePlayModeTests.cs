@@ -76,17 +76,21 @@ namespace Tests.PlayMode
                     var parent = navRoot.Q<Button>(stage == 1 ? "hub" : "stats");
                     var hand = navRoot.Q("tutorial-pointer-" + parent.name);
                     Assert.AreEqual(DisplayStyle.None, hand.resolvedStyle.display, "The pointer waits until Next dismisses the text.");
-                    Assert.False(parent.enabledInHierarchy, "Navigation waits until the explanation is dismissed.");
-                    FieldsClick(next); yield return new WaitForSecondsRealtime(.1f);
+                    Assert.True(parent.enabledInHierarchy, "The intended destination can also start this lesson.");
+                    if (portrait) FieldsClick(parent); else FieldsClick(next);
+                    yield return new WaitForSecondsRealtime(.1f);
                     Assert.AreEqual(DisplayStyle.None, card.resolvedStyle.display, $"Stage {stage}, portrait {portrait}: Next dismisses explanation.");
+                    var childId = stage == 1 ? "quests" : "statistics-section-" + (stage == 6 ? 0 : stage == 7 ? 2 : 4);
+                    if (portrait) hand = navRoot.Q(stage == 1 ? "quest-tutorial-pointer" : "tutorial-pointer-" + childId);
                     Assert.AreEqual(DisplayStyle.Flex, hand.resolvedStyle.display);
                     Assert.True(parent.enabledInHierarchy);
                     Assert.False(navRoot.Q<Button>("adventure").enabledInHierarchy, "Only the route to this lesson is available.");
                     Assert.IsNull(card.panel.Pick(parent.worldBound.center), "The dialogue must not intercept the menu button.");
                     using (var move = PointerMoveEvent.GetPooled(new Event { type = EventType.MouseMove, mousePosition = parent.worldBound.center })) parent.SendEvent(move);
-                    FieldsClick(parent); yield return new WaitForSecondsRealtime(.1f);
+                    if (!portrait) FieldsClick(parent);
+                    yield return new WaitForSecondsRealtime(.1f);
                     Assert.AreEqual(DisplayStyle.None, card.resolvedStyle.display, "The submenu must not sit behind the dialogue.");
-                    var child = navRoot.Q<Button>(stage == 1 ? "quests" : "statistics-section-" + (stage == 6 ? 0 : stage == 7 ? 2 : 4));
+                    var child = navRoot.Q<Button>(childId);
                     Assert.IsNull(card.panel.Pick(child.worldBound.center), "The dialogue must not intercept the submenu entry.");
                     using (var move = PointerMoveEvent.GetPooled(new Event { type = EventType.MouseMove, mousePosition = child.worldBound.center })) child.SendEvent(move);
                     FieldsClick(child); yield return new WaitForSecondsRealtime(.1f);
@@ -99,7 +103,7 @@ namespace Tests.PlayMode
                     var nextStage = stage == 8 ? 0 : stage + 1;
                     Assert.AreEqual(nextStage, general.ReturningPlayerLessonStage, "Skip advances only the current lesson.");
                     if (nextStage == 0)
-                        Assert.True(navRoot.Q<Button>("adventure").enabledInHierarchy, "The final lesson restores normal navigation.");
+                        Assert.True(navRoot.Q<Button>("hub").enabledInHierarchy, "The final lesson restores the pending original Buffs lesson's Hub destination.");
                     else
                         Assert.NotNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>(), "The next lesson remains available.");
                     Object.DestroyImmediate(speakerObject); speakerObject = null;
@@ -224,7 +228,7 @@ namespace Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator GuidanceFirstReapingWaitsForDialogueBeforeOfferingRunActions()
+        public IEnumerator GuidanceFirstReapingAllowsOnlyReturnToAdvanceTheDialogue()
         {
             var owner = new GameObject("Protected first reaping");
             GameObject runView = null, speakerObject = null;
@@ -246,24 +250,23 @@ namespace Tests.PlayMode
                 oracle.saveData.Quests[first.questId] = new GameData.QuestRecord { Completed = true };
                 oracle.saveData.CompletedNpcTasks.Add(Resources.Load<ToolkitNpcIntroduction>("NPC Introductions/Eva the Witch").npcId);
                 runView = CreateGuidanceRunView();
+                var navigation = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Navigation.prefab"), owner.transform);
                 speakerObject = new GameObject("Protected reaping speaker");
                 var speaker = speakerObject.AddComponent<ToolkitOrinIntroduction>();
                 foreach (var field in typeof(ToolkitOrinIntroduction).GetFields(Private)) field.SetValue(speaker, field.GetValue(source));
                 yield return new WaitForSecondsRealtime(.15f);
                 var meeting = Object.FindAnyObjectByType<ToolkitMeetingScreen>(); Assert.NotNull(meeting);
                 var ui = runView.GetComponent<UIDocument>().rootVisualElement;
-                Assert.AreEqual(DisplayStyle.None, ui.Q(className: "eov-run-death").style.display.value);
+                Assert.AreEqual(DisplayStyle.Flex, ui.Q(className: "eov-run-death").style.display.value);
+                Assert.True(ui.Q<Button>("run-death-return").enabledInHierarchy);
+                Assert.False(ui.Q<Button>("run-restart").enabledInHierarchy);
                 Assert.AreEqual(DisplayStyle.None, ui.Q("ivan-return-pointer").style.display.value);
                 gm.RequestRestartAfterDeath(); gm.RequestReturnAfterDeath();
                 yield return null;
                 Assert.True(gm.HeroIsDead); Assert.False(gm.IsInTown);
-                FieldsClick(meeting.GetComponent<UIDocument>().rootVisualElement.Q<Button>("advance"));
+                FieldsClick(ui.Q<Button>("run-death-return"));
                 yield return new WaitForSecondsRealtime(.15f);
                 Assert.True(oracle.saveData.CompletedNpcTasks.Contains("FirstReapIntroduction"));
-                Assert.AreEqual(DisplayStyle.Flex, ui.Q(className: "eov-run-death").style.display.value);
-                Assert.True(ui.Q<Button>("run-death-return").enabledInHierarchy);
-                Assert.AreEqual(DisplayStyle.Flex, ui.Q("ivan-return-pointer").style.display.value);
-                gm.RequestReturnAfterDeath(); yield return null; yield return null; yield return null;
                 Assert.True(gm.IsInTown);
             }
             finally
@@ -376,19 +379,20 @@ namespace Tests.PlayMode
                 tracker.BeginRun(AssetDatabase.LoadAssetAtPath<MapGenerationConfig>("Assets/Scriptables/MapSettings/River.asset"), TimelessEchoes.GameManager.MapScalingMode.DistanceBased);
                 runView = CreateGuidanceRunView(); yield return new WaitForSecondsRealtime(.15f);
                 var runUi = runView.GetComponent<UIDocument>().rootVisualElement;
-                var arrow = runUi.Q<Image>("first-echo-arrow"); var cast = runUi.Q<Button>("run-buff-0");
-                Assert.AreEqual(DisplayStyle.Flex, arrow.style.display.value);
-                Assert.That(arrow.worldBound.center.x, Is.EqualTo(cast.worldBound.center.x).Within(1));
-                Assert.Less(arrow.worldBound.yMax, cast.worldBound.yMin);
+                var hand = runUi.Q<Image>("first-echo-hand"); var cast = runUi.Q<Button>("run-buff-0");
+                Assert.AreEqual(DisplayStyle.Flex, hand.style.display.value);
+                var fingertip = new Vector2(hand.worldBound.xMin + hand.worldBound.width * 6.5f / 16, hand.worldBound.yMin + hand.worldBound.height * 2f / 16);
+                Assert.That(fingertip.x, Is.EqualTo(cast.worldBound.center.x).Within(1));
+                Assert.LessOrEqual(Mathf.Abs(fingertip.y - cast.worldBound.yMax), hand.worldBound.height / 12);
                 var positions = new HashSet<float>();
-                for (var i = 0; i < 4; i++) { yield return new WaitForSecondsRealtime(.08f); positions.Add(arrow.style.top.value.value); }
-                Assert.Greater(positions.Count, 1, "The green arrow bounces above the equipped ability.");
+                for (var i = 0; i < 4; i++) { yield return new WaitForSecondsRealtime(.08f); positions.Add(hand.style.top.value.value); }
+                Assert.Greater(positions.Count, 1, "The hand bounces below the equipped ability.");
                 FieldsClick(cast); yield return null;
                 Assert.AreEqual(1, tracker.BuffsCast);
                 Assert.AreEqual(4, oracle.saveData.General.BuffTutorialStage);
-                Assert.AreEqual(DisplayStyle.None, arrow.style.display.value);
+                Assert.AreEqual(DisplayStyle.None, hand.style.display.value);
                 Blindsided.EventHandler.LoadData(); yield return null;
-                Assert.AreEqual(DisplayStyle.None, arrow.style.display.value, "The casting prompt stays completed after reload.");
+                Assert.AreEqual(DisplayStyle.None, hand.style.display.value, "The casting prompt stays completed after reload.");
                 for (var i = tracker.BuffsCast; i < 9; i++) { buffs.ClearActiveBuffs(); Assert.True(buffs.ActivateSlot(0)); }
                 typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(gm, true);
                 Assert.False(quests.TryTurnInQuest("Echo Casting"));
@@ -466,7 +470,7 @@ namespace Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator GuidanceLibraryReaderKeepsSelectionAndProtectsLockedTopics()
+        public IEnumerator GuidanceLibraryOpensTopicsAndProtectsLockedArticles()
         {
             var owner = new GameObject("Library help lifecycle", typeof(UIDocument));
             try
@@ -481,6 +485,8 @@ namespace Tests.PlayMode
                 Assign("textSettings", AssetDatabase.LoadAssetAtPath<PanelTextSettings>("Assets/UI/Toolkit/TextSettings.asset"));
                 Assert.True(screen.Show()); yield return new WaitForSecondsRealtime(.1f);
                 var ui = owner.GetComponent<UIDocument>().rootVisualElement;
+                Assert.AreEqual(DisplayStyle.None, ui.Q(className: "library-article").style.display.value, "Library opens on Topics, without selecting the first article.");
+                Assert.AreEqual(DisplayStyle.Flex, ui.Q("library-topics").style.display.value);
                 Assert.AreEqual(DisplayStyle.None, ui.Q<Button>("help-forge").style.display.value);
                 FieldsClick(ui.Q<Button>("help-combat")); yield return null;
                 Assert.IsNull(ui.Q("library-reference-table"), "Overview keeps the numeric reference separate.");
@@ -495,11 +501,10 @@ namespace Tests.PlayMode
                 Assert.NotNull(ui.Q("library-reference-table"));
                 CaptureFeedback("library-combat-reference.png"); yield return null; yield return null;
                 screen.Hide(); Assert.True(screen.Show()); yield return new WaitForSecondsRealtime(.1f);
-                Assert.True(ui.Q<Button>("help-combat").ClassListContains("active"));
-                Assert.True(ui.Q<Button>("library-reference").ClassListContains("active"));
-                Assert.NotNull(ui.Q("library-reference-table"));
+                Assert.False(ui.Q<Button>("help-combat").ClassListContains("active"));
+                Assert.AreEqual(DisplayStyle.None, ui.Q(className: "library-article").style.display.value, "Reopening also returns to Topics.");
                 var forgeQuest = book.sections.Single(s => s.id == "help-forge").visibility[0].quest;
-                FieldsClick(ui.Q<Button>("library-overview")); yield return null;
+                FieldsClick(ui.Q<Button>("help-combat")); yield return null;
                 Assert.True(ui.Q<Button>("library-illustration-1").ClassListContains("active"));
                 Assert.That(ui.Q<Label>("library-illustration-description").text, Does.Contain("Defense"));
                 oracle.saveData.Quests[forgeQuest.questId] = new GameData.QuestRecord { Completed = true };
@@ -511,7 +516,7 @@ namespace Tests.PlayMode
                 CaptureFeedback("library-forge-overview.png"); yield return null; yield return null;
                 FieldsClick(ui.Q<Button>("library-reference")); yield return null;
                 CaptureFeedback("library-forge-reference.png"); yield return null; yield return null;
-                foreach (var size in new[] { new Vector2Int(844, 390), new Vector2Int(3840, 1080) })
+                foreach (var size in new[] { new Vector2Int(844, 390), new Vector2Int(3840, 1080), new Vector2Int(1080, 1920) })
                 {
                     PlayModeWindow.SetCustomRenderingResolution((uint)size.x, (uint)size.y, "Library layout check");
                     yield return null; yield return null;
@@ -522,6 +527,13 @@ namespace Tests.PlayMode
                     Assert.LessOrEqual(ui.Q("library-reference-table").worldBound.xMax, article.worldBound.xMax + 1);
                     CaptureFeedback("library-" + size.x + ".png"); yield return null; yield return null;
                 }
+                screen.Hide(); Assert.True(screen.Show()); yield return new WaitForSecondsRealtime(.1f);
+                Assert.AreEqual(DisplayStyle.Flex, ui.Q("library-topics").style.display.value, "Portrait reopening shows Topics.");
+                Assert.AreEqual(DisplayStyle.None, ui.Q(className: "library-article").style.display.value);
+                ui.Q<ScrollView>("library-topics").ScrollTo(ui.Q<Button>("help-forge"));
+                yield return new WaitForSecondsRealtime(.1f);
+                FieldsClick(ui.Q<Button>("help-forge")); yield return null;
+                Assert.AreEqual(DisplayStyle.Flex, ui.Q(className: "library-article").style.display.value);
                 oracle.saveData.Quests[forgeQuest.questId].Completed = false;
                 screen.Hide(); Assert.True(screen.Show()); yield return new WaitForSecondsRealtime(.1f);
                 Assert.False(ui.Q<Button>("help-forge").ClassListContains("active"), "A now-locked topic cannot be restored into the reader.");
@@ -1319,10 +1331,66 @@ namespace Tests.PlayMode
             finally { Object.DestroyImmediate(viewObject); Object.DestroyImmediate(map); Object.DestroyImmediate(owner); }
         }
 
+        [UnityTest]
+        public IEnumerator OutingKillBonusSurvivesDeathCapsAtTenTimesAndPaysOnce()
+        {
+            var owner = new GameObject("Outing bonus services");
+            var previousConfig = TimelessEchoes.GameManager.CurrentGenerationConfig;
+            try
+            {
+                var resource = Resources.Load<Resource>("Resource Items/Radish");
+                oracle.saveData.Resources[resource.name] = new GameData.ResourceEntry { Tier = 2 };
+                var resources = owner.AddComponent<ResourceManager>();
+                Assert.AreEqual(2, resources.GetTier(resource), "Tier bonuses must already be part of gathered amounts.");
+                var tracker = owner.AddComponent<GameplayStatTracker>(); tracker.enabled = false;
+                var ledger = owner.AddComponent<RunResourceTrackerUI>();
+                var gm = owner.AddComponent<TimelessEchoes.GameManager>(); gm.enabled = false;
+                typeof(TimelessEchoes.GameManager).GetField("statTracker", Private).SetValue(gm, tracker);
+                typeof(TimelessEchoes.GameManager).GetField("runResourceTracker", Private).SetValue(gm, ledger);
+                var config = AssetDatabase.LoadAssetAtPath<MapGenerationConfig>("Assets/Scriptables/MapSettings/Farmlands.asset");
+                typeof(TimelessEchoes.GameManager).GetProperty("CurrentGenerationConfig").SetValue(null, config);
+                var initial = resources.GetAmount(resource);
+                void BeginOuting()
+                {
+                    typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(gm, false);
+                    tracker.BeginSession(); ledger.BeginRun();
+                    tracker.BeginRun(config, TimelessEchoes.GameManager.MapScalingMode.DistanceBased);
+                }
+                BeginOuting();
+                for (var i = 0; i < 10; i++) tracker.AddKill(null);
+                resources.Add(resource, 10, eligibleForTierRoll: false);
+                tracker.AddDeath(); tracker.EndRun(true);
+                tracker.BeginRun(config, TimelessEchoes.GameManager.MapScalingMode.DistanceBased);
+                for (var i = 0; i < 15; i++) tracker.AddKill(null);
+                resources.Add(resource, 20, eligibleForTierRoll: false);
+                gm.ForceHandleHeroDeath();
+                gm.RequestReturnAfterDeath(); gm.RequestReturnAfterDeath();
+                yield return new WaitForSecondsRealtime(.15f);
+                Assert.True(gm.IsInTown);
+                Assert.AreEqual(initial + 49.5, resources.GetAmount(resource), 1e-8, "All 25 kills add 50% to the 33 gathered resources; their tier bonus must not apply twice.");
+                gm.RequestRetreat(); yield return null;
+                Assert.AreEqual(initial + 49.5, resources.GetAmount(resource), 1e-8, "Repeated return input cannot award the outing twice.");
+                BeginOuting();
+                for (var i = 0; i < 501; i++) tracker.AddKill(null);
+                resources.Add(resource, 10, eligibleForTierRoll: false);
+                gm.RequestRetreat(); yield return new WaitForSecondsRealtime(.15f);
+                Assert.AreEqual(initial + 159.5, resources.GetAmount(resource), 1e-8, "The cap is ten times the 11 gathered resources, including the original amount.");
+                BeginOuting();
+                resources.Add(resource, 10, eligibleForTierRoll: false);
+                gm.RequestRetreat(); yield return new WaitForSecondsRealtime(.15f);
+                Assert.AreEqual(initial + 170.5, resources.GetAmount(resource), 1e-8, "Leaving town starts a fresh bonus.");
+            }
+            finally
+            {
+                typeof(TimelessEchoes.GameManager).GetProperty("CurrentGenerationConfig").SetValue(null, previousConfig);
+                Object.DestroyImmediate(owner);
+            }
+        }
+
         // Owns the real outing-to-summary path, including retries before town,
         // explicit dismissal, and resource totals that already include bonuses.
         [UnityTest]
-        public IEnumerator GuidanceRunSummarySeparatesOutingTotalsAndClosesExplicitly()
+        public IEnumerator OutingSummaryShowsTotalsAndClosesExplicitly()
         {
             var owner = new GameObject("Protected outing summary");
             GameObject viewObject = null;
@@ -1352,22 +1420,28 @@ namespace Tests.PlayMode
                 Assert.True(screen.HasOpenDetails);
                 Assert.AreEqual("2", ui.Q("summary-deaths").Q<Label>(className: "summary-fact-value").text);
                 Assert.AreEqual("1", ui.Q("summary-reaps").Q<Label>(className: "summary-fact-value").text);
+                Assert.NotNull(ui.Q("summary-reaps").Q<Image>().sprite);
                 Assert.AreEqual("25", ui.Q("summary-steps").Q<Label>(className: "summary-fact-value").text);
-                Assert.That(ui.Q<Label>("summary-distance-value").text, Does.Contain("100").And.Contain("101").And.Not.Contain("sprite"));
+                var reaping = ui.Q("summary-reaping-gain");
+                Assert.NotNull(reaping.Q<Image>().sprite, "Carl's icon identifies the distance gained.");
+                Assert.AreEqual("100 → 101", reaping.Q<Label>(className: "summary-reaping-value").text);
+                Assert.AreEqual("+1", reaping.Q<Label>(className: "summary-distance-change").text);
+                Assert.That(reaping.Q<Image>().worldBound.center.y, Is.EqualTo(reaping.Q<Label>().worldBound.center.y).Within(2));
+                Assert.AreEqual("0", ui.Q("summary-kills").Q<Label>(className: "summary-fact-value").text);
+                Assert.AreEqual("×1", ui.Q("summary-multiplier").Q<Label>(className: "summary-fact-value").text);
+                foreach (var stat in new[] { "kills", "multiplier", "time", "steps", "deaths", "reaps" })
+                {
+                    Assert.NotNull(ui.Q("summary-" + stat).Q<Image>().sprite, stat);
+                    Assert.IsNotEmpty(ui.Q("summary-" + stat).Q<Label>(className: "summary-fact-label").text, stat);
+                }
+                Assert.That(ui.Q("summary-time").worldBound.yMin, Is.EqualTo(ui.Q("summary-kills").worldBound.yMin).Within(.5f), "Landscape stats flow together without a forced break after Bonus.");
+                Assert.GreaterOrEqual(reaping.worldBound.yMin, ui.Q(className: "summary-outing-facts").worldBound.yMax);
                 var resource = ui.Q("summary-resource-" + radish.name); Assert.NotNull(resource);
                 Assert.AreEqual(ToolkitLocalization.Name(radish), resource.Q<Label>("resource-name").text);
                 Assert.AreEqual("12", resource.Q<Label>("resource-total").text, "The total must include the bonus once.");
                 Assert.That(resource.Q<Label>(className: "summary-resource-bonus").text, Does.Contain("+2"));
                 Assert.That(ui.Q<Label>("summary-guide-text").text, Does.Contain("keep the resources"));
                 Assert.AreEqual("summary-resources-title", ui.Q("summary-guide-arrow").userData);
-                FieldsClick(ui.Q<Button>("summary-guide-next")); yield return null;
-                Assert.AreEqual("summary-guide-next", ui.Q("summary-guide-hand").userData);
-                Assert.AreEqual("summary-distance-value", ui.Q("summary-guide-arrow").userData);
-                Assert.Less(ui.Q("summary-guide-arrow").worldBound.center.x, ui.Q("summary-distance-value").worldBound.xMin);
-                Assert.That(ui.Q("summary-guide-arrow").worldBound.center.y, Is.InRange(ui.Q("summary-distance-value").worldBound.yMin, ui.Q("summary-distance-value").worldBound.yMax));
-                Assert.LessOrEqual(ui.Q<Label>("summary-guide-text").worldBound.xMax, ui.Q<Button>("summary-guide-next").worldBound.xMin);
-                Assert.That(ui.Q<Button>("summary-guide-next").worldBound.center.y, Is.InRange(ui.Q<Label>("summary-guide-text").worldBound.yMin, ui.Q<Label>("summary-guide-text").worldBound.yMax));
-                CaptureFeedback("first-summary-distance-guide.png"); yield return null; yield return null;
                 FieldsClick(ui.Q<Button>("summary-guide-next")); yield return null;
                 Assert.AreEqual("run-details-close", ui.Q("summary-guide-hand").userData);
                 var overlay = ui.Q(className: "eov-run-overlay");

@@ -14,7 +14,7 @@ namespace TimelessEchoes.UI.Toolkit
             ("buffs", "buffs", "Buffs help your hero gather, fight and summon Echoes. This panel shows each buff’s effect and cost. You don’t need to cast anything for this lesson."),
             ("inventory", "inventory", "Inventory holds your equipment and resources. You can compare items here. Keep your current equipment; this lesson doesn’t ask you to change it."),
             ("skills", "skills", "Skills show your levels, bonuses and upcoming unlocks. Select a skill to see its progress."),
-            ("forge", "forge", "At the Forge, smelt materials into cores and use cores to craft equipment. You can also salvage unwanted items. There’s no need to craft, equip or spend anything during this refresher."),
+            ("forge", "forge", "At the Forge, smelt materials into ingots and combine them with cores to craft equipment. You can also salvage unwanted gear. You do not need to craft, equip or spend anything during this refresher."),
             ("statistics/general", "maps", "Statistics tracks your adventures and discoveries. Choose a map to see its resources and your progress there."),
             ("statistics/graphs", "graphs", "Graphs show your recent runs. Use them to compare your results over time."),
             ("statistics/tasks", "tasks", "Tasks lets you choose which unlocked tasks can appear and adjust their frequency. Keep your current selections if you’re happy with them. That’s the end of the refresher.")

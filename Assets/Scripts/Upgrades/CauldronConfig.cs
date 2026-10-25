@@ -7,7 +7,7 @@ namespace TimelessEchoes.Upgrades
 	[CreateAssetMenu(fileName = "CauldronConfig", menuName = "SO/Cauldron Config")]
 	public class CauldronConfig : ScriptableObject
 	{
-		[Header("Tasting")] public float rollsPerSecond = 10f;
+		[Header("Tasting")]
 		[Min(0f)] public float stewPerRoll = 1f;
 
 		[Header("Tier Thresholds (counts required per tier, length 8)")]

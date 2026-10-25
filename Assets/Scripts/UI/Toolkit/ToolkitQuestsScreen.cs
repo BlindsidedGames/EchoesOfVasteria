@@ -237,8 +237,22 @@ namespace TimelessEchoes.UI.Toolkit
                     track.RegisterCallback<GeometryChangedEvent>(_ => sprite.style.width = track.contentRect.width);
                     requirements.Add((req, label, resourceRow, fill));
                 }
-            var reward = Text(row, ToolkitLocalization.Text("quests.reward", "Reward: {0}", quest.rewardDescription.GetLocalizedString()), 7); reward.AddToClassList("quest-reward");
-            reward.style.fontSize = StyleKeyword.Null;
+            var rewardText = quest.rewardDescription.GetLocalizedString();
+            ToolkitQuestRequirementRow rewardResource = null;
+            VisualElement rewardTarget;
+            if (quest.rewardDisplayResource)
+            {
+                rewardResource = new ToolkitQuestRequirementRow(quest.rewardDisplayResource, 7);
+                rewardResource.SetText(rewardText);
+                var prefix = Text(rewardResource, ToolkitLocalization.Text("quests.reward", "Reward: {0}", "").TrimEnd(), 7);
+                prefix.style.flexShrink = 0;
+                prefix.style.marginRight = 3;
+                rewardResource.Insert(0, prefix);
+                row.Add(rewardResource);
+                rewardTarget = rewardResource;
+            }
+            else rewardTarget = Text(row, ToolkitLocalization.Text("quests.reward", "Reward: {0}", rewardText), 7);
+            rewardTarget.AddToClassList("quest-reward");
             foreach (var equipment in quest.rewards.Where(r => r.type == QuestData.RewardType.Equipment && r.equipment))
             {
                 var stats = new VisualElement { name = "equipment-reward-stats" };
@@ -264,12 +278,13 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 void Pin() { manager.TogglePinned(quest.questId); Audio.AudioManager.Instance?.PlayUIButtonClick(); }
                 var pin=new Button(Pin){name="pin-"+quest.questId,text=pinned?ToolkitLocalization.Text("quests.pinned", "Pinned"):ToolkitLocalization.Text("quests.pin", "Pin")};pin.AddToClassList("button");pin.AddToClassList("quest-pin");pin.EnableInClassList("active",pinned);top.Q(className:"eov-quest-controls").Add(pin);
-                texts.pickingMode = PickingMode.Position; reward.pickingMode = PickingMode.Position;
-                texts.RegisterCallback<ClickEvent>(_ => Pin()); reward.RegisterCallback<ClickEvent>(_ => Pin());
+                texts.pickingMode = PickingMode.Position; rewardTarget.pickingMode = PickingMode.Position;
+                texts.RegisterCallback<ClickEvent>(_ => Pin()); rewardTarget.RegisterCallback<ClickEvent>(_ => Pin());
                 texts.focusable = true; texts.tabIndex = 0; texts.RegisterCallback<NavigationSubmitEvent>(evt => { Pin(); evt.StopPropagation(); });
             }
             void UpdateProgress(float value)
             {
+                rewardResource?.SetText(rewardText);
                 if (turnInLabel != null)
                     turnInLabel.text = "<b>" + (manager.NeedsAcceptance(quest) ? ToolkitLocalization.Text("quests.accept", "Accept") :
                         value < 1 ? ToolkitLocalization.Text("quests.incomplete", "Incomplete") :
@@ -281,7 +296,7 @@ namespace TimelessEchoes.UI.Toolkit
                 {
                     var presentation = QuestRequirementPresentation.Build(quest, item.req);
                     if (item.resourceRow != null) item.resourceRow.SetText(presentation.text);
-                    else item.text.text = presentation.text;
+                    else item.text.text = ToolkitControls.WithoutInlineTextSize(presentation.text);
                     item.fill.style.width = Length.Percent(presentation.progress * 100);
                 }
             }
@@ -289,7 +304,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private static Label Text(VisualElement parent, string value, float size)
         {
-            var label = new Label(value) { pickingMode = PickingMode.Ignore, enableRichText = true }; label.AddToClassList("eov-quest-text"); label.style.fontSize = Mathf.Max(7,size);
+            var label = new Label(ToolkitControls.WithoutInlineTextSize(value)) { pickingMode = PickingMode.Ignore, enableRichText = true }; label.AddToClassList("eov-quest-text"); ToolkitControls.SetTextSize(label, size);
  parent.Add(label); return label;
         }
         private readonly ToolkitWindowLayout windowLayout = new();

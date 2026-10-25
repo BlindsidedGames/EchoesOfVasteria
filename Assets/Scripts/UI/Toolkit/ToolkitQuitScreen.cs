@@ -19,6 +19,7 @@ namespace TimelessEchoes.UI.Toolkit
         private Button open, confirm, discord;
         private bool confirming;
         private ToolkitNavigationScreen navigation;
+        private ToolkitRunScreen run;
         private readonly GameQuitRequest request = new();
         private readonly List<ToolkitTextBinding> bindings = new();
 
@@ -93,8 +94,9 @@ namespace TimelessEchoes.UI.Toolkit
             if (root == null) return;
             if (!windows) windows = TownWindowManager.Instance;
             if (!navigation) navigation = FindAnyObjectByType<ToolkitNavigationScreen>();
+            if (!run) run = FindAnyObjectByType<ToolkitRunScreen>();
             var inTown = ToolkitResponsiveLayout.TownView;
-            var showControls = inTown && (!windows || !windows.HasOpenWindow) && (!navigation || !navigation.HasOpenMenu);
+            var showControls = inTown && (!windows || !windows.HasOpenWindow) && (!navigation || !navigation.HasOpenMenu) && (!run || !run.HasOpenDetails);
             var showQuit = showControls && Screen.fullScreen && !UnityEngine.Device.Application.isMobilePlatform && !ToolkitResponsiveLayout.IsPortrait;
             if (!showQuit && confirming) SetConfirmation(false);
             open.style.display = showQuit && !confirming ? DisplayStyle.Flex : DisplayStyle.None;

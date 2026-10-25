@@ -8,8 +8,8 @@ namespace TimelessEchoes.UI.Toolkit
     public sealed class ToolkitCauldronDefinition : ScriptableObject
     {
         public CauldronConfig config;
+        public Sprite stewIcon;
         public SpriteAnimation portrait, pot;
-        public string rewardHelp;
 
         [Serializable]
         public sealed class SpriteAnimation

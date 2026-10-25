@@ -11,7 +11,8 @@ namespace TimelessEchoes.UI.Toolkit
     public sealed partial class ToolkitRunScreen
     {
         private VisualElement summaryOverview, summaryResourceHeading;
-        private Label summaryResourceCount;
+        private Label summaryResourceCount, summaryMap;
+        private Image summaryDistanceIcon;
         private Button detailsClose;
         private VisualElement summaryGuide;
         private Label summaryGuideText;
@@ -24,6 +25,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void BuildSummaryOverview()
         {
+            summaryMap = L(detailTitle.parent, "", "summary-map muted"); summaryMap.name = "summary-map";
             summaryOverview = E(detail, "summary-overview"); summaryOverview.name = "run-summary-overview";
             summaryResourceHeading = E(detail, "row summary-resource-heading"); summaryResourceHeading.name = "summary-resources";
             L(summaryResourceHeading, "", "strong").name = "summary-resources-title";
@@ -61,26 +63,23 @@ namespace TimelessEchoes.UI.Toolkit
             detailTitle.text = ToolkitLocalization.Text("run.summary-title", "Run Summary");
             summaryOverview.Clear();
             var map = string.IsNullOrEmpty(summaryData.Map) ? "" : ToolkitLocalization.Text("map." + summaryData.Map, summaryData.Map);
-            L(summaryOverview, string.IsNullOrEmpty(map) ? ToolkitLocalization.Text("run.summary.since-town", "Since leaving town") :
-                ToolkitLocalization.Text("run.summary.outing", "{0} · Since leaving town", map), "summary-subtitle muted");
-            var facts = E(summaryOverview, "row summary-facts");
-            SummaryFact(facts, "time", "run.summary.time-away", "Time away", CalcUtils.FormatTime(summaryData.Duration));
-            SummaryFact(facts, "steps", "run.summary.steps", "Steps walked", CalcUtils.FormatNumber(summaryData.Steps, true));
-            SummaryFact(facts, "deaths", "run.summary.deaths-label", "Deaths", summaryData.Deaths.ToString("N0", LocaleNumbers.Culture));
-            SummaryFact(facts, "reaps", "run.summary.reaps-label", "Reaped by Carl", summaryData.Reaps.ToString("N0", LocaleNumbers.Culture));
-            var limit = E(summaryOverview, "row summary-distance"); limit.name = "summary-reaping-distance";
-            L(limit, ToolkitLocalization.Text("run.summary.limit", "Reaping distance"), "summary-distance-label");
-            var changed = summaryData.StartingDistance > 0 && !Mathf.Approximately(summaryData.StartingDistance, summaryData.Distance);
-            var value = changed ? ToolkitLocalization.Text("run.summary.limit-change", "{0:N0} → {1:N0} steps", summaryData.StartingDistance, summaryData.Distance) :
-                ToolkitLocalization.Text("run.summary.limit-value", "{0:N0} steps", summaryData.Distance);
-            L(limit, value, "strong summary-distance-value").name = "summary-distance-value";
-            if (changed)
-                L(limit, (summaryData.Distance > summaryData.StartingDistance ? "+" : "") + (summaryData.Distance - summaryData.StartingDistance).ToString("N0", LocaleNumbers.Culture), "summary-distance-change");
-            if (summaryData.Retreated && summaryData.RetreatBonusPercent > 0)
-                L(summaryOverview, ToolkitLocalization.Text("run.summary.retreat-bonus", "Returned with {0} kills · +{1:0}% resource bonus", summaryData.Kills, summaryData.RetreatBonusPercent), "summary-return-bonus");
+            summaryMap.text = map; summaryMap.tooltip = map; SetVisible(summaryMap, !string.IsNullOrEmpty(map));
+            var facts = E(summaryOverview, "row summary-facts summary-outing-facts");
+            SummaryFact(facts, "kills", "run.summary.label.kills", "Kills", summaryData.Kills.ToString("N0", LocaleNumbers.Culture), definition.killsIcon);
+            SummaryFact(facts, "multiplier", "run.summary.label.bonus", "Bonus", "×" + (1f + summaryData.RetreatBonusPercent * .01f).ToString("0.##", LocaleNumbers.Culture), definition.bonusIcon);
+            SummaryFact(facts, "time", "run.summary.label.time", "Time", CalcUtils.FormatTime(summaryData.Duration), definition.TimeIcon(summaryData.Duration));
+            SummaryFact(facts, "steps", "run.summary.label.steps", "Steps", CalcUtils.FormatNumber(summaryData.Steps, true), definition.stepsIcon);
+            SummaryFact(facts, "deaths", "run.summary.label.deaths", "Deaths", summaryData.Deaths.ToString("N0", LocaleNumbers.Culture), definition.graveIcon);
+            SummaryFact(facts, "reaps", "run.summary.label.reaps", "Reaps", summaryData.Reaps.ToString("N0", LocaleNumbers.Culture), definition.scytheIcon);
+            var reaping = E(summaryOverview, "row summary-reaping-gain"); reaping.name = "summary-reaping-gain";
+            summaryDistanceIcon = SummaryIcon(reaping, definition.reaperIcon, 20, "distance");
+            L(reaping, ToolkitLocalization.Text("run.summary.label.distance", "Distance"), "summary-fact-label muted");
+            reaping.tooltip = ToolkitLocalization.Text("run.summary.limit", "Reaping distance");
+            L(reaping, summaryData.StartingDistance.ToString("N0", LocaleNumbers.Culture) + " → " + summaryData.Distance.ToString("N0", LocaleNumbers.Culture), "summary-reaping-value");
+            L(reaping, "+" + Mathf.Max(0, summaryData.Distance - summaryData.StartingDistance).ToString("N0", LocaleNumbers.Culture), "summary-distance-change");
             summaryResourceHeading.Q<Label>("summary-resources-title").text = ToolkitLocalization.Text("run.summary.resources", "Resources gathered");
             summaryResourceCount.text = ToolkitLocalization.Text("run.summary.resource-types", "Types: {0}", summaryAmounts.Count);
-            detailRows.Clear(); resourceRows.Clear();
+            detailRows.Clear();
             if (summaryAmounts.Count == 0)
                 L(detailRows, ToolkitLocalization.Text("run.summary.empty", "No resources gathered this outing."), "summary-empty muted");
             var resourceIndex = 0;
@@ -94,7 +93,12 @@ namespace TimelessEchoes.UI.Toolkit
                 L(text, ToolkitLocalization.Name(pair.Key), "summary-resource-name").name = "resource-name";
                 summaryBonuses.TryGetValue(pair.Key, out var extra);
                 if (extra > 0)
-                    L(text, ToolkitLocalization.Text("run.summary.resource-bonus", "Includes +{0} bonus", CalcUtils.FormatNumber(extra, true)), "summary-resource-bonus");
+                {
+                    var bonusLine = E(text, "row summary-resource-bonus-line");
+                    var bonusIcon = E(bonusLine, "summary-resource-bonus-icon");
+                    ToolkitGameplay.Icon(bonusIcon, definition.bonusIcon, 12);
+                    L(bonusLine, "+" + CalcUtils.FormatNumber(extra, true), "summary-resource-bonus");
+                }
                 L(row, CalcUtils.FormatNumber(pair.Value, true), "strong summary-resource-total").name = "resource-total";
             }
         }
@@ -132,16 +136,12 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void SetSummaryGuideStep(int step)
         {
-            summaryGuideStep = Mathf.Clamp(step, 0, 2);
+            summaryGuideStep = Mathf.Clamp(step, 0, 1);
             switch (summaryGuideStep)
             {
                 case 0:
                     summaryGuideTarget = summaryResourceHeading.Q("summary-resources-title");
                     summaryGuideText.text = ToolkitLocalization.Text("run.summary.guide-resources", "You keep the resources gathered during your adventure.");
-                    break;
-                case 1:
-                    summaryGuideTarget = summaryOverview.Q("summary-distance-value");
-                    summaryGuideText.text = ToolkitLocalization.Text("run.summary.guide-distance", "<b>River, Woods and Mines:</b> being reaped at the distance limit increases your shared reaping distance by 1%.\n<b>Farmlands:</b> no distance increase from reaping.\n<b>Spooky:</b> enemy levels scale with kills, with no kill cap or distance reaping limit.");
                     break;
                 default:
                     summaryGuideTarget = detailsClose;
@@ -149,18 +149,18 @@ namespace TimelessEchoes.UI.Toolkit
                     detailsClose.Focus();
                     break;
             }
-            SetVisible(summaryGuideNext, summaryGuideStep < 2);
-            if (summaryGuideStep < 2) summaryGuideNext.Focus();
-            summaryGuideHand.userData = summaryGuideStep < 2 ? summaryGuideNext.name : detailsClose.name;
+            SetVisible(summaryGuideNext, summaryGuideStep < 1);
+            if (summaryGuideStep < 1) summaryGuideNext.Focus();
+            summaryGuideHand.userData = summaryGuideStep < 1 ? summaryGuideNext.name : detailsClose.name;
             summaryGuideArrow.userData = summaryGuideTarget?.name;
-            SetVisible(summaryGuideArrow, summaryGuideStep < 2);
+            SetVisible(summaryGuideArrow, summaryGuideStep < 1);
             PositionSummaryGuide();
         }
 
         private void PositionSummaryGuide()
         {
             if (summaryGuideStep < 0 || summaryGuideTarget?.panel == null) return;
-            var action = summaryGuideStep < 2 ? summaryGuideNext : detailsClose;
+            var action = summaryGuideStep < 1 ? summaryGuideNext : detailsClose;
             var button = action.worldBound;
             var above = ToolkitResponsiveLayout.IsPortrait;
             var point = overlay.WorldToLocal(new Vector2(button.center.x, above ? button.yMin : button.yMax));
@@ -184,32 +184,65 @@ namespace TimelessEchoes.UI.Toolkit
             SetVisible(summaryGuide, false); SetVisible(summaryGuideHand, false); SetVisible(summaryGuideArrow, false);
         }
 
-        private static void SummaryFact(VisualElement parent, string name, string key, string fallback, string value)
+        private static void SummaryFact(VisualElement parent, string name, string key, string fallback, string value, Sprite icon = null)
         {
             var fact = E(parent, "summary-fact"); fact.name = "summary-" + name;
-            L(fact, ToolkitLocalization.Text(key, fallback), "summary-fact-label muted");
-            L(fact, value, "strong summary-fact-value");
+            if (icon)
+            {
+                fact.AddToClassList("summary-icon-fact");
+                SummaryIcon(fact, icon, 16, name);
+                fact.tooltip = ToolkitLocalization.Text(key, fallback);
+            }
+            var text = E(fact, "row summary-fact-text");
+            L(text, ToolkitLocalization.Text(key, fallback), "summary-fact-label muted");
+            L(text, value, "strong summary-fact-value");
+        }
+
+        private static Image SummaryIcon(VisualElement parent, Sprite sprite, float size, string name)
+        {
+            var slot = E(parent, "summary-icon-slot summary-icon-" + name);
+            return ToolkitGameplay.Icon(slot, sprite, size);
+        }
+
+        private float PortraitDetailsTop()
+        {
+            if (!ToolkitResponsiveLayout.IsPortrait) return 0;
+            if (GameManager.Instance && GameManager.Instance.IsInTown) return ToolkitResponsiveLayout.WindowTop;
+            var bottom = portraitDashboard != null && portraitDashboard.resolvedStyle.display != DisplayStyle.None
+                ? portraitDashboard.worldBound.yMax - root.worldBound.yMin + 8 : ToolkitResponsiveLayout.WindowTop;
+            return Mathf.Max(ToolkitResponsiveLayout.WindowTop, float.IsNaN(bottom) ? 0 : bottom);
         }
 
         private void LayoutSummary(Rect area)
         {
-            detail.style.width = ToolkitResponsiveLayout.IsPortrait ? area.width : Mathf.Max(160, Mathf.Min(480, area.width - 24));
+            detail.EnableInClassList("summary-landscape", !ToolkitResponsiveLayout.IsPortrait);
+            if (summaryDistanceIcon != null)
+                summaryDistanceIcon.style.width = summaryDistanceIcon.style.height = ToolkitResponsiveLayout.IsPortrait ? 20 : 16;
+            var width = ToolkitResponsiveLayout.IsPortrait ? area.width : showingBreakdown ? Mathf.Min(720, area.width - 32) : Mathf.Max(160, Mathf.Min(480, area.width - 24));
+            detail.style.width = width;
+            liveBreakdown?.SetColumns(ToolkitResponsiveLayout.IsPortrait ? 1 : width >= 620 ? 3 : 2);
             detailsClose.text = ToolkitResponsiveLayout.IsPortrait ? ToolkitLocalization.Text("common.continue", "Continue") : "×";
-            detail.style.height = ToolkitResponsiveLayout.IsPortrait ? Mathf.Max(100, area.height - ToolkitResponsiveLayout.WindowTop - ToolkitResponsiveLayout.WindowBottom) : Mathf.Max(220, Mathf.Min(350, area.height - 64));
-            if (ToolkitResponsiveLayout.IsPortrait) { detail.style.top = ToolkitResponsiveLayout.WindowTop; detail.style.left = 0; detail.style.translate = new Translate(0, 0); }
+            var columns = width >= 620 ? 3 : 2;
+            var resourceHeight = 88 + Mathf.CeilToInt(runResources.Count / (float)columns) * 42;
+            var keepHudClear = !ToolkitResponsiveLayout.IsPortrait && (showingBreakdown || (GameManager.Instance && GameManager.Instance.CurrentMap));
+            detail.style.position = keepHudClear || ToolkitResponsiveLayout.IsPortrait ? Position.Absolute : StyleKeyword.Null;
+            detail.style.height = ToolkitResponsiveLayout.IsPortrait ? Mathf.Max(100, area.height - PortraitDetailsTop() - ToolkitResponsiveLayout.WindowBottom) : keepHudClear ? Mathf.Min(Mathf.Max(200, showingBreakdown ? resourceHeight : 350), area.height - ToolkitResponsiveLayout.WindowTop - 100) : Mathf.Max(220, Mathf.Min(350, area.height - 64));
+            if (ToolkitResponsiveLayout.IsPortrait) { detail.style.top = 0; detail.style.left = 0; detail.style.translate = new Translate(0, 0); }
+            else if (keepHudClear) { detail.style.top = area.y + ToolkitResponsiveLayout.WindowTop + 16; detail.style.left = area.x + (area.width - width) * .5f; detail.style.translate = new Translate(0, 0); }
             else { detail.style.top = StyleKeyword.Null; detail.style.left = StyleKeyword.Null; detail.style.translate = StyleKeyword.Null; }
             detail.EnableInClassList("summary-narrow", area.width < 500);
+            detail.EnableInClassList("summary-compact", summaryData != null);
             PositionSummaryGuide();
         }
 
         private void ClearSummary()
         {
             EndSummaryGuide();
-            summaryData = null; summaryAmounts.Clear(); summaryBonuses.Clear();
+            summaryData = null; summaryDistanceIcon = null; summaryAmounts.Clear(); summaryBonuses.Clear();
             if (detail == null) return;
-            detail.RemoveFromClassList("summary-sheet"); detail.RemoveFromClassList("summary-narrow");
+            detail.RemoveFromClassList("summary-sheet"); detail.RemoveFromClassList("summary-narrow"); detail.RemoveFromClassList("summary-compact");
             detail.style.width = detail.style.height = StyleKeyword.Null;
-            SetVisible(summaryOverview, false); SetVisible(summaryResourceHeading, false);
+            SetVisible(summaryOverview, false); SetVisible(summaryResourceHeading, false); SetVisible(summaryMap, false);
             SetVisible(runTime, true); if (runRatesLeft != null) SetVisible(runRatesLeft.parent, true);
             detailRows?.contentContainer.RemoveFromClassList("summary-resource-grid");
         }

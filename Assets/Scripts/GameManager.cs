@@ -134,6 +134,8 @@ namespace TimelessEchoes
         public bool RunLoadingActive => runLoadingActive;
 
         public float BonusPercentPerKill => bonusPercentPerKill;
+        public float ResourceBonusPercent => Mathf.Clamp((statTracker ? statTracker : GameplayStatTracker.Instance)?.SessionKills * bonusPercentPerKill ?? 0f, 0f, 900f);
+        public float ResourceMultiplier => 1f + ResourceBonusPercent * .01f;
 
         public event Action HeroDied;
 
@@ -157,7 +159,7 @@ namespace TimelessEchoes
         public int CurrentKillsPerLevel => currentKillsPerLevel;
         public int KillLevelIncreasePerTier => Mathf.Max(1, killLevelIncreasePerTier);
 
-        
+
         public bool TryGetKillProgress(out int totalKills, out int killsRequiredForNextLevel, out int currentKillLevel)
         {
             totalKills = 0;
@@ -218,15 +220,14 @@ namespace TimelessEchoes
                     string desired;
                     if (heroActive && hero != null)
                     {
-                        var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
-                        var percent = kills * bonusPercentPerKill;
+                        var multiplier = ResourceMultiplier;
                         desired = retreatQueued && hero.InCombat
-                            ? ToolkitLocalization.Text("run.retreat-queued-bonus", "Retreat Queued +{0:0}%", percent)
-                            : ToolkitLocalization.Text("run.resource-bonus", "+{0:0}% Resources", percent);
+                            ? ToolkitLocalization.Text("run.retreat-queued-multiplier", "Retreat queued · ×{0:0.##}", multiplier)
+                            : ToolkitLocalization.Text("run.resource-multiplier", "Resources ×{0:0.##}", multiplier);
                     }
                     else
                     {
-                        desired = ToolkitLocalization.Text("run.resource-bonus", "+{0:0}% Resources", 0);
+                        desired = ToolkitLocalization.Text("run.resource-multiplier", "Resources ×{0:0.##}", ResourceMultiplier);
                     }
 
                     if (!string.Equals(_lastRetreatBonusText, desired))
@@ -282,6 +283,7 @@ namespace TimelessEchoes
         public void RequestReturnAfterDeath() => OnDeathReturnButton();
 
         private bool retreatQueued;
+        private bool returningToTown;
 
         // Track whether the run resource tracker should reset on the next run
         private bool resetRunResourceTracker = true;
@@ -539,9 +541,8 @@ namespace TimelessEchoes
                     returnToTavernText.text = ToolkitLocalization.Text("run.retreating", "Retreating...");
                 if (retreatBonusText != null)
                 {
-                    var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
-                    var percent = kills * bonusPercentPerKill;
-                    retreatBonusText.text = ToolkitLocalization.Text("run.retreat-queued-bonus", "Retreat Queued +{0:0}%", percent);
+                    var multiplier = ResourceMultiplier;
+                    retreatBonusText.text = ToolkitLocalization.Text("run.retreat-queued-multiplier", "Retreat queued · ×{0:0.##}", multiplier);
                 }
             }
             else
@@ -1070,151 +1071,137 @@ namespace TimelessEchoes
 
         private IEnumerator ReturnToTavernRoutine(bool abandon = false)
         {
-            // Queued returns must also let the first reaping explanation finish.
-            while (FirstReapDialoguePending) yield return null;
-            HideTooltip();
-            // Ensure any death window countdown is cancelled to avoid unintended auto-run
-            if (deathWindowCoroutine != null)
+            if (returningToTown || IsInTown) yield break;
+            returningToTown = true;
+            try
             {
-                StopCoroutine(deathWindowCoroutine);
-                deathWindowCoroutine = null;
-            }
+                // Queued returns must also let the first reaping explanation finish.
+                while (FirstReapDialoguePending) yield return null;
+                HideTooltip();
+                // Ensure any death window countdown is cancelled to avoid unintended auto-run
+                if (deathWindowCoroutine != null)
+                {
+                    StopCoroutine(deathWindowCoroutine);
+                    deathWindowCoroutine = null;
+                }
 
-            DeathPromptVisible = false;
-            if (deathWindow != null)
-                deathWindow.SetActive(false);
-            deathUiFailsafeCheckAt = -1f;
-            // Reset state after death.
-            heroDead = false;
-            returnOnDeathQueued = false;
-            retreatQueued = false;
-            if (returnOnDeathText != null)
-                returnOnDeathText.text = ToolkitLocalization.Text("run.return-on-death", "Return On Death");
-            if (returnToTavernText != null)
-                returnToTavernText.text = ToolkitLocalization.Text("run.return-town", "Return To Town");
-            if (deathText != null)
-                deathText.text = string.Empty;
-            if (statTracker == null)
-            {
-                statTracker = GameplayStatTracker.Instance;
+                DeathPromptVisible = false;
+                if (deathWindow != null)
+                    deathWindow.SetActive(false);
+                deathUiFailsafeCheckAt = -1f;
+                // Reset state after death.
+                heroDead = false;
+                returnOnDeathQueued = false;
+                retreatQueued = false;
+                if (returnOnDeathText != null)
+                    returnOnDeathText.text = ToolkitLocalization.Text("run.return-on-death", "Return On Death");
+                if (returnToTavernText != null)
+                    returnToTavernText.text = ToolkitLocalization.Text("run.return-town", "Return To Town");
+                if (deathText != null)
+                    deathText.text = string.Empty;
                 if (statTracker == null)
-                    Log("GameplayStatTracker missing", TELogCategory.General, this);
-            }
+                {
+                    statTracker = GameplayStatTracker.Instance;
+                    if (statTracker == null)
+                        Log("GameplayStatTracker missing", TELogCategory.General, this);
+                }
 
-            if (!runEndedByDeath)
-            {
                 if (!abandon)
                 {
                     var manager = ResourceManager.Instance;
                     if (manager == null)
-                    {
                         Log("ResourceManager missing", TELogCategory.Resource, this);
-                    }
                     else
                     {
-                        var kills = statTracker != null ? statTracker.CurrentRunKills : 0;
-                        var bonusPercent = kills * bonusPercentPerKill * 0.01d;
-                        if (bonusPercent > 0d)
-                        {
-                            var baseDrops = CollectBaseRunDrops();
-                            if (baseDrops.Count > 0)
-                            {
-                                foreach (var pair in baseDrops)
-                                {
-                                    if (pair.Key == null)
-                                        continue;
-
-                                    var bonusAmount = pair.Value * bonusPercent;
-                                    if (bonusAmount <= 0d)
-                                        continue;
-
-                                    manager.Add(pair.Key, bonusAmount, true);
-                                }
-                            }
-                        }
+                        var bonus = ResourceBonusPercent * .01d;
+                        if (bonus > 0d)
+                            foreach (var pair in CollectBaseRunDrops())
+                                if (pair.Key && pair.Value > 0d)
+                                    manager.Add(pair.Key, pair.Value * bonus, bonus: true, eligibleForTierRoll: false, applyTierBonus: false);
                     }
                 }
-            }
 
-            if (statTracker != null)
-            {
-                if (abandon)
-                    statTracker.AbandonRun();
-                else if (runEndedByDeath)
-                    statTracker.EndRun(true, runEndedByReaper);
+                if (statTracker != null)
+                {
+                    if (abandon)
+                        statTracker.AbandonRun();
+                    else if (runEndedByDeath)
+                        statTracker.EndRun(true, runEndedByReaper);
+                    else
+                        statTracker.EndRun(false);
+                }
+
+                // Returning to town cooldown policy:
+                // - If run ended by death/reap: clear buffs without cooldowns and clear existing cooldowns.
+                // - If retreat/abandon: start cooldowns for active buffs unless the run lasted at least the buff's cooldown.
+                if (runEndedByDeath)
+                {
+                    BuffManager.Instance?.ClearActiveBuffs();
+                    BuffManager.Instance?.ResetCooldowns();
+                }
                 else
-                    statTracker.EndRun(false);
-            }
+                {
+                    var duration = statTracker != null ? statTracker.LastRunDuration : 0f;
+                    // Use special retreat clearing that compares run duration to each buff's cooldown
+                    BuffManager.Instance?.ClearActiveBuffsForRetreat(duration);
+                    // Also clear any existing cooldowns that would have fully elapsed during this run
+                    BuffManager.Instance?.ClearCooldownsIfRunLongerThan(duration);
+                }
 
-            // Returning to town cooldown policy:
-            // - If run ended by death/reap: clear buffs without cooldowns and clear existing cooldowns.
-            // - If retreat/abandon: start cooldowns for active buffs unless the run lasted at least the buff's cooldown.
-            if (runEndedByDeath)
-            {
-                BuffManager.Instance?.ClearActiveBuffs();
-                BuffManager.Instance?.ResetCooldowns();
-            }
-            else
-            {
-                var duration = statTracker != null ? statTracker.LastRunDuration : 0f;
-                // Use special retreat clearing that compares run duration to each buff's cooldown
-                BuffManager.Instance?.ClearActiveBuffsForRetreat(duration);
-                // Also clear any existing cooldowns that would have fully elapsed during this run
-                BuffManager.Instance?.ClearCooldownsIfRunLongerThan(duration);
-            }
+                yield return StartCoroutine(CleanupMapRoutine());
+                if (tavernCamera != null)
+                {
+                    tavernCamera.gameObject.SetActive(true);
+                    cloudSpawner?.SetAllowClouds(true);
+                    cloudSpawner?.ResetClouds(true);
+                }
 
-            yield return StartCoroutine(CleanupMapRoutine());
-            if (tavernCamera != null)
-            {
-                tavernCamera.gameObject.SetActive(true);
-                cloudSpawner?.SetAllowClouds(true);
-                cloudSpawner?.ResetClouds(true);
-            }
+                IsInTown = true;
+                if (Blindsided.Oracle.oracle?.saveData != null && runEndedByReaper) Blindsided.Oracle.oracle.saveData.General.FirstReapTownVisited = true;
+                tavernUI?.SetActive(true);
+                mapUI?.SetActive(false);
+                savesObject?.SetActive(true);
+                savesHiddenObject?.SetActive(false);
+                if (runCalebUI != null)
+                    runCalebUI.gameObject.SetActive(false);
+                if (CurrentGenerationConfig && CurrentGenerationConfig.name == "River" && Blindsided.Oracle.oracle?.saveData != null)
+                    Blindsided.Oracle.oracle.saveData.General.ReturnedFromRiver = true;
+                if (CurrentGenerationConfig && CurrentGenerationConfig.name == "Farmlands" && Blindsided.Oracle.oracle?.saveData != null)
+                    Blindsided.Oracle.oracle.saveData.General.ReturnedFromFarmlands = true;
+                runResourceTracker?.ShowWindow();
+                resetRunResourceTracker = true;
+                npcObjectStateController?.UpdateObjectStates();
+                locationObjectStateController?.UpdateObjectStates();
+                var audioManager = AudioManager.Instance;
+                if (audioManager != null)
+                    audioManager.PlayMusic(AudioManager.MusicTrack.Main, fadeDuration);
+    #if !DISABLESTEAMWORKS
+                RichPresenceManager.Instance?.SetInTown();
+    #endif
+                Log("Returned to tavern", TELogCategory.Run, this);
 
-            IsInTown = true;
-            if (Blindsided.Oracle.oracle?.saveData != null && runEndedByReaper) Blindsided.Oracle.oracle.saveData.General.FirstReapTownVisited = true;
-            tavernUI?.SetActive(true);
-            mapUI?.SetActive(false);
-            savesObject?.SetActive(true);
-            savesHiddenObject?.SetActive(false);
-            if (runCalebUI != null)
-                runCalebUI.gameObject.SetActive(false);
-            if (CurrentGenerationConfig && CurrentGenerationConfig.name == "River" && Blindsided.Oracle.oracle?.saveData != null)
-                Blindsided.Oracle.oracle.saveData.General.ReturnedFromRiver = true;
-            if (CurrentGenerationConfig && CurrentGenerationConfig.name == "Farmlands" && Blindsided.Oracle.oracle?.saveData != null)
-                Blindsided.Oracle.oracle.saveData.General.ReturnedFromFarmlands = true;
-            runResourceTracker?.ShowWindow();
-            resetRunResourceTracker = true;
-            npcObjectStateController?.UpdateObjectStates();
-            locationObjectStateController?.UpdateObjectStates();
-            var audioManager = AudioManager.Instance;
-            if (audioManager != null)
-                audioManager.PlayMusic(AudioManager.MusicTrack.Main, fadeDuration);
-#if !DISABLESTEAMWORKS
-            RichPresenceManager.Instance?.SetInTown();
-#endif
-            Log("Returned to tavern", TELogCategory.Run, this);
+                // If we abandoned due to stall, auto-start a fresh run with the same config
+                if (pendingAutoRestartFromStall && CurrentGenerationConfig != null)
+                {
+                    pendingAutoRestartFromStall = false;
+                    StartRun();
+                }
 
-            // If we abandoned due to stall, auto-start a fresh run with the same config
-            if (pendingAutoRestartFromStall && CurrentGenerationConfig != null)
-            {
-                pendingAutoRestartFromStall = false;
-                StartRun();
+                // Ensure resource/inventory state is immediately reflected in save data after a run ends.
+                // This synchronizes the in-memory save snapshot (oracle.saveData) with the live
+                // ResourceManager amounts so switching slots or inspecting the save right now shows
+                // the correct values instead of interim zeros.
+                try
+                {
+                    EventHandler.SaveData();
+                    Blindsided.Oracle.oracle?.RequestCheckpointSave();
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"Immediate save after return failed: {ex}");
+                }
             }
-
-            // Ensure resource/inventory state is immediately reflected in save data after a run ends.
-            // This synchronizes the in-memory save snapshot (oracle.saveData) with the live
-            // ResourceManager amounts so switching slots or inspecting the save right now shows
-            // the correct values instead of interim zeros.
-            try
-            {
-                EventHandler.SaveData();
-                Blindsided.Oracle.oracle?.RequestCheckpointSave();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Immediate save after return failed: {ex}");
-            }
+            finally { returningToTown = false; }
         }
 
         private List<KeyValuePair<Resource, double>> CollectBaseRunDrops()

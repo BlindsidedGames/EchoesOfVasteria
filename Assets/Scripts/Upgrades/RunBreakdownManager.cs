@@ -338,12 +338,11 @@ namespace TimelessEchoes.Upgrades
             if (statTracker == null)
                 return 0d;
 
-            var kills = statTracker.CurrentRunKills;
             var gameManager = GameManager.Instance;
             if (gameManager == null)
                 return 0d;
 
-            return kills * gameManager.BonusPercentPerKill * 0.01d;
+            return gameManager.ResourceBonusPercent * 0.01d;
         }
 
         private void TryCloseOnRightClick()

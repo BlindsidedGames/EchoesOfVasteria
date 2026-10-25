@@ -154,7 +154,6 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var role = size >= 8 ? ToolkitControls.TextRole.Heading : size >= 7 ? ToolkitControls.TextRole.Subheading : size >= 6 ? ToolkitControls.TextRole.Body : ToolkitControls.TextRole.Caption;
             var label = ToolkitControls.Text(value, role); label.AddToClassList("eov-stat-text");
-            if (size < 5) label.style.fontSize = Mathf.Max(7,size);
             parent.Add(label); return label;
         }
         private Button Action(VisualElement parent, string name, string title, Action clicked)

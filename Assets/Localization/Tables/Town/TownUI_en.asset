@@ -211,7 +211,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003809
-    m_Localized: MoveSpeed
+    m_Localized: Move Speed
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003808
@@ -339,7 +339,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003777
-    m_Localized: Max Iterations
+    m_Localized: Crafting limit reached
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003776
@@ -851,7 +851,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003661
-    m_Localized: Discoveries are shared across all maps. These are configured drop pools; availability depends on progression.
+    m_Localized: Discoveries are shared across all maps. This list shows possible drops; availability depends on your progress.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003660
@@ -3532,14 +3532,6 @@ MonoBehaviour:
     m_Localized: 'Technishift '
     m_Metadata:
       m_Items: []
-  - m_Id: 87000000000002009
-    m_Localized: SFX
-    m_Metadata:
-      m_Items: []
-  - m_Id: 87000000000002010
-    m_Localized: dqssq
-    m_Metadata:
-      m_Items: []
   - m_Id: 87000000000002011
     m_Localized: Primary Artist | Check out their Itch.io!
     m_Metadata:
@@ -3914,7 +3906,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002099
-    m_Localized: "\u041F\u0435\u0440\u0435\u0432\u043E\u0434 \u043D\u0430\u0445\u043E\u0434\u0438\u0442\u0441\u044F \u0432 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0435 \u0440\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u043A\u0438. \u0415\u0441\u043B\u0438 \u0432\u044B \u0440\u0435\u0448\u0438\u0442\u0435 \u0435\u0433\u043E \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C, \u0443\u0447\u0442\u0438\u0442\u0435, \u0447\u0442\u043E \u0447\u0430\u0441\u0442\u044C \u0442\u0435\u043A\u0441\u0442\u0430 \u043C\u043E\u0436\u0435\u0442 \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0442\u044C\u0441\u044F \u043D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u043E, \u0438 \u043C\u043D\u043E\u0433\u043E\u0435 \u043F\u043E-\u043F\u0440\u0435\u0436\u043D\u0435\u043C\u0443 \u0431\u0443\u0434\u0435\u0442 \u043D\u0430 \u0410\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u043C"
+    m_Localized: Translation is still in progress. Some text may display incorrectly or remain in English.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000002100
@@ -4218,7 +4210,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 164290767910211584
-    m_Localized: Open <link="help:statistics/graphs"><u><color=#EFB889>Statistics (the bar-chart icon), then Graphs</color></u></link> to see your recent runs.
+    m_Localized: "Open <link=\"help:statistics/graphs\"><u><color=#EFB889><sprite=\"NavigationInlineSprites\" name=\"statistics\" tint=1> \u2192 Graphs</color></u></link> to see your recent runs."
     m_Metadata:
       m_Items: []
   - m_Id: 164297665183092736
@@ -4538,7 +4530,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166027245250023433
-    m_Localized: Open <link="help:statistics/tasks"><u><color=#EFB889>Statistics (the bar-chart icon), then Tasks</color></u></link> to choose which tasks appear more often.
+    m_Localized: "Open <link=\"help:statistics/tasks\"><u><color=#EFB889><sprite=\"NavigationInlineSprites\" name=\"statistics\" tint=1> \u2192 Tasks</color></u></link> to choose which tasks appear more often."
     m_Metadata:
       m_Items: []
   - m_Id: 166027245250023432
@@ -4682,7 +4674,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166127623698255878
-    m_Localized: "At the Forge, smelt materials into cores and use cores to craft equipment. You can also salvage unwanted items. There\u2019s no need to craft, equip or spend anything during this refresher."
+    m_Localized: At the Forge, smelt materials into ingots and combine them with cores to craft equipment. You can also salvage unwanted gear. You do not need to craft, equip or spend anything during this refresher.
     m_Metadata:
       m_Items: []
   - m_Id: 166127623698255879
@@ -5537,6 +5529,154 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 166527630796525581
     m_Localized: Health regen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525582
+    m_Localized: Mix All
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525583
+    m_Localized: Never stop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525584
+    m_Localized: Keep crafting and salvaging until stopped or out of materials, including upgrades and Vastium.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525585
+    m_Localized: 'Time: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525586
+    m_Localized: 'Kill bonus: +{0}{1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525587
+    m_Localized: '{0} / min'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525588
+    m_Localized: 'On return: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525589
+    m_Localized: "Dist/m: {0:N0} \xB7 DPS: {1:N0} \xB7 Kills/m: {2:N0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525590
+    m_Localized: Barkley
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525591
+    m_Localized: Ivan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525592
+    m_Localized: Gill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525593
+    m_Localized: Flora and Tillman
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525594
+    m_Localized: The Old Timer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525595
+    m_Localized: Eva
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525596
+    m_Localized: Orin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 166527630796525597
+    m_Localized: Carl
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167113903412219904
+    m_Localized: Mix All {0} {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167116493634015232
+    m_Localized: "Resources \xD7{0:0.##}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167116493675958272
+    m_Localized: "Retreat queued \xB7 \xD7{0:0.##}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167116493675958273
+    m_Localized: "Run breakdown\n<size=75%>Resources \xD7{0:0.##}</size>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167116493675958274
+    m_Localized: "Kills: {0:N0} \xB7 Resources \xD7{1:0.##}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167117468855832576
+    m_Localized: 'Kills: {0:N0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167121096459030528
+    m_Localized: Kills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167121096517750784
+    m_Localized: Bonus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167121096517750785
+    m_Localized: Time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167121096517750786
+    m_Localized: Steps
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167121096517750787
+    m_Localized: Deaths
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167121096517750788
+    m_Localized: Reaps
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167121096517750789
+    m_Localized: Distance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167134370185482240
+    m_Localized: Total
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167145578645032960
+    m_Localized: Mix {0} {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167146414368493568
+    m_Localized: Tastes / s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167146414414630912
+    m_Localized: / Taste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167146414414630913
+    m_Localized: "Available: {0} \xB7"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167146414414630914
+    m_Localized: '{0} / unit'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167153080262594560
+    m_Localized: Taste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167153080312926208
+    m_Localized: Pause
     m_Metadata:
       m_Items: []
   references:

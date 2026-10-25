@@ -48,7 +48,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private Label Text(VisualElement parent, string id, float size)
         {
-            var label = new Label { name = id, pickingMode = PickingMode.Ignore }; label.AddToClassList("eov-options-label"); label.style.fontSize = size;
+            var label = new Label { name = id, pickingMode = PickingMode.Ignore }; label.AddToClassList("eov-options-label"); ToolkitControls.SetTextSize(label, size);
             parent.Add(label); bindings.Add(new ToolkitTextBinding(label, definition.Text(id))); return label;
         }
         private Button Button(VisualElement parent, string id, Action action, float height, bool label = true)
@@ -149,7 +149,7 @@ namespace TimelessEchoes.UI.Toolkit
                     Hide(); FindAnyObjectByType<LocalizationManager>()?.SelectLocale(code);
                 }, 24, false);
                 var label = new Label(language.Item2) { pickingMode = PickingMode.Ignore };
-                label.AddToClassList("eov-options-label"); label.style.fontSize = 7;
+                label.AddToClassList("eov-options-label"); ToolkitControls.SetTextSize(label, 7);
                 label.style.unityTextAlign = TextAnchor.MiddleCenter;
                 button.Add(label); button.style.marginBottom = 4;
             }

@@ -98,7 +98,7 @@ namespace TimelessEchoes.Tasks
         private void CompleteWork(HeroBase hero)
         {
             var farm = TimelessEchoes.Farming.FarmService.Instance;
-            var credit = farm?.StageCompletedTask(farmCredit, taskData, hero);
+            var credit = farm?.StageCompletedTask(farmCredit, taskData);
             farmCredit = credit;
             try
             {

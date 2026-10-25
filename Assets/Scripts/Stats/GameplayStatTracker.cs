@@ -128,6 +128,8 @@ namespace TimelessEchoes.Stats
 
         // Aggregates across multiple runs until returning to town
         public int SessionDeaths { get; private set; }
+        public int SessionKills { get; private set; }
+        public double SessionDamageDealt { get; private set; }
         public int SessionReaps { get; private set; }
         public float SessionSteps { get; private set; }
         public float SessionDuration { get; private set; }
@@ -395,6 +397,7 @@ namespace TimelessEchoes.Stats
             if (RunInProgress)
             {
                 CurrentRunKills++;
+                SessionKills++;
                 var map = GetOrCreateCurrentMapStats();
                 if (map != null)
                     map.Kills++;
@@ -421,6 +424,7 @@ namespace TimelessEchoes.Stats
                 if (RunInProgress)
                 {
                     currentRunDamageDealt += amount;
+                    SessionDamageDealt += amount;
                     var map = GetOrCreateCurrentMapStats();
                     if (map != null)
                         map.DamageDealtDouble += amount;
@@ -708,6 +712,8 @@ namespace TimelessEchoes.Stats
         public void BeginSession()
         {
             SessionDeaths = 0;
+            SessionKills = 0;
+            SessionDamageDealt = 0;
             SessionReaps = 0;
             SessionSteps = 0f;
             SessionDuration = 0f;

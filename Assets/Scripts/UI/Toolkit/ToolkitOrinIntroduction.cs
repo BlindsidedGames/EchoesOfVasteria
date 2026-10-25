@@ -33,7 +33,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (!QuestUtils.QuestCompleted(firstQuest))
             {
                 var meeting = Instantiate(meetingPrefab).GetComponent<ToolkitMeetingScreen>();
-                meeting.Init(portrait, lines, () => FindAnyObjectByType<ToolkitNavigationScreen>()?.HighlightQuests(), lineKeys);
+                meeting.Init(portrait, lines, () => FindAnyObjectByType<ToolkitNavigationScreen>()?.HighlightQuests(), lineKeys, npcId: "Orin");
                 meeting.BeginDialogue();
                 while (meeting) yield return null;
             }
@@ -76,12 +76,12 @@ namespace TimelessEchoes.UI.Toolkit
                 { yield return null; continue; }
                 if ((!gm || gm.IsInTown) && BuffIntroductionGuidance.Eligible)
                 {
-                    yield return Explain("BuffIntroduction", "You can now summon an Echo to help on adventures. Choose one to gather resources or fight alongside you.");
+                    yield return Explain("BuffIntroduction", "You can now summon an Echo to help on adventures. Choose one to gather resources or fight alongside you.", "buffs");
                     data.General.BuffTutorialStage = 1;
                     Blindsided.EventHandler.SaveData();
                 }
                 else if (gm && gm.FirstReapReturnPending && !Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Contains("FirstReapIntroduction"))
-                    yield return Explain("FirstReapIntroduction", "Carl has ended this run. You keep your loot and skill progress. Return to town to turn in your quests.");
+                    yield return Explain("FirstReapIntroduction", "Carl has ended this run. You keep your loot and skill progress. Return to town to turn in your quests.", "return-town");
                 else if ((!gm || gm.IsInTown) && data.General.ReturnedFromFarmlands && QuestUtils.QuestCompleted("The names Gill") && data.General.InventoryTutorialStage == 0)
                 {
                     if (!Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Contains("InventoryIntroduction"))
@@ -94,20 +94,20 @@ namespace TimelessEchoes.UI.Toolkit
                     yield return hubIntroduction.ShowAndWait(windows.transform);
                 else if ((!gm || gm.IsInTown) && data.General.MapStatisticsTutorialStage == 1)
                 {
-                    yield return Explain("MapStatisticsIntroduction", "Each map has different resources. Let’s see what you’ve found.");
+                    yield return Explain("MapStatisticsIntroduction", "Each map has different resources. Let’s see what you’ve found.", "statistics/general");
                     data.General.MapStatisticsTutorialStage = 2;
                 }
                 else if ((!gm || gm.IsInTown) && data.General.MapStatisticsTutorialStage == 8 &&
                          data.General.TaskBoostTutorialStage >= 2 && data.General.GraphsViewed)
                 {
-                    yield return Explain("OpeningTutorialComplete", "That’s the last opening lesson. Choose your next adventure when you’re ready.");
+                    yield return Explain("OpeningTutorialComplete", "That’s the last opening lesson. Choose your next adventure when you’re ready.", "adventure");
                     data.General.MapStatisticsTutorialStage = 9;
                 }
                 else if ((!gm || gm.IsInTown) && GraphStatisticsGuidance.Eligible &&
                          !Gear.ForgeFirstLesson.Active && !MapStatisticsGuidance.Active && data.General.TaskBoostTutorialStage != 1 &&
                          !(gm && gm.IvanReturnPending))
                 {
-                    yield return Explain("GraphsIntroduction", "Open <link=\"help:statistics/graphs\"><u><color=#EFB889>Statistics (the bar-chart icon), then Graphs</color></u></link> to see your recent runs.");
+                    yield return Explain("GraphsIntroduction", "Open <link=\"help:statistics/graphs\"><u><color=#EFB889><sprite=\"NavigationInlineSprites\" name=\"statistics\" tint=1> → Graphs</color></u></link> to see your recent runs.");
                     if (!data.General.GraphsViewed) data.General.GraphsTutorialStage = 1;
                 }
                 else if ((!gm || gm.IsInTown) && data.General.HubTutorialStage >= 3 && data.General.TaskBoostTutorialStage == 0 &&
@@ -116,14 +116,14 @@ namespace TimelessEchoes.UI.Toolkit
                 {
                     nextBoostCheck = Time.unscaledTime + 1;
                     if (!TaskBoostGuidance.FindTask()) { yield return null; continue; }
-                    yield return Explain("TaskBoostIntroduction", "Open <link=\"help:statistics/tasks\"><u><color=#EFB889>Statistics (the bar-chart icon), then Tasks</color></u></link> to choose which tasks appear more often.");
+                    yield return Explain("TaskBoostIntroduction", "Open <link=\"help:statistics/tasks\"><u><color=#EFB889><sprite=\"NavigationInlineSprites\" name=\"statistics\" tint=1> → Tasks</color></u></link> to choose which tasks appear more often.");
                     data.General.TaskBoostTutorialStage = 1;
                 }
                 yield return null;
             }
         }
 
-        private IEnumerator Explain(string marker, string text)
+        private IEnumerator Explain(string marker, string text, string navigationRoute = null)
         {
             var meeting = Instantiate(meetingPrefab).GetComponent<ToolkitMeetingScreen>();
             Blindsided.SaveData.StaticReferences.ActiveNpcMeetings.Add(marker);
@@ -131,6 +131,7 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 meeting.Init(null, new[] { text }, () =>
                     Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Add(marker), new[] { "intro." + marker });
+                meeting.SetNavigationShortcut(navigationRoute);
                 meeting.BeginDialogue();
                 while (meeting) yield return null;
             }

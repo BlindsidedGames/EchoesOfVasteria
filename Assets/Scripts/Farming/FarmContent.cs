@@ -42,14 +42,25 @@ namespace TimelessEchoes.Farming
         public FarmRecipe Recipe(string id) => recipes?.FirstOrDefault(r => r != null && r.id == id);
         public FarmBuild Build(string id) => builds?.FirstOrDefault(b => b != null && b.questId == id);
         // Crop progression tiers, not resource rarity. Packs themselves never tier up.
-        public float SeedDropChance(FarmRecipe recipe)
+        public float SeedDropChance(FarmRecipe recipe) => recipe?.orchard == false ? TierDropChance(recipe, seedChance) : 0;
+
+        public float BonusDropChance(Resource resource, float fallback)
         {
-            if (recipe == null || recipe.orchard || !recipe.source || recipes == null || !recipes.Contains(recipe)) return 0;
-            var rank = recipes.Count(candidate => candidate != null && !candidate.orchard && candidate.source &&
+            var recipe = recipes?.FirstOrDefault(candidate => candidate != null && candidate.orchard && candidate.paidInput == resource);
+            // Existing sapling bonus entries retain their legacy chance as fallback data.
+            // Fields owns their live curve; unrelated bonuses retain their authored chance.
+            return recipe == null ? fallback : TierDropChance(recipe, Mathf.Clamp01(seedChance) * Mathf.Clamp01(seedChancePerCropTier));
+        }
+        private float TierDropChance(FarmRecipe recipe, float baseChance)
+        {
+            if (recipe == null || !recipe.source || recipes == null || !recipes.Contains(recipe)) return 0;
+            var timber = recipe.secondaryOutput != null;
+            var rank = recipes.Count(candidate => candidate != null && candidate.source && candidate.orchard == recipe.orchard &&
+                (!recipe.orchard || (candidate.secondaryOutput != null) == timber) &&
                 (candidate.source.requiredSkillLevel < recipe.source.requiredSkillLevel ||
                  candidate.source.requiredSkillLevel == recipe.source.requiredSkillLevel &&
                  string.CompareOrdinal(candidate.id, recipe.id) < 0));
-            return Mathf.Clamp01(seedChance) * Mathf.Pow(Mathf.Clamp01(seedChancePerCropTier), rank);
+            return Mathf.Clamp01(baseChance) * Mathf.Pow(Mathf.Clamp01(seedChancePerCropTier), rank);
         }
         public static int SkillLevel(GameData data, string key)
         {

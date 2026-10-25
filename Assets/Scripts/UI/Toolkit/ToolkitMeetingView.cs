@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,6 +12,8 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly IReadOnlyList<string> lines, lineKeys;
         private readonly Action finished;
         private readonly Label dialogue;
+        private readonly Label speaker;
+        private string speakerKey, speakerFallback;
         private readonly VisualElement dialogueFrame;
         private readonly ToolkitTextBinding meet, next, close;
         private readonly Label meetLabel, nextLabel, closeLabel;
@@ -19,6 +22,8 @@ namespace TimelessEchoes.UI.Toolkit
         private bool? portraitLayout;
         private int index = -1;
         private bool completed, disposed;
+        private string navigationShortcut;
+        private static readonly Regex HelpRoutes = new("<link\\s*=\\s*[\"']?help:([^\"'\\s>]+)", RegexOptions.IgnoreCase);
         private bool hasTextMeasurement;
         private float measuredTextHeight;
         private (string text, float width, float size, Font font, FontDefinition definition,
@@ -43,6 +48,27 @@ namespace TimelessEchoes.UI.Toolkit
             skipButton.name = "meeting-skip";
         }
         public bool AwaitingMeet => index < 0;
+
+        public void SetNavigationShortcut(string route) => navigationShortcut = route;
+
+        public string FindNavigationRoute(Func<string, bool> matches)
+        {
+            if (disposed || completed || index < 0 || index != lines.Count - 1 ||
+                BeforeAdvance != null || AdvanceButton?.enabledInHierarchy != true) return null;
+            if (!string.IsNullOrEmpty(navigationShortcut) && matches(navigationShortcut)) return navigationShortcut;
+            foreach (Match link in HelpRoutes.Matches(dialogue.text ?? string.Empty))
+                if (matches(link.Groups[1].Value)) return link.Groups[1].Value;
+            return null;
+        }
+
+        public bool FollowNavigation(string route)
+        {
+            var navigation = UnityEngine.Object.FindAnyObjectByType<ToolkitNavigationScreen>();
+            if (!navigation || FindNavigationRoute(candidate => candidate == route) == null) return false;
+            Advance();
+            navigation.FollowHelpAfterDialogue(route);
+            return true;
+        }
 
         public ToolkitMeetingView(ToolkitTheme theme, VisualTreeAsset template, Sprite portrait,
             ToolkitMeetingDefinition definition, IReadOnlyList<string> lines, Action finished, IReadOnlyList<string> localizedLineKeys = null, bool continueAfterDialogue = false)
@@ -73,12 +99,10 @@ namespace TimelessEchoes.UI.Toolkit
             dialogueFrame.AddToClassList("surface");
 
             dialogue = Root.Q<Label>("dialogue");
-            ToolkitHelpLinks.Attach(dialogue, route =>
-            {
-                var navigation = UnityEngine.Object.FindAnyObjectByType<ToolkitNavigationScreen>();
-                if (!navigation || index != lines.Count - 1 || !AdvanceButton.enabledSelf) return false;
-                Advance(); navigation.FollowHelpAfterDialogue(route); return true;
-            });
+            speaker = new Label { name = "meeting-npc-name", pickingMode = PickingMode.Ignore };
+            speaker.AddToClassList("meeting-npc-name");
+            dialogue.parent.Insert(0, speaker);
+            ToolkitHelpLinks.Attach(dialogue, FollowNavigation);
             AdvanceButton = Root.Q<Button>("advance");
             if (!portrait) AdvanceButton.style.top = 0;
             AdvanceButton.AddToClassList("button");
@@ -100,6 +124,20 @@ namespace TimelessEchoes.UI.Toolkit
             dialogueScroll.verticalScrollerVisibility = ScrollerVisibility.Auto;
             ToolkitGameplay.StyleScroll(dialogueScroll);
             ToolkitLocalization.Changed += Refresh;
+            Refresh();
+        }
+
+        public void SetSpeaker(string npcId)
+        {
+            var identity = npcId switch
+            {
+                "Barkley1" => "Barkley", "Ivan1" => "Ivan", "Gill1" => "Gill",
+                "Farmers1" => "Farmers", "OldTimer1" => "OldTimer",
+                "Witch1" or "EvaWateringCanIntroduction" => "Eva",
+                "Orin" or "OrinHubIntroduction" => "Orin", "Reaper1" => "Carl", _ => null
+            };
+            speakerKey = identity == null ? null : "npc.name." + identity;
+            speakerFallback = identity switch { "Farmers" => "Flora and Tillman", "OldTimer" => "The Old Timer", _ => identity };
             Refresh();
         }
 
@@ -148,14 +186,17 @@ namespace TimelessEchoes.UI.Toolkit
             if (AwaitingMeet)
             {
                 Root.style.height = height;
-                Root.style.top = safe.yMax - ToolkitResponsiveLayout.WindowBottom - height - 8 - navigationClearance;
+                // Expanded play puts health and abilities at the bottom of the map.
+                // Keep an unstarted encounter above that HUD instead of covering it.
+                Root.style.top = ToolkitResponsiveLayout.FocusView ? safe.yMin + 12 :
+                    safe.yMax - ToolkitResponsiveLayout.WindowBottom - height - 8 - navigationClearance;
                 return;
             }
             // Measure after layout so localization and the actual available text width
             // determine the card height. Long entries scroll above a fixed action.
             var width = dialogue.resolvedStyle.width;
             if (!float.IsFinite(width) || width <= 0) return;
-            var textHeight = MeasureDialogueHeight(width);
+            var textHeight = MeasureDialogueHeight(width) + (speaker.resolvedStyle.display == DisplayStyle.None ? 0 : speaker.resolvedStyle.height + 4);
             var minimum = noPortrait ? 76 : 96;
             height = Mathf.RoundToInt(Mathf.Clamp(Mathf.Ceil(textHeight) + (guidedActions != null ? 104 : 64), minimum, availableHeight));
             Root.style.height = height;
@@ -203,7 +244,10 @@ namespace TimelessEchoes.UI.Toolkit
             Root.EnableInClassList("meeting-awaiting", !started);
             if (dialogueScroll != null) dialogueScroll.scrollOffset = Vector2.zero;
             // Reserve the dialogue space before meeting so the action stays at bottom-right.
-            dialogueFrame.style.display = started || portraitLayout == true ? DisplayStyle.Flex : DisplayStyle.None;
+            speaker.text = speakerKey == null ? "" : ToolkitLocalization.Text(speakerKey, speakerFallback);
+            speaker.style.display = string.IsNullOrEmpty(speaker.text) ? DisplayStyle.None : DisplayStyle.Flex;
+            dialogueFrame.style.display = started || portraitLayout == true || !string.IsNullOrEmpty(speaker.text) ? DisplayStyle.Flex : DisplayStyle.None;
+            dialogue.style.display = started ? DisplayStyle.Flex : DisplayStyle.None;
             var text = started && index < lines.Count ? (index < lineKeys.Count && !string.IsNullOrEmpty(lineKeys[index])
                 ? ToolkitLocalization.Text(lineKeys[index], lines[index]) : lines[index]) : string.Empty;
             dialogue.text = ToolkitResponsiveLayout.IsPortrait ? text : "<b><smallcaps>" + text + "</smallcaps></b>";

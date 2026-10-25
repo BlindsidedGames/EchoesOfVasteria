@@ -53,11 +53,11 @@ namespace TimelessEchoes.Upgrades
         }
 
         /// <summary>
-        ///     Clears all recorded resource amounts. Call this when a run begins.
+        ///     Clears all recorded resource amounts when leaving town for a new outing.
         /// </summary>
         public void BeginRun()
         {
-            nativeView?.HideDetails();
+            nativeView?.BeginOuting();
             amounts.Clear();
             bonusAmounts.Clear();
             ClearSlots();
@@ -193,15 +193,15 @@ namespace TimelessEchoes.Upgrades
             var runs = tracker.RecentRuns;
             var last = runs != null && runs.Count > 0 ? runs[runs.Count - 1] : null;
             var retreated = last != null && !last.Died && !last.Reaped && !last.Abandoned;
-            var perKill = TimelessEchoes.GameManager.Instance ? TimelessEchoes.GameManager.Instance.BonusPercentPerKill : 2f;
+            var manager = TimelessEchoes.GameManager.Instance;
             return new RunSummaryData
             {
                 Map = last?.MapType ?? TimelessEchoes.GameManager.CurrentGenerationConfig?.name,
                 Duration = Mathf.Max(0, tracker.SessionDuration), Steps = Mathf.Max(0, tracker.SessionSteps),
                 Deaths = tracker.SessionDeaths, Reaps = tracker.SessionReaps,
                 StartingDistance = startingReapDistance, Distance = tracker.MaxRunDistance,
-                Retreated = retreated, Kills = last?.EnemiesKilled ?? 0,
-                RetreatBonusPercent = retreated ? last.EnemiesKilled * perKill : 0
+                Retreated = retreated, Kills = tracker.SessionKills,
+                RetreatBonusPercent = last?.Abandoned == true ? 0 : manager ? manager.ResourceBonusPercent : Mathf.Min(tracker.SessionKills * 2f, 900f)
             };
         }
 
@@ -231,22 +231,8 @@ namespace TimelessEchoes.Upgrades
                 lines.Add(ToolkitLocalization.Text("run.summary.reaping-distance-text", "Reaping Distance: {0} → {1}" , oldDist, newDist));
             }
 
-            // Line 3 (optional): Retreated with K kills for P% bonus (only if last run retreated)
-            var runs = tracker.RecentRuns;
-            if (runs != null && runs.Count > 0)
-            {
-                var last = runs[runs.Count - 1];
-                bool retreated = !last.Died && !last.Reaped && !last.Abandoned;
-                if (retreated)
-                {
-                    int kills = Mathf.FloorToInt((float)last.EnemiesKilled);
-                    float perKill = TimelessEchoes.GameManager.Instance != null
-                        ? TimelessEchoes.GameManager.Instance.BonusPercentPerKill
-                        : 2f;
-                    float bonusPercent = kills * perKill;
-                    lines.Add(ToolkitLocalization.Text("run.summary.retreat", "Retreated with {0} kills for {1:0}% bonus" , kills, bonusPercent));
-                }
-            }
+            var summary = BuildSummary();
+            lines.Add(ToolkitLocalization.Text("run.summary.kill-multiplier", "Kills: {0:N0} · Resources ×{1:0.##}", summary.Kills, 1f + summary.RetreatBonusPercent * .01f));
 
             return string.Join("\n", lines);
         }
