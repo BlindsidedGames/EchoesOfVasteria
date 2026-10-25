@@ -19,6 +19,8 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly ResourceManager resources;
         private readonly VisualElement content, tooltip;
         private readonly Label tooltipText;
+        private readonly System.Action<string> openDetails;
+        private static bool UsesDetailsPopup => Application.isMobilePlatform || ToolkitResponsiveLayout.IsPortrait;
         private readonly Dictionary<string, Resource> resourceById = new();
         private readonly Dictionary<string, BuffRecipe> buffById = new();
         private readonly Dictionary<string, InfinityCauldronStatSO> infinityById = new();
@@ -41,10 +43,12 @@ namespace TimelessEchoes.UI.Toolkit
             public readonly List<string> ids = new();
         }
         public ToolkitCauldronCollections(ToolkitCauldronDefinition definition, CauldronManager manager,
-            ResourceManager resources, VisualElement content, VisualElement tooltip,VisualElement tabParent)
+            ResourceManager resources, VisualElement content, VisualElement tooltip,VisualElement tabParent,
+            System.Action<string> openDetails)
         {
             this.definition = definition; this.manager = manager; this.resources = resources;
             this.content = content; this.tooltip = tooltip;
+            this.openDetails = openDetails;
             tooltipText = new Label { name = "collection-tooltip-text", pickingMode = PickingMode.Ignore };
             tooltipText.AddToClassList("eov-cauldron-tooltip-text"); tooltip.Add(tooltipText);
             tabs=E(tabParent,"row tabs");tabParent.Insert(0,tabs);
@@ -101,10 +105,19 @@ namespace TimelessEchoes.UI.Toolkit
         private void AddCard(Section section, string id, Sprite sprite)
         {
             var card = new Card { id = id }; cards[id] = card; section.ids.Add(id);
-            var button=ToolkitGameplay.B(section.background,"",()=>{if(tooltipId==id)HideTooltip();else ShowTooltip(id);},"card");button.name="card-"+id;card.border=button;card.background=button;ToolkitGameplay.Icon(button,sprite,18);
+            var button=ToolkitGameplay.B(section.background,"",()=>
+            {
+                HideTooltip();
+                openDetails(id);
+            },"card");button.name="card-"+id;card.border=button;card.background=button;ToolkitGameplay.Icon(button,sprite,18);
             string title=resourceById.TryGetValue(id,out var resource)?ToolkitLocalization.Name(resource):buffById.TryGetValue(id,out var buff)?buff.GetDisplayName():infinityById.TryGetValue(id,out var infinity)?infinity.DisplayName:id.Substring(4);L(button,title,"small strong card-name");card.count=L(button,"","small muted");var progress=E(button,"row card-progress-row");progress.Add(new ToolkitRarityStar());card.fill=ToolkitGameplay.Bar(progress,"collection-progress");
             if(infinityById.ContainsKey(id)){progress.style.display=DisplayStyle.None;card.effect=L(button,"","small strong");}
-            button.RegisterCallback<PointerEnterEvent>(e=>{if(e.pointerType=="mouse")ShowTooltip(id);});button.RegisterCallback<PointerLeaveEvent>(e=>{if(e.pointerType=="mouse"&&tooltipId==id)HideTooltip();});button.RegisterCallback<FocusInEvent>(_=>ShowTooltip(id));button.RegisterCallback<FocusOutEvent>(_=>HideTooltip());
+            var scroll = content.GetFirstAncestorOfType<ScrollView>();
+            if (scroll != null) ToolkitDragScroll.EnableFrom(scroll, button);
+            button.RegisterCallback<PointerEnterEvent>(e=>{if(!UsesDetailsPopup&&e.pointerType=="mouse")ShowTooltip(id);});
+            button.RegisterCallback<PointerLeaveEvent>(e=>{if(!UsesDetailsPopup&&e.pointerType=="mouse"&&tooltipId==id)HideTooltip();});
+            button.RegisterCallback<FocusInEvent>(_=>{if(!UsesDetailsPopup)ShowTooltip(id);});
+            button.RegisterCallback<FocusOutEvent>(_=>{if(!UsesDetailsPopup)HideTooltip();});
         }
         private Sprite Tier(Sprite[] sprites, int tier) => sprites.Length == 0 ? null : sprites[Mathf.Clamp(tier - 1, 0, sprites.Length - 1)];
         private int CardTier(string id) => id.StartsWith("INF:") ? 7 : Mathf.Max(1, id.StartsWith("RES:") ? manager.GetResourceTier(id.Substring(4)) : manager.GetBuffTier(id.Substring(5)));
@@ -155,10 +168,13 @@ namespace TimelessEchoes.UI.Toolkit
         public void ShowTooltip(string id)
         {
             tooltipId = id;
-            tooltipText.text = CauldronCollectionPresentation.BuildTooltipText(id, manager, resourceById, buffById, GroupTier, out var tier, out var infinity);
+            tooltipText.text = GetDetailsText(id);
             tooltipText.style.whiteSpace=WhiteSpace.Normal;
             tooltip.style.display = DisplayStyle.Flex;
         }
+        public string GetDetailsText(string id) => CauldronCollectionPresentation.BuildTooltipText(
+            id, manager, resourceById, buffById, GroupTier, out _, out _);
+        public bool TryGetResource(string id, out Resource resource) => resourceById.TryGetValue(id, out resource);
         public void HideTooltip() { tooltipId = null; tooltip.style.display = DisplayStyle.None; }
     }
 }

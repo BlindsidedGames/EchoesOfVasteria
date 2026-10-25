@@ -344,7 +344,22 @@
 .gameplay.portrait.live-cauldron .card {min-height:82px;}
 .gameplay.portrait.live-cauldron .collection .tabs .tab {min-height:30px;font-size:var(--body);white-space:nowrap;}
 .gameplay.portrait.live-cauldron .collection-detail {left:8px;right:8px;bottom:48px;}
-.gameplay.portrait.live-cauldron .tasting-top {margin-bottom:8px;}
+.gameplay.portrait.live-cauldron .tasting-top {margin-bottom:12px;}
+.gameplay.portrait.live-cauldron .tasting-top > .tasting-eva {margin-bottom:12px;}
+.gameplay.portrait.live-cauldron .tasting-eva .small {font-size:var(--small);}
+.gameplay.portrait.live-cauldron .tasting-top > .tasting-footer {margin-bottom:12px;}
+.gameplay.portrait.live-cauldron .tasting-top .odds-heading {margin-bottom:0;}
+.gameplay.portrait.live-cauldron .odds-heading > Label {-unity-font-style:normal;color:var(--muted);}
+.gameplay.portrait.live-cauldron .tasting-overview {flex-direction:row;align-items:flex-end;margin-bottom:0;}
+.gameplay.portrait.live-cauldron .brew-summary {width:30%;flex-shrink:0;margin:0 12px 0 0;}
+.gameplay.portrait.live-cauldron .tasting-controls {flex-grow:1;min-width:0;}
+.gameplay.portrait.live-cauldron .tasting-actions .button {min-height:32px;margin-bottom:0;}
+.gameplay.portrait.live-cauldron .tasting-readouts {flex-direction:row;justify-content:space-between;flex-wrap:wrap;margin-top:6px;}
+.gameplay.portrait.live-cauldron .tasting-readouts .readout {flex-wrap:nowrap;justify-content:flex-start;margin-bottom:0;}
+.gameplay.portrait.live-cauldron .taste-rate-caption,
+.gameplay.portrait.live-cauldron .taste-cost-caption {font-size:var(--small);}
+.gameplay.portrait.live-cauldron .taste-rate-value,
+.gameplay.portrait.live-cauldron .taste-cost-value {margin-right:4px;-unity-font-style:bold;}
 .gameplay.portrait.live-cauldron #collection-scroll > .unity-scroll-view__content-and-vertical-scroll-container > .unity-scroll-view__content-viewport > .unity-scroll-view__content-container {padding-bottom:48px;}
 .gameplay.portrait .portrait-edge-scroll,
 .gameplay.portrait .portrait-edge-scroll > .unity-scroll-view__content-and-vertical-scroll-container {overflow:visible;}

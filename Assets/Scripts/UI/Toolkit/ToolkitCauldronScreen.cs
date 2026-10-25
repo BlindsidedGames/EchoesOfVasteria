@@ -25,7 +25,8 @@ namespace TimelessEchoes.UI.Toolkit
         private CauldronManager manager;
         private ResourceManager resources;
         private VisualElement root, xpFill, ingredientsColumn, tastingColumn, collectionColumn, modal;
-        private VisualElement workspace, tastingTop, tastingFooter, tastingInfo, tastingActions;
+        private VisualElement workspace, tastingTop, tastingFooter, tastingInfo, tastingControls, tastingActions;
+        private VisualElement tasteRateRow, tasteCostRow, tasteCostLabel;
         private ScrollView tastingScroll;
         private bool? tastingPortrait;
         private Label selection;private VisualElement mobileTabs;private string mobileTab="Ingredients";private bool wasNarrow;
@@ -44,6 +45,10 @@ namespace TimelessEchoes.UI.Toolkit
         private float nextMembershipCheck;
         private string membershipKey;
         private ToolkitCauldronCollections collections;
+        private string collectionDetailsId;
+        private Label collectionDetailsText;
+        private Label collectionCardLabel, collectionCardValue, collectionGroupLabel, collectionGroupValue;
+        private Label collectionTotalLabel, collectionTotalValue, collectionNextStep;
         private sealed class FoodSlot
         {
             public Button button;
@@ -65,7 +70,7 @@ namespace TimelessEchoes.UI.Toolkit
             root = new VisualElement { name = "cauldron" }; root.AddToClassList("eov-cauldron"); theme.Apply(root); document.rootVisualElement.Add(root);
             ToolkitGameplay.Apply(root,theme);root.AddToClassList("live-cauldron");mobileTabs=E(root,"row tabs");foreach(var tab in new[]{"Ingredients","Tasting","Collection"}){string chosen=tab;var button = ToolkitGameplay.B(mobileTabs,"",()=>{mobileTab=chosen;ApplyMobileTabs();},"tab"); button.userData=chosen; ToolkitLocalization.Bind(button, "cauldron.tab-"+chosen.ToLowerInvariant(), chosen);}workspace=E(root,"workspace row");ingredientsColumn=E(workspace,"column ingredients");tastingColumn=E(workspace,"column brewing");collectionColumn=E(workspace,"column collection");BuildMixing();BuildDrinking();
             var scroll=ToolkitGameplay.Scroll(collectionColumn,"collection-scroll");var tooltip=E(root,"surface collection-detail");tooltip.name="collection-tooltip";
-            collections=new ToolkitCauldronCollections(definition,manager,resources,scroll.contentContainer,tooltip,collectionColumn);collections.Rebuild();membershipKey=collections.MembershipKey();
+            collections=new ToolkitCauldronCollections(definition,manager,resources,scroll.contentContainer,tooltip,collectionColumn,ShowCollectionDetails);collections.Rebuild();membershipKey=collections.MembershipKey();
             resources.OnInventoryChanged += InventoryChanged;
             manager.OnStewChanged += Changed; manager.OnWeightsChanged += Changed;
             manager.OnCardGained += Gained;
@@ -102,7 +107,7 @@ namespace TimelessEchoes.UI.Toolkit
             addFood.name = "add-to-cauldron";
             mixPrefix = L(addFood, "", "mix-label mix-caption"); mixPrefix.pickingMode = PickingMode.Ignore;
             var result = E(addFood, "row mix-yield"); result.pickingMode = PickingMode.Ignore;
-            ToolkitGameplay.Icon(result, definition.stewIcon, 12).AddToClassList("mix-stew-icon");
+            ToolkitGameplay.Icon(result, definition.stewIcon, 16).AddToClassList("mix-stew-icon");
             predicted = L(result, "", "mix-label"); predicted.name = "predicted-stew"; predicted.pickingMode = PickingMode.Ignore;
             var amountRow = E(footer, "row conversion-quantity");
             LocalizedLabel(amountRow, "cauldron.amount", "Amount", "amount-label");
@@ -123,7 +128,9 @@ namespace TimelessEchoes.UI.Toolkit
             ToolkitLocalization.BindTooltip(plusAmount, "cauldron.increase-amount", "Increase amount");
             maxAmount = LocalizedButton(amountRow, "cauldron.max", "Max", () => SetAmount(selectedFood ? resources.GetAmount(selectedFood) : 0), "amount-max");
             conversionError = L(footer, "", "small muted conversion-error");
-            mixAll = ToolkitGameplay.B(footer, "", MixAllFoods, "mix-preview mix-all-main");
+            var actions = E(footer, "mix-actions");
+            actions.Add(addFood);
+            mixAll = ToolkitGameplay.B(actions, "", MixAllFoods, "mix-preview mix-all-main");
             mixAll.name = "mix-all";
             mixAllPrefix = L(mixAll, "", "mix-label mix-caption"); mixAllPrefix.pickingMode = PickingMode.Ignore;
             var allResult = E(mixAll, "row mix-yield"); allResult.pickingMode = PickingMode.Ignore;
@@ -284,17 +291,22 @@ namespace TimelessEchoes.UI.Toolkit
             var eva=E(tastingTop,"row eva tasting-eva");portrait=ToolkitGameplay.Icon(eva,definition.portrait.At(0),20);var info=E(eva,"eva-info");level=L(info,"","strong");xpFill=ToolkitGameplay.Bar(info);xp=L(info,"","small muted");
             tastingInfo=E(tastingTop,"row between odds-heading");LocalizedLabel(tastingInfo, "cauldron.reward-chances", "Reward chances","strong");ToolkitGameplay.B(tastingInfo,"i",ShowTastingDetails,"details-button");
             tastingFooter = E(tastingColumn, "tasting-footer");
-            var summary=E(tastingFooter,"brew-summary");pot=ToolkitGameplay.Icon(summary,definition.pot.At(0),46);
+            var overview = E(tastingFooter, "tasting-overview");
+            var summary=E(overview,"brew-summary");pot=ToolkitGameplay.Icon(summary,definition.pot.At(0),46);
             var total = E(summary, "row stew-total");
             ToolkitGameplay.Icon(total, definition.stewIcon, 14);
             stew = L(total, "", "stew-amount");
-            var rate=E(tastingFooter,"row between readout");LocalizedLabel(rate, "cauldron.tastes-per-second", "Tastes / s","muted");tasteRate=L(rate, "");
-            var cost = E(tastingFooter, "row between readout");
-            var costLabel = E(cost, "row stew-cost-label");
-            ToolkitGameplay.Icon(costLabel, definition.stewIcon, 12);
-            LocalizedLabel(costLabel, "cauldron.per-taste", "/ Taste", "muted");
-            tasteCost = L(cost, "");
-            tastingActions = E(tastingFooter, "tasting-actions");
+            tastingControls = E(overview, "tasting-controls");
+            var readouts = E(tastingControls, "tasting-readouts");
+            tasteRateRow=E(readouts,"row between readout");LocalizedLabel(tasteRateRow, "cauldron.tastes-per-second", "Tastes / s","muted taste-rate-caption");tasteRate=L(tasteRateRow, "");
+            tasteRate.AddToClassList("taste-rate-value");
+            tasteCostRow = E(readouts, "row between readout");
+            tasteCostLabel = E(tasteCostRow, "row stew-cost-label");
+            ToolkitGameplay.Icon(tasteCostLabel, definition.stewIcon, 12);
+            LocalizedLabel(tasteCostLabel, "cauldron.per-taste", "/ Taste", "muted taste-cost-caption");
+            tasteCost = L(tasteCostRow, "");
+            tasteCost.AddToClassList("taste-cost-value");
+            tastingActions = E(tastingControls, "tasting-actions");
             taste=LocalizedButton(tastingActions,"cauldron.taste","Taste",()=>manager.StartTasting(),"primary");stop=LocalizedButton(tastingActions,"cauldron.pause","Pause",()=>manager.StopTasting());
         }
         private void ArrangeTastingForOrientation(bool portraitLayout)
@@ -308,7 +320,9 @@ namespace TimelessEchoes.UI.Toolkit
                 tastingTop.Add(tastingFooter);
                 tastingTop.Add(tastingInfo);
                 tastingColumn.Add(collectionColumn);
-                tastingFooter.Add(tastingActions);
+                tastingControls.Insert(0, tastingActions);
+                tasteRateRow.Insert(0, tasteRate);
+                tasteCostLabel.Insert(1, tasteCost);
                 tastingScroll.style.display = DisplayStyle.None;
                 mobileTabs.BringToFront();
             }
@@ -316,14 +330,75 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 tastingScroll.Add(tastingTop);
                 tastingTop.Add(tastingFooter);
-                tastingFooter.Add(tastingActions);
+                tastingControls.Add(tastingActions);
+                tasteRateRow.Add(tasteRate);
+                tasteCostRow.Add(tasteCost);
                 tastingTop.Add(tastingInfo);
                 workspace.Add(collectionColumn);
                 tastingScroll.style.display = DisplayStyle.Flex;
             }
         }
-        private void CloseModal(){modal?.RemoveFromHierarchy();modal=null;root?.Q(className:"workspace")?.SetEnabled(true);}
-        private VisualElement Modal(string title){CloseModal();root.Q(className:"workspace")?.SetEnabled(false);modal=E(root,"modal");var d=E(modal,"surface dialog mix-dialog");L(d,title,"heading");modal.RegisterCallback<KeyDownEvent>(e=>{if(e.keyCode==KeyCode.Escape){CloseModal();e.StopPropagation();}});return d;}
+        private void CloseModal(){modal?.RemoveFromHierarchy();modal=null;collectionDetailsId=null;collectionDetailsText=null;collectionCardLabel=null;collectionCardValue=null;collectionGroupLabel=null;collectionGroupValue=null;collectionTotalLabel=null;collectionTotalValue=null;collectionNextStep=null;root?.Q(className:"workspace")?.SetEnabled(true);}
+        private VisualElement Modal(string title){CloseModal();root.Q(className:"workspace")?.SetEnabled(false);modal=E(root,"modal");var d=E(modal,"surface dialog mix-dialog");if(!string.IsNullOrEmpty(title))L(d,title,"heading");modal.RegisterCallback<KeyDownEvent>(e=>{if(e.keyCode==KeyCode.Escape){CloseModal();e.StopPropagation();}});return d;}
+        private void ShowCollectionDetails(string id)
+        {
+            collections.HideTooltip();
+            var dialog = Modal(null);
+            dialog.name = "collection-details-dialog";
+            dialog.AddToClassList("collection-dialog");
+            collectionDetailsId = id;
+            var scroll = ToolkitGameplay.Scroll(dialog, "collection-details-scroll");
+            scroll.verticalScrollerVisibility = ScrollerVisibility.Auto;
+            ToolkitGameplay.StyleScroll(scroll);
+            var resourceDetails = collections.TryGetResource(id, out _);
+            collectionDetailsText = L(scroll, "", resourceDetails ? "collection-details-title" : "collection-details-text");
+            collectionDetailsText.name = "collection-details-text";
+            if (resourceDetails)
+            {
+                var card = E(scroll, "row collection-detail-row");
+                collectionCardLabel = L(card, "", "collection-detail-name");
+                collectionCardValue = L(card, "", "collection-detail-value");
+                var group = E(scroll, "row collection-detail-row");
+                collectionGroupLabel = L(group, "", "collection-detail-name");
+                collectionGroupValue = L(group, "", "collection-detail-value");
+                var total = E(scroll, "row collection-detail-row collection-detail-total");
+                collectionTotalLabel = L(total, "", "collection-detail-name strong");
+                collectionTotalValue = L(total, "", "collection-detail-value strong");
+                collectionNextStep = L(scroll, "", "collection-details-text collection-detail-next muted");
+            }
+            RefreshCollectionDetails();
+            LocalizedButton(dialog, "common.close", "Close", CloseModal).Focus();
+        }
+        private void RefreshCollectionDetails()
+        {
+            if (collectionDetailsText == null || collectionDetailsId == null) return;
+            if (collectionCardLabel == null || !collections.TryGetResource(collectionDetailsId, out var resource))
+            {
+                collectionDetailsText.text = collections.GetDetailsText(collectionDetailsId)
+                    .Replace("<line-height=50%>\n</line-height>\n", "\n\n");
+                return;
+            }
+            var name = ToolkitLocalization.Name(resource);
+            var group = manager.GetResourceGroup(resource);
+            var groupName = CauldronCollectionPresentation.FormatGroupName(group);
+            var cardTier = manager.GetResourceTier(resource.name);
+            var groupTier = CauldronResourceYield.CategoryTier(oracle?.saveData, group, definition.config);
+            var cardBonus = CauldronResourceYield.CardBonusPercent(cardTier, definition.config);
+            var groupBonus = CauldronResourceYield.CategoryBonusPercent(groupTier, definition.config);
+            collectionDetailsText.text = name;
+            collectionCardLabel.text = ToolkitLocalization.Text("cauldron.details.card", "Card · Tier {0}", cardTier);
+            collectionGroupLabel.text = ToolkitLocalization.Text("cauldron.details.collection", "{0} collection · Tier {1}", groupName, groupTier);
+            collectionCardValue.text = "+" + LocaleNumbers.PercentPoints(cardBonus);
+            collectionGroupValue.text = "+" + LocaleNumbers.PercentPoints(groupBonus);
+            collectionTotalLabel.text = ToolkitLocalization.Text("cauldron.details.total", "Total yield bonus");
+            collectionTotalValue.text = "+" + LocaleNumbers.PercentPoints(cardBonus + groupBonus);
+            var maxTier = Mathf.Min(definition.config.resourceTierThresholds.Length, definition.config.categoryYieldBonusPerTier.Length);
+            collectionNextStep.style.display = groupTier < maxTier ? DisplayStyle.Flex : DisplayStyle.None;
+            if (groupTier < maxTier)
+                collectionNextStep.text = ToolkitLocalization.Text("cauldron.details.next-collection",
+                    "Raise all unlocked {0} cards to Tier {1} for a +{2} collection bonus.",
+                    groupName, groupTier + 1, LocaleNumbers.PercentPoints(CauldronResourceYield.CategoryBonusPercent(groupTier + 1, definition.config)));
+        }
         private void ShowTastingDetails()
         {
             var current = manager.GetEffectiveWeightsAtLevel(manager.EvaLevel);
@@ -369,6 +444,7 @@ namespace TimelessEchoes.UI.Toolkit
             taste.style.display=manager.IsTasting?DisplayStyle.None:DisplayStyle.Flex;stop.style.display=manager.IsTasting?DisplayStyle.Flex:DisplayStyle.None;
             tasteCost.text=CalcUtils.FormatNumber(manager.GetStewCostPerRoll());
             taste.SetEnabled(!manager.IsTasting && manager.Stew >= manager.GetStewCostPerRoll()); stop.SetEnabled(manager.IsTasting);
+            RefreshCollectionDetails();
         }
         private void Changed() => dirty = true;
         private void InventoryChanged() { dirty = true; membershipDirty = true; }
@@ -416,7 +492,11 @@ namespace TimelessEchoes.UI.Toolkit
                 localizationDirty = false;
                 collections?.Rebuild();
                 Refresh();
-                if (modal != null) ShowTastingDetails();
+                if (modal != null)
+                {
+                    if (collectionDetailsId != null) ShowCollectionDetails(collectionDetailsId);
+                    else ShowTastingDetails();
+                }
             }
             portrait.sprite = definition.portrait.At(Time.time); pot.sprite = definition.pot.At(Time.time);
             if (dirty) { dirty = false; Refresh(); }

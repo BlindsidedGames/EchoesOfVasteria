@@ -37,7 +37,7 @@ namespace TimelessEchoes.UI.Cauldron
                 sectionEffect = T("cauldron.category-yield", "Category Yield: +{0} {1}", LocaleNumbers.PercentPoints(sectPct), sectionName);
                 cardName = resourceById.TryGetValue(id, out var namedResource) ? ToolkitLocalization.Name(namedResource) : ToolkitLocalization.Text("resource." + cardName, cardName);
                 var pct = CauldronResourceYield.CardBonusPercent(cardTier, config);
-                cardEffect = T("cauldron.card-yield", "+{0} {1} Yield (gathering and harvests)", LocaleNumbers.PercentPoints(pct, "N0"), cardName);
+                cardEffect = T("cauldron.card-yield", "+{0} {1} Yield", LocaleNumbers.PercentPoints(pct, "N0"), cardName);
 			}
 			else if (id.StartsWith("BUFF:"))
 			{
