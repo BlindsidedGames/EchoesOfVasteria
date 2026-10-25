@@ -1,8 +1,10 @@
 # Intermittent black world after mobile rotation
 
-**Status: deferred at the user's request on 23 October 2026. Unresolved.**
+**Status, 26 October 2026: backdrop lifecycle fix prepared for 1.5.3. Physical-device confirmation remains pending.**
 
-The physical-device fault has not been reproduced in a controlled test. No production camera or rendering change was made during this investigation. Resume from the evidence below when more device information or a reproduction is available; do not treat passing synthetic tests as proof that the fault is fixed.
+Eve's follow-up isolated the hidden landscape menu blur: closing the window left backdrop filtering registered, changing portrait world composition. The exact candidate now detaches the backdrop while no window is open and reattaches the same element when needed. The isolated Editor comparison had 12/24 faulty baseline samples, 24/24 correct candidate samples, and 12/24 faulty samples after reverting. The simulator confirmed the lifecycle correction but did not reproduce the visual fault. No camera reset or post-processing removal is part of the fix.
+
+At the user's request, the older `ViewportRotationPlayModeTests` fixture and its exclusive URP test references have been removed. Eve's additional regression fixture was not imported. The older evidence below is retained as investigation history; its synthetic passes did not reproduce the reported fault.
 
 ## Reported behavior
 

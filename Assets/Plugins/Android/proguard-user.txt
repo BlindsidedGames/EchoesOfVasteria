@@ -1,0 +1,3 @@
+# Unity IAP accesses Google Play Billing classes, members and listeners through JNI.
+# They are runtime dependencies even when R8 cannot see Java call sites.
+-keep class com.android.billingclient.** { *; }
