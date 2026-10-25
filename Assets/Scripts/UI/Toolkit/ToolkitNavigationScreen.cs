@@ -104,8 +104,13 @@ namespace TimelessEchoes.UI.Toolkit
                 refresherTab >= 0 && entry.statisticsTab == refresherTab;
         }
 
+        private bool SettingsAction(Entry entry) =>
+            entry.action == NavAction.Window && entry.window == TownWindowManager.Window.Options ||
+            entry.action == NavAction.Close && windows && windows.IsWindowOpen(TownWindowManager.Window.Options);
+
         private bool NavigationAllows(Entry entry)
         {
+            if (SettingsAction(entry)) return true;
             if (!RefresherAllows(entry)) return false;
             if (refresherEntry != null) return true;
             if (ToolkitMeetingScreen.HasOpenDialogue)
@@ -395,8 +400,11 @@ namespace TimelessEchoes.UI.Toolkit
         private void Activate(Entry entry)
         {
             if (!ToolkitVisibilityRule.All(entry.visibility) || !NavigationAllows(entry)) return;
-            if (ToolkitMeetingScreen.TryFollowNavigation(route => DialogueRouteMatches(entry, route))) return;
-            if (refresherEntry != null && ToolkitMeetingScreen.AdvanceRefresherNavigation(this)) return;
+            if (!SettingsAction(entry))
+            {
+                if (ToolkitMeetingScreen.TryFollowNavigation(route => DialogueRouteMatches(entry, route))) return;
+                if (refresherEntry != null && ToolkitMeetingScreen.AdvanceRefresherNavigation(this)) return;
+            }
             if (TutorialWindowClose(entry)) { windows.CloseAllWindows(); CloseMenu(); Refresh(); return; }
             if (entry.id == "shop" && !TimelessEchoes.Shop.ShopService.Ensure().Unlocked) return;
             moreOpen = false; if (morePopup != null) morePopup.style.display = DisplayStyle.None;

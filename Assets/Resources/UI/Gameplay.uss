@@ -604,6 +604,7 @@
 .gameplay .eov-meeting-button {min-height:22px;padding:var(--space-tight);}
 .gameplay.eov-quit {height:auto;}
 .gameplay .eov-quit-button {min-height:22px;padding:var(--space-tight);}
+.gameplay #discord-icon {--unity-image-tint-color:var(--text);}
 .gameplay .eov-number-field .unity-base-text-field__input {background-color:var(--field);color:var(--text);border-width:.5px;border-color:var(--line);}
 .gameplay .eov-navigation-auto-pin {background-image:none;height:22px;padding:0;margin-left:var(--space-control);align-items:center;}
 .gameplay .eov-navigation-toggle {width:22px;height:22px;padding:0;}

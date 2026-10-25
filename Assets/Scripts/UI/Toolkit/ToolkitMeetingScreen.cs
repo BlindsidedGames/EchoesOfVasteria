@@ -150,13 +150,16 @@ namespace TimelessEchoes.UI.Toolkit
             if (view != null)
             {
                 ApplyLayout();
+                var settingsOpen = TownWindowManager.Instance && TownWindowManager.Instance.IsWindowOpen(TownWindowManager.Window.Options);
+                // Settings temporarily covers the lesson without completing or replacing it.
+                view.Root.style.display = !settingsOpen && (!lessonNavigation || !guidanceStarted || lessonNavigation.RefresherDestinationOpen)
+                    ? DisplayStyle.Flex : DisplayStyle.None;
                 if (ToolkitResponsiveLayout.IsPortrait)
                     view.FitPortrait(Mathf.Min(220, ToolkitResponsiveLayout.SafeScreenArea.height - 100), lessonNavigation ? 32 : 0);
                 if (lessonNavigation)
                 {
                     // Dropdowns and their tutorial hand must remain visible and clickable.
                     // Restore the explanation once the player selects a destination.
-                    view.Root.style.display = !guidanceStarted || lessonNavigation.RefresherDestinationOpen ? DisplayStyle.Flex : DisplayStyle.None;
                     view.AdvanceButton.SetEnabled(true);
                 }
                 meetHand.style.display = view.AwaitingMeet && definition.tutorialHand ? DisplayStyle.Flex : DisplayStyle.None;

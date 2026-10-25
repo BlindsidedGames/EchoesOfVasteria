@@ -38,7 +38,7 @@ namespace TimelessEchoes.UI.Toolkit
             discord.tooltip = "Discord";
             discord.style.height = 24;
             discord.style.marginRight = 4;
-            var discordIcon = new Image { sprite = definition.discord, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
+            var discordIcon = new Image { name = "discord-icon", sprite = definition.discord, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
             discordIcon.style.width = 16; discordIcon.style.height = 16;
             discord.Add(discordIcon);
             root.Add(discord);
