@@ -40,14 +40,17 @@ namespace TimelessEchoes.UI.Toolkit
             if (root == null) return;
             if (!navigation) navigation = FindAnyObjectByType<ToolkitNavigationScreen>();
             var portrait = ToolkitResponsiveLayout.IsPortrait;
-            root.style.display = !ToolkitResponsiveLayout.FocusView && TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow ? DisplayStyle.Flex : DisplayStyle.None;
-            root.style.backdropFilter = portrait ? StyleKeyword.None : desktopBlur;
+            var visible = !ToolkitResponsiveLayout.FocusView && TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow;
+            root.style.backdropFilter = visible && !portrait ? desktopBlur : StyleKeyword.None;
+            if (!visible) { root.RemoveFromHierarchy(); return; }
+            root.style.display = DisplayStyle.Flex;
             root.style.backgroundColor = portrait && ToolkitResponsiveLayout.TownView ?
                 ToolkitColorTheme.Surface : new Color(0, 0, 0, .6f);
             // Town sheets cover the world; in-run sheets leave the HUD unobscured.
             root.style.left = root.style.right = root.style.bottom = 0;
             root.style.top = portrait && !ToolkitResponsiveLayout.TownView ?
                 ToolkitWindowLayout.SafeArea.y + (navigation && navigation.HasOpenMenu ? ToolkitResponsiveLayout.MenuTop : ToolkitResponsiveLayout.WindowTop) : 0;
+            if (root.parent == null) GetComponent<UIDocument>().rootVisualElement.Add(root);
         }
         private void OnDisable() { root?.RemoveFromHierarchy(); root = null; if (settings) Destroy(settings); settings = null; }
     }

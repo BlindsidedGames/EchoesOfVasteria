@@ -1057,11 +1057,11 @@
 .gameplay.book-reviewed .eov-credit .eov-chapter-title {width:176px;flex-grow:0;flex-shrink:0;margin-right:var(--space-panel);-unity-text-align:upper-left;}
 .gameplay.book-reviewed .eov-credit .eov-chapter-body {flex-grow:1;flex-basis:0;min-width:0;-unity-text-align:upper-left;color:var(--muted);}
 .gameplay.quests-reviewed .eov-quest-instructions {color:var(--muted);margin-bottom:var(--space-section);}
-.gameplay.quests-reviewed .eov-quest-entries {padding:0;}
-.gameplay.quests-reviewed .eov-quest-row {padding:var(--space-section) 0;margin:0;border-bottom-width:.5px;border-bottom-color:var(--line);}
-.gameplay.quests-reviewed .eov-quest-controls {width:64px;margin-left:var(--space-section);}
+.gameplay.quests-reviewed .eov-quest-entries {padding:0;flex-direction:row;flex-wrap:wrap;align-items:stretch;}
+.gameplay.quests-reviewed .eov-quest-row {padding:4px 0 10px;margin:0;}
+.gameplay.quests-reviewed .quests-toolbar {margin-bottom:8px;}
+.gameplay.quests-reviewed #quests-compact {min-width:66px;margin-left:var(--space-section);}
 .gameplay.quests-reviewed .eov-quest-turn-in {width:64px;min-height:22px;}
-.gameplay.quests-reviewed .quest-pin {width:64px;margin-top:var(--space-control);min-height:22px;font-size:var(--small);}
 .gameplay.quests-reviewed .quest-description {margin-top:var(--space-control);color:var(--muted);font-size:var(--small);}
 .gameplay.quests-reviewed .quest-requirement {margin-top:var(--space-control);}
 .gameplay.quests-reviewed .quest-requirement .track {margin-top:var(--space-tight);}
@@ -1269,8 +1269,7 @@
 .gameplay .eov-options-transfer-status {height:auto;min-height:12px;white-space:normal;}
 .gameplay.quests-reviewed .quest-name {font-size:var(--heading);}
 .gameplay.quests-reviewed .quest-description {font-size:var(--body);}
-.gameplay.quests-reviewed .eov-quest-controls {width:76px;}
-.gameplay.quests-reviewed .eov-quest-turn-in,.gameplay.quests-reviewed .quest-pin {width:76px;min-height:26px;}
+.gameplay.quests-reviewed .eov-quest-turn-in {width:76px;min-height:26px;}
 .gameplay .quest-resource-icon {width:12px;height:12px;}
 
 .gameplay .eov-buffs-header {flex-shrink:0;}
@@ -1278,6 +1277,26 @@
 .gameplay .journal-run-number,.gameplay .journal-run-duration {white-space:nowrap;}
 
 .gameplay.quests-reviewed .quest-reward {-unity-font-style:bold;}
+.gameplay.quests-reviewed.quests-compact .eov-quest-instructions {display:none;}
+.gameplay.quests-reviewed .eov-quest-row {max-width:600px;}
+.gameplay.quests-reviewed #quest-requirements {flex-direction:row;flex-wrap:wrap;}
+.gameplay.quests-reviewed .quest-requirement {flex-shrink:0;margin-top:6px;}
+.gameplay.quests-reviewed .quest-title-line {flex-direction:row;align-items:center;}
+.gameplay.quests-reviewed .quest-title-line .quest-name {flex-shrink:1;min-width:0;}
+.gameplay.quests-reviewed .quest-title-line .button.quest-pin {width:28px;min-width:28px;height:28px;min-height:28px;padding:0;margin:0;align-items:center;justify-content:center;background-color:transparent;border-width:0;}
+.gameplay.quests-reviewed .quest-title-line .button.quest-pin:hover,
+.gameplay.quests-reviewed .quest-title-line .button.quest-pin:active {background-color:transparent;}
+.gameplay.keyboard.quests-reviewed .quest-pin:focus {border-width:.5px;border-color:var(--text);}
+.gameplay.quests-reviewed .quest-pin-mark {width:16px;height:16px;color:var(--muted);rotate:35deg;translate:-4px 0;}
+.gameplay.quests-reviewed .quest-pin.active .quest-pin-mark {color:var(--text);rotate:0deg;translate:-5px 0;}
+.gameplay.quests-reviewed .quest-footer {flex-direction:row;align-items:flex-start;margin-top:6px;}
+.gameplay.quests-reviewed .quest-reward-content {flex-grow:1;flex-basis:0;min-width:0;}
+.gameplay.quests-reviewed .quest-reward-content .quest-reward {margin-top:0;color:var(--text);}
+.gameplay.quests-reviewed .quest-actions {flex-direction:row;align-items:center;flex-shrink:0;margin-left:12px;}
+.gameplay.quests-reviewed .quest-title-action .quest-name {flex-grow:1;flex-basis:0;}
+.gameplay.quests-reviewed .quest-requirements-line {flex-direction:row;align-items:center;}
+.gameplay.quests-reviewed #quest-requirements {flex-grow:1;flex-basis:0;min-width:0;}
+.gameplay.quests-reviewed .quest-actions .eov-quest-turn-in {width:auto;min-width:64px;min-height:28px;margin:0;}
 /* Shared live run resources: portrait list and responsive landscape columns. */
 .gameplay .run-resources-view {flex-grow:1;min-height:0;}
 .gameplay .run-resources-header {align-items:flex-start;flex-shrink:0;margin-bottom:6px;}

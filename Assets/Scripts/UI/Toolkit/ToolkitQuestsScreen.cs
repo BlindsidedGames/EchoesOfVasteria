@@ -24,9 +24,9 @@ namespace TimelessEchoes.UI.Toolkit
         private ToolkitResourceInventoryScreen companionInventory;
         private ScrollView scroll;
         private VisualElement inventoryHost;
-        private Button inventoryToggle;
-        private VisualElement inventoryTriangle;
-        private bool inventoryExpanded;
+        private const string CompactPreference = "Quests.Compact";
+        private Button compactToggle;
+        private bool compact;
         private Button portraitAutoPin;
         private ToolkitTextBinding instructionBinding;
         private readonly Dictionary<string, Action<float>> progress = new();
@@ -55,25 +55,21 @@ namespace TimelessEchoes.UI.Toolkit
             columns.AddToClassList("quests-columns"); root.Add(columns);
             var quests = new VisualElement { name = "quests-content" };
             quests.AddToClassList("quests-content"); columns.Add(quests);
-            var heading = new VisualElement(); heading.style.flexDirection = FlexDirection.Row; quests.Add(heading);
+            var heading = new VisualElement(); heading.AddToClassList("quests-toolbar"); heading.style.flexDirection = FlexDirection.Row; quests.Add(heading);
             var title = Text(heading,ToolkitLocalization.Text("quests.heading", "Quests"),12); title.AddToClassList("quests-heading"); title.style.flexGrow = 1;
-            inventoryToggle = new Button(() => SetInventoryExpanded(!inventoryExpanded)) { name = "quests-toggle-inventory" };
-            inventoryToggle.AddToClassList("button");
-            inventoryToggle.style.width = inventoryToggle.style.minWidth = 22; inventoryToggle.style.height = 22;
-            inventoryToggle.style.alignItems = Align.Center; inventoryToggle.style.justifyContent = Justify.Center;
-            inventoryTriangle = new VisualElement { pickingMode = PickingMode.Ignore };
-            inventoryTriangle.style.width = inventoryTriangle.style.height = 9;
-            inventoryTriangle.generateVisualContent += context =>
+            compact = PlayerPrefs.GetInt(CompactPreference, 0) != 0;
+            root.EnableInClassList("quests-compact", compact);
+            compactToggle = ToolkitGameplay.B(heading, "", () =>
             {
-                var rect = inventoryTriangle.contentRect; var painter = context.painter2D;
-                painter.fillColor = inventoryTriangle.resolvedStyle.color; painter.BeginPath();
-                var tip = inventoryExpanded ? rect.xMax : rect.xMin;
-                var back = inventoryExpanded ? rect.xMin : rect.xMax;
-                painter.MoveTo(new Vector2(tip, rect.center.y)); painter.LineTo(new Vector2(back, rect.yMin));
-                painter.LineTo(new Vector2(back, rect.yMax)); painter.ClosePath(); painter.Fill();
-            };
-            inventoryToggle.Add(inventoryTriangle); heading.Add(inventoryToggle);
-            var inventoryLabel = new Label(); ToolkitLocalization.Bind(inventoryLabel, "quests.inventory", "Inventory"); inventoryLabel.AddToClassList("quest-inventory-label"); inventoryLabel.pickingMode = PickingMode.Ignore; inventoryToggle.Add(inventoryLabel);
+                compact = !compact;
+                PlayerPrefs.SetInt(CompactPreference, compact ? 1 : 0);
+                root.EnableInClassList("quests-compact", compact);
+                compactToggle.EnableInClassList("active", compact);
+                Rebuild();
+            });
+            compactToggle.name = "quests-compact";
+            ToolkitLocalization.Bind(compactToggle, "quests.compact", "Compact");
+            compactToggle.EnableInClassList("active", compact);
             portraitAutoPin = ToolkitGameplay.B(heading, "", () => {
                 Blindsided.SaveData.StaticReferences.AutoPinActiveQuests = !Blindsided.SaveData.StaticReferences.AutoPinActiveQuests;
                 RefreshPortraitAutoPin();
@@ -92,8 +88,7 @@ namespace TimelessEchoes.UI.Toolkit
                     inventoryHost.RemoveFromHierarchy();
                 }
             }
-            inventoryToggle.style.display = companionInventory ? DisplayStyle.Flex : DisplayStyle.None;
-            SetInventoryExpanded(inventoryExpanded);
+            SetInventoryExpanded(false);
             manager.RefreshNoticeboard();
             manager.NoticeboardChanged += Changed; manager.QuestProgressChanged += ProgressChanged;
             LocalizationSettings.SelectedLocaleChanged += LocaleChanged;
@@ -102,17 +97,13 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void SetInventoryExpanded(bool expanded)
         {
-            inventoryExpanded = expanded;
             if (ToolkitResponsiveLayout.IsPortrait && companionInventory)
             {
                 if (inventoryHost != null) inventoryHost.style.display = DisplayStyle.None;
                 if (expanded) companionInventory.ShowOverQuests();
                 else companionInventory.Hide();
             }
-            inventoryToggle?.EnableInClassList("active", expanded);
             if (inventoryHost != null && !ToolkitResponsiveLayout.IsPortrait) inventoryHost.style.display = expanded ? DisplayStyle.Flex : DisplayStyle.None;
-            if (inventoryToggle != null) inventoryToggle.tooltip = expanded ? ToolkitLocalization.Text("quests.hide-inventory", "Hide inventory") : ToolkitLocalization.Text("quests.show-inventory", "Show inventory");
-            inventoryTriangle?.MarkDirtyRepaint();
         }
         private void LocaleChanged(UnityEngine.Localization.Locale _) { manager.RefreshNoticeboard(); dirty = true; }
         public bool TryHighlightResource(Upgrades.Resource resource, bool scrollToSlot)
@@ -187,6 +178,7 @@ namespace TimelessEchoes.UI.Toolkit
                 group.Add(header); group.Add(content); Expand(expanded);
                 foreach (var entry in items) AddQuest(content, entry);
                 content.ElementAt(content.childCount - 1).style.marginBottom = 0;
+                content.RegisterCallback<GeometryChangedEvent>(_ => LayoutQuestColumns(content));
             }
             scroll.scrollOffset = offset;
         }
@@ -198,25 +190,34 @@ namespace TimelessEchoes.UI.Toolkit
             var top = new VisualElement(); top.AddToClassList("eov-quest-top"); row.Add(top);
             var texts = new VisualElement(); texts.AddToClassList("eov-quest-texts"); top.Add(texts);
             var pinned = Blindsided.Oracle.oracle?.saveData?.PinnedQuests?.Contains(quest.questId) == true;
-            Text(texts, "<b>" + quest.questName.GetLocalizedString() + "</b>", 9).AddToClassList("quest-name");
-            var description = Text(texts, quest.description.GetLocalizedString(), 6); description.AddToClassList("quest-description");
-            description.style.fontSize = StyleKeyword.Null;
-            ToolkitHelpLinks.Attach(description);
+            var heading = new VisualElement(); heading.AddToClassList("quest-title-line"); texts.Add(heading);
+            var name = Text(heading, "<b>" + quest.questName.GetLocalizedString() + "</b>", 9); name.AddToClassList("quest-name");
+            Label description = null;
+            if (!compact)
+            {
+                description = Text(texts, quest.description.GetLocalizedString(), 6); description.AddToClassList("quest-description");
+                description.style.fontSize = StyleKeyword.Null;
+                ToolkitHelpLinks.Attach(description);
+            }
             Button turnIn = null;
             Label turnInLabel = null;
             var first = quest.requirements?.FirstOrDefault()?.type;
+            var footer = new VisualElement(); footer.AddToClassList("quest-footer"); texts.Add(footer);
+            var rewardParent = new VisualElement(); rewardParent.AddToClassList("quest-reward-content"); footer.Add(rewardParent);
+            var actions = new VisualElement(); actions.AddToClassList("quest-actions");
             if (!entry.Completed)
             {
-                var controls = new VisualElement(); controls.AddToClassList("eov-quest-controls"); top.Add(controls);
                 turnIn = ToolkitBuffsScreen.MakeButton("turn-in-" + quest.questId, () => manager.TryTurnInQuest(quest.questId), definition.button);
                 turnIn.AddToClassList("eov-quest-turn-in");
                 turnInLabel = Text(turnIn, "", 8);
-                controls.Add(turnIn); turnIn.SetEnabled((manager.NeedsAcceptance(quest) || entry.Progress >= 1) && manager.CanTurnInAtCurrentLocation(quest));
+                actions.Add(turnIn); turnIn.SetEnabled((manager.NeedsAcceptance(quest) || entry.Progress >= 1) && manager.CanTurnInAtCurrentLocation(quest));
                 if (!manager.CanTurnInAtCurrentLocation(quest))
                     turnIn.tooltip = ToolkitLocalization.Text("quests.return-to-town", "Return to town to hand in this quest.");
             }
             var requirements = new List<(QuestData.Requirement req, Label text, ToolkitQuestRequirementRow resourceRow, VisualElement fill)>();
-            var requirementGroup = new VisualElement(); requirementGroup.style.marginTop = 2; row.Add(requirementGroup);
+            var requirementLine = new VisualElement(); requirementLine.AddToClassList("quest-requirements-line"); texts.Add(requirementLine);
+            var requirementGroup = new VisualElement { name = "quest-requirements" }; requirementGroup.style.marginTop = 2;
+            requirementLine.Add(requirementGroup);
             if (!entry.Completed && quest.requirements != null)
                 foreach (var req in quest.requirements.Where(r => r != null && r.type != QuestData.RequirementType.Instant))
                 {
@@ -248,16 +249,16 @@ namespace TimelessEchoes.UI.Toolkit
                 prefix.style.flexShrink = 0;
                 prefix.style.marginRight = 3;
                 rewardResource.Insert(0, prefix);
-                row.Add(rewardResource);
+                rewardParent.Add(rewardResource);
                 rewardTarget = rewardResource;
             }
-            else rewardTarget = Text(row, ToolkitLocalization.Text("quests.reward", "Reward: {0}", rewardText), 7);
+            else rewardTarget = Text(rewardParent, ToolkitLocalization.Text("quests.reward", "Reward: {0}", rewardText), 7);
             rewardTarget.AddToClassList("quest-reward");
             foreach (var equipment in quest.rewards.Where(r => r.type == QuestData.RewardType.Equipment && r.equipment))
             {
                 var stats = new VisualElement { name = "equipment-reward-stats" };
                 stats.style.flexDirection = FlexDirection.Row; stats.style.flexWrap = Wrap.Wrap;
-                row.Add(stats);
+                rewardParent.Add(stats);
                 foreach (var affix in equipment.equipment.affixes)
                 {
                     if (affix?.stat == null) continue;
@@ -274,16 +275,28 @@ namespace TimelessEchoes.UI.Toolkit
                 }
             }
             var canPin = !entry.Completed && quest.requirements?.Any(r => r != null && r.type == QuestData.RequirementType.Instant) != true;
+            Button pin = null;
             if (canPin)
             {
-                void Pin() { manager.TogglePinned(quest.questId); Audio.AudioManager.Instance?.PlayUIButtonClick(); }
-                var pin=new Button(Pin){name="pin-"+quest.questId,text=pinned?ToolkitLocalization.Text("quests.pinned", "Pinned"):ToolkitLocalization.Text("quests.pin", "Pin")};pin.AddToClassList("button");pin.AddToClassList("quest-pin");pin.EnableInClassList("active",pinned);top.Q(className:"eov-quest-controls").Add(pin);
-                texts.pickingMode = PickingMode.Position; rewardTarget.pickingMode = PickingMode.Position;
-                texts.RegisterCallback<ClickEvent>(_ => Pin()); rewardTarget.RegisterCallback<ClickEvent>(_ => Pin());
-                texts.focusable = true; texts.tabIndex = 0; texts.RegisterCallback<NavigationSubmitEvent>(evt => { Pin(); evt.StopPropagation(); });
+                void Pin() { if (pin.style.display == DisplayStyle.None) return; manager.TogglePinned(quest.questId); Audio.AudioManager.Instance?.PlayUIButtonClick(); }
+                pin = new Button(Pin) { name = "pin-" + quest.questId, tooltip = pinned ? ToolkitLocalization.Text("quests.pinned", "Pinned") : ToolkitLocalization.Text("quests.pin", "Pin") };
+                pin.AddToClassList("button"); pin.AddToClassList("quest-pin"); pin.EnableInClassList("active", pinned);
+                AddPinMark(pin, pinned); heading.Add(pin);
+                name.pickingMode = rewardTarget.pickingMode = PickingMode.Position;
+                name.RegisterCallback<ClickEvent>(_ => Pin()); rewardTarget.RegisterCallback<ClickEvent>(_ => Pin());
+                if (description != null) { description.pickingMode = PickingMode.Position; description.RegisterCallback<ClickEvent>(_ => Pin()); }
+                name.focusable = true; name.tabIndex = 0; name.RegisterCallback<NavigationSubmitEvent>(evt => { Pin(); evt.StopPropagation(); });
             }
+            heading.Add(actions);
             void UpdateProgress(float value)
             {
+                var accepting = manager.NeedsAcceptance(quest);
+                var ready = !entry.Completed && !accepting && value >= 1;
+                heading.EnableInClassList("quest-title-action", !entry.Completed && (accepting || ready));
+                if (pin != null) pin.style.display = ready ? DisplayStyle.None : DisplayStyle.Flex;
+                name.focusable = canPin && !ready;
+                name.pickingMode = rewardTarget.pickingMode = canPin && !ready ? PickingMode.Position : PickingMode.Ignore;
+                if (description != null) description.pickingMode = name.pickingMode;
                 rewardResource?.SetText(rewardText);
                 if (turnInLabel != null)
                     turnInLabel.text = "<b>" + (manager.NeedsAcceptance(quest) ? ToolkitLocalization.Text("quests.accept", "Accept") :
@@ -292,15 +305,77 @@ namespace TimelessEchoes.UI.Toolkit
                         first == QuestData.RequirementType.Meet ? ToolkitLocalization.Text("quests.done", "Done") :
                         ToolkitLocalization.Text("quests.turn-in", "Turn In")) + "</b>";
                 turnIn?.SetEnabled((manager.NeedsAcceptance(quest) || value >= 1) && manager.CanTurnInAtCurrentLocation(quest));row.EnableInClassList("quest-ready",!entry.Completed&&value>=1);
+                actions.style.display = !entry.Completed && (accepting || ready) ? DisplayStyle.Flex : DisplayStyle.None;
                 foreach (var item in requirements)
                 {
                     var presentation = QuestRequirementPresentation.Build(quest, item.req);
-                    if (item.resourceRow != null) item.resourceRow.SetText(presentation.text);
+                    var cost = item.req.type == QuestData.RequirementType.Resource && item.req.resource;
+                    var label = ready && cost ? QuestRequirementPresentation.FormatValue(quest, item.req.amount) + " " + ToolkitLocalization.Name(item.req.resource) : presentation.text;
+                    if (item.resourceRow != null) item.resourceRow.SetText(label);
                     else item.text.text = ToolkitControls.WithoutInlineTextSize(presentation.text);
                     item.fill.style.width = Length.Percent(presentation.progress * 100);
+                    item.fill.parent.style.display = ready ? DisplayStyle.None : DisplayStyle.Flex;
+                    item.fill.parent.parent.style.display = !ready || cost ? DisplayStyle.Flex : DisplayStyle.None;
                 }
             }
             progress[quest.questId] = UpdateProgress; UpdateProgress(entry.Progress);
+            if (requirements.Count > 0)
+                requirementGroup.RegisterCallback<GeometryChangedEvent>(_ => LayoutRequirements(requirementGroup));
+        }
+        private static void AddPinMark(Button pin, bool pinned)
+        {
+            var mark = new VisualElement { pickingMode = PickingMode.Ignore }; mark.AddToClassList("quest-pin-mark"); pin.Add(mark);
+            mark.generateVisualContent += context =>
+            {
+                var painter = context.painter2D; var center = mark.contentRect.center;
+                painter.strokeColor = painter.fillColor = mark.resolvedStyle.color; painter.lineWidth = 1.2f;
+                painter.BeginPath(); painter.MoveTo(center + new Vector2(-4, -6)); painter.LineTo(center + new Vector2(4, -6));
+                painter.LineTo(center + new Vector2(4, -3)); painter.LineTo(center + new Vector2(2, -3)); painter.LineTo(center + new Vector2(2, 0));
+                painter.LineTo(center + new Vector2(5, 3)); painter.LineTo(center + new Vector2(-5, 3));
+                painter.LineTo(center + new Vector2(-2, 0)); painter.LineTo(center + new Vector2(-2, -3)); painter.LineTo(center + new Vector2(-4, -3)); painter.ClosePath();
+                if (pinned) painter.Fill(); painter.Stroke();
+                painter.BeginPath(); painter.MoveTo(center + new Vector2(0, 3)); painter.LineTo(center + new Vector2(0, 8)); painter.Stroke();
+            };
+        }
+        private void LayoutQuestColumns(VisualElement content)
+        {
+            const float gap = 18;
+            var width = content.contentRect.width;
+            if (!float.IsFinite(width) || width <= 0) return;
+            var name = content.Q<Label>(className: "quest-name");
+            var minimum = 300 * Mathf.Max(1, name.resolvedStyle.fontSize / 11.5f);
+            var columns = ToolkitResponsiveLayout.IsPortrait ? 1 : Mathf.Max(1, Mathf.FloorToInt((width + gap) / (minimum + gap)));
+            var cellWidth = Mathf.Floor((width - gap * (columns - 1) - 1) / columns);
+            for (var index = 0; index < content.childCount; index++)
+            {
+                var row = content[index];
+                row.style.width = row.style.maxWidth = cellWidth;
+                row.style.marginRight = index % columns < columns - 1 ? gap : 0;
+            }
+        }
+        private static void LayoutRequirements(VisualElement group)
+        {
+            const float gap = 10;
+            var width = group.contentRect.width;
+            if (!float.IsFinite(width) || width <= 0) return;
+            var cells = group.Children().Where(c => c.resolvedStyle.display != DisplayStyle.None).ToArray();
+            if (cells.Length == 0) return;
+            var minimum = 90f;
+            foreach (var cell in cells)
+            {
+                var label = cell.Q<Label>();
+                var measured = label.MeasureTextSize(label.text, 0, VisualElement.MeasureMode.Undefined, 0, VisualElement.MeasureMode.Undefined).x;
+                var icon = label.parent is ToolkitQuestRequirementRow ? 20 : 0;
+                minimum = Mathf.Max(minimum, measured + icon);
+            }
+            var columns = Mathf.Clamp(Mathf.FloorToInt((width + gap) / (minimum + gap)), 1, Mathf.Min(cells.Length, ToolkitResponsiveLayout.IsPortrait ? 2 : 3));
+            var cellWidth = Mathf.Min((width - gap * (columns - 1)) / columns, columns > 1 ? 180 : 300);
+            for (var index = 0; index < cells.Length; index++)
+            {
+                var cell = cells[index];
+                cell.style.width = cellWidth;
+                cell.style.marginRight = index % columns < columns - 1 ? gap : 0;
+            }
         }
         private static Label Text(VisualElement parent, string value, float size)
         {
@@ -318,10 +393,6 @@ namespace TimelessEchoes.UI.Toolkit
         private void Layout()
         {
             windowLayout.Fill(root, theme); RefreshPortraitAutoPin();
-            var phone = ToolkitResponsiveLayout.IsPortrait;
-            inventoryToggle.style.width = inventoryToggle.style.minWidth = phone ? 76 : 22;
-            inventoryToggle.Q<Label>().style.display = phone ? DisplayStyle.Flex : DisplayStyle.None;
-            inventoryTriangle.style.display = phone ? DisplayStyle.None : DisplayStyle.Flex;
         }
         private void Update()
         {
@@ -351,7 +422,6 @@ namespace TimelessEchoes.UI.Toolkit
         public void Hide()
         {
             pendingRevealQuest = null;
-            if (ToolkitResponsiveLayout.IsPortrait) inventoryExpanded = false;
             if (companionInventory)
             {
                 companionInventory.Hide(); Destroy(companionInventory.gameObject); companionInventory = null;
@@ -360,7 +430,7 @@ namespace TimelessEchoes.UI.Toolkit
             LocalizationSettings.SelectedLocaleChanged -= LocaleChanged;
             ToolkitLocalization.Changed -= LocalizationChanged;
             acceptHand = null; lessonAccept = null;
-            instructionBinding?.Dispose(); instructionBinding = null; root?.RemoveFromHierarchy(); root = null; inventoryHost = null; inventoryToggle = null; progress.Clear(); dirtyProgress.Clear(); dirty = false;
+            instructionBinding?.Dispose(); instructionBinding = null; root?.RemoveFromHierarchy(); root = null; inventoryHost = null; compactToggle = null; progress.Clear(); dirtyProgress.Clear(); dirty = false;
             ToolkitPanel.Release(GetComponent<UIDocument>(), ref settings);
         }
         private void OnDisable() => Hide();

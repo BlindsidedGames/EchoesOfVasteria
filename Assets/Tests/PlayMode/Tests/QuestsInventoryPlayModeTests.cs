@@ -65,7 +65,7 @@ namespace Tests.PlayMode
                 Assert.NotNull(host, "Quests must own its inventory inside the Quests layout, rather than open the Hub window beside/behind it.");
                 Assert.IsFalse(hub.IsOpen, "Opening Quests must not open or move the standalone Hub view.");
                 Assert.AreEqual(DisplayStyle.None, host.style.display.value, "The resource pop-out starts collapsed.");
-                FieldsClick(ui.Q<Button>("quests-toggle-inventory"));
+                Assert.IsTrue(windows.TryHighlightNativeResource(seed, true));
                 yield return null; yield return null;
                 Assert.AreEqual(DisplayStyle.Flex, host.style.display.value);
                 var embedded = host.Q("resource-inventory");

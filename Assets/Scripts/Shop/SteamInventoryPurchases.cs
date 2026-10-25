@@ -31,7 +31,9 @@ namespace TimelessEchoes.Shop
         public string Status => string.IsNullOrEmpty(statusEnglish) ? "" : ToolkitLocalization.Text("shop.status." + statusKey, statusEnglish);
         private ShopService shop;
         private string statusKey, statusEnglish = "";
-        private readonly Dictionary<string, string> prices = new();
+        private readonly Dictionary<string, ulong> prices = new();
+        private string currency;
+        private static readonly Dictionary<string, (string symbol, int digits)> currencyFormats = new();
         private readonly Dictionary<SteamInventoryResult_t, TaskCompletionSource<EResult>> queries = new();
         private readonly CancellationTokenSource lifetime = new();
         private Callback<SteamInventoryResultReady_t> delivered;
@@ -44,7 +46,7 @@ namespace TimelessEchoes.Shop
         private bool CatalogLoaded => prices.ContainsKey(shop.Settings.permanentProductId) && Array.TrueForAll(shop.Settings.supporterProductIds, prices.ContainsKey);
         private void SetStatus(string key, string english) { statusKey = key; statusEnglish = english; Changed?.Invoke(); }
         public void Initialize(ShopService owner) => shop = owner;
-        public string Price(string id) => prices.TryGetValue(id, out var price) ? price : null;
+        public string Price(string id) => prices.TryGetValue(id, out var price) ? FormatPrice(price, currency) : null;
         public bool Available(string id) => !Busy && Connected && prices.ContainsKey(id) && SteamUtils.IsOverlayEnabled();
         private int Definition(string id)
         {
@@ -151,10 +153,11 @@ namespace TimelessEchoes.Shop
                 var result = await Call<SteamInventoryRequestPricesResult_t>(SteamInventory.RequestPrices(), expected);
                 if (result.m_result != EResult.k_EResultOK) throw new InvalidOperationException("Prices unavailable.");
                 prices.Clear();
+                currency = result.m_rgchCurrency;
                 var ids = new List<string>(shop.Settings.supporterProductIds) { shop.Settings.permanentProductId };
                 foreach (var id in ids)
                     if (Definition(id) > 0 && SteamInventory.GetItemPrice(new SteamItemDef_t(Definition(id)), out var price, out _))
-                        prices[id] = FormatPrice(price, result.m_rgchCurrency);
+                        prices[id] = price;
                 connected = true;
                 if (SteamUtils.IsOverlayEnabled()) SetStatus("none", "");
                 else SetStatus("unavailable", "Store unavailable. Try again later.");
@@ -168,7 +171,29 @@ namespace TimelessEchoes.Shop
         {
             if (currency == null || currency.Length != 3) throw new ArgumentException("Invalid currency.");
             foreach (var character in currency) if (character < 'A' || character > 'Z') throw new ArgumentException("Invalid currency.");
-            return currency + " " + (amount / 100m).ToString("0.##", Blindsided.Utilities.LocaleNumbers.Culture);
+            if (!currencyFormats.TryGetValue(currency, out var display))
+            {
+                display = (currency, 2);
+                foreach (var culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
+                {
+                    try
+                    {
+                        var region = new RegionInfo(culture.Name);
+                        if (region.ISOCurrencySymbol != currency) continue;
+                        display = (region.CurrencySymbol, culture.NumberFormat.CurrencyDecimalDigits);
+                        break;
+                    }
+                    catch (ArgumentException) { }
+                }
+                currencyFormats[currency] = display;
+            }
+            var format = (NumberFormatInfo)Blindsided.Utilities.LocaleNumbers.Culture.NumberFormat.Clone();
+            format.CurrencySymbol = display.symbol;
+            format.CurrencyDecimalDigits = display.digits;
+            format.CurrencyDecimalSeparator = format.NumberDecimalSeparator;
+            format.CurrencyGroupSeparator = format.NumberGroupSeparator;
+            if (display.symbol == currency) format.CurrencyPositivePattern = 2;
+            return (amount / 100m).ToString("C", format);
         }
         public async void Buy(string id)
         {
