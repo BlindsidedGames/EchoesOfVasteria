@@ -52,6 +52,8 @@ namespace TimelessEchoes.UI.Toolkit
         private sealed class FoodSlot
         {
             public Button button;
+            public Button lockButton;
+            public ToolkitLockIcon lockIcon;
             public Image icon;
             public Label name, count;
             public Resource resource;
@@ -151,6 +153,16 @@ namespace TimelessEchoes.UI.Toolkit
                     if (!Mathf.Approximately(e.newRect.width, e.oldRect.width)) FitFoodName(slot);
                 });
                 slot.count = L(slot.button, "", "small muted");
+                slot.lockButton = ToolkitGameplay.B(slot.button, "", () =>
+                {
+                    if (!slot.resource) return;
+                    SetCauldronFoodLocked(slot.resource.name, !IsCauldronFoodLocked(slot.resource.name));
+                    Refresh();
+                }, "food-lock");
+                slot.lockButton.RegisterCallback<PointerDownEvent>(e => e.StopPropagation());
+                slot.lockButton.RegisterCallback<PointerUpEvent>(e => e.StopPropagation());
+                slot.lockButton.RegisterCallback<ClickEvent>(e => e.StopPropagation());
+                slot.lockIcon = new ToolkitLockIcon(); slot.lockButton.Add(slot.lockIcon);
                 foodSlots.Add(slot);
             }
         }
@@ -224,6 +236,7 @@ namespace TimelessEchoes.UI.Toolkit
             double allStew = 0;
             foreach (var food in CauldronMixingPresentation.BuildEligibleFoods(resources))
             {
+                if (IsCauldronFoodLocked(food.name)) continue;
                 var quantity = Math.Floor(resources.GetAmount(food));
                 if (manager.CanAddToCauldron(food, quantity)) allStew += quantity * CauldronConversion.UnitValue(food);
             }
@@ -273,6 +286,7 @@ namespace TimelessEchoes.UI.Toolkit
                 conversionError.text = "";
                 foreach (var food in CauldronMixingPresentation.BuildEligibleFoods(resources))
                 {
+                    if (IsCauldronFoodLocked(food.name)) continue;
                     var amount = Math.Floor(resources.GetAmount(food));
                     if (!manager.CanAddToCauldron(food, amount)) continue;
                     var sequence = oracle.saveData.CauldronConversionSequence;
@@ -434,7 +448,15 @@ namespace TimelessEchoes.UI.Toolkit
                 slot.count.style.display = food && known ? DisplayStyle.Flex : DisplayStyle.None;
                 slot.button.tooltip = food && known ? ToolkitLocalization.Name(food) : "";
                 slot.button.EnableInClassList("selected", food && food == selectedFood);
-                slot.button.SetEnabled(known && resources.GetAmount(food) > 0 && !addingFood);
+                slot.button.SetEnabled(known && !addingFood);
+                var locked = food && IsCauldronFoodLocked(food.name);
+                slot.icon.style.opacity = slot.name.style.opacity = slot.count.style.opacity = locked ? .4f : 1f;
+                slot.lockButton.style.display = known ? DisplayStyle.Flex : DisplayStyle.None;
+                slot.lockButton.EnableInClassList("locked", locked);
+                slot.lockButton.tooltip = ToolkitLocalization.Text(locked ? "cauldron.mix-unlock" : "cauldron.mix-lock",
+                    locked ? "Allow in Mix All" : "Exclude from Mix All");
+                slot.lockIcon.Locked = locked;
+                slot.lockIcon.style.opacity = locked ? 1 : .5f;
             }
             RefreshConversion();
             level.text = ToolkitLocalization.Text("cauldron.eva-level", "Eva · Level {0}", manager.EvaLevel); var needed = 50 + 10 * Mathf.Max(0, manager.EvaLevel - 1);

@@ -115,8 +115,9 @@ namespace TimelessEchoes.Farming
         public string BuildGate(GameData data, FarmBuild build)
         {
             if (data?.Farm == null || data.General == null || build == null) return ToolkitLocalization.Text("fields.error.unknown-build", "Unknown construction.");
-            if (!Completed(data, build.previousQuestId)) return build.previousQuestId == IntroductionId
-                ? ToolkitLocalization.Text("fields.error.farming-introduction", "Complete Flora and Tillman's introduction first.")
+            if (!Completed(data, build.previousQuestId) &&
+                !(build.previousQuestId == IntroductionId && data.CompletedNpcTasks?.Contains("Farmers1") == true)) return build.previousQuestId == IntroductionId
+                ? ToolkitLocalization.Text("fields.error.farming-introduction", "Meet Flora and Tillman first.")
                 : ToolkitLocalization.Text("fields.error.preceding-build", "Build the earlier plots first.");
             if (data.Farm.TwinsLevel < build.twinsLevel) return ToolkitLocalization.Text("fields.error.fields-level", "Fields level {0} required.", build.twinsLevel);
             if (build.sources == null || build.sources.Count == 0) return ToolkitLocalization.Text("fields.error.missing-source", "Missing gathering sources.");

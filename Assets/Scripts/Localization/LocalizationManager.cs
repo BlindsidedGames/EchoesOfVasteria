@@ -42,6 +42,14 @@ public sealed class LocalizationManager : MonoBehaviour
     {
         var savedLocaleCode = PlayerPrefs.GetString(SelectedLocaleKey, string.Empty);
         var targetLocale = !string.IsNullOrWhiteSpace(savedLocaleCode) ? FindLocale(savedLocaleCode) : null;
+        var hasStoredSelection = targetLocale != null;
+
+        // Unity's startup selectors already resolve the device language. Only an
+        // explicit in-game choice should replace it or become a saved preference.
+        if (targetLocale == null)
+        {
+            targetLocale = LocalizationSettings.SelectedLocale;
+        }
 
         if (targetLocale == null)
         {
@@ -55,7 +63,7 @@ public sealed class LocalizationManager : MonoBehaviour
 
         if (targetLocale == null) return;
 
-        SetLocaleInternal(targetLocale, true);
+        SetLocaleInternal(targetLocale, hasStoredSelection);
     }
 
     public void SelectLocale(string localeCode)

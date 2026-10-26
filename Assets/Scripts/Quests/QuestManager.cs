@@ -884,6 +884,24 @@ namespace TimelessEchoes.Quests
             return entries;
         }
 
+        public void CompleteFieldsConstruction(string questId, bool includeIntroduction)
+        {
+            if (!TimelessEchoes.Farming.FarmCommands.KnownBuild(questId)) return;
+            var ids = includeIntroduction ? new[] { TimelessEchoes.Farming.FarmContent.IntroductionId, questId } : new[] { questId };
+            foreach (var id in ids.Distinct())
+            {
+                if (!QuestUtils.QuestCompleted(id)) continue;
+                if (active.Remove(id, out var instance) && instance.ui != null) uiManager?.RemoveEntry(instance.ui);
+                oracle.saveData.PinnedQuests.Remove(id);
+                QuestHandin(id);
+            }
+            StartAvailableQuests();
+            UpdateCompletionPercentage();
+            AuditQuestCompletionState();
+            PinnedQuestUIManager.Instance?.RefreshPins();
+            RefreshNoticeboard();
+        }
+
         public void RefreshFieldsProgression()
         {
             if (oracle?.saveData == null) return;

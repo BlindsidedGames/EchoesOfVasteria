@@ -31,6 +31,8 @@ namespace TimelessEchoes.Farming
         public FarmTuning Tuning => tuning;
         public FarmState State => Oracle.oracle?.saveData?.Farm;
         public bool Ready => Oracle.oracle != null && Oracle.oracle.HasLoadedCurrentSlotData;
+        public bool NeedsAttention => Ready && State?.Beds?.Values.Any(bed => bed != null && bed.IsReady &&
+            (!bed.Repeat || State.TwinsLevel < FarmContent.AutoReplantLevel)) == true;
         private string lastError;
         private GameData yieldPreviewOwner;
         private double nextYieldPreview;

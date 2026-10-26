@@ -911,11 +911,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003637
-    m_Localized: "Aumenta el peso de aparici\xF3n de esta tarea. Completar hitos aumenta la bonificaci\xF3n."
+    m_Localized: "Encuentra esta tarea más seguido. Consulta los detalles para ver la probabilidad."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003636
-    m_Localized: "Aumento de aparici\xF3n activado. Haz clic para quitar la bonificaci\xF3n de peso de la tarea."
+    m_Localized: "Priorizada. Selecciona de nuevo para desactivar."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003635
@@ -2115,7 +2115,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003320
-    m_Localized: Sir Splashford III
+    m_Localized: "Sir Splash"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003319
@@ -2131,7 +2131,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003316
-    m_Localized: Niblet el Audaz
+    m_Localized: "Niblet"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003315
@@ -2211,7 +2211,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003296
-    m_Localized: Bloopicus Maximus
+    m_Localized: "Bloopicus"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003295
@@ -2223,7 +2223,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003293
-    m_Localized: Devorador de barro
+    m_Localized: "Comebarro"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003292
@@ -2295,7 +2295,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003275
-    m_Localized: Flippy Floppy
+    m_Localized: "Flippy"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003274
@@ -2595,11 +2595,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003200
-    m_Localized: Sir Splashford III
+    m_Localized: "Sir Splash"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003199
-    m_Localized: Niblet el Audaz
+    m_Localized: "Niblet"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003198
@@ -2611,15 +2611,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003196
-    m_Localized: Bloopicus Maximus
+    m_Localized: "Bloopicus"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003195
-    m_Localized: Devorador de barro
+    m_Localized: "Comebarro"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003194
-    m_Localized: Flippy Floppy
+    m_Localized: "Flippy"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003193
@@ -4067,7 +4067,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004064
-    m_Localized: "Completa primero la introducci\xF3n de Flora y Tillman."
+    m_Localized: "Conoce primero a Flora y Tillman."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004065
@@ -4651,7 +4651,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166027245250023429
-    m_Localized: "Selecciona Potenciar para que esta tarea aparezca m\xE1s en su categor\xEDa. La categor\xEDa tambi\xE9n aparecer\xE1 un poco m\xE1s en el mapa. Los hitos de tareas completadas mejoran el efecto. Selecciona Potenciar otra vez para desactivarlo."
+    m_Localized: "Selecciona Priorizar para encontrar esta tarea más seguido. Completar tareas aumenta la mejora."
     m_Metadata:
       m_Items: []
   - m_Id: 166027245250023430
@@ -4903,7 +4903,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166516885933396022
-    m_Localized: Potenciar
+    m_Localized: "Priorizar"
     m_Metadata:
       m_Items: []
   - m_Id: 166516885933396023
@@ -5578,6 +5578,62 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 167163636583370755
     m_Localized: "Compacto"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370756
+    m_Localized: "Excluir de Mezclar todo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370757
+    m_Localized: "Incluir en Mezclar todo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370758
+    m_Localized: "Orientación"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370759
+    m_Localized: "Auto"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370760
+    m_Localized: "Vertical"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370761
+    m_Localized: "Horizontal"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370762
+    m_Localized: "Mantener la vista bajo el recorte"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370763
+    m_Localized: "Próxima mejora: {0} tareas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370764
+    m_Localized: "Mejora máxima"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370765
+    m_Localized: "Probabilidad: {0:0.##}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370766
+    m_Localized: "Probabilidad: {0:0.##}% → {1:0.##}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370767
+    m_Localized: "Probabilidad en esta salida"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370768
+    m_Localized: "Sin descubrir ({0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370769
+    m_Localized: "Idioma"
     m_Metadata:
       m_Items: []
   references:

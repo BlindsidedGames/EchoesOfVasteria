@@ -1,3 +1,41 @@
+/* Task choices stay compact; historical metrics are shown on demand. */
+.gameplay .task-preferences-toolbar {flex-direction:row;align-items:center;justify-content:flex-end;margin-bottom:8px;flex-shrink:0;}
+.gameplay .task-skill-selectors {flex-direction:row;flex-grow:1;min-width:0;}
+.gameplay .task-skill-selector {width:34px;min-width:34px;height:34px;padding:4px;margin-right:3px;}
+.gameplay .task-skill-selector .eov-icon {width:24px;height:24px;}
+.gameplay .task-preferences-sort {width:112px;min-width:0;flex-shrink:0;margin:0;}
+.gameplay .task-preferences-sort .unity-base-popup-field__input {min-height:30px;background-color:var(--control);border-color:var(--line);border-width:1px;color:var(--text);}
+.gameplay .task-preferences-sort .unity-base-popup-field__text {font-size:var(--body);color:var(--text);}
+.gameplay .task-preferences-context {font-size:var(--small);color:var(--muted);margin-bottom:6px;flex-shrink:0;}
+.gameplay .task-preferences-grid {flex-direction:row;flex-wrap:wrap;align-items:flex-start;}
+.gameplay .task-preferences-column {min-width:0;flex-shrink:0;}
+.gameplay .task-preferences-group {min-width:0;flex-shrink:0;padding:0 0 14px 0;}
+.gameplay .task-preferences-multi .task-preferences-group {padding-right:14px;}
+.gameplay .task-preferences-heading {flex-direction:row;align-items:center;min-height:30px;margin-bottom:5px;}
+.gameplay .task-preferences-heading .eov-icon {width:22px;height:22px;margin-right:6px;}
+.gameplay .task-preferences-skill-name {font-size:var(--body);-unity-font-style:bold;flex-grow:1;}
+.gameplay .task-preferences-favour-label {font-size:var(--small);color:var(--muted);flex-shrink:0;}
+.gameplay .task-preference-row {flex-direction:row;align-items:center;min-height:36px;margin-bottom:2px;}
+.gameplay .task-preference-name,.gameplay .task-preference-name:hover,.gameplay .task-preference-name:active {flex-direction:row;justify-content:flex-start;flex-grow:1;flex-basis:0;min-width:0;min-height:36px;padding:2px 0;background-color:transparent;border-width:0;}
+.gameplay .task-preference-name .eov-icon {width:22px;height:22px;flex-shrink:0;margin-right:6px;}
+.gameplay .task-preference-title {font-size:var(--body);-unity-font-style:normal;white-space:normal;flex-shrink:1;min-width:0;-unity-text-align:middle-left;}
+.gameplay.eov-statistics .button.task-preference-name,.gameplay.eov-statistics .button.task-preference-name:hover,.gameplay.eov-statistics .button.task-preference-name:active {background-color:transparent;border-width:0;padding:2px 0;}
+.gameplay .task-preference-chance {width:46px;margin-left:4px;font-size:var(--small);color:var(--muted);-unity-text-align:middle-right;flex-shrink:0;}
+.gameplay .task-preference-toggle,.gameplay .task-preference-toggle:hover,.gameplay .task-preference-toggle:active {width:36px;min-width:36px;height:36px;padding:9px;margin:0 0 0 2px;background-color:transparent;border-width:0;}
+.gameplay .task-preference-toggle .eov-icon {width:16px;height:16px;}
+.gameplay .button.task-preference-toggle.check-control--standalone {width:36px;min-width:36px;max-width:36px;height:36px;min-height:36px;padding:9px;justify-content:center;}
+.gameplay.eov-statistics .button.task-preference-toggle,.gameplay.eov-statistics .button.task-preference-toggle:hover,.gameplay.eov-statistics .button.task-preference-toggle:active {background-color:transparent;border-width:0;}
+.gameplay .task-preferences-unknown-toggle,.gameplay .task-preferences-unknown-toggle:hover {font-size:var(--small);-unity-font-style:normal;-unity-text-align:middle-left;min-height:30px;padding:2px 0;background-color:transparent;border-width:0;color:var(--muted);}
+.gameplay .task-details-overlay {position:absolute;left:0;right:0;top:0;bottom:0;align-items:center;justify-content:center;}
+.gameplay.eov-statistics .button.task-details-backdrop,.gameplay.eov-statistics .button.task-details-backdrop:hover {position:absolute;left:0;right:0;top:0;bottom:0;background-color:rgba(0,0,0,.45);border-width:0;}
+.gameplay .task-details-panel {width:90%;max-width:340px;max-height:90%;padding:12px;flex-shrink:1;}
+.gameplay .task-details-heading {flex-direction:row;align-items:center;flex-shrink:0;margin-bottom:12px;}
+.gameplay .task-details-heading .eov-icon {width:24px;height:24px;margin-right:6px;}
+.gameplay .task-details-title {flex-grow:1;flex-shrink:1;min-width:0;font-size:var(--body);-unity-font-style:bold;white-space:normal;}
+.gameplay #task-details-close {width:30px;min-width:30px;height:30px;margin-left:8px;}
+.gameplay .task-details-text {font-size:var(--body);white-space:normal;margin-bottom:12px;}
+.gameplay #task-details-favour {min-height:34px;flex-shrink:0;}
+
 /* Semantic roles are shared by both routes. Rarity colours retain the original tier artwork. */
 .gameplay.dark .hero-text {color:#eaddd1;}
 .gameplay.dark .hero-surface {background-color:#2b2425;border-color:#7e684e;}
@@ -68,6 +106,10 @@
 .gameplay .food .icon,.gameplay .card .icon {margin:0 0 var(--space-control) 0;}
 .gameplay .food Label,.gameplay .card Label {-unity-text-align:middle-center;}
 .gameplay .food .food-name {width:100%;min-width:0;white-space:nowrap;overflow:hidden;}
+.gameplay .food .food-lock {position:absolute;right:0;top:0;width:22px;height:22px;min-width:22px;padding:3px;margin:0;border-width:0;background-color:transparent;}
+.gameplay .food .food-lock.active,.gameplay .food .food-lock:hover,.gameplay .food .food-lock:active,.gameplay .food .food-lock:focus {background-color:transparent;border-width:0;}
+.gameplay .food-lock .buff-lock-icon {width:12px;height:14px;margin:0;}
+.gameplay .food-lock.locked .buff-lock-icon {color:var(--accent);}
 .gameplay .selected {background-color:var(--selected);border-color:var(--accent);}
 .gameplay .mix-footer {flex-shrink:0;padding-top:var(--space-control);}
 .gameplay .mix-summary {align-items:center;margin-bottom:var(--space-control);}
@@ -963,7 +1005,8 @@
 .gameplay.eov-forge .forge-odds-zero {opacity:.35;}
 .gameplay.eov-forge .forge-craft-controls {align-items:center;margin-bottom:4px;}
 .gameplay.eov-forge .forge-craft-controls > Button {width:82px;min-height:28px;margin-right:8px;flex-shrink:0;}
-.gameplay.eov-forge .forge-craft-recipe {flex-grow:1;justify-content:center;}
+.gameplay.eov-forge .forge-craft-recipe {flex-grow:1;justify-content:flex-start;min-width:0;}
+.gameplay.eov-forge .forge-craft-controls > #forge-replace {margin-left:8px;margin-right:0;}
 .gameplay.eov-forge #forge-automation-area {min-height:24px;}
 .gameplay.eov-forge .eov-forge-conversions {margin-top:auto;margin-bottom:0;flex-shrink:0;}
 

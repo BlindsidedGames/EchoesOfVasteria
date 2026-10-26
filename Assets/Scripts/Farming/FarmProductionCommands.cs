@@ -54,6 +54,12 @@ namespace TimelessEchoes.Farming
             for (int i = 0; i < build.gardenCapacity; i++) Unlock(result.Candidate, GardenBeds[i]);
             for (int i = 0; i < build.orchardCapacity; i++) Unlock(result.Candidate, OrchardBeds[i]);
             result.CompletedQuests.Add(questId);
+            if (build.previousQuestId == FarmContent.IntroductionId && !FarmContent.Completed(owner, FarmContent.IntroductionId))
+            {
+                result.CompletedQuests.Add(FarmContent.IntroductionId);
+                result.ResourceDeltas.TryGetValue(SeedResourceName(RadishSeedId), out var seeds);
+                result.ResourceDeltas[SeedResourceName(RadishSeedId)] = seeds + 1;
+            }
             return result;
         }
         private static void Unlock(FarmState state, string id)

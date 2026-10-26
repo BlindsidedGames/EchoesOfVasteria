@@ -72,6 +72,7 @@ namespace TimelessEchoes.UI.Toolkit
         public void SelectTab(int index)
         {
             if (!IsOpen || !tabButtons.ContainsKey(index)) return;
+            taskPreferences?.CloseDetails(); taskPreferences = null;
             runGraph = null; townView = null; selectedTab = index; distanceControls?.RemoveFromHierarchy(); distanceControls = null; enemyDistance = null; body.Clear(); footer.Clear(); portraitSortActions.Clear(); summaries.Clear(); tooltip.style.display = DisplayStyle.None;
             foreach (var pair in tabButtons) StyleSelection(pair.Value, pair.Key == index);
             footer.style.display = index != 0 && index != 6 ? DisplayStyle.Flex : DisplayStyle.None;
@@ -183,7 +184,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void Changed() { dirty = true; }
         private void RunEnded(bool _) => Changed();
-        private void DistanceChanged(float _) { if (selectedTab == 0) dirty = true; }
+        private void DistanceChanged(float _) { if (selectedTab == 0 || selectedTab == 4) dirty = true; }
         private void Update() { if (!IsOpen) return; Layout(); RefreshJournalAccess(); RefreshMapTutorial(); RefreshGraphGuidance(); RefreshBoostGuidance(); if (localizationDirty) { localizationDirty = false; RefreshLocalization(); } if (dirty || selectedTab == 6 && Time.unscaledTime >= nextTownRefresh) Refresh(); }
         // Portrait section guidance belongs to the global Statistics popup.
         private VisualElement StatisticsSectionTarget(int tab) => ToolkitResponsiveLayout.IsPortrait ? null : tabButtons[tab];
@@ -242,7 +243,14 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly ToolkitWindowLayout windowLayout = new();
         private void Layout()
         {
-            windowLayout.Centered(root, theme);
+            if (selectedTab == 4)
+            {
+                var area = ToolkitWindowLayout.SafeArea;
+                var width = Mathf.Min(900, area.width - 24);
+                windowLayout.Apply(root, new Rect(area.center.x - width / 2, area.y + ToolkitResponsiveLayout.WindowTop,
+                    width, Mathf.Max(0, area.height - ToolkitResponsiveLayout.WindowTop - ToolkitResponsiveLayout.WindowBottom)));
+            }
+            else windowLayout.Centered(root, theme);
             var portrait = ToolkitResponsiveLayout.IsPortrait;
             if (previousPortraitLayout.HasValue && previousPortraitLayout.Value != portrait)
             {
@@ -250,8 +258,9 @@ namespace TimelessEchoes.UI.Toolkit
                 else runGraph?.Refresh();
             }
             previousPortraitLayout = portrait;
+            taskPreferences?.Layout();
             syncingPortraitSelectors = true;
-            footer.style.display = !portrait && selectedTab != 0 && selectedTab != 2 && selectedTab != 6 ? DisplayStyle.Flex : DisplayStyle.None;
+            footer.style.display = !portrait && selectedTab != 0 && selectedTab != 2 && selectedTab != 4 && selectedTab != 6 ? DisplayStyle.Flex : DisplayStyle.None;
             portraitSort.style.display = portrait && portraitSortActions.Count > 0 ? DisplayStyle.Flex : DisplayStyle.None;
             if (portraitSortActions.Count > 0)
             {
@@ -277,7 +286,8 @@ namespace TimelessEchoes.UI.Toolkit
             TimelessEchoes.Tasks.TaskWeightService.ToggleChanged -= TaskToggleChanged; TimelessEchoes.Tasks.TaskWeightService.WeightsChanged -= TaskWeightsChanged;
             boostHand?.RemoveFromHierarchy(); graphHand?.RemoveFromHierarchy(); mapTutorialHand?.RemoveFromHierarchy();
             boostHand = null; graphHand = null; boostScrolled = false; mapTutorial = null; mapTutorialText = null; mapTutorialHand = null;
-            taskRows.Clear(); enemyRows.Clear(); statSortButtons.Clear(); distanceControls = null; enemyDistance = null;
+            taskPreferences?.CloseDetails(); taskPreferences = null;
+            enemyRows.Clear(); statSortButtons.Clear(); distanceControls = null; enemyDistance = null;
             itemRows.Clear(); itemSortButtons.Clear(); itemContent = null;
             journalSelectors.Clear(); journalDiscoveries.Clear(); journalContent = journalRecent = journalCollection = null; journalDiscoveryCount = null;
             Blindsided.EventHandler.OnLoadData -= Changed; root?.RemoveFromHierarchy(); root = null; tracker = null; runGraph = null; townView = null; tabButtons.Clear(); summaries.Clear();

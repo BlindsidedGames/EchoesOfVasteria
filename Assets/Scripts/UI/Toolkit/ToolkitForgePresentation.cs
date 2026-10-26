@@ -72,6 +72,7 @@ namespace TimelessEchoes.UI.Toolkit
             ingotCost.EnableInClassList("forge-loss", !ingot || resources.GetAmount(ingot) < (core ? core.ingotCost : 0));
             craftArrow.sprite = session.CanCraft() ? definition.arrowValid : definition.arrowInvalid;
             maxCrafts.text = ToolkitLocalization.Text("forge.crafts-available", "{0:N0} crafts available", session.MaxCrafts); craft.text = session.IsAutoCrafting ? ToolkitLocalization.Text("common.stop", "Stop") : ToolkitLocalization.Text("forge.craft", "Craft"); craft.SetEnabled(session.IsAutoCrafting || session.CanCraft()); replace.SetEnabled(session.CanReplace);
+            replace.style.display = session.CanReplace ? DisplayStyle.Flex : DisplayStyle.None;
             automationControls.SetEnabled(session.AutomationUnlocked);
             automationControls.style.visibility = session.AutomationUnlocked ? Visibility.Visible : Visibility.Hidden;
             automationLock.style.display = session.AutomationUnlocked ? DisplayStyle.None : DisplayStyle.Flex;
@@ -82,6 +83,9 @@ namespace TimelessEchoes.UI.Toolkit
             ToolkitGameplay.SetToggle(stopIcon,StopAutocraftOnVastium);ToolkitGameplay.SetToggle(lockIcon,LockAutocraftStatSet);ToolkitGameplay.SetToggle(repeatIcon,repeatCraft || NeverStopAutocraft);
             ToolkitGameplay.SetToggle(neverStopIcon,NeverStopAutocraft);
             stopIcon.parent.SetEnabled(!NeverStopAutocraft);
+            stopIcon.parent.style.display = definition.catalog.cores.Any(binding => binding.core &&
+                binding.core.name == "Vastium" && binding.coreResource && resources.IsUnlocked(binding.coreResource))
+                ? DisplayStyle.Flex : DisplayStyle.None;
             lockIcon.parent.SetEnabled(!NeverStopAutocraft);
             repeatIcon.parent.SetEnabled(!NeverStopAutocraft);
             var weights = RarityOddsCalculator.BuildRarityWeightInfo(core).weights;

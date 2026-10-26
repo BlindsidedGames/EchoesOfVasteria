@@ -36,7 +36,7 @@ namespace TimelessEchoes.UI.Toolkit
         private VisualElement morePopup;
         private bool moreOpen;
         private bool? portraitNavigation;
-        private Image forgeAttention, cauldronAttention, questAttention, hubQuestAttention;
+        private Image forgeAttention, cauldronAttention, fieldsAttention, questAttention, hubQuestAttention;
         private VisualElement progressRoot, progressFill;
         private Image progressHero, progressReaper;
         private TimelessEchoes.Characters.CharacterImage characterPortrait;
@@ -249,6 +249,9 @@ namespace TimelessEchoes.UI.Toolkit
                 {
                     forgeAttention = AddAttention(button, definition.forgeAttention);
                     cauldronAttention = AddAttention(button, definition.cauldronAttention);
+                    fieldsAttention = AddAttention(button, TimelessEchoes.Farming.FarmContent.Load()?.recipes
+                        .Find(recipe => recipe?.output != null)?.output.icon);
+                    fieldsAttention.name = "fields-attention";
                 }
                 if (entry.action == NavAction.Window && entry.window == TownWindowManager.Window.Quests)
                 {
@@ -442,7 +445,7 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 windows?.CloseAllWindows(); CloseMenu(); Refresh(); return;
             }
-            if (ToolkitResponsiveLayout.IsPortrait) windows?.CloseAllWindows();
+            windows?.CloseAllWindows();
             portraitMenuTitle.text = MenuTitle(group);
             openGroup = group; menuAnchor = ToolkitResponsiveLayout.IsPortrait && anchor.parent?.parent == morePopup ? moreButton : anchor; popup.style.display = DisplayStyle.Flex;
             Refresh();
@@ -579,6 +582,7 @@ namespace TimelessEchoes.UI.Toolkit
             RefreshTutorialPrompt();
             SetVisible(forgeAttention, windows != null && windows.ForgeNeedsAttention);
             SetVisible(cauldronAttention, windows != null && windows.CauldronNeedsAttention);
+            SetVisible(fieldsAttention, TimelessEchoes.Farming.FarmService.Instance?.NeedsAttention == true);
             SetVisible(questAttention, QuestManager.Instance != null && QuestManager.Instance.HasQuestsReadyForTurnIn());
             SetVisible(hubQuestAttention, QuestManager.Instance != null && QuestManager.Instance.HasQuestsReadyForTurnIn());
             SetVisible(autoPinGroup, !ToolkitResponsiveLayout.IsPortrait && windows != null && windows.IsWindowOpen(TownWindowManager.Window.Quests));

@@ -947,11 +947,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003637
-    m_Localized: Boost this task's spawn weight. Completion milestones increase the bonus.
+    m_Localized: "Find this task more often. Open its details to preview the chance."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003636
-    m_Localized: Spawn boost enabled. Click to remove the task weight bonus.
+    m_Localized: "Favoured. Select again to turn off."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003635
@@ -2182,7 +2182,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003320
-    m_Localized: Sir Splashford III
+    m_Localized: "Sir Splash"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003319
@@ -2198,7 +2198,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003316
-    m_Localized: Niblet the Bold
+    m_Localized: "Niblet"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003315
@@ -2278,7 +2278,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003296
-    m_Localized: Bloopicus Maximus
+    m_Localized: "Bloopicus"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003295
@@ -2290,7 +2290,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003293
-    m_Localized: Muddy Muck Muncher
+    m_Localized: "Muck Muncher"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003292
@@ -2362,7 +2362,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003275
-    m_Localized: Flippy Floppy
+    m_Localized: "Flippy"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003274
@@ -2662,11 +2662,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003200
-    m_Localized: Sir Splashford III
+    m_Localized: "Sir Splash"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003199
-    m_Localized: Niblet the Bold
+    m_Localized: "Niblet"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003198
@@ -2678,15 +2678,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003196
-    m_Localized: Bloopicus Maximus
+    m_Localized: "Bloopicus"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003195
-    m_Localized: Muddy Muck Muncher
+    m_Localized: "Muck Muncher"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003194
-    m_Localized: Flippy Floppy
+    m_Localized: "Flippy"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003193
@@ -4386,7 +4386,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004064
-    m_Localized: Complete Flora and Tillman's introduction first.
+    m_Localized: "Meet Flora and Tillman first."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004065
@@ -4546,7 +4546,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166027245250023429
-    m_Localized: Select Boost to make this task more common within its category. Its category also becomes a little more common on the map. Completion milestones strengthen the boost. Select Boost again to turn it off.
+    m_Localized: "Select Favour to find this task more often. Completing tasks strengthens the boost."
     m_Metadata:
       m_Items: []
   - m_Id: 166027245250023428
@@ -5018,7 +5018,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166516885933396022
-    m_Localized: Boost
+    m_Localized: "Favour"
     m_Metadata:
       m_Items: []
   - m_Id: 166516885933396023
@@ -5697,6 +5697,62 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 167163636583370755
     m_Localized: "Compact"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370756
+    m_Localized: "Exclude from Mix All"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370757
+    m_Localized: "Allow in Mix All"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370758
+    m_Localized: "Orientation"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370759
+    m_Localized: "Auto"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370760
+    m_Localized: "Portrait"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370761
+    m_Localized: "Landscape"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370762
+    m_Localized: "Keep view below cutouts"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370763
+    m_Localized: "Next boost: {0} completions"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370764
+    m_Localized: "Boost maxed"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370765
+    m_Localized: "Chance: {0:0.##}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370766
+    m_Localized: "Chance: {0:0.##}% → {1:0.##}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370767
+    m_Localized: "Chance in this run"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370768
+    m_Localized: "Undiscovered ({0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370769
+    m_Localized: "Language"
     m_Metadata:
       m_Items: []
   references:

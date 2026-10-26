@@ -174,6 +174,15 @@ namespace TimelessEchoes.UI.Toolkit
             var light = ActionButton(themeRow, "theme-light", () => ToolkitColorTheme.SetLight(true), 22, false); Grow(light);
             ToolkitLocalization.Bind(dark, "options.theme-dark", "Dark");
             ToolkitLocalization.Bind(light, "options.theme-light", "Light");
+            var languageRow = Row(frame, "appearance-language");
+            languageRow.AddToClassList("settings-actions");
+            languageRow.style.marginTop = 6;
+            var languageLabel = ToolkitGameplay.L(languageRow, "", "settings-language-label");
+            ToolkitLocalization.Bind(languageLabel, "options.language", "Language");
+            languageLabel.style.flexGrow = 1;
+            languageLabel.style.unityTextAlign = TextAnchor.MiddleLeft;
+            var language = ActionButton(languageRow, "language", () => OpenDialog("language"), 28);
+            Grow(language);
             RefreshThemeButtons();
         }
         private void BuildDisplay()
@@ -187,6 +196,25 @@ namespace TimelessEchoes.UI.Toolkit
             full.style.display=window.style.display=UnityEngine.Device.Application.isMobilePlatform?DisplayStyle.None:DisplayStyle.Flex;
             var fps=ActionButton(row,"fps",()=>{TargetFps=TargetFps==30?60:TargetFps==60?120:30;ApplyFps();RefreshValues();},22);Grow(fps);
             LabelledToggle(row,"vsync","vsync-label",()=>{VSyncEnabled=!VSyncEnabled;ApplyFps();});
+            var mobileDisplay = new VisualElement { name = "mobile-display-options" }; frame.Add(mobileDisplay);
+            mobileDisplay.style.marginTop = 8;
+            var heading = ToolkitGameplay.L(mobileDisplay, "", "settings-section-title");
+            heading.name = "orientation-heading";
+            heading.style.marginBottom = 4;
+            ToolkitLocalization.Bind(heading, "options.orientation", "Orientation");
+            var orientations = Row(mobileDisplay); orientations.AddToClassList("settings-actions");
+            var names = new[] { "Auto", "Portrait", "Landscape" };
+            for (var i = 0; i < names.Length; i++)
+            {
+                var mode = i;
+                var button = ActionButton(orientations, "orientation-" + i, () =>
+                { ToolkitDisplayPreferences.Orientation = mode; RefreshValues(); }, 22, false);
+                ToolkitLocalization.Bind(button, "options.orientation-" + i, names[i]); Grow(button);
+            }
+            var inset = ActionButton(mobileDisplay, "world-safe-area", () =>
+            { ToolkitDisplayPreferences.KeepWorldInSafeArea = !ToolkitDisplayPreferences.KeepWorldInSafeArea; RefreshValues(); }, 22, false);
+            inset.style.marginTop = 6;
+            ToolkitLocalization.Bind(inset, "options.world-safe-area", "Keep view below cutouts");
         }
         private void RefreshThemeButtons()
         {
@@ -232,9 +260,8 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var row=Row(root,"footer");row.AddToClassList("settings-footer");
             Grow(ActionButton(row,"credits",()=>windows?.OpenWindow(TownWindowManager.Window.Credits),22));
-            var language=ActionButton(row,"language",()=>OpenDialog("language"),22);Grow(language);
             var folder=ActionButton(row,"folder",()=>Application.OpenURL($"file://{Application.persistentDataPath}"),22);Grow(folder);
-            language.style.display=folder.style.display=UnityEngine.Device.Application.isMobilePlatform?DisplayStyle.None:DisplayStyle.Flex;
+            folder.style.display=UnityEngine.Device.Application.isMobilePlatform?DisplayStyle.None:DisplayStyle.Flex;
             foreach (var button in row.Children().OfType<Button>())
             {
                 button.style.height = StyleKeyword.Auto;
@@ -288,6 +315,8 @@ namespace TimelessEchoes.UI.Toolkit
         private void SetSlider(string id, float value) { sliders[id].SetValueWithoutNotify(value); sliders[id].Q("value-fill").style.width = Length.Percent(value * 100); }
         private void RefreshValues()
         {
+            for (var i = 0; i < 3; i++) buttons["orientation-" + i].EnableInClassList("active", ToolkitDisplayPreferences.Orientation == i);
+            buttons["world-safe-area"].EnableInClassList("active", ToolkitDisplayPreferences.KeepWorldInSafeArea);
             SetSlider("master", MasterVolume); SetSlider("music", MusicVolume); SetSlider("sfx", SfxVolume); SetSlider("width", SafeAreaRatio);
             SetSlider("drops", DropFloatingTextDuration / 10); SetSlider("player-damage", PlayerDamageTextDuration / 2); SetSlider("enemy-damage", EnemyDamageTextDuration / 2);
             SetToggle("mute", MuteWhenUnfocused); SetToggle("vsync", VSyncEnabled); SetToggle("drops-toggle", ItemDropFloatingText);
@@ -304,6 +333,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void Layout()
         {
             var phone = UnityEngine.Device.Application.isMobilePlatform || ToolkitResponsiveLayout.IsPortrait;
+            root.Q("mobile-display-options").style.display = UnityEngine.Device.Application.isMobilePlatform || Application.isEditor ? DisplayStyle.Flex : DisplayStyle.None;
             root.Q("desktop-display-width").style.display = phone ? DisplayStyle.None : DisplayStyle.Flex;
             buttons["fullscreen"].style.display = buttons["windowed"].style.display = phone ? DisplayStyle.None : DisplayStyle.Flex;
             buttons["vsync"].style.display = phone ? DisplayStyle.None : DisplayStyle.Flex;

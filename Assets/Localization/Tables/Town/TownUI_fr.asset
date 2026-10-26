@@ -901,11 +901,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003637
-    m_Localized: "Augmente la fr\xE9quence de cette t\xE2che. Les paliers de t\xE2ches termin\xE9es renforcent le bonus."
+    m_Localized: "Cette tâche apparaîtra plus souvent. Consultez les détails pour voir sa probabilité."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003636
-    m_Localized: "Bonus d\u2019apparition activ\xE9. Clique pour le retirer."
+    m_Localized: "Favorisé. Sélectionnez à nouveau pour désactiver."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003635
@@ -2103,7 +2103,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003320
-    m_Localized: Sir Splashford III
+    m_Localized: "Sire Plouf"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003319
@@ -2119,7 +2119,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003316
-    m_Localized: "Niblet l\u2019Audacieux"
+    m_Localized: "Niblet"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003315
@@ -2199,7 +2199,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003296
-    m_Localized: Bloopicus Maximus
+    m_Localized: "Bloopicus"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003295
@@ -2211,7 +2211,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003293
-    m_Localized: Gobe-vase boueux
+    m_Localized: "Gobe-vase"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003292
@@ -2283,7 +2283,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003275
-    m_Localized: Flippy Floppy
+    m_Localized: "Flippy"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003274
@@ -2583,11 +2583,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003200
-    m_Localized: Sir Splashford III
+    m_Localized: "Sire Plouf"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003199
-    m_Localized: "Niblet l\u2019Audacieux"
+    m_Localized: "Niblet"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003198
@@ -2599,15 +2599,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003196
-    m_Localized: Bloopicus Maximus
+    m_Localized: "Bloopicus"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003195
-    m_Localized: Gobe-vase boueux
+    m_Localized: "Gobe-vase"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003194
-    m_Localized: Flippy Floppy
+    m_Localized: "Flippy"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003193
@@ -4055,7 +4055,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004064
-    m_Localized: "Termine d\u2019abord la pr\xE9sentation de Flora et Tillman."
+    m_Localized: "Rencontrez d’abord Flora et Tillman."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004065
@@ -4639,7 +4639,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166027245250023429
-    m_Localized: "S\xE9lectionne Booster pour rendre cette t\xE2che plus fr\xE9quente dans sa cat\xE9gorie. Sa cat\xE9gorie devient aussi un peu plus fr\xE9quente sur la carte. Les paliers de r\xE9alisation renforcent le boost. S\xE9lectionne \xE0 nouveau Booster pour le d\xE9sactiver."
+    m_Localized: "Sélectionnez Favoriser pour trouver cette tâche plus souvent. Accomplir des tâches renforce le bonus."
     m_Metadata:
       m_Items: []
   - m_Id: 166027245250023430
@@ -4887,7 +4887,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166516885933396022
-    m_Localized: Booster
+    m_Localized: "Favoriser"
     m_Metadata:
       m_Items: []
   - m_Id: 166516885933396023
@@ -5562,6 +5562,62 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 167163636583370755
     m_Localized: "Compact"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370756
+    m_Localized: "Exclure de Tout mélanger"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370757
+    m_Localized: "Inclure dans Tout mélanger"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370758
+    m_Localized: "Orientation"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370759
+    m_Localized: "Auto"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370760
+    m_Localized: "Portrait"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370761
+    m_Localized: "Paysage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370762
+    m_Localized: "Garder la vue sous l’encoche"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370763
+    m_Localized: "Prochain bonus : {0} tâches"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370764
+    m_Localized: "Bonus maximal"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370765
+    m_Localized: "Chance : {0:0.##}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370766
+    m_Localized: "Chance : {0:0.##}% → {1:0.##}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370767
+    m_Localized: "Chances pour cette sortie"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370768
+    m_Localized: "Non découverts ({0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370769
+    m_Localized: "Langue"
     m_Metadata:
       m_Items: []
   references:

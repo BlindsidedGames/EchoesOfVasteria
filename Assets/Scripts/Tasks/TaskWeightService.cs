@@ -24,7 +24,7 @@ namespace TimelessEchoes.Tasks
         public static event Action WeightsChanged;
         public static void NotifyWeightsChanged() => WeightsChanged?.Invoke();
 
-        public static float GetEffectiveWeight(TaskData task, float worldX)
+        public static float GetEffectiveWeight(TaskData task, float worldX, bool? favoured = null)
         {
             if (task == null)
                 return 0f;
@@ -40,7 +40,7 @@ namespace TimelessEchoes.Tasks
             if (baseWeight <= 0f)
                 return 0f;
 
-            var multiplier = GetProgressMultiplier(task);
+            var multiplier = GetProgressMultiplier(task, favoured);
             var weight = baseWeight * multiplier;
             if (TimelessEchoes.Buffs.BuffManager.Instance != null)
                 weight *= TimelessEchoes.Buffs.BuffManager.Instance.GetGatheringWeightMultiplier(task);
@@ -127,9 +127,9 @@ namespace TimelessEchoes.Tasks
             return false;
         }
 
-        public static float GetProgressMultiplier(TaskData task)
+        public static float GetProgressMultiplier(TaskData task, bool? favoured = null)
         {
-            var toggleEnabled = IsToggleEnabled(task);
+            var toggleEnabled = favoured ?? IsToggleEnabled(task);
             var multiplier = 1f;
             if (toggleEnabled)
             {

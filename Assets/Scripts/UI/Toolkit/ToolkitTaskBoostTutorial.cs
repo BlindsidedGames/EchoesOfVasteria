@@ -21,13 +21,13 @@ namespace TimelessEchoes.UI.Toolkit
                 else
                 {
                     var task = TaskBoostGuidance.FindTask();
-                    if (task && taskRows.TryGetValue(task, out var row))
+                    if (task && taskPreferences != null)
                     {
                         if (Tasks.TaskWeightService.IsToggleEnabled(task))
                         { general.TaskBoostTutorialStage = 2; return; }
-                        target = row.Toggle;
-                        if (!boostScrolled && row.Root.layout.height > 0)
-                        { body.Q<ScrollView>()?.ScrollTo(row.Root); boostScrolled = true; }
+                        target = taskPreferences.ToggleFor(task);
+                        if (!boostScrolled)
+                        { target = taskPreferences.Reveal(task); boostScrolled = target?.worldBound.height > 0; }
                     }
                 }
             }

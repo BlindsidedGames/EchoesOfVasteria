@@ -67,7 +67,7 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 Toggle = ToolkitControls.Button("toggle-" + name, toggle, null); Toggle.AddToClassList("eov-stat-entry-toggle");
                 ToggleIcon = ToolkitControls.Icon(null); ToggleIcon.style.width = 32; ToggleIcon.style.height = 16; Toggle.Add(ToggleIcon);
-                var boostLabel = ToolkitGameplay.L(Toggle, "", "task-boost-label"); ToolkitLocalization.Bind(boostLabel, "statistics.boost", "Boost");
+                var boostLabel = ToolkitGameplay.L(Toggle, "", "task-boost-label"); ToolkitLocalization.Bind(boostLabel, "statistics.boost", "Favour");
                 Root.Add(Toggle);
             }
             progress = new VisualElement(); progress.AddToClassList("eov-stat-entry-progress"); progress.AddToClassList("track"); content.Add(progress);

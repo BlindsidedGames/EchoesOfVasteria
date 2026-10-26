@@ -17,7 +17,8 @@ namespace TimelessEchoes.UI.Toolkit
         private VisualElement statContent, distanceControls;
         private Slider enemyDistance;
         private Label enemyDistanceLabel;
-        private readonly Dictionary<TaskData, ToolkitStatRow> taskRows = new();
+        private ToolkitTaskPreferences taskPreferences;
+        private string taskSelectedSkill;
         private readonly Dictionary<EnemyData, ToolkitStatRow> enemyRows = new();
         private readonly List<Button> statSortButtons = new();
 
@@ -25,13 +26,15 @@ namespace TimelessEchoes.UI.Toolkit
         {
             
             body.style.paddingTop = body.style.paddingBottom = body.style.paddingLeft = body.style.paddingRight = 0;
-            if (!enemies && Blindsided.Oracle.oracle?.saveData?.General.TaskBoostTutorialStage == 1)
+            if (!enemies)
             {
-                var hint = ToolkitControls.Text(ToolkitLocalization.Text("statistics.boost-lesson", "Select Boost to make this task more common within its category. Its category also becomes a little more common on the map. Completion milestones strengthen the boost. Select Boost again to turn it off."), ToolkitControls.TextRole.Body);
-                hint.name = "task-boost-lesson"; hint.style.whiteSpace = WhiteSpace.Normal; body.Add(hint);
+                taskPresentation ??= new TaskStatisticsPresentation();
+                taskPreferences = new ToolkitTaskPreferences(body, root, theme, definition.inset, taskPresentation, tracker,
+                    taskSort, taskSelectedSkill, SetTaskSort, skill => taskSelectedSkill = skill.name);
+                return;
             }
             var scroll = ToolkitControls.RecessedScroll(body, enemies ? "enemy-statistics" : "task-statistics", theme, definition.inset);
-            statContent = scroll.contentContainer; taskRows.Clear(); enemyRows.Clear(); statSortButtons.Clear();
+            statContent = scroll.contentContainer; enemyRows.Clear(); statSortButtons.Clear();
             if (enemies)
             {
                 enemyPresentation ??= new EnemyStatisticsPresentation();
@@ -47,18 +50,6 @@ namespace TimelessEchoes.UI.Toolkit
                 foreach (EnemyStatsPanelUI.SortMode mode in Enum.GetValues(typeof(EnemyStatsPanelUI.SortMode)))
                     statSortButtons.Add(Action(footer, "enemy-sort-" + mode, EnemySortLabel(mode), () => SetEnemySort(mode)));
             }
-            else
-            {
-                taskPresentation ??= new TaskStatisticsPresentation();
-                foreach (var data in taskPresentation.Ordered(taskSort, tracker))
-                {
-                    var task = data;
-                    var row = new ToolkitStatRow("task-stat-" + data.name, "#" + data.taskID, 2, theme, definition.row, definition.iconFrame, null, null, () => TaskWeightService.SetToggle(task, !TaskWeightService.IsToggleEnabled(task)));
-                    taskRows.Add(data, row); statContent.Add(row.Root);
-                }
-                foreach (TaskStatsPanelUI.SortMode mode in Enum.GetValues(typeof(TaskStatsPanelUI.SortMode)))
-                    statSortButtons.Add(Action(footer, "task-sort-" + mode, TaskSortLabel(mode), () => SetTaskSort(mode)));
-            }
         }
         private static string EnemySortLabel(EnemyStatsPanelUI.SortMode mode) => mode switch
         {
@@ -70,30 +61,11 @@ namespace TimelessEchoes.UI.Toolkit
             EnemyStatsPanelUI.SortMode.Vision => ToolkitLocalization.Text("statistics.sort-vision", "Vision"),
             _ => ToolkitLocalization.Text("statistics.sort-default", "Default")
         };
-        private static string TaskSortLabel(TaskStatsPanelUI.SortMode mode) => mode switch
-        {
-            TaskStatsPanelUI.SortMode.Completions => ToolkitLocalization.Text("statistics.sort-completions", "Completions"),
-            TaskStatsPanelUI.SortMode.TaskTime => ToolkitLocalization.Text("statistics.sort-tasktime", "Task Time"),
-            TaskStatsPanelUI.SortMode.Unknown => ToolkitLocalization.Text("statistics.sort-unknown", "Unknown"),
-            _ => ToolkitLocalization.Text("statistics.sort-default", "Default")
-        };
         public void SetTaskSort(TaskStatsPanelUI.SortMode mode) { taskSort = mode; if (IsOpen && selectedTab == 4) RefreshTasks(); }
         public void SetEnemySort(EnemyStatsPanelUI.SortMode mode) { enemySort = mode; if (IsOpen && selectedTab == 3) RefreshEnemies(); }
         private void RefreshTasks()
         {
-            taskPresentation.Refresh(tracker);
-            var ordered = taskPresentation.Ordered(taskSort, tracker);
-            for (var index = 0; index < ordered.Count; index++)
-            {
-                var task = ordered[index]; var row = taskRows[task];
-                if (statContent.IndexOf(row.Root) != index) statContent.Insert(index, row.Root);
-                var data = taskPresentation.Describe(task, tracker);
-                row.Title.text = data.title; row.Fields[0].text = data.totals; row.Fields[1].text = data.detail; row.SetEntryIcon(data.icon, data.toggleVisible, data.toggle);
-                row.Toggle.style.display = data.toggleVisible ? DisplayStyle.Flex : DisplayStyle.None;
-                ToolkitGameplay.SetToggle(row.ToggleIcon,data.toggle);
-                row.Toggle.tooltip = data.toggle ? ToolkitLocalization.Text("statistics.task-boost-enabled", "Spawn boost enabled. Click to remove the task weight bonus.") : ToolkitLocalization.Text("statistics.task-boost-hint", "Boost this task's spawn weight. Completion milestones increase the bonus.");
-            }
-            for (var i = 0; i < statSortButtons.Count; i++) StyleSelection(statSortButtons[i], i == (int)taskSort);
+            taskPreferences?.Refresh();
         }
         private void RefreshEnemies()
         {
