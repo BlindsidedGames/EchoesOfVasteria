@@ -1056,7 +1056,9 @@ namespace TimelessEchoes.Tasks
             public string requiredNpcId;
             public List<TaskData> tasks = new();
 
-            public float GetWeight(float worldX)
+            public float GetWeight(float worldX) => GetWeight(worldX, null, false);
+
+            public float GetWeight(float worldX, TaskData previewTask, bool favoured)
             {
                 // Carry a quarter of the average task boost into its parent category.
                 // Normalize against unboosted weights so merely unlocking more task
@@ -1065,9 +1067,10 @@ namespace TimelessEchoes.Tasks
                 if (tasks != null)
                     foreach (var task in tasks)
                     {
-                        var effective = TaskWeightService.GetEffectiveWeight(task, worldX);
+                        bool? preview = task == previewTask ? favoured : null;
+                        var effective = TaskWeightService.GetEffectiveWeight(task, worldX, preview);
                         if (effective <= 0f) continue;
-                        baseline += effective / TaskWeightService.GetProgressMultiplier(task);
+                        baseline += effective / TaskWeightService.GetProgressMultiplier(task, preview);
                         boosted += effective;
                     }
                 var categoryMultiplier = baseline > 0f ? 1f + .25f * (boosted / baseline - 1f) : 1f;

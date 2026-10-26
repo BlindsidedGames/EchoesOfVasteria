@@ -12,36 +12,26 @@ namespace TimelessEchoes.UI.Toolkit
     public sealed class TaskStatisticsPresentation
     {
         private readonly List<TaskData> tasks = AssetCache.GetAll<TaskData>("Tasks").OrderBy(t => t.taskID).ThenBy(t => t.taskName).ToList();
-        private readonly Dictionary<Skill, List<TaskData>> bySkill = new();
         private readonly Dictionary<TaskData, ProceduralTaskGenerator.WeightedTaskCategory> categories = new();
         private readonly Dictionary<ProceduralTaskGenerator.WeightedTaskCategory, float> categoryTotals = new();
         private float categoryWeightSum, worldX;
         private bool inRun;
         private MapGenerationConfig config;
-        public TaskStatisticsPresentation()
-        {
-            foreach (var task in tasks)
-            {
-                if (!task.associatedSkill) continue;
-                if (!bySkill.TryGetValue(task.associatedSkill, out var list)) bySkill[task.associatedSkill] = list = new();
-                list.Add(task);
-            }
-        }
         public void Refresh(GameplayStatTracker tracker)
         {
-            worldX = tracker && tracker.MaxRunDistance > 0 ? tracker.MaxRunDistance : 100;
+            worldX = Hero.HeroController.Instance ? Hero.HeroController.Instance.transform.position.x : 0;
             inRun = tracker && tracker.RunInProgress; config = inRun ? GameManager.CurrentGenerationConfig : null;
             categories.Clear(); categoryTotals.Clear(); categoryWeightSum = 0;
             if (!config) return;
             var settings = config.taskGeneratorSettings;
             foreach (var category in new[] { settings.woodcutting, settings.mining, settings.farming, settings.fishing, settings.looting })
             {
-                if (category == null || categoryTotals.ContainsKey(category)) continue;
+                if (category == null || categoryTotals.ContainsKey(category) || !CategoryAllowed(category)) continue;
                 categoryWeightSum += category.GetWeight(worldX); float sum = 0;
                 if (category.tasks != null) foreach (var task in category.tasks)
                 {
                     if (!task) continue;
-                    categories[task] = category; sum += TaskWeightService.GetEffectiveWeight(task, worldX);
+                    categories[task] = category; sum += SelectionWeight(task);
                 }
                 categoryTotals[category] = sum;
             }
@@ -57,22 +47,38 @@ namespace TimelessEchoes.UI.Toolkit
             if (mode == TaskStatsPanelUI.SortMode.Unknown) { unknown.AddRange(known); return unknown; }
             known.AddRange(unknown); return known;
         }
-        private bool Chance(TaskData task, out float chance)
+        private static bool CategoryAllowed(ProceduralTaskGenerator.WeightedTaskCategory category) =>
+            TimelessEchoes.Quests.QuestUtils.QuestCompleted(category.requiredQuest) &&
+            (string.IsNullOrEmpty(category.requiredNpcId) || Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Contains(category.requiredNpcId));
+
+        private float SelectionWeight(TaskData task, bool? favoured = null)
+        {
+            if (!config || !task) return 0;
+            var terrain = config.tilemapChunkSettings;
+            var available = new[] { terrain.bottomTerrain, terrain.middleTerrain, terrain.topTerrain };
+            if (task.spawnTerrains?.Count > 0 && !available.Any(t => t && task.spawnTerrains.Contains(t))) return 0;
+            return TaskWeightService.GetEffectiveWeight(task, worldX, favoured) * task.GetTerrainMultiplier(available);
+        }
+
+        private bool Chance(TaskData task, out float chance, bool? favoured = null)
         {
             chance = 0;
             if (inRun)
             {
                 if (!config || !categories.TryGetValue(task, out var category) || category == null) return true;
-                var categoryWeight = category.GetWeight(worldX);
-                if (categoryWeightSum > 0 && categoryWeight > 0 && categoryTotals.TryGetValue(category, out var total) && total > 0)
-                    chance = categoryWeight / categoryWeightSum * (TaskWeightService.GetEffectiveWeight(task, worldX) / total);
+                var categoryWeight = favoured.HasValue ? category.GetWeight(worldX, task, favoured.Value) : category.GetWeight(worldX);
+                var allCategories = favoured.HasValue ? categoryWeightSum - category.GetWeight(worldX) + categoryWeight : categoryWeightSum;
+                if (categoryTotals.TryGetValue(category, out var total))
+                {
+                    if (favoured.HasValue) total += SelectionWeight(task, favoured) - SelectionWeight(task);
+                    if (allCategories > 0 && categoryWeight > 0 && total > 0)
+                        chance = categoryWeight / allCategories * SelectionWeight(task, favoured) / total;
+                }
                 return true;
             }
-            if (!task.associatedSkill || !bySkill.TryGetValue(task.associatedSkill, out var list) || list.Count == 0) return false;
-            float sum = 0; foreach (var candidate in list) if (TaskWeightService.IsTaskUnlocked(candidate)) sum += TaskWeightService.GetEffectiveWeight(candidate, worldX);
-            if (TaskWeightService.IsTaskUnlocked(task) && sum > 0) chance = TaskWeightService.GetEffectiveWeight(task, worldX) / sum;
-            return true;
+            return false;
         }
+        public bool TryChance(TaskData task, out float chance) => Chance(task, out chance);
         public (string title, string totals, string detail, Sprite icon, bool toggleVisible, bool toggle) Describe(TaskData task, GameplayStatTracker tracker)
         {
             var record = tracker ? tracker.GetTaskRecord(task) : null;
@@ -83,19 +89,19 @@ namespace TimelessEchoes.UI.Toolkit
             var detail = string.Empty;
             if (known)
             {
-                var weight = TaskWeightService.GetEffectiveWeight(task, worldX); if (inRun && (!config || !categories.ContainsKey(task))) weight = 0;
-                var weightText = CalcUtils.FormatNumber(Mathf.Max(0, weight), true);
-                var distance = ToolkitLocalization.Text("statistics.task-min-distance", "Min Distance: {0}", CalcUtils.FormatNumber(task.GetEffectiveMinX(), true));
-                if (task.enforceMaxDistance) distance += ToolkitLocalization.Text("statistics.task-max-distance", ", Max Distance: {0}", float.IsInfinity(task.maxX) ? ToolkitLocalization.Text("common.infinity", "Infinity") : CalcUtils.FormatNumber(task.maxX, true));
+                var next = TaskWeightService.TryGetNextThreshold(task, out var remaining) ? remaining : 0;
+                var improvement = next > 0
+                    ? ToolkitLocalization.Text("statistics.favour-next", "Next boost: {0} completions", CalcUtils.FormatNumber(next, true))
+                    : ToolkitLocalization.Text("statistics.favour-max", "Boost maxed");
+                detail = improvement;
                 if (Chance(task, out var chance))
                 {
-                    chance = Mathf.Clamp01(float.IsFinite(chance) ? chance : 0);
-                    var next = TaskWeightService.TryGetNextThreshold(task, out var remaining) ? remaining : 0;
-                    var compact = ToolkitResponsiveLayout.IsPortrait;
-                    var improvement = next > 0 ? ToolkitLocalization.Text(compact ? "statistics.task-improvement-compact" : "statistics.task-improvement", compact ? "Tasks to boost: {0}" : "Tasks until next improvement: {0}", CalcUtils.FormatNumber(next, true)) : ToolkitLocalization.Text("statistics.task-improvement-maxed", "Next improvement: Maxed");
-                    detail = ToolkitLocalization.Text(compact ? "statistics.task-chance-compact" : "statistics.task-chance", compact ? "Chance: {0:0.##}% ({1})\n{2}\n{3}" : "Spawn chance: {0:0.##}% ({1})\n{2}\n{3}", chance * 100, weightText, improvement, distance);
+                    chance = Mathf.Clamp01(chance);
+                    var line = ToolkitLocalization.Text("statistics.favour-chance", "Chance: {0:0.##}%", chance * 100);
+                    if (!TaskWeightService.IsToggleEnabled(task) && Chance(task, out var preview, true) && !Mathf.Approximately(chance, preview))
+                        line = ToolkitLocalization.Text("statistics.favour-preview", "Chance: {0:0.##}% → {1:0.##}%", chance * 100, Mathf.Clamp01(preview) * 100);
+                    detail = line + "\n" + improvement;
                 }
-                else detail = ToolkitLocalization.Text("statistics.task-no-chance", "Spawn chance: -- ({0})\nNext improvement: --\n{1}", weightText, distance);
             }
             return (known ? ToolkitLocalization.Text("task." + task.name, task.taskName) : "???", totals, detail, known ? task.taskIcon : null, known, TaskWeightService.IsToggleEnabled(task));
         }

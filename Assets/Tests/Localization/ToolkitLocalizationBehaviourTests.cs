@@ -88,6 +88,43 @@ namespace TimelessEchoes.Tests.Localization
         }
 
         [UnityTest]
+        public IEnumerator StartupKeepsDeviceLocaleUntilPlayerChoosesALanguage()
+        {
+            const string preference = "Localization.SelectedLocale";
+            var hadPreference = PlayerPrefs.HasKey(preference);
+            var previousPreference = PlayerPrefs.GetString(preference, string.Empty);
+            var owner = new GameObject("Locale startup");
+            try
+            {
+                PlayerPrefs.DeleteKey(preference);
+                LocalizationSettings.SelectedLocale = russian;
+                var manager = owner.AddComponent<LocalizationManager>();
+                typeof(LocalizationManager).GetMethod("Start", System.Reflection.BindingFlags.Instance |
+                    System.Reflection.BindingFlags.NonPublic).Invoke(manager, null);
+                yield return null;
+                Assert.That(LocalizationSettings.SelectedLocale, Is.SameAs(russian));
+                Assert.That(PlayerPrefs.HasKey(preference), Is.False, "Automatic selection must not become a permanent override.");
+
+                manager.SelectLocale(english);
+                Assert.That(PlayerPrefs.GetString(preference), Is.EqualTo("en"));
+                Object.DestroyImmediate(manager);
+                LocalizationSettings.SelectedLocale = russian;
+                manager = owner.AddComponent<LocalizationManager>();
+                typeof(LocalizationManager).GetMethod("Start", System.Reflection.BindingFlags.Instance |
+                    System.Reflection.BindingFlags.NonPublic).Invoke(manager, null);
+                yield return null;
+                Assert.That(LocalizationSettings.SelectedLocale, Is.SameAs(english), "A saved player choice takes precedence over the device locale.");
+            }
+            finally
+            {
+                Object.DestroyImmediate(owner);
+                if (hadPreference) PlayerPrefs.SetString(preference, previousPreference);
+                else PlayerPrefs.DeleteKey(preference);
+                PlayerPrefs.Save();
+            }
+        }
+
+        [UnityTest]
         public IEnumerator OpenLabelSurvivesCacheAutoReleaseAndDetachedLabelWaitsUntilReopened()
         {
             tables.Add(english, "test.switch", "English view");

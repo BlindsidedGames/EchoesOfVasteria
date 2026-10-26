@@ -124,6 +124,7 @@ namespace TimelessEchoes.UI.Toolkit
             var costs = new VisualElement(); recipe.Add(costs); var first = Row(costs); first.AddToClassList("forge-ingredient"); costCore = ToolkitControls.Icon(null); first.Add(costCore); coreCost = Label(first, "1"); var second = Row(costs); second.AddToClassList("forge-ingredient"); costIngot = ToolkitControls.Icon(null); second.Add(costIngot); ingotCost = Label(second, "");
             craftArrow = ToolkitControls.Icon(null); recipe.Add(craftArrow);
             var result = new VisualElement(); recipe.Add(result); resultIcon = ToolkitControls.Icon(null); resultIcon.style.width = resultIcon.style.height = 24; result.Add(resultIcon); resultTier = Label(result, "", ToolkitControls.TextRole.Caption);
+            replace = LocalizedButton(craftRow, "forge-replace", "forge.equip", "Equip", session.Replace);
             maxCrafts = Label(actions, "", ToolkitControls.TextRole.Caption);
             var automationArea = new VisualElement { name = "forge-automation-area" }; actions.Add(automationArea);
             automationControls = new VisualElement(); automationArea.Add(automationControls);
@@ -142,9 +143,6 @@ namespace TimelessEchoes.UI.Toolkit
             odds = new ToolkitForgeOdds { name = "forge-odds", pickingMode = PickingMode.Ignore }; oddsSummary.Add(odds);
             BuildOddsLegend(oddsSummary);
             var results = new VisualElement(); results.AddToClassList("forge-comparison-section"); columns.Add(results);
-            var heading = Row(results); heading.AddToClassList("forge-comparison-heading");
-            var title = LocalizedLabel(heading, "forge.comparison", "Comparison", ToolkitControls.TextRole.Heading); title.style.flexGrow = 1;
-            replace = LocalizedButton(heading, "forge-replace", "forge.equip", "Equip", session.Replace);
             comparisonRows = new VisualElement(); results.Add(comparisonRows);
         }
         private void CraftSelected()

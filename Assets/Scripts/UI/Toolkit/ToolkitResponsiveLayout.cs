@@ -94,19 +94,19 @@ namespace TimelessEchoes.UI.Toolkit
 
         public static Rect WorldPixels(Vector2Int size, Rect safe)
         {
-            if (!Portrait(size)) return new Rect(0, 0, size.x, size.y);
             safe = ValidSafeArea(size, safe);
-            if (TownView) return new Rect(0, 0, size.x, size.y);
+            var bounds = ToolkitDisplayPreferences.KeepWorldInSafeArea ? safe : new Rect(0, 0, size.x, size.y);
+            if (!Portrait(size) || TownView) return bounds;
             if (FocusView)
             {
                 // Keep the health/ability row on its own panel, above navigation.
                 var bottom = Mathf.Clamp(safe.yMin + 92f / Scale(size), 0, size.y - 1);
-                return new Rect(0, bottom, size.x, size.y - bottom);
+                return new Rect(bounds.x, bottom, bounds.width, Mathf.Max(0, bounds.yMax - bottom));
             }
             var height = safe.width * 9f / 16f;
             // The world can extend behind the Dynamic Island; only interactive UI
             // needs the top safe-area inset. Keep the run viewport at 16:9.
-            return new Rect(safe.x, size.y - height, safe.width, height);
+            return new Rect(safe.x, bounds.yMax - height, safe.width, height);
         }
 
         // UI coordinates start at the top; camera pixels start at the bottom.
@@ -119,7 +119,8 @@ namespace TimelessEchoes.UI.Toolkit
                     safe.width * scale, safe.height * scale);
             // Preserve the dock's normal geometry while suspended. Its panels must
             // never receive zero/negative layout heights during focus mode.
-            var world = new Rect(safe.x, size.y - safe.width * 9f / 16f, safe.width, safe.width * 9f / 16f);
+            var world = new Rect(safe.x, (ToolkitDisplayPreferences.KeepWorldInSafeArea ? safe.yMax : size.y) - safe.width * 9f / 16f,
+                safe.width, safe.width * 9f / 16f);
             var top = (size.y - world.yMin) * scale;
             return new Rect(safe.xMin * scale, top,
                 safe.width * scale,

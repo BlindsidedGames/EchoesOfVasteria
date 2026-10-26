@@ -315,9 +315,12 @@ namespace TimelessEchoes.UI.Toolkit
         private void Build(FarmBuildPresentation build, string id)
         {
             if (build?.CanTurnIn != true || source is not FarmService service) return;
-            var manager = QuestManager.Instance;
-            if (manager) manager.RefreshFieldsProgression();
-            if (manager ? manager.TryTurnInQuest(build.QuestId) : service.BuildQuest(build.QuestId)) SelectBed(id);
+            var includeIntroduction = !FarmContent.Completed(Blindsided.Oracle.oracle.saveData, FarmContent.IntroductionId);
+            if (service.BuildQuest(build.QuestId))
+            {
+                QuestManager.Instance?.CompleteFieldsConstruction(build.QuestId, includeIntroduction);
+                SelectBed(id);
+            }
             Refresh();
         }
         private void PlantSelected()

@@ -913,11 +913,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003637
-    m_Localized: "Aumente o peso de apari\xE7\xE3o desta tarefa. Marcos de conclus\xE3o aumentam o b\xF4nus."
+    m_Localized: "Encontre esta tarefa com mais frequência. Veja a chance nos detalhes."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003636
-    m_Localized: "B\xF4nus de apari\xE7\xE3o ativado. Clique para remover o b\xF4nus de peso da tarefa."
+    m_Localized: "Priorizada. Selecione de novo para desativar."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003635
@@ -2129,7 +2129,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003320
-    m_Localized: Sir Splashford III
+    m_Localized: "Sir Splash"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003319
@@ -2145,7 +2145,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003316
-    m_Localized: Niblet, o Audaz
+    m_Localized: "Niblet"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003315
@@ -2225,7 +2225,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003296
-    m_Localized: Bloopicus Maximus
+    m_Localized: "Bloopicus"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003295
@@ -2237,7 +2237,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003293
-    m_Localized: "Comil\xE3o de lama"
+    m_Localized: "Come-lodo"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003292
@@ -2309,7 +2309,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003275
-    m_Localized: Flippy Floppy
+    m_Localized: "Flippy"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003274
@@ -2609,11 +2609,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003200
-    m_Localized: Sir Splashford III
+    m_Localized: "Sir Splash"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003199
-    m_Localized: Niblet, o Audaz
+    m_Localized: "Niblet"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003198
@@ -2625,15 +2625,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003196
-    m_Localized: Bloopicus Maximus
+    m_Localized: "Bloopicus"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003195
-    m_Localized: "Comil\xE3o de lama"
+    m_Localized: "Come-lodo"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003194
-    m_Localized: Flippy Floppy
+    m_Localized: "Flippy"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003193
@@ -4087,7 +4087,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004064
-    m_Localized: "Conclua primeiro a introdu\xE7\xE3o de Flora e Tillman."
+    m_Localized: "Conheça Flora e Tillman primeiro."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004065
@@ -4671,7 +4671,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166027245250023429
-    m_Localized: "Selecione Impulsionar para tornar esta tarefa mais comum em sua categoria. A categoria tamb\xE9m fica um pouco mais comum no mapa. Os marcos de conclus\xE3o fortalecem o impulso. Selecione Impulsionar novamente para desativ\xE1-lo."
+    m_Localized: "Selecione Priorizar para encontrar esta tarefa com mais frequência. Concluir tarefas aumenta o bônus."
     m_Metadata:
       m_Items: []
   - m_Id: 166027245250023430
@@ -4923,7 +4923,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166516885933396022
-    m_Localized: Impulsionar
+    m_Localized: "Priorizar"
     m_Metadata:
       m_Items: []
   - m_Id: 166516885933396023
@@ -5600,6 +5600,62 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 167163636583370755
     m_Localized: "Compacto"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370756
+    m_Localized: "Excluir de Misturar tudo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370757
+    m_Localized: "Incluir em Misturar tudo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370758
+    m_Localized: "Orientação"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370759
+    m_Localized: "Auto"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370760
+    m_Localized: "Retrato"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370761
+    m_Localized: "Paisagem"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370762
+    m_Localized: "Manter a visão abaixo do recorte"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370763
+    m_Localized: "Próximo bônus: {0} tarefas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370764
+    m_Localized: "Bônus máximo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370765
+    m_Localized: "Chance: {0:0.##}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370766
+    m_Localized: "Chance: {0:0.##}% → {1:0.##}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370767
+    m_Localized: "Chance nesta expedição"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370768
+    m_Localized: "Não descobertas ({0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370769
+    m_Localized: "Idioma"
     m_Metadata:
       m_Items: []
   references:

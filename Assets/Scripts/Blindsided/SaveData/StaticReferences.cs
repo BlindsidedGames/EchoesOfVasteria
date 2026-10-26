@@ -197,6 +197,15 @@ namespace Blindsided.SaveData
                 amount >= 0 && !double.IsNaN(amount) && !double.IsInfinity(amount) ? Math.Floor(amount) : 1;
         }
 
+        public static bool IsCauldronFoodLocked(string food) => PlayerPrefs.GetInt("Cauldron.Locked." + food, 0) == 1;
+
+        public static void SetCauldronFoodLocked(string food, bool locked)
+        {
+            if (string.IsNullOrEmpty(food)) return;
+            PlayerPrefs.SetInt("Cauldron.Locked." + food, locked ? 1 : 0);
+            PlayerPrefs.Save();
+        }
+
         public static void SetCauldronFoodAmount(string food, double amount)
         {
             if (string.IsNullOrEmpty(food) || amount < 0 || double.IsNaN(amount) || double.IsInfinity(amount)) return;

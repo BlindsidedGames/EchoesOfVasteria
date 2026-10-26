@@ -931,11 +931,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003637
-    m_Localized: "Erh\xF6he die Erscheinungsgewichtung dieser Aufgabe. Abschluss-Meilensteine steigern den Bonus."
+    m_Localized: "Diese Aufgabe erscheint häufiger. Die Vorschau findest du in den Details."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003636
-    m_Localized: Erscheinungsbonus aktiviert. Klicken entfernt den Gewichtungsbonus.
+    m_Localized: "Bevorzugt. Erneut auswählen zum Deaktivieren."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003635
@@ -2141,7 +2141,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003320
-    m_Localized: Sir Splashford III
+    m_Localized: "Sir Platsch"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003319
@@ -2157,7 +2157,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003316
-    m_Localized: Niblet the Bold
+    m_Localized: "Niblet"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003315
@@ -2237,7 +2237,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003296
-    m_Localized: Bloopicus Maximus
+    m_Localized: "Bloopicus"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003295
@@ -2249,7 +2249,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003293
-    m_Localized: Muddy Muck Muncher
+    m_Localized: "Schlammfresser"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003292
@@ -2321,7 +2321,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003275
-    m_Localized: Flippy Floppy
+    m_Localized: "Flippy"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003274
@@ -2621,11 +2621,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003200
-    m_Localized: Sir Splashford III
+    m_Localized: "Sir Platsch"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003199
-    m_Localized: Niblet the Bold
+    m_Localized: "Niblet"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003198
@@ -2637,15 +2637,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003196
-    m_Localized: Bloopicus Maximus
+    m_Localized: "Bloopicus"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003195
-    m_Localized: Muddy Muck Muncher
+    m_Localized: "Schlammfresser"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003194
-    m_Localized: Flippy Floppy
+    m_Localized: "Flippy"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003193
@@ -4101,7 +4101,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004064
-    m_Localized: "Schlie\xDFe zuerst Floras und Tillmans Einf\xFChrung ab."
+    m_Localized: "Triff zuerst Flora und Tillman."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000004065
@@ -4685,7 +4685,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166027245250023429
-    m_Localized: "W\xE4hle Verst\xE4rken, damit diese Aufgabe innerhalb ihrer Kategorie h\xE4ufiger erscheint. Auch ihre Kategorie erscheint etwas h\xE4ufiger auf der Karte. Abschlussmeilensteine verst\xE4rken den Bonus. W\xE4hle Verst\xE4rken erneut, um ihn abzuschalten."
+    m_Localized: "Wähle Bevorzugen, damit diese Aufgabe häufiger erscheint. Erledigte Aufgaben verstärken den Bonus."
     m_Metadata:
       m_Items: []
   - m_Id: 166027245250023430
@@ -4937,7 +4937,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 166516885933396022
-    m_Localized: "Verst\xE4rken"
+    m_Localized: "Bevorzugen"
     m_Metadata:
       m_Items: []
   - m_Id: 166516885933396023
@@ -5612,6 +5612,62 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 167163636583370755
     m_Localized: "Kompakt"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370756
+    m_Localized: "Von Alles mischen ausschließen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370757
+    m_Localized: "In Alles mischen einbeziehen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370758
+    m_Localized: "Ausrichtung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370759
+    m_Localized: "Auto"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370760
+    m_Localized: "Hochformat"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370761
+    m_Localized: "Querformat"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370762
+    m_Localized: "Ansicht unter Aussparungen halten"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370763
+    m_Localized: "Nächster Bonus: {0} Aufgaben"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370764
+    m_Localized: "Maximaler Bonus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370765
+    m_Localized: "Chance: {0:0.##}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370766
+    m_Localized: "Chance: {0:0.##}% → {1:0.##}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370767
+    m_Localized: "Chancen in diesem Lauf"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370768
+    m_Localized: "Unentdeckt ({0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 167163636583370769
+    m_Localized: "Sprache"
     m_Metadata:
       m_Items: []
   references:

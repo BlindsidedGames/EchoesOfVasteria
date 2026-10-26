@@ -122,6 +122,15 @@ namespace TimelessEchoes.UI.Toolkit
         // before the localization tables finish loading, without renaming those keys.
         internal static string ResourceNameFallback(string name)
         {
+            name = name switch
+            {
+                "Muddy Muck Muncher" => "Muck Muncher",
+                "Sir Splashford III" => "Sir Splash",
+                "Bloopicus Maximus" => "Bloopicus",
+                "Niblet the Bold" => "Niblet",
+                "Flippy Floppy" => "Flippy",
+                _ => name
+            };
             var separator = name.IndexOf(' ');
             var tier = separator < 0 ? name : name.Substring(0, separator);
             var display = tier switch

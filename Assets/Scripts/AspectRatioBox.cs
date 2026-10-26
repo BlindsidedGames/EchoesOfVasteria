@@ -67,14 +67,16 @@ public class AspectRatioBox : MonoBehaviour
         }
         else
         {
-            float windowAspect = (float)size.x / size.y;
+            var bounds = UI.Toolkit.ToolkitResponsiveLayout.WorldPixels(size, Screen.safeArea);
+            float windowAspect = bounds.width / bounds.height;
             float targetAspect = Mathf.Min(windowAspect, maxAspect);
             float scale = windowAspect / targetAspect;
 
             // A tablet keeps the full height and crops horizontally, just like
             // expanded portrait. RunActivityArea retains the wider Echo bounds.
             float invScale = 1f / scale;
-            rect = new Rect((1f - invScale) * 0.5f, 0f, invScale, 1f);
+            rect = new Rect((bounds.x + bounds.width * (1f - invScale) * .5f) / size.x,
+                bounds.y / size.y, bounds.width * invScale / size.x, bounds.height / size.y);
         }
 
         if (rect.width > 0 && rect.height > 0 &&
