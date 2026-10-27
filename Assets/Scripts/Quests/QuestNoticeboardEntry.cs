@@ -1,6 +1,6 @@
 namespace TimelessEchoes.Quests
 {
-    public enum QuestNoticeboardCategory { Ready, Pinned, Active, Completed }
+    public enum QuestNoticeboardCategory { Ready, Pinned, Active, Locked, Completed }
 
     public readonly struct QuestNoticeboardEntry
     {

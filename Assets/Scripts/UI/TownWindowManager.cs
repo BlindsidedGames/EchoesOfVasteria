@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Blindsided;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -24,6 +24,7 @@ namespace TimelessEchoes.UI
         public enum Window { Upgrades = 0, Buffs = 1, Quests = 2, Credits = 3, Stats = 5, Skills = 6, Library = 7, Cauldron = 8, Forge = 9, Inventory = 10, Options = 11, Farm = 12, Shop = 13 } // 4 is retired
         public event Action CloseRequested;
         public event Action WindowsChanged;
+        private int navigationRevision;
         public bool HasOpenWindow => AnyWindowOpen();
         public bool ForgeNeedsAttention { get; private set; }
         public bool CauldronNeedsAttention { get; private set; }
@@ -35,6 +36,7 @@ namespace TimelessEchoes.UI
         public void OpenWindow(Window window)
         {
             if (!CanOpenWindow(window)) return;
+            navigationRevision++;
             switch (window)
             {
                 case Window.Upgrades: OpenUpgrades(); break;
@@ -62,6 +64,25 @@ namespace TimelessEchoes.UI
             if (!CanOpenWindow(Window.Quests) || toolkitQuests == null || !toolkitQuests.IsConfigured) return;
             if (!toolkitQuests.IsOpen) OpenWindow(Window.Quests);
             toolkitQuests.RevealQuest(questId);
+        }
+
+        public Action SuspendQuestsForReveal()
+        {
+            if (!toolkitQuests || !toolkitQuests.IsOpen) return null;
+            var state = toolkitQuests.CaptureViewState();
+            var revision = navigationRevision;
+            toolkitQuests.Hide();
+            if (autoPin) autoPin.SetActive(false);
+            UpdateTownButtonsVisibility();
+            return () =>
+            {
+                if (!this || !toolkitQuests || HasOpenWindow || navigationRevision != revision ||
+                    !GameManager.Instance || !GameManager.Instance.IsInTown) return;
+                ShowNativeQuests();
+                toolkitQuests.RestoreViewState(state);
+                if (autoPin) autoPin.SetActive(true);
+                UpdateTownButtonsVisibility();
+            };
         }
 
         public bool IsWindowOpen(Window window)
@@ -369,7 +390,7 @@ namespace TimelessEchoes.UI
                 CloseAllWindows();
                 if (quests.window != null)
                 {
-                    if (toolkitQuests != null && toolkitQuests.IsConfigured) ShowNativeQuests(true);
+                    if (toolkitQuests != null && toolkitQuests.IsConfigured) ShowNativeQuests();
                     else Debug.LogError("Native Quests view is not configured.", this);
                     if (autoPin != null)
                         autoPin.SetActive(true);
@@ -413,7 +434,7 @@ namespace TimelessEchoes.UI
             {
                 var wasOpen = toolkitQuests.IsOpen;
                 CloseAllWindows();
-                if (!wasOpen) ShowNativeQuests(quests.openInventory);
+                if (!wasOpen) ShowNativeQuests();
                 if (autoPin != null) autoPin.SetActive(!wasOpen);
                 UpdateTownButtonsVisibility();
                 return;
@@ -421,9 +442,9 @@ namespace TimelessEchoes.UI
             Debug.LogError("Native Quests view is not configured.", this);
         }
 
-        private void ShowNativeQuests(bool withInventory)
+        private void ShowNativeQuests()
         {
-            toolkitQuests.Show(withInventory ? toolkitResources : null);
+            toolkitQuests.Show();
         }
 
         private void OpenCredits()
@@ -543,9 +564,8 @@ namespace TimelessEchoes.UI
 
         public bool TryHighlightNativeResource(Upgrades.Resource resource, bool scrollToSlot)
         {
-            if (toolkitQuests != null && toolkitQuests.TryHighlightResource(resource, scrollToSlot)) return true;
             if (toolkitResources == null || !toolkitResources.IsConfigured) return false;
-            SetResourceInventoryVisible(true);
+            if (!toolkitResources.IsOpen) OpenWindow(Window.Inventory);
             toolkitResources.HighlightResource(resource, scrollToSlot);
             UpdateTownButtonsVisibility();
             return true;

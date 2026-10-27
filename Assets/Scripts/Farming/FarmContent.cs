@@ -29,6 +29,8 @@ namespace TimelessEchoes.Farming
         public int lastCropCapLevel = 5000;
         public double baseYield = 10;
         public int harvestXp = 10;
+        [Range(0, 1)] public float cropSeedChance = .07f;
+        // Retain the existing sapling curves independently of crop seed packs.
         [Range(0, 1)] public float seedChance = .05f;
         [Range(0, 1)] public float seedChancePerCropTier = .9f;
         public List<FarmRecipe> recipes = new();
@@ -41,8 +43,8 @@ namespace TimelessEchoes.Farming
         public static FarmContent Load() => cached ? cached : cached = Resources.Load<FarmContent>("Farming/FarmContent");
         public FarmRecipe Recipe(string id) => recipes?.FirstOrDefault(r => r != null && r.id == id);
         public FarmBuild Build(string id) => builds?.FirstOrDefault(b => b != null && b.questId == id);
-        // Crop progression tiers, not resource rarity. Packs themselves never tier up.
-        public float SeedDropChance(FarmRecipe recipe) => recipe?.orchard == false ? TierDropChance(recipe, seedChance) : 0;
+        public float SeedDropChance(FarmRecipe recipe) => recipe?.orchard == false && recipe.source &&
+            recipes != null && recipes.Contains(recipe) ? Mathf.Clamp01(cropSeedChance) : 0;
 
         public float BonusDropChance(Resource resource, float fallback)
         {
@@ -78,7 +80,7 @@ namespace TimelessEchoes.Farming
             {
                 if (candidate?.source == null) continue;
                 count++;
-                var comparison = candidate.source.requiredSkillLevel.CompareTo(recipe.source.requiredSkillLevel);
+                var comparison = candidate.GrowthLevel.CompareTo(recipe.GrowthLevel);
                 if (comparison < 0 || comparison == 0 && string.CompareOrdinal(candidate.id, recipe.id) < 0) rank++;
             }
             return Math.Max(minimumCropCapLevel,
@@ -87,7 +89,7 @@ namespace TimelessEchoes.Farming
         public double GrowthDuration(FarmRecipe recipe, int fieldsLevel)
         {
             var level = Math.Max(1, fieldsLevel);
-            var baseSeconds = baseDurationSeconds * Math.Pow(durationMultiplierPerCropLevel, Math.Max(1, recipe.source.requiredSkillLevel) - 1);
+            var baseSeconds = baseDurationSeconds * Math.Pow(durationMultiplierPerCropLevel, recipe.GrowthLevel - 1);
             var capLevel = GrowthCapLevel(recipe);
             if (level >= capLevel) return minimumDurationSeconds;
             // Retain the early milestones, then keep improving toward each crop's cap.
@@ -101,7 +103,7 @@ namespace TimelessEchoes.Farming
         {
             // Scale faster than base growth time so later seeds improve XP per minute.
             // Fields speed upgrades and watering shorten the wait without reducing XP.
-            var durationRatio = Math.Pow(durationMultiplierPerCropLevel, Math.Max(1, recipe.source.requiredSkillLevel) - 1);
+            var durationRatio = Math.Pow(durationMultiplierPerCropLevel, recipe.GrowthLevel - 1);
             return checked((int)Math.Ceiling(harvestXp * Math.Pow(durationRatio, 1.5)));
         }
         public static int XpRequired(int level) => checked(5 + Math.Max(1, level) / 2);
@@ -137,16 +139,34 @@ namespace TimelessEchoes.Farming
         public Resource secondaryOutput;
         public double secondaryYieldRatio;
         public TaskData source;
+        [Tooltip("Optional growth tuning level, independent of the gathering unlock. Zero follows the source task.")]
+        [Min(0)] public int growthLevel;
+        public int GrowthLevel => Math.Max(1, growthLevel > 0 ? growthLevel : source ? source.requiredSkillLevel : 1);
         public string seedId;
         public Resource paidInput;
         public bool orchard;
         public Sprite packIcon, unknownIcon;
         public Sprite[] stages = Array.Empty<Sprite>();
+        public Sprite fullGrownSprite;
+        public Sprite GrowthSprite(float progress, bool ready, bool growFully)
+        {
+            if (stages == null || stages.Length != 4) return null;
+            if (!secondaryOutput) return stages[FarmView.GrowthStage(progress, ready)];
+            if (growFully && fullGrownSprite)
+            {
+                if (ready || progress >= .75f) return fullGrownSprite;
+                progress *= 2;
+            }
+            var stage = ready ? 3 : Mathf.Min(3, Mathf.FloorToInt(Mathf.Clamp01(progress) * 4));
+            return stages[stage];
+        }
         public string DisplayName => string.IsNullOrEmpty(displayName) ? ToolkitLocalization.Name(output) : ToolkitLocalization.Text("fields.tree." + id, displayName);
     }
     [Serializable] public sealed class FarmBuild
     {
         public string questId, previousQuestId, title;
+        public LocalizedString localizedTitle;
+        public string DisplayTitle => localizedTitle != null && !localizedTitle.IsEmpty ? localizedTitle.GetLocalizedString() : title;
         public int twinsLevel, gardenCapacity, orchardCapacity;
         public List<TaskData> sources = new();
         public List<FarmBuildCost> costs = new();

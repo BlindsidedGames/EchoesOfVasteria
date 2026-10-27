@@ -110,3 +110,6 @@
 .gameplay.portrait.fields-ui .fields-seed-card {height:43px;min-height:43px;padding:3px;}
 .gameplay.portrait.fields-ui .fields-seed-card .icon {width:24px;height:24px;}
 .gameplay.portrait.fields-ui .fields-seed-count {font-size:12px;}
+
+.gameplay.fields-ui #fields-keep-growing {flex-grow:1;min-width:0;height:26px;min-height:26px;margin-top:4px;font-size:var(--body);}
+.gameplay.portrait.fields-ui #fields-keep-growing {height:32px;min-height:32px;font-size:11px;}

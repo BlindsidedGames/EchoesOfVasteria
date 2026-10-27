@@ -27,7 +27,7 @@ namespace TimelessEchoes.UI.Toolkit
             public ToolkitVisibilityRule[] visibility = Array.Empty<ToolkitVisibilityRule>();
         }
         public Entry[] entries = Array.Empty<Entry>();
-        public Sprite forgeAttention, cauldronAttention, questAttention;
+        public Sprite forgeAttention, cauldronAttention, questAttention, shopAttention, shopAttentionLight;
         public Sprite questTutorialHand;
         public ToolkitNpcIntroduction farmingIntroduction;
         public ToolkitNpcIntroduction hubIntroduction;

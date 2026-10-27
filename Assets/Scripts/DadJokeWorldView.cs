@@ -119,7 +119,7 @@ namespace TimelessEchoes
             bubble.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,
                 Mathf.Max(40, bubbleText.GetPreferredValues(bubbleText.text, 66, 0).y + 25));
             bubble.gameObject.SetActive(true);
-            closesAt = Time.unscaledTime + 3;
+            closesAt = Time.unscaledTime + 6;
         }
 
         private void RefreshJokeLocale()

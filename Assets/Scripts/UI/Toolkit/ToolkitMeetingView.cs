@@ -20,6 +20,7 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly VisualElement portraitColumn, portraitFrame, contentColumn;
         private readonly ScrollView dialogueScroll;
         private bool? portraitLayout;
+        private readonly float portraitPixelScale;
         private int index = -1;
         private bool completed, disposed;
         private string navigationShortcut;
@@ -71,8 +72,9 @@ namespace TimelessEchoes.UI.Toolkit
         }
 
         public ToolkitMeetingView(ToolkitTheme theme, VisualTreeAsset template, Sprite portrait,
-            ToolkitMeetingDefinition definition, IReadOnlyList<string> lines, Action finished, IReadOnlyList<string> localizedLineKeys = null, bool continueAfterDialogue = false)
+            ToolkitMeetingDefinition definition, IReadOnlyList<string> lines, Action finished, IReadOnlyList<string> localizedLineKeys = null, bool continueAfterDialogue = false, float portraitPixelScale = 1)
         {
+            this.portraitPixelScale = portraitPixelScale;
             this.lines = lines ?? Array.Empty<string>();
             lineKeys = localizedLineKeys ?? Array.Empty<string>();
             this.finished = finished;
@@ -91,8 +93,8 @@ namespace TimelessEchoes.UI.Toolkit
             // consistent instead of shrinking a padded 64px frame into a 32px square.
             if (portrait)
             {
-                image.style.width = portrait.rect.width;
-                image.style.height = portrait.rect.height;
+                image.style.width = portrait.rect.width * portraitPixelScale;
+                image.style.height = portrait.rect.height * portraitPixelScale;
                 image.style.flexShrink = 0;
             }
             dialogueFrame = Root.Q("dialogue-frame");
@@ -149,7 +151,7 @@ namespace TimelessEchoes.UI.Toolkit
             var portraitImage = portraitFrame.Q<Image>("portrait");
             if (portraitImage.sprite)
             {
-                var pixelScale = portraitMode ? 2 : 1;
+                var pixelScale = (portraitMode ? 2 : 1) * portraitPixelScale;
                 portraitImage.style.width = portraitImage.sprite.rect.width * pixelScale;
                 portraitImage.style.height = portraitImage.sprite.rect.height * pixelScale;
             }

@@ -40,18 +40,41 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  rewardDisplayResource: {fileID: 0}
+  rewardIconKnown: 0
+  speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
   npcId: Farmers1
+  requiresTown: 1
+  acceptanceQuest: 0
+  acceptanceResources: []
   autoPin: 0
   useN0ForPinnedNumbers: 1
   requiredQuests:
   - {fileID: 11400000, guid: 6028092a5d9040468a85c3a42ad7c280, type: 2}
+  minimumMaxRunDistanceExclusive: 0
   requirements:
   - type: 0
-    resource: {fileID: 11400000, guid: d27f42dac2c64a9fbdaef87b1d68cf83, type: 2}
-    amount: 2500
+    resource: {fileID: 11400000, guid: 46c7f0ba803d4f56acb642a964cbe795, type: 2}
+    amount: 150000
+    enemies: []
+    killName:
+    killIcon: {fileID: 0}
+    meetNpcId:
+    buffs: []
+    includeAutoCasts: 1
+    buffCastName:
+    buffCastIcon: {fileID: 0}
   - type: 0
-    resource: {fileID: 11400000, guid: 662ac0c8e09545b9a11ae5a1e0ac7125, type: 2}
-    amount: 5000
+    resource: {fileID: 11400000, guid: 25c8cee6eddf4c4cb20d6d77f390eb56, type: 2}
+    amount: 300000
+    enemies: []
+    killName:
+    killIcon: {fileID: 0}
+    meetNpcId:
+    buffs: []
+    includeAutoCasts: 1
+    buffCastName:
+    buffCastIcon: {fileID: 0}
   rewards: []
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
@@ -59,3 +82,6 @@ MonoBehaviour:
   disciplePercentReward: 0
   unlocksBuff: 0
   upgradesBuff: 0
+  references:
+    version: 2
+    RefIds: []

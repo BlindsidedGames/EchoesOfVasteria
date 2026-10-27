@@ -11,16 +11,17 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
   m_Name: Medium Oak Tree
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   taskName: Medium Oak Tree
   taskID: 4
   taskIcon: {fileID: 6013379132409528037, guid: 974fe87578622624abd01a4856b266ef, type: 3}
   associatedSkill: {fileID: 11400000, guid: c2b68db9a9d75f441a4fc9e8e179640d, type: 2}
   xpForCompletion: 5
   minX: 100
+  enforceMinDistance: 0
   maxX: 2500
   enforceMaxDistance: 0
-  requiredSkillLevel: 13
+  requiredSkillLevel: 46
   taskDuration: 3
   sfxInterval: 0.7
   taskPrefab: {fileID: 5366876333383290996, guid: 59f9cd6a2535b134ea8a37959ddf07a6, type: 3}
@@ -31,22 +32,20 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7fb50b98a8abd724bb2b115b095a6432, type: 2}
   - {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
   - {fileID: 11400000, guid: e9e0d5475b2b3794d9035d35ea81d481, type: 2}
+  terrainWeights: []
   resourceDrops:
   - resource: {fileID: 11400000, guid: 662ac0c8e09545b9a11ae5a1e0ac7125, type: 2}
     dropRange: {x: 1, y: 5}
     weight: 1
-    minX: 100
-    maxX: Infinity
     requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: d27f42dac2c64a9fbdaef87b1d68cf83, type: 2}
     dropRange: {x: 1, y: 3}
     weight: 1
-    minX: 0
-    maxX: Infinity
     requiredSkillLevel: 0
   bonusDrops:
   - resource: {fileID: 11400000, guid: cc7e64ee6a6d12f4d9da19a67a5ad369, type: 2}
     chance: 0.1
+    chanceMultiplier: 1
     range: {x: 1, y: 1}
   additionalLootChances:
   - 0.3

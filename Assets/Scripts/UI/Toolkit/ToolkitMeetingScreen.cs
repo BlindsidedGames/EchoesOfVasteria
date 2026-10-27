@@ -19,6 +19,7 @@ namespace TimelessEchoes.UI.Toolkit
         private PanelSettings panel;
         private ToolkitMeetingView view;
         private Sprite portrait;
+        private Quests.QuestSpeaker speakerProfile;
         private string npcId;
         private IReadOnlyList<Sprite> portraitFrames;
         private Image animatedPortrait, meetHand;
@@ -69,7 +70,8 @@ namespace TimelessEchoes.UI.Toolkit
         public void Init(Sprite npcPortrait, IReadOnlyList<string> dialogue, Action onFinished, IReadOnlyList<string> localizedLineKeys = null, bool continueAfterDialogue = false, string npcId = null)
         {
             this.npcId = npcId;
-            portrait = npcPortrait;
+            speakerProfile = npcId is "Orin" or "OrinHubIntroduction" ? definition.orinSpeaker : null;
+            portrait = speakerProfile ? speakerProfile.portrait : npcPortrait;
             lines = dialogue;
             lineKeys = localizedLineKeys;
             this.continueAfterDialogue = continueAfterDialogue;
@@ -120,7 +122,13 @@ namespace TimelessEchoes.UI.Toolkit
             var document = GetComponent<UIDocument>();
             document.panelSettings = panel;
             document.rootVisualElement.pickingMode = PickingMode.Ignore;
-            view ??= new ToolkitMeetingView(theme, template, portrait, definition, lines, Finish, lineKeys, continueAfterDialogue);
+            view ??= new ToolkitMeetingView(theme, template, portrait, definition, lines, Finish, lineKeys, continueAfterDialogue,
+                speakerProfile ? speakerProfile.dialoguePixelScale : 1);
+            if (speakerProfile)
+            {
+                view.Root.Q<Image>("portrait").AddToClassList("quest-speaker-orin");
+                SetPortraitAnimation(speakerProfile.frames, speakerProfile.framesPerSecond);
+            }
             view.SetNavigationShortcut(navigationShortcut);
             view.SetSpeaker(npcId);
             document.rootVisualElement.Add(view.Root);
@@ -174,7 +182,12 @@ namespace TimelessEchoes.UI.Toolkit
                     meetHand.style.rotate = new Rotate(Angle.Degrees(aboveButton ? 180 : 0));
                 }
             }
-            if (animatedPortrait != null && portraitFrames != null && portraitFrames.Count > 0)
+            if (animatedPortrait != null && speakerProfile)
+            {
+                var frame = speakerProfile.PortraitAt(Time.unscaledTime - portraitAnimationStartedAt);
+                if (animatedPortrait.sprite != frame) animatedPortrait.sprite = frame;
+            }
+            else if (animatedPortrait != null && portraitFrames != null && portraitFrames.Count > 0)
             {
                 var index = Mathf.FloorToInt((Time.unscaledTime - portraitAnimationStartedAt) * portraitFramesPerSecond) % portraitFrames.Count;
                 var frame = portraitFrames[index];

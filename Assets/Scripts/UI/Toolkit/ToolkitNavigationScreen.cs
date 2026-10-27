@@ -36,7 +36,7 @@ namespace TimelessEchoes.UI.Toolkit
         private VisualElement morePopup;
         private bool moreOpen;
         private bool? portraitNavigation;
-        private Image forgeAttention, cauldronAttention, fieldsAttention, questAttention, hubQuestAttention;
+        private Image forgeAttention, cauldronAttention, fieldsAttention, questAttention, hubQuestAttention, shopAttention, hubShopAttention;
         private VisualElement progressRoot, progressFill;
         private Image progressHero, progressReaper;
         private TimelessEchoes.Characters.CharacterImage characterPortrait;
@@ -111,6 +111,7 @@ namespace TimelessEchoes.UI.Toolkit
         private bool NavigationAllows(Entry entry)
         {
             if (SettingsAction(entry)) return true;
+            if (TownQuestReveal.IsPlaying) return false;
             if (!RefresherAllows(entry)) return false;
             if (refresherEntry != null) return true;
             if (ToolkitMeetingScreen.HasOpenDialogue)
@@ -243,7 +244,13 @@ namespace TimelessEchoes.UI.Toolkit
                 {
                     hubQuestAttention = AddAttention(button, definition.questAttention);
                     hubQuestAttention.name = "hub-quest-attention";
-                    hubQuestAttention.AddToClassList("eov-navigation-quest-attention");
+                    hubShopAttention = AddAttention(button, definition.shopAttention);
+                    hubShopAttention.name = "hub-shop-attention";
+                }
+                if (entry.id == "shop")
+                {
+                    shopAttention = AddAttention(button, definition.shopAttention);
+                    shopAttention.name = "shop-attention";
                 }
                 if (entry.action == NavAction.TownsfolkMenu)
                 {
@@ -256,7 +263,6 @@ namespace TimelessEchoes.UI.Toolkit
                 if (entry.action == NavAction.Window && entry.window == TownWindowManager.Window.Quests)
                 {
                     questAttention = AddAttention(button, definition.questAttention);
-                    questAttention.AddToClassList("eov-navigation-quest-attention");
                 }
                 if (entry.group == Group.Toolbar)
                 {
@@ -585,6 +591,12 @@ namespace TimelessEchoes.UI.Toolkit
             SetVisible(fieldsAttention, TimelessEchoes.Farming.FarmService.Instance?.NeedsAttention == true);
             SetVisible(questAttention, QuestManager.Instance != null && QuestManager.Instance.HasQuestsReadyForTurnIn());
             SetVisible(hubQuestAttention, QuestManager.Instance != null && QuestManager.Instance.HasQuestsReadyForTurnIn());
+            var shopIcon = ToolkitColorTheme.IsLight && definition.shopAttentionLight ? definition.shopAttentionLight : definition.shopAttention;
+            if (shopAttention != null) shopAttention.sprite = shopIcon;
+            if (hubShopAttention != null) hubShopAttention.sprite = shopIcon;
+            var canClaimShopBonus = TimelessEchoes.Shop.ShopService.Instance?.CanClaim == true;
+            SetVisible(shopAttention, canClaimShopBonus);
+            SetVisible(hubShopAttention, canClaimShopBonus);
             SetVisible(autoPinGroup, !ToolkitResponsiveLayout.IsPortrait && windows != null && windows.IsWindowOpen(TownWindowManager.Window.Quests));
             var inRun = GameManager.Instance != null && GameManager.Instance.CurrentMap != null;
             SetVisible(progressRoot, inRun);

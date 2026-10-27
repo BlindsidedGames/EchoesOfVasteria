@@ -40,7 +40,7 @@ namespace TimelessEchoes.Farming
     {
         public string Id;
         public string Title;
-        public bool Unlocked, Orchard, Watered, Repeat;
+        public bool Unlocked, Orchard, Watered, Repeat, GrowFully;
         public string RecipeId, RecipeTitle;
         public string YieldTitle;
         public Sprite Icon;
@@ -149,7 +149,7 @@ namespace TimelessEchoes.Farming
                 var stage = bed == null ? 0 : GrowthStage(bed.Progress01, bed.Ready);
                 var recipe = FarmContent.Load()?.Recipe(bed?.RecipeId);
                 var stages = recipe?.stages ?? radishStages;
-                var sprite = stages.Length == 4 ? stages[stage] : null;
+                var sprite = recipe != null ? recipe.GrowthSprite(bed.Progress01, bed.Ready, bed.GrowFully) : stages.Length == 4 ? stages[stage] : null;
                 foreach (var plant in visual.plants ?? Array.Empty<SpriteRenderer>())
                 {
                     if (!plant) continue;

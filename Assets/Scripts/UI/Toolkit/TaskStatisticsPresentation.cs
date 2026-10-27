@@ -47,6 +47,15 @@ namespace TimelessEchoes.UI.Toolkit
             if (mode == TaskStatsPanelUI.SortMode.Unknown) { unknown.AddRange(known); return unknown; }
             known.AddRange(unknown); return known;
         }
+        public float MapWeight(Skill skill)
+        {
+            var settings=GameManager.CurrentGenerationConfig?.taskGeneratorSettings;
+            if(settings==null||!skill)return 0;
+            // Keep map relevance stable when task preferences or skill levels change.
+            return new[]{settings.woodcutting,settings.mining,settings.farming,settings.fishing,settings.looting}
+                .Where(category=>category?.tasks!=null&&category.tasks.Any(task=>task&&task.associatedSkill==skill))
+                .Select(category=>Mathf.Max(0,category.weight)).DefaultIfEmpty(0).Max();
+        }
         private static bool CategoryAllowed(ProceduralTaskGenerator.WeightedTaskCategory category) =>
             TimelessEchoes.Quests.QuestUtils.QuestCompleted(category.requiredQuest) &&
             (string.IsNullOrEmpty(category.requiredNpcId) || Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Contains(category.requiredNpcId));

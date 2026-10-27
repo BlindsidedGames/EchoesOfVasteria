@@ -11,14 +11,12 @@ namespace TimelessEchoes.UI.Toolkit
     {
         private TaskStatisticsPresentation taskPresentation;
         private EnemyStatisticsPresentation enemyPresentation;
-        private TaskStatsPanelUI.SortMode taskSort;
         private EnemyStatsPanelUI.SortMode enemySort;
         private EnemyKillTracker killTracker;
         private VisualElement statContent, distanceControls;
         private Slider enemyDistance;
         private Label enemyDistanceLabel;
         private ToolkitTaskPreferences taskPreferences;
-        private string taskSelectedSkill;
         private readonly Dictionary<EnemyData, ToolkitStatRow> enemyRows = new();
         private readonly List<Button> statSortButtons = new();
 
@@ -29,8 +27,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (!enemies)
             {
                 taskPresentation ??= new TaskStatisticsPresentation();
-                taskPreferences = new ToolkitTaskPreferences(body, root, theme, definition.inset, taskPresentation, tracker,
-                    taskSort, taskSelectedSkill, SetTaskSort, skill => taskSelectedSkill = skill.name);
+                taskPreferences = new ToolkitTaskPreferences(body, root, theme, definition.inset, taskPresentation, tracker);
                 return;
             }
             var scroll = ToolkitControls.RecessedScroll(body, enemies ? "enemy-statistics" : "task-statistics", theme, definition.inset);
@@ -61,7 +58,6 @@ namespace TimelessEchoes.UI.Toolkit
             EnemyStatsPanelUI.SortMode.Vision => ToolkitLocalization.Text("statistics.sort-vision", "Vision"),
             _ => ToolkitLocalization.Text("statistics.sort-default", "Default")
         };
-        public void SetTaskSort(TaskStatsPanelUI.SortMode mode) { taskSort = mode; if (IsOpen && selectedTab == 4) RefreshTasks(); }
         public void SetEnemySort(EnemyStatsPanelUI.SortMode mode) { enemySort = mode; if (IsOpen && selectedTab == 3) RefreshEnemies(); }
         private void RefreshTasks()
         {

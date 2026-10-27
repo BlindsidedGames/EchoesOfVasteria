@@ -21,6 +21,10 @@ namespace TimelessEchoes.Quests
         public LocalizedString rewardDescription;
         [Tooltip("Optional resource icon for the reward text. Display only; does not grant an item.")]
         public Resource rewardDisplayResource;
+        [Tooltip("Show the reward's real icon before discovery when the giver has already identified it.")]
+        public bool rewardIconKnown;
+        [Tooltip("Who speaks this quest. Presentation only; separate from the NPC unlock requirement.")]
+        public QuestSpeaker speaker;
         public string npcId;
         [Tooltip("This quest must be handed in after returning to town.")]
         public bool requiresTown;

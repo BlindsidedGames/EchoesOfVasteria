@@ -32,7 +32,7 @@ namespace TimelessEchoes.UI.Toolkit
         private Image yieldIcon, secondaryIcon;
         private VisualElement secondaryReward;
         private CostStrip selectedCosts;
-        private Button plant, harvest, water, repeat, buildSelected;
+        private Button plant, harvest, water, repeat, buildSelected, keepGrowing;
         private readonly ToolkitWindowLayout layout = new();
         private readonly Dictionary<string, SeedCard> seeds = new();
         private readonly Dictionary<string, BedTile> beds = new();
@@ -136,7 +136,7 @@ namespace TimelessEchoes.UI.Toolkit
             yieldXp = L(yieldRow, "", "muted fields-yield-xp");
             detail = L(controls, "", "muted fields-selection-detail"); detail.name = "fields-selected-status";
             var primaryActions = E(controls, "row fields-primary-actions");
-            buildSelected = Button(primaryActions, "", () => Build(FindBuild(source.CapturePresentation(), selectedBed), selectedBed)); buildSelected.AddToClassList("primary");
+            buildSelected = Button(primaryActions, "", OpenConstructionQuest); buildSelected.AddToClassList("primary");
             var tending = E(controls, "row fields-harvest-actions");
             repeat = Button(tending, "", ToggleRepeat); repeat.name = "fields-repeat-selected";
             var mainAction = E(tending, "fields-main-action");
@@ -145,6 +145,8 @@ namespace TimelessEchoes.UI.Toolkit
             water.AddToClassList("primary");
             harvest = Button(mainAction, "", () => { if (source is FarmService service) Execute(() => service.Harvest(selectedBed)); });
             harvest.name = "fields-harvest-selected"; harvest.AddToClassList("primary");
+            var growthChoice = E(controls, "row fields-growth-choice");
+            keepGrowing = Button(growthChoice, "", KeepGrowing); keepGrowing.name = "fields-keep-growing";
             seedColumn = E(drawer, "column fields-seeds-column"); seedHeading = L(seedColumn, "", "heading");
             seedScroll = ToolkitControls.RecessedScroll(seedColumn, "fields-seeds", theme, compact: true);
             seedGrid = E(seedScroll, "row fields-seed-grid");
@@ -312,21 +314,23 @@ namespace TimelessEchoes.UI.Toolkit
             Refresh();
         }
         private static string Compact(double value) => System.Text.RegularExpressions.Regex.Replace(FormatNumber(value, hideDecimal: true), "<[^>]+>", "");
-        private void Build(FarmBuildPresentation build, string id)
+        private void OpenConstructionQuest()
         {
-            if (build?.CanTurnIn != true || source is not FarmService service) return;
-            var includeIntroduction = !FarmContent.Completed(Blindsided.Oracle.oracle.saveData, FarmContent.IntroductionId);
-            if (service.BuildQuest(build.QuestId))
-            {
-                QuestManager.Instance?.CompleteFieldsConstruction(build.QuestId, includeIntroduction);
-                SelectBed(id);
-            }
-            Refresh();
+            var build = FindBuild(source.CapturePresentation(), selectedBed);
+            if (build == null || !QuestManager.Instance) return;
+            var id = QuestManager.Instance.IsQuestInProgress(build.QuestId) ? build.QuestId : FarmContent.IntroductionId;
+            TownWindowManager.Instance?.OpenQuest(id);
         }
         private void PlantSelected()
         {
             if (!plant.enabledInHierarchy || source is not FarmService service || selectedBed == null) return;
             if (selectedRecipe != null) Execute(() => service.Plant(selectedBed, selectedRecipe));
+        }
+        private void KeepGrowing()
+        {
+            var bed = source.CapturePresentation().Beds.FirstOrDefault(b => b.Id == selectedBed);
+            if (bed != null && source is FarmService service) service.KeepGrowing(bed.Id);
+            Refresh();
         }
         private void ToggleRepeat()
         {
@@ -388,8 +392,10 @@ namespace TimelessEchoes.UI.Toolkit
             var seedContent = (source as FarmService)?.Content ?? FarmContent.Load();
             var selectedDefinition = seedContent.Recipe(selected?.Id);
             var dryTime = selectedDefinition == null ? 0 : seedContent.GrowthDuration(selectedDefinition, snapshot.TwinsLevel);
+            var selectedIsGrowing = target?.Planted == true && target.RecipeId == selected?.Id;
+            if (selectedDefinition?.secondaryOutput && (selectedIsGrowing ? target.GrowFully : target?.Repeat == true)) dryTime *= 2;
             var autoWater = snapshot.TwinsLevel >= FarmContent.AutoWaterLevel;
-            var growthTime = target?.Planted == true && target.RecipeId == selected?.Id && target.GrowthSeconds > 0
+            var growthTime = selectedIsGrowing && target.GrowthSeconds > 0
                 ? target.GrowthSeconds / (autoWater && !target.Watered ? 2 : 1)
                 : dryTime / (autoWater ? 2 : 1);
             seedHeading.text = selected == null ? "" : selected.CropTitle + " • " + FormatTime(growthTime, mspace: false, shortForm: true);
@@ -443,7 +449,9 @@ namespace TimelessEchoes.UI.Toolkit
             Visible(detail, detail.text.Length > 0);
             Visible(buildSelected, selectedBuild != null); buildSelected.name = "fields-build-selected";
             Visible(buildSelected.parent, selectedBuild != null);
-            buildSelected.text = T("fields.construct", "Construct"); buildSelected.SetEnabled(selectedBuild?.CanTurnIn == true);
+            buildSelected.text = ToolkitLocalization.Text("quests.heading", "Quests");
+            buildSelected.SetEnabled(selectedBuild != null && QuestManager.Instance &&
+                (QuestManager.Instance.IsQuestInProgress(selectedBuild.QuestId) || QuestManager.Instance.IsQuestInProgress(FarmContent.IntroductionId)));
             Visible(plant, selectedBuild == null && target?.Planted != true);
             plant.SetEnabled(canPlant);
             plant.text = T("fields.action.plant", "Plant");
@@ -455,6 +463,10 @@ namespace TimelessEchoes.UI.Toolkit
             repeat.SetEnabled(snapshot.TownActionsAllowed && target?.Unlocked == true && snapshot.TwinsLevel >= FarmContent.AutoReplantLevel);
             repeat.EnableInClassList("primary", target?.Repeat == true);
             repeat.text = target?.Repeat == true ? T("fields.auto-on", "Auto • On") : T("fields.auto-off", "Auto • Off");
+            Visible(keepGrowing.parent, target?.Planted == true && target.Timber && target.Ready && !target.GrowFully && !target.Repeat);
+            keepGrowing.SetEnabled(snapshot.TownActionsAllowed);
+            keepGrowing.text = T("fields.keep-growing", "Keep growing");
+            keepGrowing.tooltip = T("fields.keep-growing-help", "Grow to full size for twice the resources and XP.");
             repeat.tooltip = ToolkitLocalization.Text("fields.repeat-help-water-on-plant", "Fields level {0}: harvest and replant using one matching seed pack or sapling. Stops when you run out. From Fields level {1}, every new planting is watered automatically, even with Auto off.", FarmContent.AutoReplantLevel, FarmContent.AutoWaterLevel);
             Visible(preview.Root, !orchard && selectedBuild == null); Visible(orchardPreview.Root, orchard && selectedBuild == null);
             if (target != null)
@@ -478,7 +490,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void RefreshArt(BedTile tile, FarmBedPresentation bed)
         {
             var recipe = (source as FarmService)?.Content.Recipe(bed.RecipeId); var stage = FarmView.GrowthStage(bed.Progress01, bed.Ready);
-            var sprite = !bed.Planted ? null : recipe?.stages?.Length == 4 ? recipe.stages[stage] : bed.Orchard && stage < 3 && appearance ? appearance.treeStages[stage] : bed.Icon;
+            var sprite = !bed.Planted ? null : recipe?.GrowthSprite(bed.Progress01, bed.Ready, bed.GrowFully) ?? (bed.Orchard && stage < 3 && appearance ? appearance.treeStages[stage] : bed.Icon);
             var size = bed.Orchard ? 2 : 3;
             var previewCropInset = tile.Preview && !bed.Orchard && sprite ? PreviewCropInset(sprite) : 0;
             tile.Soil.Configure(appearance ? appearance.dry : null, size);
@@ -499,7 +511,9 @@ namespace TimelessEchoes.UI.Toolkit
                     var width = sprite.rect.width / sprite.pixelsPerUnit * 8;
                     var height = sprite.rect.height / sprite.pixelsPerUnit * 8;
                     tile.Plants[i].style.width = width; tile.Plants[i].style.height = height;
-                    tile.Plants[i].style.left = 4; tile.Plants[i].style.top = 32 - height;
+                    var fullGrown = sprite == recipe?.fullGrownSprite;
+                    tile.Plants[i].style.left = fullGrown ? 12 - width / 2 : 4;
+                    tile.Plants[i].style.top = fullGrown ? 24 - height + sprite.pivot.y / sprite.pixelsPerUnit * 8 : 32 - height;
                 }
             }
         }

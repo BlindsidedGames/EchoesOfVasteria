@@ -11,16 +11,17 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c626bd8d63577f4690c035c3093d030, type: 3}
   m_Name: Large Birch Tree
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   taskName: Large Birch Tree
   taskID: 8
   taskIcon: {fileID: 2630977764869979562, guid: 53248977f321e9648bbbe8718c39a315, type: 3}
   associatedSkill: {fileID: 11400000, guid: c2b68db9a9d75f441a4fc9e8e179640d, type: 2}
   xpForCompletion: 25
   minX: 500
+  enforceMinDistance: 0
   maxX: 5000
   enforceMaxDistance: 0
-  requiredSkillLevel: 36
+  requiredSkillLevel: 90
   taskDuration: 7
   sfxInterval: 0.7
   taskPrefab: {fileID: 5366876333383290996, guid: dba5ff011728773449ac4bebb0e57a1c, type: 3}
@@ -31,22 +32,20 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7fb50b98a8abd724bb2b115b095a6432, type: 2}
   - {fileID: 11400000, guid: 72b8d65aaf5564344a54e119d2064b95, type: 2}
   - {fileID: 11400000, guid: e9e0d5475b2b3794d9035d35ea81d481, type: 2}
+  terrainWeights: []
   resourceDrops:
   - resource: {fileID: 11400000, guid: 25c8cee6eddf4c4cb20d6d77f390eb56, type: 2}
     dropRange: {x: 4, y: 10}
     weight: 1
-    minX: 500
-    maxX: Infinity
     requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: 46c7f0ba803d4f56acb642a964cbe795, type: 2}
     dropRange: {x: 5, y: 12}
     weight: 1
-    minX: 0
-    maxX: Infinity
     requiredSkillLevel: 0
   bonusDrops:
   - resource: {fileID: 11400000, guid: 0ed152a201c35ce4f8d00ad338a2faa5, type: 2}
     chance: 0.1
+    chanceMultiplier: 1
     range: {x: 1, y: 1}
   additionalLootChances:
   - 0.3

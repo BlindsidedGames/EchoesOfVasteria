@@ -1,4 +1,4 @@
-#if UNITY_INCLUDE_TESTS && UNITY_EDITOR
+﻿#if UNITY_INCLUDE_TESTS && UNITY_EDITOR
 using System.Collections;
 using System.Linq;
 using Blindsided.SaveData;
@@ -27,8 +27,8 @@ namespace Tests.PlayMode
                 typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(game, false);
                 oracle.saveData.CompletedNpcTasks.Add("Farmers1");
                 Build(FarmContent.IntroductionId);
-                oracle.saveData.Resources["Log"] = new GameData.ResourceEntry { Amount = 10, Earned = true };
-                oracle.saveData.Resources["Stick"] = new GameData.ResourceEntry { Amount = 20, Earned = true };
+                oracle.saveData.Resources["Log"] = new GameData.ResourceEntry { Amount = 20, Earned = true };
+                oracle.saveData.Resources["Stick"] = new GameData.ResourceEntry { Amount = 40, Earned = true };
                 var seedName = FarmCommands.SeedResourceName(FarmCommands.RadishSeedId);
                 oracle.saveData.Resources[seedName] = new GameData.ResourceEntry { Amount = 0, Earned = true };
                 var resources = resourceObject.AddComponent<TimelessEchoes.Upgrades.ResourceManager>(); resources.enabled = false;
@@ -44,13 +44,16 @@ namespace Tests.PlayMode
                 Assert.False(unknownCorn.enabledInHierarchy);
                 Assert.AreSame(content.Recipe("recipe.corn.v1").unknownIcon, unknownCorn.Q<Image>().sprite);
                 var buildPlot = ui.Q<Button>("fields-build-selected");
-                Assert.True(buildPlot.enabledInHierarchy);
+                Assert.False(buildPlot.enabledInHierarchy, "Without a quest owner, Fields must not offer direct construction.");
                 FieldsClick(buildPlot);
-                Assert.AreEqual(1, service.State.GardenCapacity, "The selected plot construction action must purchase the correct plot.");
-                Assert.AreEqual(0, oracle.saveData.Resources["Log"].Amount);
-                Assert.AreEqual(0, oracle.saveData.Resources["Stick"].Amount);
-                FieldsClick(buildPlot);
-                Assert.AreEqual(0, oracle.saveData.Resources["Log"].Amount, "Selecting a built plot must not repeat its construction payment.");
+                Assert.AreEqual(0, service.State.GardenCapacity, "The Fields screen cannot bypass quest construction.");
+                Assert.AreEqual(20, oracle.saveData.Resources["Log"].Amount);
+                Assert.AreEqual(40, oracle.saveData.Resources["Stick"].Amount);
+                typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(game, true);
+                Build("Farm.Garden.Build01.v1");
+                typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(game, false);
+                screen.Hide(); Assert.True(screen.Show());
+                yield return null; yield return null;
                 FieldsClick(ui.Q<Button>("fields-seed-" + FarmCommands.RadishRecipeId));
                 Assert.True(ui.Q<Button>("fields-seed-" + FarmCommands.RadishRecipeId).ClassListContains("primary"),
                     "Seed selection must repaint on its own click, before touching any bed.");
@@ -90,7 +93,7 @@ namespace Tests.PlayMode
                 Assert.True(service.State.Beds[FarmCommands.WestBedId].Watered);
                 var viewport = ui.Q<ScrollView>("fields-workspace");
                 Assert.LessOrEqual(viewport.verticalScroller.highValue, .5f, "The desktop Fields grid and controls fit without an unnecessary outer scrollbar.");
-                Assert.IsNull(ui.Q<Foldout>("fields-construction-foldout"), "Construction lives on its plot, rather than in a separate quest list.");
+                Assert.IsNull(ui.Q<Foldout>("fields-construction-foldout"), "Fields does not duplicate construction quests in a foldout.");
                 Assert.AreEqual(9, ui.Query<VisualElement>(className: "fields-selector-tile").ToList().Count,
                     "Six crop selectors and three grouped orchard selectors share one 3x3 grid.");
                 Assert.IsNull(ui.Q<Button>(className: "fields-plot-action"), "Economic actions belong only to the selected plot panel.");
@@ -126,7 +129,7 @@ namespace Tests.PlayMode
                 Assert.False(ui.Q<Button>("fields-plant-selected").enabledInHierarchy, "Changing crops cannot plant into the occupied bed or a locked one.");
                 Assert.AreEqual(1, resources.GetAmount(otherRecipe.paidInput, oracle.saveData));
                 var nextBuild = content.builds[1];
-                oracle.saveData.Farm.TwinsLevel = 20;
+                oracle.saveData.Farm.TwinsLevel = 25;
                 oracle.saveData.General.MaxRunDistance = 100000;
                 foreach (var task in nextBuild.sources)
                     oracle.saveData.SkillData[task.associatedSkill.name] = new GameData.SkillProgress { Level = task.requiredSkillLevel };

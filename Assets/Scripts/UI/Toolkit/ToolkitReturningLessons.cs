@@ -82,7 +82,7 @@ namespace TimelessEchoes.UI.Toolkit
                         yield return null;
                         meeting = Instantiate(meetingPrefab).GetComponent<ToolkitMeetingScreen>();
                         meeting.Init(null, new[] { lesson.text }, () => finished = true,
-                            new[] { "intro.refresher." + lesson.key }, true);
+                            new[] { "intro.refresher." + lesson.key }, true, npcId: "Orin");
                         meeting.GuideNavigation(guiding ? navigation : null);
                         meeting.BeginDialogue();
                         while (meeting && !finished) yield return null;
