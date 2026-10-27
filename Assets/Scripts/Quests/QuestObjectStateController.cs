@@ -28,6 +28,41 @@ namespace TimelessEchoes.Quests
 
         [SerializeField]
         private List<Entry> entries = new();
+        private bool presentationHeld;
+
+        public void HoldPresentation() => presentationHeld = true;
+        public void ReleasePresentation() { presentationHeld = false; UpdateObjectStates(); }
+
+        private Dictionary<GameObject, bool> DesiredStates()
+        {
+            var desired = new Dictionary<GameObject, bool>();
+            foreach (var entry in entries)
+            {
+                if (entry == null) continue;
+                var completed = entry.quest && QuestCompleted(entry.quest.questId);
+                var active = entry.quest && QuestInProgress(entry.quest.questId);
+                foreach (var obj in entry.disableUntilComplete) if (obj) desired[obj] = completed;
+                foreach (var obj in entry.enableUntilComplete) if (obj) desired[obj] = !completed;
+                foreach (var obj in entry.enableWhileInProgress) if (obj) desired[obj] = active;
+            }
+            return desired;
+        }
+
+        public List<TownVisualChange> PendingPresentationChanges(Transform town)
+        {
+            var changes = new List<TownVisualChange>();
+            foreach (var pair in DesiredStates())
+            {
+                var obj = pair.Key;
+                if (obj.activeSelf == pair.Value || !obj.transform.IsChildOf(town) ||
+                    (obj.transform.parent && !obj.transform.parent.gameObject.activeInHierarchy)) continue;
+                var bounds = TownQuestReveal.SpriteBounds(obj);
+                if (!bounds.HasValue) continue;
+                var enabled = pair.Value;
+                changes.Add(new TownVisualChange(bounds.Value, () => { if (obj) obj.SetActive(enabled); }));
+            }
+            return changes;
+        }
 
         private void Awake()
         {
@@ -67,6 +102,7 @@ namespace TimelessEchoes.Quests
         /// </summary>
         public void UpdateObjectStates()
         {
+            if (presentationHeld) return;
             foreach (var entry in entries)
             {
                 if (entry == null) continue;

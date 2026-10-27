@@ -29,6 +29,27 @@ namespace TimelessEchoes
         private int pinchIdA, pinchIdB;
         private bool pinching, pinchRejected;
         private InputAction moveAction;
+        private bool presentationControl;
+
+        public readonly struct Pose
+        {
+            public readonly Vector3 Position;
+            public readonly float Size;
+            public Pose(Vector3 position, float size) { Position = position; Size = size; }
+        }
+
+        public bool CanPresent => isActiveAndEnabled && panTarget && landBounds && outputCamera;
+        public Pose CapturePose() => new(panTarget.position, requestedSize);
+        public void BeginPresentation() { presentationControl = true; ResetGesture(); }
+        public void EndPresentation() { presentationControl = false; ResetGesture(); }
+        public void SetPresentationPose(Pose pose) { panTarget.position = pose.Position; requestedSize = pose.Size; }
+        public Pose Frame(Bounds bounds)
+        {
+            var aspect = (float)outputCamera.pixelWidth / Mathf.Max(1, outputCamera.pixelHeight);
+            var size = Mathf.Max(bounds.extents.y + 2, (bounds.extents.x + 2) / Mathf.Max(.1f, aspect));
+            size = Mathf.Clamp(size, preferredSize * .5f, preferredSize * 1.5f);
+            return new Pose(new Vector3(bounds.center.x, bounds.center.y, panTarget.position.z), size);
+        }
 
         private void Awake()
         {
@@ -40,6 +61,7 @@ namespace TimelessEchoes
 
         public void Focus(Vector2 worldPosition)
         {
+            if (presentationControl) return;
             if (Characters.CharacterCreation.Required || UI.Toolkit.ToolkitCharacterCreator.BlocksWorldInput) return;
             if (panTarget == null || landBounds == null || outputCamera == null) return;
             ResetGesture();
@@ -101,6 +123,21 @@ namespace TimelessEchoes
                 (bounds.extents.x - slack) / aspect);
             float minSize = Mathf.Min(preferredSize * .5f, maxSize);
             requestedSize = Mathf.Clamp(requestedSize, minSize, maxSize);
+
+            if (presentationControl)
+            {
+                if (!Mathf.Approximately(townCamera.Lens.OrthographicSize, requestedSize) || !Mathf.Approximately(aspect, lastAspect))
+                {
+                    townCamera.Lens.OrthographicSize = requestedSize;
+                    confiner.InvalidateLensCache();
+                    lastAspect = aspect;
+                }
+                var target = panTarget.position;
+                target.x = Mathf.Clamp(target.x, bounds.min.x + requestedSize * aspect + slack, bounds.max.x - requestedSize * aspect - slack);
+                target.y = Mathf.Clamp(target.y, bounds.min.y + requestedSize + slack, bounds.max.y - requestedSize - slack);
+                panTarget.position = target;
+                return;
+            }
 
             Vector2 position = default, secondPosition = default;
             bool down = false;

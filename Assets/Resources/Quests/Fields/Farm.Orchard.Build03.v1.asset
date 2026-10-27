@@ -40,8 +40,11 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  rewardDisplayResource: {fileID: 0}
+  rewardIconKnown: 0
+  speaker: {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
   npcId: Farmers1
-  requiresTown: 0
+  requiresTown: 1
   acceptanceQuest: 0
   acceptanceResources: []
   autoPin: 0
@@ -51,8 +54,8 @@ MonoBehaviour:
   minimumMaxRunDistanceExclusive: 0
   requirements:
   - type: 0
-    resource: {fileID: 11400000, guid: 46c7f0ba803d4f56acb642a964cbe795, type: 2}
-    amount: 6000
+    resource: {fileID: 11400000, guid: 7b11407c43c740dea10e135bf7e0c061, type: 2}
+    amount: 1000000
     enemies: []
     killName:
     killIcon: {fileID: 0}
@@ -62,8 +65,8 @@ MonoBehaviour:
     buffCastName:
     buffCastIcon: {fileID: 0}
   - type: 0
-    resource: {fileID: 11400000, guid: 25c8cee6eddf4c4cb20d6d77f390eb56, type: 2}
-    amount: 9000
+    resource: {fileID: 11400000, guid: 914756acb1d24fb8a64da0ad08e3838f, type: 2}
+    amount: 2000000
     enemies: []
     killName:
     killIcon: {fileID: 0}

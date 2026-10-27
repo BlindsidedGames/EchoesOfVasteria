@@ -152,6 +152,8 @@ namespace TimelessEchoes.Farming
             FarmJournal.NextOperation(state, "water:" + bedId), DateTime.UtcNow));
         public bool SetRepeat(string bedId, bool repeat) => Execute(state => FarmCommands.SetRepeat(state, bedId, repeat,
             FarmJournal.NextOperation(state, "repeat:" + bedId + ":" + (repeat ? "1" : "0")), DateTime.UtcNow));
+        public bool KeepGrowing(string bedId) => Execute(state => FarmCommands.KeepGrowing(state, bedId,
+            FarmJournal.NextOperation(state, "grow-tree:" + bedId), DateTime.UtcNow));
         public bool HarvestReady() => Execute(state => FarmCommands.HarvestFields(Oracle.oracle.saveData,
             FarmJournal.NextOperation(state, "harvest-fields"), DateTime.UtcNow, Content, false));
         public bool Harvest(string bedId) => Execute(state => FarmCommands.HarvestFields(Oracle.oracle.saveData,
@@ -274,7 +276,7 @@ namespace TimelessEchoes.Farming
                 var gate=config.BuildGate(data,build);
                 var costText=string.Join(" + ",build.costs.Select(c => ToolkitLocalization.Text("fields.material-cost", "{0:N0} {1}", c.amount, ToolkitLocalization.Name(c.resource))));
                 var materials=build.costs.All(c=>Amount(c.resource)>=c.amount);
-                builds.Add(new FarmBuildPresentation { QuestId=build.questId,Title=QuestTitle(build.questId, build.title),TwinsLevel=build.twinsLevel,Completed=completed,
+                builds.Add(new FarmBuildPresentation { QuestId=build.questId,Title=build.DisplayTitle,TwinsLevel=build.twinsLevel,Completed=completed,
                     GardenCapacity=build.gardenCapacity,OrchardCapacity=build.orchardCapacity,
                     Materials=build.costs.Select(c=>new FarmMaterialPresentation { Title=ToolkitLocalization.Name(c.resource),Icon=c.resource.icon,Owned=Amount(c.resource),Required=c.amount }).ToArray(),
                     Costs=costText,CanTurnIn=InTown && !completed && gate==null && materials,
@@ -296,10 +298,10 @@ namespace TimelessEchoes.Farming
                     var orchard=index>=6;
                     return new FarmBedPresentation { Id=id,Title=ToolkitLocalization.Text("fields.plot-number", "Plot {0}", orchard ? index-5 : index+1),
                         Unlocked=FarmCommands.AccessibleBed(state,id),Orchard=orchard,RecipeId=recipe?.id,RecipeTitle=recipe?.DisplayName,YieldTitle=ToolkitLocalization.Name(recipe?.output),
-                        ExpectedYield=bed?.IsPlanted==true ? bed.FrozenYield * (1 + PreviewBonus(recipe?.output) / 100d) : 0,
-                        SecondaryExpectedYield=bed?.IsPlanted==true ? bed.FrozenSecondaryYield * (1 + PreviewBonus(recipe?.secondaryOutput) / 100d) : 0,
+                        ExpectedYield=bed?.IsPlanted==true ? bed.FrozenYield * bed.GrowthMultiplier * (1 + PreviewBonus(recipe?.output) / 100d) : 0,
+                        SecondaryExpectedYield=bed?.IsPlanted==true ? bed.FrozenSecondaryYield * bed.GrowthMultiplier * (1 + PreviewBonus(recipe?.secondaryOutput) / 100d) : 0,
                         SecondaryIcon=recipe?.secondaryOutput?.icon,SecondaryTitle=ToolkitLocalization.Name(recipe?.secondaryOutput),Timber=recipe?.secondaryOutput,
-                        HarvestXp=bed?.HarvestXp ?? 0, EstablishedTree=bed?.EstablishedTree==true,
+                        HarvestXp=bed == null ? 0 : checked(bed.HarvestXp * bed.GrowthMultiplier), GrowFully=bed?.FullGrowth==true, EstablishedTree=bed?.EstablishedTree==true,
                         Icon=bed?.IsPlanted==true?recipe?.output?.icon:null,Watered=bed?.Watered==true,Repeat=bed?.Repeat==true,Planted=bed?.IsPlanted==true,Ready=bed?.IsReady==true,
                         Progress01=bed?.IsPlanted==true && bed.ReadyAfterSeconds>0?Mathf.Clamp01((float)(bed.ElapsedSeconds/bed.ReadyAfterSeconds)):0,
                         RemainingSeconds=bed?.IsPlanted==true?Math.Max(0,bed.ReadyAfterSeconds-bed.ElapsedSeconds):0,

@@ -35,25 +35,26 @@ namespace Tests.PlayMode
                 Assert.True(quests.TryTurnInQuest(FarmContent.IntroductionId));
                 var seed = Resources.Load<Resource>("Resource Items/Radish Seed Pack");
                 Assert.AreEqual(1, resources.GetAmount(seed));
-                var build = Resources.Load<QuestData>("Quests/Fields/Farm.Garden.Build01.v1");
-                foreach (var requirement in build.requirements)
-                    resources.Add(requirement.resource, requirement.amount, trackStats: false, eligibleForTierRoll: false);
+                var build = content.Build("Farm.Garden.Build01.v1");
+                foreach (var cost in build.costs)
+                    resources.Add(cost.resource, cost.amount, trackStats: false, eligibleForTierRoll: false);
                 quests.RefreshFieldsProgression();
+                Assert.NotNull(quests.GetQuestData(build.questId), "Construction must be available as a quest.");
                 Assert.True(quests.IsQuestInProgress(build.questId));
                 SetTown(false);
                 Assert.False(quests.TryTurnInQuest(build.questId), "Fully funded construction must not bypass the town gate.");
                 Assert.False(service.BuildQuest(build.questId));
                 Assert.False(service.CapturePresentation().Builds.Single(b => b.QuestId == build.questId).CanTurnIn);
                 Assert.AreEqual(0, service.State.GardenCapacity);
-                foreach (var requirement in build.requirements)
-                    Assert.AreEqual(requirement.amount, resources.GetAmount(requirement.resource), "Rejected turn-in must preserve its materials.");
+                foreach (var cost in build.costs)
+                    Assert.AreEqual(cost.amount, resources.GetAmount(cost.resource), "Rejected construction must preserve its materials.");
                 SetTown(true);
                 Assert.True(service.CapturePresentation().Builds.Single(b => b.QuestId == build.questId).CanTurnIn);
                 Assert.True(quests.TryTurnInQuest(build.questId));
-                Assert.True(quests.IsQuestCompleted(build));
+                Assert.True(FarmContent.Completed(oracle.saveData, build.questId));
                 Assert.AreEqual(1, service.State.GardenCapacity);
-                foreach (var requirement in build.requirements) Assert.AreEqual(0, resources.GetAmount(requirement.resource));
-                Assert.False(quests.TryTurnInQuest(build.questId), "The town reward is applied once.");
+                foreach (var cost in build.costs) Assert.AreEqual(0, resources.GetAmount(cost.resource));
+                Assert.False(quests.TryTurnInQuest(build.questId), "Construction can only be purchased once.");
             }
             finally
             {

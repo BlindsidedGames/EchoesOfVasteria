@@ -28,9 +28,11 @@ namespace TimelessEchoes.UI.Toolkit {
   void Changed()=>dirty=true;void ProgressChanged(QuestData _,float __)=>dirty=true;void LocaleChanged(UnityEngine.Localization.Locale _)=>dirty=true;
   void Refresh(){RefreshPortrait();if(ToolkitResponsiveLayout.IsPortrait)return;entries.Clear();foreach(var id in oracle.saveData.PinnedQuests){if(string.IsNullOrEmpty(id))continue;var data=manager.GetQuestData(id);if(data&&data.requirements.Any(r=>r!=null&&r.type==QuestData.RequirementType.Instant))continue;oracle.saveData.Quests.TryGetValue(id,out var record);var display=data?PinnedQuestPresentation.Build(data,record):(id,false);var row=new VisualElement{pickingMode=PickingMode.Ignore};row.AddToClassList("eov-pinned-row");var content=new VisualElement {pickingMode=PickingMode.Ignore};
     row.Add(content);
+    // Fresh text must finish resolving its font and styles before it sets the panel width.
+    content.RegisterCallback<GeometryChangedEvent>(_ => FitText());
     if(data) PopulateQuestText(content,data,record,definition.textSize,true);
     else content.Add(new Label(id){pickingMode=PickingMode.Ignore});
-    var check=new Image{sprite=definition.ready,pickingMode=PickingMode.Ignore,scaleMode=ScaleMode.ScaleToFit};check.AddToClassList("eov-pinned-ready");check.style.display=display.Item2?DisplayStyle.Flex:DisplayStyle.None;row.Add(check);entries.Add(row);}root.schedule.Execute(FitText);entries.style.display=ShowPinnedQuests?DisplayStyle.Flex:DisplayStyle.None;state.sprite=ShowPinnedQuests?definition.expanded:definition.collapsed;backdrop.style.display=ShowPinnedQuests?DisplayStyle.Flex:DisplayStyle.None;}
+    var check=new Image{sprite=definition.ready,pickingMode=PickingMode.Ignore,scaleMode=ScaleMode.ScaleToFit};check.AddToClassList("eov-pinned-ready");check.style.display=display.Item2?DisplayStyle.Flex:DisplayStyle.None;row.Add(check);entries.Add(row);}entries.style.display=ShowPinnedQuests?DisplayStyle.Flex:DisplayStyle.None;state.sprite=ShowPinnedQuests?definition.expanded:definition.collapsed;backdrop.style.display=ShowPinnedQuests?DisplayStyle.Flex:DisplayStyle.None;}
   void PopulateQuestText(VisualElement content, QuestData data, Blindsided.SaveData.GameData.QuestRecord record, float size, bool rightAligned)
   {
    content.Clear();
@@ -61,10 +63,11 @@ namespace TimelessEchoes.UI.Toolkit {
    {
     var measured=label.MeasureTextSize(label.text,0,VisualElement.MeasureMode.Undefined,0,VisualElement.MeasureMode.Undefined).x;
     var icon=label.parent.Q<Image>(className:"quest-resource-icon");
-    if(icon!=null && icon.resolvedStyle.display!=DisplayStyle.None) measured+=icon.style.width.value.value+icon.style.marginRight.value.value;
+    if(icon!=null && icon.resolvedStyle.display!=DisplayStyle.None) measured+=icon.resolvedStyle.width+icon.resolvedStyle.marginRight;
     width=Mathf.Max(width,measured);
    }
-   root.style.width=width;
+   if(float.IsFinite(width) && width > 0 && Mathf.Abs(root.style.width.value.value-width) > .05f)
+    root.style.width=width;
   }
   void BuildPortraitCard()
   {
@@ -142,7 +145,6 @@ namespace TimelessEchoes.UI.Toolkit {
    root.style.top = portrait ? ToolkitResponsiveLayout.WorldArea.yMax + 92 : safe.y + 65;
    root.style.maxWidth = portrait ? ToolkitResponsiveLayout.Size.x - 24 : StyleKeyword.None;
    if(portrait) { root.style.width = ToolkitResponsiveLayout.Size.x - 24; PortraitBottom = root.worldBound.yMax; }
-   else FitText();
   }
   void OnDisable(){PortraitBottom=0;StopAllCoroutines();if(manager){manager.NoticeboardChanged-=Changed;manager.QuestProgressChanged-=ProgressChanged;}Blindsided.EventHandler.OnLoadData-=Changed;LocalizationSettings.SelectedLocaleChanged-=LocaleChanged;ToolkitLocalization.Changed-=Changed;root?.RemoveFromHierarchy();root=null;}
   void OnDestroy(){if(settings)Destroy(settings);}

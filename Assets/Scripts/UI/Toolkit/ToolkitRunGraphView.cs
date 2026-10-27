@@ -13,13 +13,15 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly Func<IReadOnlyList<GameData.RunRecord>> history;
         private readonly ToolkitStatisticsDefinition definition;
         private readonly List<Button> metrics = new(), maps = new();
-        private readonly Button totals, rates;
-        private readonly VisualElement plot, barHost, averageLine, details;
-        private readonly Label summary, sample, empty, first, last, detailTitle, averageLabel;
+        private readonly Button totals, rates, zoomIn, zoomOut, resetZoom;
+        private readonly VisualElement plot, axis, axisLabels, barHost, averageLine, details;
+        private readonly Label summary, sample, empty, first, last, detailTitle, averageLabel, overflowValue;
         private readonly Label[] ticks = new Label[5];
         private List<GameData.RunRecord> visible = new();
         private Metric metric;
-        private int map = -1, selectedRun = -1;
+        private int map = -1, selectedRun = -1, zoomSteps;
+        private const int MaximumZoomSteps = 18;
+        private double ceiling;
         private bool perMinute;
         private readonly DropdownField portraitMetric, portraitMap;
         public ToolkitRunGraphView(VisualElement body, VisualElement footer, ToolkitStatisticsDefinition definition, Func<IReadOnlyList<GameData.RunRecord>> history)
@@ -40,21 +42,29 @@ namespace TimelessEchoes.UI.Toolkit
             var mapNames = new List<string> { ToolkitLocalization.Text("graph.all-maps", "All maps") };
             mapNames.AddRange(definition.maps.Select(m => ToolkitLocalization.Text("map." + m.config.name, m.label.Trim())));
             portraitMap = new DropdownField(mapNames, 0); portraitMap.AddToClassList("portrait-picker"); portraitMap.AddToClassList("graph-last-picker"); phoneFilters.Add(portraitMap);
-            portraitMap.RegisterValueChangedCallback(_ => { map = portraitMap.index - 1; selectedRun = -1; Refresh(); });
+            portraitMap.RegisterValueChangedCallback(_ => { map = portraitMap.index - 1; selectedRun = -1; zoomSteps = 0; Refresh(); });
             var controls = ToolkitGameplay.E(body, "graph-controls");
             foreach (Metric m in Enum.GetValues(typeof(Metric)))
             { var choice=m; metrics.Add(Choice(controls, "graph-"+m, MetricLabel(m),()=>SetMetric(choice))); }
             var units=ToolkitGameplay.E(controls,"graph-units");
-            totals=Choice(units,"graph-totals",ToolkitLocalization.Text("graph.totals", "Totals"),()=>{perMinute=false;Refresh();});
-            rates=Choice(units,"graph-rates",ToolkitLocalization.Text("graph.per-minute", "Per minute"),()=>{perMinute=true;Refresh();});
+            totals=Choice(units,"graph-totals",ToolkitLocalization.Text("graph.totals", "Totals"),()=>SetRate(false));
+            rates=Choice(units,"graph-rates",ToolkitLocalization.Text("graph.per-minute", "Per minute"),()=>SetRate(true));
             rates.AddToClassList("graph-last-choice");
             var filters=ToolkitGameplay.E(body,"graph-map-filters");
-            for(int i=-1;i<definition.maps.Length;i++) {var index=i;maps.Add(Choice(filters,"graph-map-"+(i+1),i<0?ToolkitLocalization.Text("graph.all-maps", "All maps"):ToolkitLocalization.Text("map." + definition.maps[i].config.name, definition.maps[i].label.Trim()),()=>{map=index;selectedRun=-1;Refresh();}));}
+            for(int i=-1;i<definition.maps.Length;i++) {var index=i;maps.Add(Choice(filters,"graph-map-"+(i+1),i<0?ToolkitLocalization.Text("graph.all-maps", "All maps"):ToolkitLocalization.Text("map." + definition.maps[i].config.name, definition.maps[i].label.Trim()),()=>{map=index;selectedRun=-1;zoomSteps=0;Refresh();}));}
             maps[maps.Count - 1].AddToClassList("graph-last-choice");
             var heading=ToolkitGameplay.E(body,"graph-summary-row");
-            summary=Text(heading,"","graph-summary");sample=Text(heading,"","graph-sample");
+            var copy=ToolkitGameplay.E(heading,"graph-summary-copy");
+            summary=Text(copy,"","graph-summary");sample=Text(copy,"","graph-sample");
+            var zoom=ToolkitGameplay.E(heading,"graph-zoom-controls");
+            zoomOut=Choice(zoom,"graph-zoom-out","−",()=>{zoomSteps=Math.Max(0,zoomSteps-1);Refresh();});
+            zoomIn=Choice(zoom,"graph-zoom-in","+",()=>{zoomSteps=Math.Min(MaximumZoomSteps,zoomSteps+1);Refresh();});
+            resetZoom=Choice(zoom,"graph-reset-zoom",ToolkitLocalization.Text("graph.reset-zoom", "Reset"),()=>{zoomSteps=0;Refresh();});
+            ToolkitLocalization.BindTooltip(zoomOut,"graph.zoom-out","Zoom out");
+            ToolkitLocalization.BindTooltip(zoomIn,"graph.zoom-in","Zoom in");
+            ToolkitLocalization.BindTooltip(resetZoom,"graph.reset-zoom-help","Show the full range");
             var chart=ToolkitGameplay.E(body,"graph-chart");
-            var axis=ToolkitGameplay.E(chart,"graph-axis");
+            axis=ToolkitGameplay.E(chart,"graph-axis");
             for(int i=0;i<5;i++){ticks[i]=Text(axis,"","graph-tick");ticks[i].style.bottom=Length.Percent(i*25);}
             plot=ToolkitGameplay.E(chart,"graph-plot");
             for(int i=0;i<5;i++){var line=ToolkitGameplay.E(plot,"graph-grid-line");line.pickingMode=PickingMode.Ignore;line.style.bottom=Length.Percent(i*25);}
@@ -62,7 +72,10 @@ namespace TimelessEchoes.UI.Toolkit
             averageLine=ToolkitGameplay.E(plot,"graph-average");averageLine.pickingMode=PickingMode.Ignore;
             averageLabel=Text(averageLine,"","graph-average-label");
             empty=Text(plot,ToolkitLocalization.Text("graph.empty", "No saved runs for this selection."),"graph-empty");
-            var axisLabels=ToolkitGameplay.E(body,"graph-x-labels");first=Text(axisLabels,"","graph-first");Text(axisLabels,ToolkitLocalization.Text("graph.run-number", "Run number"),"graph-x-title");last=Text(axisLabels,"","graph-last");
+            overflowValue=Text(plot,"","graph-overflow-value");overflowValue.pickingMode=PickingMode.Ignore;
+            plot.RegisterCallback<GeometryChangedEvent>(_=>{SizeAxis();PositionOverflowValue();});
+            overflowValue.RegisterCallback<GeometryChangedEvent>(_=>PositionOverflowValue());
+            axisLabels=ToolkitGameplay.E(body,"graph-x-labels");first=Text(axisLabels,"","graph-first");Text(axisLabels,ToolkitLocalization.Text("graph.run-number", "Run number"),"graph-x-title");last=Text(axisLabels,"","graph-last");
             var legend=ToolkitGameplay.E(body,"graph-legend");
             Legend(legend,ToolkitLocalization.Text("run.outcome-retreated", "Retreated"),"retreated");Legend(legend,ToolkitLocalization.Text("run.outcome-reaped", "Reaped"),"reaped");Legend(legend,ToolkitLocalization.Text("run.outcome-died", "Died"),"died");Legend(legend,ToolkitLocalization.Text("run.outcome-abandoned", "Abandoned"),"abandoned");
             var detailHeader=ToolkitGameplay.E(body,"graph-detail-heading");detailTitle=Text(detailHeader,"","graph-detail-title");
@@ -81,13 +94,15 @@ namespace TimelessEchoes.UI.Toolkit
         private static Button Choice(VisualElement parent,string name,string text,Action click){var b=ToolkitGameplay.B(parent,text,click);b.name=name;b.AddToClassList("graph-choice");return b;}
         private static Label Text(VisualElement parent,string text,string classes)=>ToolkitGameplay.L(parent,text,classes);
         private static void Legend(VisualElement parent,string title,string outcome){var item=ToolkitGameplay.E(parent,"graph-legend-item");var swatch=ToolkitGameplay.E(item,"graph-legend-swatch");swatch.AddToClassList("graph-outcome-"+outcome);Text(item,title,"");}
-        public (Metric metric, int map, int selectedRun, bool perMinute) ViewState => (metric, map, selectedRun, perMinute);
-        public void RestoreViewState((Metric metric, int map, int selectedRun, bool perMinute) state)
+        public (Metric metric, int map, int selectedRun, bool perMinute, int zoomSteps) ViewState => (metric, map, selectedRun, perMinute, zoomSteps);
+        public void RestoreViewState((Metric metric, int map, int selectedRun, bool perMinute, int zoomSteps) state)
         {
             metric = state.metric; map = Mathf.Clamp(state.map, -1, definition.maps.Length - 1);
-            selectedRun = state.selectedRun; perMinute = state.perMinute && SupportsRate; Refresh();
+            selectedRun = state.selectedRun; perMinute = state.perMinute && SupportsRate;
+            zoomSteps = Mathf.Clamp(state.zoomSteps, 0, MaximumZoomSteps); Refresh();
         }
-        public void SetMetric(Metric value){metric=value;if(!SupportsRate)perMinute=false;Refresh();}
+        public void SetMetric(Metric value){if(metric!=value)zoomSteps=0;metric=value;if(!SupportsRate)perMinute=false;Refresh();}
+        private void SetRate(bool value){if(perMinute!=value)zoomSteps=0;perMinute=value;Refresh();}
         private bool SupportsRate=>metric==Metric.Resources||metric==Metric.Tasks||metric==Metric.Kills;
         public static double Value(GameData.RunRecord run,Metric metric,bool rate)
         {
@@ -116,37 +131,71 @@ namespace TimelessEchoes.UI.Toolkit
             sample.text = ToolkitResponsiveLayout.IsPortrait
                 ? ToolkitLocalization.Text("graph.recent-sample", "Latest {0} runs{1}", visible.Count, omittedText)
                 : ToolkitLocalization.Text("graph.sample", "{0} of last {1} saved runs{2}", visible.Count, all.Count, omittedText);
-            var ceiling=max>0?NiceCeiling(max):1;
+            ceiling=max>0?NiceCeiling(max):1;
+            for(var step=0;step<zoomSteps;step++)ceiling=LowerCeiling(ceiling);
+            if(!perMinute)ceiling=Math.Max(1,ceiling);
+            zoomIn.SetEnabled(max>0&&zoomSteps<MaximumZoomSteps&&(perMinute||LowerCeiling(ceiling)>=1));
+            zoomOut.SetEnabled(zoomSteps>0);resetZoom.SetEnabled(zoomSteps>0);
             for(int i=0;i<5;i++)ticks[i].text=Format(ceiling*i/4);
+            SizeAxis();
             barHost.Clear();var slots=Math.Max(10,visible.Count);
             for(int i=0;i<visible.Count;i++)
             {
                 var run=visible[i];var value=values[i];var hit=new Button(()=>{selectedRun=run.RunNumber;ShowDetails(run);StyleSelection();}){name="graph-run-"+run.RunNumber};
                 hit.AddToClassList("graph-run-bar");hit.style.width=Length.Percent(100f/slots);barHost.Add(hit);
-                var fill=ToolkitGameplay.E(hit,"graph-run-fill");fill.pickingMode=PickingMode.Ignore;fill.style.height=Length.Percent((float)(value/ceiling*100));
+                var fill=ToolkitGameplay.E(hit,"graph-run-fill");fill.pickingMode=PickingMode.Ignore;fill.style.height=Length.Percent((float)(Math.Min(value/ceiling,1)*100));
                 fill.AddToClassList("graph-outcome-"+(run.Abandoned?"abandoned":run.Reaped?"reaped":run.Died?"died":"retreated"));
+                hit.tooltip=Format(value)+suffix;
+                if(value>ceiling){var overflow=Text(hit,"↑","graph-overflow-marker");overflow.pickingMode=PickingMode.Ignore;}
                 hit.RegisterCallback<PointerEnterEvent>(_=>ShowDetails(run));hit.RegisterCallback<PointerLeaveEvent>(_=>ShowSelected());
                 hit.RegisterCallback<FocusInEvent>(_=>ShowDetails(run));hit.RegisterCallback<FocusOutEvent>(_=>ShowSelected());
                 hit.userData=run.RunNumber;
             }
-            averageLine.style.display=max>0?DisplayStyle.Flex:DisplayStyle.None;averageLine.style.bottom=Length.Percent((float)(avg/ceiling*100));averageLabel.text=ToolkitLocalization.Text("graph.average-marker", "Avg {0}", Format(avg));
+            averageLine.style.display=max>0&&avg<=ceiling?DisplayStyle.Flex:DisplayStyle.None;averageLine.style.bottom=Length.Percent((float)(avg/ceiling*100));averageLabel.text=ToolkitLocalization.Text("graph.average-marker", "Avg {0}", Format(avg));
             empty.style.display=visible.Count==0?DisplayStyle.Flex:DisplayStyle.None;
             first.text=visible.Count>0?"#"+visible[0].RunNumber:"";last.text=visible.Count>1?"#"+visible[visible.Count-1].RunNumber:"";
             if(!visible.Any(r=>r.RunNumber==selectedRun))selectedRun=visible.Count>0?visible[visible.Count-1].RunNumber:-1;
             StyleSelection();ShowSelected();
         }
         private static double NiceCeiling(double maximum){var power=Math.Pow(10,Math.Floor(Math.Log10(maximum)));return Math.Ceiling(maximum/power)*power;}
+        private static double LowerCeiling(double value)
+        {
+            var power=Math.Pow(10,Math.Floor(Math.Log10(value)));
+            var fraction=value/power;
+            return fraction>5.000001?5*power:fraction>2.000001?2*power:fraction>1.000001?power:power/2;
+        }
         private void StyleSelection(){foreach(var bar in barHost.Children())bar.EnableInClassList("selected",(int)bar.userData==selectedRun);}
         private void ShowSelected()=>ShowDetails(visible.FirstOrDefault(r=>r.RunNumber==selectedRun));
         private static string Outcome(GameData.RunRecord run)=>run.Abandoned?ToolkitLocalization.Text("run.outcome-abandoned", "Abandoned"):run.Reaped?ToolkitLocalization.Text("run.outcome-reaped", "Reaped"):run.Died?ToolkitLocalization.Text("run.outcome-died", "Died"):ToolkitLocalization.Text("run.outcome-retreated", "Retreated");
         private void ShowDetails(GameData.RunRecord run)
         {
+            overflowValue.text=run!=null&&Value(run,metric,perMinute)>ceiling?Format(Value(run,metric,perMinute)):"";
+            overflowValue.style.display=string.IsNullOrEmpty(overflowValue.text)?DisplayStyle.None:DisplayStyle.Flex;
+            overflowValue.userData=run?.RunNumber;PositionOverflowValue();
             details.Clear();if(run==null){detailTitle.text=ToolkitLocalization.Text("graph.details", "Run details");Text(details,ToolkitLocalization.Text("graph.select-map", "Select a map with saved runs to inspect its history."),"graph-detail-hint");return;}
             var mapName=definition.maps.FirstOrDefault(m=>m.config&&m.config.name==run.MapType).label;
             detailTitle.text=ToolkitLocalization.Text("graph.detail-title", "Run #{0} · {1} · {2}", run.RunNumber, ToolkitLocalization.Text("map." + run.MapType, string.IsNullOrWhiteSpace(mapName)?run.MapType:mapName.Trim()), Outcome(run));
             Detail(ToolkitLocalization.Text("graph.duration", "Duration"),CalcUtils.FormatTime(run.Duration));Detail(ToolkitLocalization.Text("graph.distance", "Distance"),ItemStatisticsPresentation.Number(run.Distance));Detail(ToolkitLocalization.Text("graph.tasks", "Tasks"),ItemStatisticsPresentation.Number(run.TasksCompleted));
             Detail(ToolkitLocalization.Text("graph.resources", "Resources"),ItemStatisticsPresentation.Number(run.ResourcesCollected));Detail(ToolkitLocalization.Text("graph.bonus-resources", "Bonus resources"),ItemStatisticsPresentation.Number(run.BonusResourcesCollected));Detail(ToolkitLocalization.Text("graph.kills", "Kills"),ItemStatisticsPresentation.Number(run.EnemiesKilled));
             Detail(ToolkitLocalization.Text("graph.damage-dealt", "Damage dealt"),ItemStatisticsPresentation.Number(run.DamageDealtAsDouble));Detail(ToolkitLocalization.Text("graph.damage-taken", "Damage taken"),ItemStatisticsPresentation.Number(run.DamageTakenAsDouble));
+        }
+        private void PositionOverflowValue()
+        {
+            if(overflowValue?.userData is not int number||string.IsNullOrEmpty(overflowValue.text))return;
+            var bar=barHost.Children().FirstOrDefault(b=>b.userData is int id&&id==number);
+            if(bar==null||float.IsNaN(plot.contentRect.width)||float.IsNaN(overflowValue.resolvedStyle.width))return;
+            overflowValue.style.left=Mathf.Clamp(bar.layout.center.x-overflowValue.resolvedStyle.width/2,0,Mathf.Max(0,plot.contentRect.width-overflowValue.resolvedStyle.width));
+        }
+        private void SizeAxis()
+        {
+            var width=42f;
+            foreach(var tick in ticks)
+            {
+                var measured=tick.MeasureTextSize(tick.text,0,VisualElement.MeasureMode.Undefined,0,VisualElement.MeasureMode.Undefined).x;
+                if(!float.IsNaN(measured)&&!float.IsInfinity(measured))width=Mathf.Max(width,Mathf.Ceil(measured)+8);
+            }
+            axis.style.width=width;
+            if(axisLabels!=null)axisLabels.style.marginLeft=width;
         }
         private void Detail(string title,string value){var pair=ToolkitGameplay.E(details,"graph-detail-pair");Text(pair,title,"graph-detail-key");Text(pair,value,"graph-detail-value");}
     }

@@ -119,7 +119,7 @@ namespace TimelessEchoes.Upgrades
             {
                 if (drop?.resource == null) continue;
                 var content = TimelessEchoes.Farming.FarmContent.Load();
-                var chance = content ? content.BonusDropChance(drop.resource, drop.chance) : drop.chance;
+                var chance = (content ? content.BonusDropChance(drop.resource, drop.chance) : drop.chance) * Mathf.Max(0, drop.chanceMultiplier);
                 if (chance <= 0 || Rand() >= Mathf.Clamp01(chance)) continue;
                 var min = Mathf.Max(0, drop.range.x); var max = Mathf.Max(min, drop.range.y);
                 var t = Rand(); t *= t;

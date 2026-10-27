@@ -7,6 +7,7 @@ namespace TimelessEchoes.UI.Toolkit
     {
         public Sprite portraitFrame, shadow;
         public Sprite tutorialHand;
+        public Quests.QuestSpeaker orinSpeaker;
         public ToolkitBookDefinition.Text meet = Text("meeting.meet", "Meet");
         public ToolkitBookDefinition.Text next = Text("meeting.next", "Next");
         public ToolkitBookDefinition.Text close = Text("meeting.close", "Close");

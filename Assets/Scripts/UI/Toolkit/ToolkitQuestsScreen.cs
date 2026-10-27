@@ -1,4 +1,4 @@
-using Blindsided.Utilities;
+﻿using Blindsided.Utilities;
 using Screen = UnityEngine.Device.Screen;
 using System;
 using System.Collections.Generic;
@@ -20,10 +20,9 @@ namespace TimelessEchoes.UI.Toolkit
         [SerializeField] private PanelTextSettings textSettings;
         private PanelSettings settings;
         private QuestManager manager;
+        private Skills.SkillController skills;
         private VisualElement root;
-        private ToolkitResourceInventoryScreen companionInventory;
         private ScrollView scroll;
-        private VisualElement inventoryHost;
         private const string CompactPreference = "Quests.Compact";
         private Button compactToggle;
         private bool compact;
@@ -31,17 +30,82 @@ namespace TimelessEchoes.UI.Toolkit
         private ToolkitTextBinding instructionBinding;
         private readonly Dictionary<string, Action<float>> progress = new();
         private readonly HashSet<string> dirtyProgress = new();
+        private readonly Dictionary<string, QuestNoticeboardCategory> categories = new();
+        private readonly List<(Image image, QuestSpeaker speaker)> speakerPortraits = new();
         private bool dirty;
         private string pendingRevealQuest;
         private Vector3 previousRevealLayout = Vector3.negativeInfinity;
         private Image acceptHand;
+        public sealed class ViewState
+        {
+            internal Vector2 Scroll;
+            internal bool Compact;
+            internal Dictionary<QuestNoticeboardCategory, bool> Expanded;
+            internal List<(string name, float offset)> Anchors;
+        }
+        private ViewState pendingViewState;
+        private Vector3 previousRestoreLayout = Vector3.negativeInfinity;
+        public ViewState CaptureViewState() => new()
+        {
+            Scroll = scroll.scrollOffset, Compact = compact,
+            Expanded = new Dictionary<QuestNoticeboardCategory, bool>(expandedCategories),
+            Anchors = scroll.Query<VisualElement>(className: "eov-quest-row").ToList()
+                .Where(row => row.worldBound.height > 0 && row.worldBound.Overlaps(scroll.contentViewport.worldBound))
+                .Select(row => (row.name, row.worldBound.yMin - scroll.contentViewport.worldBound.yMin)).ToList()
+        };
+        public void RestoreViewState(ViewState state)
+        {
+            expandedCategories.Clear();
+            foreach (var entry in state.Expanded) expandedCategories[entry.Key] = entry.Value;
+            compact = state.Compact; root.EnableInClassList("quests-compact", compact); compactToggle.EnableInClassList("active", compact);
+            Rebuild();
+            pendingViewState = state; previousRestoreLayout = Vector3.negativeInfinity;
+        }
+        private void RestoreScroll()
+        {
+            if (pendingViewState == null) return;
+            var geometry = new Vector3(scroll.contentContainer.layout.height, scroll.contentViewport.layout.height, scroll.verticalScroller.highValue);
+            if (geometry != previousRestoreLayout) { previousRestoreLayout = geometry; return; }
+            var position = pendingViewState.Scroll.y;
+            foreach (var anchor in pendingViewState.Anchors)
+            {
+                var row = scroll.Q(anchor.name);
+                if (row == null || row.worldBound.height <= 0) continue;
+                var visible = true;
+                for (var parent = row; parent != null && parent != scroll; parent = parent.parent)
+                    if (parent.resolvedStyle.display == DisplayStyle.None) { visible = false; break; }
+                if (!visible) continue;
+                position = scroll.scrollOffset.y + row.worldBound.yMin - scroll.contentViewport.worldBound.yMin - anchor.offset;
+                break;
+            }
+            scroll.scrollOffset = new Vector2(0, Mathf.Clamp(position, 0, Mathf.Max(0, scroll.verticalScroller.highValue)));
+            pendingViewState = null;
+        }
+        public Action ShowRevealSkip(Action skip)
+        {
+            var host = new GameObject("Town reveal controls", typeof(UIDocument));
+            var document = host.GetComponent<UIDocument>();
+            var panel = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); panel.sortingOrder = 190;
+            document.panelSettings = panel; document.rootVisualElement.pickingMode = PickingMode.Ignore;
+            var controls = new VisualElement { pickingMode = PickingMode.Ignore };
+            theme.Apply(controls); ToolkitGameplay.Apply(controls, theme); document.rootVisualElement.Add(controls);
+            var button = ToolkitGameplay.B(controls, ToolkitLocalization.Text("meeting.skip", "Skip"), skip);
+            button.name = "quest-reveal-skip"; button.style.position = Position.Absolute;
+            button.style.width = 56; button.style.height = 28;
+            controls.schedule.Execute(() =>
+            {
+                var safe = ToolkitResponsiveLayout.SafeScreenArea;
+                button.style.left = safe.xMax - 64;
+                button.style.top = safe.yMax - ToolkitResponsiveLayout.WindowBottom - 38;
+            }).Every(50);
+            return () => { if (document) document.panelSettings = null; if (panel) Destroy(panel); if (host) Destroy(host); };
+        }
         private Button lessonAccept;
         private readonly Dictionary<QuestNoticeboardCategory,bool> expandedCategories=new();
         public bool IsOpen => root != null;
         public bool IsConfigured => definition && theme && runtimeTheme && textSettings;
 
-        public bool Show() => Show(null);
-        public bool Show(ToolkitResourceInventoryScreen inventoryTemplate)
+        public bool Show()
         {
             if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return false;
             if (IsOpen) return true;
@@ -77,42 +141,15 @@ namespace TimelessEchoes.UI.Toolkit
             portraitAutoPin.name = "quests-auto-pin"; RefreshPortraitAutoPin();
             scroll = new ScrollView(ScrollViewMode.Vertical) { name = "quest-scroll", horizontalScrollerVisibility = ScrollerVisibility.Hidden, verticalScrollerVisibility = ScrollerVisibility.Auto };
             scroll.AddToClassList("eov-buffs-scroll"); theme.StyleScroll(scroll);ToolkitGameplay.StyleScroll(scroll); quests.Add(scroll);
-            if (inventoryTemplate && inventoryTemplate.IsConfigured)
-            {
-                inventoryHost = new VisualElement { name = "quests-inventory" };
-                inventoryHost.AddToClassList("quests-inventory"); columns.Add(inventoryHost);
-                companionInventory = inventoryTemplate.CreateCompanionView();
-                if (!ToolkitResponsiveLayout.IsPortrait && !companionInventory.ShowInQuests(inventoryHost))
-                {
-                    Destroy(companionInventory.gameObject); companionInventory = null;
-                    inventoryHost.RemoveFromHierarchy();
-                }
-            }
-            SetInventoryExpanded(false);
             manager.RefreshNoticeboard();
             manager.NoticeboardChanged += Changed; manager.QuestProgressChanged += ProgressChanged;
+            skills = Skills.SkillController.Instance;
+            if (skills) skills.OnLevelUp += SkillLevelUp;
             LocalizationSettings.SelectedLocaleChanged += LocaleChanged;
             ToolkitLocalization.Changed += LocalizationChanged;
             Rebuild(); Layout(); return true;
         }
-        private void SetInventoryExpanded(bool expanded)
-        {
-            if (ToolkitResponsiveLayout.IsPortrait && companionInventory)
-            {
-                if (inventoryHost != null) inventoryHost.style.display = DisplayStyle.None;
-                if (expanded) companionInventory.ShowOverQuests();
-                else companionInventory.Hide();
-            }
-            if (inventoryHost != null && !ToolkitResponsiveLayout.IsPortrait) inventoryHost.style.display = expanded ? DisplayStyle.Flex : DisplayStyle.None;
-        }
         private void LocaleChanged(UnityEngine.Localization.Locale _) { manager.RefreshNoticeboard(); dirty = true; }
-        public bool TryHighlightResource(Upgrades.Resource resource, bool scrollToSlot)
-        {
-            if (!IsOpen || !companionInventory) return false;
-            SetInventoryExpanded(true);
-            companionInventory.HighlightResource(resource, scrollToSlot);
-            return true;
-        }
         public bool RevealQuest(string questId)
         {
             if (!IsOpen || string.IsNullOrEmpty(questId)) return false;
@@ -135,7 +172,7 @@ namespace TimelessEchoes.UI.Toolkit
             // Opening/rebuilding a window lays out content and updates the scroller in separate passes.
             // Wait for settled geometry, then align the quest's top rather than merely making it visible.
             if (layout != previousRevealLayout) { previousRevealLayout = layout; return; }
-            scroll.scrollOffset = new Vector2(0, Mathf.Clamp(target, 0, scroll.verticalScroller.highValue));
+            scroll.scrollOffset = new Vector2(0, Mathf.Clamp(target, 0, Mathf.Max(0, scroll.verticalScroller.highValue)));
             pendingRevealQuest = null;
         }
 
@@ -145,17 +182,21 @@ namespace TimelessEchoes.UI.Toolkit
             QuestNoticeboardCategory.Ready => ToolkitLocalization.Text("quests.category-ready", "Complete"),
             QuestNoticeboardCategory.Completed => ToolkitLocalization.Text("quests.category-completed", "Quest History"),
             QuestNoticeboardCategory.Pinned => ToolkitLocalization.Text("quests.category-tracked", "Tracked"),
+            QuestNoticeboardCategory.Locked => ToolkitLocalization.Text("quests.category-locked", "Locked"),
             _ => ToolkitLocalization.Text("quests.category-untracked", "Untracked")
         };
         private void Changed() => dirty = true;
+        private void SkillLevelUp(Skills.Skill _, int __) => dirty = true;
         private void ProgressChanged(QuestData quest, float value) { if (quest) dirtyProgress.Add(quest.questId); }
         private void Rebuild()
         {
-            var offset = scroll.scrollOffset; instructionBinding?.Dispose(); scroll.Clear(); progress.Clear(); dirtyProgress.Clear();
+            var offset = scroll.scrollOffset; instructionBinding?.Dispose(); scroll.Clear(); progress.Clear(); dirtyProgress.Clear(); speakerPortraits.Clear();
             var instructions = Text(scroll, "", 4.4f); instructions.AddToClassList("eov-quest-instructions");
             instructionBinding = new ToolkitTextBinding(instructions, definition.instructions);
             lessonAccept = null;
             var entries = manager.GetNoticeboardEntries().ToList();
+            categories.Clear();
+            foreach (var entry in entries) categories[entry.Quest.questId] = entry.Category;
             var lesson = entries.FirstOrDefault(e => e.Quest.questId == "Ivan's First Lesson" && manager.NeedsAcceptance(e.Quest));
             if (lesson.Quest && (GameManager.Instance == null || GameManager.Instance.IsInTown))
             {
@@ -191,6 +232,15 @@ namespace TimelessEchoes.UI.Toolkit
             var texts = new VisualElement(); texts.AddToClassList("eov-quest-texts"); top.Add(texts);
             var pinned = Blindsided.Oracle.oracle?.saveData?.PinnedQuests?.Contains(quest.questId) == true;
             var heading = new VisualElement(); heading.AddToClassList("quest-title-line"); texts.Add(heading);
+            if (quest.speaker && quest.speaker.portrait)
+            {
+                var portrait = new Image { name = "quest-speaker", sprite = quest.speaker.CurrentPortrait,
+                    scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
+                portrait.AddToClassList("quest-speaker");
+                portrait.EnableInClassList("quest-speaker-orin", quest.speaker.speakerId == "Orin");
+                heading.Add(portrait);
+                speakerPortraits.Add((portrait, quest.speaker));
+            }
             var name = Text(heading, "<b>" + quest.questName.GetLocalizedString() + "</b>", 9); name.AddToClassList("quest-name");
             Label description = null;
             if (!compact)
@@ -243,7 +293,7 @@ namespace TimelessEchoes.UI.Toolkit
             VisualElement rewardTarget;
             if (quest.rewardDisplayResource)
             {
-                rewardResource = new ToolkitQuestRequirementRow(quest.rewardDisplayResource, 7);
+                rewardResource = new ToolkitQuestRequirementRow(quest.rewardDisplayResource, 7, knownIcon: quest.rewardIconKnown);
                 rewardResource.SetText(rewardText);
                 var prefix = Text(rewardResource, ToolkitLocalization.Text("quests.reward", "Reward: {0}", "").TrimEnd(), 7);
                 prefix.style.flexShrink = 0;
@@ -311,6 +361,14 @@ namespace TimelessEchoes.UI.Toolkit
                     var presentation = QuestRequirementPresentation.Build(quest, item.req);
                     var cost = item.req.type == QuestData.RequirementType.Resource && item.req.resource;
                     var label = ready && cost ? QuestRequirementPresentation.FormatValue(quest, item.req.amount) + " " + ToolkitLocalization.Name(item.req.resource) : presentation.text;
+                    if (!accepting && !entry.Completed)
+                    {
+                        var gates = QuestResourceAccess.Blockers(item.req, Blindsided.Oracle.oracle?.saveData);
+                        if (gates.Count > 0)
+                            label += " · " + string.Join(ToolkitLocalization.Text("quests.requirement-or", " or "), gates.Select(gate =>
+                                ToolkitLocalization.Text("quests.requires-skill", "Requires {0} {1}", gate.level,
+                                    ToolkitLocalization.Text("skill." + gate.skill.name, gate.skill.skillName))));
+                    }
                     if (item.resourceRow != null) item.resourceRow.SetText(label);
                     else item.text.text = ToolkitControls.WithoutInlineTextSize(presentation.text);
                     item.fill.style.width = Length.Percent(presentation.progress * 100);
@@ -397,6 +455,9 @@ namespace TimelessEchoes.UI.Toolkit
         private void Update()
         {
             if (!IsOpen) return; Layout();
+            foreach (var portrait in speakerPortraits)
+                if (portrait.image.sprite != portrait.speaker.CurrentPortrait)
+                    portrait.image.sprite = portrait.speaker.CurrentPortrait;
             if (acceptHand == null && definition.tutorialHand)
             {
                 acceptHand = new Image { name = "quest-accept-hand", sprite = definition.tutorialHand, pickingMode = PickingMode.Ignore };
@@ -414,23 +475,25 @@ namespace TimelessEchoes.UI.Toolkit
             if (dirty) { dirty = false; root.Q<Label>(className: "quests-heading").text = ToolkitLocalization.Text("quests.heading", "Quests"); Rebuild(); }
             else if (dirtyProgress.Count > 0)
             {
-                foreach (var entry in manager.GetNoticeboardEntries()) if (dirtyProgress.Contains(entry.Quest.questId) && progress.TryGetValue(entry.Quest.questId, out var update)) update(entry.Progress);
+                var entries = manager.GetNoticeboardEntries();
+                if (entries.Any(entry => !categories.TryGetValue(entry.Quest.questId, out var category) || category != entry.Category)) Rebuild();
+                else foreach (var entry in entries) if (dirtyProgress.Contains(entry.Quest.questId) && progress.TryGetValue(entry.Quest.questId, out var update)) update(entry.Progress);
                 dirtyProgress.Clear();
             }
             ApplyPendingQuestReveal();
+            RestoreScroll();
         }
         public void Hide()
         {
             pendingRevealQuest = null;
-            if (companionInventory)
-            {
-                companionInventory.Hide(); Destroy(companionInventory.gameObject); companionInventory = null;
-            }
+            pendingViewState = null;
+            speakerPortraits.Clear();
             if (manager) { manager.NoticeboardChanged -= Changed; manager.QuestProgressChanged -= ProgressChanged; }
+            if (skills) skills.OnLevelUp -= SkillLevelUp;
             LocalizationSettings.SelectedLocaleChanged -= LocaleChanged;
             ToolkitLocalization.Changed -= LocalizationChanged;
             acceptHand = null; lessonAccept = null;
-            instructionBinding?.Dispose(); instructionBinding = null; root?.RemoveFromHierarchy(); root = null; inventoryHost = null; compactToggle = null; progress.Clear(); dirtyProgress.Clear(); dirty = false;
+            instructionBinding?.Dispose(); instructionBinding = null; root?.RemoveFromHierarchy(); root = null; compactToggle = null; progress.Clear(); dirtyProgress.Clear(); dirty = false;
             ToolkitPanel.Release(GetComponent<UIDocument>(), ref settings);
         }
         private void OnDisable() => Hide();

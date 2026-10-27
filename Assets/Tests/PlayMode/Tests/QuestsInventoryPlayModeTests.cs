@@ -1,4 +1,4 @@
-#if UNITY_INCLUDE_TESTS && UNITY_EDITOR
+﻿#if UNITY_INCLUDE_TESTS && UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +18,10 @@ namespace Tests.PlayMode
 {
     public sealed partial class FieldsProductionPlayModeTests
     {
-        // The real navigation boundary owns embedding and disposal; the existing
-        // ordinary inventory test separately owns durable seed-credit publication.
+        // Resource links leave Quests for the regular Inventory in both layouts.
+        // The ordinary inventory test separately owns durable seed-credit publication.
         [UnityTest]
-        public IEnumerator QuestsInventoryStaysEmbeddedAndHubOwnsAnIndependentView()
+        public IEnumerator QuestResourceLinksOpenStandaloneInventoryAcrossLayouts()
         {
             var seed = Resources.Load<Resource>("Resource Items/Radish Seed Pack");
             var radish = Resources.Load<Resource>("Resource Items/Radish");
@@ -61,70 +61,33 @@ namespace Tests.PlayMode
                 windows.OpenWindow(TownWindowManager.Window.Quests);
                 yield return null; yield return null;
                 var ui = questsObject.GetComponent<UIDocument>().rootVisualElement;
-                var host = ui.Q("quests-inventory");
-                Assert.NotNull(host, "Quests must own its inventory inside the Quests layout, rather than open the Hub window beside/behind it.");
-                Assert.IsFalse(hub.IsOpen, "Opening Quests must not open or move the standalone Hub view.");
-                Assert.AreEqual(DisplayStyle.None, host.style.display.value, "The resource pop-out starts collapsed.");
-                Assert.IsTrue(windows.TryHighlightNativeResource(seed, true));
-                yield return null; yield return null;
-                Assert.AreEqual(DisplayStyle.Flex, host.style.display.value);
-                var embedded = host.Q("resource-inventory");
-                Assert.NotNull(embedded); Assert.IsNull(embedded.Q<Button>("inventory-close"));
-                var grid = embedded.Q<ToolkitGrid>();
-                Assert.GreaterOrEqual(grid.Columns, 5, "The companion must retain a usable compact grid instead of two oversized standalone columns.");
-                Assert.LessOrEqual(embedded.worldBound.xMax, ui.Q("quests").worldBound.xMax + 1);
-                Assert.Greater(embedded.worldBound.height, 100);
-                Assert.AreEqual(ToolkitLocalization.Text("inventory.resource-tier-tooltip", "{0} · Tier {1}", ToolkitLocalization.Name(radish), 3),
-                    embedded.Q<Button>("resource-Radish").tooltip);
-                Assert.IsTrue(windows.TryHighlightNativeResource(seed, true));
-                Assert.IsFalse(hub.IsOpen, "Highlighting a Quests resource must select its embedded inventory, not open Hub.");
-                Assert.AreEqual(ToolkitLocalization.Text("inventory.resource-tier", "{0} - Tier {1}", ToolkitLocalization.Name(seed), 1), embedded.Q<Label>("selected-resource").text);
-                Assert.AreEqual(26f, embedded.Q<Button>("resource-Radish Seed Pack").resolvedStyle.width, .01f);
-                Assert.AreEqual(32f, embedded.Q<Button>("resource-Radish Seed Pack").resolvedStyle.height, .01f);
-                var count = embedded.Q<Button>("resource-Radish Seed Pack").Q<Label>();
-                Assert.AreEqual("14", Regex.Replace(count.text, "<[^>]*>", ""));
-                Assert.AreSame(seed.icon, embedded.Q<Button>("resource-Radish Seed Pack").Q<Image>().sprite);
-                yield return null; // Apply the normal highlight scroll before visual capture.
-                var seedButton = embedded.Q<Button>("resource-Radish Seed Pack");
-                var originalBounds = seedButton.worldBound;
-                var originalIconBounds = seedButton.Q<Image>().worldBound;
-                var originalCountBounds = count.worldBound;
-                var radishButton = embedded.Q<Button>("resource-Radish");
-                using (var down = PointerDownEvent.GetPooled(new Event { type = EventType.MouseDown, button = 0, mousePosition = radishButton.worldBound.center })) radishButton.SendEvent(down);
-                using (var up = PointerUpEvent.GetPooled(new Event { type = EventType.MouseUp, button = 0, mousePosition = radishButton.worldBound.center })) radishButton.SendEvent(up);
-                Assert.AreEqual(ToolkitLocalization.Text("inventory.resource-tier", "{0} - Tier {1}", ToolkitLocalization.Name(radish), 3), embedded.Q<Label>("selected-resource").text,
-                    "Pointer selection must update the embedded inventory's resource details.");
-                using (var down = PointerDownEvent.GetPooled(new Event { type = EventType.MouseDown, button = 0, mousePosition = seedButton.worldBound.center })) seedButton.SendEvent(down);
-                using (var up = PointerUpEvent.GetPooled(new Event { type = EventType.MouseUp, button = 0, mousePosition = seedButton.worldBound.center })) seedButton.SendEvent(up);
-                yield return null;
-                Assert.AreEqual(originalBounds, seedButton.worldBound, "Changing selection must not move or resize a slot.");
-                Assert.AreEqual(originalIconBounds, seedButton.Q<Image>().worldBound, "Selecting a slot must not offset its icon.");
-                Assert.AreEqual(originalCountBounds, count.worldBound, "Selecting a slot must not offset its quantity.");
-                CaptureFeedback("quests-inventory-embedded.png"); yield return null; yield return null;
-
-                // Concurrent views share resource changes, never their visual tree.
-                hub.Bounds = new Rect(64, 44, 640, 376); Assert.IsTrue(hub.Show());
-                yield return null;
                 var hubUi = inventoryObject.GetComponent<UIDocument>().rootVisualElement;
-                AssertDiscoveryOrder(embedded); AssertDiscoveryOrder(hubUi);
+                foreach (var portrait in new[] { false, true })
+                {
+                    PlayModeWindow.SetCustomRenderingResolution(portrait ? 1080u : 1920u, portrait ? 1920u : 1080u, "Quest resource navigation");
+                    yield return null; yield return null;
+                    if (!quests.IsOpen) windows.OpenWindow(TownWindowManager.Window.Quests);
+                    yield return null; yield return null;
+                    Assert.IsNull(ui.Q("quests-inventory"), "Quests must not retain a companion inventory.");
+                    Assert.False(hub.IsOpen);
+                    Assert.True(windows.TryHighlightNativeResource(seed, true));
+                    yield return null; yield return null;
+                    Assert.False(quests.IsOpen, "A resource link leaves Quests rather than embedding another panel.");
+                    Assert.True(hub.IsOpen);
+                    Assert.NotNull(hubUi.Q<Button>("inventory-close"));
+                    Assert.AreEqual(ToolkitLocalization.Text("inventory.resource-tier", "{0} - Tier {1}", ToolkitLocalization.Name(seed), 1), hubUi.Q<Label>("selected-resource").text);
+                }
+                PlayModeWindow.SetCustomRenderingResolution(1920, 1080, "Inventory quality review");
+                yield return null; yield return null;
+                AssertDiscoveryOrder(hubUi);
                 var newlyFound = authored.Last(r => !discovered.Contains(r)); discovered.Add(newlyFound);
                 resources.Add(newlyFound, 1, trackStats: false, eligibleForTierRoll: false);
-                yield return null; yield return null;
-                AssertDiscoveryOrder(embedded); AssertDiscoveryOrder(hubUi);
-                resources.Spend(newlyFound, resources.GetAmount(newlyFound)); yield return null;
-                AssertDiscoveryOrder(embedded); AssertDiscoveryOrder(hubUi);
-                Assert.AreNotSame(embedded, hubUi.Q("resource-inventory"));
-                Assert.AreSame(host, embedded.parent);
+                yield return null; yield return null; AssertDiscoveryOrder(hubUi);
+                resources.Spend(newlyFound, resources.GetAmount(newlyFound)); yield return null; AssertDiscoveryOrder(hubUi);
                 resources.Add(seed, 2, trackStats: false, eligibleForTierRoll: false); yield return null;
-                Assert.AreEqual("16", Regex.Replace(count.text, "<[^>]*>", ""));
                 Assert.AreEqual("16", Regex.Replace(hubUi.Q<Button>("resource-Radish Seed Pack").Q<Label>().text, "<[^>]*>", ""));
-                Assert.IsTrue(resources.Spend(seed, 1)); yield return null;
-                Assert.AreEqual("15", Regex.Replace(count.text, "<[^>]*>", ""));
+                Assert.True(resources.Spend(seed, 1)); yield return null;
                 Assert.AreEqual("15", Regex.Replace(hubUi.Q<Button>("resource-Radish Seed Pack").Q<Label>().text, "<[^>]*>", ""));
-                hub.Hide(); Assert.IsNotNull(host.Q("resource-inventory"));
-                windows.OpenWindow(TownWindowManager.Window.Inventory); yield return null; yield return null;
-                Assert.IsFalse(quests.IsOpen); Assert.IsTrue(hub.IsOpen);
-                Assert.NotNull(hubUi.Q<Button>("inventory-close"));
                 var hubSeedButton = hubUi.Q<Button>("resource-Radish Seed Pack");
                 var hubIconBounds = hubSeedButton.Q<Image>().worldBound;
                 var hubCountBounds = hubSeedButton.Q<Label>().worldBound;
@@ -140,21 +103,11 @@ namespace Tests.PlayMode
                 CaptureFeedback("hub-inventory-keyboard-focus.png"); yield return null; yield return null;
                 hubSeedButton.Blur(); yield return null;
                 CaptureFeedback("hub-inventory-independent.png"); yield return null; yield return null;
-                windows.CloseAllWindows(); Assert.IsFalse(hub.IsOpen);
-                windows.OpenWindow(TownWindowManager.Window.Quests); yield return null;
-                Assert.NotNull(ui.Q("quests-inventory").Q<Button>("resource-Radish Seed Pack"));
-                Assert.IsFalse(hub.IsOpen);
                 var qualityResource = tierResources[4];
-                Assert.IsTrue(windows.TryHighlightNativeResource(qualityResource, true)); yield return null; yield return null;
-                var qualitySlot = ui.Q("quests-inventory").Q<Button>("resource-" + qualityResource.name);
-                yield return CaptureQualityStates(qualitySlot, "quests");
-                windows.OpenWindow(TownWindowManager.Window.Inventory); yield return null; yield return null;
-                Assert.IsTrue(windows.TryHighlightNativeResource(qualityResource, true)); yield return null; yield return null;
+                Assert.True(windows.TryHighlightNativeResource(qualityResource, true)); yield return null; yield return null;
                 yield return CaptureQualityStates(hubUi.Q<Button>("resource-" + qualityResource.name), "hub");
-                for (var context = 0; context < 2; context++)
                 {
-                    if (context == 1) { windows.OpenWindow(TownWindowManager.Window.Quests); yield return null; yield return null; }
-                    var qualityRoot = context == 0 ? hubUi : ui.Q("quests-inventory");
+                    var qualityRoot = hubUi;
                     var qualityColours = new HashSet<Color>();
                     for (var i = 0; i < tierResources.Length; i++)
                     {

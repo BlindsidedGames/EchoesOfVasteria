@@ -104,6 +104,7 @@ namespace TimelessEchoes.Farming
             bed.BatchId = "fields:" + operationId + ":" + id;
             bed.SelectedRecipeId = bed.RecipeId = recipe.id;
             bed.DurationSeconds = duration;
+            bed.GrowFully = recipe.secondaryOutput && bed.Repeat;
             bed.EstablishedTree = false;
             bed.FrozenYield = content.baseYield * FarmContent.YieldMultiplier(state.TwinsLevel);
             if (!Finite(recipe.secondaryYieldRatio) || recipe.secondaryYieldRatio < 0) return "InvalidRecipeTuning";
@@ -136,7 +137,19 @@ namespace TimelessEchoes.Farming
             var result = Begin(state, operationId, "repeat:" + id + ":" + (repeat ? "1" : "0"), now);
             if (!result.Accepted) return result;
             if (!KnownBed(id) || !AccessibleBed(state, id) || repeat && state.TwinsLevel < FarmContent.AutoReplantLevel || !result.Candidate.Beds.TryGetValue(id, out var bed) || bed == null) return Reject("RepeatLocked");
-            bed.Repeat = repeat; return result;
+            if ((repeat || bed.Repeat) && bed.IsTimber) bed.GrowFully = true;
+            bed.Repeat = repeat;
+            return result;
+        }
+        public static FarmCommandResult KeepGrowing(FarmState state, string id, string operationId, DateTime now)
+        {
+            var result = Begin(state, operationId, "grow-tree:" + id, now);
+            if (!result.Accepted) return result;
+            if (!OrchardBeds.Contains(id) || !AccessibleBed(state, id) || !result.Candidate.Beds.TryGetValue(id, out var bed) ||
+                bed == null || !bed.IsTimber || !bed.IsReady || bed.GrowFully || bed.Repeat)
+                return Reject("CannotKeepGrowing");
+            bed.GrowFully = true;
+            return result;
         }
         public static FarmCommandResult HarvestFields(GameData owner, string operationId, DateTime now, FarmContent content, bool automatic, string bedId = null)
         {
@@ -155,7 +168,7 @@ namespace TimelessEchoes.Farming
                     !ValidPaidBatch(owner.Farm, id, bed, legacy)) return Reject("InvalidHarvestBatch");
                 result.ResourceDeltas.TryGetValue(recipe.output.name, out var total);
                 var bonus = CauldronResourceYield.BonusPercent(owner, recipe.output);
-                var gathered = (legacy ? bed.HarvestYield : bed.FrozenYield) * (1 + bonus / 100d);
+                var gathered = (legacy ? bed.HarvestYield : bed.FrozenYield * bed.GrowthMultiplier) * (1 + bonus / 100d);
                 result.ResourceDeltas[recipe.output.name] = total + gathered;
                 result.Candidate.TotalHarvests++;
                 if (recipe.orchard && recipe.secondaryOutput) result.Candidate.LogsGathered += gathered;
@@ -164,7 +177,7 @@ namespace TimelessEchoes.Farming
                 {
                     result.ResourceDeltas.TryGetValue(recipe.secondaryOutput.name, out var secondary);
                     var secondaryBonus = CauldronResourceYield.BonusPercent(owner, recipe.secondaryOutput);
-                    result.ResourceDeltas[recipe.secondaryOutput.name] = secondary + bed.FrozenSecondaryYield * (1 + secondaryBonus / 100d);
+                    result.ResourceDeltas[recipe.secondaryOutput.name] = secondary + bed.FrozenSecondaryYield * bed.GrowthMultiplier * (1 + secondaryBonus / 100d);
                 }
                 result.OperationReceipt.BatchIds.Add(bed.BatchId); result.HarvestedBeds.Add(id);
                 if (legacy)
@@ -177,10 +190,10 @@ namespace TimelessEchoes.Farming
                 else
                 {
                     bed.LastHarvestedPlantSequence = bed.PlantSequence;
-                    FarmContent.AddXp(result.Candidate, bed.HarvestXp);
+                    FarmContent.AddXp(result.Candidate, checked(bed.HarvestXp * bed.GrowthMultiplier));
                     result.Candidate.FirstHarvestCompleted = true;
                 }
-                bed.BatchId = null; bed.RecipeId = null; bed.DurationSeconds = bed.ElapsedSeconds = bed.FrozenYield = bed.FrozenSecondaryYield = 0; bed.HarvestXp = 0; bed.HarvestYield = 0; bed.LastGrowthUtcTicks = 0; bed.Watered = false;
+                bed.BatchId = null; bed.RecipeId = null; bed.DurationSeconds = bed.ElapsedSeconds = bed.FrozenYield = bed.FrozenSecondaryYield = 0; bed.HarvestXp = 0; bed.HarvestYield = 0; bed.LastGrowthUtcTicks = 0; bed.Watered = false; bed.GrowFully = false;
                 if (bed.Repeat && result.Candidate.TwinsLevel >= FarmContent.AutoReplantLevel)
                 {
                     // Begin one new cycle; never carry elapsed time or watering into it.

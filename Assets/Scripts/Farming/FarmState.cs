@@ -72,6 +72,7 @@ namespace TimelessEchoes.Farming
         public bool Unlocked;
         public string SelectedRecipeId;
         public bool Repeat;
+        public bool GrowFully;
         public bool Watered;
         public bool EstablishedTree;
         public double FrozenYield;
@@ -90,7 +91,10 @@ namespace TimelessEchoes.Farming
 
         public bool IsPlanted => !string.IsNullOrEmpty(BatchId);
         public bool IsReady => IsPlanted && DurationSeconds > 0 && ElapsedSeconds >= ReadyAfterSeconds;
-        public double ReadyAfterSeconds => Watered ? DurationSeconds / 2 : DurationSeconds;
+        public bool IsTimber => RecipeId is "recipe.oak.v1" or "recipe.birch.v1" or "recipe.spruce.v1";
+        public bool FullGrowth => (GrowFully || Repeat) && IsTimber;
+        public int GrowthMultiplier => FullGrowth ? 2 : 1;
+        public double ReadyAfterSeconds => DurationSeconds * GrowthMultiplier / (Watered ? 2 : 1);
         public FarmBedState DeepClone() => (FarmBedState)MemberwiseClone();
     }
 

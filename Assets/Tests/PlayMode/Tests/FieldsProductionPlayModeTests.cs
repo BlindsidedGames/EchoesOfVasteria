@@ -111,8 +111,8 @@ namespace Tests.PlayMode
             Assert.AreEqual(0, service.State.TwinsXp);
             Assert.AreEqual(0, service.State.GardenCapacity);
             Assert.IsEmpty(service.State.Seeds);
-            oracle.saveData.Resources["Log"] = new GameData.ResourceEntry { Amount = 10, Earned = true };
-            oracle.saveData.Resources["Stick"] = new GameData.ResourceEntry { Amount = 20, Earned = true };
+            oracle.saveData.Resources["Log"] = new GameData.ResourceEntry { Amount = 20, Earned = true };
+            oracle.saveData.Resources["Stick"] = new GameData.ResourceEntry { Amount = 40, Earned = true };
             Build("Farm.Garden.Build01.v1");
             Assert.AreEqual(0, oracle.saveData.Resources["Log"].Amount);
             Assert.AreEqual(0, oracle.saveData.Resources["Stick"].Amount);
@@ -274,9 +274,16 @@ namespace Tests.PlayMode
                 Assert.False(geometry.Find(FarmCommands.EastBedId).gameObject.activeSelf);
                 Assert.False(geometry.Find("Fields enclosure 1").gameObject.activeSelf);
                 oracle.saveData.CompletedNpcTasks.Add("Farmers1"); Build(FarmContent.IntroductionId);
-                oracle.saveData.Resources["Log"] = new GameData.ResourceEntry { Amount = 10, Earned = true };
-                oracle.saveData.Resources["Stick"] = new GameData.ResourceEntry { Amount = 20, Earned = true };
+                oracle.saveData.Resources["Log"] = new GameData.ResourceEntry { Amount = 20, Earned = true };
+                oracle.saveData.Resources["Stick"] = new GameData.ResourceEntry { Amount = 40, Earned = true };
+                view.HoldPresentation();
                 Build("Farm.Garden.Build01.v1"); view.Refresh();
+                Assert.AreEqual(1, service.State.GardenCapacity, "Construction commits before its visual reveal.");
+                Assert.False(geometry.Find(FarmCommands.WestBedId).gameObject.activeSelf, "Polling must keep the old view until the camera arrives.");
+                var reveal = view.PendingPresentationChange();
+                Assert.True(reveal.HasValue);
+                reveal.Value.Apply();
+                view.ReleasePresentation();
                 Assert.True(geometry.Find(FarmCommands.WestBedId).gameObject.activeSelf);
                 Assert.True(geometry.Find("Fields enclosure 1").gameObject.activeSelf);
                 Assert.False(geometry.Find(FarmCommands.EastBedId).gameObject.activeSelf);
@@ -321,8 +328,8 @@ namespace Tests.PlayMode
         {
             oracle.saveData.CompletedNpcTasks.Add("Farmers1");
             Build(FarmContent.IntroductionId);
-            oracle.saveData.Resources["Log"] = new GameData.ResourceEntry { Amount = 10, Earned = true };
-            oracle.saveData.Resources["Stick"] = new GameData.ResourceEntry { Amount = 20, Earned = true };
+            oracle.saveData.Resources["Log"] = new GameData.ResourceEntry { Amount = 20, Earned = true };
+            oracle.saveData.Resources["Stick"] = new GameData.ResourceEntry { Amount = 40, Earned = true };
             Build("Farm.Garden.Build01.v1");
             var recipe = content.recipes.Single(r => r.seedId == FarmCommands.RadishSeedId);
             oracle.saveData.Resources[recipe.paidInput.name] = new GameData.ResourceEntry { Amount = 2, Earned = true, Tier = 1 };

@@ -535,6 +535,7 @@ namespace TimelessEchoes.Quests
         private bool CompleteQuest(QuestInstance inst)
         {
             if (inst == null) return false;
+            if (TownQuestReveal.IsPlaying) return false;
             if (!CanTurnInAtCurrentLocation(inst.data)) return false;
             // Validate every equipment reward before consuming quest resources or completing it.
             foreach (var reward in inst.data.rewards)
@@ -547,6 +548,7 @@ namespace TimelessEchoes.Quests
                 if (reward.type == QuestData.RewardType.Equipment &&
                     !TimelessEchoes.Gear.EquipmentController.Instance.Equip(reward.equipment.CreateItem()))
                     return false;
+            using var reveal = TownQuestReveal.Begin();
             var fieldQuest = inst.data.questId.StartsWith("Farm.Garden.", StringComparison.Ordinal) || inst.data.questId.StartsWith("Farm.Orchard.", StringComparison.Ordinal);
             if (fieldQuest && (TimelessEchoes.Farming.FarmService.Instance == null || !TimelessEchoes.Farming.FarmService.Instance.BuildQuest(inst.data.questId))) return false;
             var id = inst.data.questId;
@@ -647,6 +649,7 @@ namespace TimelessEchoes.Quests
             {
                 Debug.LogError($"Immediate save after quest completion failed: {ex}");
             }
+            reveal?.Play();
             return true;
         }
 
@@ -872,34 +875,16 @@ namespace TimelessEchoes.Quests
             if (pins != null)
                 foreach (var id in pins)
                     if (!string.IsNullOrEmpty(id) && active.TryGetValue(id, out var inst) && inst != null && !inst.ReadyForTurnIn)
-                        entries.Add(new QuestNoticeboardEntry(inst.data, QuestNoticeboardCategory.Pinned, inst.Progress));
+                        entries.Add(new QuestNoticeboardEntry(inst.data, QuestResourceAccess.IsLocked(inst.data, oracle.saveData) ? QuestNoticeboardCategory.Locked : QuestNoticeboardCategory.Pinned, inst.Progress));
             foreach (var inst in active.Values.Where(i => i != null && !i.ReadyForTurnIn && !(pins?.Contains(i.data.questId) ?? false))
                          .OrderBy(i => i.data.questName != null ? i.data.questName.GetLocalizedString() : string.Empty))
-                entries.Add(new QuestNoticeboardEntry(inst.data, QuestNoticeboardCategory.Active, inst.Progress));
+                entries.Add(new QuestNoticeboardEntry(inst.data, QuestResourceAccess.IsLocked(inst.data, oracle.saveData) ? QuestNoticeboardCategory.Locked : QuestNoticeboardCategory.Active, inst.Progress));
             if (oracle?.saveData?.Quests != null)
                 foreach (var quest in quests.Where(q => q != null && !active.ContainsKey(q.questId))
                              .Select(q => new { data = q, record = oracle.saveData.Quests.TryGetValue(q.questId, out var r) ? r : null })
                              .Where(q => q.record != null && q.record.Completed).OrderByDescending(q => q.record.CompletedTimestamp))
                     entries.Add(new QuestNoticeboardEntry(quest.data, QuestNoticeboardCategory.Completed, 1));
             return entries;
-        }
-
-        public void CompleteFieldsConstruction(string questId, bool includeIntroduction)
-        {
-            if (!TimelessEchoes.Farming.FarmCommands.KnownBuild(questId)) return;
-            var ids = includeIntroduction ? new[] { TimelessEchoes.Farming.FarmContent.IntroductionId, questId } : new[] { questId };
-            foreach (var id in ids.Distinct())
-            {
-                if (!QuestUtils.QuestCompleted(id)) continue;
-                if (active.Remove(id, out var instance) && instance.ui != null) uiManager?.RemoveEntry(instance.ui);
-                oracle.saveData.PinnedQuests.Remove(id);
-                QuestHandin(id);
-            }
-            StartAvailableQuests();
-            UpdateCompletionPercentage();
-            AuditQuestCompletionState();
-            PinnedQuestUIManager.Instance?.RefreshPins();
-            RefreshNoticeboard();
         }
 
         public void RefreshFieldsProgression()
@@ -952,7 +937,7 @@ namespace TimelessEchoes.Quests
                 var entries = GetNoticeboardEntries();
                 if (uiManager != null && uiManager.enabled)
                 {
-                    var counts = new int[4];
+                    var counts = new int[Enum.GetValues(typeof(QuestNoticeboardCategory)).Length];
                     foreach (var entry in entries)
                     {
                         counts[(int)entry.Category]++;
@@ -967,7 +952,8 @@ namespace TimelessEchoes.Quests
                         inst.ui = uiManager.CreateEntry(inst.data, () => CompleteQuest(inst), true, false, category);
                         UpdateProgress(inst);
                     }
-                    uiManager.UpdateCategoryVisibility(counts[0], counts[1], counts[2], counts[3]);
+                    uiManager.UpdateCategoryVisibility(counts[(int)QuestNoticeboardCategory.Ready], counts[(int)QuestNoticeboardCategory.Pinned],
+                        counts[(int)QuestNoticeboardCategory.Active] + counts[(int)QuestNoticeboardCategory.Locked], counts[(int)QuestNoticeboardCategory.Completed]);
                 }
                 NoticeboardChanged?.Invoke();
             }

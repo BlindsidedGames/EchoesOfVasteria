@@ -9,12 +9,14 @@ namespace TimelessEchoes.UI.Toolkit
     internal sealed class ToolkitQuestRequirementRow : VisualElement
     {
         private readonly Resource resource;
+        private readonly bool knownIcon;
         private readonly Image icon;
         public readonly Label Text;
 
-        public ToolkitQuestRequirementRow(Resource resource, float fontSize, bool rightAligned = false)
+        public ToolkitQuestRequirementRow(Resource resource, float fontSize, bool rightAligned = false, bool knownIcon = false)
         {
             this.resource = resource;
+            this.knownIcon = knownIcon;
             pickingMode = PickingMode.Ignore;
             AddToClassList("quest-resource-line");
             style.flexDirection = FlexDirection.Row;
@@ -36,7 +38,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         public void SetText(string richText)
         {
-            var unlocked = resource && ResourceManager.Instance && ResourceManager.Instance.IsUnlocked(resource);
+            var unlocked = knownIcon || resource && ResourceManager.Instance && ResourceManager.Instance.IsUnlocked(resource);
             icon.sprite = resource ? (unlocked ? resource.icon : resource.UnknownIcon) : null;
             icon.style.display = icon.sprite ? DisplayStyle.Flex : DisplayStyle.None;
             Text.text = ToolkitControls.WithoutInlineTextSize(Regex.Replace(richText, @"<sprite[^>]*>[\s ]*", ""));

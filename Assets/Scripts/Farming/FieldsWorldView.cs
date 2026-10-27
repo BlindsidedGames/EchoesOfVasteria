@@ -31,6 +31,23 @@ namespace TimelessEchoes.Farming
         private Blindsided.SaveData.GameData renderedOwner;
         private int garden = -1, orchard = -1;
         private float nextRefresh;
+        private bool presentationHeld;
+        public void HoldPresentation() => presentationHeld = true;
+        public void ReleasePresentation() { presentationHeld = false; Refresh(); }
+        public TownVisualChange? PendingPresentationChange()
+        {
+            if (!service || !service.Ready || garden < 0 || orchard < 0) return null;
+            var nextGarden = Mathf.Clamp(service.State.GardenCapacity, 0, 6);
+            var nextOrchard = Mathf.Clamp(service.State.OrchardCapacity, 0, 6);
+            Bounds? bounds = null;
+            void Include(Bounds addition) { if (bounds.HasValue) { var current = bounds.Value; current.Encapsulate(addition); bounds = current; } else bounds = addition; }
+            for (var i = garden; i < nextGarden; i++) Include(new Bounds(GardenAnchors[i] + Vector2.one, new Vector3(5, 5, 1)));
+            for (var i = orchard; i < nextOrchard; i++) Include(new Bounds(OrchardAnchors[i] + Vector2.one * .5f, new Vector3(4, 4, 1)));
+            var fences = new[] { new Bounds(new Vector3(-59, 2.5f), new Vector3(12, 9, 1)), new Bounds(new Vector3(-58, -7.5f), new Vector3(14, 9, 1)), new Bounds(new Vector3(-58, -26), new Vector3(12, 8, 1)) };
+            for (var i = 0; i < fences.Length; i++) if (garden < i * 2 + 1 && nextGarden >= i * 2 + 1) Include(fences[i]);
+            if (!bounds.HasValue) return null;
+            return new TownVisualChange(bounds.Value, () => { var held = presentationHeld; presentationHeld = false; Refresh(); presentationHeld = held; });
+        }
         public int ClearedStumps { get; private set; }
         public int ClearedStandingTrees { get; private set; }
         public static readonly Vector2[] GardenAnchors = { new(-62,1), new(-58,1), new(-62,-9), new(-57,-9), new(-61,-27), new(-57,-27) };
@@ -77,6 +94,7 @@ namespace TimelessEchoes.Farming
         }
         public void Refresh()
         {
+            if (presentationHeld) return;
             if (!appearance || !town || !service) return;
             var state = service.Ready ? service.State : null;
             var owner = service.Ready ? Blindsided.Oracle.oracle?.saveData : null;
@@ -100,11 +118,13 @@ namespace TimelessEchoes.Farming
                 int stage = FarmView.GrowthStage(progress,bed?.IsReady == true);
                 Sprite sprite = null;
                 if (recipe != null)
-                    sprite = recipe.stages?.Length == 4 ? recipe.stages[stage] : plot.orchard && stage < 3 ? appearance.treeStages[stage] : null;
+                    sprite = recipe.GrowthSprite(progress, bed.IsReady, bed.FullGrowth) ?? (plot.orchard && stage < 3 ? appearance.treeStages[stage] : null);
                 foreach(var wet in plot.wet) wet.enabled = bed?.IsPlanted == true && bed.Watered;
                 foreach(var plant in plot.plants) { plant.sprite = sprite; plant.enabled = sprite; }
                 // Retain the imported pivot relative to the ground sorting anchor.
-                if (plot.orchard && sprite) plot.plants[0].transform.localPosition = new Vector3(sprite.pivot.x / sprite.pixelsPerUnit - 1,sprite.pivot.y / sprite.pixelsPerUnit - 1,0);
+                if (plot.orchard && sprite) plot.plants[0].transform.localPosition = sprite == recipe.fullGrownSprite
+                    ? Vector3.zero
+                    : new Vector3(sprite.pivot.x / sprite.pixelsPerUnit - 1,sprite.pivot.y / sprite.pixelsPerUnit - 1,0);
             }
         }
         private SpriteRenderer Put(Transform parent, Sprite sprite, Vector2 position, int order, string name, bool flipX=false, bool flipY=false)

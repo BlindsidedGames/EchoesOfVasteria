@@ -75,6 +75,7 @@ namespace TimelessEchoes.Farming
                 value == "plant-radish:" + FarmCommands.WestBedId || value == "plant-radish:" + FarmCommands.EastBedId) return true;
             if (value == null) return false;
             if (value.StartsWith("build:", StringComparison.Ordinal)) return FarmCommands.KnownBuild(value.Substring(6));
+            if (value.StartsWith("grow-tree:", StringComparison.Ordinal)) return FarmCommands.OrchardBeds.Contains(value.Substring(10));
             if (value.StartsWith("water:", StringComparison.Ordinal)) return FarmCommands.KnownBed(value.Substring(6));
             if (value.StartsWith("harvest-bed:", StringComparison.Ordinal)) return FarmCommands.KnownBed(value.Substring(12));
             var parts = value.Split(':');

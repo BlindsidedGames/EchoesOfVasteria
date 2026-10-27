@@ -1,12 +1,4 @@
 /* Task choices stay compact; historical metrics are shown on demand. */
-.gameplay .task-preferences-toolbar {flex-direction:row;align-items:center;justify-content:flex-end;margin-bottom:8px;flex-shrink:0;}
-.gameplay .task-skill-selectors {flex-direction:row;flex-grow:1;min-width:0;}
-.gameplay .task-skill-selector {width:34px;min-width:34px;height:34px;padding:4px;margin-right:3px;}
-.gameplay .task-skill-selector .eov-icon {width:24px;height:24px;}
-.gameplay .task-preferences-sort {width:112px;min-width:0;flex-shrink:0;margin:0;}
-.gameplay .task-preferences-sort .unity-base-popup-field__input {min-height:30px;background-color:var(--control);border-color:var(--line);border-width:1px;color:var(--text);}
-.gameplay .task-preferences-sort .unity-base-popup-field__text {font-size:var(--body);color:var(--text);}
-.gameplay .task-preferences-context {font-size:var(--small);color:var(--muted);margin-bottom:6px;flex-shrink:0;}
 .gameplay .task-preferences-grid {flex-direction:row;flex-wrap:wrap;align-items:flex-start;}
 .gameplay .task-preferences-column {min-width:0;flex-shrink:0;}
 .gameplay .task-preferences-group {min-width:0;flex-shrink:0;padding:0 0 14px 0;}
@@ -14,7 +6,6 @@
 .gameplay .task-preferences-heading {flex-direction:row;align-items:center;min-height:30px;margin-bottom:5px;}
 .gameplay .task-preferences-heading .eov-icon {width:22px;height:22px;margin-right:6px;}
 .gameplay .task-preferences-skill-name {font-size:var(--body);-unity-font-style:bold;flex-grow:1;}
-.gameplay .task-preferences-favour-label {font-size:var(--small);color:var(--muted);flex-shrink:0;}
 .gameplay .task-preference-row {flex-direction:row;align-items:center;min-height:36px;margin-bottom:2px;}
 .gameplay .task-preference-name,.gameplay .task-preference-name:hover,.gameplay .task-preference-name:active {flex-direction:row;justify-content:flex-start;flex-grow:1;flex-basis:0;min-width:0;min-height:36px;padding:2px 0;background-color:transparent;border-width:0;}
 .gameplay .task-preference-name .eov-icon {width:22px;height:22px;flex-shrink:0;margin-right:6px;}
@@ -25,7 +16,7 @@
 .gameplay .task-preference-toggle .eov-icon {width:16px;height:16px;}
 .gameplay .button.task-preference-toggle.check-control--standalone {width:36px;min-width:36px;max-width:36px;height:36px;min-height:36px;padding:9px;justify-content:center;}
 .gameplay.eov-statistics .button.task-preference-toggle,.gameplay.eov-statistics .button.task-preference-toggle:hover,.gameplay.eov-statistics .button.task-preference-toggle:active {background-color:transparent;border-width:0;}
-.gameplay .task-preferences-unknown-toggle,.gameplay .task-preferences-unknown-toggle:hover {font-size:var(--small);-unity-font-style:normal;-unity-text-align:middle-left;min-height:30px;padding:2px 0;background-color:transparent;border-width:0;color:var(--muted);}
+.gameplay .task-preferences-unknown-count {font-size:var(--small);color:var(--muted);margin-top:4px;margin-bottom:4px;}
 .gameplay .task-details-overlay {position:absolute;left:0;right:0;top:0;bottom:0;align-items:center;justify-content:center;}
 .gameplay.eov-statistics .button.task-details-backdrop,.gameplay.eov-statistics .button.task-details-backdrop:hover {position:absolute;left:0;right:0;top:0;bottom:0;background-color:rgba(0,0,0,.45);border-width:0;}
 .gameplay .task-details-panel {width:90%;max-width:340px;max-height:90%;padding:12px;flex-shrink:1;}
@@ -845,9 +836,13 @@
 .gameplay .graph-controls > .graph-choice {flex-grow:1;flex-basis:0;min-width:0;}
 .gameplay .graph-units {flex-direction:row;flex-shrink:0;margin-left:var(--space-control);}
 .gameplay .graph-map-filters .graph-choice {flex-grow:1;flex-basis:0;min-width:0;}
-.gameplay .graph-summary-row {flex-direction:row;align-items:baseline;margin-bottom:var(--space-section);flex-shrink:0;}
-.gameplay .graph-summary {font-size:var(--body);-unity-font-style:bold;}
-.gameplay .graph-sample {font-size:var(--small);color:var(--muted);margin-left:auto;white-space:normal;}
+.gameplay .graph-summary-row {flex-direction:row;align-items:center;flex-wrap:wrap;margin-bottom:var(--space-section);flex-shrink:0;}
+.gameplay .graph-summary-copy {flex-grow:1;flex-shrink:1;flex-basis:180px;min-width:0;margin-right:var(--space-section);}
+.gameplay .graph-summary {font-size:var(--body);-unity-font-style:bold;white-space:normal;}
+.gameplay .graph-sample {font-size:var(--small);color:var(--muted);margin-top:var(--space-tight);white-space:normal;}
+.gameplay .graph-zoom-controls {flex-direction:row;align-items:center;flex-shrink:0;}
+.gameplay .graph-zoom-controls .graph-choice {min-width:24px;height:24px;min-height:24px;margin-top:var(--space-control);margin-bottom:var(--space-control);}
+.gameplay #graph-reset-zoom {margin-right:0;}
 .gameplay .graph-chart {flex-direction:row;flex-grow:1;min-height:72px;}
 .gameplay .graph-axis {width:42px;flex-shrink:0;position:relative;}
 .gameplay .graph-tick {position:absolute;right:var(--space-control);font-size:var(--small);color:var(--muted);-unity-text-align:middle-right;}
@@ -858,6 +853,8 @@
 .gameplay .graph-run-bar:hover,.gameplay .graph-run-bar:focus,.gameplay .graph-run-bar.selected {background-color:rgba(245,228,214,.07);}
 .gameplay .graph-run-fill {position:absolute;left:1px;right:1px;bottom:0;}
 .gameplay .graph-run-bar.selected .graph-run-fill {border-width:.5px;border-color:var(--accent);}
+.gameplay .graph-overflow-marker {position:absolute;left:0;right:0;top:0;-unity-text-align:upper-center;font-size:var(--body);color:var(--text);}
+.gameplay .graph-overflow-value {position:absolute;top:14px;font-size:var(--small);color:var(--text);background-color:var(--surface);padding:var(--space-tight) var(--space-control);}
 .gameplay .graph-average {position:absolute;left:0;right:0;height:.5px;background-color:var(--accent);}
 .gameplay .graph-average-label {position:absolute;right:0;bottom:1px;font-size:var(--small);color:var(--accent);background-color:var(--surface);padding-left:var(--space-tight);}
 .gameplay .graph-empty {position:absolute;left:0;right:0;top:35%;-unity-text-align:middle-center;font-size:var(--body);color:var(--muted);}
@@ -865,9 +862,9 @@
 .gameplay .graph-first,.gameplay .graph-last {width:50px;font-size:var(--small);color:var(--muted);}
 .gameplay .graph-last {-unity-text-align:middle-right;}
 .gameplay .graph-x-title {flex-grow:1;-unity-text-align:middle-center;font-size:var(--small);color:var(--muted);}
-.gameplay .graph-legend {flex-direction:row;justify-content:center;margin-bottom:var(--space-section);flex-shrink:0;}
-.gameplay .graph-legend-item {flex-direction:row;align-items:center;margin-right:var(--space-section);}
-.gameplay .graph-legend-item Label {font-size:var(--small);color:var(--muted);}
+.gameplay .graph-legend {flex-direction:row;flex-wrap:wrap;justify-content:center;margin-bottom:var(--space-section);flex-shrink:0;}
+.gameplay .graph-legend-item {flex-direction:row;align-items:center;flex-shrink:0;margin-right:var(--space-section);margin-bottom:var(--space-tight);}
+.gameplay .graph-legend-item Label {font-size:var(--small);color:var(--muted);white-space:nowrap;}
 .gameplay .graph-legend-swatch {width:5px;height:5px;margin-right:var(--space-tight);}
 .gameplay .graph-detail-heading {flex-direction:row;align-items:baseline;margin-bottom:var(--space-control);flex-shrink:0;}
 .gameplay .graph-detail-title {font-size:var(--body);-unity-font-style:bold;}
@@ -1410,3 +1407,6 @@
 .gameplay .summary-sheet.summary-landscape .summary-fact {padding-top:0;padding-bottom:0;}
 .gameplay .summary-sheet.summary-landscape .summary-reaping-gain {padding-top:0;padding-bottom:2px;}
 .gameplay .summary-sheet.summary-landscape .summary-icon-distance > .icon {left:2.5px;top:2px;}
+
+.gameplay .quest-speaker {width:22px;min-width:22px;height:26px;margin-right:4px;flex-shrink:0;}
+.gameplay .quest-speaker-orin {--unity-image-tint-color:var(--text);}
