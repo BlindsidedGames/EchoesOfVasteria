@@ -1019,9 +1019,18 @@
 .gameplay.eov-forge .forge-odds-value {width:36px;flex-shrink:0;-unity-text-align:middle-right;}
 .gameplay.eov-forge .forge-odds-zero {opacity:.35;}
 .gameplay.eov-forge .forge-craft-controls {align-items:center;margin-bottom:4px;}
-.gameplay.eov-forge .forge-craft-controls > Button {width:82px;min-height:28px;margin-right:8px;flex-shrink:0;}
+.gameplay.eov-forge .forge-craft-controls > Button {width:80px;flex-basis:80px;min-height:28px;margin-right:7px;flex-shrink:0;}
 .gameplay.eov-forge .forge-craft-recipe {flex-grow:1;justify-content:flex-start;min-width:0;}
-.gameplay.eov-forge .forge-craft-controls > #forge-replace {margin-left:8px;margin-right:0;}
+.gameplay.eov-forge .forge-craft-controls > #forge-replace {margin-left:7px;margin-right:0;}
+.gameplay.eov-forge .forge-craft-area {flex-shrink:0;min-width:0;--forge-inline-gap:7;}
+.gameplay.eov-forge .forge-craft-recipe .eov-text {white-space:nowrap;}
+.gameplay.eov-forge .forge-recipe-costs,
+.gameplay.eov-forge .forge-recipe-result {flex-shrink:0;}
+.gameplay.eov-forge .forge-craft-stacked > .forge-craft-recipe {width:100%;flex-grow:0;justify-content:center;margin-bottom:3px;}
+.gameplay.eov-forge .forge-craft-stacked > .forge-craft-controls {width:100%;justify-content:space-between;}
+.gameplay.eov-forge .forge-craft-stacked > .forge-craft-controls > Button {flex-grow:1;flex-shrink:1;margin-right:4px;}
+.gameplay.eov-forge .forge-craft-stacked > .forge-craft-controls > #forge-replace {margin-left:4px;margin-right:0;}
+.gameplay.eov-forge .forge-actions-stacked .forge-odds-row {width:100%;}
 .gameplay.eov-forge #forge-automation-area {min-height:24px;}
 .gameplay.eov-forge .eov-forge-conversions {margin-top:auto;margin-bottom:0;flex-shrink:0;}
 
@@ -1319,6 +1328,7 @@
 
 /* Keep room for the recipe and readable odds on 4:3 landscape tablets. */
 .gameplay.eov-forge.forge-compact-landscape .forge-comparison-section {width:38%;}
+.gameplay.eov-forge.forge-compact-landscape .forge-comparison-section .forge-metric-value {width:28%;}
 .gameplay.eov-forge.forge-compact-landscape .forge-odds-row {width:100%;}
 
 /* Text must keep its reading size when a panel becomes narrow. */

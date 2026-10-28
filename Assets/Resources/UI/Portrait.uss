@@ -164,9 +164,12 @@
 .gameplay.portrait.eov-forge .eov-forge-core-frame {width:40px;height:40px;margin-bottom:2px;}
 .gameplay.portrait.eov-forge .eov-forge-core .eov-text {font-size:var(--body);}
 .gameplay.portrait.eov-forge .eov-forge-actions {width:100%;margin:8px 0 0 0;}
-.gameplay.portrait.eov-forge .forge-craft-controls {flex-direction:row;align-items:center;}
-.gameplay.portrait.eov-forge .forge-craft-controls > Button {width:96px;height:34px;min-height:34px;font-size:12px;margin:0 12px 0 0;}
-.gameplay.portrait.eov-forge .forge-craft-recipe {height:44px;flex-grow:1;justify-content:flex-start;}
+.gameplay.portrait.eov-forge .forge-craft-area {--forge-inline-gap:6;}
+.gameplay.portrait.eov-forge .forge-craft-controls {flex-direction:row;align-items:center;justify-content:center;}
+.gameplay.portrait.eov-forge .forge-craft-controls > Button {width:96px;flex-basis:96px;height:34px;min-height:34px;font-size:12px;margin:0 6px 0 0;}
+.gameplay.portrait.eov-forge .forge-craft-controls > #forge-replace {margin-left:6px;}
+.gameplay.portrait.eov-forge .forge-craft-recipe {height:44px;flex-grow:0;justify-content:flex-start;}
+.gameplay.portrait.eov-forge .forge-craft-stacked > .forge-craft-recipe {flex-grow:0;justify-content:center;}
 .gameplay.portrait.eov-forge .forge-comparison-heading Button {width:72px;height:30px;min-height:30px;font-size:11px;}
 .gameplay.portrait.eov-forge .forge-rarity-section {margin-top:12px;padding-top:8px;border-top-width:1px;border-top-color:var(--line);}
 .gameplay.portrait.eov-forge .forge-odds-legend > .eov-text--heading {font-size:12px;margin-bottom:6px;}

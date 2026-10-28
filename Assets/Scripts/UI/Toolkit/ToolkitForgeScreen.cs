@@ -23,6 +23,9 @@ namespace TimelessEchoes.UI.Toolkit
         private VisualElement root, main, xpFill;
         private Label ivan, xp, maxCrafts, resultTier;
         private Button craft, replace;
+        private VisualElement craftArea, craftRow, craftRecipe;
+        private bool craftStacked;
+        private static readonly CustomStyleProperty<float> CraftInlineGap = new("--forge-inline-gap");
         private bool repeatCraft;
         private VisualElement automationControls;
         private Label automationLock;
@@ -118,12 +121,14 @@ namespace TimelessEchoes.UI.Toolkit
             var lockedFrame = new VisualElement(); lockedFrame.AddToClassList("eov-forge-core-frame"); locked.Add(lockedFrame); lockedCoreIcon = FramedIcon(lockedFrame, null);
             Label(locked, "—", ToolkitControls.TextRole.Caption).name = "forge-locked-core-count";
             var actions = new VisualElement(); actions.AddToClassList("eov-forge-actions"); columns.Add(actions);
-            var craftRow = Row(actions); craftRow.AddToClassList("forge-craft-controls");
+            craftArea = new VisualElement(); craftArea.AddToClassList("forge-craft-area"); actions.Add(craftArea);
+            craftRow = Row(craftArea); craftRow.AddToClassList("forge-craft-controls");
             craft = LocalizedButton(craftRow, "forge-craft", "forge.craft", "Craft", CraftSelected);
             var recipe = Row(craftRow); recipe.style.alignItems = Align.Center; recipe.AddToClassList("forge-craft-recipe");
-            var costs = new VisualElement(); recipe.Add(costs); var first = Row(costs); first.AddToClassList("forge-ingredient"); costCore = ToolkitControls.Icon(null); first.Add(costCore); coreCost = Label(first, "1"); var second = Row(costs); second.AddToClassList("forge-ingredient"); costIngot = ToolkitControls.Icon(null); second.Add(costIngot); ingotCost = Label(second, "");
+            craftRecipe = recipe; craftStacked = false;
+            var costs = new VisualElement(); costs.AddToClassList("forge-recipe-costs"); recipe.Add(costs); var first = Row(costs); first.AddToClassList("forge-ingredient"); costCore = ToolkitControls.Icon(null); first.Add(costCore); coreCost = Label(first, "1"); var second = Row(costs); second.AddToClassList("forge-ingredient"); costIngot = ToolkitControls.Icon(null); second.Add(costIngot); ingotCost = Label(second, "");
             craftArrow = ToolkitControls.Icon(null); recipe.Add(craftArrow);
-            var result = new VisualElement(); recipe.Add(result); resultIcon = ToolkitControls.Icon(null); resultIcon.style.width = resultIcon.style.height = 24; result.Add(resultIcon); resultTier = Label(result, "", ToolkitControls.TextRole.Caption);
+            var result = new VisualElement(); result.AddToClassList("forge-recipe-result"); recipe.Add(result); resultIcon = ToolkitControls.Icon(null); resultIcon.style.width = resultIcon.style.height = 24; result.Add(resultIcon); resultTier = Label(result, "", ToolkitControls.TextRole.Caption);
             replace = LocalizedButton(craftRow, "forge-replace", "forge.equip", "Equip", session.Replace);
             maxCrafts = Label(actions, "", ToolkitControls.TextRole.Caption);
             var automationArea = new VisualElement { name = "forge-automation-area" }; actions.Add(automationArea);
@@ -175,7 +180,39 @@ namespace TimelessEchoes.UI.Toolkit
             root.EnableInClassList("forge-narrow", width < 620);
             root.EnableInClassList("forge-compact-landscape", width < 620 && !ToolkitResponsiveLayout.IsPortrait);
             RefreshPortraitForge();
+            LayoutCraftControls();
             LayoutConversions();
+        }
+        private void LayoutCraftControls()
+        {
+            if (craftArea == null || craftArea.contentRect.width <= 0 || craft.resolvedStyle.width <= 0) return;
+            float TextWidth(Label label, string text)
+            {
+                var width = label.MeasureTextSize(text, 0, VisualElement.MeasureMode.Undefined, 0, VisualElement.MeasureMode.Undefined).x;
+                return float.IsFinite(width) ? width : 0;
+            }
+            float IconWidth(Image icon) => icon.resolvedStyle.width + icon.resolvedStyle.marginLeft + icon.resolvedStyle.marginRight;
+            var costsWidth = Mathf.Max(IconWidth(costCore) + TextWidth(coreCost, coreCost.text),
+                IconWidth(costIngot) + TextWidth(ingotCost, ingotCost.text));
+            var tierWidth = Mathf.Max(TextWidth(resultTier, resultTier.text),
+                TextWidth(resultTier, ToolkitLocalization.Text("inventory.tier", "Tier {0}", 8)));
+            var recipeWidth = Mathf.Ceil(costsWidth + IconWidth(craftArrow) + Mathf.Max(IconWidth(resultIcon), tierWidth));
+            if (!float.IsFinite(recipeWidth)) return;
+            craftRecipe.style.minWidth = recipeWidth;
+            // Both actions use the same width. Reserve Equip even while hidden so
+            // crafting an item cannot squeeze the recipe into a different layout.
+            var buttonWidth = craft.resolvedStyle.flexBasis.value;
+            // Measure the inline spacing even when the stacked layout uses tighter gaps.
+            var margins = (craftArea.customStyle.TryGetValue(CraftInlineGap, out var gap) ? gap : 7) * 2;
+            var requiredWidth = buttonWidth * 2 + margins + recipeWidth;
+            var availableWidth = craftArea.contentRect.width;
+            var stacked = craftStacked ? availableWidth < requiredWidth + .5f : availableWidth < requiredWidth;
+            if (stacked == craftStacked) return;
+            craftStacked = stacked;
+            craftArea.EnableInClassList("forge-craft-stacked", stacked);
+            craftArea.parent.EnableInClassList("forge-actions-stacked", stacked);
+            if (stacked) craftArea.Insert(0, craftRecipe);
+            else craftRow.Insert(1, craftRecipe);
         }
         private void RefreshPortraitForge()
         {
