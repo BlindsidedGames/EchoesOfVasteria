@@ -729,6 +729,8 @@ namespace TimelessEchoes.Buffs
 
         private void AutoCastBuffs()
         {
+            // The first lesson must be completed by pressing the ability.
+            if (UI.Toolkit.BuffIntroductionGuidance.Stage == 3) return;
             var tracker = GameplayStatTracker.Instance ??
                           FindAnyObjectByType<GameplayStatTracker>();
             if (tracker == null || !tracker.RunInProgress)

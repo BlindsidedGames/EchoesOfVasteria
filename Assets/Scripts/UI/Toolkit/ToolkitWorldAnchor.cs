@@ -12,7 +12,7 @@ namespace TimelessEchoes.UI.Toolkit
     [DisallowMultipleComponent]
     public sealed class ToolkitWorldAnchor : MonoBehaviour
     {
-        public enum Value { Static, HealthFill, TaskFill, EchoFill, EnemyTitle, EnemyHealth }
+        public enum Value { Static, HealthFill, TaskFill, EchoFill, EnemyTitle, EnemyHealth, FuseFill }
         [Serializable] public sealed class Element
         {
             public RectTransform anchor, rowGroup;
@@ -32,6 +32,7 @@ namespace TimelessEchoes.UI.Toolkit
         public Enemy enemy;
         public ContinuousTask task;
         public EchoController echo;
+        public BombschroomFuse fuse;
         private string healthText, healthNegativeSign;
         private int displayedHealth, displayedMaxHealth;
         public static readonly HashSet<ToolkitWorldAnchor> Active = new();
@@ -43,6 +44,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (!enemy) enemy = GetComponentInParent<Enemy>();
             if (!task) task = GetComponentInParent<ContinuousTask>();
             if (!echo) echo = GetComponentInParent<EchoController>();
+            if (!fuse) fuse = GetComponentInParent<BombschroomFuse>();
             Active.Add(this);
         }
         private void OnDisable() => Active.Remove(this);
@@ -51,6 +53,7 @@ namespace TimelessEchoes.UI.Toolkit
             Value.HealthFill => health && health.MaxHealth > 0 ? Mathf.Max(.05f, health.CurrentHealth / health.MaxHealth) : 1,
             Value.TaskFill => task ? task.ProgressRemaining : 1,
             Value.EchoFill => echo ? echo.LifetimeRemainingFraction : 1,
+            Value.FuseFill => fuse ? fuse.FuseRemainingFraction : 0,
             _ => 1
         };
         public string Text(Element e)

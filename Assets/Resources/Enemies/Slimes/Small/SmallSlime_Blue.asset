@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Blue Minislime
   displayOrder: 6
+  statisticsGroup: {fileID: 11400000, guid: 4f6905179186c264a82ad2c4dbec39bd, type: 2}
   icon: {fileID: 43810669774899895, guid: f3a27f43c7070b1458586ed35bab3dfb, type: 3}
   prefab: {fileID: 8193780003442596315, guid: 370ef629523d47c58f7df122efe1b298, type: 3}
   weight: 0.5
-  minX: 50
+  minX: 24
   maxX: Infinity
   spawnTerrains:
   - {fileID: 11400000, guid: 7fb50b98a8abd724bb2b115b095a6432, type: 2}
@@ -29,63 +30,43 @@ MonoBehaviour:
   - resource: {fileID: 11400000, guid: 1b77cb67ea1673647af1d3a57796d18f, type: 2}
     dropRange: {x: 1, y: 3}
     weight: 500
-    minX: 0
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
+    requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
     dropRange: {x: 1, y: 1}
     weight: 50
-    minX: 0
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
+    requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: eac487199cf71634491bac5855d2e4f5, type: 2}
     dropRange: {x: 1, y: 1}
     weight: 300
-    minX: 50
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
+    requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: 183f7bb9228fc354681abf509895d03f, type: 2}
     dropRange: {x: 1, y: 1}
     weight: 150
-    minX: 150
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
+    requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: 2ebd59f743307bc4ca7a7d1e55491b6c, type: 2}
     dropRange: {x: 1, y: 1}
     weight: 100
-    minX: 250
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
+    requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: 01a714e515d3f4f40aca69459d70c9a3, type: 2}
     dropRange: {x: 1, y: 1}
     weight: 50
-    minX: 300
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
+    requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: 3fc88fefd277cff43ba21a4816fd993c, type: 2}
     dropRange: {x: 1, y: 1}
     weight: 25
-    minX: 500
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
+    requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: c57a924f0ab50614ca64ef288331eec2, type: 2}
     dropRange: {x: 1, y: 1}
     weight: 10
-    minX: 600
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
+    requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: bec6646bec02be748b6325fa80cb6655, type: 2}
     dropRange: {x: 1, y: 1}
     weight: 5
-    minX: 750
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
+    requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: 4559fb45d6ad98246b96535dd6a04349, type: 2}
     dropRange: {x: 1, y: 1}
     weight: 1
-    minX: 1000
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
+    requiredSkillLevel: 0
   additionalLootChances:
   - 0.5
   experience: 3
@@ -104,3 +85,5 @@ MonoBehaviour:
   defensePerLevel: 0.25
   distancePerLevel: 20
   projectilePrefab: {fileID: 5086888241769898753, guid: 16c7aba8affac87478feae7df4c5e22e, type: 3}
+  projectileForwardOffset: 0
+  projectileHeightOffset: 0

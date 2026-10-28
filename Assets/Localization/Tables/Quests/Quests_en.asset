@@ -47,7 +47,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4508550053888
-    m_Localized: "\u201CCarl the Reaper makes sure you don\u2019t stray too far from town. Help the townsfolk and he\u2019ll loosen the leash.\u201D \u2014 Orin\n\nYour reaping distance is your travel limit. Some quests increase it. Being reaped at the limit adds 1% in River, Woods and Mines; Farmlands gives no increase. Spooky uses kills instead of distance."
+    m_Localized: "\u201CCarl the Reaper makes sure you don\u2019t stray too far from town. Help the townsfolk and he\u2019ll loosen the leash.\u201D \u2014 Orin\n\nYour reaping distance is your travel limit. Some quests increase it. Being reaped at the limit adds 1% in River, Woods and Mines; Farmlands gives no increase. Hollow uses kills instead of distance."
     m_Metadata:
       m_Items: []
   - m_Id: 4510643011584
@@ -95,7 +95,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4902881738752
-    m_Localized: Meeting Ivan
+    m_Localized: Find Ivan
     m_Metadata:
       m_Items: []
   - m_Id: 5136814850048
@@ -225,7 +225,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7244716851200
-    m_Localized: '"Much obliged sir, you''re welcome to grow our corn crops any time you need some. Wait whats that!? I''ve never seen a Radish grow like that before! It seems to be connected to you somehow! I''d love to see where this goes. Fetch me some Corn and I will teach you how to grow Wheat" - Tillman'
+    m_Localized: "\u201CNever seen corn grow quite like yours. Whatever you\u2019re doing, keep at it.\u201D \u2014 Tillman"
     m_Metadata:
       m_Items: []
   - m_Id: 7245635403776
@@ -237,9 +237,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7521440251904
-    m_Localized: '<b>Task weights can be adjusted slightly if you go into the tasks tab of the stats panel.</b>
-
-      "There''s no way we can get that many radishes in time for Eva... Oh! I see you have her magic watering can! If you gather me 100 Radishes I''d happily get Tillman to teach you a thing or two about Corn" - Flora'
+    m_Localized: "\u201CEva asked for radishes. She didn\u2019t mention we\u2019d need a cart for them.\u201D \u2014 Flora"
     m_Metadata:
       m_Items: []
   - m_Id: 7522576908288
@@ -247,11 +245,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7639480549376
-    m_Localized: "<i>Giggles</i> \"Thanks for helping with all that wheat Tillman\u2019s been setting out. I\u2019d like to make a refreshing drink for the whole town. I\u2019ll set out some watermelones; would you mind growing them for me?\" - Flora"
+    m_Localized: "\u201CA cold drink would go down nicely after all this weeding. How are those watermelones coming along?\u201D \u2014 Flora"
     m_Metadata:
       m_Items: []
   - m_Id: 7638297755648
-    m_Localized: Set the Rows
+    m_Localized: A Juicy Request
     m_Metadata:
       m_Items: []
   - m_Id: 7640587845632
@@ -271,7 +269,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7954296619008
-    m_Localized: Cool as a Cucumber
+    m_Localized: Eva's Salad
     m_Metadata:
       m_Items: []
   - m_Id: 7955139674112
@@ -330,7 +328,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7955986563392
-    m_Localized: Cast buffs 10 times to unlock autocasting for your first buff slot and the Bonus Experience buff.
+    m_Localized: "\u201CKeep calling on that power. It\u2019s beginning to answer before you\u2019ve finished asking.\u201D \u2014 Orin"
     m_Metadata:
       m_Items: []
   - m_Id: 7955987563392
@@ -374,11 +372,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956042563392
-    m_Localized: Stoking the Flames
+    m_Localized: All That Glitters
     m_Metadata:
       m_Items: []
   - m_Id: 7956043563392
-    m_Localized: "*Chuckles* \"Hah! You actually did it\u2014well I'll be damned. Bring me some of that Gold ore and we'll see about getting Ivan's forge improved!\" - The Old Timer"
+    m_Localized: "\u201CIvan wants a closer look at that gold. Best leave the hammering to him.\u201D \u2014 The Old Timer"
     m_Metadata:
       m_Items: []
   - m_Id: 7956044563392
@@ -386,7 +384,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956045563392
-    m_Localized: Ring Leader
+    m_Localized: Sweet Rewards
     m_Metadata:
       m_Items: []
   - m_Id: 7956046563392
@@ -402,19 +400,21 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956049563392
-    m_Localized: "\u201CPheeewwww! Well then, that green stuff\u2019s got a bit of a kick\u2014these minecarts\u2019ll be moving faster than Eva on a broom! What say ye mine some more Copium and we\u2019ll see how much deeper we can get.\u201D \u2014 The Old Timer"
+    m_Localized: "\u201CThe town paths are wearing thin. Bring me more Copium Chunks and I'll give us some firmer footing.\u201D \u2014 The Old Timer"
     m_Metadata:
       m_Items: []
   - m_Id: 7956050563392
-    m_Localized: 9,200 Mining Experience
+    m_Localized: 'Improves the town paths.
+
+      9,200 Mining Experience'
     m_Metadata:
       m_Items: []
   - m_Id: 7956051563392
-    m_Localized: Leek the Deal
+    m_Localized: Gill's Green Lunch
     m_Metadata:
       m_Items: []
   - m_Id: 7956052563392
-    m_Localized: "\u201CGill promised to trade us a new plant he found on his travels in exchange for some cucumbers! You don\u2019t mind fetching me some do you?\u201D \u2014 Tillman"
+    m_Localized: "\u201CGill keeps asking after our cucumbers. I think he\u2019s tired of fish.\u201D \u2014 Tillman"
     m_Metadata:
       m_Items: []
   - m_Id: 7956053563392
@@ -422,11 +422,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956054563392
-    m_Localized: Leaf It To Me
+    m_Localized: Pick of the Vine
     m_Metadata:
       m_Items: []
   - m_Id: 7956055563392
-    m_Localized: "\u201CAt this point you know the drill \u2014 walk with me while I set these tomato seeds, will you? Bring me some of your juiciest Tomatoes and I\u2019ll show you the secret to growing crisp, refreshing Lettuce.\u201D \u2014 Flora"
+    m_Localized: "\u201CSave me the juiciest tomatoes. The others can go in the stew.\u201D \u2014 Flora"
     m_Metadata:
       m_Items: []
   - m_Id: 7956056563392
@@ -438,7 +438,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956058563392
-    m_Localized: "\"I'm beginning to like you, young one. Now that the forge can handle it, fetch some of that Fire you spotted\u2014It\u2019ll get the forge burning hotter than anything this side of the sun.\" \u2014 The Old Timer"
+    m_Localized: "\u201CThose Fire Chunks burn hotter than anything I\u2019ve dug up. Ivan will want a look at them.\u201D \u2014 The Old Timer"
     m_Metadata:
       m_Items: []
   - m_Id: 7956059563392
@@ -470,7 +470,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956066563392
-    m_Localized: Pepper Upper
+    m_Localized: Back to the Roots
     m_Metadata:
       m_Items: []
   - m_Id: 7956067563392
@@ -482,11 +482,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956069563392
-    m_Localized: Gourd Deeds
+    m_Localized: Winter Warmers
     m_Metadata:
       m_Items: []
   - m_Id: 7956070563392
-    m_Localized: "\u201CBeats me why The Old Timer likes this stuff, but he promised us some Pumking seeds if we help him out.\u201D \u2014 Tillman"
+    m_Localized: "\u201CThe Old Timer wants more chillies. Something about keeping the cold out.\u201D \u2014 Tillman"
     m_Metadata:
       m_Items: []
   - m_Id: 7956071563392
@@ -498,7 +498,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956073563392
-    m_Localized: "\"That watermelone juice hit the spot\u2014reminds me of the old days when I wanted to try carrot juice. How about I set out some seeds and you help me try this out? Bring the carrots in and let\u2019s see where this goes.\" - Roots of the Matter"
+    m_Localized: "\u201CFlora\u2019s juice went down a treat. Think carrots would work just as well?\u201D \u2014 Tillman"
     m_Metadata:
       m_Items: []
   - m_Id: 7956074563392
@@ -518,11 +518,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956078563392
-    m_Localized: Vine and Dine
+    m_Localized: Supper for Eva
     m_Metadata:
       m_Items: []
   - m_Id: 7956079563392
-    m_Localized: "<i>Smiles</i> \"Eva\u2019s at it again\u2014she must be cooking up a feast with that many potatoes in mind! I\u2019ll seed some potatoes for you; would you mind growing them for me?\" - Flora"
+    m_Localized: "\u201CEva\u2019s planning a feast again. I hope you\u2019ve been keeping an eye on the spuds.\u201D \u2014 Flora"
     m_Metadata:
       m_Items: []
   - m_Id: 7956080563392
@@ -534,7 +534,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956082563392
-    m_Localized: "\u201CEvery master farmer needs to know how to wrangle the most devilish food of them all: Funions! Don\u2019t let the name deceive you\u2014this crop may test your sanity. Fetch me some, and I\u2019ll teach you how to grow turnips.\u201D \u2014 Flora"
+    m_Localized: "\u201CIf you can harvest Funions without losing your temper, I\u2019ll call you a proper farmer.\u201D \u2014 Flora"
     m_Metadata:
       m_Items: []
   - m_Id: 7956083563392
@@ -554,11 +554,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956087563392
-    m_Localized: Way of The Water
+    m_Localized: Grain of Truth
     m_Metadata:
       m_Items: []
   - m_Id: 7956088563392
-    m_Localized: <i>A piece of wheat chaff between his teeth</i> "Well then... looks like each time you harvest something your connection to these plants increases. I've asked Barkley to build a fence and I'm giving you this bit of land, I'm going to teach you to grow every type of crop I know!"
+    m_Localized: "\u201CKeep an eye on that wheat. A good harvest will teach you plenty.\u201D \u2014 Tillman"
     m_Metadata:
       m_Items: []
   - m_Id: 7956089563392
@@ -630,7 +630,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1575867566669824
-    m_Localized: "The Twins supply my farming ingredients. Find them in the Farmlands and place an order for me. I'll teach you to expand your connection to Echoes. \u2014 Eva"
+    m_Localized: "\u201CFlora and Tillman grow most of my ingredients. You\u2019ll find them in the Farmlands.\u201D \u2014 Eva"
     m_Metadata:
       m_Items: []
   - m_Id: 1575905307017216
@@ -652,7 +652,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1871405633650688
-    m_Localized: '"Tillman tells me you''re growing crops with your essence now? *whistles* that''s incredible. Anyhow don''t tell him I told ya but he''s planning to give you that plot of land over by the windmill and asked me to get started on a fence. If you give me some of them sticks you''ve collected I would be more than happy to get started for you" - Barkley'
+    m_Localized: "\u201CWe could use a fence by the windmill. Otherwise those animals will be helping themselves.\u201D \u2014 Barkley"
     m_Metadata:
       m_Items: []
   - m_Id: 1871406690615296
@@ -820,7 +820,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904171
-    m_Localized: "Combat Enhancer: Damage +50%<sprite=194>+75%; defense +25%<sprite=194>+50%."
+    m_Localized: 'Combat Enhancer: Damage +50%<sprite=194>+75%; defense +25%<sprite=194>+50%.'
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904174
@@ -960,7 +960,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904143
-    m_Localized: Now you're the fastest one alive.
+    m_Localized: "\u201CYou\u2019re quick. Let\u2019s see how long you can keep that pace.\u201D \u2014 Orin"
     m_Metadata:
       m_Items: []
   - m_Id: 8817834121904145
@@ -1180,15 +1180,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 22109034010525696
-    m_Localized: Spooktacular
+    m_Localized: A Spell for the Hollow
     m_Metadata:
       m_Items: []
   - m_Id: 22109034035691520
-    m_Localized: "\"I'm decorating my backyard, can you bring me pumpkings?\" \u2014 Eva"
+    m_Localized: "\u201CThere's a hollow beyond the town. I can open a way through, but I'll need more slime than this town has ever seen. Try not to spill it on my doorstep.\u201D \u2014 Eva"
     m_Metadata:
       m_Items: []
   - m_Id: 22109034035691521
-    m_Localized: Unlock the Spooky Map
+    m_Localized: Unlocks the Hollow.
     m_Metadata:
       m_Items: []
   - m_Id: 34882991914631168
@@ -1220,7 +1220,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000001
-    m_Localized: "Here’s a Radish seed pack to start with. Barkley can help us fence the first plot. Complete “Our First Patch”, then plant it in Town → Fields. Watering halves its growing time. — Flora"
+    m_Localized: "Here\u2019s a Radish seed pack to start with. Barkley can help us fence the first plot. Complete \u201COur First Patch\u201D, then plant it in Town \u2192 Fields. Watering halves its growing time. \u2014 Flora"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000002
@@ -1232,7 +1232,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000011
-    m_Localized: "Barkley’s agreed to fence off our first patch. Tillman’s already picked the spot. I’m choosing what we grow. — Flora"
+    m_Localized: "Barkley\u2019s agreed to fence off our first patch. Tillman\u2019s already picked the spot. I\u2019m choosing what we grow. \u2014 Flora"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000012
@@ -1244,7 +1244,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000021
-    m_Localized: "Tillman says two plots mean twice the weeding. I told him he was very good at weeding. — Flora"
+    m_Localized: "Tillman says two plots mean twice the weeding. I told him he was very good at weeding. \u2014 Flora"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000022
@@ -1256,7 +1256,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000031
-    m_Localized: "That old field used to feed half the town. Barkley reckons the posts are rotten, but the soil’s still good. — Flora"
+    m_Localized: "That old field used to feed half the town. Barkley reckons the posts are rotten, but the soil\u2019s still good. \u2014 Flora"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000032
@@ -1268,7 +1268,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000041
-    m_Localized: "A second row would catch the morning sun. Tillman’s marked it out before I could change my mind. — Flora"
+    m_Localized: "A second row would catch the morning sun. Tillman\u2019s marked it out before I could change my mind. \u2014 Flora"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000042
@@ -1280,7 +1280,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000051
-    m_Localized: "We’re past the old boundary now. Barkley wants spruce posts and stone footings. I’d rather he be fussy than rebuild it twice. — Flora"
+    m_Localized: "We\u2019re past the old boundary now. Barkley wants spruce posts and stone footings. I\u2019d rather he be fussy than rebuild it twice. \u2014 Flora"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000052
@@ -1292,7 +1292,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000061
-    m_Localized: "That’s the last patch of good soil. Barkley’s finishing the fence, and Tillman’s trying to find an excuse to grow more turnips. — Flora"
+    m_Localized: "That\u2019s the last patch of good soil. Barkley\u2019s finishing the fence, and Tillman\u2019s trying to find an excuse to grow more turnips. \u2014 Flora"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000062
@@ -1304,7 +1304,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000071
-    m_Localized: "Flora can have her rows of vegetables. I’m saving this corner for trees. Barkley says he’ll help with the fencing. — Tillman"
+    m_Localized: "Flora can have her rows of vegetables. I\u2019m saving this corner for trees. Barkley says he\u2019ll help with the fencing. \u2014 Tillman"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000072
@@ -1316,7 +1316,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000081
-    m_Localized: "We’ll need room for another pair. I’d like to pick the fruit without climbing through a fence. — Tillman"
+    m_Localized: "We\u2019ll need room for another pair. I\u2019d like to pick the fruit without climbing through a fence. \u2014 Tillman"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000082
@@ -1328,7 +1328,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000091
-    m_Localized: "One last pair of plots. I’m calling the orchard finished before Flora finds somewhere else to plant. — Tillman"
+    m_Localized: "One last pair of plots. I\u2019m calling the orchard finished before Flora finds somewhere else to plant. \u2014 Tillman"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000092
@@ -1360,7 +1360,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 159865356388274176
-    m_Localized: Seek out Barkley by the River. He's searching for the perfect lumber.
+    m_Localized: "\u201CI\u2019ve got plans for a house. All I\u2019m missing is the timber\u2014and someone willing to swing an axe.\u201D \u2014 Barkley"
     m_Metadata:
       m_Items: []
   - m_Id: 159865356442800128
@@ -1368,7 +1368,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 159880735105880064
-    m_Localized: Claim this reward, then close the quest window to speak with Eva.
+    m_Localized: "\u201CEva wants a word with you. I\u2019ll let her explain.\u201D \u2014 Orin"
     m_Metadata:
       m_Items: []
   - m_Id: 159880735131045888
@@ -1380,7 +1380,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 159890707516624896
-    m_Localized: Find Ivan in the Woods, then return to town. He'll teach you to forge your first sword.
+    m_Localized: "\u201CIvan makes the weapons around here. You\u2019ll find him near the Woods entrance.\u201D \u2014 Orin"
     m_Metadata:
       m_Items: []
   - m_Id: 159890707558567936
@@ -1388,7 +1388,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 159890707558567937
-    m_Localized: Ivan has set aside materials for your first sword. Accept them, then follow his Forge lesson.
+    m_Localized: "\u201CI\u2019ve set aside what you\u2019ll need. Take it, and we\u2019ll make your first sword.\u201D \u2014 Ivan"
     m_Metadata:
       m_Items: []
   - m_Id: 159890707558567938
@@ -1396,11 +1396,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 160252005534273536
-    m_Localized: Bring Mildred 5 Flippy Floppys to unlock your first Echo buffs. Choose a Task Echo to gather resources or a Combat Echo to fight enemies.
+    m_Localized: Bring Mildred 5 Flippy Floppys to unlock Task Echo.
     m_Metadata:
       m_Items: []
   - m_Id: 160252005576216576
-    m_Localized: "Task Echo and Combat Echo buffs. Assign one in Hub \u2192 Buffs."
+    m_Localized: "Task Echo. Assign it in Hub \u2192 Buffs."
     m_Metadata:
       m_Items: []
   references:

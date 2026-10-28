@@ -101,6 +101,7 @@ namespace TimelessEchoes.UI.Toolkit
         public void Hide() { ToolkitLocalization.Changed -= RefreshText; root?.RemoveFromHierarchy(); root = null; input = null; if (settings) Destroy(settings); settings = null; }
         private void Update()
         {
+            if (ToolkitDimScreen.BlocksInput) return;
             if (Keyboard.current?.backquoteKey.wasPressedThisFrame == true) Toggle();
             if (IsActive && Keyboard.current?.escapeKey.wasPressedThisFrame == true) Hide();
             for (int i = jobs.Count - 1; i >= 0; i--) if (jobs[i].IsCompleted) { var job = jobs[i]; jobs.RemoveAt(i); try { job.GetAwaiter().GetResult(); var result = job.GetType().GetProperty("Result")?.GetValue(job); if (result != null) LogToConsole(result.ToString()); } catch (Exception e) { LogToConsole(e.Message); } }

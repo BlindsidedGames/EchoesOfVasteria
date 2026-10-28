@@ -136,7 +136,7 @@ namespace TimelessEchoes.UI.Toolkit
             var display = tier switch
             {
                 "Eznorb" => "Bronze", "Nori" => "Iron", "Dlog" => "Gold",
-                "Erif" => "Fire", "Idle" => "Crimsonite", _ => tier
+                "Erif" => "Fire", "Idle" => "Crimsonite", "Vastium" => "Vathrium", _ => tier
             };
             return display == tier ? name : display + (separator < 0 ? "" : name.Substring(separator));
         }

@@ -24,9 +24,9 @@ namespace TimelessEchoes.UI.Toolkit
         private PanelSettings panel;
         private VisualElement root, widthPreview;
         private ScrollView scroll;
-        private VisualElement preferences, savePage, currentPage;
+        private VisualElement preferences, gameplayPage, savePage, currentPage;
         private string selectedPage = "preferences";
-        private Button preferencesTab, savesTab;
+        private Button preferencesTab, gameplayTab, savesTab;
         private readonly List<ToolkitTextBinding> bindings = new();
         private readonly Dictionary<string, Button> buttons = new();
         private readonly Dictionary<string, Slider> sliders = new();
@@ -54,14 +54,20 @@ namespace TimelessEchoes.UI.Toolkit
             scroll.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
             scroll.verticalScrollerVisibility = ScrollerVisibility.Auto;
             scroll.AddToClassList("eov-options-scroll"); theme.StyleScroll(scroll);ToolkitGameplay.StyleScroll(scroll); root.Add(scroll);
-            var heading = Text(root, "settings-title", 12); heading.AddToClassList("settings-heading"); root.Insert(0, heading);
+            BuildHeader();
             var tabs = Row(root, "settings-tabs"); tabs.AddToClassList("settings-tabs"); root.Insert(1, tabs);
             preferencesTab = ActionButton(tabs, "preferences-tab", () => SelectPage("preferences"), 24); Grow(preferencesTab);
+            gameplayTab = ActionButton(tabs, "gameplay-tab", () => SelectPage("gameplay"), 24, false); Grow(gameplayTab);
+            var gameplayLabel = ToolkitGameplay.L(gameplayTab, "", "eov-options-label eov-options-button-label");
+            ToolkitControls.SetTextSize(gameplayLabel, 8);
+            ToolkitLocalization.Bind(gameplayLabel, "options.gameplay", "Gameplay");
             savesTab = ActionButton(tabs, "saves-tab", () => SelectPage("saves"), 24); Grow(savesTab);
             preferences = new VisualElement { name="settings-preferences" }; scroll.Add(preferences); currentPage=preferences;
-            BuildAudio(); BuildAppearance(); BuildDisplay(); BuildFloating();
+            BuildAudio(); BuildAppearance(); BuildDisplay();
+            gameplayPage = new VisualElement { name="settings-gameplay" }; scroll.Add(gameplayPage); currentPage=gameplayPage;
+            BuildGameplay(); BuildFloating();
             savePage = new VisualElement { name="settings-saves" }; scroll.Add(savePage); currentPage=savePage; BuildSaves();
-            BuildFooter(); MarkRowEnds(); SelectPage(selectedPage);
+            MarkRowEnds(); SelectPage(selectedPage);
             widthPreview = new VisualElement { name = "width-preview", pickingMode = PickingMode.Ignore };
             widthPreview.style.position = Position.Absolute; widthPreview.style.display = DisplayStyle.None;
             ToolkitTheme.Background(widthPreview, definition.widthPreview);
@@ -139,8 +145,9 @@ namespace TimelessEchoes.UI.Toolkit
         private void SelectPage(string page)
         {
             selectedPage=page; preferences.style.display=page=="preferences"?DisplayStyle.Flex:DisplayStyle.None;
+            gameplayPage.style.display=page=="gameplay"?DisplayStyle.Flex:DisplayStyle.None;
             savePage.style.display=page=="saves"?DisplayStyle.Flex:DisplayStyle.None;
-            preferencesTab.EnableInClassList("active",page=="preferences"); savesTab.EnableInClassList("active",page=="saves");
+            preferencesTab.EnableInClassList("active",page=="preferences"); gameplayTab.EnableInClassList("active",page=="gameplay"); savesTab.EnableInClassList("active",page=="saves");
             scroll.scrollOffset=Vector2.zero;
         }
         private Button LabelledToggle(VisualElement parent,string id,string labelId,Action action)
@@ -196,6 +203,9 @@ namespace TimelessEchoes.UI.Toolkit
             full.style.display=window.style.display=UnityEngine.Device.Application.isMobilePlatform?DisplayStyle.None:DisplayStyle.Flex;
             var fps=ActionButton(row,"fps",()=>{TargetFps=TargetFps==30?60:TargetFps==60?120:30;ApplyFps();RefreshValues();},22);Grow(fps);
             LabelledToggle(row,"vsync","vsync-label",()=>{VSyncEnabled=!VSyncEnabled;ApplyFps();});
+            var dim = ActionButton(frame, "dim-screen", () => ToolkitDimScreen.Show(theme, runtimeTheme, textSettings), 24, false);
+            dim.style.marginTop = 6;
+            ToolkitLocalization.Bind(dim, "options.dim-screen", "Dim Screen");
             var mobileDisplay = new VisualElement { name = "mobile-display-options" }; frame.Add(mobileDisplay);
             mobileDisplay.style.marginTop = 8;
             var heading = ToolkitGameplay.L(mobileDisplay, "", "settings-section-title");
@@ -220,6 +230,16 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (buttons.TryGetValue("theme-dark", out var dark)) dark.EnableInClassList("active", !ToolkitColorTheme.IsLight);
             if (buttons.TryGetValue("theme-light", out var light)) light.EnableInClassList("active", ToolkitColorTheme.IsLight);
+        }
+        private void BuildGameplay()
+        {
+            var frame = new VisualElement { name = "gameplay-options" };
+            frame.AddToClassList("eov-options-frame"); currentPage.Add(frame);
+            var toggle = ActionButton(frame, "skip-restart-countdown", () =>
+            { GameManager.SkipRestartCountdown = !GameManager.SkipRestartCountdown; RefreshValues(); }, 24, false);
+            toggle.AddToClassList("settings-labelled-toggle");
+            var label = ToolkitGameplay.L(toggle, "", "eov-options-label");
+            ToolkitLocalization.Bind(label, "options.skip-restart-countdown", "Skip restart countdown");
         }
         private static void ApplyFps()
         {
@@ -254,24 +274,22 @@ namespace TimelessEchoes.UI.Toolkit
             }
             var transfers=Row(frame);transfers.AddToClassList("settings-actions");
             Grow(ActionButton(transfers,"import",()=>OpenDialog("import"),22));Grow(ActionButton(transfers,"export",()=>OpenDialog("export"),22));
+            var folder=ActionButton(frame,"folder",()=>Application.OpenURL($"file://{Application.persistentDataPath}"),24);
+            folder.style.marginTop=6;
+            folder.style.display=UnityEngine.Device.Application.isMobilePlatform?DisplayStyle.None:DisplayStyle.Flex;
             var note=Text(frame,"autosave-label",7);note.AddToClassList("settings-save-note");
         }
-        private void BuildFooter()
+        private void BuildHeader()
         {
-            var row=Row(root,"footer");row.AddToClassList("settings-footer");
-            Grow(ActionButton(row,"credits",()=>windows?.OpenWindow(TownWindowManager.Window.Credits),22));
-            var folder=ActionButton(row,"folder",()=>Application.OpenURL($"file://{Application.persistentDataPath}"),22);Grow(folder);
-            folder.style.display=UnityEngine.Device.Application.isMobilePlatform?DisplayStyle.None:DisplayStyle.Flex;
-            foreach (var button in row.Children().OfType<Button>())
-            {
-                button.style.height = StyleKeyword.Auto;
-                button.style.minHeight = 22;
-            }
-            row.style.alignItems = Align.Stretch;
+            var row=Row(root,"settings-header");row.AddToClassList("settings-header");root.Insert(0,row);
+            var heading=Text(row,"settings-title",12);heading.AddToClassList("settings-heading");
+            heading.style.marginBottom=0;
             var version = Text(row,"version-label",7);
             version.text = "v" + Application.version;
             version.AddToClassList("settings-version");
-            version.style.alignSelf = Align.Center;
+            var space=new VisualElement { pickingMode=PickingMode.Ignore };space.style.flexGrow=1;row.Add(space);
+            var credits=ActionButton(row,"credits",()=>windows?.OpenWindow(TownWindowManager.Window.Credits),24);
+            credits.style.width=76;credits.style.flexShrink=0;
         }
         private bool CanSave(int index) => Oracle.oracle != null && Oracle.oracle.CanBeginSaveMutation && (index == Oracle.oracle.CurrentSlot || safety[index]);
         private bool CanLoad(int index) => Oracle.oracle != null && Oracle.oracle.CanBeginSaveMutation && (safety[index] || ((GameManager.Instance == null || GameManager.Instance.CurrentMap == null) && index != Oracle.oracle.CurrentSlot));
@@ -315,6 +333,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void SetSlider(string id, float value) { sliders[id].SetValueWithoutNotify(value); sliders[id].Q("value-fill").style.width = Length.Percent(value * 100); }
         private void RefreshValues()
         {
+            SetToggle("skip-restart-countdown", GameManager.SkipRestartCountdown);
             for (var i = 0; i < 3; i++) buttons["orientation-" + i].EnableInClassList("active", ToolkitDisplayPreferences.Orientation == i);
             buttons["world-safe-area"].EnableInClassList("active", ToolkitDisplayPreferences.KeepWorldInSafeArea);
             SetSlider("master", MasterVolume); SetSlider("music", MusicVolume); SetSlider("sfx", SfxVolume); SetSlider("width", SafeAreaRatio);

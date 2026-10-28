@@ -15,6 +15,7 @@ namespace TimelessEchoes.Farming
         public Sprite[] fence = new Sprite[8]; // rail, side, NW, NE, SW, SE, north gate, south gate.
         public Sprite[] treeStages = new Sprite[3];
         public Tile[] pathTiles;
+        public Tile[] upgradedPathTiles;
         public Material material;
         public ToolkitTheme theme;
         public ThemeStyleSheet runtimeTheme;

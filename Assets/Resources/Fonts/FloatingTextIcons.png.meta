@@ -272,7 +272,9 @@ TextureImporter:
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
+  spriteTessellationMethod: 0
   spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
@@ -4917,7 +4919,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -4939,7 +4941,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -4961,7 +4963,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -4983,7 +4985,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -5005,7 +5007,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -5027,7 +5029,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -5898,6 +5900,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: FloatingTextIcons_268
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 240
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2394263d6ca98e24586eafeebfad25ea
+      internalID: 1121977342
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FloatingTextIcons_269
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 240
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39bfd64edc8adfe42818c9424f02ac52
+      internalID: 2056560452
+      vertices: []
+      indices:
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -6047,6 +6093,8 @@ TextureImporter:
       FloatingTextIcons_24: 6479052824937170556
       FloatingTextIcons_25: 8966146862518263173
       FloatingTextIcons_26: -6913191272992818723
+      FloatingTextIcons_268: 1121977342
+      FloatingTextIcons_269: 2056560452
       FloatingTextIcons_27: 3856010529711975706
       FloatingTextIcons_28: -6585815137610441631
       FloatingTextIcons_29: -1382889976668254810
@@ -6147,25 +6195,25 @@ TextureImporter:
       SeedPack_TanBulb_A: 763178360772320342
       SeedPack_TanBulb_B: 983674330619392682
       SeedPack_Tomato: 1015026102469086203
+      SeedPack_Unknown: 398324854314620224
       SeedPack_Watermelon: 127031998072820663
       SeedPack_Wheat: 495149490969744701
-      SeedPack_Unknown: 398324854314620224
-      Timber_StarterStick: 421698404467648060
-      Timber_StarterStick_Unknown: 727849609343084173
-      Timber_StarterLog: 489098626560803395
-      Timber_StarterLog_Unknown: 262102940682007718
-      Timber_OakStick: 117843253311342565
-      Timber_OakStick_Unknown: 481654122412729998
-      Timber_OakLog: 936827264989479905
-      Timber_OakLog_Unknown: 395609894683887768
-      Timber_BirchStick: 453852723744772982
-      Timber_BirchStick_Unknown: 149264221147120778
       Timber_BirchLog: 567164148545298937
       Timber_BirchLog_Unknown: 15504776762566348
-      Timber_SpruceStick: 675579681349317558
-      Timber_SpruceStick_Unknown: 90209590612146231
+      Timber_BirchStick: 453852723744772982
+      Timber_BirchStick_Unknown: 149264221147120778
+      Timber_OakLog: 936827264989479905
+      Timber_OakLog_Unknown: 395609894683887768
+      Timber_OakStick: 117843253311342565
+      Timber_OakStick_Unknown: 481654122412729998
       Timber_SpruceLog: 634021073273878761
       Timber_SpruceLog_Unknown: 41346664410591715
+      Timber_SpruceStick: 675579681349317558
+      Timber_SpruceStick_Unknown: 90209590612146231
+      Timber_StarterLog: 489098626560803395
+      Timber_StarterLog_Unknown: 262102940682007718
+      Timber_StarterStick: 421698404467648060
+      Timber_StarterStick_Unknown: 727849609343084173
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

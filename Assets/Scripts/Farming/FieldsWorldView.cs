@@ -21,12 +21,12 @@ namespace TimelessEchoes.Farming
         private readonly Dictionary<SpriteRenderer, bool> hidden = new();
         private readonly List<SpriteRenderer> legacyFarmArt = new();
         private bool legacyFarmArtCached;
-        private readonly Dictionary<Vector3Int, TileBase> changedPath = new();
-        private readonly Dictionary<Vector3Int, Matrix4x4> pathMatrices = new();
-        private readonly Dictionary<Vector3Int, TileFlags> pathFlags = new();
+        private readonly Dictionary<(Tilemap map, Vector3Int cell), TileBase> changedPath = new();
+        private readonly Dictionary<(Tilemap map, Vector3Int cell), Matrix4x4> pathMatrices = new();
+        private readonly Dictionary<(Tilemap map, Vector3Int cell), TileFlags> pathFlags = new();
         private readonly Dictionary<Vector3Int, TileBase> changedDecor = new();
         private readonly List<GameObject> retainedTrees = new();
-        private Tilemap path, decor;
+        private Tilemap path, upgradedPath, decor;
         private Transform geometry;
         private Blindsided.SaveData.GameData renderedOwner;
         private int garden = -1, orchard = -1;
@@ -67,6 +67,7 @@ namespace TimelessEchoes.Farming
             geometry = new GameObject("Fields world").transform;
             geometry.SetParent(town,false);
             path = town.GetComponentsInChildren<Tilemap>(true).FirstOrDefault(t => t.name == "-2 Old Path");
+            upgradedPath = town.GetComponentsInChildren<Tilemap>(true).FirstOrDefault(t => t.name == "-1 Path");
             decor = town.GetComponentsInChildren<Tilemap>(true).FirstOrDefault(t => t.name == "BG_Decor 0");
             for (int i=0;i<6;i++) CreatePlot(FarmCommands.GardenBeds[i], GardenAnchors[i], false);
             for (int i=0;i<6;i++) CreatePlot(FarmCommands.OrchardBeds[i], OrchardAnchors[i], true);
@@ -202,8 +203,13 @@ namespace TimelessEchoes.Farming
         {
             foreach(var pair in hidden) if(pair.Key) pair.Key.enabled=pair.Value;
             hidden.Clear();
-            if(path) foreach(var pair in changedPath)
-            { path.SetTile(pair.Key,pair.Value); path.SetTileFlags(pair.Key,TileFlags.None); path.SetTransformMatrix(pair.Key,pathMatrices[pair.Key]); path.SetTileFlags(pair.Key,pathFlags[pair.Key]); }
+            foreach(var pair in changedPath)
+            {
+                var (map, cell) = pair.Key;
+                if (!map) continue;
+                map.SetTile(cell,pair.Value); map.SetTileFlags(cell,TileFlags.None);
+                map.SetTransformMatrix(cell,pathMatrices[pair.Key]); map.SetTileFlags(cell,pathFlags[pair.Key]);
+            }
             changedPath.Clear(); pathMatrices.Clear(); pathFlags.Clear();
             if(decor) foreach(var pair in changedDecor) decor.SetTile(pair.Key,pair.Value);
             changedDecor.Clear();
@@ -242,25 +248,33 @@ namespace TimelessEchoes.Farming
             }
             ExtendPaths(stage);
         }
-        private void ChangePath(Vector3Int cell,TileBase tile)
+        private void ChangePath(Tilemap map,Vector3Int cell,TileBase tile)
         {
-            if(!changedPath.ContainsKey(cell)) { changedPath.Add(cell,path.GetTile(cell)); pathMatrices.Add(cell,path.GetTransformMatrix(cell)); pathFlags.Add(cell,path.GetTileFlags(cell)); }
-            path.SetTile(cell,tile); path.SetTileFlags(cell,TileFlags.None); path.SetTransformMatrix(cell,Matrix4x4.identity);
+            var key = (map, cell);
+            if(!changedPath.ContainsKey(key)) { changedPath.Add(key,map.GetTile(cell)); pathMatrices.Add(key,map.GetTransformMatrix(cell)); pathFlags.Add(key,map.GetTileFlags(cell)); }
+            map.SetTile(cell,tile); map.SetTileFlags(cell,TileFlags.None); map.SetTransformMatrix(cell,Matrix4x4.identity);
         }
         private void ExtendPaths(int stage)
         {
-            if(!path || appearance.pathTiles==null || appearance.pathTiles.Length==0) return;
+            // Extend both quest-controlled layers, including the inactive one. The
+            // town's normal path upgrade then also replaces the Fields entrances.
+            ExtendPath(path, appearance.pathTiles, stage, false);
+            ExtendPath(upgradedPath, appearance.upgradedPathTiles, stage, true);
+        }
+        private void ExtendPath(Tilemap map,Tile[] tiles,int stage,bool upgraded)
+        {
+            if(!map || tiles==null || tiles.Length==0) return;
             var changed=new HashSet<Vector3Int>();
-            void Add(int x,int y) => changed.Add(path.WorldToCell(new Vector3(x,y,0)));
+            void Add(int x,int y) => changed.Add(map.WorldToCell(new Vector3(x,y,0)));
             if(stage>=2) { for(int x=-60;x<=-58;x++) Add(x,-3); for(int x=-59;x<=-58;x++) for(int y=-4;y<=-3;y++) Add(x,y); }
             if(stage>=3) { for(int x=-60;x<=-58;x++) Add(x,-22); for(int x=-59;x<=-58;x++) for(int y=-23;y<=-22;y++) Add(x,y); }
-            foreach(var cell in changed) ChangePath(cell,appearance.pathTiles[0]);
+            foreach(var cell in changed) ChangePath(map,cell,tiles[0]);
             var affected=new HashSet<Vector3Int>(changed);
             foreach(var cell in changed) for(int x=-1;x<=1;x++) for(int y=-1;y<=1;y++) affected.Add(cell+new Vector3Int(x,y,0));
             foreach(var cell in affected)
             {
-                if(!path.GetTile(cell)) continue;
-                bool Occupied(int x,int y) => path.GetTile(cell+new Vector3Int(x,y,0));
+                if(!map.GetTile(cell)) continue;
+                bool Occupied(int x,int y) => map.GetTile(cell+new Vector3Int(x,y,0));
                 string join=""; if(Occupied(0,1))join+="N";if(Occupied(1,0))join+="E";if(Occupied(0,-1))join+="S";if(Occupied(-1,0))join+="W";
                 var absent=new List<string>();
                 if(!(Occupied(-1,0)&&Occupied(0,1)&&Occupied(-1,1)))absent.Add("NW");
@@ -268,8 +282,31 @@ namespace TimelessEchoes.Farming
                 if(!(Occupied(1,0)&&Occupied(0,-1)&&Occupied(1,-1)))absent.Add("SE");
                 if(!(Occupied(-1,0)&&Occupied(0,-1)&&Occupied(-1,-1)))absent.Add("SW");
                 string prefix="Farmland_WetOverlay_SoilJoin_"+(join==""?"None":join)+"_AbsentCorners_"+(absent.Count==0?"None":string.Join("_",absent))+"_Variant";
-                var tile=Array.Find(appearance.pathTiles,t=>t&&t.name.StartsWith(prefix,StringComparison.Ordinal));
-                if(tile) ChangePath(cell,tile);
+                Tile tile;
+                if (upgraded)
+                {
+                    // Jagged dirt names describe the exposed edge, while the old
+                    // soil names describe connected neighbours.
+                    var shape = join switch
+                    {
+                        "NESW" => "DirtInterior", "NEW" => "DirtEdge_S", "NES" => "DirtEdge_W",
+                        "NSW" => "DirtEdge_E", "ESW" => "DirtEdge_N", "NS" => "DirtStrip_NS", "EW" => "DirtStrip_EW",
+                        "NE" => "DirtOuterCorner_SW", "NW" => "DirtOuterCorner_SE",
+                        "SE" => "DirtOuterCorner_NW", "SW" => "DirtOuterCorner_NE",
+                        "N" => "DirtCap_S", "E" => "DirtCap_W", "S" => "DirtCap_N", "W" => "DirtCap_E",
+                        _ => "DirtIslet"
+                    };
+                    var notches = new List<string>();
+                    if (Occupied(-1,0) && Occupied(0,1) && !Occupied(-1,1)) notches.Add("NW");
+                    if (Occupied(1,0) && Occupied(0,1) && !Occupied(1,1)) notches.Add("NE");
+                    if (Occupied(1,0) && Occupied(0,-1) && !Occupied(1,-1)) notches.Add("SE");
+                    if (Occupied(-1,0) && Occupied(0,-1) && !Occupied(-1,-1)) notches.Add("SW");
+                    var name = "GrassDirtJagged_" + shape + (notches.Count == 0 ? "" :
+                        (notches.Count == 1 ? "_GrassNotch_" : "_GrassNotches_") + string.Join("_",notches));
+                    tile = Array.Find(tiles,t=>t && t.name == name);
+                }
+                else tile=Array.Find(tiles,t=>t&&t.name.StartsWith(prefix,StringComparison.Ordinal));
+                if(tile) ChangePath(map,cell,tile);
             }
         }
         private void OnDestroy()

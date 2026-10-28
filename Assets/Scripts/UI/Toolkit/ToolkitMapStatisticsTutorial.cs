@@ -43,6 +43,13 @@ namespace TimelessEchoes.UI.Toolkit
             if (general?.MapStatisticsTutorialStage is 5 or 6) general.MapStatisticsTutorialStage = 7;
             var active = general != null && MapStatisticsGuidance.Stage >= 2 && MapStatisticsGuidance.Active &&
                 (!GameManager.Instance || GameManager.Instance.IsInTown);
+            foreach (var tab in tabButtons)
+                tab.Value.SetEnabled(!active || MapStatisticsGuidance.Stage < 4 && tab.Key == 0);
+            for (var i = 0; i < journalSelectors.Count; i++)
+                journalSelectors[i].SetEnabled(!active || MapStatisticsGuidance.Stage == 4 && i > 0 &&
+                    definition.maps[i - 1].config.name == MapStatisticsGuidance.TargetMap);
+            journalHeading?.Query<Button>().ForEach(button => button.SetEnabled(!active));
+            journalContent?.Query<Button>().ForEach(button => button.SetEnabled(!active));
             mapTutorial.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
             mapTutorialHand.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
             if (!active) return;
@@ -68,12 +75,26 @@ namespace TimelessEchoes.UI.Toolkit
                 {
                     option = ToolkitLocalization.Text("map." + map, definition.maps[index].label.Trim());
                     mapTutorialText.text = ToolkitLocalization.Text("journal.tutorial." + map, "Choose Farmlands to see its resources.");
-                    target = ToolkitResponsiveLayout.IsPortrait ? journalArea : journalSelectors[index + 1];
+                    target = journalSelectors[index + 1].Q<Label>("journal-map-label");
                 }
             }
             mapTutorialHand.style.display = target != null && definition.tutorialHand ? DisplayStyle.Flex : DisplayStyle.None;
             if (target == null) return;
             PositionStatisticsHand(mapTutorialHand, target, option);
+            if (selectedTab == 0 && target is Label)
+            {
+                // Keep the fingertip close to the word, rather than using the
+                // extra clearance needed beneath a dropdown or toolbar button.
+                if (ToolkitResponsiveLayout.IsPortrait)
+                    mapTutorialHand.style.top = mapTutorialHand.style.top.value.value - 4;
+                else
+                {
+                    var word = root.WorldToLocal(new Vector2(target.worldBound.xMin, target.worldBound.center.y));
+                    mapTutorialHand.style.left = Mathf.Round(word.x - 23);
+                    mapTutorialHand.style.top = Mathf.Round(word.y - 12);
+                    mapTutorialHand.style.rotate = new Rotate(Angle.Degrees(90));
+                }
+            }
         }
     }
 }

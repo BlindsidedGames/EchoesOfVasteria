@@ -28,7 +28,7 @@ MonoBehaviour:
     minX: 0
     height: 18
     enemyDensity: 0.2
-    enemySpawnXOffset: -40
+    enemySpawnXOffset: 0
     topBuffer: 0
     bottomBuffer: 0
     blockingMask:
@@ -39,30 +39,73 @@ MonoBehaviour:
     - {fileID: 11400000, guid: f982370fcd3f9fd489cd5188f7eb546b, type: 2}
     - {fileID: 11400000, guid: fa5c5ead31adba84aab4b87031402956, type: 2}
     - {fileID: 11400000, guid: 628c77d48f420ba4eb9103538adfeae6, type: 2}
+    - {fileID: 11400000, guid: a76ab83d4851a98438f2c96029582f14, type: 2}
+    - {fileID: 11400000, guid: 2da0d8cd357542f4ca6c03722c97e739, type: 2}
+    enemyWeightOverrides:
+    - enemy: {fileID: 11400000, guid: f982370fcd3f9fd489cd5188f7eb546b, type: 2}
+      weight: 30
+      weightByDistance:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    - enemy: {fileID: 11400000, guid: fa5c5ead31adba84aab4b87031402956, type: 2}
+      weight: 10
+      weightByDistance:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    - enemy: {fileID: 11400000, guid: 628c77d48f420ba4eb9103538adfeae6, type: 2}
+      weight: 5
+      weightByDistance:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    - enemy: {fileID: 11400000, guid: a76ab83d4851a98438f2c96029582f14, type: 2}
+      weight: 40
+      weightByDistance:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    - enemy: {fileID: 11400000, guid: 2da0d8cd357542f4ca6c03722c97e739, type: 2}
+      weight: 15
+      weightByDistance:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
     woodcutting:
       weight: 1
       requiredQuest: {fileID: 0}
-      requiredNpcId:
+      requiredNpcId: 
       tasks: []
     mining:
       weight: 1
       requiredQuest: {fileID: 0}
-      requiredNpcId:
+      requiredNpcId: 
       tasks: []
     farming:
       weight: 0
       requiredQuest: {fileID: 0}
-      requiredNpcId:
+      requiredNpcId: 
       tasks: []
     fishing:
       weight: 1
       requiredQuest: {fileID: 0}
-      requiredNpcId:
+      requiredNpcId: 
       tasks: []
     looting:
       weight: 1
       requiredQuest: {fileID: 0}
-      requiredNpcId:
+      requiredNpcId: 
       tasks: []
     npcTasks: []
     minTaskDistance: 1.5
@@ -72,3 +115,8 @@ MonoBehaviour:
   heroStartY: 14
   allowMaxDistanceReapGain: 1
   entryIntroduction: {fileID: 0}
+  woodlandScenery:
+    terrain: {fileID: 0}
+    mediumTreesPerSegment: 0
+    largeTreesPerSegment: 0
+    trees: []

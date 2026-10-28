@@ -128,11 +128,11 @@ namespace TimelessEchoes.UI.Toolkit
             maxCrafts = Label(actions, "", ToolkitControls.TextRole.Caption);
             var automationArea = new VisualElement { name = "forge-automation-area" }; actions.Add(automationArea);
             automationControls = new VisualElement(); automationArea.Add(automationControls);
-            var toggles = Row(automationControls); toggles.AddToClassList("forge-toggles"); stopIcon = Toggle(toggles, "forge-stop-vastium", "forge.stop-vastium", "Stop for Vastium", () => { StopAutocraftOnVastium = !StopAutocraftOnVastium; MarkDirty(); }); lockIcon = Toggle(toggles, "forge-lock-stats", "forge.stat-matching", "Stat Matching", () => { LockAutocraftStatSet = !LockAutocraftStatSet; MarkDirty(); });
+            var toggles = Row(automationControls); toggles.AddToClassList("forge-toggles"); stopIcon = Toggle(toggles, "forge-stop-vastium", "forge.stop-vastium", "Stop for Vathrium", () => { StopAutocraftOnVastium = !StopAutocraftOnVastium; MarkDirty(); }); lockIcon = Toggle(toggles, "forge-lock-stats", "forge.stat-matching", "Stat Matching", () => { LockAutocraftStatSet = !LockAutocraftStatSet; MarkDirty(); });
             repeatIcon = Toggle(toggles, "forge-repeat-craft", "forge.repeat-craft", "Repeat craft", () => { repeatCraft = !repeatCraft; if (!repeatCraft) session.StopAutoCrafting(); MarkDirty(); });
             ToolkitLocalization.BindTooltip(repeatIcon.parent, "forge.repeat-craft-help", "Repeat crafting until an upgrade or another stop condition is reached.");
             neverStopIcon = Toggle(toggles, "forge-never-stop", "forge.never-stop", "Never stop", () => { NeverStopAutocraft = !NeverStopAutocraft; MarkDirty(); });
-            ToolkitLocalization.BindTooltip(neverStopIcon.parent, "forge.never-stop-help", "Keep crafting and salvaging until stopped or out of materials, including upgrades and Vastium.");
+            ToolkitLocalization.BindTooltip(neverStopIcon.parent, "forge.never-stop-help", "Keep crafting and salvaging until stopped or out of materials, including upgrades and Vathrium.");
             automationLock = Label(automationArea, ""); automationLock.name = "forge-automation-locked";
             automationLock.style.position = Position.Absolute;
             automationLock.style.left = automationLock.style.right = automationLock.style.top = automationLock.style.bottom = 0;

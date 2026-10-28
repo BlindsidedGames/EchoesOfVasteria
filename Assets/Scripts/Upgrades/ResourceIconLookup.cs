@@ -62,6 +62,9 @@ namespace TimelessEchoes.Upgrades
             idToIndex[101] = 226; // Turnip Seed Pack
             for (var id = 85; id <= 101; id++) idToUnknownIndex[id] = 235;
 
+            idToIndex[105] = 268; // Mushroom
+            idToUnknownIndex[105] = 269;
+
         }
 
 

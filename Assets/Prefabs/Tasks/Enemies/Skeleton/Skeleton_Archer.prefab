@@ -57,12 +57,13 @@ MonoBehaviour:
   animator: {fileID: 3857100333722271928}
   spriteRenderer: {fileID: 9165481713511291873}
   invertXFlip: 0
-  fourDirectional: 0
+  fourDirectional: 1
   projectileOrigin: {fileID: 1929803122595014453}
   targetUpdateInterval: 1
   levelText: {fileID: 7690468655359413076}
   randomizeSpriteLibraryOnSpawn: 0
   spriteLibraryVariants: []
+  spriteLibraryVariantPaths: []
   regularSectionWeight: 1
   weightedSpriteLibraryVariants: []
   targetSpriteLibrary: {fileID: 0}
@@ -424,11 +425,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1269389565974613120, guid: 692e7ef6ca09f8b4b96980d701c570b8, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 0.2875
       objectReference: {fileID: 0}
     - target: {fileID: 1269389565974613120, guid: 692e7ef6ca09f8b4b96980d701c570b8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -0.2875
       objectReference: {fileID: 0}
     - target: {fileID: 1269389565974613120, guid: 692e7ef6ca09f8b4b96980d701c570b8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

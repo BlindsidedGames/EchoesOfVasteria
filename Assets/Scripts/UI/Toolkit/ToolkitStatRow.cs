@@ -78,9 +78,8 @@ namespace TimelessEchoes.UI.Toolkit
         {
             Icon.sprite = sprite;
             var size = sprite ? sprite.rect.size * (16f / sprite.pixelsPerUnit) : Vector2.zero;
-            // Task art may be taller than resource art (for example an orchard tree).
-            // Keep its full silhouette inside the task thumbnail's 32px frame.
-            if (taskStyle && Mathf.Max(size.x, size.y) > 32f)
+            // Keep the complete task or enemy silhouette inside the 32px thumbnail.
+            if (Mathf.Max(size.x, size.y) > 32f)
                 size *= 32f / Mathf.Max(size.x, size.y);
             Icon.style.width = size.x;
             Icon.style.height = size.y;

@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b3f1b0013cbb546a76110fae216a33, type: 3}
+  m_Name: Bat
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.Enemies.EnemyData
+  enemyName: Bat
+  displayOrder: 108
+  icon: {fileID: 8647823593821616703, guid: dbe6494f831c3404aa947b8f3b97c777, type: 3}
+  prefab: {fileID: 5400312291430499913, guid: 8f6735fec24e5f141ac61d619ba5b59b, type: 3}
+  weight: 1
+  minX: 24
+  maxX: Infinity
+  spawnTerrains:
+  - {fileID: 11400000, guid: 8a0fecde35efd7543953ddaad4e93834, type: 2}
+  - {fileID: 11400000, guid: 7955e64270b45ec4eb728778a330f28e, type: 2}
+  resourceDrops:
+  - resource: {fileID: 11400000, guid: 0d0c0d6eb92c2314596c9d8b51935653, type: 2}
+    dropRange: {x: 1, y: 2}
+    weight: 100
+    requiredSkillLevel: 0
+  additionalLootChances: []
+  experience: 3
+  moveSpeed: 4
+  visionRange: 4
+  assistRange: 1
+  wanderDistance: 2
+  minWanderDistance: 0.5
+  maxHealth: 4
+  damage: 1
+  defense: 0
+  attackSpeed: 1
+  attackRange: 0.8
+  healthPerLevel: 3
+  damagePerLevel: 0.7
+  defensePerLevel: 0.1
+  distancePerLevel: 20
+  projectilePrefab: {fileID: 5086888241769898753, guid: 7f6445b853984454f8c435355f99d025, type: 3}
+  projectileForwardOffset: 0
+  projectileHeightOffset: 0

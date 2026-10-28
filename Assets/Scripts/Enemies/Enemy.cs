@@ -77,6 +77,7 @@ namespace TimelessEchoes.Enemies
 
         private AIPath ai;
         private EnemyHealth health;
+        private EnemyAttackLunge attackLunge;
         private float nextAttack;
         private float nextTargetUpdate;
         private AIDestinationSetter setter;
@@ -134,6 +135,7 @@ namespace TimelessEchoes.Enemies
             ai = GetComponent<AIPath>();
             setter = GetComponent<AIDestinationSetter>();
             health = GetComponent<EnemyHealth>();
+            attackLunge = GetComponent<EnemyAttackLunge>();
             PooledMarker = GetComponent<PooledObject>();
 
             // Do not parent a wander target under the enemy. We acquire a pooled
@@ -365,6 +367,7 @@ namespace TimelessEchoes.Enemies
                     FaceTarget();
                     if (animator != null)
                         animator.Play("Attack");
+                    attackLunge?.Play(lastMoveDir);
                     FireProjectile();
                 }
             }
@@ -472,9 +475,15 @@ namespace TimelessEchoes.Enemies
         private void FireProjectile()
         {
             if (stats.projectilePrefab == null || setter.target == null) return;
+            // Animated launch points must use the attack pose, not the previous flight frame.
+            if (projectileOrigin && animator && projectileOrigin != animator.transform &&
+                projectileOrigin.IsChildOf(animator.transform))
+                animator.Update(0f);
             var origin = projectileOrigin ? projectileOrigin : transform;
             var projObj = PoolManager.Get(stats.projectilePrefab);
-            projObj.transform.position = origin.position;
+            projObj.transform.position = origin.position +
+                (Vector3)(lastMoveDir.normalized * stats.projectileForwardOffset) +
+                Vector3.up * stats.projectileHeightOffset;
             projObj.transform.rotation = Quaternion.identity;
             var proj = projObj.GetComponent<Projectile>();
             if (proj != null)

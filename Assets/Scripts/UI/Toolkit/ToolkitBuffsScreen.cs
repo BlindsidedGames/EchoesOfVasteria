@@ -75,11 +75,11 @@ namespace TimelessEchoes.UI.Toolkit
         private void BuildRows()
         {
             var offset=scroll.scrollOffset;scroll.Clear();rows.Clear();var manager=BuffManager.Instance;if(!manager)return;
-            // Keep the introductory Echo choices first; preserve the remaining recipe order.
+            // Teach Task Echo first; preserve the remaining recipe order afterwards.
             foreach(var recipe in manager.Recipes.OrderBy(recipe => !recipe ? 3 : recipe.name == "Echo Tasks" ? 0 : recipe.name == "Echo Combat" ? 1 : 2))
             {
                 if(!recipe||!recipe.IsUnlocked)continue;
-                if (BuffIntroductionGuidance.Active && !BuffIntroductionGuidance.IsFirstEcho(recipe)) continue;
+                if (BuffIntroductionGuidance.Active && recipe.name != "Echo Tasks") continue;
                 var row=new VisualElement{name="recipe-"+recipe.name};row.AddToClassList("buff-entry");scroll.Add(row);
                 var line=new VisualElement();line.AddToClassList("buff-entry-heading");row.Add(line);
                 var frame=new VisualElement();frame.AddToClassList("buff-entry-icon");line.Add(frame);NativeIcon(frame,recipe.buffIcon);
@@ -104,7 +104,7 @@ namespace TimelessEchoes.UI.Toolkit
             var manager=BuffManager.Instance;if(!manager||!IsOpen)return;
             instruction.text=inRun?ToolkitLocalization.Text("buffs.instructions-running", "You can’t change buffs during a run. Select an equipped slot to turn autocast on or off."):selected?ToolkitLocalization.Text("buffs.instructions-select-slot", "Choose a slot for {0}, or select Cancel to keep your current setup.", selected.GetDisplayName()):ToolkitLocalization.Text("buffs.instructions-select-buff", "Select Assign beside a buff, then choose a slot. Select an equipped slot to turn autocast on or off.");
             if (BuffIntroductionGuidance.Active)
-                instruction.text = selected ? ToolkitLocalization.Text("buffs.lesson.slot", "Select your first slot to equip this Echo.") : ToolkitLocalization.Text("buffs.lesson.choice", "Choose Task Echo to gather resources or Combat Echo to fight. Select Assign beside your choice.");
+                instruction.text = selected ? ToolkitLocalization.Text("buffs.lesson.slot", "Select your first slot to equip this Echo.") : ToolkitLocalization.Text("buffs.lesson.choice", "Select Assign beside Task Echo, then select your first slot.");
             else if (!inRun && !selected && BuffIntroductionGuidance.Stage >= 3 && !manager.IsAutoSlotUnlocked(0))
                 instruction.text = ToolkitLocalization.Text("buffs.lesson.casting", "During an adventure, select your Echo’s ability button to summon it. Complete Echo Casting to unlock autocasting.");
             for(int i=0;i<5;i++)

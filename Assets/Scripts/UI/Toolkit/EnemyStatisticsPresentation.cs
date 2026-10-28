@@ -12,7 +12,7 @@ namespace TimelessEchoes.UI.Toolkit
         public List<EnemyData> Ordered(EnemyStatsPanelUI.SortMode mode, EnemyKillTracker tracker)
         {
             var threshold = mode switch { EnemyStatsPanelUI.SortMode.Damage => 1, EnemyStatsPanelUI.SortMode.Health => 2, EnemyStatsPanelUI.SortMode.Defense => 3, EnemyStatsPanelUI.SortMode.AttackRate => 4, EnemyStatsPanelUI.SortMode.MoveSpeed => 5, EnemyStatsPanelUI.SortMode.Vision => 6, _ => 0 };
-            bool Known(EnemyData e) => tracker && (mode == EnemyStatsPanelUI.SortMode.Default ? tracker.GetKills(e) > 0 : tracker.GetRevealLevel(e) >= threshold);
+            bool Known(EnemyData e) => tracker && (mode == EnemyStatsPanelUI.SortMode.Default ? tracker.GetProgressKills(e) > 0 : tracker.GetRevealLevel(e) >= threshold);
             var known = enemies.Where(Known).ToList(); var unknown = enemies.Where(e => !Known(e)).ToList();
             int Tie(EnemyData a, EnemyData b) { var c = a.displayOrder.CompareTo(b.displayOrder); return c != 0 ? c : string.Compare(a.enemyName, b.enemyName, System.StringComparison.Ordinal); }
             if (mode == EnemyStatsPanelUI.SortMode.Default) { known.Sort(Tie); unknown.Sort(Tie); }
@@ -27,7 +27,7 @@ namespace TimelessEchoes.UI.Toolkit
         };
         public (string title, string health, string defense, string movement, string kills, Sprite icon, bool showProgress, float progress, string[] values) Describe(EnemyData enemy, EnemyKillTracker tracker, float distance)
         {
-            var kills = tracker ? tracker.GetKills(enemy) : 0; var reveal = tracker ? tracker.GetRevealLevel(enemy) : 0;
+            var kills = tracker ? tracker.GetProgressKills(enemy) : 0; var reveal = tracker ? tracker.GetRevealLevel(enemy) : 0;
             var bonus = (tracker ? tracker.GetDamageMultiplier(enemy) : 1) - 1;
             var level = enemy.GetLevel(Mathf.Max(0, distance - enemy.minX));
             var spawnable = distance >= enemy.minX && (float.IsInfinity(enemy.maxX) || distance <= enemy.maxX);

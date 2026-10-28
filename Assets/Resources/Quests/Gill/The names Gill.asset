@@ -40,12 +40,18 @@ MonoBehaviour:
     m_FallbackState: 2
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  rewardDisplayResource: {fileID: 0}
+  rewardIconKnown: 0
+  speaker: {fileID: 11400000, guid: b6fdb271a2694554c9f8cc67b2923e0d, type: 2}
   npcId: Gill1
   requiresTown: 1
+  acceptanceQuest: 0
+  acceptanceResources: []
   autoPin: 0
   useN0ForPinnedNumbers: 0
   requiredQuests:
   - {fileID: 11400000, guid: 298f411e97766fb47bf1d61e9e1a5bf8, type: 2}
+  minimumMaxRunDistanceExclusive: 0
   requirements:
   - type: 5
     resource: {fileID: 0}

@@ -41,7 +41,7 @@ namespace TimelessEchoes.UI.Toolkit
             internal Vector2 Scroll;
             internal bool Compact;
             internal Dictionary<QuestNoticeboardCategory, bool> Expanded;
-            internal List<(string name, float offset)> Anchors;
+            internal List<(string name, float offset, QuestNoticeboardCategory category)> Anchors;
         }
         private ViewState pendingViewState;
         private Vector3 previousRestoreLayout = Vector3.negativeInfinity;
@@ -51,7 +51,8 @@ namespace TimelessEchoes.UI.Toolkit
             Expanded = new Dictionary<QuestNoticeboardCategory, bool>(expandedCategories),
             Anchors = scroll.Query<VisualElement>(className: "eov-quest-row").ToList()
                 .Where(row => row.worldBound.height > 0 && row.worldBound.Overlaps(scroll.contentViewport.worldBound))
-                .Select(row => (row.name, row.worldBound.yMin - scroll.contentViewport.worldBound.yMin)).ToList()
+                .Select(row => (row.name, row.worldBound.yMin - scroll.contentViewport.worldBound.yMin,
+                    categories[row.name.Substring("quest-".Length)])).ToList()
         };
         public void RestoreViewState(ViewState state)
         {
@@ -69,6 +70,8 @@ namespace TimelessEchoes.UI.Toolkit
             var position = pendingViewState.Scroll.y;
             foreach (var anchor in pendingViewState.Anchors)
             {
+                // A handed-in quest moves to History; following it would jump away from the old view.
+                if (!categories.TryGetValue(anchor.name.Substring("quest-".Length), out var category) || category != anchor.category) continue;
                 var row = scroll.Q(anchor.name);
                 if (row == null || row.worldBound.height <= 0) continue;
                 var visible = true;

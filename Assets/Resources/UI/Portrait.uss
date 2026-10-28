@@ -284,6 +284,14 @@
 .gameplay.portrait .general-metric {flex-direction:column;align-items:flex-start;margin-bottom:8px;}
 .gameplay.portrait .general-metric-name {font-size:var(--body);}
 .gameplay.portrait .general-metric-value {font-size:12px;}
+.gameplay.portrait .journal-lifetime .general-metrics {width:100%;min-width:0;align-items:stretch;}
+.gameplay.portrait .journal-lifetime .general-column {padding:0;width:auto;min-width:0;}
+.gameplay.portrait .journal-lifetime .general-metric {flex-direction:column;align-items:stretch;margin-bottom:6px;min-height:0;min-width:0;}
+.gameplay.portrait .journal-lifetime .general-metric-name {font-size:var(--body);min-width:0;max-width:100%;flex-grow:0;white-space:normal;}
+.gameplay.portrait .journal-lifetime .general-metric-value {font-size:var(--body);margin-left:0;max-width:100%;-unity-font-style:bold;-unity-text-align:middle-left;white-space:normal;}
+.gameplay.portrait .journal-run {min-width:0;max-width:100%;}
+.gameplay.portrait .journal-run-map,.gameplay.portrait .journal-run-rewards,.gameplay.portrait .journal-run-outcome {min-width:0;flex-shrink:1;white-space:normal;}
+.gameplay.portrait .journal-run-rewards {flex-basis:0;}
 .gameplay.portrait .eov-stat-entry {padding:8px 0;}
 .gameplay.portrait .eov-stat-entry-fields {flex-direction:row;flex-wrap:wrap;height:auto;}
 .gameplay.portrait .enemy-stat-column {width:100%;flex-basis:100%;min-width:0;flex-direction:row;margin:0;}
@@ -439,3 +447,17 @@
 .gameplay.portrait.eov-navigation .eov-navigation-button:disabled .eov-navigation-label {color:var(--muted);}
 
 .gameplay.portrait .summary-sheet .breakdown-header {margin-right:0;}
+
+.gameplay.portrait .journal-navigation {width:100%;flex-grow:1;flex-shrink:1;margin:0;min-height:0;}
+.gameplay.portrait .journal-navigation .journal-selectors {display:flex;flex-direction:column;flex-wrap:nowrap;width:100%;}
+.gameplay.portrait .journal-navigation .journal-selector {flex-direction:row;flex-grow:0;flex-basis:auto;justify-content:flex-start;min-height:48px;height:48px;padding:8px;margin:0 0 8px;}
+.gameplay.portrait .journal-navigation .journal-selector > .journal-art {width:32px;height:32px;flex-shrink:0;margin-right:12px;}
+.gameplay.portrait .journal-navigation .journal-selector Label {font-size:var(--body);white-space:normal;flex-shrink:1;}
+.gameplay.portrait .journal-page {width:100%;min-width:0;min-height:0;}
+.gameplay.portrait .enemy-family-heading {min-height:36px;}
+.gameplay.portrait .journal-navigation .journal-selector {min-height:44px;height:44px;margin-bottom:2px;border-width:0;border-left-width:1px;border-left-color:rgba(0,0,0,0);background-color:rgba(0,0,0,0);}
+.gameplay.portrait .journal-navigation .journal-selector:hover {background-color:var(--hover);}
+.gameplay.portrait .journal-navigation .journal-selector.active {background-color:var(--control);border-left-color:var(--text);}
+.gameplay .enemy-family-heading {width:100%;align-self:stretch;}
+
+.gameplay.portrait .enemy-family .enemy-stat-metric {width:50%;flex-basis:50%;height:22px;min-height:22px;}

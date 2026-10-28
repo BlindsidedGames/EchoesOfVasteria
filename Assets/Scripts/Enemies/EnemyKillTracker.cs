@@ -21,6 +21,7 @@ namespace TimelessEchoes.Stats
         public event System.Action<EnemyData> OnKillRegistered;
 
         private readonly Dictionary<EnemyData, double> kills = new();
+        private readonly Dictionary<EnemyData, double> progressKills = new();
 
         private void Awake()
         {
@@ -45,6 +46,9 @@ namespace TimelessEchoes.Stats
                 kills[stats] += 1;
             else
                 kills[stats] = 1;
+            var group = stats.statisticsGroup ? stats.statisticsGroup : stats;
+            progressKills.TryGetValue(group, out var total);
+            progressKills[group] = total + 1;
             OnKillRegistered?.Invoke(stats);
         }
 
@@ -55,13 +59,20 @@ namespace TimelessEchoes.Stats
 
         public int GetRevealLevel(EnemyData stats)
         {
-            double count = GetKills(stats);
+            double count = GetProgressKills(stats);
             int level = 0;
             foreach (var t in Thresholds)
             {
                 if (count >= t) level++;
             }
             return level;
+        }
+
+        public double GetProgressKills(EnemyData stats)
+        {
+            if (!stats) return 0;
+            var group = stats.statisticsGroup ? stats.statisticsGroup : stats;
+            return progressKills.TryGetValue(group, out var total) ? total : 0;
         }
 
         public float GetDamageMultiplier(EnemyData stats)
@@ -96,10 +107,14 @@ namespace TimelessEchoes.Stats
             if (oracle == null) return;
             oracle.saveData.EnemyKills ??= new Dictionary<string, double>();
             kills.Clear();
+            progressKills.Clear();
             foreach (var enemy in Blindsided.Utilities.AssetCache.GetAll<EnemyData>(""))
             {
                 oracle.saveData.EnemyKills.TryGetValue(enemy.name, out var count);
                 kills[enemy] = count;
+                var group = enemy.statisticsGroup ? enemy.statisticsGroup : enemy;
+                progressKills.TryGetValue(group, out var total);
+                progressKills[group] = total + count;
             }
         }
     }

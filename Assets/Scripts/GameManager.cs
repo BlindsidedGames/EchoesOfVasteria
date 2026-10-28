@@ -273,6 +273,11 @@ namespace TimelessEchoes
         public bool HeroIsDead => heroDead;
         public bool RunEndedByReaper => runEndedByReaper;
         public bool DeathPromptVisible { get; private set; }
+        public static bool SkipRestartCountdown
+        {
+            get => PlayerPrefs.GetInt("Gameplay.SkipRestartCountdown", 0) == 1;
+            set { PlayerPrefs.SetInt("Gameplay.SkipRestartCountdown", value ? 1 : 0); PlayerPrefs.Save(); }
+        }
         public float DeathPromptProgress { get; private set; }
         public bool FirstReapReturnPending => heroDead && runEndedByReaper && Blindsided.Oracle.oracle?.saveData?.General.FirstReapTownVisited == false;
         public bool FirstReapDialoguePending => FirstReapReturnPending && !StaticReferences.CompletedNpcTasks.Contains("FirstReapIntroduction");
@@ -768,6 +773,10 @@ namespace TimelessEchoes
 
             BuffManager.Instance?.Resume();
 
+            var firstEchoLesson = FindAnyObjectByType<UI.Toolkit.ToolkitOrinIntroduction>();
+            if (firstEchoLesson && UI.Toolkit.BuffIntroductionGuidance.Stage == 3)
+                yield return firstEchoLesson.TeachFirstEchoCast();
+
             // Start monitoring for stalled distance after run begins
             if (stallMonitorCoroutine != null)
             {
@@ -1028,7 +1037,7 @@ namespace TimelessEchoes
             if (deathTimerImage != null)
                 deathTimerImage.fillAmount = 0f;
 
-            while (t < deathWindowDuration || StaticReferences.ActiveNpcMeetings.Count > 0 || IvanReturnPending || FirstReapReturnPending)
+            while (t < deathWindowDuration || StaticReferences.ActiveNpcMeetings.Count > 0 || IvanReturnPending || FirstReapReturnPending || returnOnDeathQueued || retreatQueued)
             {
                 if (StaticReferences.ActiveNpcMeetings.Count > 0)
                 {
@@ -1047,6 +1056,7 @@ namespace TimelessEchoes
                     yield return null;
                     continue;
                 }
+                if (SkipRestartCountdown) break;
                 DeathPromptProgress = Mathf.Clamp01(t / deathWindowDuration);
                 if (deathTimerImage != null)
                     deathTimerImage.fillAmount = Mathf.Clamp01(t / deathWindowDuration);

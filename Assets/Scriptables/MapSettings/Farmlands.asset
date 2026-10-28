@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a7024b925fb721449cb612a187ddd1a, type: 3}
   m_Name: Farmlands
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   tilemapChunkSettings:
     terrainMap: {fileID: 0}
     decorMap: {fileID: 0}
@@ -28,7 +28,7 @@ MonoBehaviour:
     minX: 15
     height: 18
     enemyDensity: 0.1
-    enemySpawnXOffset: 20
+    enemySpawnXOffset: 0
     topBuffer: 2
     bottomBuffer: 2
     blockingMask:
@@ -40,10 +40,43 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 73c3c512ca642fb479327adc18c5b89a, type: 2}
     - {fileID: 11400000, guid: a4e6f01acc6db934f97ab0e2c7a152ab, type: 2}
     - {fileID: 11400000, guid: bed652063bc146145b2672622708b00c, type: 2}
+    enemyWeightOverrides:
+    - enemy: {fileID: 11400000, guid: 4adee0cf9ed708b4580c6fbf6576c6a8, type: 2}
+      weight: 40
+      weightByDistance:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    - enemy: {fileID: 11400000, guid: 73c3c512ca642fb479327adc18c5b89a, type: 2}
+      weight: 20
+      weightByDistance:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    - enemy: {fileID: 11400000, guid: a4e6f01acc6db934f97ab0e2c7a152ab, type: 2}
+      weight: 20
+      weightByDistance:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    - enemy: {fileID: 11400000, guid: bed652063bc146145b2672622708b00c, type: 2}
+      weight: 20
+      weightByDistance:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
     woodcutting:
       weight: 0.3
       requiredQuest: {fileID: 11400000, guid: 023383fb0fcbe3b41b7dca4f9ec81b72, type: 2}
-      requiredNpcId:
+      requiredNpcId: 
       tasks:
       - {fileID: 11400000, guid: b91ced891537788468693fa7afa420f9, type: 2}
       - {fileID: 11400000, guid: 8d93789f09a37544e9dda9870a26098c, type: 2}
@@ -60,7 +93,7 @@ MonoBehaviour:
     mining:
       weight: 0
       requiredQuest: {fileID: 0}
-      requiredNpcId:
+      requiredNpcId: 
       tasks:
       - {fileID: 11400000, guid: fa24818abe1da184aafa062af624ec6c, type: 2}
       - {fileID: 11400000, guid: 668dad8fbc2902843a7e173e243dee9a, type: 2}
@@ -73,7 +106,7 @@ MonoBehaviour:
     farming:
       weight: 1
       requiredQuest: {fileID: 0}
-      requiredNpcId:
+      requiredNpcId: 
       tasks:
       - {fileID: 11400000, guid: 70617213aa5b4282810c56d8c6fef1dc, type: 2}
       - {fileID: 11400000, guid: 057a73ef4be1461a8f37f4a18cc9ccd7, type: 2}
@@ -99,7 +132,7 @@ MonoBehaviour:
     fishing:
       weight: 0.2
       requiredQuest: {fileID: 11400000, guid: 918ef9c4bf0607e479041a3d39b3f3b7, type: 2}
-      requiredNpcId:
+      requiredNpcId: 
       tasks:
       - {fileID: 11400000, guid: c549fee4e4f15594698a6f046c39af11, type: 2}
       - {fileID: 11400000, guid: 05fdfa111cb7016449fc9bdbd752ec6e, type: 2}
@@ -112,7 +145,7 @@ MonoBehaviour:
     looting:
       weight: 0.01
       requiredQuest: {fileID: 0}
-      requiredNpcId:
+      requiredNpcId: 
       tasks:
       - {fileID: 11400000, guid: b1555f4354b02664ab812f41368de535, type: 2}
       - {fileID: 11400000, guid: 79af76c4f8e5991408e4c1cdeb5a27df, type: 2}
@@ -146,3 +179,8 @@ MonoBehaviour:
   heroStartY: 12
   allowMaxDistanceReapGain: 0
   entryIntroduction: {fileID: 11400000, guid: 098f03185e3a0594296d7fec33148c0d, type: 2}
+  woodlandScenery:
+    terrain: {fileID: 0}
+    mediumTreesPerSegment: 0
+    largeTreesPerSegment: 0
+    trees: []

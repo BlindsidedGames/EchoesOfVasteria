@@ -4,7 +4,6 @@ using System.Linq;
 using Blindsided.Utilities;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
-using static Blindsided.Oracle;
 namespace TimelessEchoes.UI.Toolkit
 {
     public sealed class ItemStatisticsPresentation
@@ -50,14 +49,11 @@ namespace TimelessEchoes.UI.Toolkit
             var tier = earned && manager ? manager.GetTier(resource) : 1;
             var name = earned ? ToolkitLocalization.Name(resource) : "???";
             var totals = ToolkitLocalization.Text("statistics.item-totals", "Collected: {0}\nSpent: {1}", Number(resource.totalReceived), Number(resource.totalSpent));
-            double best = 0;
-            if (oracle != null && oracle.saveData.Resources != null && oracle.saveData.Resources.TryGetValue(resource.name, out var record)) best = record.BestPerMinute;
-            var power = resource.DisableAlterEcho ? ToolkitLocalization.Text("common.not-applicable", "N/A") : Number(best);
-            var detail = ToolkitLocalization.Text("statistics.item-best-rate", "Best gathered/min: {0}", power);
+            var detail = "";
             if (earned)
             {
-                if (resource.DisableAlterEcho) detail = ToolkitLocalization.Text("statistics.item-crafted", "Crafted\n{0}", detail);
-                else if (tier > 1) detail = ToolkitLocalization.Text("statistics.item-tier-bonus", "Tier Bonus: {0:0.#}%\n{1}", manager ? manager.GetTierBonusPercent(tier) : 0, detail);
+                if (resource.DisableAlterEcho) detail = ToolkitLocalization.Text("statistics.item-crafted", "Crafted\n{0}", "").Trim();
+                else if (tier > 1) detail = ToolkitLocalization.Text("statistics.item-tier-bonus", "Tier Bonus: {0:0.#}%\n{1}", manager ? manager.GetTierBonusPercent(tier) : 0, "").Trim();
             }
             if (resource.DisableAlterEcho && earned && tierCount > 0) tier = tierCount;
             return (name, totals, detail, tier, earned ? resource.icon : null, Number(amount));

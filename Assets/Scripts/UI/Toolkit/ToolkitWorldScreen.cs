@@ -54,7 +54,13 @@ namespace TimelessEchoes.UI.Toolkit
                         node.style.left = 0; node.style.top = 0;
                         node.usageHints |= UsageHints.DynamicTransform;
                         if (node is Image image) image.tintColor = data.color;
-                        else if (node is Label label) { label.style.color = data.color; label.style.unityTextAlign = TextAnchor.MiddleCenter; label.style.whiteSpace = WhiteSpace.NoWrap; }
+                        else if (node is Label label)
+                        {
+                            label.style.color = data.color;
+                            label.style.unityTextAlign = data.value == ToolkitWorldAnchor.Value.EnemyTitle || data.value == ToolkitWorldAnchor.Value.EnemyHealth
+                                ? TextAnchor.MiddleLeft : TextAnchor.MiddleCenter;
+                            label.style.whiteSpace = WhiteSpace.NoWrap;
+                        }
                         else { ToolkitTheme.Background(node, data.sprite); node.style.unityBackgroundImageTintColor = data.color; if (!data.sprite) node.style.backgroundColor = data.color; }
                         nodes[i] = node; root.Add(node);
                     }

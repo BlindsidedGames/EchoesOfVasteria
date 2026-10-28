@@ -137,6 +137,10 @@ namespace TimelessEchoes.Tasks
             blockingMask = cfg.taskGeneratorSettings.blockingMask;
             otherTaskEdgeOffset = cfg.taskGeneratorSettings.otherTaskEdgeOffset;
 
+            // Keep the approach to Ivan safe for players who have not met him.
+            // Snapshot this for the run so streamed segments cannot change its rules mid-visit.
+            var enemyOpening = cfg.name == "Woods" && oracle?.saveData?.CompletedNpcTasks.Contains("Ivan1") != true
+                ? 50f : float.NegativeInfinity;
             enemies = new List<WeightedSpawn>();
             foreach (var spawn in cfg.taskGeneratorSettings.enemies)
             {
@@ -144,7 +148,9 @@ namespace TimelessEchoes.Tasks
                 var copy = new WeightedSpawn
                 {
                     data = spawn,
-                    minX = spawn.minX + enemySpawnXOffset,
+                    weight = cfg.taskGeneratorSettings.GetEnemyWeight(spawn),
+                    weightByDistance = cfg.taskGeneratorSettings.GetEnemyWeightCurve(spawn),
+                    minX = Mathf.Max(spawn.minX + enemySpawnXOffset, enemyOpening),
                     maxX = spawn.maxX + enemySpawnXOffset
                 };
                 enemies.Add(copy);
@@ -325,7 +331,7 @@ namespace TimelessEchoes.Tasks
             for (var i = 0; i < enemyCount; i++)
             {
                 var localX = Random.Range(localMinX, localMaxX);
-                if (firstRiverRun && localX < 38f) continue;
+                if (firstRiverRun && localX < 24f) continue;
                 var worldX = transform.position.x + localX;
 
                 var entry = PickEntry(enemies, worldX, e => TaskAllowed(e, true, true, true));
@@ -738,7 +744,7 @@ namespace TimelessEchoes.Tasks
             {
                 if (budget.Expired) { yield return null; budget.Restart(); }
                 var localX = Random.Range(localMinX, localMaxX);
-                if (firstRiverRun && localX < 38f) continue;
+                if (firstRiverRun && localX < 24f) continue;
                 var worldX = transform.position.x + localX;
                 var entry = PickEntry(enemies, worldX, e => TaskAllowed(e, true, true, true));
                 if (entry == null || entry.data == null || entry.data.prefab == null) continue;
@@ -1014,7 +1020,9 @@ namespace TimelessEchoes.Tasks
             {
                 if (!filter(e))
                     continue;
-                r -= customWeight != null ? customWeight(e) : e.GetWeight(worldX);
+                var entryWeight = customWeight != null ? customWeight(e) : e.GetWeight(worldX);
+                if (entryWeight <= 0f) continue;
+                r -= entryWeight;
                 if (r <= 0f)
                     return e;
             }
@@ -1029,6 +1037,11 @@ namespace TimelessEchoes.Tasks
         {
             [Required] public EnemyData data;
 
+            // Negative retains the shared EnemyData weight for entries without a map snapshot.
+            public float weight = -1f;
+
+            public AnimationCurve weightByDistance;
+
             public float minX;
 
             public float maxX = float.PositiveInfinity;
@@ -1041,7 +1054,9 @@ namespace TimelessEchoes.Tasks
                 if (data == null || data.prefab == null) return 0f;
                 if (worldX < minX || worldX > maxX)
                     return 0f;
-                return Mathf.Max(0f, data.weight);
+                return Mathf.Max(0f, weightByDistance != null && weightByDistance.length > 0
+                    ? weightByDistance.Evaluate(worldX)
+                    : weight >= 0f ? weight : data.weight);
             }
         }
 

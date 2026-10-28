@@ -17,9 +17,14 @@ namespace TimelessEchoes.Buffs
         // Keep serialized effect IDs and old card counts readable after retirement.
         public static bool IsRetiredName(string value) => value == "Prospector" || value == "Slipstream";
         public bool IsRetired => IsRetiredName(name) || HasEffect(BuffEffectType.ProspectorWeightPercent);
-        // Retain Bonus Experience already earned before its unlock moved to Echo Casting.
+        // Combat Echo follows the first manual summon. Preserve assigned/upgraded
+        // legacy Echoes and Bonus Experience earned before their unlocks moved.
         public bool IsUnlocked => !IsRetired && (!requiredQuest || QuestUtils.QuestCompleted(requiredQuest) ||
-            (name == "Bonus Experience" && QuestUtils.QuestCompleted("Into The Multiverse")));
+            (name == "Bonus Experience" && QuestUtils.QuestCompleted("Into The Multiverse"))) &&
+            (name != "Echo Combat" || BuffIntroductionGuidance.Stage >= 4 ||
+             QuestUtils.QuestCompleted("Echo Casting") || QuestUtils.QuestCompleted("EchoCombatPlus1") ||
+             QuestUtils.QuestCompleted("Into The Multiverse") ||
+             Blindsided.Oracle.oracle?.saveData?.BuffSlots?.Contains("Echo Combat") == true);
         private static BuffRecipe[] availableSource, availableBuffs;
         public static BuffRecipe[] LoadAvailable(string path = "")
         {

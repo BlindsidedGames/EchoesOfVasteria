@@ -1,5 +1,6 @@
 using System;
 using Pathfinding;
+using TimelessEchoes.Enemies;
 using TimelessEchoes.Utilities;
 using UnityEngine;
 
@@ -20,6 +21,10 @@ namespace TimelessEchoes.Hero
         private Seeker seeker;
         private AIDestinationSetter setter;
         private Transform idleWalkTarget;
+        private EchoController echo;
+        private Camera guardCamera;
+        private float nextGuardUpdate;
+        private float normalMaxSpeed;
         private Vector2 lastMoveDir = Vector2.down;
         private bool destinationOverride;
         private bool isEcho;
@@ -53,9 +58,11 @@ namespace TimelessEchoes.Hero
         public void Init(bool isEchoActor, float walkStep = 5f)
         {
             ai = GetComponent<AIPath>();
+            normalMaxSpeed = ai ? ai.maxSpeed : 0;
             seeker = GetComponent<Seeker>();
             setter = GetComponent<AIDestinationSetter>();
             isEcho = isEchoActor;
+            echo = isEchoActor ? GetComponent<EchoController>() : null;
             idleWalkStep = walkStep;
         }
 
@@ -67,6 +74,7 @@ namespace TimelessEchoes.Hero
             destinationOverride = false;
             lastMoveDir = Vector2.down;
             logicActive = true;
+            nextGuardUpdate = 0;
 
             if (!isEcho)
             {
@@ -186,14 +194,67 @@ namespace TimelessEchoes.Hero
             if (!isEcho || mainHero == null || mainHero == transform)
                 return false;
 
+            if (echo && echo.Type == EchoType.Combat && TryGuardMainHero(mainHero))
+                return true;
+
             if (setter.target != mainHero)
             {
                 setter.target = mainHero;
                 ai?.SearchPath();
             }
 
+            ai.maxSpeed = normalMaxSpeed;
             ai.simulateMovement = true;
             return true;
+        }
+
+        private bool TryGuardMainHero(Transform mainHero)
+        {
+            if (!GameManager.Instance || !GameManager.Instance.CurrentMap) return false;
+            if (!guardCamera && EnemyActivator.Instance) guardCamera = EnemyActivator.Instance.GetComponent<Camera>();
+            if (!guardCamera) return false;
+            if (idleWalkTarget && setter.target == idleWalkTarget && Time.time < nextGuardUpdate)
+            { ContinueGuardMovement(); return true; }
+            nextGuardUpdate = Time.time + .2f;
+
+            // Use the visible world rather than the wider portrait simulation area.
+            var min = guardCamera.ViewportToWorldPoint(Vector3.zero);
+            var max = guardCamera.ViewportToWorldPoint(Vector3.one);
+            var heroPosition = mainHero.position;
+            var ahead = Mathf.Min(Mathf.Max(0, max.x - .5f - heroPosition.x) * .5f, echo.CombatAggroRange);
+            if (ahead < .25f) return false;
+            var index = 0;
+            foreach (var other in EchoController.CombatEchoes)
+            {
+                if (other == echo) break;
+                if (other && other.isActiveAndEnabled && other.Type == EchoType.Combat) index++;
+            }
+            var spread = index == 0 ? 0 : (index % 2 == 1 ? 1 : -1) * ((index + 1) / 2) * 1.25f;
+            var candidate = new Vector3(heroPosition.x + ahead,
+                Mathf.Clamp(heroPosition.y + spread, min.y + .5f, Mathf.Max(min.y + .5f, max.y - .5f)), heroPosition.z);
+            var pathfinder = AstarPath.active;
+            if (!pathfinder) return false;
+            var constraint = NearestNodeConstraint.Walkable; constraint.tags = ~0;
+            var start = pathfinder.GetNearest(transform.position, constraint).node;
+            var goal = pathfinder.GetNearest(candidate, constraint);
+            if (start == null || goal.node == null || !PathUtilities.IsPathPossible(start, goal.node)) return false;
+            var position = (Vector3)goal.position; position.z = heroPosition.z;
+            if (position.x < heroPosition.x || position.x > max.x - .25f || position.y < min.y || position.y > max.y) return false;
+            EnsureIdleWalkTarget();
+            var moved = (idleWalkTarget.position - position).sqrMagnitude > .0625f;
+            idleWalkTarget.position = position;
+            if (setter.target != idleWalkTarget || moved)
+            { destinationOverride = false; setter.target = idleWalkTarget; ai.SearchPath(); }
+            ContinueGuardMovement();
+            return true;
+        }
+
+        private void ContinueGuardMovement()
+        {
+            // Normal speed is restored before combat targeting each frame.
+            var catchingUp = (idleWalkTarget.position - transform.position).sqrMagnitude > 1f;
+            ai.maxSpeed = normalMaxSpeed * (catchingUp ? 1.2f : 1f);
+            ai.simulateMovement = true;
         }
 
         /// <summary>
@@ -224,6 +285,7 @@ namespace TimelessEchoes.Hero
         /// </summary>
         public void UpdateMaxSpeed(float speed)
         {
+            normalMaxSpeed = speed;
             if (ai != null)
                 ai.maxSpeed = speed;
         }

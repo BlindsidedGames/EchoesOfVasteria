@@ -31,12 +31,14 @@ namespace TimelessEchoes.UI.Toolkit
                 return;
             }
             var scroll = ToolkitControls.RecessedScroll(body, enemies ? "enemy-statistics" : "task-statistics", theme, definition.inset);
-            statContent = scroll.contentContainer; enemyRows.Clear(); statSortButtons.Clear();
+            statContent = scroll.contentContainer; enemyRows.Clear(); enemyFamilyRows.Clear(); statSortButtons.Clear();
             if (enemies)
             {
                 enemyPresentation ??= new EnemyStatisticsPresentation();
-                foreach (var data in enemyPresentation.Ordered(enemySort, killTracker))
+                foreach (var data in CatalogueEnemies(enemyPresentation.Ordered(enemySort, killTracker)))
                 {
+                    var family = EnemyFamily(data);
+                    if (family != null) { BuildEnemyFamily(family); continue; }
                     var row = new ToolkitStatRow("enemy-stat-" + data.name, "#" + data.displayOrder, 4, theme, definition.row, definition.iconFrame, definition.progressTrack, definition.progressFill);
                     enemyRows.Add(data, row); statContent.Add(row.Root);
                 }
@@ -67,11 +69,14 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var distance = enemyDistance?.value ?? tracker.MaxRunDistance;
             if (enemyDistanceLabel != null) enemyDistanceLabel.text = ToolkitLocalization.Text("statistics.preview-distance", "Preview distance: {0:N0}", distance);
-            var ordered = enemyPresentation.Ordered(enemySort, killTracker);
+            var ordered = new List<EnemyData>(CatalogueEnemies(enemyPresentation.Ordered(enemySort, killTracker)));
             for (var index = 0; index < ordered.Count; index++)
             {
-                var enemy = ordered[index]; var row = enemyRows[enemy];
-                if (statContent.IndexOf(row.Root) != index) statContent.Insert(index, row.Root);
+                var enemy = ordered[index];
+                var entry = enemyFamilyRows.TryGetValue(enemy, out var family) ? family.Root : enemyRows[enemy].Root;
+                if (statContent.IndexOf(entry) != index) statContent.Insert(index, entry);
+                if (family != null) { RefreshEnemyFamily(family, distance); continue; }
+                var row = enemyRows[enemy];
                 var data = enemyPresentation.Describe(enemy, killTracker, distance);
                 row.Title.text = data.title;
                 for (var i = 0; i < row.EnemyValues.Length; i++) row.EnemyValues[i].text = data.values[i];
@@ -100,6 +105,6 @@ namespace TimelessEchoes.UI.Toolkit
         private void TaskWeightsChanged() { if (selectedTab == 4) dirty = true; }
         private void KillChanged(EnemyData _) { if (selectedTab == 0 || selectedTab == 3) dirty = true; }
         private void TaskCompleted() { if (selectedTab == 0 || selectedTab == 4) dirty = true; }
-        private void InventoryChanged() { if (selectedTab == 5) dirty = true; }
+        private void InventoryChanged() { if (selectedTab == 0 || selectedTab == 5) dirty = true; }
     }
 }

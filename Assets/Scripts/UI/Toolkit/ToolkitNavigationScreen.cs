@@ -116,6 +116,13 @@ namespace TimelessEchoes.UI.Toolkit
             if (refresherEntry != null) return true;
             if (ToolkitMeetingScreen.HasOpenDialogue)
                 return ToolkitMeetingScreen.AllowsNavigation(route => DialogueRouteMatches(entry, route));
+            if (MapStatisticsGuidance.Stage is >= 2 and < 7 && windows &&
+                windows.IsWindowOpen(TownWindowManager.Window.Stats))
+            {
+                if (!statisticsScreen) statisticsScreen = FindAnyObjectByType<ToolkitStatisticsScreen>();
+                return statisticsScreen && statisticsScreen.SelectedTab != 0 &&
+                    (entry.id == "stats" || entry.statisticsTab == 0);
+            }
             if (BuffIntroductionGuidance.Stage == 3 && GameManager.Instance && GameManager.Instance.CurrentMap && !GameManager.Instance.HeroIsDead) return false;
             return highlightedEntryId == null || entry.id == highlightedEntryId || TutorialWindowClose(entry);
         }
@@ -179,7 +186,8 @@ namespace TimelessEchoes.UI.Toolkit
             menuDismiss = new VisualElement { name = "navigation-menu-dismiss" };
             menuDismiss.style.position = Position.Absolute;
             menuDismiss.style.display = DisplayStyle.None;
-            menuDismiss.RegisterCallback<PointerDownEvent>(evt => { CloseMenu(); Refresh(); evt.StopPropagation(); });
+            ToolkitTapDismiss.Bind(menuDismiss, () => { CloseMenu(); Refresh(); },
+                () => !ToolkitDimScreen.BlocksInput && highlightedEntryId == null && refresherEntry == null && !ToolkitMeetingScreen.HasOpenDialogue);
             root.Insert(0, menuDismiss);
             popup = root.Q("navigation-popup");
             portraitMenuHeader = CreatePortraitHeader(popup);
@@ -465,6 +473,14 @@ namespace TimelessEchoes.UI.Toolkit
         }
 
         public bool HasOpenMenu => openGroup != Group.Toolbar || moreOpen;
+        internal bool CanDismissWindow
+        {
+            get
+            {
+                var close = navigationEntries == null ? null : System.Array.Find(navigationEntries, entry => entry.action == NavAction.Close);
+                return close != null && NavigationAllows(close);
+            }
+        }
 
         private void Update()
         {
@@ -547,9 +563,14 @@ namespace TimelessEchoes.UI.Toolkit
             if (portraitMenuTitle != null && HasOpenMenu)
                 portraitMenuTitle.text = MenuTitle(openGroup);
             if (windows != null && windows.IsWindowOpen(TownWindowManager.Window.Quests))
+            {
                 highlightQuestsUntilOpened = false;
+                var data = Blindsided.Oracle.oracle?.saveData;
+                if (data != null && QuestManager.Instance?.IsQuestInProgress("Meeting Ivan") == true)
+                    data.General.FindIvanQuestSeen = true;
+            }
             root.EnableInClassList("eov-navigation--window-open", openGroup != Group.Toolbar || (windows != null && windows.HasOpenWindow));
-            SetVisible(menuDismiss, ToolkitResponsiveLayout.IsPortrait && HasOpenMenu);
+            SetVisible(menuDismiss, HasOpenMenu);
             foreach (var entry in navigationEntries)
             {
                 var visible = ToolkitVisibilityRule.All(entry.visibility) && (entry.group == Group.Toolbar || entry.group == openGroup);
@@ -700,7 +721,9 @@ namespace TimelessEchoes.UI.Toolkit
             else if (data != null && inTown && QuestUtils.QuestCompleted("The names Gill") && !data.CompletedNpcTasks.Contains("Barkley1"))
                 desired = windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Adventure ? "map-3" : "adventure";
             else if (data != null && inTown && QuestUtils.QuestCompleted("Another Magicool Gift") && !data.CompletedNpcTasks.Contains("Ivan1"))
-                desired = windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Adventure ? "map-1" : "adventure";
+                desired = !data.General.FindIvanQuestSeen
+                    ? windows != null && windows.HasOpenWindow ? "close" : "quests"
+                    : windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Adventure ? "map-1" : "adventure";
             tutorialCloseWindow = desired == "close" && windows && windows.HasOpenWindow;
             if (ToolkitResponsiveLayout.IsPortrait && desired == "close" && windows)
                 desired = HubWindowOpen() ? "hub" : windows.IsWindowOpen(TownWindowManager.Window.Quests) ? "quests" :
@@ -852,6 +875,10 @@ namespace TimelessEchoes.UI.Toolkit
             root.style.width = area.width - (ToolkitResponsiveLayout.IsPortrait ? 0 : 16);
             // Continue the same navigation surface through the home-indicator inset.
             root.style.height = ToolkitResponsiveLayout.IsPortrait ? ToolkitResponsiveLayout.Size.y - (area.yMax - 44) : 36;
+            menuDismiss.style.left = -root.resolvedStyle.left;
+            menuDismiss.style.top = -root.resolvedStyle.top;
+            menuDismiss.style.width = ToolkitResponsiveLayout.Size.x;
+            menuDismiss.style.height = ToolkitResponsiveLayout.Size.y;
             ConfigurePortraitNavigation();
             portraitMenuHeader.style.display = DisplayStyle.None;
             portraitMoreHeader.style.display = DisplayStyle.None;
@@ -868,8 +895,6 @@ namespace TimelessEchoes.UI.Toolkit
                 foreach (var entry in navigationEntries) buttons[entry].style.minWidth = entry.width;
             if (ToolkitResponsiveLayout.IsPortrait)
             {
-                menuDismiss.style.left = 0; menuDismiss.style.top = -root.resolvedStyle.top;
-                menuDismiss.style.width = area.width; menuDismiss.style.height = root.resolvedStyle.top;
                 var visibleRows = 0;
                 foreach (var entry in navigationEntries)
                     if ((entry.group != Group.Toolbar || !PortraitBottomEntry(entry)) && rows[entry].style.display.value == DisplayStyle.Flex)

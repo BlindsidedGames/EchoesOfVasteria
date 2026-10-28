@@ -27,7 +27,7 @@ namespace TimelessEchoes.MapGeneration
 
         private bool Blocked(Vector2 position)
         {
-            if (CharacterCreation.Required || ToolkitCharacterCreator.BlocksWorldInput ||
+            if (ToolkitDimScreen.BlocksInput || CharacterCreation.Required || ToolkitCharacterCreator.BlocksWorldInput ||
                 (TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow)) return true;
             if (!EventSystem.current) return false;
             uiHits.Clear();

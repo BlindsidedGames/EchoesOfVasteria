@@ -1,5 +1,6 @@
 using System;
 using TimelessEchoes.MapGeneration;
+using TimelessEchoes.Enemies;
 using UnityEngine;
 namespace TimelessEchoes.UI.Toolkit
 {
@@ -14,11 +15,19 @@ namespace TimelessEchoes.UI.Toolkit
         public GraphColors distanceColors, resourceColors, killColors;
         public Sprite[] itemTiers = Array.Empty<Sprite>();
         public MapEntry[] maps;
+        public EnemyFamily[] enemyFamilies = Array.Empty<EnemyFamily>();
+        [Serializable] public sealed class EnemyFamily
+        {
+            public EnemyData representative;
+            public string label, localizationKey;
+            public EnemyData[] variants = Array.Empty<EnemyData>();
+        }
         [Serializable] public struct GraphColors { public Color death, retreat, abandoned, reaped, bonus; }
         [Serializable] public struct MapEntry
         {
             public MapGenerationConfig config;
             public Sprite icon;
+            public Sprite unknownIcon;
             public string label;
             public float labelSize;
             public bool killScaling;

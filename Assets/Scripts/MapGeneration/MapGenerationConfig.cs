@@ -29,6 +29,25 @@ namespace TimelessEchoes.MapGeneration
 
         public UI.Toolkit.ToolkitNpcIntroduction entryIntroduction;
 
+        public WoodlandScenery woodlandScenery = new();
+
+        [Serializable]
+        public class WoodlandScenery
+        {
+            public TerrainSettings terrain;
+            [Min(0)] public int mediumTreesPerSegment;
+            [Min(0)] public int largeTreesPerSegment;
+            public List<SceneryTree> trees = new();
+        }
+
+        [Serializable]
+        public class SceneryTree
+        {
+            public GameObject prefab;
+            public bool large;
+            public float minX;
+        }
+
         [Serializable]
         public class TilemapChunkSettings
         {
@@ -67,6 +86,34 @@ namespace TimelessEchoes.MapGeneration
             [MinValue(0f)] public float otherTaskEdgeOffset = 1f;
 
             public List<TimelessEchoes.Enemies.EnemyData> enemies = new();
+
+            [Tooltip("Optional map-specific weights. The enemy asset and its quest identity stay shared.")]
+            public List<EnemyWeightOverride> enemyWeightOverrides = new();
+
+            public float GetEnemyWeight(EnemyData enemy)
+            {
+                if (!enemy) return 0f;
+                if (enemyWeightOverrides != null)
+                    foreach (var entry in enemyWeightOverrides)
+                        if (entry != null && entry.enemy == enemy) return Mathf.Max(0f, entry.weight);
+                return Mathf.Max(0f, enemy.weight);
+            }
+
+            public AnimationCurve GetEnemyWeightCurve(EnemyData enemy)
+            {
+                if (enemyWeightOverrides != null)
+                    foreach (var entry in enemyWeightOverrides)
+                        if (entry != null && entry.enemy == enemy) return entry.weightByDistance;
+                return null;
+            }
+
+            [Serializable]
+            public class EnemyWeightOverride
+            {
+                [Required] public EnemyData enemy;
+                [MinValue(0f)] public float weight = 1f;
+                public AnimationCurve weightByDistance;
+            }
 
             [Header("Woodcutting")] public ProceduralTaskGenerator.WeightedTaskCategory woodcutting = new();
             [Header("Mining")] public ProceduralTaskGenerator.WeightedTaskCategory mining = new();

@@ -106,7 +106,7 @@ namespace TimelessEchoes
 
         private void Update()
         {
-            if (Characters.CharacterCreation.Required || UI.Toolkit.ToolkitCharacterCreator.BlocksWorldInput) { ResetGesture(); return; }
+            if (UI.Toolkit.ToolkitDimScreen.BlocksInput || Characters.CharacterCreation.Required || UI.Toolkit.ToolkitCharacterCreator.BlocksWorldInput) { ResetGesture(); return; }
             if (panTarget == null || landBounds == null || outputCamera == null) return;
             if (GameManager.Instance != null && !GameManager.Instance.IsInTown)
             {

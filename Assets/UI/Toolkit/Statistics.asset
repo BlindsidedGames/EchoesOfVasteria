@@ -63,26 +63,29 @@ MonoBehaviour:
   maps:
   - config: {fileID: 11400000, guid: f55e1d93d6f548440b91047ab11572be, type: 2}
     icon: {fileID: -2997195532997922311, guid: e36f7692c71d2a34383e21fe9d44dc80, type: 3}
+    unknownIcon: {fileID: 21300000, guid: 352a3756119aecf40988bca162668107, type: 3}
     label: Farmlands
     labelSize: 3.7
     killScaling: 0
     access:
     - condition: 0
       quest: {fileID: 11400000, guid: 298f411e97766fb47bf1d61e9e1a5bf8, type: 2}
-      npcId:
+      npcId: 
     lockedHint: You can find more information about this area in town.
   - config: {fileID: 11400000, guid: a0abc9be431dbc64d867ea8e6099b6f5, type: 2}
     icon: {fileID: -4548796474974412338, guid: 674345f33219f70418aca2a3db04ecbc, type: 3}
+    unknownIcon: {fileID: 21300000, guid: 8a87f41ad1b9b28499423f721d8a9348, type: 3}
     label: River
     labelSize: 5
     killScaling: 0
     access:
     - condition: 0
       quest: {fileID: 11400000, guid: 918ef9c4bf0607e479041a3d39b3f3b7, type: 2}
-      npcId:
+      npcId: 
     lockedHint: You can find more information about this area in the Farmlands.
   - config: {fileID: 11400000, guid: 70ed6e565be72ad4cb97fbf161957534, type: 2}
     icon: {fileID: 621266246945384593, guid: b45d02bebb0bae34490e63de2e1440b9, type: 3}
+    unknownIcon: {fileID: 21300000, guid: 90bee248ddd8aa244b7cf4158834582b, type: 3}
     label: 'Woods
 
 '
@@ -91,25 +94,55 @@ MonoBehaviour:
     access:
     - condition: 0
       quest: {fileID: 11400000, guid: c058038d0557e31478313cc9f9131098, type: 2}
-      npcId:
+      npcId: 
     lockedHint: You can find more information about this area at the River.
   - config: {fileID: 11400000, guid: 6c2ad25e840f46a44b1a7ceb4ba7280a, type: 2}
     icon: {fileID: -7112000108182893260, guid: 17ab04ce672d2cf4fbe3b9314f205693, type: 3}
+    unknownIcon: {fileID: 21300000, guid: 1a0cf89b61110a64d8907fd4216346f0, type: 3}
     label: Mines
     labelSize: 5
     killScaling: 0
     access:
     - condition: 0
       quest: {fileID: 11400000, guid: 8a18857e90fcac348ba107a6d4b45789, type: 2}
-      npcId:
+      npcId: 
     lockedHint: You can find more information about this area in the Woods.
   - config: {fileID: 11400000, guid: 1bea16f9e7eb61c43bcb22c706dae6dc, type: 2}
     icon: {fileID: 2029275289, guid: 3683944cef7e6bd4cae5ecd76295b35f, type: 3}
+    unknownIcon: {fileID: 21300000, guid: b86d1f83f90edab40a37df98a74b8772, type: 3}
     label: Spooky
     labelSize: 5
     killScaling: 1
     access:
     - condition: 0
       quest: {fileID: 11400000, guid: 1146a0d8f3daaf04fb64f91860e4e2ea, type: 2}
-      npcId:
+      npcId: 
     lockedHint: You can find more information about this area in town.
+  enemyFamilies:
+  - representative: {fileID: 11400000, guid: 4f6905179186c264a82ad2c4dbec39bd, type: 2}
+    label: Small Slime
+    localizationKey: statistics.slime-small
+    variants:
+    - {fileID: 11400000, guid: 4f6905179186c264a82ad2c4dbec39bd, type: 2}
+    - {fileID: 11400000, guid: 84840229f7fda1b45a9143488951540d, type: 2}
+    - {fileID: 11400000, guid: 26835af928284989a60fa2e8c53227e2, type: 2}
+    - {fileID: 11400000, guid: a7d9f5713f684e9088bab870f52f27c2, type: 2}
+    - {fileID: 11400000, guid: a7130bd560e84148ba65da5d24f96e18, type: 2}
+  - representative: {fileID: 11400000, guid: 0c2cca794cc4431b951962c60f9dda6c, type: 2}
+    label: Medium Slime
+    localizationKey: statistics.slime-medium
+    variants:
+    - {fileID: 11400000, guid: 0c2cca794cc4431b951962c60f9dda6c, type: 2}
+    - {fileID: 11400000, guid: 8da44056ea4144cf91d93f9e92f2aca2, type: 2}
+    - {fileID: 11400000, guid: 4e511179ff6f4d75be9f5579a5025d04, type: 2}
+    - {fileID: 11400000, guid: 72a49fcb907c458db5471c9efdaf14cb, type: 2}
+    - {fileID: 11400000, guid: 72ad984febee4da2a79ebcf25a3376dd, type: 2}
+  - representative: {fileID: 11400000, guid: 783c679f6bbd00b49bc7aabbde2e2066, type: 2}
+    label: Large Slime
+    localizationKey: statistics.slime-large
+    variants:
+    - {fileID: 11400000, guid: 783c679f6bbd00b49bc7aabbde2e2066, type: 2}
+    - {fileID: 11400000, guid: d84d8bbc7616c72428c5c553284041bd, type: 2}
+    - {fileID: 11400000, guid: 37b744852da019b4a89e40e3b840e8fb, type: 2}
+    - {fileID: 11400000, guid: 33efd3c66b7c6e64683739ddae629387, type: 2}
+    - {fileID: 11400000, guid: 53c9c01350d335d43a95f709cef9407c, type: 2}

@@ -11,11 +11,13 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly LocalizedString localized;
         private readonly string fallback;
         private readonly bool bold, smallCaps;
+        private readonly Func<string, string> format;
         private bool disposed;
 
-        public ToolkitTextBinding(TextElement target, ToolkitBookDefinition.Text text)
+        public ToolkitTextBinding(TextElement target, ToolkitBookDefinition.Text text, Func<string, string> format = null)
         {
             this.target = target;
+            this.format = format;
             fallback = text?.fallback ?? string.Empty;
             bold = text?.bold ?? false;
             smallCaps = text?.smallCaps ?? false;
@@ -33,6 +35,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (disposed) return;
             var display = string.IsNullOrEmpty(value) ? fallback : value;
+            if (format != null) display = format(display);
             if (smallCaps) display = "<smallcaps>" + display + "</smallcaps>";
             if (bold) display = "<b>" + display + "</b>";
             target.text = display;

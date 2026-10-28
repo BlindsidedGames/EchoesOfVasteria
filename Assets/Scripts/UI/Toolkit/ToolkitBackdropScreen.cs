@@ -32,6 +32,8 @@ namespace TimelessEchoes.UI.Toolkit
             root.style.backgroundColor = new Color(0, 0, 0, .6f);
             desktopBlur = Blur();
             root.style.backdropFilter = desktopBlur;
+            ToolkitTapDismiss.Bind(root, () => TownWindowManager.Instance?.CloseAllWindows(),
+                () => !ToolkitDimScreen.BlocksInput && (!navigation || navigation.CanDismissWindow));
             document.rootVisualElement.Add(root); Refresh();
         }
         private void Update() => Refresh();

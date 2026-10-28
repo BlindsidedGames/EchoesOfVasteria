@@ -43,6 +43,15 @@ namespace TimelessEchoes.UI.Toolkit
             if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return false;
             if (IsOpen) return true;
             if (!IsConfigured || !(tracker = GameplayStatTracker.Instance)) return false;
+            if ((Blindsided.Oracle.oracle?.saveData?.General.MapStatisticsTutorialStage ?? 0) >= 8)
+            {
+                selectedTab = 0;
+                var map = GameManager.Instance && GameManager.Instance.CurrentMap
+                    ? GameManager.CurrentGenerationConfig?.name
+                    : tracker.RecentRuns.LastOrDefault()?.MapType;
+                journalMap = Array.FindIndex(definition.maps, entry =>
+                    entry.config && entry.config.name == map && entry.IsAccessible);
+            }
             if (!settings) { settings = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); settings.sortingOrder = 100; }
             var document = GetComponent<UIDocument>(); document.panelSettings = settings; document.rootVisualElement.pickingMode = PickingMode.Ignore;
             root = new VisualElement { name = "statistics" }; root.AddToClassList("eov-statistics"); theme.Apply(root);ToolkitGameplay.Apply(root,theme);root.AddToClassList("menu-surface"); document.rootVisualElement.Add(root);
@@ -69,9 +78,11 @@ namespace TimelessEchoes.UI.Toolkit
             if (resourceManager) { resourceManager.OnInventoryChanged += InventoryChanged; resourceManager.OnResourceAdded += ResourceChanged; resourceManager.OnResourceTierUpgraded += ResourceTierChanged; }
             SelectTab(selectedTab); Layout(); return true;
         }
-        public void SelectTab(int index)
+        public void SelectTab(int index, bool preserveJournalSelection = false)
         {
             if (!IsOpen || !tabButtons.ContainsKey(index)) return;
+            if (index != selectedTab) journalDetailTarget = null;
+            if (index == 0 && !preserveJournalSelection) journalIndexOpen = true;
             taskPreferences?.CloseDetails(); taskPreferences = null;
             runGraph = null; townView = null; selectedTab = index; distanceControls?.RemoveFromHierarchy(); distanceControls = null; enemyDistance = null; body.Clear(); footer.Clear(); portraitSortActions.Clear(); summaries.Clear(); tooltip.style.display = DisplayStyle.None;
             foreach (var pair in tabButtons) StyleSelection(pair.Value, pair.Key == index);
@@ -177,15 +188,15 @@ namespace TimelessEchoes.UI.Toolkit
             else
             {
                 var distance = enemyDistance?.value;
-                SelectTab(selectedTab);
+                SelectTab(selectedTab, true);
                 if (distance.HasValue && enemyDistance != null)
                 { ToolkitControls.SetSliderValue(enemyDistance, distance.Value); RefreshEnemies(); }
             }
         }
-        private void Changed() { dirty = true; }
+        private void Changed() { dirty = true; journalKnown = -1; }
         private void RunEnded(bool _) => Changed();
         private void DistanceChanged(float _) { if (selectedTab == 0 || selectedTab == 4) dirty = true; }
-        private void Update() { if (!IsOpen) return; Layout(); RefreshJournalAccess(); RefreshMapTutorial(); RefreshGraphGuidance(); RefreshBoostGuidance(); if (localizationDirty) { localizationDirty = false; RefreshLocalization(); } if (dirty || selectedTab == 6 && Time.unscaledTime >= nextTownRefresh) Refresh(); }
+        private void Update() { if (!IsOpen) return; Layout(); RefreshJournalAccess(); RefreshMapTutorial(); RefreshGraphGuidance(); RefreshBoostGuidance(); if (localizationDirty) { localizationDirty = false; RefreshLocalization(); } if (dirty || selectedTab == 6 && Time.unscaledTime >= nextTownRefresh) Refresh(); RevealJournalDiscovery(); }
         // Portrait section guidance belongs to the global Statistics popup.
         private VisualElement StatisticsSectionTarget(int tab) => ToolkitResponsiveLayout.IsPortrait ? null : tabButtons[tab];
         private void PositionStatisticsHand(Image hand, VisualElement target, string option = null)
@@ -254,7 +265,8 @@ namespace TimelessEchoes.UI.Toolkit
             var portrait = ToolkitResponsiveLayout.IsPortrait;
             if (previousPortraitLayout.HasValue && previousPortraitLayout.Value != portrait)
             {
-                if (selectedTab == 0) SelectTab(0);
+                if (selectedTab == 0) SelectTab(0, true);
+                else if (selectedTab == 3) RefreshEnemies();
                 else runGraph?.Refresh();
             }
             previousPortraitLayout = portrait;
@@ -287,9 +299,9 @@ namespace TimelessEchoes.UI.Toolkit
             boostHand?.RemoveFromHierarchy(); graphHand?.RemoveFromHierarchy(); mapTutorialHand?.RemoveFromHierarchy();
             boostHand = null; graphHand = null; boostScrolled = false; mapTutorial = null; mapTutorialText = null; mapTutorialHand = null;
             taskPreferences?.CloseDetails(); taskPreferences = null;
-            enemyRows.Clear(); statSortButtons.Clear(); distanceControls = null; enemyDistance = null;
+            enemyRows.Clear(); enemyFamilyRows.Clear(); statSortButtons.Clear(); distanceControls = null; enemyDistance = null;
             itemRows.Clear(); itemSortButtons.Clear(); itemContent = null;
-            journalSelectors.Clear(); journalDiscoveries.Clear(); journalContent = journalRecent = journalCollection = null; journalDiscoveryCount = null;
+            journalSelectors.Clear(); journalDiscoveries.Clear(); journalDetailTarget = null; journalContent = journalRecent = journalCollection = null; journalEnemyCount = journalResourceCount = null;
             Blindsided.EventHandler.OnLoadData -= Changed; root?.RemoveFromHierarchy(); root = null; tracker = null; runGraph = null; townView = null; tabButtons.Clear(); summaries.Clear();
             ToolkitPanel.Release(GetComponent<UIDocument>(), ref settings);
         }

@@ -60,6 +60,7 @@ namespace TimelessEchoes.MapGeneration
         private int prevSandDepth = -1;
         private int prevGrassDepth = -1;
         private Transform currentDecorParent;
+        private MapGenerationConfig currentConfig;
         public Tilemap TerrainMap => terrainMap;
         private BetterRuleTile BottomTile => bottomTerrain != null ? bottomTerrain.tile : null;
         private BetterRuleTile MiddleTile => middleTerrain != null ? middleTerrain.tile : null;
@@ -105,6 +106,8 @@ namespace TimelessEchoes.MapGeneration
         private void ApplyConfig(MapGenerationConfig cfg)
         {
             if (cfg == null) return;
+
+            currentConfig = cfg;
 
             if (terrainMap == null)
                 terrainMap = cfg.tilemapChunkSettings.terrainMap;
@@ -486,6 +489,58 @@ namespace TimelessEchoes.MapGeneration
                             : Matrix4x4.identity;
                         decorMap.SetTransformMatrix(cell, matrix);
                     }
+                }
+            }
+        }
+
+        public System.Collections.IEnumerator PlaceWoodlandScenery(Vector2Int offset, Vector2Int size, Transform parent,
+            IReadOnlyList<MonoBehaviour> tasks)
+        {
+            var scenery = currentConfig ? currentConfig.woodlandScenery : null;
+            if (scenery == null || !scenery.terrain || !terrainMap || !parent) yield break;
+            var total = scenery.mediumTreesPerSegment + scenery.largeTreesPerSegment;
+            if (total == 0 || scenery.trees == null || scenery.trees.Count == 0) yield break;
+            Physics2D.SyncTransforms();
+            var blockingLayers = LayerMask.GetMask("Blocking");
+            var positions = new List<Vector3>(total);
+            var eligible = new List<MapGenerationConfig.SceneryTree>();
+            var budget = new GenerationWorkBudget(GameManager.Instance && GameManager.Instance.RunLoadingActive);
+            for (var i = 0; i < total; i++)
+            {
+                var large = i >= scenery.mediumTreesPerSegment;
+                for (var attempt = 0; attempt < 64; attempt++)
+                {
+                    if (budget.Expired) { yield return null; budget.Restart(); }
+                    // Loose pairs, with a clear horizontal route through the forest.
+                    var x = offset.x + (i % 4 + .5f) * size.x / 4f + RandomRangeFloat(-5f, 5f);
+                    var y = offset.y + RandomRangeFloat(2f, size.y - 3f);
+                    var cell = terrainMap.WorldToCell(new Vector3(x, y));
+                    if (cell.x < offset.x + 2 || cell.x >= offset.x + size.x - 2 ||
+                        SampleTerrain(cell) != scenery.terrain.tile ||
+                        IsBufferedEdge(cell, scenery.terrain.tile, large ? 4 : 3, 1, 1) ||
+                        decorLookup.ContainsKey(cell)) continue;
+                    var point = terrainMap.GetCellCenterWorld(cell);
+                    if (Mathf.Abs(point.y - currentConfig.heroStartY) < 1.75f) continue;
+                    var clear = true;
+                    foreach (var task in tasks)
+                        if (task && (task.transform.position - point).sqrMagnitude < 2.25f)
+                        { clear = false; break; }
+                    if (!clear) continue;
+                    foreach (var placed in positions)
+                        if ((placed - point).sqrMagnitude < 6.25f) { clear = false; break; }
+                    if (!clear || Physics2D.OverlapCircle(point, .6f, blockingLayers)) continue;
+                    eligible.Clear();
+                    foreach (var tree in scenery.trees)
+                        if (tree != null && tree.prefab && tree.large == large && point.x >= tree.minX)
+                            eligible.Add(tree);
+                    if (eligible.Count == 0) continue;
+                    var instance = Blindsided.Utilities.Pooling.PoolManager.Get(eligible[RandomRange(0, eligible.Count)].prefab);
+                    instance.transform.SetParent(parent, false);
+                    instance.transform.position = point;
+                    instance.transform.rotation = Quaternion.identity;
+                    decorLookup[cell] = instance.transform;
+                    positions.Add(point);
+                    break;
                 }
             }
         }

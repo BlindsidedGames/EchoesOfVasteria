@@ -40,12 +40,18 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  rewardDisplayResource: {fileID: 0}
+  rewardIconKnown: 0
   speaker: {fileID: 11400000, guid: f8d638bbab1ae4a4292cbf1eb8f7f614, type: 2}
   npcId: 
+  requiresTown: 0
+  acceptanceQuest: 0
+  acceptanceResources: []
   autoPin: 0
   useN0ForPinnedNumbers: 0
   requiredQuests:
   - {fileID: 11400000, guid: 74ed306672b0a214685903da2dbf07c8, type: 2}
+  minimumMaxRunDistanceExclusive: 0
   requirements:
   - type: 0
     resource: {fileID: 11400000, guid: 72499b5ec8c98a143937cc737473baa8, type: 2}
@@ -64,6 +70,7 @@ MonoBehaviour:
     amount: 0
     skill: {fileID: 11400000, guid: 26be2150ef7e8b143b109ad88581e2ed, type: 2}
     experience: 4000
+    equipment: {fileID: 0}
   unlockBuffSlots: 0
   unlockAutoBuffSlots: 0
   maxDistanceIncrease: 0

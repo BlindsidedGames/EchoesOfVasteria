@@ -24,6 +24,7 @@ namespace TimelessEchoes.UI.Toolkit
         [SerializeField] private PanelTextSettings textSettings;
         private PanelSettings settings;
         private VisualElement root, hud, bar, returnControls, death, deathFill, overlay, detail, tooltip, abilityBar;
+        private VisualElement detailDismiss;
         private Label runTime,runRatesLeft,runRatesRight;
         private Label deathTitle, detailTitle, tooltipText;
         private Label breakdownTitle, breakdownKills, breakdownMultiplier;
@@ -74,7 +75,7 @@ namespace TimelessEchoes.UI.Toolkit
             ivanReturnPointer = new Image { name = "ivan-return-pointer", sprite = definition.tutorialHand, pickingMode = PickingMode.Ignore };
             ivanReturnPointer.style.position = Position.Absolute; ivanReturnPointer.style.width = ivanReturnPointer.style.height = 24; root.Add(ivanReturnPointer);
             SetVisible(ivanReturnPointer, false);
-            breakdown = Button(root, "run-breakdown", "", ShowBreakdown); breakdown.AddToClassList("eov-run-breakdown");
+            breakdown = Button(root, "run-breakdown", "", ToggleBreakdown); breakdown.AddToClassList("eov-run-breakdown");
             ToolkitLocalization.BindTooltip(breakdown, "run.breakdown-heading", "Run breakdown");
             var resourceCount = E(breakdown, "row run-breakdown-resource-count");
             breakdownResourceIcon = ToolkitGameplay.Icon(resourceCount, definition.ResourceIcon(0), 16);
@@ -91,6 +92,9 @@ namespace TimelessEchoes.UI.Toolkit
             restart = LocalizedButton(death, "run-restart", "run.restart", "Restart", () => GameManager.Instance?.RequestRestartAfterDeath());
             deathReturn = LocalizedButton(death, "run-death-return", "run.return-town-title", ToolkitLocalization.Text("run.return-town-title", "Return To Town"), () => { if (!ToolkitMeetingScreen.TryFollowNavigation("return-town")) GameManager.Instance?.RequestReturnAfterDeath(); });
             deathSummary = LocalizedButton(death, "run-death-summary", "run.view-summary", "View Summary", ShowBreakdown); deathFill = Progress(death, definition.healthTrack, definition.healthFill);
+            detailDismiss = new VisualElement { name = "run-details-dismiss" };
+            detailDismiss.style.position = Position.Absolute; root.Insert(0, detailDismiss);
+            ToolkitTapDismiss.Bind(detailDismiss, HideDetails, () => !ToolkitDimScreen.BlocksInput && summaryGuideStep < 0 && !ToolkitMeetingScreen.HasOpenDialogue);
             overlay = new VisualElement(); overlay.AddToClassList("eov-run-overlay"); root.Add(overlay);
             detail=Panel(overlay,"breakdown-sheet");var head=E(detail,"row breakdown-header");LocalizedLabel(head, "run.base-return-rate", "Base rate (return bonus)","small muted breakdown-rate");detailTitle=L(head,ToolkitLocalization.Text("run.breakdown-heading", "Run breakdown"),"heading breakdown-title");runTime=L(head,"","strong breakdown-time");BuildSummaryOverview();
             detailRows=ToolkitGameplay.Scroll(detail,"run-ledger");detailRows.contentContainer.AddToClassList("run-ledger-grid");var footer=E(detail,"row breakdown-footer");runRatesLeft=L(footer,"","small");runRatesRight=L(footer,"","small");runRatesRight.style.unityTextAlign=TextAnchor.MiddleRight; liveBreakdown = new ToolkitRunResourcesView(definition); detail.Add(liveBreakdown); BuildDetailsClose(); HideDetails();
@@ -148,10 +152,15 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void FirstEchoCast(BuffRecipe recipe, bool automatic)
         {
-            if (BuffIntroductionGuidance.Stage != 3 || !BuffIntroductionGuidance.IsFirstEcho(recipe) ||
+            if (automatic || BuffIntroductionGuidance.Stage != 3 || !BuffIntroductionGuidance.IsFirstEcho(recipe) ||
                 !GameManager.Instance || !GameManager.Instance.CurrentMap) return;
+            var combat = guidedBuffManager.Recipes.FirstOrDefault(r => r && r.name == "Echo Combat");
+            var unlocksCombat = combat && !combat.IsUnlocked;
             Blindsided.Oracle.oracle.saveData.General.BuffTutorialStage = 4;
             SetVisible(firstEchoHand, false);
+            if (unlocksCombat)
+                FindAnyObjectByType<ToolkitNotificationScreen>()?.ShowLocalized(combat.buffIcon,
+                    "buffs.combat-echo-unlocked", "Combat Echo unlocked.", null, 4);
             Blindsided.EventHandler.SaveData();
         }
         private void RefreshFirstEchoHand()
@@ -217,6 +226,9 @@ namespace TimelessEchoes.UI.Toolkit
             var focus = ToolkitResponsiveLayout.FocusView;
             var area = focus ? ToolkitResponsiveLayout.SafeScreenArea : ToolkitWindowLayout.SafeArea;
             root.style.left = area.x; root.style.top = area.y; root.style.width = area.width; root.style.height = area.height;
+            detailDismiss.style.left = -area.x; detailDismiss.style.top = -area.y;
+            detailDismiss.style.width = ToolkitResponsiveLayout.Size.x; detailDismiss.style.height = ToolkitResponsiveLayout.Size.y;
+            SetVisible(detailDismiss, HasOpenDetails);
             ConfigurePortraitHud(area);
             UpdatePortraitResources(area);
             // Run-summary backdrops also extend outside the HUD safe area.
@@ -239,7 +251,7 @@ namespace TimelessEchoes.UI.Toolkit
                 // root. Keep the guidance above them without moving its target.
                 ivanReturnPointer.BringToFront();
             }
-            if (Keyboard.current?.escapeKey.wasPressedThisFrame == true) { HideDetails(); SetHeroStatsOpen(false); }
+            if (!ToolkitDimScreen.BlocksInput && Keyboard.current?.escapeKey.wasPressedThisFrame == true) { HideDetails(); SetHeroStatsOpen(false); }
             if (Time.unscaledTime >= nextRefresh) { nextRefresh = Time.unscaledTime + .1f; Refresh(); }
             SetVisible(focusControls, ToolkitResponsiveLayout.IsPortrait && canFocus && !HasOpenDetails);
             var world = ToolkitResponsiveLayout.WorldArea;
@@ -260,7 +272,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void LateUpdate()
         {
             // Match town-window dismissal: finish the pointer gesture before hiding UI.
-            if (root != null && Mouse.current?.rightButton.wasReleasedThisFrame == true)
+            if (!ToolkitDimScreen.BlocksInput && root != null && Mouse.current?.rightButton.wasReleasedThisFrame == true)
             {
                 HideDetails();
                 SetHeroStatsOpen(false);
@@ -388,7 +400,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void HandleBuffHotkeys()
         {
-            if (ToolkitMeetingScreen.HasOpenDialogue || UnityEngine.Device.Application.isMobilePlatform || Keyboard.current == null || (ToolkitConsoleScreen.Instance && ToolkitConsoleScreen.Instance.IsActive)) return;
+            if (ToolkitDimScreen.BlocksInput || ToolkitMeetingScreen.HasOpenDialogue || UnityEngine.Device.Application.isMobilePlatform || Keyboard.current == null || (ToolkitConsoleScreen.Instance && ToolkitConsoleScreen.Instance.IsActive)) return;
             var manager = BuffManager.Instance;
             if (!manager || !manager.HasUnlockedAbilities) return;
             for (int i = 0; i < slots.Count; i++)
@@ -490,9 +502,14 @@ namespace TimelessEchoes.UI.Toolkit
             LayoutSummary(ToolkitWindowLayout.SafeArea); RefreshBreakdown();
         }
         private void RefreshBreakdown() => RefreshResourceView(liveBreakdown);
+        private void ToggleBreakdown()
+        {
+            if (showingBreakdown && HasOpenDetails) HideDetails();
+            else ShowBreakdown();
+        }
         public bool HasOpenHeroStats => heroStatsOpen;
         public bool HasOpenDetails => overlay != null && overlay.style.display.value != DisplayStyle.None;
-        public void HideDetails() { if(detail!=null)detail.Q(className: "breakdown-rate").style.display=DisplayStyle.None; showingBreakdown = false; if(overlay!=null)overlay.pickingMode=PickingMode.Position; ClearSummary();detail?.RemoveFromClassList("resource-breakdown");SetVisible(liveBreakdown,false);if(detailTitle!=null)SetVisible(detailTitle.parent,true);SetVisible(detailRows,true);if(runTime!=null)runTime.text="";if(runRatesLeft!=null)runRatesLeft.text="";if(runRatesRight!=null)runRatesRight.text="";SetVisible(overlay, false); detailRows?.Clear(); }
+        public void HideDetails() { SetVisible(detailDismiss, false); if(detail!=null)detail.Q(className: "breakdown-rate").style.display=DisplayStyle.None; showingBreakdown = false; if(overlay!=null)overlay.pickingMode=PickingMode.Position; ClearSummary();detail?.RemoveFromClassList("resource-breakdown");SetVisible(liveBreakdown,false);if(detailTitle!=null)SetVisible(detailTitle.parent,true);SetVisible(detailRows,true);if(runTime!=null)runTime.text="";if(runRatesLeft!=null)runRatesLeft.text="";if(runRatesRight!=null)runRatesRight.text="";SetVisible(overlay, false); detailRows?.Clear(); }
         private static void SetVisible(VisualElement element, bool value) { if (element != null) element.style.display = value ? DisplayStyle.Flex : DisplayStyle.None; }
         private void OnDisable()
         {

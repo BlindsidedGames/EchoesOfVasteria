@@ -402,6 +402,7 @@ namespace Blindsided.SaveData
             public int MostKillsSingleRun;
             public float MaxRunDistance = 50f;
             public bool ForgeIntroductionSeen;
+            public bool FindIvanQuestSeen;
             public int HubTutorialStage;
             public int BuffTutorialStage;
             public string HubTutorialSkill;

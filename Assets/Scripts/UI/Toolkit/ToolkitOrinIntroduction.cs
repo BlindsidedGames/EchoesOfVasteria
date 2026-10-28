@@ -76,7 +76,7 @@ namespace TimelessEchoes.UI.Toolkit
                 { yield return null; continue; }
                 if ((!gm || gm.IsInTown) && BuffIntroductionGuidance.Eligible)
                 {
-                    yield return Explain("BuffIntroduction", "You can now summon an Echo to help on adventures. Choose one to gather resources or fight alongside you.", "buffs");
+                    yield return Explain("BuffIntroduction", "You can now call an Echo to gather for you. Assign Task Echo in your first buff slot.", "buffs");
                     data.General.BuffTutorialStage = 1;
                     Blindsided.EventHandler.SaveData();
                 }
@@ -98,10 +98,12 @@ namespace TimelessEchoes.UI.Toolkit
                     data.General.MapStatisticsTutorialStage = 2;
                 }
                 else if ((!gm || gm.IsInTown) && data.General.MapStatisticsTutorialStage == 8 &&
-                         data.General.TaskBoostTutorialStage >= 2 && data.General.GraphsViewed)
+                         (data.General.TaskBoostTutorialStage >= 2 || data.General.TaskBoostTutorialStage == 0 && !TaskBoostGuidance.FindTask()) &&
+                         (data.General.GraphsViewed || !GraphStatisticsGuidance.Eligible && !GraphStatisticsGuidance.Active))
                 {
-                    yield return Explain("OpeningTutorialComplete", "That’s the last opening lesson. Choose your next adventure when you’re ready.", "adventure");
+                    yield return Explain("OpeningTutorialComplete", "You’re ready to explore. Open Quests to choose what to work on next.", "quests");
                     data.General.MapStatisticsTutorialStage = 9;
+                    FindAnyObjectByType<ToolkitNavigationScreen>()?.HighlightQuests();
                 }
                 else if ((!gm || gm.IsInTown) && GraphStatisticsGuidance.Eligible &&
                          !Gear.ForgeFirstLesson.Active && !MapStatisticsGuidance.Active && data.General.TaskBoostTutorialStage != 1 &&
@@ -120,6 +122,25 @@ namespace TimelessEchoes.UI.Toolkit
                     data.General.TaskBoostTutorialStage = 1;
                 }
                 yield return null;
+            }
+        }
+
+        public IEnumerator TeachFirstEchoCast()
+        {
+            var gm = GameManager.Instance;
+            var hero = Hero.HeroController.Instance;
+            if (BuffIntroductionGuidance.Stage != 3 || !gm || !gm.CurrentMap || !hero || !meetingPrefab)
+                yield break;
+            var map = gm.CurrentMap;
+            // Keep the starting position after the dialogue closes, until the
+            // player uses the highlighted ability. Existing saves keep their Echo.
+            using (hero.BeginNpcConversation())
+            {
+                if (!Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Contains("FirstEchoCastIntroduction"))
+                    yield return Explain("FirstEchoCastIntroduction",
+                        "My power lets you reach through the ether and call an echo of your past self. Press the marked ability to summon it.");
+                while (BuffIntroductionGuidance.Stage == 3 && gm.CurrentMap == map && !gm.HeroIsDead)
+                    yield return null;
             }
         }
 

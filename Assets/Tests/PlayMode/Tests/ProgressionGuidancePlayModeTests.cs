@@ -332,11 +332,13 @@ namespace Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator GuidanceFiveFishUnlocksAnExplicitEchoChoice()
+        public IEnumerator GuidanceFiveFishTeachesTaskEchoBeforeUnlockingCombatEcho()
         {
             var owner=new GameObject("Early Echo lesson"); GameObject view=null, runView=null;
             try
             {
+                var gm = owner.AddComponent<TimelessEchoes.GameManager>(); gm.enabled = false;
+                typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(gm, true);
                 Assert.That(oracle.saveData.BuffSlots.All(string.IsNullOrEmpty));
                 var quest=Resources.Load<QuestData>("Quests/Mildred/BuffSlot1");
                 foreach(var prerequisite in quest.requiredQuests) oracle.saveData.Quests[prerequisite.questId]=new GameData.QuestRecord {Completed=true};
@@ -366,20 +368,21 @@ namespace Tests.PlayMode
                 var screen=view.GetComponent<ToolkitBuffsScreen>();Assert.True(screen.Show());
                 yield return null;yield return null;
                 var ui=view.GetComponent<UIDocument>().rootVisualElement;
-                Assert.NotNull(ui.Q<Button>("assign-Echo Tasks"));Assert.NotNull(ui.Q<Button>("assign-Echo Combat"));
+                Assert.NotNull(ui.Q<Button>("assign-Echo Tasks"));Assert.IsNull(ui.Q<Button>("assign-Echo Combat"));
+                var combat = Resources.Load<BuffRecipe>("Buffs/Echo Combat");
+                Assert.False(combat.IsUnlocked, "Combat Echo waits for the first manual summon.");
                 Assert.IsNull(ui.Q<Button>("assign-Bonus Experience"));
-                FieldsClick(ui.Q<Button>("assign-Echo Combat"));yield return null;
+                FieldsClick(ui.Q<Button>("assign-Echo Tasks"));yield return null;
                 Assert.True(BuffIntroductionGuidance.Active,"Choosing the recipe is not yet an assignment.");
                 FieldsClick(ui.Q<Button>("assign-slot-0"));yield return null;
-                Assert.AreEqual("Echo Combat",buffs.GetAssigned(0).name);
+                Assert.AreEqual("Echo Tasks",buffs.GetAssigned(0).name);
                 Assert.False(BuffIntroductionGuidance.Active);
                 Assert.False(buffs.IsAutoSlotUnlocked(0));
-                CaptureFeedback("first-echo-choice.png");yield return null;yield return null;
+                CaptureFeedback("first-task-echo.png");yield return null;yield return null;
                 Blindsided.EventHandler.LoadData();yield return null;
-                Assert.AreEqual("Echo Combat",buffs.GetAssigned(0).name);
+                Assert.AreEqual("Echo Tasks",buffs.GetAssigned(0).name);
                 Assert.AreEqual(3,oracle.saveData.General.BuffTutorialStage);
                 screen.Hide();
-                var gm = owner.AddComponent<TimelessEchoes.GameManager>(); gm.enabled = false;
                 var map = new GameObject("First Echo adventure"); map.transform.SetParent(owner.transform);
                 typeof(TimelessEchoes.GameManager).GetProperty("CurrentMap").SetValue(gm, map);
                 typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(gm, false);
@@ -403,6 +406,7 @@ namespace Tests.PlayMode
                 FieldsClick(cast); yield return null;
                 Assert.AreEqual(1, tracker.BuffsCast);
                 Assert.AreEqual(4, oracle.saveData.General.BuffTutorialStage);
+                Assert.True(combat.IsUnlocked, "The first manual summon unlocks Combat Echo.");
                 Assert.AreEqual(DisplayStyle.None, hand.style.display.value);
                 Blindsided.EventHandler.LoadData(); yield return null;
                 Assert.AreEqual(DisplayStyle.None, hand.style.display.value, "The casting prompt stays completed after reload.");
@@ -1174,7 +1178,7 @@ namespace Tests.PlayMode
         public IEnumerator GuidanceForgeCompletionIntroducesAccessibleMapsWithoutSpoilingLockedOnes()
         {
             var owner = new GameObject("Protected map lesson");
-            GameObject stats = null, navigation = null, speakerObject = null;
+            GameObject stats = null, navigation = null, speakerObject = null, questsView = null;
             try
             {
                 owner.AddComponent<QuestManager>().enabled = false;
@@ -1186,11 +1190,15 @@ namespace Tests.PlayMode
                 stats = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Statistics.prefab"));
                 var screen = stats.GetComponent<ToolkitStatisticsScreen>();
                 typeof(TownWindowManager).GetField("toolkitStatistics", Private).SetValue(windows, screen);
+                questsView = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Quests.prefab"));
+                typeof(TownWindowManager).GetField("toolkitQuests", Private).SetValue(windows, questsView.GetComponent<ToolkitQuestsScreen>());
                 navigation = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Navigation.prefab"));
                 var nav = navigation.GetComponent<ToolkitNavigationScreen>();
                 var navUi = navigation.GetComponent<UIDocument>().rootVisualElement;
                 Assert.True(screen.Show()); yield return new WaitForSecondsRealtime(.1f);
                 var ui = stats.GetComponent<UIDocument>().rootVisualElement;
+                Assert.AreEqual("???", ui.Q<Button>("journal-map-4").Q<Label>("journal-map-label").text);
+                Assert.AreEqual("???", ui.Q<Button>("journal-map-5").Q<Label>("journal-map-label").text);
                 FieldsClick(ui.Q<Button>("journal-map-4")); yield return null;
                 Assert.That(ui.Q<Label>("journal-locked-hint").text, Does.Contain("in the Woods"));
                 Assert.IsNull(ui.Q(className: "journal-collection"));
@@ -1223,6 +1231,9 @@ namespace Tests.PlayMode
                 Assert.AreEqual(DisplayStyle.Flex, navUi.Q("tutorial-pointer-statistics-section-0").style.display.value);
                 FieldsClick(navUi.Q<Button>("statistics-section-0")); yield return new WaitForSecondsRealtime(.1f);
                 Assert.AreEqual(4, oracle.saveData.General.MapStatisticsTutorialStage);
+                Assert.True(ui.Q<Button>("journal-map-1").enabledInHierarchy);
+                Assert.True(ui.Query<Button>(className:"eov-stat-tab").ToList().All(b=>!b.enabledInHierarchy));
+                Assert.False(ui.Q<Button>("journal-map-4").enabledInHierarchy);
                 FieldsClick(ui.Q<Button>("journal-map-1")); yield return new WaitForSecondsRealtime(.1f);
                 Assert.AreEqual(7, oracle.saveData.General.MapStatisticsTutorialStage, "Viewing one map should finish the map-selection lesson.");
                 Assert.NotNull(ui.Q(className: "journal-collection"));
@@ -1234,17 +1245,25 @@ namespace Tests.PlayMode
                     yield return null; yield return null;
                     Assert.AreEqual(7, oracle.saveData.General.MapStatisticsTutorialStage, "Existing comparison steps should skip to closing Statistics.");
                 }
-                FieldsClick(ui.Q<Button>("journal-map-2")); yield return new WaitForSecondsRealtime(.1f);
-                var art = ui.Q<Button>("journal-map-2").Q<Image>();
+                Assert.False(ui.Q<Button>("journal-map-2").enabledInHierarchy, "Keep unrelated maps disabled until the lesson closes.");
+                var art = ui.Q<Button>("journal-map-1").Q<Image>();
                 Assert.AreEqual(ScaleMode.ScaleToFit, art.scaleMode);
                 Assert.LessOrEqual(art.worldBound.width, art.parent.worldBound.width + 1);
-                CaptureFeedback("map-statistics-river.png"); yield return null; yield return null;
+                CaptureFeedback("map-statistics-farmlands.png"); yield return null; yield return null;
                 Assert.AreEqual(7, oracle.saveData.General.MapStatisticsTutorialStage);
                 Assert.AreEqual(DisplayStyle.None, ui.Q("map-statistics-hand").style.display.value);
                 nav.Refresh();
                 Assert.AreEqual(DisplayStyle.Flex, navUi.Q("tutorial-pointer-close").style.display.value);
                 Assert.That(ui.Q("map-statistics-tutorial").Q<Label>().text, Does.Contain("Close Statistics"));
                 Assert.IsNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>(), "The closing message waits until Statistics is closed.");
+                FieldsClick(navUi.Q<Button>("close")); yield return null; yield return null;
+                var nextGoal = Object.FindAnyObjectByType<ToolkitMeetingScreen>(); Assert.NotNull(nextGoal, "Give a next step when later lessons are not ready.");
+                FieldsClick(nextGoal.GetComponent<UIDocument>().rootVisualElement.Q<Button>("advance"));
+                yield return null; yield return null;
+                Assert.AreEqual(9, oracle.saveData.General.MapStatisticsTutorialStage);
+                windows.OpenWindow(TownWindowManager.Window.Quests); nav.Refresh(); windows.CloseAllWindows();
+                windows.OpenWindow(TownWindowManager.Window.Stats); yield return null; yield return null;
+                ui = stats.GetComponent<UIDocument>().rootVisualElement;
                 FieldsClick(ui.Q<Button>("journal-map-4")); yield return null;
                 Assert.NotNull(ui.Q("journal-locked-hint"), "The lesson must not reveal Mines prematurely.");
                 oracle.saveData.Quests[definition.maps[3].access[0].quest.questId] = new GameData.QuestRecord { Completed = true };
@@ -1252,8 +1271,8 @@ namespace Tests.PlayMode
                 Assert.IsNull(ui.Q("journal-locked-hint"));
                 Assert.NotNull(ui.Q(className: "journal-collection"), "Unlocking a selected map should reveal its details immediately.");
                 FieldsClick(navUi.Q<Button>("close")); yield return null; yield return null;
-                Assert.IsNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>(), "The farewell waits for task weights and graphs, not just maps.");
-                Assert.AreEqual(8, oracle.saveData.General.MapStatisticsTutorialStage);
+                Assert.IsNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>(), "Do not repeat the next-step message.");
+                Assert.AreEqual(9, oracle.saveData.General.MapStatisticsTutorialStage);
                 Assert.False(MapStatisticsGuidance.Active);
                 Blindsided.EventHandler.SaveData(); Blindsided.EventHandler.LoadData();
                 yield return null; yield return null;
@@ -1265,6 +1284,7 @@ namespace Tests.PlayMode
                 if (speakerObject) Object.DestroyImmediate(speakerObject);
                 if (navigation) Object.DestroyImmediate(navigation);
                 if (stats) Object.DestroyImmediate(stats);
+                if (questsView) Object.DestroyImmediate(questsView);
                 Object.DestroyImmediate(owner);
             }
         }
@@ -1488,7 +1508,7 @@ namespace Tests.PlayMode
 
         // Real run endings, native navigation and save/load own this lesson's timing.
         [UnityTest]
-        public IEnumerator GuidanceGraphsLessonStartsAfterFiveAdventuresAndSurvivesReload() => ExerciseGraphsLesson(false);
+        public IEnumerator GuidanceGraphsLessonStartsAfterFiveAdventuresAndSurvivesReload() { yield return ExerciseGraphsLesson(false); }
 
         [UnityTest]
         public IEnumerator GuidanceGraphsEarlyVisitSuppressesTheLessonAfterReload() => ExerciseGraphsLesson(true);
@@ -1496,7 +1516,7 @@ namespace Tests.PlayMode
         private IEnumerator ExerciseGraphsLesson(bool earlyVisit)
         {
             var owner = new GameObject("Protected graph introduction");
-            GameObject stats = null, navigation = null, speakerObject = null, runView = null;
+            GameObject stats = null, navigation = null, speakerObject = null, runView = null, questsView = null;
             try
             {
                 owner.AddComponent<ResourceManager>();
@@ -1518,6 +1538,8 @@ namespace Tests.PlayMode
                 stats = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Statistics.prefab"));
                 var screen = stats.GetComponent<ToolkitStatisticsScreen>();
                 typeof(TownWindowManager).GetField("toolkitStatistics", Private).SetValue(windows, screen);
+                questsView = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Quests.prefab"));
+                typeof(TownWindowManager).GetField("toolkitQuests", Private).SetValue(windows, questsView.GetComponent<ToolkitQuestsScreen>());
                 navigation = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Navigation.prefab"));
                 var nav = navigation.GetComponent<ToolkitNavigationScreen>();
                 var navUi = navigation.GetComponent<UIDocument>().rootVisualElement;
@@ -1546,9 +1568,15 @@ namespace Tests.PlayMode
                 }
                 for (var i = 0; i < 4; i++) Adventure(i == 3);
                 Town(true); yield return new WaitForSecondsRealtime(.1f);
-                Assert.IsNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>(), "Four adventures must not introduce graphs.");
                 if (!earlyVisit)
-                    Assert.AreEqual(8, general.MapStatisticsTutorialStage, "The maps tour ends without a premature farewell or blocking the later lessons.");
+                {
+                    var nextGoal = Object.FindAnyObjectByType<ToolkitMeetingScreen>(); Assert.NotNull(nextGoal);
+                    FieldsClick(nextGoal.GetComponent<UIDocument>().rootVisualElement.Q<Button>("advance"));
+                    yield return null; yield return null;
+                    Assert.AreEqual(9, general.MapStatisticsTutorialStage, "The maps tour gives a next step without waiting for five runs.");
+                    windows.OpenWindow(TownWindowManager.Window.Quests); nav.Refresh(); windows.CloseAllWindows();
+                }
+                Assert.IsNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>(), "Four adventures must not introduce graphs.");
                 Town(false);
                 tracker.BeginRun(map, TimelessEchoes.GameManager.MapScalingMode.DistanceBased);
                 tracker.RecordHeroPosition(new Vector3(1, 0)); tracker.RecordHeroPosition(new Vector3(11, 0));
@@ -1585,12 +1613,7 @@ namespace Tests.PlayMode
                 if (!earlyVisit)
                 {
                     yield return new WaitForSecondsRealtime(.1f);
-                    Assert.IsNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>(), "The farewell still waits for task weights after graphs are viewed.");
-                    oracle.saveData.General.TaskBoostTutorialStage = 2;
-                    yield return new WaitForSecondsRealtime(.1f);
-                    var farewell = Object.FindAnyObjectByType<ToolkitMeetingScreen>(); Assert.NotNull(farewell);
-                    FieldsClick(farewell.GetComponent<UIDocument>().rootVisualElement.Q<Button>("advance"));
-                    yield return null; yield return null;
+                    Assert.IsNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>(), "The next-step message was already shown after maps.");
                     Assert.AreEqual(9, oracle.saveData.General.MapStatisticsTutorialStage);
                 }
                 Blindsided.EventHandler.SaveData(); Blindsided.EventHandler.LoadData();
@@ -1606,6 +1629,7 @@ namespace Tests.PlayMode
                 if (navigation) Object.DestroyImmediate(navigation);
                 if (stats) Object.DestroyImmediate(stats);
                 if (runView) Object.DestroyImmediate(runView);
+                if (questsView) Object.DestroyImmediate(questsView);
                 Object.DestroyImmediate(owner);
             }
         }

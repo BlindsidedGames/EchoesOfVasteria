@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b3f1b0013cbb546a76110fae216a33, type: 3}
+  m_Name: Flying_Skull
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.Enemies.EnemyData
+  enemyName: Flying Skull
+  displayOrder: 109
+  icon: {fileID: 6330020326161735373, guid: bef281a472ce5d347960f1ccb962e50e, type: 3}
+  prefab: {fileID: 7105360355317958593, guid: 54c1b4e841b480c4e847066229c42cad, type: 3}
+  weight: 1
+  minX: 100
+  maxX: Infinity
+  spawnTerrains:
+  - {fileID: 11400000, guid: 8a0fecde35efd7543953ddaad4e93834, type: 2}
+  resourceDrops:
+  - resource: {fileID: 11400000, guid: b448067cd3b40aa478fb72e658eee42b, type: 2}
+    dropRange: {x: 2, y: 4}
+    weight: 92
+    requiredSkillLevel: 0
+  - resource: {fileID: 11400000, guid: c179c63de4230254383d26a0f2c0715d, type: 2}
+    dropRange: {x: 1, y: 1}
+    weight: 2.8
+    requiredSkillLevel: 1
+  - resource: {fileID: 11400000, guid: 067acda5cc1c56a4d9927390cb7529c8, type: 2}
+    dropRange: {x: 1, y: 1}
+    weight: 2
+    requiredSkillLevel: 7
+  - resource: {fileID: 11400000, guid: 2d94657f9f194bd4e9d9b82d65dcaa94, type: 2}
+    dropRange: {x: 1, y: 1}
+    weight: 1.28
+    requiredSkillLevel: 15
+  - resource: {fileID: 11400000, guid: b6e2a77fe18c74243998ae416085dd35, type: 2}
+    dropRange: {x: 1, y: 1}
+    weight: 0.8
+    requiredSkillLevel: 22
+  - resource: {fileID: 11400000, guid: 1bac3dac70cad2e409b66c0225460f71, type: 2}
+    dropRange: {x: 1, y: 1}
+    weight: 0.48
+    requiredSkillLevel: 30
+  - resource: {fileID: 11400000, guid: 2e9fdeb6cbb36164da71dbb62fbd720a, type: 2}
+    dropRange: {x: 1, y: 1}
+    weight: 0.32
+    requiredSkillLevel: 38
+  - resource: {fileID: 11400000, guid: e1755a5c82b38474aa140bd97161fe63, type: 2}
+    dropRange: {x: 1, y: 1}
+    weight: 0.2
+    requiredSkillLevel: 46
+  - resource: {fileID: 11400000, guid: ae618b00309e56e4a87824a497a82aaf, type: 2}
+    dropRange: {x: 1, y: 1}
+    weight: 0.12
+    requiredSkillLevel: 56
+  additionalLootChances: []
+  experience: 15
+  moveSpeed: 3.5
+  visionRange: 5
+  assistRange: 2
+  wanderDistance: 2
+  minWanderDistance: 0.5
+  maxHealth: 40
+  damage: 6.1
+  defense: 1.3
+  attackSpeed: 1.25
+  attackRange: 4
+  healthPerLevel: 5
+  damagePerLevel: 1.1
+  defensePerLevel: 0.2
+  distancePerLevel: 20
+  projectilePrefab: {fileID: 3616310629872538375, guid: 2aab631b230000342a2a3173bf45b5e2, type: 3}
+  projectileForwardOffset: 0.1875
+  projectileHeightOffset: 0

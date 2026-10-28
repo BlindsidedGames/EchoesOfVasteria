@@ -248,6 +248,13 @@ namespace TimelessEchoes.MapGeneration
                 }
             }
 
+            var scenery = chunkGenerator.PlaceWoodlandScenery(offset, segmentSize, decorRoot.transform, controller.TaskObjects);
+#if UNITY_EDITOR
+            if (TimelessEchoes.Platform.StartupDiagnostics.EditorScreenshotSession)
+                while (scenery.MoveNext()) { }
+            else
+#endif
+                yield return scenery;
             segments.Enqueue(new Segment { startX = offset.x, tasks = tasksRoot, decor = decorRoot });
             nextSegmentX += segmentSize.x;
         }

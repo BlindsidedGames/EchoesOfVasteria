@@ -4,8 +4,7 @@ using TimelessEchoes.Hero;
 namespace TimelessEchoes.Utilities
 {
     /// <summary>
-    /// Fades the attached <see cref="SpriteRenderer"/> when the hero enters this
-    /// object's trigger collider and restores the alpha on exit.
+    /// Fades the attached sprite while the hero stands inside its canopy.
     /// </summary>
     [RequireComponent(typeof(Collider2D))]
     [RequireComponent(typeof(SpriteRenderer))]
@@ -17,6 +16,7 @@ namespace TimelessEchoes.Utilities
 
         private float targetAlpha;
         private float defaultAlpha;
+        private Collider2D canopy;
 
         private void Awake()
         {
@@ -25,28 +25,31 @@ namespace TimelessEchoes.Utilities
             if (spriteRenderer != null)
                 defaultAlpha = spriteRenderer.color.a;
 
-            var col = GetComponent<Collider2D>();
-            if (col != null)
-                col.isTrigger = true;
+            canopy = GetComponent<Collider2D>();
+            if (canopy != null)
+                canopy.isTrigger = true;
             targetAlpha = defaultAlpha;
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
+        private void OnEnable()
         {
-            if (other.GetComponentInParent<HeroController>() != null)
-                targetAlpha = fadedAlpha;
-        }
-
-        private void OnTriggerExit2D(Collider2D other)
-        {
-            if (other.GetComponentInParent<HeroController>() != null)
-                targetAlpha = defaultAlpha;
+            targetAlpha = defaultAlpha;
+            if (spriteRenderer != null)
+            {
+                var color = spriteRenderer.color;
+                color.a = defaultAlpha;
+                spriteRenderer.color = color;
+            }
         }
 
         private void Update()
         {
             if (spriteRenderer == null)
                 return;
+            // The hero uses pathfinding/RVO movement and has no physics collider.
+            var hero = HeroController.Instance;
+            targetAlpha = hero && canopy && canopy.OverlapPoint(hero.transform.position)
+                ? fadedAlpha : defaultAlpha;
             var c = spriteRenderer.color;
             c.a = Mathf.MoveTowards(c.a, targetAlpha, fadeSpeed * Time.deltaTime);
             spriteRenderer.color = c;

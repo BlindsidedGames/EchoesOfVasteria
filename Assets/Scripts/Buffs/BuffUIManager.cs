@@ -369,7 +369,7 @@ namespace TimelessEchoes.Buffs
                 RefreshSlots();
             }
 
-            if (!Application.isMobilePlatform && buffManager != null && Keyboard.current != null)
+            if (!TimelessEchoes.UI.Toolkit.ToolkitDimScreen.BlocksInput && !Application.isMobilePlatform && buffManager != null && Keyboard.current != null)
                 for (var i = 0; i < 5; i++)
                 {
                     var digitKey = Keyboard.current[(Key)((int)Key.Digit1 + i)];

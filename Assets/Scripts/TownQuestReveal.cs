@@ -32,6 +32,7 @@ namespace TimelessEchoes
         private Action resumeQuests, removeSkip;
         private Coroutine sequence;
         private readonly List<(SpriteRenderer renderer, Color color)> fading = new();
+        private readonly List<(UnityEngine.Tilemaps.Tilemap map, Color color)> fadingTilemaps = new();
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reset() => active = null;
@@ -157,7 +158,7 @@ namespace TimelessEchoes
 
         private void Update()
         {
-            if (playing && Keyboard.current != null &&
+            if (playing && !UI.Toolkit.ToolkitDimScreen.BlocksInput && Keyboard.current != null &&
                 (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.spaceKey.wasPressedThisFrame)) cancelled = true;
         }
 
@@ -186,14 +187,21 @@ namespace TimelessEchoes
                     if (Interrupted) yield break;
                     var before = town.GetComponentsInChildren<SpriteRenderer>(true)
                         .Where(r => r.enabled && r.gameObject.activeInHierarchy).ToHashSet();
+                    var beforeTilemaps = town.GetComponentsInChildren<UnityEngine.Tilemaps.Tilemap>(true)
+                        .Where(map => map.gameObject.activeInHierarchy).ToHashSet();
                     foreach (var change in group.Changes) change.Apply();
                     foreach (var renderer in town.GetComponentsInChildren<SpriteRenderer>(true))
                         if (renderer.enabled && renderer.sprite && renderer.gameObject.activeInHierarchy && !before.Contains(renderer))
                         { fading.Add((renderer, renderer.color)); var color = renderer.color; color.a = 0; renderer.color = color; }
+                    foreach (var map in town.GetComponentsInChildren<UnityEngine.Tilemaps.Tilemap>(true))
+                        if (map.gameObject.activeInHierarchy && !beforeTilemaps.Contains(map))
+                        { fadingTilemaps.Add((map, map.color)); var color = map.color; color.a = 0; map.color = color; }
                     for (var elapsed = 0f; elapsed < .35f && !Interrupted; elapsed += Time.unscaledDeltaTime)
                     {
                         foreach (var item in fading) if (item.renderer)
                         { var color = item.color; color.a *= Mathf.Clamp01(elapsed / .35f); item.renderer.color = color; }
+                        foreach (var item in fadingTilemaps) if (item.map)
+                        { var color = item.color; color.a *= Mathf.Clamp01(elapsed / .35f); item.map.color = color; }
                         yield return null;
                     }
                     RestoreColors();
@@ -208,6 +216,8 @@ namespace TimelessEchoes
         {
             foreach (var item in fading) if (item.renderer) item.renderer.color = item.color;
             fading.Clear();
+            foreach (var item in fadingTilemaps) if (item.map) item.map.color = item.color;
+            fadingTilemaps.Clear();
         }
 
         private void Cleanup()

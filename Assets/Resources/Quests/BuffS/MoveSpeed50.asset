@@ -40,11 +40,18 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  rewardDisplayResource: {fileID: 0}
+  rewardIconKnown: 0
+  speaker: {fileID: 11400000, guid: fca9454bbe209d1418a20daaecdfdef8, type: 2}
   npcId: 
+  requiresTown: 0
+  acceptanceQuest: 0
+  acceptanceResources: []
   autoPin: 0
   useN0ForPinnedNumbers: 0
   requiredQuests:
   - {fileID: 11400000, guid: 371eebec0f399df4593d20bbe09ab0f0, type: 2}
+  minimumMaxRunDistanceExclusive: 0
   requirements:
   - type: 3
     resource: {fileID: 0}

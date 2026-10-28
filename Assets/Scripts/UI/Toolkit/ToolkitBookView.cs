@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.UIElements;
@@ -183,16 +184,36 @@ namespace TimelessEchoes.UI.Toolkit
                     SelectIllustration(initial);
                 }
             }
-            BindText(articleContent, isReference ? section.details : section.body, "library-prose").name = "library-article-body";
+            if (section.id == "help-patchnotes" && !isReference)
+            {
+                BindText(articleContent, section.body, "library-prose", value => PatchNotesPart(value, false)).name = "library-article-body";
+                var history = BindText(articleContent, section.body, "library-prose", value => PatchNotesPart(value, true));
+                history.name = "library-patch-history";
+                history.AddToClassList("library-patch-history");
+            }
+            else
+            {
+                var body = BindText(articleContent, isReference ? section.details : section.body, "library-prose");
+                body.name = "library-article-body";
+                if (section.id == "help-patchnotes") body.AddToClassList("library-patch-history");
+            }
             if (isReference && section.referenceRows.Length > 0) AddTable(section);
             foreach (var button in Scroll.contentContainer.Query<Button>().ToList()) ToolkitDragScroll.EnableFrom(Scroll, button);
         }
 
-        private Label BindText(VisualElement parent, ToolkitBookDefinition.Text text, string css)
+        private static string PatchNotesPart(string text, bool history)
+        {
+            var versions = Regex.Matches(text, @"<b>[^<]*\d+\.\d+\.\d+[^<]*</b>");
+            if (versions.Count < 2) return history ? string.Empty : text;
+            var split = versions[1].Index;
+            return history ? text.Substring(split).TrimStart() : text.Substring(0, split).TrimEnd();
+        }
+
+        private Label BindText(VisualElement parent, ToolkitBookDefinition.Text text, string css, Func<string, string> format = null)
         {
             var label = new Label(); label.AddToClassList(css); parent.Add(label);
             if (text?.fallback?.Contains("<link=\"help:") == true) ToolkitHelpLinks.Attach(label, OpenArticleLink);
-            articleBindings.Add(new ToolkitTextBinding(label, DefenseText(text))); return label;
+            articleBindings.Add(new ToolkitTextBinding(label, DefenseText(text), format)); return label;
         }
 
         private bool OpenArticleLink(string route)

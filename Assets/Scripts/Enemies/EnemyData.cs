@@ -17,6 +17,9 @@ namespace TimelessEchoes.Enemies
         [TitleGroup("General")] [Tooltip("Lower numbers appear first in the stats panel")]
         public int displayOrder;
 
+        [TitleGroup("General"), Tooltip("Shares kill-based reveals and damage bonuses with this entry. Individual kill records remain separate.")]
+        public EnemyData statisticsGroup;
+
         [TitleGroup("References")] public Sprite icon;
 
         [TitleGroup("Spawn Settings")] [Required]
@@ -95,6 +98,14 @@ namespace TimelessEchoes.Enemies
         public float distancePerLevel = float.PositiveInfinity;
 
         [TitleGroup("References")] public GameObject projectilePrefab;
+
+        [TitleGroup("References"), MinValue(0f)]
+        [Tooltip("Launch position ahead of the enemy in its attack direction, in world units.")]
+        public float projectileForwardOffset;
+
+        [TitleGroup("References")]
+        [Tooltip("Launch height above the projectile origin, in world units.")]
+        public float projectileHeightOffset;
 
         public float GetWeight(float worldX)
         {

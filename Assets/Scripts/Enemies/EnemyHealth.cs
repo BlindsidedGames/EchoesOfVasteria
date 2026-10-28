@@ -108,6 +108,15 @@ namespace TimelessEchoes.Enemies
                 healthBar.gameObject.SetActive(visible);
         }
 
+        public void DespawnWithoutRewards()
+        {
+            // In-flight attacks must also stop targeting a self-destructed enemy.
+            CurrentHealth = 0f;
+            UpdateBar();
+            RaiseHealthChanged();
+            Blindsided.Utilities.Pooling.PoolManager.Release(gameObject);
+        }
+
         private void HandleHealthChanged(float current, float max)
         {
             if (healthText != null && healthText.enabled)

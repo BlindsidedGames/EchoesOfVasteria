@@ -17,7 +17,7 @@ MonoBehaviour:
   icon: {fileID: 6233744874289106954, guid: d65892ca043916f43a05dcdee64c6352, type: 3}
   prefab: {fileID: 4506237991738823879, guid: 68e3a2ef94fdf464da4fa27351c4726c, type: 3}
   weight: 3
-  minX: 0
+  minX: 24
   maxX: Infinity
   spawnTerrains:
   - {fileID: 11400000, guid: f7652d9dd57fe47448365063293ce8bc, type: 2}
@@ -25,9 +25,7 @@ MonoBehaviour:
   - resource: {fileID: 11400000, guid: 2127cdd04bf07ac4b9c19b6432213a1d, type: 2}
     dropRange: {x: 1, y: 3}
     weight: 1
-    minX: 0
-    maxX: Infinity
-    requiredQuest: {fileID: 0}
+    requiredSkillLevel: 0
   additionalLootChances: []
   experience: 1
   moveSpeed: 5
@@ -45,3 +43,5 @@ MonoBehaviour:
   defensePerLevel: 0.1
   distancePerLevel: 20
   projectilePrefab: {fileID: 5086888241769898753, guid: 7f6445b853984454f8c435355f99d025, type: 3}
+  projectileForwardOffset: 0
+  projectileHeightOffset: 0
