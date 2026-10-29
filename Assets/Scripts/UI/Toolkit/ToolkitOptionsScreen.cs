@@ -235,6 +235,21 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var frame = new VisualElement { name = "gameplay-options" };
             frame.AddToClassList("eov-options-frame"); currentPage.Add(frame);
+            var viewLabel = ToolkitGameplay.L(frame, "", "settings-section-title");
+            ToolkitLocalization.Bind(viewLabel, "options.default-portrait-view", "Default portrait view");
+            var views = Row(frame); views.AddToClassList("settings-actions"); views.style.marginBottom = 8;
+            for (var i = 0; i < 2; i++)
+            {
+                var fullscreen = i == 0;
+                var button = ActionButton(views, fullscreen ? "portrait-fullscreen" : "portrait-compact", () =>
+                {
+                    ToolkitDisplayPreferences.DefaultPortraitFullscreen = fullscreen;
+                    ToolkitResponsiveLayout.SetFocusView(fullscreen);
+                    RefreshValues();
+                }, 24, false);
+                ToolkitLocalization.Bind(button, fullscreen ? "options.portrait-fullscreen" : "options.portrait-compact", fullscreen ? "Fullscreen" : "Compact");
+                Grow(button);
+            }
             var toggle = ActionButton(frame, "skip-restart-countdown", () =>
             { GameManager.SkipRestartCountdown = !GameManager.SkipRestartCountdown; RefreshValues(); }, 24, false);
             toggle.AddToClassList("settings-labelled-toggle");
@@ -333,6 +348,8 @@ namespace TimelessEchoes.UI.Toolkit
         private void SetSlider(string id, float value) { sliders[id].SetValueWithoutNotify(value); sliders[id].Q("value-fill").style.width = Length.Percent(value * 100); }
         private void RefreshValues()
         {
+            buttons["portrait-fullscreen"].EnableInClassList("active", ToolkitDisplayPreferences.DefaultPortraitFullscreen);
+            buttons["portrait-compact"].EnableInClassList("active", !ToolkitDisplayPreferences.DefaultPortraitFullscreen);
             SetToggle("skip-restart-countdown", GameManager.SkipRestartCountdown);
             for (var i = 0; i < 3; i++) buttons["orientation-" + i].EnableInClassList("active", ToolkitDisplayPreferences.Orientation == i);
             buttons["world-safe-area"].EnableInClassList("active", ToolkitDisplayPreferences.KeepWorldInSafeArea);

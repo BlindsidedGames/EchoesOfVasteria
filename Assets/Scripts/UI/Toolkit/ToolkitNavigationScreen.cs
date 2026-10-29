@@ -24,6 +24,7 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly List<ToolkitTextBinding> bindings = new();
         private readonly Dictionary<Entry, VisualElement> rows = new();
         private readonly Dictionary<Entry, Button> buttons = new();
+        private readonly Dictionary<Entry, Label> portraitCloseLabels = new();
         private Entry[] navigationEntries;
         private ToolkitShopScreen shopScreen;
         private PanelSettings panel;
@@ -38,7 +39,8 @@ namespace TimelessEchoes.UI.Toolkit
         private bool? portraitNavigation;
         private Image forgeAttention, cauldronAttention, fieldsAttention, questAttention, hubQuestAttention, shopAttention, hubShopAttention;
         private VisualElement progressRoot, progressFill;
-        private Image progressHero, progressReaper;
+        private Image progressHero, progressReaper, progressFlight;
+        private ToolkitNpcIntroduction progressIntroduction;
         private TimelessEchoes.Characters.CharacterImage characterPortrait;
         private Transform progressHeroTransform;
         private Vector3 previousHeroPosition;
@@ -315,6 +317,7 @@ namespace TimelessEchoes.UI.Toolkit
             progressFill.AddToClassList("fill"); track.Add(progressFill); progressRoot.Add(track);
             progressHero = new Image { sprite = definition.progressHero, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
             progressHero.AddToClassList("eov-navigation-progress-actor");progressHero.AddToClassList("progress-hero"); progressRoot.Add(progressHero);
+            progressIntroduction = UnityEngine.Resources.Load<ToolkitNpcIntroduction>("NPC Introductions/Carl the Reaper");
             progressReaper = new Image { name = "progress-reaper", sprite = definition.progressReaper, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
             progressReaper.AddToClassList("eov-navigation-progress-actor"); progressReaper.AddToClassList("progress-reaper");progressReaper.style.scale=new Scale(new Vector3(-1,1,1)); progressRoot.Add(progressReaper);
             progressHero.name = "progress-hero";
@@ -423,6 +426,7 @@ namespace TimelessEchoes.UI.Toolkit
                 if (refresherEntry != null && ToolkitMeetingScreen.AdvanceRefresherNavigation(this)) return;
             }
             if (TutorialWindowClose(entry)) { windows.CloseAllWindows(); CloseMenu(); Refresh(); return; }
+            if (PortraitCloses(entry)) { windows?.CloseAllWindows(); CloseMenu(); Refresh(); return; }
             if (entry.id == "shop" && !TimelessEchoes.Shop.ShopService.Ensure().Unlocked) return;
             moreOpen = false; if (morePopup != null) morePopup.style.display = DisplayStyle.None;
             if (!windows) windows = TownWindowManager.Instance;
@@ -506,11 +510,94 @@ namespace TimelessEchoes.UI.Toolkit
             Refresh();
         }
 
+        public bool CanReceiveReaper => progressReaper?.panel != null && progressReaper.worldBound.width > 0;
+
+        public bool ProgressReaperIsToRightOf(Vector3 worldPosition)
+        {
+            var camera = Camera.main;
+            var scale = ToolkitResponsiveLayout.Scale(new Vector2Int(UnityEngine.Device.Screen.width, UnityEngine.Device.Screen.height));
+            return !camera || progressReaper.worldBound.center.x >= camera.WorldToScreenPoint(worldPosition).x * scale;
+        }
+
+        public void CancelReaperFlight()
+        {
+            progressFlight?.RemoveFromHierarchy();
+            progressFlight = null;
+        }
+
+        public System.Collections.IEnumerator FlyReaperToProgress(SpriteRenderer source, ToolkitNpcIntroduction introduction, float animationStartedAt)
+            => FlyReaper(source, introduction, animationStartedAt, true);
+
+        public const float ReaperFlightDuration = .3f;
+
+        public System.Collections.IEnumerator FlyReaperFromProgress(SpriteRenderer destination, AnimationClip flightAnimation)
+            => FlyReaper(destination, progressIntroduction, Time.unscaledTime, false, flightAnimation);
+
+        private static Rect ReaperScreenRect(SpriteRenderer artwork, Camera camera, float scale)
+        {
+            var bounds = artwork.bounds;
+            var bottomLeft = camera.WorldToScreenPoint(bounds.min);
+            var topRight = camera.WorldToScreenPoint(bounds.max);
+            return new Rect(bottomLeft.x * scale, (UnityEngine.Device.Screen.height - topRight.y) * scale,
+                (topRight.x - bottomLeft.x) * scale, (topRight.y - bottomLeft.y) * scale);
+        }
+
+        private System.Collections.IEnumerator FlyReaper(SpriteRenderer worldActor, ToolkitNpcIntroduction introduction, float animationStartedAt, bool toProgress, AnimationClip flightAnimation = null)
+        {
+            var camera = Camera.main;
+            if (!camera || !worldActor || !CanReceiveReaper) yield break;
+            CancelReaperFlight();
+            var scale = ToolkitResponsiveLayout.Scale(new Vector2Int(UnityEngine.Device.Screen.width, UnityEngine.Device.Screen.height));
+            var start = toProgress ? ReaperScreenRect(worldActor, camera, scale) : progressReaper.worldBound;
+            var image = new Image { name = toProgress ? "reaper-introduction-flight" : "reaper-reaping-flight", sprite = worldActor.sprite, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
+            image.style.position = Position.Absolute;
+            image.style.scale = new Scale(new Vector3((worldActor.flipX ? -1 : 1) * Mathf.Sign(worldActor.transform.lossyScale.x), worldActor.flipY ? -1 : 1, 1));
+            var surface = GetComponent<UIDocument>().rootVisualElement;
+            surface.Add(image); progressFlight = image;
+            if (!toProgress) progressReaper.style.visibility = Visibility.Hidden;
+            worldActor.enabled = false;
+            var map = GameManager.Instance ? GameManager.Instance.CurrentMap : null;
+            var duration = toProgress ? .7f : ReaperFlightDuration;
+            try
+            {
+                for (var elapsed = 0f; elapsed < duration && image.panel != null && worldActor && GameManager.Instance && GameManager.Instance.CurrentMap == map;)
+                {
+                    if (toProgress && windows && windows.IsWindowOpen(TownWindowManager.Window.Options)) { yield return null; continue; }
+                    if (!toProgress && flightAnimation && flightAnimation.length > 0)
+                        flightAnimation.SampleAnimation(worldActor.gameObject, elapsed % flightAnimation.length);
+                    var t = Mathf.SmoothStep(0, 1, elapsed / duration);
+                    // Resolve live bounds through camera movement and portrait layout transitions.
+                    scale = ToolkitResponsiveLayout.Scale(new Vector2Int(UnityEngine.Device.Screen.width, UnityEngine.Device.Screen.height));
+                    var target = toProgress ? progressReaper.worldBound : ReaperScreenRect(worldActor, camera, scale);
+                    var center = Vector2.Lerp(start.center, target.center, t);
+                    if (toProgress) center += Vector2.up * (-Mathf.Sin(t * Mathf.PI) * 24);
+                    var size = Vector2.Lerp(start.size, target.size, t);
+                    var local = surface.WorldToLocal(center - size * .5f);
+                    image.style.left = local.x; image.style.top = local.y;
+                    image.style.width = size.x; image.style.height = size.y;
+                    if (toProgress && introduction && introduction.portraitFrames is { Length: > 0 } frames)
+                        image.sprite = frames[Mathf.FloorToInt((Time.unscaledTime - animationStartedAt) * Mathf.Max(1, introduction.portraitFramesPerSecond)) % frames.Length];
+                    else image.sprite = worldActor.sprite;
+                    elapsed += toProgress ? Time.unscaledDeltaTime : Time.deltaTime;
+                    yield return null;
+                }
+                if (toProgress && progressReaper?.panel != null) progressReaper.style.visibility = Visibility.Visible;
+            }
+            finally
+            {
+                if (!toProgress && worldActor) worldActor.enabled = true;
+                CancelReaperFlight();
+            }
+        }
+
         private void AnimateProgressActors()
         {
             var hero = Hero.HeroController.Instance;
             if (!GameManager.Instance || !GameManager.Instance.CurrentMap || !hero)
             { progressHeroTransform = null; progressReapStarted = -1; return; }
+            progressReaper.style.visibility = WorldIntroductionActor.ReaperHandoffPending || hero.ReaperSpawnedByDistance ||
+                progressIntroduction && Blindsided.Oracle.oracle?.saveData != null && !progressIntroduction.HasBeenCompleted
+                ? Visibility.Hidden : Visibility.Visible;
             var position = hero.transform.position;
             var sameHero = progressHeroTransform == hero.transform;
             var delta = sameHero ? position - previousHeroPosition : Vector3.zero;
@@ -522,29 +609,20 @@ namespace TimelessEchoes.UI.Toolkit
             progressHeroTransform = hero.transform;
             previousHeroPosition = position;
             var frame = Mathf.FloorToInt(Time.time * Mathf.Max(1, definition.progressFramesPerSecond));
-            var reaped = false;
             // The authored swing faces right; Carl stands at the right end of the route.
             progressReaper.style.scale = new Scale(new Vector3(-1, 1, 1));
-            if (hero.ReaperSpawnedByDistance && definition.progressReaperReapFrames is { Length: > 0 } reapFrames) {
+            if (hero.ReaperSpawnedByDistance) {
                 if (progressReapStarted < 0) progressReapStarted = Time.time;
-                var reapFrame = Mathf.Clamp(Mathf.FloorToInt((Time.time - progressReapStarted) * Mathf.Max(1, definition.progressFramesPerSecond)), 0, reapFrames.Length - 1);
-                progressReaper.sprite = reapFrames[reapFrame];
-                reaped = reapFrame >= definition.progressReapImpactFrame;
             }
             else {
                 progressReapStarted = -1;
                 if (definition.progressReaperFrames is { Length: > 0 } idleFrames) progressReaper.sprite = idleFrames[frame % idleFrames.Length];
             }
+            progressHero.style.opacity = hero.ReaperSpawnedByDistance
+                ? 1 - Mathf.Clamp01((Time.time - progressReapStarted) / ReaperFlightDuration) : 1;
             var heroFrames = moving ? definition.progressHeroRunFrames : definition.progressHeroIdleFrames;
             var profile = TimelessEchoes.Characters.CharacterEquipmentAppearance.Resolve(TimelessEchoes.Characters.CharacterCreation.Current);
-            if (reaped && definition.progressHeroGravestone)
-            {
-                characterPortrait?.Set(null, 0);
-                progressHero.sprite = definition.progressHeroGravestone;
-                progressHero.style.scale = new Scale(Vector3.one);
-                progressHero.PlaceBehind(progressReaper);
-            }
-            else if (profile is { Created: true, Modular: true } && TimelessEchoes.Characters.CharacterCatalog.Load())
+            if (profile is { Created: true, Modular: true } && TimelessEchoes.Characters.CharacterCatalog.Load())
             {
                 progressHero.sprite = null;
                 characterPortrait ??= new TimelessEchoes.Characters.CharacterImage(progressHero, 2);
@@ -597,7 +675,9 @@ namespace TimelessEchoes.UI.Toolkit
                 if (entry.id == "stats") selected = openGroup == Group.Statistics || windows && windows.IsWindowOpen(TownWindowManager.Window.Stats);
                 if (entry.id == "townsfolk") selected = openGroup == Group.Townsfolk || TownWindowOpen();
                 if (entry.id == "adventure") selected = openGroup == Group.Adventure;
+                if (entry.id == "options") selected = windows && (windows.IsWindowOpen(TownWindowManager.Window.Options) || windows.IsWindowOpen(TownWindowManager.Window.Credits));
                 buttons[entry].EnableInClassList("active", ToolkitResponsiveLayout.IsPortrait && selected);
+                PresentPortraitClose(entry, ToolkitResponsiveLayout.IsPortrait && selected);
             }
             SetVisible(morePopup, ToolkitResponsiveLayout.IsPortrait && moreOpen);
             SetVisible(moreButton, false);
@@ -739,7 +819,8 @@ namespace TimelessEchoes.UI.Toolkit
             if (desiredEntry != null && desiredEntry.group != Group.Toolbar && openGroup != desiredEntry.group)
                 desired = System.Array.Find(navigationEntries, e => e.action == ParentAction(desiredEntry.group))?.id;
             if (desired != highlightedEntryId) { highlightedEntryId = desired; questHighlightStartedAt = Time.unscaledTime; }
-            if (desired != null) ToolkitResponsiveLayout.SetFocusView(false);
+            if (inTown && !(GameManager.Instance && GameManager.Instance.RunLoadingActive) &&
+                desired != null && !WorldPresentation.SuppressesFocusReset) ToolkitResponsiveLayout.SetFocusView(false);
             foreach (var pair in tutorialPrompts)
             {
                 var visible = pair.Key == desired;
@@ -829,6 +910,35 @@ namespace TimelessEchoes.UI.Toolkit
 
         private static bool PortraitBottomEntry(Entry entry) => entry.id is "adventure" or "hub" or "townsfolk" or "stats" or "options";
 
+        private bool PortraitCloses(Entry entry) => ToolkitResponsiveLayout.IsPortrait && PortraitBottomEntry(entry) &&
+            (entry.id == "adventure" && openGroup == Group.Adventure ||
+             entry.id == "hub" && (openGroup == Group.Hub || HubWindowOpen()) ||
+             entry.id == "townsfolk" && (openGroup == Group.Townsfolk || TownWindowOpen()) ||
+             entry.id == "stats" && (openGroup == Group.Statistics || windows && windows.IsWindowOpen(TownWindowManager.Window.Stats)) ||
+             entry.id == "options" && windows && (windows.IsWindowOpen(TownWindowManager.Window.Options) || windows.IsWindowOpen(TownWindowManager.Window.Credits)));
+
+        private void PresentPortraitClose(Entry entry, bool closing)
+        {
+            if (!PortraitBottomEntry(entry)) return;
+            var button = buttons[entry];
+            if (!portraitCloseLabels.TryGetValue(entry, out var label))
+            {
+                label = new Label { name = "portrait-close-label", pickingMode = PickingMode.Ignore };
+                label.AddToClassList("eov-navigation-label");
+                label.style.position = Position.Absolute;
+                label.style.left = label.style.right = label.style.top = label.style.bottom = 0;
+                label.style.unityTextAlign = TextAnchor.MiddleCenter;
+                label.style.unityFontStyleAndWeight = FontStyle.Bold;
+                button.Add(label); portraitCloseLabels.Add(entry, label);
+            }
+            label.text = entry.id is "stats" or "options" ? "×" : ToolkitLocalization.Text("common.close", "Close");
+            label.style.fontSize = entry.id is "stats" or "options" ? 22 : 12;
+            SetVisible(label, closing);
+            // Retain the original footprint so changing the action never shifts tabs.
+            foreach (var child in button.Children())
+                if (child != label) child.style.visibility = closing ? Visibility.Hidden : Visibility.Visible;
+        }
+
         private static NavAction ParentAction(Group group) => group switch
         {
             Group.Hub => NavAction.HubMenu, Group.Adventure => NavAction.AdventureMenu,
@@ -846,6 +956,7 @@ namespace TimelessEchoes.UI.Toolkit
         private bool TownWindowOpen() => windows && windows.HasOpenWindow && !HubWindowOpen() &&
             !windows.IsWindowOpen(TownWindowManager.Window.Quests) &&
             !windows.IsWindowOpen(TownWindowManager.Window.Stats) &&
+            !windows.IsWindowOpen(TownWindowManager.Window.Credits) &&
             !windows.IsWindowOpen(TownWindowManager.Window.Options);
 
         private bool HubWindowOpen() => windows &&
@@ -885,7 +996,7 @@ namespace TimelessEchoes.UI.Toolkit
             var context = root.Q("navigation-context");
             context.style.display = ToolkitResponsiveLayout.IsPortrait && !(GameManager.Instance && GameManager.Instance.CurrentMap) ? DisplayStyle.None : DisplayStyle.Flex;
             context.style.top = ToolkitResponsiveLayout.IsPortrait ?
-                (ToolkitResponsiveLayout.FocusView ? ToolkitResponsiveLayout.SafeScreenArea.yMax - 92 : ToolkitResponsiveLayout.WorldArea.yMax) - root.resolvedStyle.top - 39 : StyleKeyword.Null;
+                ToolkitResponsiveLayout.WorldArea.yMax - root.resolvedStyle.top - 39 : StyleKeyword.Null;
             progressRoot.style.width = ToolkitResponsiveLayout.IsPortrait ? area.width - 16 : StyleKeyword.Null;
             progressRoot.Q(className: "eov-navigation-progress-track").style.width = ToolkitResponsiveLayout.IsPortrait ? area.width - 20 : StyleKeyword.Null;
             progressReaper.style.left = ToolkitResponsiveLayout.IsPortrait ? area.width - 40 : StyleKeyword.Null;
@@ -923,7 +1034,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (hooked && windows) { windows.CloseRequested -= CloseMenu; windows.WindowsChanged -= Refresh; }
             hooked = false;
             foreach (var binding in bindings) binding.Dispose();
-            bindings.Clear(); rows.Clear(); buttons.Clear();
+            bindings.Clear(); rows.Clear(); buttons.Clear(); portraitCloseLabels.Clear();
             root?.RemoveFromHierarchy(); root = null; popup = null; menuAnchor = null; morePopup = null; moreButton = null; portraitGroupScroll = null; portraitMoreScroll = null; portraitNavigation = null;
             menuDismiss = null;
             characterPortrait = null;

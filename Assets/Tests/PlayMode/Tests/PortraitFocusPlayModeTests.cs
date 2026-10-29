@@ -121,7 +121,7 @@ namespace Tests.PlayMode
                     .SetValue(windows, statistics.GetComponent<ToolkitStatisticsScreen>());
                 var navigationUi = navigation.GetComponent<UIDocument>().rootVisualElement;
                 var ui = view.GetComponent<UIDocument>().rootVisualElement;
-                var toggle = ui.Q<Button>("run-focus-toggle");
+                var toggle = ui.Q<Button>("run-breakdown");
                 Assert.NotNull(toggle);
                 var menu = new VisualElement(); ui.Add(menu);
                 ToolkitGameplay.Apply(menu, AssetDatabase.LoadAssetAtPath<ToolkitTheme>("Assets/UI/Toolkit/Theme.asset"));
@@ -139,7 +139,7 @@ namespace Tests.PlayMode
                     if (landscape)
                     {
                         Assert.False(ToolkitResponsiveLayout.FocusView);
-                        Assert.AreEqual(DisplayStyle.None, toggle.parent.style.display.value);
+                        Assert.AreEqual(DisplayStyle.Flex, toggle.resolvedStyle.display, "Landscape keeps its loot breakdown button.");
                     }
                     else
                     {
@@ -243,11 +243,7 @@ namespace Tests.PlayMode
                 for (var frame = 0; frame < 5; frame++) yield return null;
                 ToolkitResponsiveLayout.ApplyFocusPresentation(menu);
                 Assert.False(ToolkitResponsiveLayout.FocusView);
-                var expandIcon = ui.Q("run-focus-icon");
-                Assert.AreEqual(expandIcon.worldBound.height, expandIcon.worldBound.width, .01f, "Zoom-in icon stays square.");
-                Assert.AreEqual("UI_Selectors_50", expandIcon.resolvedStyle.backgroundImage.sprite.name);
-                var runDefinition = AssetDatabase.LoadAssetAtPath<ToolkitRunDefinition>("Assets/UI/Toolkit/Run.asset");
-                Assert.AreEqual(runDefinition.fullscreenIcon.pixelsPerUnit, runDefinition.restoreViewIcon.pixelsPerUnit, "Both icons share the same pixel scale.");
+                Assert.AreEqual(DisplayStyle.Flex, toggle.Q(className: "run-breakdown-resource-count").resolvedStyle.display, "The loot count remains available to switch back to expanded play.");
                 Assert.True(field.enabledInHierarchy);
                 Assert.AreEqual("Preserved selection", field.value);
                 Assert.Greater(camera.rect.y, 0, "Restoring menus must restore the top 16:9 viewport.");

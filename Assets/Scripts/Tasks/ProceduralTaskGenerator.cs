@@ -346,7 +346,7 @@ namespace TimelessEchoes.Tasks
                 while (attempts < 5)
                 {
                     var terrain = GetTerrainAt(pos);
-                    var allowedTerrain = terrain != null &&
+                    var allowedTerrain = terrain != null && terrain.IsWalkable &&
                                          (entry.spawnTerrains == null || entry.spawnTerrains.Count == 0 ||
                                           entry.spawnTerrains.Contains(terrain));
                     var cell = terrainMap.WorldToCell(pos);
@@ -754,7 +754,7 @@ namespace TimelessEchoes.Tasks
                 while (attempts < 5)
                 {
                     var terrain = GetTerrainAt(pos);
-                    var allowed = terrain != null && (entry.spawnTerrains == null || entry.spawnTerrains.Count == 0 || entry.spawnTerrains.Contains(terrain));
+                    var allowed = terrain != null && terrain.IsWalkable && (entry.spawnTerrains == null || entry.spawnTerrains.Count == 0 || entry.spawnTerrains.Contains(terrain));
                     var cell = terrainMap.WorldToCell(pos);
                     var obstructed = HasBlockingCollider(pos) || IsBlockedAhead(pos);
                     if (allowed && !obstructed && ValidateTerrainRules(terrain, cell)) { valid = true; break; }

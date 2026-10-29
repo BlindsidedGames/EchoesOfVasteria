@@ -21,6 +21,7 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly ScrollView dialogueScroll;
         private bool? portraitLayout;
         private readonly float portraitPixelScale;
+        private float portraitOffsetY;
         private int index = -1;
         private bool completed, disposed;
         private string navigationShortcut;
@@ -32,6 +33,7 @@ namespace TimelessEchoes.UI.Toolkit
             bool richText, float scale) textMeasurementKey;
         public VisualElement Root { get; }
         public Button AdvanceButton { get; }
+        public Func<bool> BeforeStart { private get; set; }
         public Func<bool> BeforeAdvance { private get; set; }
         private VisualElement guidedActions;
         private Button skipButton;
@@ -139,6 +141,7 @@ namespace TimelessEchoes.UI.Toolkit
                 "Orin" or "OrinHubIntroduction" => "Orin", "Reaper1" => "Carl", _ => null
             };
             speakerKey = identity == null ? null : "npc.name." + identity;
+            portraitOffsetY = identity == "Carl" ? 8 : 0;
             speakerFallback = identity switch { "Farmers" => "Flora and Tillman", "OldTimer" => "The Old Timer", _ => identity };
             Refresh();
         }
@@ -196,35 +199,120 @@ namespace TimelessEchoes.UI.Toolkit
             }
             // Measure after layout so localization and the actual available text width
             // determine the card height. Long entries scroll above a fixed action.
-            var width = dialogue.resolvedStyle.width;
-            if (!float.IsFinite(width) || width <= 0) return;
-            var textHeight = MeasureDialogueHeight(width) + (speaker.resolvedStyle.display == DisplayStyle.None ? 0 : speaker.resolvedStyle.height + 4);
-            var minimum = noPortrait ? 76 : 96;
-            height = Mathf.RoundToInt(Mathf.Clamp(Mathf.Ceil(textHeight) + (guidedActions != null ? 104 : 64), minimum, availableHeight));
+            height = Mathf.RoundToInt(PreferredHeight(availableHeight));
             Root.style.height = height;
             Root.style.top = safe.yMax - ToolkitResponsiveLayout.WindowBottom - height - 8 - navigationClearance;
+        }
+
+        // The screen owns placement. This view only reports how much room its
+        // full localized conversation needs, with scrolling for unusually long text.
+        public float PreferredHeight(float maximumHeight)
+        {
+            var minimum = Root.ClassListContains("meeting-no-portrait") ? 76 : 96;
+            // Reserve the full conversation before Meet, even while its first line is hidden.
+            var width = dialogueScroll.contentViewport.resolvedStyle.width;
+            if (!float.IsFinite(width) || width <= 0) return Mathf.Min(144, maximumHeight);
+            var nameHeight = speaker.resolvedStyle.display == DisplayStyle.None ? 0 : speaker.resolvedStyle.height + 4;
+            var textHeight = MeasureDialogueHeight(width) + (float.IsFinite(nameHeight) ? nameHeight : 16);
+            // Include the card borders and text/scroll rounding, so a short second
+            // line never needs scrolling just to reveal its final few pixels.
+            return Mathf.Clamp(Mathf.Ceil(textHeight) + (guidedActions != null ? 116 : 76), Mathf.Min(minimum, maximumHeight), maximumHeight);
+        }
+
+        public void LayoutBottomDialogue(bool portraitMode)
+        {
+            // Share one flow layout; typography can still respond to orientation.
+            LayoutPortrait(true);
+            Root.style.flexDirection = FlexDirection.Row;
+            Root.style.alignItems = Align.Stretch;
+            Root.style.paddingLeft = Root.style.paddingRight = 12;
+            Root.style.paddingTop = Root.style.paddingBottom = 12;
+            Root.style.borderLeftWidth = Root.style.borderRightWidth = Root.style.borderTopWidth = Root.style.borderBottomWidth = 1;
+            Root.style.backgroundColor = ToolkitColorTheme.Surface;
+            Root.style.borderLeftColor = Root.style.borderRightColor = Root.style.borderTopColor = Root.style.borderBottomColor = ToolkitColorTheme.HudBorder;
+            portraitColumn.style.width = 56;
+            portraitColumn.style.marginRight = 12;
+            portraitColumn.style.flexShrink = 0;
+            portraitColumn.style.display = Root.ClassListContains("meeting-no-portrait") ? DisplayStyle.None : DisplayStyle.Flex;
+            contentColumn.style.flexGrow = 1;
+            contentColumn.style.flexShrink = 1;
+            contentColumn.style.minWidth = contentColumn.style.minHeight = 0;
+            portraitFrame.style.position = dialogueFrame.style.position = Position.Relative;
+            portraitFrame.style.left = portraitFrame.style.top = dialogueFrame.style.left = dialogueFrame.style.top = StyleKeyword.Auto;
+            portraitFrame.style.width = 56;
+            portraitFrame.style.height = 96;
+            // Animated artwork may extend beyond its column. Only the outer
+            // dialogue border clips it, never a smaller invisible portrait box.
+            Root.style.overflow = Overflow.Hidden;
+            portraitColumn.style.overflow = portraitFrame.style.overflow = Overflow.Visible;
+            portraitFrame.style.paddingLeft = portraitFrame.style.paddingRight = 0;
+            portraitFrame.style.paddingTop = portraitFrame.style.paddingBottom = 0;
+            portraitFrame.style.backgroundColor = dialogueFrame.style.backgroundColor = Color.clear;
+            portraitFrame.style.borderLeftWidth = portraitFrame.style.borderRightWidth = portraitFrame.style.borderTopWidth = portraitFrame.style.borderBottomWidth = 0;
+            dialogueFrame.style.borderLeftWidth = dialogueFrame.style.borderRightWidth = dialogueFrame.style.borderTopWidth = dialogueFrame.style.borderBottomWidth = 0;
+            dialogueFrame.style.width = StyleKeyword.Auto;
+            dialogueFrame.style.minWidth = dialogueFrame.style.minHeight = 0;
+            dialogueFrame.style.flexGrow = dialogueFrame.style.flexShrink = 1;
+            dialogueFrame.style.paddingLeft = dialogueFrame.style.paddingRight = dialogueFrame.style.paddingTop = dialogueFrame.style.paddingBottom = 0;
+            var inset = Root.Q("dialogue-inset");
+            inset.style.paddingLeft = inset.style.paddingRight = inset.style.paddingTop = inset.style.paddingBottom = 0;
+            dialogueScroll.style.flexGrow = 1;
+            dialogueScroll.style.minHeight = 0;
+            ActionElement.style.position = Position.Relative;
+            ActionElement.style.left = ActionElement.style.top = StyleKeyword.Auto;
+            ActionElement.style.alignSelf = Align.FlexEnd;
+            ActionElement.style.flexShrink = 0;
+            ActionElement.style.marginTop = 8;
+            ActionElement.style.width = guidedActions != null ? 96 : 76;
+            AdvanceButton.style.minHeight = 32;
+            AdvanceButton.style.height = guidedActions != null ? StyleKeyword.Auto : 32;
+            AdvanceButton.style.position = Position.Relative;
+            AdvanceButton.style.left = AdvanceButton.style.top = StyleKeyword.Auto;
+            AdvanceButton.style.marginTop = guidedActions != null ? 0 : 8;
+            var image = portraitFrame.Q<Image>("portrait");
+            if (image.sprite)
+            {
+                // One dialogue pixel scale across characters and orientations,
+                // independent of world PPU. Preserve sheet padding and relative
+                // character sizes rather than fitting silhouettes to the column.
+                var scale = (5f / 3f) * portraitPixelScale;
+                image.style.width = image.sprite.rect.width * scale;
+                image.style.height = image.sprite.rect.height * scale;
+                image.style.translate = new Translate(0, portraitOffsetY);
+            }
         }
 
         private float MeasureDialogueHeight(float width)
         {
             var style = dialogue.resolvedStyle;
             var scale = ToolkitResponsiveLayout.Scale(new Vector2Int(UnityEngine.Device.Screen.width, UnityEngine.Device.Screen.height));
-            var key = (dialogue.text, width, style.fontSize, style.unityFont, style.unityFontDefinition,
+            var conversation = string.Join("\n", System.Linq.Enumerable.Select(System.Linq.Enumerable.Range(0, lines.Count), FormattedLine));
+            var key = (conversation, width, style.fontSize, style.unityFont, style.unityFontDefinition,
                 style.unityFontStyleAndWeight, style.letterSpacing, style.wordSpacing,
                 style.unityParagraphSpacing, style.whiteSpace, dialogue.enableRichText, scale);
             if (!hasTextMeasurement || !key.Equals(textMeasurementKey))
             {
-                measuredTextHeight = dialogue.MeasureTextSize(dialogue.text, width, VisualElement.MeasureMode.Exactly,
-                    0, VisualElement.MeasureMode.Undefined).y;
+                measuredTextHeight = 0;
+                for (var i = 0; i < lines.Count; i++)
+                    measuredTextHeight = Mathf.Max(measuredTextHeight, dialogue.MeasureTextSize(FormattedLine(i), width,
+                        VisualElement.MeasureMode.Exactly, 0, VisualElement.MeasureMode.Undefined).y);
                 textMeasurementKey = key;
                 hasTextMeasurement = true;
             }
             return measuredTextHeight;
         }
 
+        private string FormattedLine(int line)
+        {
+            var text = line < lineKeys.Count && !string.IsNullOrEmpty(lineKeys[line])
+                ? ToolkitLocalization.Text(lineKeys[line], lines[line]) : lines[line];
+            return ToolkitResponsiveLayout.IsPortrait ? text : "<b><smallcaps>" + text + "</smallcaps></b>";
+        }
+
         public void Advance()
         {
             if (disposed || completed) return;
+            if (index < 0 && BeforeStart?.Invoke() == false) return;
             if (index >= 0 && BeforeAdvance?.Invoke() == true) return;
             Audio.AudioManager.Instance?.PlayUIButtonClick();
             if (index >= 0 && index >= lines.Count - 1)
@@ -250,9 +338,7 @@ namespace TimelessEchoes.UI.Toolkit
             speaker.style.display = string.IsNullOrEmpty(speaker.text) ? DisplayStyle.None : DisplayStyle.Flex;
             dialogueFrame.style.display = started || portraitLayout == true || !string.IsNullOrEmpty(speaker.text) ? DisplayStyle.Flex : DisplayStyle.None;
             dialogue.style.display = started ? DisplayStyle.Flex : DisplayStyle.None;
-            var text = started && index < lines.Count ? (index < lineKeys.Count && !string.IsNullOrEmpty(lineKeys[index])
-                ? ToolkitLocalization.Text(lineKeys[index], lines[index]) : lines[index]) : string.Empty;
-            dialogue.text = ToolkitResponsiveLayout.IsPortrait ? text : "<b><smallcaps>" + text + "</smallcaps></b>";
+            dialogue.text = started && index < lines.Count ? FormattedLine(index) : string.Empty;
             ToolkitHelpLinks.Attach(dialogue, FollowNavigation);
             meetLabel.style.display = !started ? DisplayStyle.Flex : DisplayStyle.None;
             nextLabel.style.display = started && index < lines.Count - 1 ? DisplayStyle.Flex : DisplayStyle.None;

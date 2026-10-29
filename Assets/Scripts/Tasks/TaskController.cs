@@ -147,6 +147,7 @@ namespace TimelessEchoes.Tasks
             AcquireHero();
             if (mapCamera == null)
                 mapCamera = GetComponentInChildren<CinemachineCamera>(true);
+            RunCameraFrame.Attach(mapCamera);
             nextPruneTime = Time.time + pruneInterval;
         }
 
@@ -212,6 +213,7 @@ namespace TimelessEchoes.Tasks
                 Log("Replacing existing TaskController singleton instance", TELogCategory.Task, this);
             }
             Instance = this;
+            RunCameraFrame.Attach(mapCamera);
             AcquireHero();
             ResetTasks();
             nextPruneTime = Time.time + pruneInterval;
@@ -688,6 +690,12 @@ namespace TimelessEchoes.Tasks
                     {
                         var c = obj.GetComponent<FarmingTask>(); if (c != null) c.enabled = false;
                     }
+                    else if (task is TalkToNpcTask npc && npc.IsComplete())
+                    {
+                        // Retire the interaction, not the person. The map segment
+                        // owns the remaining actor and its ambient animation.
+                        npc.enabled = false;
+                    }
                     else
                     {
                         Blindsided.Utilities.Pooling.PoolManager.Release(obj.gameObject);
@@ -696,7 +704,8 @@ namespace TimelessEchoes.Tasks
             }
             else if (task is MonoBehaviour mb)
             {
-                if (task is OpenChestTask || task is WoodcuttingTask || task is FruitHarvestTask || task is MiningTask || task is FarmingTask)
+                if (task is OpenChestTask || task is WoodcuttingTask || task is FruitHarvestTask || task is MiningTask || task is FarmingTask ||
+                    task is TalkToNpcTask npc && npc.IsComplete())
                 {
                     // Disable the component and keep visuals
                     var mbBehaviour = mb as Behaviour; if (mbBehaviour != null) mbBehaviour.enabled = false;

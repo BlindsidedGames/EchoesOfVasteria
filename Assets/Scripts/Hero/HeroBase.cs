@@ -277,7 +277,7 @@ namespace TimelessEchoes.Hero
                                 if (gm.GravestonePrefab != null)
                                     Instantiate(gm.GravestonePrefab, transform.position, Quaternion.identity,
                                         gm.CurrentMap.transform);
-                            }, gm.ReaperSpawnOffset);
+                            }, gm.ReaperSpawnOffset, fromProgressBar: true);
                         ReaperSpawnedByDistance = true;
                     }
                 }
@@ -803,7 +803,7 @@ namespace TimelessEchoes.Hero
             secondaryMovementCallback ??= UpdateSecondaryAnimatorMovement;
             secondaryFlipCallback ??= UpdateSecondarySpriteFlip;
             movementController?.UpdateAnimation(animator, spriteRenderer, fourDirectional,
-                secondaryMovementCallback, secondaryFlipCallback);
+                secondaryMovementCallback, secondaryFlipCallback, ConversationFacingTarget);
         }
 
         private Action<Vector2, float> secondaryMovementCallback;

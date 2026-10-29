@@ -106,12 +106,12 @@ namespace TimelessEchoes.Hero
         /// <param name="onSecondaryUpdate">Callback for secondary animator update (main hero only).</param>
         /// <param name="onSecondaryFlip">Callback for secondary sprite flip (main hero only).</param>
         public void UpdateAnimation(Animator animator, SpriteRenderer sprite, bool fourDirectional,
-            Action<Vector2, float> onSecondaryUpdate = null, Action<bool> onSecondaryFlip = null)
+            Action<Vector2, float> onSecondaryUpdate = null, Action<bool> onSecondaryFlip = null, Transform faceTarget = null)
         {
             Vector2 vel = ai != null && ai.simulateMovement ? ai.desiredVelocity : Vector2.zero;
-            Vector2 dir = vel;
+            Vector2 dir = faceTarget ? faceTarget.position - transform.position : vel;
 
-            if (dir.sqrMagnitude < 0.0001f && setter != null && setter.target != null)
+            if (!faceTarget && dir.sqrMagnitude < 0.0001f && setter != null && setter.target != null)
                 dir = setter.target.position - transform.position;
 
             dir = AnimatorMovementHelper.SnapToCardinal(dir, fourDirectional);
@@ -218,8 +218,7 @@ namespace TimelessEchoes.Hero
             nextGuardUpdate = Time.time + .2f;
 
             // Use the visible world rather than the wider portrait simulation area.
-            var min = guardCamera.ViewportToWorldPoint(Vector3.zero);
-            var max = guardCamera.ViewportToWorldPoint(Vector3.one);
+            if (!RunCameraFrame.TryGetVisibleBounds(guardCamera, out var min, out var max)) return false;
             var heroPosition = mainHero.position;
             var ahead = Mathf.Min(Mathf.Max(0, max.x - .5f - heroPosition.x) * .5f, echo.CombatAggroRange);
             if (ahead < .25f) return false;

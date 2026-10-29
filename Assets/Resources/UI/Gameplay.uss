@@ -461,7 +461,6 @@
 /* Live game adapters retain existing routing and scale with the shared safe area. */
 .gameplay .eov-run-return {top:8px;right:8px;}
 .gameplay .eov-run-return #run-return {width:auto;height:auto;min-height:22px;font-size:var(--body);padding:var(--space-control) var(--space-control);}
-.gameplay .eov-run-return #run-return-on-death {width:auto;height:auto;min-height:14px;font-size:var(--small);padding:1.5px var(--space-control);margin-top:var(--space-tight);}
 .gameplay .eov-run-breakdown {right:8px;bottom:8px;width:auto;height:auto;min-width:92px;font-size:var(--body);padding:var(--space-control) var(--space-control);align-items:center;justify-content:center;}
 .gameplay .run-breakdown-totals {align-self:stretch;align-items:center;justify-content:space-between;}
 .gameplay .run-breakdown-resource-count {align-items:center;justify-content:center;}

@@ -13,7 +13,7 @@ namespace TimelessEchoes.Hero
 
         // Capture the standing spot, not the moving hero transform. Combat may
         // temporarily take the player away, but cannot assign another objective.
-        public IDisposable BeginNpcConversation()
+        public IDisposable BeginNpcConversation(Transform faceTarget = null)
         {
             if (IsEchoActor || !gameObject.activeInHierarchy) return null;
             if (!IsInNpcConversation)
@@ -23,7 +23,7 @@ namespace TimelessEchoes.Hero
                 conversationPosition.position = transform.position;
                 conversationStoppingDistance = movementController?.AI != null ? movementController.AI.endReachedDistance : .1f;
             }
-            var wait = new ConversationWait(this);
+            var wait = new ConversationWait(this, faceTarget);
             conversationWaits.Add(wait);
             if (!InCombat)
             {
@@ -57,6 +57,17 @@ namespace TimelessEchoes.Hero
             return true;
         }
 
+        private Transform ConversationFacingTarget
+        {
+            get
+            {
+                if (!IsInNpcConversation || InCombat) return null;
+                foreach (var wait in conversationWaits)
+                    if (wait.FaceTarget) return wait.FaceTarget;
+                return null;
+            }
+        }
+
         private void RestoreConversationCombatDistance()
         {
             if (conversationPosition && movementController?.AI != null)
@@ -88,7 +99,9 @@ namespace TimelessEchoes.Hero
         private sealed class ConversationWait : IDisposable
         {
             private HeroBase owner;
-            public ConversationWait(HeroBase owner) => this.owner = owner;
+            public readonly Transform FaceTarget;
+            public ConversationWait(HeroBase owner, Transform faceTarget)
+            { this.owner = owner; FaceTarget = faceTarget; }
             public void Dispose()
             {
                 if (owner) owner.EndNpcConversation(this);

@@ -13,7 +13,7 @@ namespace Tests.PlayMode
  public sealed partial class FieldsProductionPlayModeTests
  {
   [UnityTest]
-  public IEnumerator IvanReturnHandRendersAboveReturnOnDeathAcrossOrientations()
+  public IEnumerator IvanReturnHandKeepsReturnActionClickableAcrossOrientations()
   {
    var owner=new GameObject("Ivan return guidance"); GameObject run=null;
    try {
@@ -28,10 +28,11 @@ namespace Tests.PlayMode
      PlayModeWindow.SetCustomRenderingResolution((uint)size.x,(uint)size.y,"Ivan return guidance");
      yield return new WaitForSecondsRealtime(.3f);
      Assert.True(manager.IvanReturnPending);
-     var hand=ui.Q<Image>("ivan-return-pointer"); var town=ui.Q<Button>("run-return"); var death=ui.Q<Button>("run-return-on-death");
+     var hand=ui.Q<Image>("ivan-return-pointer"); var town=ui.Q<Button>("run-return");
      Assert.AreEqual(DisplayStyle.Flex,hand.resolvedStyle.display);
-     if(size.x>size.y)
-      Assert.That(town.worldBound.yMin,Is.LessThan(20),"Landscape return controls must use the actual screen safe area, not the former letterbox inset.");
+     var safe=ToolkitResponsiveLayout.IsPortrait?ToolkitResponsiveLayout.SafeScreenArea:ToolkitResponsiveLayout.RunHudArea;
+     Assert.That(town.worldBound.yMin,Is.EqualTo(safe.yMin+8).Within(1),"Return To Town stays at the top of the screen.");
+     Assert.That(town.worldBound.xMax,Is.EqualTo(safe.xMax-8).Within(1),"Return To Town stays at the right of the screen.");
      Assert.That(hand.worldBound.center.x,Is.EqualTo(town.worldBound.center.x).Within(1),"Keep the original hand position below Return To Town.");
      Assert.Greater(hand.worldBound.yMin,town.worldBound.yMax);
      Assert.False(hand.worldBound.Overlaps(town.worldBound),$"{size}: the hand obscures its target.");
@@ -40,23 +41,6 @@ namespace Tests.PlayMode
      Assert.AreEqual(PickingMode.Ignore,hand.pickingMode);
      var hit=ui.panel.Pick(town.worldBound.center);
      Assert.True(hit==town || town.Contains(hit),$"{size}: Return To Town must remain clickable.");
-     System.IO.Directory.CreateDirectory("Artifacts/ScreenshotStudio/ivan-guidance");
-     var path=$"Artifacts/ScreenshotStudio/ivan-guidance/hand-{size.x}.png";
-     ScreenCapture.CaptureScreenshot(path); yield return null;
-     if(size.x>size.y) {
-      var visible=new Texture2D(2,2); visible.LoadImage(System.IO.File.ReadAllBytes(path));
-      hand.style.opacity=0; yield return null;
-      var hiddenPath=$"Artifacts/ScreenshotStudio/ivan-guidance/hidden-{size.x}.png";
-      ScreenCapture.CaptureScreenshot(hiddenPath); yield return null;
-      var hidden=new Texture2D(2,2); hidden.LoadImage(System.IO.File.ReadAllBytes(hiddenPath));
-      var overlap=Rect.MinMaxRect(Mathf.Max(hand.worldBound.xMin,death.worldBound.xMin),Mathf.Max(hand.worldBound.yMin,death.worldBound.yMin),Mathf.Min(hand.worldBound.xMax,death.worldBound.xMax),Mathf.Min(hand.worldBound.yMax,death.worldBound.yMax));
-      var changed=0; var scale=ToolkitResponsiveLayout.Scale(size);
-      for(var y=(int)(overlap.yMin/scale);y<(int)(overlap.yMax/scale);y++)
-       for(var x=(int)(overlap.xMin/scale);x<(int)(overlap.xMax/scale);x++)
-        if(Vector4.Distance(visible.GetPixel(x,size.y-1-y),hidden.GetPixel(x,size.y-1-y))>.1f) changed++;
-      Object.DestroyImmediate(visible);Object.DestroyImmediate(hidden);hand.style.opacity=1;
-      Assert.Greater(changed,10,"The hand must render in front of Return On Death, not be concealed by it.");
-     }
     }
    } finally {if(run)Object.DestroyImmediate(run);Object.DestroyImmediate(owner);}
   }
@@ -148,9 +132,9 @@ namespace Tests.PlayMode
    } finally {if(actor)Object.DestroyImmediate(actor);Object.DestroyImmediate(owner);}
   }
   [UnityTest]
-  public IEnumerator GuidancePointerAutocastCompletesEchoPromptInBothLayouts()
+  public IEnumerator GuidancePointerManualCastCompletesEchoPromptInBothLayouts()
   {
-   var owner=new GameObject("Autocast tutorial check"); GameObject run=null;
+   var owner=new GameObject("Manual cast tutorial check"); GameObject run=null;
    try {
     owner.AddComponent<TimelessEchoes.Upgrades.ResourceManager>();
     var tracker=owner.AddComponent<TimelessEchoes.Stats.GameplayStatTracker>(); tracker.enabled=false;
@@ -163,24 +147,34 @@ namespace Tests.PlayMode
     oracle.saveData.Quests[recipe.requiredQuest.questId]=new Blindsided.SaveData.GameData.QuestRecord {Completed=true};
     var buffs=owner.AddComponent<TimelessEchoes.Buffs.BuffManager>(); buffs.enabled=false;
     buffs.AssignBuff(0,recipe); buffs.UnlockAutoSlots(1);
+    CreateGuidancePathfinder(owner);
+    var actor=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Caleb.prefab"),owner.transform);
+    var hero=actor.GetComponent<TimelessEchoes.Hero.HeroController>(); hero.enabled=false;
+    hero.MovementController.SetActiveState(false,hero.Animator);
+    actor.GetComponent<TimelessEchoes.Hero.HeroHealth>().Init(100);
     run=CreateGuidanceRunView();
     var hand=run.GetComponent<UIDocument>().rootVisualElement.Q<Image>("first-echo-hand");
     bool automaticObserved=false; buffs.OnBuffCast+=(_,automatic)=>automaticObserved|=automatic;
     foreach(var size in new[]{new Vector2Int(1170,2532),new Vector2Int(1920,1080)}) {
      buffs.enabled=false; buffs.ClearActiveBuffs(); automaticObserved=false;
      oracle.saveData.General.BuffTutorialStage=3;
-     PlayModeWindow.SetCustomRenderingResolution((uint)size.x,(uint)size.y,"Autocast prompt check");
+     PlayModeWindow.SetCustomRenderingResolution((uint)size.x,(uint)size.y,"Manual cast prompt check");
      yield return new WaitForSecondsRealtime(.2f);
      Assert.AreEqual(DisplayStyle.Flex,hand.style.display.value);
      var target=run.GetComponent<UIDocument>().rootVisualElement.Q<Button>("run-buff-0");
-     var fingertip=new Vector2(hand.worldBound.xMin+hand.worldBound.width*6.5f/16,hand.worldBound.yMin+hand.worldBound.height*2f/16);
+     var fingertip=(Vector2)hand.worldTransform.MultiplyPoint3x4(new Vector3(9.75f,3,0));
      Assert.That(fingertip.x,Is.EqualTo(target.worldBound.center.x).Within(1),"The fingertip, rather than the image box, must be centered on the ability.");
      var pointerScale=hand.worldBound.height/24;
-     Assert.That(fingertip.y-target.worldBound.yMax,Is.InRange(-2*pointerScale,pointerScale),"The fingertip must touch the lower button edge, including throughout its gentle bob.");
+     var edge=ToolkitResponsiveLayout.IsPortrait?target.worldBound.yMin:target.worldBound.yMax;
+     Assert.That(Mathf.Abs(fingertip.y-edge),Is.LessThanOrEqualTo(3*pointerScale),"The fingertip must touch the upper edge in portrait and lower edge in landscape.");
      Assert.AreEqual(PickingMode.Ignore,hand.pickingMode,"The overlay must not intercept the ability or disabled controls beneath it.");
      buffs.enabled=true;
      yield return null; yield return null;
-     Assert.True(automaticObserved,"The check must exercise the automatic casting path.");
+     Assert.False(automaticObserved,"Autocast must wait for the first manual cast lesson.");
+     Assert.AreEqual(3,oracle.saveData.General.BuffTutorialStage);
+     var hit=target.panel.Pick(target.worldBound.center);
+     Assert.True(hit==target || target.Contains(hit),"The prompted ability must receive the tap.");
+     FieldsClick(target); yield return null;
      Assert.AreEqual(4,oracle.saveData.General.BuffTutorialStage);
      Assert.AreEqual(DisplayStyle.None,hand.style.display.value);
     }
@@ -246,6 +240,9 @@ namespace Tests.PlayMode
       if(ToolkitResponsiveLayout.IsPortrait)
        Assert.AreEqual(DisplayStyle.Flex,root.Q("tutorial-pointer-stats").style.display.value,"Guide out of the wrong portrait Statistics page.");
       ClickControl(root.Q<Button>("stats")); yield return new WaitForSecondsRealtime(.15f);
+      if(ToolkitResponsiveLayout.IsPortrait && !screen.HasOpenMenu) {
+       ClickControl(root.Q<Button>("stats")); yield return new WaitForSecondsRealtime(.15f);
+      }
       Assert.AreEqual(DisplayStyle.Flex,root.Q("tutorial-pointer-statistics-section-"+lessonTab).style.display.value,"The lesson must point at the correct popup entry in either layout.");
       ClickControl(root.Q<Button>("statistics-section-"+lessonTab)); yield return new WaitForSecondsRealtime(.15f);
       Assert.AreEqual(lessonTab,stats.GetComponent<ToolkitStatisticsScreen>().SelectedTab);
@@ -261,7 +258,7 @@ namespace Tests.PlayMode
     typeof(TimelessEchoes.GameManager).GetProperty("CurrentMap").SetValue(gm,owner);
     typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(gm,false);
     run=CreateGuidanceRunView();
-    var expand=run.GetComponent<UIDocument>().rootVisualElement.Q<Button>("run-focus-toggle");
+    var expand=run.GetComponent<UIDocument>().rootVisualElement.Q<Button>("run-breakdown");
     foreach(var size in new[]{new Vector2Int(1170,2532),new Vector2Int(5120,2054),new Vector2Int(1170,2532)}) {
      PlayModeWindow.SetCustomRenderingResolution((uint)size.x,(uint)size.y,"Expand closes navigation state");
      yield return new WaitForSecondsRealtime(.2f);
@@ -274,11 +271,13 @@ namespace Tests.PlayMode
      foreach(var route in new[]{"quests","stats/tasks"}) {
       Assert.True(screen.OpenHelpDestination(route)); yield return new WaitForSecondsRealtime(.15f);
       Assert.True(manager.HasOpenWindow);
-      ClickControl(expand); yield return new WaitForSecondsRealtime(.2f);
+      var parent=root.Q<Button>(route=="quests"?"hub":"stats");
+      Assert.AreEqual(DisplayStyle.Flex,parent.Q<Label>("portrait-close-label").resolvedStyle.display,"The source tab exposes its close action.");
+      ClickControl(parent); yield return new WaitForSecondsRealtime(.2f);
+      if(!ToolkitResponsiveLayout.FocusView) { ClickControl(expand); yield return new WaitForSecondsRealtime(.2f); }
       Assert.True(ToolkitResponsiveLayout.FocusView);
       Assert.False(manager.HasOpenWindow,"Expanding must close the window, not suspend an open selection.");
       Assert.False(screen.HasOpenMenu);
-      var parent=root.Q<Button>(route=="quests"?"hub":"stats");
       Assert.False(parent.ClassListContains("active"),"The hidden window must not leave its navigation selected.");
       ClickControl(parent); yield return new WaitForSecondsRealtime(.15f);
       Assert.True(screen.HasOpenMenu,"The first tap after expanding must open the menu again.");
@@ -289,13 +288,13 @@ namespace Tests.PlayMode
      foreach(var id in new[]{"adventure","hub","townsfolk","stats"}) {
       ClickControl(root.Q<Button>(id)); yield return new WaitForSecondsRealtime(.15f);
       Assert.True(screen.HasOpenMenu);
-      ClickControl(expand); yield return new WaitForSecondsRealtime(.2f);
+      ClickControl(root.Q<Button>(id)); yield return new WaitForSecondsRealtime(.2f);
       Assert.True(ToolkitResponsiveLayout.FocusView);
-      Assert.False(screen.HasOpenMenu,"Expanding must close the "+id+" popup.");
+      Assert.False(screen.HasOpenMenu,"The active source button must close the "+id+" popup.");
       Assert.False(root.Q<Button>(id).ClassListContains("active"));
       ClickControl(root.Q<Button>(id)); yield return new WaitForSecondsRealtime(.15f);
       Assert.True(screen.HasOpenMenu,"A single tap must reopen "+id+" after expansion.");
-      ClickControl(root.Q<Button>(id)); ClickControl(expand); yield return new WaitForSecondsRealtime(.15f);
+      ClickControl(root.Q<Button>(id)); yield return new WaitForSecondsRealtime(.15f);
      }
     }
    } finally {

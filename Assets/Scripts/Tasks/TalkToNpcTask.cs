@@ -58,7 +58,7 @@ namespace TimelessEchoes.Tasks
             var toolkit = meetingInstance.GetComponent<TimelessEchoes.UI.Toolkit.ToolkitMeetingScreen>();
             if (toolkit != null)
             {
-                toolkit.Init(npcSprite, lines, OnMeetingFinished, lineKeys, npcId: npcId);
+                toolkit.Init(npcSprite, lines, OnMeetingFinished, lineKeys, npcId: npcId, worldSubject: transform);
                 return;
             }
             var controller = meetingInstance.GetComponent<MeetingController>();
@@ -76,6 +76,7 @@ namespace TimelessEchoes.Tasks
                 TimelessEchoes.NPC.NpcObjectStateController.Instance?.UpdateObjectStates();
             }
             talked = true;
+            if (npcId == "Ivan1") GameManager.Instance?.WaitForIvanReturn(transform);
             GrantCompletionXP();
             NotifyCompleted();
         }

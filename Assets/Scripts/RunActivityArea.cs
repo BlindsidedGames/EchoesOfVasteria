@@ -4,8 +4,8 @@ using UnityEngine;
 namespace TimelessEchoes
 {
     /// <summary>
-    /// Keeps cropped run simulation at its normal landscape width even when
-    /// the display shows only a narrower crop of that world.
+    /// Keeps run simulation on its ordinary tracking view even while the output
+    /// camera is cropped or presenting dialogue, with at least landscape width.
     /// </summary>
     public static class RunActivityArea
     {
@@ -19,6 +19,13 @@ namespace TimelessEchoes
 
         public static bool Contains(Camera camera, Vector3 worldPosition)
         {
+            if (RunCameraFrame.TryGetCurrent(out var frame))
+            {
+                if (!frame.HasState) return false;
+                var bounds = frame.ActivityBounds;
+                return worldPosition.x >= bounds.min.x && worldPosition.x <= bounds.max.x &&
+                       worldPosition.y >= bounds.min.y && worldPosition.y <= bounds.max.y;
+            }
             if (!camera) return false;
             var point = camera.WorldToViewportPoint(worldPosition);
             var halfWidth = camera.orthographic && UsesLandscapeActivity && camera.aspect > 0f
@@ -31,6 +38,12 @@ namespace TimelessEchoes
         public static bool TryGetBounds(Camera camera, out Vector3 min, out Vector3 max)
         {
             min = max = Vector3.zero;
+            if (RunCameraFrame.TryGetCurrent(out var frame))
+            {
+                var bounds = frame.ActivityBounds;
+                min = bounds.min; max = bounds.max;
+                return frame.HasState;
+            }
             if (!camera) return false;
             min = camera.ViewportToWorldPoint(Vector3.zero);
             max = camera.ViewportToWorldPoint(Vector3.one);

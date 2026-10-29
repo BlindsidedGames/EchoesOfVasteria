@@ -10,6 +10,13 @@ namespace TimelessEchoes.MapGeneration
     [CreateAssetMenu(menuName = "SO/Terrain Settings")]
     public class TerrainSettings : ScriptableObject
     {
+        public enum Traversal { Unspecified, Walkable, NonWalkable }
+
+        [Tooltip("Intended movement area. Enemy spawns require Walkable; tasks, scenery and edge collisions have separate rules.")]
+        public Traversal traversal;
+
+        public bool IsWalkable => traversal == Traversal.Walkable;
+
         [Required]
         public BetterRuleTile tile;
 

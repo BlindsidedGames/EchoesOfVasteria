@@ -59,7 +59,7 @@ namespace TimelessEchoes.Quests
                 var bounds = TownQuestReveal.SpriteBounds(obj);
                 if (!bounds.HasValue) continue;
                 var enabled = pair.Value;
-                changes.Add(new TownVisualChange(bounds.Value, () => { if (obj) obj.SetActive(enabled); }));
+                changes.Add(new TownVisualChange(bounds.Value, () => { if (obj) obj.SetActive(enabled); }, enabled ? obj : null, obj));
             }
             return changes;
         }

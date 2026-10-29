@@ -70,12 +70,6 @@ namespace TimelessEchoes
         [TitleGroup("UI/General")] [SerializeField]
         private TMP_Text retreatBonusText;
 
-        [TitleGroup("UI/General")] [SerializeField]
-        private Button returnOnDeathButton;
-
-        [TitleGroup("UI/General")] [SerializeField]
-        private TMP_Text returnOnDeathText;
-
         [TitleGroup("UI/General")] [TitleGroup("UI/General")] [SerializeField] [Min(0f)]
         private float bonusPercentPerKill = 2f;
 
@@ -181,7 +175,6 @@ namespace TimelessEchoes
 
         // Cached UI state to avoid per-frame string/flag updates
         private bool _lastReturnToTavernInteractable;
-        private bool _lastReturnOnDeathInteractable;
         private string _lastReturnToTavernText;
         private string _lastRetreatBonusText;
 
@@ -238,14 +231,6 @@ namespace TimelessEchoes
                 }
             }
 
-            if (returnOnDeathButton != null)
-            {
-                if (_lastReturnOnDeathInteractable != heroActive)
-                {
-                    returnOnDeathButton.interactable = heroActive;
-                    _lastReturnOnDeathInteractable = heroActive;
-                }
-            }
         }
 
         [SerializeField] private float fadeDuration = 1f;
@@ -265,11 +250,9 @@ namespace TimelessEchoes
         private LocationObjectStateController locationObjectStateController;
         private GameplayStatTracker statTracker;
         private Action<bool> runEndedAction;
-        private bool returnOnDeathQueued;
 
         // Presentation state is available independently of the legacy Canvas controls.
         public bool RetreatQueued => retreatQueued;
-        public bool ReturnOnDeathQueued => returnOnDeathQueued;
         public bool HeroIsDead => heroDead;
         public bool RunEndedByReaper => runEndedByReaper;
         public bool DeathPromptVisible { get; private set; }
@@ -283,9 +266,23 @@ namespace TimelessEchoes
         public bool FirstReapDialoguePending => FirstReapReturnPending && !StaticReferences.CompletedNpcTasks.Contains("FirstReapIntroduction");
         public bool IvanReturnPending => StaticReferences.CompletedNpcTasks.Contains("Ivan1") && !TimelessEchoes.Quests.QuestUtils.QuestCompleted("Meeting Ivan");
         public void RequestRetreat() => OnReturnToTavernButton();
-        public void RequestReturnOnDeath() => QueueReturnOnDeath();
         public void RequestRestartAfterDeath() => OnDeathRunButton();
         public void RequestReturnAfterDeath() => OnDeathReturnButton();
+
+        public void WaitForIvanReturn(Transform speaker)
+        {
+            if (speaker && hero && CurrentMap && IvanReturnPending)
+                StartCoroutine(AwaitIvanReturn(speaker, hero, CurrentMap));
+        }
+
+        private IEnumerator AwaitIvanReturn(Transform speaker, HeroController player, GameObject map)
+        {
+            // Continue the conversation's standing pose until the player uses
+            // Return To Town. The dialogue camera is already free to restore.
+            using (player.BeginNpcConversation(speaker))
+                while (player && speaker && CurrentMap == map && !IsInTown && !heroDead && IvanReturnPending)
+                    yield return null;
+        }
 
         private bool retreatQueued;
         private bool returningToTown;
@@ -374,8 +371,6 @@ namespace TimelessEchoes
 
             if (returnToTavernButton != null)
                 returnToTavernButton.onClick.AddListener(OnReturnToTavernButton);
-            if (returnOnDeathButton != null)
-                returnOnDeathButton.onClick.AddListener(QueueReturnOnDeath);
             if (deathRunButton != null)
                 deathRunButton.onClick.AddListener(OnDeathRunButton);
             if (deathReturnButton != null)
@@ -403,8 +398,6 @@ namespace TimelessEchoes
             base.OnDestroy();
             if (returnToTavernButton != null)
                 returnToTavernButton.onClick.RemoveListener(OnReturnToTavernButton);
-            if (returnOnDeathButton != null)
-                returnOnDeathButton.onClick.RemoveListener(QueueReturnOnDeath);
             if (deathRunButton != null)
                 deathRunButton.onClick.RemoveListener(OnDeathRunButton);
             if (deathReturnButton != null)
@@ -435,8 +428,6 @@ namespace TimelessEchoes
                 deathWindow.SetActive(false);
             if (returnToTavernText != null)
                 returnToTavernText.text = ToolkitLocalization.Text("run.return-town", "Return To Town");
-            if (returnOnDeathText != null)
-                returnOnDeathText.text = ToolkitLocalization.Text("run.return-on-death", "Return On Death");
             npcObjectStateController?.UpdateObjectStates();
             locationObjectStateController?.UpdateObjectStates();
 
@@ -466,10 +457,6 @@ namespace TimelessEchoes
         {
             RefreshRunButtonsUI();
             UpdateGenerationButtonStats();
-            if (returnOnDeathText != null)
-                returnOnDeathText.text = returnOnDeathQueued
-                    ? ToolkitLocalization.Text("run.queued", "Queued")
-                    : ToolkitLocalization.Text("run.return-on-death", "Return On Death");
         }
 
         private IEnumerator RunButtonsUICoroutine()
@@ -506,9 +493,8 @@ namespace TimelessEchoes
                 var tavernActive = IsInTown;
                 if (!deathWindowActive && !tavernActive)
                 {
-                    if (returnOnDeathQueued || retreatQueued)
+                    if (retreatQueued)
                     {
-                        returnOnDeathQueued = false;
                         retreatQueued = false;
                         StartCoroutine(ReturnToTavernRoutine());
                     }
@@ -556,13 +542,6 @@ namespace TimelessEchoes
             }
         }
 
-        private void QueueReturnOnDeath()
-        {
-            returnOnDeathQueued = true;
-            if (returnOnDeathText != null)
-                returnOnDeathText.text = ToolkitLocalization.Text("run.queued", "Queued");
-        }
-
         public void AbandonRun()
         {
             StartCoroutine(ReturnToTavernRoutine(true));
@@ -603,12 +582,9 @@ namespace TimelessEchoes
             // Stop any ongoing taskbar flashing when a new run begins
             FindAnyObjectByType<TaskbarFlasher>()?.StopFlashing();
             heroDead = false;
-            returnOnDeathQueued = false;
             retreatQueued = false;
             savesObject?.SetActive(false);
             savesHiddenObject?.SetActive(true);
-            if (returnOnDeathText != null)
-                returnOnDeathText.text = ToolkitLocalization.Text("run.return-on-death", "Return On Death");
             if (returnToTavernText != null)
                 returnToTavernText.text = ToolkitLocalization.Text("run.return-town", "Return To Town");
 #if !DISABLESTEAMWORKS
@@ -806,15 +782,24 @@ namespace TimelessEchoes
                 playerInput.enabled = false;
             hero.SetActiveState(false);
 
+            // The first authored entrance stands a few steps inside the map.
+            // Tasks still start at their normal thresholds; later runs keep the
+            // existing start once the introduction has been completed.
+            var entry = CurrentGenerationConfig ? CurrentGenerationConfig.entryIntroduction : null;
+            var startX = entry ? Mathf.Max(startingDistance, entry.StartingInset) : startingDistance;
+            // Orin's first Echo lesson also needs room inside the generated map,
+            // before the player is released to move or use the marked ability.
+            if (UI.Toolkit.BuffIntroductionGuidance.Stage == 3)
+                startX = Mathf.Max(startX, 4);
             var startPos = hero.transform.position;
             if (warpDuration > 0f)
             {
-                var speed = Mathf.Abs(startingDistance - startPos.x) / warpDuration;
+                var speed = Mathf.Abs(startX - startPos.x) / warpDuration;
                 var elapsed = 0f;
-                while (elapsed < warpDuration && !Mathf.Approximately(hero.transform.position.x, startingDistance))
+                while (elapsed < warpDuration && !Mathf.Approximately(hero.transform.position.x, startX))
                 {
                     var pos = hero.transform.position;
-                    pos.x = Mathf.MoveTowards(pos.x, startingDistance, speed * Time.deltaTime);
+                    pos.x = Mathf.MoveTowards(pos.x, startX, speed * Time.deltaTime);
                     hero.transform.position = pos;
                     elapsed += Time.deltaTime;
                     yield return null;
@@ -822,7 +807,7 @@ namespace TimelessEchoes
             }
 
             var finalPos = hero.transform.position;
-            finalPos.x = startingDistance;
+            finalPos.x = startX;
             hero.transform.position = finalPos;
 
             yield return null;
@@ -891,8 +876,6 @@ namespace TimelessEchoes
             FindAnyObjectByType<TaskbarFlasher>()?.FlashNow();
             if (returnToTavernButton != null)
                 returnToTavernButton.interactable = false;
-            if (returnOnDeathButton != null)
-                returnOnDeathButton.interactable = false;
             var distanceReaper = false;
             if (hero != null)
             {
@@ -943,9 +926,8 @@ namespace TimelessEchoes
             if (deathText != null)
                 deathText.text = distanceReaper ? ToolkitLocalization.Text("run.reaped", "You were reaped...") : ToolkitLocalization.Text("run.died", "You have Died...");
 
-            if (returnOnDeathQueued || retreatQueued)
+            if (retreatQueued)
             {
-                returnOnDeathQueued = false;
                 retreatQueued = false;
                 StartCoroutine(ReturnToTavernRoutine());
             }
@@ -960,7 +942,7 @@ namespace TimelessEchoes
 
         private void OnDeathRunButton()
         {
-            if (FirstReapDialoguePending) return;
+            if (FirstReapReturnPending || IvanReturnPending) return;
             if (deathWindowCoroutine != null)
                 StopCoroutine(deathWindowCoroutine);
             DeathPromptVisible = false;
@@ -987,14 +969,14 @@ namespace TimelessEchoes
         }
 
         /// <summary>
-        ///     Fallback invoked when the hero is reaped. If a return was queued (return-on-death
-        ///     or retreat), force an immediate return to the tavern and mark the run as ended by
+        ///     Fallback invoked when the hero is reaped. If a retreat was queued,
+        ///     force an immediate return to the tavern and mark the run as ended by
         ///     a reaper death. This guards against any edge cases where the death event flow is
         ///     interrupted (e.g., due to timing) and ensures the expected UX.
         /// </summary>
         public void EnsureAutoReturnOnReapIfQueued()
         {
-            if (!(returnOnDeathQueued || retreatQueued))
+            if (!retreatQueued)
                 return;
 
             // Ensure state reflects a death by reaper
@@ -1031,20 +1013,24 @@ namespace TimelessEchoes
         private IEnumerator DeathWindowRoutine()
         {
             if (deathWindow != null) deathWindow.SetActive(false);
-            DeathPromptVisible = true;
+            DeathPromptVisible = false;
             DeathPromptProgress = 0;
+            // The first reaping is explained before offering the end-of-run actions.
+            while (FirstReapDialoguePending && !IsInTown) yield return null;
+            if (!heroDead || IsInTown) yield break;
+            DeathPromptVisible = true;
             var t = 0f;
             if (deathTimerImage != null)
                 deathTimerImage.fillAmount = 0f;
 
-            while (t < deathWindowDuration || StaticReferences.ActiveNpcMeetings.Count > 0 || IvanReturnPending || FirstReapReturnPending || returnOnDeathQueued || retreatQueued)
+            while (t < deathWindowDuration || StaticReferences.ActiveNpcMeetings.Count > 0 || IvanReturnPending || FirstReapReturnPending || retreatQueued)
             {
                 if (StaticReferences.ActiveNpcMeetings.Count > 0)
                 {
                     yield return null;
                     continue;
                 }
-                if (returnOnDeathQueued || retreatQueued)
+                if (retreatQueued)
                 {
                     StartCoroutine(ReturnToTavernRoutine());
                     yield break;
@@ -1101,10 +1087,7 @@ namespace TimelessEchoes
                 deathUiFailsafeCheckAt = -1f;
                 // Reset state after death.
                 heroDead = false;
-                returnOnDeathQueued = false;
                 retreatQueued = false;
-                if (returnOnDeathText != null)
-                    returnOnDeathText.text = ToolkitLocalization.Text("run.return-on-death", "Return On Death");
                 if (returnToTavernText != null)
                     returnToTavernText.text = ToolkitLocalization.Text("run.return-town", "Return To Town");
                 if (deathText != null)

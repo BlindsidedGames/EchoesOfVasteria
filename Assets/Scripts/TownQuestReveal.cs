@@ -15,7 +15,10 @@ namespace TimelessEchoes
     {
         public readonly Bounds Bounds;
         public readonly Action Apply;
-        public TownVisualChange(Bounds bounds, Action apply) { Bounds = bounds; Apply = apply; }
+        public readonly GameObject RevealedObject;
+        public readonly GameObject TargetObject;
+        public TownVisualChange(Bounds bounds, Action apply, GameObject revealedObject = null, GameObject targetObject = null)
+        { Bounds = bounds; Apply = apply; RevealedObject = revealedObject; TargetObject = targetObject; }
     }
 
     /// <summary>Presents committed town changes. Never owns quest rewards or save data.</summary>
@@ -25,12 +28,13 @@ namespace TimelessEchoes
         public static bool IsPlaying => active && active.playing;
         private bool playing, cancelled, restoreMenu;
         private TownCameraPan cameraPan;
-        private TownCameraPan.Pose originalPose;
+        private WorldPresentation.RevealSession presentation;
         private QuestObjectStateController[] objects;
         private FieldsWorldView fields;
         private Transform town;
         private Action resumeQuests, removeSkip;
         private Coroutine sequence;
+        private readonly List<WorldSpeakerPerformance> arrivals = new();
         private readonly List<(SpriteRenderer renderer, Color color)> fading = new();
         private readonly List<(UnityEngine.Tilemaps.Tilemap map, Color color)> fadingTilemaps = new();
 
@@ -58,7 +62,7 @@ namespace TimelessEchoes
 
         public static Scope Begin()
         {
-            if (IsPlaying || !GameManager.Instance || !GameManager.Instance.IsInTown || Characters.CharacterCreation.Required) return null;
+            if (IsPlaying || WorldPresentation.IsBusy || !GameManager.Instance || !GameManager.Instance.IsInTown || Characters.CharacterCreation.Required) return null;
             var camera = FindAnyObjectByType<TownCameraPan>();
             var root = GameObject.Find("Hometown")?.transform;
             if (!camera || !camera.CanPresent || !root || !QuestManager.Instance) return null;
@@ -133,9 +137,9 @@ namespace TimelessEchoes
                 else group.Bounds.Encapsulate(change.Bounds);
                 group.Changes.Add(change);
             }
-            originalPose = cameraPan.CapturePose();
+            presentation = WorldPresentation.BeginReveal(this);
+            if (presentation == null) { Cleanup(); return; }
             cancelled = false; restoreMenu = true; playing = true; active = this;
-            cameraPan.BeginPresentation();
             resumeQuests = TownWindowManager.Instance?.SuspendQuestsForReveal();
             var screen = FindAnyObjectByType<ToolkitQuestsScreen>(FindObjectsInactive.Include);
             if (screen && screen.IsConfigured) removeSkip = screen.ShowRevealSkip(() => cancelled = true);
@@ -152,7 +156,7 @@ namespace TimelessEchoes
                 { restoreMenu = false; return true; }
                 if (TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow)
                 { restoreMenu = false; return true; }
-                return cancelled;
+                return cancelled || presentation == null || presentation.Interrupted;
             }
         }
 
@@ -160,18 +164,9 @@ namespace TimelessEchoes
         {
             if (playing && !UI.Toolkit.ToolkitDimScreen.BlocksInput && Keyboard.current != null &&
                 (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.spaceKey.wasPressedThisFrame)) cancelled = true;
-        }
-
-        private IEnumerator Move(TownCameraPan.Pose target, float duration)
-        {
-            var start = cameraPan.CapturePose();
-            for (var elapsed = 0f; elapsed < duration && !Interrupted; elapsed += Time.unscaledDeltaTime)
-            {
-                var t = Mathf.SmoothStep(0, 1, elapsed / duration);
-                cameraPan.SetPresentationPose(new TownCameraPan.Pose(Vector3.Lerp(start.Position, target.Position, t), Mathf.Lerp(start.Size, target.Size, t)));
-                yield return null;
-            }
-            if (!Interrupted) cameraPan.SetPresentationPose(target);
+            // Stop an in-flight shared camera move as soon as Skip or another
+            // window interrupts it; the coroutine's finally still settles visuals.
+            if (playing && Interrupted) presentation?.Dispose();
         }
 
         private IEnumerator Reveal(List<Group> groups)
@@ -183,13 +178,26 @@ namespace TimelessEchoes
                 foreach (var group in groups)
                 {
                     if (Interrupted) yield break;
-                    yield return Move(cameraPan.Frame(group.Bounds), .65f);
+                    yield return presentation.Focus(group.Bounds, .65f);
                     if (Interrupted) yield break;
                     var before = town.GetComponentsInChildren<SpriteRenderer>(true)
                         .Where(r => r.enabled && r.gameObject.activeInHierarchy).ToHashSet();
                     var beforeTilemaps = town.GetComponentsInChildren<UnityEngine.Tilemaps.Tilemap>(true)
                         .Where(map => map.gameObject.activeInHierarchy).ToHashSet();
-                    foreach (var change in group.Changes) change.Apply();
+                    var deferred = new HashSet<GameObject>();
+                    foreach (var change in group.Changes)
+                    {
+                        if (change.RevealedObject && !change.RevealedObject.activeInHierarchy)
+                            foreach (var actor in change.RevealedObject.GetComponentsInChildren<WorldSpeakerPerformance>(true))
+                            {
+                                var atImpact = group.Changes.Where(c => actor.OwnsTownArrivalChange(c.TargetObject)).ToArray();
+                                if (!actor.PrepareTownArrival(() => { foreach (var pending in atImpact) pending.Apply(); })) continue;
+                                arrivals.Add(actor);
+                                foreach (var pending in atImpact) deferred.Add(pending.TargetObject);
+                            }
+                    }
+                    foreach (var change in group.Changes)
+                        if (!change.TargetObject || !deferred.Contains(change.TargetObject)) change.Apply();
                     foreach (var renderer in town.GetComponentsInChildren<SpriteRenderer>(true))
                         if (renderer.enabled && renderer.sprite && renderer.gameObject.activeInHierarchy && !before.Contains(renderer))
                         { fading.Add((renderer, renderer.color)); var color = renderer.color; color.a = 0; renderer.color = color; }
@@ -205,9 +213,18 @@ namespace TimelessEchoes
                         yield return null;
                     }
                     RestoreColors();
+                    foreach (var actor in arrivals)
+                    {
+                        if (!actor) continue;
+                        if (Interrupted) yield break;
+                        var performance = actor.PlayTownArrival();
+                        while (!Interrupted && performance.MoveNext()) yield return performance.Current;
+                        if (Interrupted) yield break;
+                    }
+                    arrivals.Clear();
                     for (var elapsed = 0f; elapsed < .6f && !Interrupted; elapsed += Time.unscaledDeltaTime) yield return null;
                 }
-                if (!Interrupted) yield return Move(originalPose, .55f);
+                if (!Interrupted) yield return presentation.Restore(.55f);
             }
             finally { Cleanup(); }
         }
@@ -223,11 +240,12 @@ namespace TimelessEchoes
         private void Cleanup()
         {
             RestoreColors();
+            foreach (var actor in arrivals) if (actor) actor.Cancel();
+            arrivals.Clear();
             if (objects != null) foreach (var controller in objects) if (controller) controller.ReleasePresentation();
             if (fields) fields.ReleasePresentation();
             objects = null; fields = null;
-            if (playing && cameraPan)
-            { cameraPan.SetPresentationPose(originalPose); cameraPan.EndPresentation(); }
+            presentation?.Dispose(); presentation = null;
             playing = false; if (active == this) active = null;
             Blindsided.EventHandler.OnLoadData -= Loaded;
             removeSkip?.Invoke(); removeSkip = null;

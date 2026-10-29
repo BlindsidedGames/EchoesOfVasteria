@@ -33,7 +33,12 @@ namespace TimelessEchoes.UI.Toolkit
             if (!QuestUtils.QuestCompleted(firstQuest))
             {
                 var meeting = Instantiate(meetingPrefab).GetComponent<ToolkitMeetingScreen>();
-                meeting.Init(portrait, lines, () => FindAnyObjectByType<ToolkitNavigationScreen>()?.HighlightQuests(), lineKeys, npcId: "Orin");
+                const string overviewSeen = "OrinTownOverview";
+                meeting.Init(portrait, lines, () =>
+                {
+                    Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Add(overviewSeen);
+                    FindAnyObjectByType<ToolkitNavigationScreen>()?.HighlightQuests();
+                }, lineKeys, npcId: "Orin", townOverview: !Blindsided.SaveData.StaticReferences.CompletedNpcTasks.Contains(overviewSeen));
                 meeting.BeginDialogue();
                 while (meeting) yield return null;
             }

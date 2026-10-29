@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a01e3aeb3affdd48ab5fa969c12e6c5, type: 3}
-  m_Name: Mines_BottomVoid
-  m_EditorClassIdentifier: 
-  tile: {fileID: -4519693275580884954, guid: ec1b7295a86f3764b83bd3a2f14e87fd, type: 2}
+  m_Name: Hollow_LowerVoid_NonWalkable
+  m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.MapGeneration.TerrainSettings
+  traversal: 2
+  tile: {fileID: 2298303501592985273, guid: 41a71dbdc17ff604cb9a37164c73c877, type: 2}
   taskSettings:
     taskDensity: 0.1
     borderOnly: 0
@@ -20,6 +21,7 @@ MonoBehaviour:
     bottomBorderOffset: 0
     leftBorderOffset: 0
     rightBorderOffset: 0
+    addToTaskList: 1
   decor:
     density: 1
     decor: []

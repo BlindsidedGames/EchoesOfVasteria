@@ -31,25 +31,11 @@ namespace TimelessEchoes
         private InputAction moveAction;
         private bool presentationControl;
 
-        public readonly struct Pose
-        {
-            public readonly Vector3 Position;
-            public readonly float Size;
-            public Pose(Vector3 position, float size) { Position = position; Size = size; }
-        }
-
         public bool CanPresent => isActiveAndEnabled && panTarget && landBounds && outputCamera;
-        public Pose CapturePose() => new(panTarget.position, requestedSize);
+        public Bounds LandBounds => landBounds ? landBounds.bounds : default;
+        public CinemachineCamera Camera => townCamera;
         public void BeginPresentation() { presentationControl = true; ResetGesture(); }
         public void EndPresentation() { presentationControl = false; ResetGesture(); }
-        public void SetPresentationPose(Pose pose) { panTarget.position = pose.Position; requestedSize = pose.Size; }
-        public Pose Frame(Bounds bounds)
-        {
-            var aspect = (float)outputCamera.pixelWidth / Mathf.Max(1, outputCamera.pixelHeight);
-            var size = Mathf.Max(bounds.extents.y + 2, (bounds.extents.x + 2) / Mathf.Max(.1f, aspect));
-            size = Mathf.Clamp(size, preferredSize * .5f, preferredSize * 1.5f);
-            return new Pose(new Vector3(bounds.center.x, bounds.center.y, panTarget.position.z), size);
-        }
 
         private void Awake()
         {

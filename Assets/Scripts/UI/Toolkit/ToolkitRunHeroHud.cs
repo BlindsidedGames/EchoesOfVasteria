@@ -39,6 +39,9 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void RefreshHeroHud(HeroController hero, HeroHealth health)
         {
+            var closingStats = ToolkitResponsiveLayout.IsPortrait && heroStatsOpen && !HasOpenDetails &&
+                !(TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow);
+            heroStatsToggle.text = closingStats ? ToolkitLocalization.Text("common.close", "Close") : ToolkitLocalization.Text("run.stats", "Stats");
             var profile = TimelessEchoes.Characters.CharacterCreation.Current;
             heroCharacterName.text = profile?.Name ?? "";
             SetVisible(heroCharacterName, false);

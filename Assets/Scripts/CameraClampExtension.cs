@@ -14,6 +14,7 @@ namespace TimelessEchoes
     {
         [SerializeField] private float yLevel = 0f;
         [SerializeField] private float minX = 0f;
+        public float MinimumX => minX;
 
         private sealed class ComposerState : VcamExtraStateBase
         {
@@ -27,6 +28,7 @@ namespace TimelessEchoes
         public override void PrePipelineMutateCameraStateCallback(
             CinemachineVirtualCameraBase vcam, ref CameraState state, float deltaTime)
         {
+            RunCameraFrame.Prepare(vcam, ref state);
             var extra = GetExtraState<ComposerState>(vcam);
             if (!extra.Composer && !vcam.TryGetComponent(out extra.Composer)) return;
             if (extra.Adjusted)
@@ -87,7 +89,7 @@ namespace TimelessEchoes
                     var maximumLead = state.Lens.OrthographicSize * state.Lens.Aspect * margin;
                     // Lookahead predicts motion; framing independently keeps the
                     // player in the first third of the zoomed forward view.
-                    var minimumLead = UI.Toolkit.ToolkitResponsiveLayout.FocusView
+                    var minimumLead = UI.Toolkit.ToolkitResponsiveLayout.UserFocusView
                         ? state.Lens.OrthographicSize * state.Lens.Aspect / 3f
                         : -maximumLead;
                     pos.x = Mathf.Clamp(pos.x, vcam.Follow.position.x + minimumLead, vcam.Follow.position.x + maximumLead);
@@ -96,6 +98,7 @@ namespace TimelessEchoes
                 // may yield near the start, but must never reveal ungenerated space.
                 pos.x = Mathf.Max(minX + halfWidth, pos.x);
                 state.PositionCorrection += pos - state.GetFinalPosition();
+                RunCameraFrame.Capture(vcam, state);
             }
         }
     }

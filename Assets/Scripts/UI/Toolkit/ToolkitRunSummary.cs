@@ -208,8 +208,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (!ToolkitResponsiveLayout.IsPortrait) return 0;
             if (GameManager.Instance && GameManager.Instance.IsInTown) return ToolkitResponsiveLayout.WindowTop;
-            var bottom = portraitDashboard != null && portraitDashboard.resolvedStyle.display != DisplayStyle.None
-                ? portraitDashboard.worldBound.yMax - root.worldBound.yMin + 8 : ToolkitResponsiveLayout.WindowTop;
+            var bottom = PortraitHudBottom - root.worldBound.yMin + 8;
             return Mathf.Max(ToolkitResponsiveLayout.WindowTop, float.IsNaN(bottom) ? 0 : bottom);
         }
 

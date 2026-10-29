@@ -87,7 +87,6 @@ namespace TimelessEchoes.UI.Toolkit
             cover.Focus();
             RefreshText(); ToolkitLocalization.Changed += RefreshText;
             previousRenderInterval = OnDemandRendering.renderFrameInterval;
-            if (Application.isMobilePlatform) previousBrightness = Screen.brightness;
             ApplyPowerSettings();
         }
 
@@ -100,7 +99,12 @@ namespace TimelessEchoes.UI.Toolkit
                 ? (float)Screen.currentResolution.refreshRateRatio.value / QualitySettings.vSyncCount
                 : Application.targetFrameRate > 0 ? Application.targetFrameRate : 60;
             OnDemandRendering.renderFrameInterval = Mathf.Max(previousRenderInterval, Mathf.CeilToInt(rate / 10f));
-            if (Application.isMobilePlatform) Screen.brightness = 0;
+            if (Application.isMobilePlatform)
+            {
+                // iOS brightness can change while the app is inactive. Capture it on each resume.
+                if (Application.platform != RuntimePlatform.Android) previousBrightness = Screen.brightness;
+                Screen.brightness = 0;
+            }
             powerApplied = true;
         }
 
@@ -108,7 +112,11 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (!powerApplied) return;
             OnDemandRendering.renderFrameInterval = previousRenderInterval;
-            if (Application.isMobilePlatform) Screen.brightness = previousBrightness;
+            if (Application.isMobilePlatform)
+            {
+                // Android's brightness getter loses the system-default mode; release the override.
+                Screen.brightness = Application.platform == RuntimePlatform.Android ? -1f : previousBrightness;
+            }
             powerApplied = false;
         }
 

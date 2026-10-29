@@ -340,7 +340,10 @@ namespace TimelessEchoes.UI.Toolkit
                     (next.level > 0 ? "\n" + ToolkitLocalization.Text("skills.next-unlock", "Next: {0} at level {1}.", nextName, next.level) : ""), 8);
                 hint.name = "skills-tutorial-hint"; hint.style.whiteSpace = WhiteSpace.Normal;
             }
-            foreach (var item in milestones.Concat(unlocks).OrderBy(i => i.level))
+            foreach (var item in milestones.Concat(unlocks)
+                .OrderByDescending(i => controller.TotalActiveSlots > 0 && i.milestone != null &&
+                    i.milestone.CanActivate && controller.GetMilestoneState(skill, i.milestone)?.IsUnlocked == true)
+                .ThenBy(i => i.level))
 
             {
 

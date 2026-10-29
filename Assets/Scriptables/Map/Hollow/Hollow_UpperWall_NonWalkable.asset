@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a01e3aeb3affdd48ab5fa969c12e6c5, type: 3}
-  m_Name: Haloween_Uppe
+  m_Name: Hollow_UpperWall_NonWalkable
   m_EditorClassIdentifier: Assembly-CSharp::TimelessEchoes.MapGeneration.TerrainSettings
+  traversal: 2
   tile: {fileID: 7901333943584832741, guid: 41a71dbdc17ff604cb9a37164c73c877, type: 2}
   taskSettings:
     taskDensity: 0.1

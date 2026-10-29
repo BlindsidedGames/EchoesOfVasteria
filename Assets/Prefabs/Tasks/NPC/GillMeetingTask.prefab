@@ -149,6 +149,8 @@ GameObject:
   - component: {fileID: 1742882378197287474}
   - component: {fileID: 8720975377543719220}
   - component: {fileID: 1626297467428878684}
+  - component: {fileID: 9100000000000001001}
+  - component: {fileID: 9100000000000001002}
   m_Layer: 0
   m_Name: GillMeetingTask
   m_TagString: Untagged
@@ -816,3 +818,71 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!114 &9100000000000001001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2531123100031854895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1edc82d60a7141fdbeb425117a02fb2d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.WorldSpeakerAnchor
+  speakerId: Gill1
+  framingCenter: {x: 0, y: 0.5}
+  framingSize: {x: 2.5, y: 2.5}
+--- !u!114 &9100000000000001002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2531123100031854895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d5485c3bcc946a4bcdcb574c018fd72, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.WorldSpeakerPerformance
+  enterFrames:
+  - {fileID: 1035176138, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: 47743855, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: 2024894394, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: -893412954, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: -1224857423, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: -251620637, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  exitFrames:
+  - {fileID: 1168339137, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: -1243073846, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: 82793782, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: 635577385, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: -1895862115, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: 1408969329, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: 1513649313, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: -1963534502, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  idleFront:
+  - {fileID: 1003641274, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: -1170970057, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: 567990740, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: -1751369069, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: 219655872, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: -928823428, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  idleSide:
+  - {fileID: -1580446544, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: 779288647, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: -687379436, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: -236426286, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: 517463445, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: -2044425863, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  idleBack:
+  - {fileID: 525739522, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: 847456801, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: -1346479877, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: 151939512, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: -1621490221, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  - {fileID: 1356205629, guid: d2dcfc5a75a795a4d9e9d33c8ecde370, type: 3}
+  framesPerSecond: 12
+  sideFacesRight: 1
+  caughtItem: {fileID: -5709444697936806870, guid: 1dc8e874f9facc24fa08bd9484c90178, type: 3}
+  catchOrigin: {x: 1.8, y: -1.3}

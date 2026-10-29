@@ -14,12 +14,12 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void UpdatePortraitResources(Rect area)
         {
-            var visible = ToolkitResponsiveLayout.IsPortrait && GameManager.Instance && GameManager.Instance.CurrentMap &&
+            var visible = ToolkitResponsiveLayout.IsPortrait && ToolkitResponsiveLayout.FocusTransition < 1 && GameManager.Instance && GameManager.Instance.CurrentMap &&
                 !(TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow) && !HasOpenDetails && !heroStatsOpen;
             SetVisible(portraitResources, visible);
             if (!visible) return;
             portraitResources.style.left = portraitResources.style.right = 12;
-            portraitResources.style.top = Mathf.Max(portraitDashboard.worldBound.yMax, ToolkitPinnedGoals.PortraitBottom) - root.worldBound.yMin + 12;
+            portraitResources.style.top = Mathf.Max(PortraitHudBottom, ToolkitPinnedGoals.PortraitBottom) - area.yMin + 8;
             portraitResources.style.bottom = 0;
             portraitResources.SetBottomClearance(ToolkitResponsiveLayout.WindowBottom + 12);
             portraitResources.SetColumns(1);

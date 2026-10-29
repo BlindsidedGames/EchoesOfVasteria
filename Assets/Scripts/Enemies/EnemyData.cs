@@ -32,7 +32,9 @@ namespace TimelessEchoes.Enemies
 
         [TitleGroup("Spawn Settings")] public float maxX = float.PositiveInfinity;
 
-        [TitleGroup("Spawn Settings")] public List<TerrainSettings> spawnTerrains = new();
+        [TitleGroup("Spawn Settings")]
+        [ValidateInput(nameof(HasValidSpawnTerrains), "Assign at least one terrain. Every entry must be present and explicitly Walkable.")]
+        public List<TerrainSettings> spawnTerrains = new();
 
         [TitleGroup("Spawn Settings")] public List<ResourceDrop> resourceDrops = new();
 
@@ -106,6 +108,21 @@ namespace TimelessEchoes.Enemies
         [TitleGroup("References")]
         [Tooltip("Launch height above the projectile origin, in world units.")]
         public float projectileHeightOffset;
+
+        private bool HasValidSpawnTerrains() => GetSpawnTerrainError() == null;
+
+        public string GetSpawnTerrainError()
+        {
+            if (spawnTerrains == null || spawnTerrains.Count == 0)
+                return "No spawn terrain assigned; enemies must have an explicit Walkable terrain list.";
+            foreach (var terrain in spawnTerrains)
+            {
+                if (!terrain) return "The spawn terrain list contains a missing terrain reference.";
+                if (!terrain.IsWalkable)
+                    return $"Terrain '{terrain.name}' is {terrain.traversal}; enemy spawn terrain must be Walkable.";
+            }
+            return null;
+        }
 
         public float GetWeight(float worldX)
         {

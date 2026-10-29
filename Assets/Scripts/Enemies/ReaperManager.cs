@@ -15,6 +15,8 @@ namespace TimelessEchoes.Enemies
         private GameObject target;
         private Action onKill;
         private bool fromHero;
+        private UI.Toolkit.ToolkitNavigationScreen flightNavigation;
+        private Vector3 arrivalOffset;
 
         [SerializeField] private float moveDistance = 0.5f;
         [SerializeField] private float moveDownDistance;
@@ -34,6 +36,13 @@ namespace TimelessEchoes.Enemies
 
         private void Update()
         {
+            if (flightNavigation)
+            {
+                // Follow through the swing as well, so a moving hero cannot
+                // leave Carl's visible strike behind before the impact event.
+                if (target) transform.position = target.transform.position + arrivalOffset;
+                return;
+            }
             var step = moveSpeed * Time.deltaTime;
             var downStep = moveDownSpeed * Time.deltaTime;
 
@@ -149,6 +158,39 @@ namespace TimelessEchoes.Enemies
             }
         }
 
+        private void OnDestroy()
+        {
+            if (flightNavigation) flightNavigation.CancelReaperFlight();
+        }
+
+        private System.Collections.IEnumerator ArriveFromProgress(SpriteRenderer artwork)
+        {
+            var animator = GetComponent<Animator>();
+            var flyIn = animator && animator.runtimeAnimatorController
+                ? Array.Find(animator.runtimeAnimatorController.animationClips, clip => clip.name == "FlyIn") : null;
+            // Land at the original fly-in's final position, then play the full
+            // authored swing. Its KillTarget event must not run during travel.
+            arrivalOffset = transform.position - target.transform.position +
+                transform.right * (moveDistance * Mathf.Sign(transform.localScale.x)) - Vector3.up * moveDownDistance;
+            moved = moveDistance;
+            movedDown = moveDownDistance;
+            transform.position = target.transform.position + arrivalOffset;
+            if (animator) animator.enabled = false;
+            try
+            {
+                yield return flightNavigation.FlyReaperFromProgress(artwork, flyIn);
+            }
+            finally
+            {
+                if (animator)
+                {
+                    animator.enabled = true;
+                    animator.Play("Reap", 0, 0);
+                    animator.Update(0);
+                }
+            }
+        }
+
         /// <summary>
         ///     Animator event to destroy the reaper instance.
         /// </summary>
@@ -161,14 +203,16 @@ namespace TimelessEchoes.Enemies
         ///     Spawns a new reaper targeting the given object.
         /// </summary>
         public static ReaperManager Spawn(GameObject prefab, GameObject target, Transform parent = null,
-            bool fromHero = false, Action onKill = null, Vector3? positionOffset = null)
+            bool fromHero = false, Action onKill = null, Vector3? positionOffset = null, bool fromProgressBar = false)
         {
             if (prefab == null || target == null) return null;
             var offset = positionOffset ?? Vector3.zero;
 
-            // Randomly flip the horizontal spawn position so the reaper may
-            // appear from either side of the target.
-            var fromRight = Random.value < 0.5f;
+            var navigation = fromProgressBar ? FindAnyObjectByType<UI.Toolkit.ToolkitNavigationScreen>() : null;
+            // Distance reaps approach from the HUD's side of the hero. Combat
+            // procs retain their existing random approach.
+            var fromRight = navigation && navigation.CanReceiveReaper
+                ? navigation.ProgressReaperIsToRightOf(target.transform.position) : Random.value < 0.5f;
             if (fromRight) offset.x = -offset.x;
 
             var obj = Instantiate(prefab, target.transform.position + offset, Quaternion.identity, parent);
@@ -183,7 +227,18 @@ namespace TimelessEchoes.Enemies
 
             var mgr = obj.GetComponent<ReaperManager>();
             if (mgr != null)
+            {
                 mgr.Init(target, fromHero, onKill);
+                if (fromProgressBar)
+                {
+                    var artwork = obj.GetComponentInChildren<SpriteRenderer>();
+                    if (navigation && navigation.CanReceiveReaper && artwork)
+                    {
+                        mgr.flightNavigation = navigation;
+                        mgr.StartCoroutine(mgr.ArriveFromProgress(artwork));
+                    }
+                }
+            }
             return mgr;
         }
     }

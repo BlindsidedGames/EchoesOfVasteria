@@ -14,12 +14,58 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly List<VisualElement> roots = new();
         private VisualElement dock;
         private PanelSettings dockSettings;
-        private static bool focusRequested;
+        private static bool focusRequested = true;
         private static readonly Dictionary<VisualElement, bool> suspended = new();
-        public static bool FocusView => focusRequested && IsPortrait && !TownView;
+        // Dialogue never changes normal run framing. Content windows temporarily
+        // use the compact viewport, without discarding the user's selected view.
+        public static bool UserFocusView => focusRequested && IsPortrait && !TownView &&
+            !(TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow);
+        public static bool FocusView => IsPortrait && !TownView &&
+            !(TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow) &&
+            WorldPresentation.ResolveExpanded(focusRequested && !(GameManager.Instance && GameManager.Instance.HeroIsDead));
+
+        private static float focusAmount, focusFrom, focusStarted;
+        private static bool focusTarget, focusInitialized, transitionPortrait;
+        // Presentation only: normal gameplay tracking uses the immediate user
+        // viewport overload, never this short surface transition.
+        public static float FocusTransition
+        {
+            get
+            {
+                var portrait = IsPortrait && !TownView;
+                var target = FocusView;
+                var now = Time.unscaledTime;
+                if (!focusInitialized || portrait != transitionPortrait)
+                {
+                    focusInitialized = true; transitionPortrait = portrait;
+                    focusTarget = target; focusAmount = focusFrom = target ? 1 : 0; focusStarted = now;
+                }
+                if (target != focusTarget)
+                {
+                    focusFrom = focusAmount; focusStarted = now; focusTarget = target;
+                }
+                focusAmount = Mathf.Lerp(focusFrom, focusTarget ? 1 : 0,
+                    Mathf.SmoothStep(0, 1, Mathf.Clamp01((now - focusStarted) / .18f)));
+                return focusAmount;
+            }
+        }
+
+        public static Rect RunHudArea
+        {
+            get
+            {
+                var normal = ToolkitWindowLayout.SafeArea;
+                if (!IsPortrait) return normal;
+                var expanded = SafeScreenArea;
+                var blend = FocusTransition;
+                return new Rect(Vector2.Lerp(normal.position, expanded.position, blend),
+                    Vector2.Lerp(normal.size, expanded.size, blend));
+            }
+        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void ResetFocus() { focusRequested = false; suspended.Clear(); }
+        private static void ResetFocus()
+        { focusRequested = ToolkitDisplayPreferences.DefaultPortraitFullscreen; focusInitialized = false; focusAmount = 0; suspended.Clear(); }
 
         public static void SetFocusView(bool expanded) => focusRequested = expanded;
 
@@ -94,10 +140,21 @@ namespace TimelessEchoes.UI.Toolkit
 
         public static Rect WorldPixels(Vector2Int size, Rect safe)
         {
+            var normal = WorldPixels(size, safe, false);
+            if (!Portrait(size) || TownView) return normal;
+            var expanded = WorldPixels(size, safe, true);
+            var blend = FocusTransition;
+            return new Rect(Vector2.Lerp(normal.position, expanded.position, blend),
+                Vector2.Lerp(normal.size, expanded.size, blend));
+        }
+
+        // Also used by normal run tracking while a cinematic owns the rendered view.
+        public static Rect WorldPixels(Vector2Int size, Rect safe, bool expanded)
+        {
             safe = ValidSafeArea(size, safe);
             var bounds = ToolkitDisplayPreferences.KeepWorldInSafeArea ? safe : new Rect(0, 0, size.x, size.y);
             if (!Portrait(size) || TownView) return bounds;
-            if (FocusView)
+            if (expanded)
             {
                 // Keep the health/ability row on its own panel, above navigation.
                 var bottom = Mathf.Clamp(safe.yMin + 92f / Scale(size), 0, size.y - 1);

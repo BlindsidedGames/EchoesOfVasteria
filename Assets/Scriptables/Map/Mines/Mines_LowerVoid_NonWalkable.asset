@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a01e3aeb3affdd48ab5fa969c12e6c5, type: 3}
-  m_Name: Mines_Water
+  m_Name: Mines_LowerVoid_NonWalkable
   m_EditorClassIdentifier: 
-  tile: {fileID: -2285546718387168241, guid: ec1b7295a86f3764b83bd3a2f14e87fd, type: 2}
+  traversal: 2
+  tile: {fileID: -4519693275580884954, guid: ec1b7295a86f3764b83bd3a2f14e87fd, type: 2}
   taskSettings:
     taskDensity: 0.1
     borderOnly: 0

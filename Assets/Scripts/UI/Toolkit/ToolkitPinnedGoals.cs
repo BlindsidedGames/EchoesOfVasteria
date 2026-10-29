@@ -123,13 +123,13 @@ namespace TimelessEchoes.UI.Toolkit {
   {
    PortraitBottom = 0;
    if(root == null)return;
-   var controlsEnabled = BuffIntroductionGuidance.Stage != 3 && !ToolkitMeetingScreen.HasOpenDialogue;
+   var controlsEnabled = BuffIntroductionGuidance.Stage != 3 && !ToolkitMeetingScreen.HasOpenDialogue && !ToolkitResponsiveLayout.FocusView;
    toggle.SetEnabled(controlsEnabled); portraitCard.SetEnabled(controlsEnabled);
    var portrait = ToolkitResponsiveLayout.IsPortrait;
    if(previousPortrait != portrait) { previousPortrait = portrait; dirty = true; }
    if(dirty && oracle != null) { dirty = false; Refresh(); }
    var visible = GameManager.Instance && GameManager.Instance.IsMapUIVisible && oracle != null && oracle.saveData.PinnedQuests.Count > 0;
-   if(portrait) visible &= !ToolkitResponsiveLayout.FocusView && ShowPinnedQuests && portraitIds.Count > 0 &&
+   if(portrait) visible &= ToolkitResponsiveLayout.FocusTransition < 1 && ShowPinnedQuests && portraitIds.Count > 0 &&
     !(TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow) &&
     !ToolkitMeetingScreen.HasVisibleMeeting && !(runScreen && (runScreen.HasOpenDetails || runScreen.HasOpenHeroStats)) &&
     !GameManager.Instance.HeroIsDead && !GameManager.Instance.FirstReapDialoguePending;
@@ -140,9 +140,10 @@ namespace TimelessEchoes.UI.Toolkit {
    toggle.style.display = portrait ? DisplayStyle.None : DisplayStyle.Flex;
    backdrop.style.display = !portrait && ShowPinnedQuests ? DisplayStyle.Flex : DisplayStyle.None;
    var safe = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width,Screen.height),Screen.safeArea,UnityEngine.Device.Application.isMobilePlatform?1:SafeAreaRatio);
+   // The HUD anchor already follows the portrait expansion transition.
    root.style.translate = portrait ? new Translate(0,0) : StyleKeyword.Null;
    root.style.left = portrait ? 12 : safe.xMax;
-   root.style.top = portrait ? ToolkitResponsiveLayout.WorldArea.yMax + 92 : safe.y + 65;
+   root.style.top = portrait ? (runScreen ? runScreen.PortraitHudBottom : ToolkitResponsiveLayout.DockArea(new Vector2Int(Screen.width,Screen.height),Screen.safeArea).yMin + 44) + 8 : safe.y + 65;
    root.style.maxWidth = portrait ? ToolkitResponsiveLayout.Size.x - 24 : StyleKeyword.None;
    if(portrait) { root.style.width = ToolkitResponsiveLayout.Size.x - 24; PortraitBottom = root.worldBound.yMax; }
   }

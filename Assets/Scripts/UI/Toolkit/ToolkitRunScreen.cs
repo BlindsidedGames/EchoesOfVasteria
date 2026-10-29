@@ -30,7 +30,7 @@ namespace TimelessEchoes.UI.Toolkit
         private Label breakdownTitle, breakdownKills, breakdownMultiplier;
         private VisualElement breakdownTotals;
         private Image breakdownResourceIcon;
-        private Button retreat, returnOnDeath, restart, deathReturn, deathSummary, breakdown;
+        private Button retreat, restart, deathReturn, deathSummary, breakdown;
         private Image ivanReturnPointer;
         private Image firstEchoHand;
         private BuffManager guidedBuffManager;
@@ -41,15 +41,12 @@ namespace TimelessEchoes.UI.Toolkit
         private GameplayStatTracker tracker;
         private bool showingBreakdown, portraitDetails;
         private bool? portraitRun;
-        private VisualElement portraitRunActions;
-        private VisualElement portraitDashboard;
         private ScrollView portraitStatsScroll;
-        private VisualElement focusControls;
-        private Button focusToggle;
-        private VisualElement focusIcon;
         private float nextRefresh;
         private ToolkitRunResourcesView liveBreakdown;
         private int tooltipSlot = -1;
+        internal float PortraitHudBottom => hud == null ? 0 : Mathf.Max(hud.worldBound.yMax,
+            abilityBar.resolvedStyle.display == DisplayStyle.Flex ? abilityBar.worldBound.yMax : 0);
         public bool IsConfigured => definition && definition.buffs && theme && runtimeTheme && textSettings;
 
         private void OnEnable()
@@ -71,7 +68,6 @@ namespace TimelessEchoes.UI.Toolkit
             root.Add(firstEchoHand); SetVisible(firstEchoHand, false);
             returnControls = new VisualElement(); returnControls.AddToClassList("eov-run-return"); root.Add(returnControls);
             retreat = Button(returnControls, "run-return", ToolkitLocalization.Text("run.return-town-title", "Return To Town"), () => { if (!ToolkitMeetingScreen.TryFollowNavigation("return-town")) GameManager.Instance?.RequestRetreat(); });
-            returnOnDeath = Button(returnControls, "run-return-on-death", ToolkitLocalization.Text("run.return-on-death-title", "Return On Death"), () => GameManager.Instance?.RequestReturnOnDeath());
             ivanReturnPointer = new Image { name = "ivan-return-pointer", sprite = definition.tutorialHand, pickingMode = PickingMode.Ignore };
             ivanReturnPointer.style.position = Position.Absolute; ivanReturnPointer.style.width = ivanReturnPointer.style.height = 24; root.Add(ivanReturnPointer);
             SetVisible(ivanReturnPointer, false);
@@ -99,36 +95,6 @@ namespace TimelessEchoes.UI.Toolkit
             detail=Panel(overlay,"breakdown-sheet");var head=E(detail,"row breakdown-header");LocalizedLabel(head, "run.base-return-rate", "Base rate (return bonus)","small muted breakdown-rate");detailTitle=L(head,ToolkitLocalization.Text("run.breakdown-heading", "Run breakdown"),"heading breakdown-title");runTime=L(head,"","strong breakdown-time");BuildSummaryOverview();
             detailRows=ToolkitGameplay.Scroll(detail,"run-ledger");detailRows.contentContainer.AddToClassList("run-ledger-grid");var footer=E(detail,"row breakdown-footer");runRatesLeft=L(footer,"","small");runRatesRight=L(footer,"","small");runRatesRight.style.unityTextAlign=TextAnchor.MiddleRight; liveBreakdown = new ToolkitRunResourcesView(definition); detail.Add(liveBreakdown); BuildDetailsClose(); HideDetails();
             tooltip = Panel(root, "eov-run-tooltip", definition.tooltipFrame); tooltipText = Text(tooltip, ""); SetVisible(tooltip, false);
-            focusControls = new VisualElement { name = "run-focus-controls", pickingMode = PickingMode.Ignore };
-            theme.Apply(focusControls); ToolkitGameplay.Apply(focusControls, theme);
-            focusControls.style.position = Position.Absolute;
-            focusControls.style.left = focusControls.style.top = 0;
-            focusControls.style.width = focusControls.style.height = Length.Percent(100);
-            document.rootVisualElement.Add(focusControls);
-            focusToggle = ToolkitControls.Button("run-focus-toggle", () =>
-            {
-                var expand = !ToolkitResponsiveLayout.FocusView;
-                if (expand)
-                {
-                    // Expansion dismisses the menu, including its selected-window
-                    // state, so the next navigation tap opens it normally.
-                    TownWindowManager.Instance?.CloseAllWindows();
-                    HideDetails();
-                    SetHeroStatsOpen(false);
-                }
-                ToolkitResponsiveLayout.SetFocusView(expand);
-            }, theme.button);
-            focusToggle.style.position = Position.Absolute;
-            focusToggle.style.width = focusToggle.style.height = 32;
-            focusToggle.AddToClassList("run-focus-toggle");
-            focusToggle.style.paddingLeft = focusToggle.style.paddingRight = 3;
-            focusToggle.style.paddingTop = focusToggle.style.paddingBottom = 3;
-            focusControls.Add(focusToggle);
-            focusToggle.style.alignItems = Align.Center;
-            focusToggle.style.justifyContent = Justify.Center;
-            focusIcon = new VisualElement { name = "run-focus-icon", pickingMode = PickingMode.Ignore };
-            focusIcon.style.flexShrink = 0;
-            focusToggle.Add(focusIcon);
             ToolkitLocalization.Changed += LocalizationChanged;
             Blindsided.EventHandler.OnRunStarted += RunStarted;
             AttachServices(); Refresh();
@@ -176,12 +142,17 @@ namespace TimelessEchoes.UI.Toolkit
                     { target = slots[i].button; break; }
             SetVisible(firstEchoHand, target != null && firstEchoHand.sprite);
             if (target == null) return;
-            var point = root.WorldToLocal(new Vector2(target.worldBound.center.x, target.worldBound.yMax));
+            var above = ToolkitResponsiveLayout.IsPortrait;
+            var point = root.WorldToLocal(new Vector2(target.worldBound.center.x,
+                above ? target.worldBound.yMin : target.worldBound.yMax));
             // UI_Icons_12 has a fingertip at (6.5, 2) in its 16 x 16 sprite.
             // Anchor that visible tip, accounting for the transparent padding.
             var fingertip = new Vector2(6.5f, 2) * (24f / 16);
+            if (above) fingertip = Vector2.one * 24 - fingertip;
+            firstEchoHand.style.rotate = new Rotate(Angle.Degrees(above ? 180 : 0));
             firstEchoHand.style.left = point.x - fingertip.x;
-            firstEchoHand.style.top = point.y - fingertip.y - 1 + .5f * (1 + Mathf.Cos(Time.unscaledTime * 5));
+            var bob = .5f * (1 + Mathf.Cos(Time.unscaledTime * 5));
+            firstEchoHand.style.top = point.y - fingertip.y - 1 + (above ? -bob : bob);
             firstEchoHand.BringToFront();
         }
         private VisualElement Panel(VisualElement parent, string style, Sprite sprite = null)
@@ -218,13 +189,8 @@ namespace TimelessEchoes.UI.Toolkit
         private void Update()
         {
             if (root == null) return; AttachServices();
-            var gm = GameManager.Instance;
-            var canFocus = gm && gm.CurrentMap && !gm.HeroIsDead;
-            var focusAllowed = canFocus && !gm.FirstReapDialoguePending && !ToolkitMeetingScreen.HasOpenDialogue && BuffIntroductionGuidance.Stage != 3;
-            focusToggle.SetEnabled(focusAllowed);
-            if (!focusAllowed && !(gm && gm.RunLoadingActive)) ToolkitResponsiveLayout.SetFocusView(false);
             var focus = ToolkitResponsiveLayout.FocusView;
-            var area = focus ? ToolkitResponsiveLayout.SafeScreenArea : ToolkitWindowLayout.SafeArea;
+            var area = ToolkitResponsiveLayout.RunHudArea;
             root.style.left = area.x; root.style.top = area.y; root.style.width = area.width; root.style.height = area.height;
             detailDismiss.style.left = -area.x; detailDismiss.style.top = -area.y;
             detailDismiss.style.width = ToolkitResponsiveLayout.Size.x; detailDismiss.style.height = ToolkitResponsiveLayout.Size.y;
@@ -253,20 +219,18 @@ namespace TimelessEchoes.UI.Toolkit
             }
             if (!ToolkitDimScreen.BlocksInput && Keyboard.current?.escapeKey.wasPressedThisFrame == true) { HideDetails(); SetHeroStatsOpen(false); }
             if (Time.unscaledTime >= nextRefresh) { nextRefresh = Time.unscaledTime + .1f; Refresh(); }
-            SetVisible(focusControls, ToolkitResponsiveLayout.IsPortrait && canFocus && !HasOpenDetails);
             var world = ToolkitResponsiveLayout.WorldArea;
-            var safe = ToolkitResponsiveLayout.SafeScreenArea;
-            var focusSprite = focus ? definition.restoreViewIcon : definition.fullscreenIcon;
-            ToolkitTheme.Background(focusIcon, focusSprite);
-            focusIcon.style.width = focusIcon.style.height = focus ? 22 : 26;
-            focusToggle.style.left = Mathf.Min(world.xMax, safe.xMax) - 40;
-            focusToggle.style.top = focus ? safe.yMax - 178 : Mathf.Max(safe.y, world.yMax - 78);
-            if (focus)
+            if (ToolkitResponsiveLayout.IsPortrait)
             {
-                SetVisible(portraitDashboard, false);
-                SetVisible(portraitResources, false);
-                SetVisible(returnControls, false);
-                SetVisible(breakdown, false);
+                breakdown.style.left = StyleKeyword.Auto;
+                breakdown.style.right = 8;
+                breakdown.style.top = world.yMax - area.y - 88;
+                breakdown.style.bottom = StyleKeyword.Auto;
+            }
+            if (ToolkitResponsiveLayout.IsPortrait)
+            {
+                portraitResources.SetEnabled(!focus);
+                if (ToolkitResponsiveLayout.FocusTransition >= 1) SetVisible(portraitResources, false);
             }
         }
         private void LateUpdate()
@@ -285,8 +249,14 @@ namespace TimelessEchoes.UI.Toolkit
             root.style.overflow = portrait ? Overflow.Visible : Overflow.Hidden;
             var health = hud.Q("run-health-strip");
             var world = ToolkitResponsiveLayout.WorldArea;
+            // Anchor to the screen, even when the compact dock starts below the world.
+            var safe = ToolkitResponsiveLayout.SafeScreenArea;
+            returnControls.style.top = portrait ? safe.yMin - area.yMin + 8 : StyleKeyword.Null;
+            returnControls.style.right = portrait ? area.xMax - safe.xMax + 8 : StyleKeyword.Null;
+            death.style.top = portrait ? safe.yMin - area.yMin + 8 : StyleKeyword.Null;
+            death.style.right = portrait ? area.xMax - safe.xMax + 8 : StyleKeyword.Null;
             hud.style.left = portrait ? 8 : 12;
-            hud.style.top = portrait ? (ToolkitResponsiveLayout.FocusView ? area.height - 84 : 8) : StyleKeyword.Auto;
+            hud.style.top = portrait ? ToolkitResponsiveLayout.WorldArea.yMax - area.yMin + 8 : StyleKeyword.Auto;
             hud.style.bottom = portrait ? StyleKeyword.Auto : 12;
             // Reserve the five-slot footprint even before abilities unlock. A hidden
             // row must not make the health strip shrink to its text's intrinsic width.
@@ -316,7 +286,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (portrait)
             {
                 abilityBar.style.left = area.width - 204;
-                abilityBar.style.top = ToolkitResponsiveLayout.FocusView ? area.height - 84 : 8;
+                abilityBar.style.top = ToolkitResponsiveLayout.WorldArea.yMax - area.yMin + 8;
             }
             // Colour changes must not repeat the orientation-only reparenting below.
             health.style.backgroundColor = portrait ? Color.clear : ToolkitColorTheme.HudSurface;
@@ -354,11 +324,8 @@ namespace TimelessEchoes.UI.Toolkit
                 portraitStatsScroll.style.width = area.width - 16;
                 portraitStatsScroll.style.maxHeight = Mathf.Min(180, area.height - 140);
                 SetVisible(portraitStatsScroll, heroStatsOpen);
-                portraitDashboard = E(root, "portrait-run-dashboard");
-                portraitRunActions = E(portraitDashboard, "portrait-run-actions row");
-                portraitRunActions.Add(returnControls);
-                portraitRunActions.Add(breakdown);
-                portraitDashboard.Add(death);
+                root.Add(breakdown);
+                root.Add(death);
             }
             else
             {
@@ -370,26 +337,25 @@ namespace TimelessEchoes.UI.Toolkit
                 root.Add(returnControls);
                 root.Add(death);
                 root.Add(breakdown);
-                portraitRunActions?.RemoveFromHierarchy();
-                portraitRunActions = null;
-                portraitDashboard?.RemoveFromHierarchy();
-                portraitDashboard = null;
             }
             abilityBar.EnableInClassList("portrait-map-abilities", portrait);
             abilityBar.style.position = portrait ? Position.Absolute : Position.Relative;
             if (!portrait) abilityBar.style.left = abilityBar.style.top = StyleKeyword.Null;
-            returnControls.style.position = portrait ? Position.Relative : Position.Absolute;
-            returnControls.style.top = returnControls.style.right = portrait ? StyleKeyword.Auto : StyleKeyword.Null;
+            returnControls.style.position = Position.Absolute;
             returnControls.style.marginTop = 0;
             returnControls.style.flexDirection = portrait ? FlexDirection.Row : FlexDirection.Column;
-            foreach (var control in new VisualElement[] { death, breakdown })
-            {
-                control.style.position = portrait ? Position.Relative : Position.Absolute;
-                control.style.left = control.style.right = control.style.top = control.style.bottom = portrait ? StyleKeyword.Auto : StyleKeyword.Null;
-                control.style.translate = portrait ? new Translate(0, 0) : StyleKeyword.Null;
-                control.style.width = portrait && control == death ? Length.Percent(100) : StyleKeyword.Null;
-                control.style.marginTop = portrait && control == death ? 8 : 0;
-            }
+            death.style.position = Position.Absolute;
+            death.style.left = death.style.bottom = portrait ? StyleKeyword.Auto : StyleKeyword.Null;
+            death.style.translate = portrait ? new Translate(0, 0) : StyleKeyword.Null;
+            death.style.width = StyleKeyword.Null;
+            death.style.marginTop = 0;
+            SetVisible(deathSummary, !portrait);
+            breakdown.style.position = Position.Absolute;
+            breakdown.style.left = breakdown.style.right = breakdown.style.top = breakdown.style.bottom = StyleKeyword.Null;
+            breakdown.style.width = portrait ? 112 : StyleKeyword.Null;
+            breakdown.style.height = portrait ? 40 : StyleKeyword.Null;
+            breakdown.EnableInClassList("portrait-loot-toggle", portrait);
+            breakdownTitle.style.fontSize = breakdownKills.style.fontSize = breakdownMultiplier.style.fontSize = portrait ? 12 : StyleKeyword.Null;
             heroStatsPanel.style.position = portrait ? Position.Relative : Position.Absolute;
             heroStatsPanel.style.bottom = portrait ? StyleKeyword.Auto : Length.Percent(100);
             heroStatsPanel.style.width = Length.Percent(100);
@@ -412,32 +378,30 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var gm = GameManager.Instance; bool inRun = gm && gm.CurrentMap;
             var waitingForReapDialogue = gm && gm.FirstReapDialoguePending;
-            SetVisible(hud, inRun); SetVisible(returnControls, inRun&&!(TownWindowManager.Instance&&TownWindowManager.Instance.HasOpenWindow)); SetVisible(breakdown, inRun); SetVisible(death, inRun && gm.DeathPromptVisible && (!waitingForReapDialogue || ToolkitMeetingScreen.AllowsNavigation("return-town")));
-            if (portraitDashboard != null) SetVisible(portraitDashboard, inRun && !heroStatsOpen && !(TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow));
+            SetVisible(hud, inRun); SetVisible(returnControls, inRun&&!(TownWindowManager.Instance&&TownWindowManager.Instance.HasOpenWindow)); SetVisible(breakdown, inRun); SetVisible(death, inRun && gm.DeathPromptVisible && !waitingForReapDialogue);
             if (ToolkitResponsiveLayout.IsPortrait && inRun)
             {
                 SetVisible(returnControls, !gm.HeroIsDead && !(TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow));
-                SetVisible(breakdown, false);
+                SetVisible(breakdown, !gm.HeroIsDead && !HasOpenDetails && !heroStatsOpen &&
+                    !(TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow));
             }
             if (!inRun) { SetVisible(abilityBar, false); SetHeroStatsOpen(false); return; }
             var hero = HeroController.Instance; var health = hero ? hero.GetComponent<HeroHealth>() : null;
             RefreshHeroHud(hero, health);
             heroStatsToggle.SetEnabled((!ToolkitMeetingScreen.HasOpenDialogue || ToolkitMeetingScreen.AllowsNavigation("hero-stats")) && BuffIntroductionGuidance.Stage != 3);
             retreat.text = gm.RetreatQueued ? ToolkitLocalization.Text("run.retreating", "Retreating...") : ToolkitLocalization.Text("run.return-town", "Return To Town"); retreat.SetEnabled(!gm.HeroIsDead && ((!waitingForReapDialogue && !ToolkitMeetingScreen.HasOpenDialogue) || ToolkitMeetingScreen.AllowsNavigation("return-town")) && BuffIntroductionGuidance.Stage != 3);
-            returnOnDeath.text = gm.ReturnOnDeathQueued ? ToolkitLocalization.Text("run.queued", "Queued") : ToolkitLocalization.Text("run.return-on-death", "Return On Death"); returnOnDeath.SetEnabled(!gm.HeroIsDead && !waitingForReapDialogue && !ToolkitMeetingScreen.HasOpenDialogue && BuffIntroductionGuidance.Stage != 3);
             deathReturn.SetEnabled((!waitingForReapDialogue && !ToolkitMeetingScreen.HasOpenDialogue) || ToolkitMeetingScreen.AllowsNavigation("return-town"));
-            restart.SetEnabled(!waitingForReapDialogue && !ToolkitMeetingScreen.HasOpenDialogue);
+            restart.SetEnabled(!gm.FirstReapReturnPending && !gm.IvanReturnPending && !ToolkitMeetingScreen.HasOpenDialogue);
             deathSummary.SetEnabled((!waitingForReapDialogue && !ToolkitMeetingScreen.HasOpenDialogue) || ToolkitMeetingScreen.AllowsNavigation("run-summary"));
-            breakdown.SetEnabled(((!waitingForReapDialogue && !ToolkitMeetingScreen.HasOpenDialogue) || ToolkitMeetingScreen.AllowsNavigation("run-summary")) && BuffIntroductionGuidance.Stage != 3);
+            breakdown.SetEnabled(((!waitingForReapDialogue && !ToolkitMeetingScreen.HasOpenDialogue && !WorldPresentation.HasDialogue) || ToolkitMeetingScreen.AllowsNavigation("run-summary")) && BuffIntroductionGuidance.Stage != 3);
             var resourceTotal = runResources.Values.Sum() * (1d + gm.ResourceBonusPercent * .01d);
             breakdownResourceIcon.sprite = definition.ResourceIcon(resourceTotal);
-            breakdownTitle.text = ToolkitResponsiveLayout.IsPortrait ? ToolkitLocalization.Text("run.summary-short", "Summary") :
-                ToolkitLocalization.Text("run.total-label", "Total") + " " + ToolkitControls.WithoutInlineTextSize(CalcUtils.FormatNumber(resourceTotal, true));
-            SetVisible(breakdownResourceIcon, !ToolkitResponsiveLayout.IsPortrait);
-            SetVisible(breakdownTotals, !ToolkitResponsiveLayout.IsPortrait);
+            breakdownTitle.text = ToolkitLocalization.Text("run.total-label", "Total") + " " + ToolkitControls.WithoutInlineTextSize(CalcUtils.FormatNumber(resourceTotal, true));
+            SetVisible(breakdownResourceIcon, true);
+            SetVisible(breakdownTotals, true);
             breakdownKills.text = (tracker ? tracker.SessionKills : 0).ToString("N0", LocaleNumbers.Culture);
             breakdownMultiplier.text = "×" + gm.ResourceMultiplier.ToString("0.##", LocaleNumbers.Culture);
-            deathTitle.text = gm.IvanReturnPending ? ToolkitLocalization.Text("run.return-ivan", "Return to town to meet Ivan") : gm.RunEndedByReaper ? ToolkitLocalization.Text("run.reaped-prompt", "You were reaped...") : ToolkitLocalization.Text("run.died-prompt", "You have Died...");
+            deathTitle.text = gm.RunEndedByReaper ? ToolkitLocalization.Text("run.reaped-prompt", "You were reaped...") : ToolkitLocalization.Text("run.died-prompt", "You have Died...");
             SetVisible(deathFill.parent, !gm.IvanReturnPending && !gm.FirstReapReturnPending);
             deathFill.style.width = Length.Percent(gm.DeathPromptProgress * 100);
             RefreshBuffs(!gm.HeroIsDead && health && health.CurrentHealth > 0 && health.gameObject.activeInHierarchy);
@@ -487,14 +451,15 @@ namespace TimelessEchoes.UI.Toolkit
             SetVisible(tooltip, recipe); if (recipe) tooltipText.text = recipe.GetDisplayName() + "\n" + string.Join("\n", recipe.GetDescriptionLines());
         }
         public void BeginOuting() { runResources.Clear(); HideDetails(); }
-        private void RunStarted() { SetHeroStatsOpen(false); HideDetails(); }
+        private void RunStarted() { ToolkitResponsiveLayout.SetFocusView(ToolkitDisplayPreferences.DefaultPortraitFullscreen); SetHeroStatsOpen(false); HideDetails(); }
         private void RunEnded(bool died) { if (died) HideDetails(); }
         private void ResourceAdded(Resource resource, double amount, bool bonus)
         { if (!tracker || !tracker.RunInProgress || !resource || resource.DisableAlterEcho || bonus || amount <= 0) return; runResources.TryGetValue(resource, out var current); runResources[resource] = current + amount; }
         public void ShowBreakdown()
         {
             if (ToolkitMeetingScreen.TryFollowNavigation("run-summary")) return;
-            ToolkitResponsiveLayout.SetFocusView(false); HideDetails(); SetHeroStatsOpen(false);
+            if (ToolkitResponsiveLayout.IsPortrait) ToolkitResponsiveLayout.SetFocusView(false);
+            HideDetails(); SetHeroStatsOpen(false);
             if (ToolkitResponsiveLayout.IsPortrait && GameManager.Instance && !GameManager.Instance.HeroIsDead) return;
             showingBreakdown = true; overlay.pickingMode = PickingMode.Ignore; detail.AddToClassList("resource-breakdown");
             SetVisible(detailTitle.parent, false); SetVisible(detailRows, false); SetVisible(runRatesLeft.parent, false);
@@ -504,6 +469,14 @@ namespace TimelessEchoes.UI.Toolkit
         private void RefreshBreakdown() => RefreshResourceView(liveBreakdown);
         private void ToggleBreakdown()
         {
+            if (ToolkitMeetingScreen.TryFollowNavigation("run-summary")) return;
+            if (ToolkitResponsiveLayout.IsPortrait && GameManager.Instance && !GameManager.Instance.HeroIsDead)
+            {
+                TownWindowManager.Instance?.CloseAllWindows();
+                HideDetails(); SetHeroStatsOpen(false);
+                ToolkitResponsiveLayout.SetFocusView(!ToolkitResponsiveLayout.UserFocusView);
+                return;
+            }
             if (showingBreakdown && HasOpenDetails) HideDetails();
             else ShowBreakdown();
         }
@@ -513,8 +486,6 @@ namespace TimelessEchoes.UI.Toolkit
         private static void SetVisible(VisualElement element, bool value) { if (element != null) element.style.display = value ? DisplayStyle.Flex : DisplayStyle.None; }
         private void OnDisable()
         {
-            ToolkitResponsiveLayout.SetFocusView(false);
-            focusControls?.RemoveFromHierarchy(); focusControls = null;
             portraitRun = null;
             ToolkitLocalization.Changed -= LocalizationChanged;
             Blindsided.EventHandler.OnRunStarted -= RunStarted;

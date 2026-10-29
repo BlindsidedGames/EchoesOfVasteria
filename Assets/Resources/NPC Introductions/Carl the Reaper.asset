@@ -30,3 +30,25 @@ MonoBehaviour:
   lineKeys:
   - intro.Reaper.distance.line.01
   - intro.Reaper.distance.line.02
+  worldArrival:
+    entranceFrames:
+    - {fileID: 7436478308486094104, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+    - {fileID: -1723881984, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+    - {fileID: 718037692, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+    - {fileID: 629843019, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+    departureFrames:
+    - {fileID: -7272798146211615363, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+    - {fileID: -3157703983849919003, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+    - {fileID: -3157703983849919003, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+    framesPerSecond: 12
+    approachSeconds: 0.7
+    startingInset: 4
+    standingOffset: {x: 2, y: 0}
+    standingFrames:
+    - {fileID: -7889258641812825965, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+    - {fileID: -4304034985205797261, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+    - {fileID: -7646640505266202685, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+    - {fileID: 3344978320883665979, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+    - {fileID: -1118698758140868226, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+    - {fileID: 2941466638187903638, guid: 76e09a37f606a514dbee18ee1fa1ebcc, type: 3}
+    standingFacesRight: 1

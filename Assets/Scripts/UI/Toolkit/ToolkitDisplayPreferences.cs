@@ -10,6 +10,12 @@ namespace TimelessEchoes.UI.Toolkit
             set { PlayerPrefs.SetInt("Display.Orientation", Mathf.Clamp(value, 0, 2)); PlayerPrefs.Save(); ApplyOrientation(); }
         }
 
+        public static bool DefaultPortraitFullscreen
+        {
+            get => PlayerPrefs.GetInt("Display.DefaultPortraitFullscreen", 1) == 1;
+            set { PlayerPrefs.SetInt("Display.DefaultPortraitFullscreen", value ? 1 : 0); PlayerPrefs.Save(); }
+        }
+
         public static bool KeepWorldInSafeArea
         {
             get => PlayerPrefs.GetInt("Display.SafeArea", 0) == 1;

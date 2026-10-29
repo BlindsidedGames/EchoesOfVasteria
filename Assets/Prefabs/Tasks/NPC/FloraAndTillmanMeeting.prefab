@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: -8091379227490058525}
   - component: {fileID: 2843715812355913838}
   - component: {fileID: 69090384407675852}
+  - component: {fileID: 9100000000000001001}
   m_Layer: 0
   m_Name: FloraAndTillmanMeeting
   m_TagString: Untagged
@@ -284,3 +285,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1832289936946605160}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9100000000000001001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5909428014693970596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1edc82d60a7141fdbeb425117a02fb2d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.WorldSpeakerAnchor
+  speakerId: Farmers1
+  framingCenter: {x: 0.6, y: 0.5}
+  framingSize: {x: 3.8, y: 2.5}
