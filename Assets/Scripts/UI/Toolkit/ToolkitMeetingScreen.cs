@@ -33,6 +33,24 @@ namespace TimelessEchoes.UI.Toolkit
         private IDisposable conversationWait;
         private Transform worldSubject;
         private WorldPresentation.DialogueSession presentation;
+        private WorldPresentation.RevealSession inheritedReveal;
+        public void AdoptReveal(WorldPresentation.RevealSession reveal) => inheritedReveal = reveal;
+        public void SetFinalActionLabel(string key, string fallback) => view?.SetFinalActionLabel(key, fallback);
+        public void SetLineSpeakers(IReadOnlyList<Quests.QuestSpeaker> speakers)
+        {
+            if (view == null || speakers == null || speakers.Count == 0) return;
+            void Apply(int index)
+            {
+                var profile = speakers[Mathf.Clamp(index, 0, speakers.Count - 1)];
+                if (!profile) return;
+                speakerProfile = profile;
+                view.SetPortrait(profile.portrait, profile.dialoguePixelScale);
+                view.SetSpeaker(profile.speakerId);
+                SetPortraitAnimation(profile.frames, profile.framesPerSecond);
+            }
+            view.LineChanged = Apply;
+            Apply(0);
+        }
         private WorldPresentationWind wind;
         private WorldSpeakerPerformance performance;
         private bool dialogueRequested, entrancePending, closing;
@@ -184,12 +202,18 @@ namespace TimelessEchoes.UI.Toolkit
 
         private bool TryBeginPresentation()
         {
+            if (presentation == null && inheritedReveal != null)
+            {
+                presentation = inheritedReveal.ContinueAsDialogue(this, npcId, worldSubject);
+                inheritedReveal = null;
+            }
             if (!ContextValid || ActiveMeeting != this || completed || (presentation == null && WorldPresentation.IsBusy) ||
                 TownWindowManager.Instance && TownWindowManager.Instance.IsWindowOpen(TownWindowManager.Window.Options)) return false;
             presentation ??= WorldPresentation.BeginDialogue(this, npcId, worldSubject, townOverview);
             if (presentation == null) return false;
             conversationWait ??= TimelessEchoes.Hero.HeroController.Instance?.BeginNpcConversation(worldSubject);
-            if (speakerProfile && GameManager.Instance && GameManager.Instance.CurrentMap && !wind)
+            if (speakerProfile && speakerProfile == definition.orinSpeaker &&
+                GameManager.Instance && GameManager.Instance.CurrentMap && !wind)
             {
                 wind = gameObject.AddComponent<WorldPresentationWind>();
                 wind.Setup(speakerProfile);

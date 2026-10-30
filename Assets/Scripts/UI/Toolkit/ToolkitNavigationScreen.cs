@@ -27,6 +27,19 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly Dictionary<Entry, Label> portraitCloseLabels = new();
         private Entry[] navigationEntries;
         private ToolkitShopScreen shopScreen;
+        private ToolkitMildredPicker mildredPicker;
+
+        public void ShowMildredColours()
+        {
+            if (!theme || !runtimeTheme || !textSettings) return;
+            if (!mildredPicker)
+            {
+                var host = new GameObject("Mildred colours", typeof(UIDocument));
+                mildredPicker = host.AddComponent<ToolkitMildredPicker>();
+                mildredPicker.Configure(theme, runtimeTheme, textSettings);
+            }
+            mildredPicker.Show();
+        }
         private PanelSettings panel;
         private VisualElement root, popup, autoPinGroup;
         private VisualElement menuDismiss;
@@ -1031,6 +1044,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void OnDisable()
         {
+            if (mildredPicker) mildredPicker.Hide();
             if (hooked && windows) { windows.CloseRequested -= CloseMenu; windows.WindowsChanged -= Refresh; }
             hooked = false;
             foreach (var binding in bindings) binding.Dispose();
@@ -1044,6 +1058,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void OnDestroy()
         {
+            if (mildredPicker) Destroy(mildredPicker.gameObject);
             if (shopScreen) Destroy(shopScreen.gameObject);
             if (panel) Destroy(panel);
         }

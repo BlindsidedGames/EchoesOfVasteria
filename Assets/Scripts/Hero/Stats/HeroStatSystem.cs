@@ -192,16 +192,11 @@ namespace TimelessEchoes.Hero
                     else movementRating += Mathf.Max(0f, infMove);
                 }
 
-                const float BaseMoveSpeed = 3f;
-                const float MoveBonusRange = 6f;
-                const float MovementScalarN = 25f;
-
-                var ratingClamped = Mathf.Max(0f, movementRating);
-                var scale01 = ratingClamped / (ratingClamped + MovementScalarN);
-                var preBuff = BaseMoveSpeed + MoveBonusRange * scale01;
+                var preBuff = TownPathProgression.UnbuffedSpeed(movementRating,
+                    TownPathProgression.Tier(Blindsided.Oracle.oracle?.saveData));
                 var buffMult = buffs != null ? buffs.MoveSpeedMultiplier : 1f;
                 var finalSpeed = preBuff * buffMult;
-                newSnapshot.movementSpeed = Mathf.Max(BaseMoveSpeed, finalSpeed);
+                newSnapshot.movementSpeed = Mathf.Max(3f, finalSpeed);
             }
 
             if ((_dirtyMask & DirtyMask.Defense) != 0)

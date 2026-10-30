@@ -314,7 +314,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7955977563392
-    m_Localized: '"*Grumbles* This town could sure use a better footing. Go fetch some Iron Chunks and we will get started on some pathing" - The Old Timer'
+    m_Localized: I could use another batch of ore.
     m_Metadata:
       m_Items: []
   - m_Id: 7955978563392
@@ -400,13 +400,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7956049563392
-    m_Localized: "\u201CThe town paths are wearing thin. Bring me more Copium Chunks and I'll give us some firmer footing.\u201D \u2014 The Old Timer"
+    m_Localized: "Let\u2019s see what you\u2019ve dug up this time."
     m_Metadata:
       m_Items: []
   - m_Id: 7956050563392
-    m_Localized: 'Improves the town paths.
-
-      9,200 Mining Experience'
+    m_Localized: 9,200 Mining Experience
     m_Metadata:
       m_Items: []
   - m_Id: 7956051563392
@@ -652,7 +650,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1871405633650688
-    m_Localized: "\u201CWe could use a fence by the windmill. Otherwise those animals will be helping themselves.\u201D \u2014 Barkley"
+    m_Localized: Help Barkley reinforce the farm boundary.
     m_Metadata:
       m_Items: []
   - m_Id: 1871406690615296
@@ -664,7 +662,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1876363284201473
-    m_Localized: '"So what do you think?! It''s nice right? I''ll need some more sticks to continue though and I am out of logs for the posts. You wouldn''t mind fetching some more would ya?" - Barkley'
+    m_Localized: Supply rails for the next stretch of fence.
     m_Metadata:
       m_Items: []
   - m_Id: 1876363284201472
@@ -680,7 +678,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1879594387259393
-    m_Localized: '"Few more and we''ll be done, this time I will need a bit of slime as well, I''ll use it in the lashings for the gate" - Barkley'
+    m_Localized: Help Barkley strengthen the gate.
     m_Metadata:
       m_Items: []
   - m_Id: 1879594387259394
@@ -1220,7 +1218,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000001
-    m_Localized: "Here\u2019s a Radish seed pack to start with. Barkley can help us fence the first plot. Complete \u201COur First Patch\u201D, then plant it in Town \u2192 Fields. Watering halves its growing time. \u2014 Flora"
+    m_Localized: Collect a Radish seed pack from Flora.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000002
@@ -1232,7 +1230,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000011
-    m_Localized: "Barkley\u2019s agreed to fence off our first patch. Tillman\u2019s already picked the spot. I\u2019m choosing what we grow. \u2014 Flora"
+    m_Localized: Help Flora and Tillman prepare their first growing bed.
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000012
@@ -1264,11 +1262,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000040
-    m_Localized: A Second Row
+    m_Localized: Another Bed
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000041
-    m_Localized: "A second row would catch the morning sun. Tillman\u2019s marked it out before I could change my mind. \u2014 Flora"
+    m_Localized: "A second bed would catch the morning sun. Tillman\u2019s marked it out before I could change my mind. \u2014 Flora"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000042
@@ -1292,7 +1290,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000061
-    m_Localized: "That\u2019s the last patch of good soil. Barkley\u2019s finishing the fence, and Tillman\u2019s trying to find an excuse to grow more turnips. \u2014 Flora"
+    m_Localized: "That\u2019s the last patch of good soil. Tillman\u2019s trying to find an excuse to grow more turnips. \u2014 Flora"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000062
@@ -1304,7 +1302,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000071
-    m_Localized: "Flora can have her rows of vegetables. I\u2019m saving this corner for trees. Barkley says he\u2019ll help with the fencing. \u2014 Tillman"
+    m_Localized: "Flora can have her rows of vegetables. I\u2019m saving this corner for trees. \u2014 Tillman"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000072
@@ -1316,7 +1314,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000081
-    m_Localized: "We\u2019ll need room for another pair. I\u2019d like to pick the fruit without climbing through a fence. \u2014 Tillman"
+    m_Localized: "We\u2019ll need room for another pair. \u2014 Tillman"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000000082
@@ -1401,6 +1399,70 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 160252005576216576
     m_Localized: "Task Echo. Assign it in Hub \u2192 Buffs."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87020000000000000
+    m_Localized: Building the Mill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87020000000000001
+    m_Localized: Supply the timber for the mill.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87020000000000002
+    m_Localized: Mill building and field fence
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87020000000000003
+    m_Localized: Feathered Sails
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87020000000000004
+    m_Localized: "Finish the mill\u2019s sails."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87020000000000005
+    m_Localized: Automatic planting and harvesting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87020000000000006
+    m_Localized: Water on Hand
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87020000000000007
+    m_Localized: Build a well beside the fields.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87020000000000008
+    m_Localized: Automatic watering
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87030000000000000
+    m_Localized: Firm Footing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87030000000000001
+    m_Localized: "Nearly lost a boot in that mud. Let\u2019s get some gravel down."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87030000000000002
+    m_Localized: 'Dirt paths
+
+      +15% movement speed'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87030000000000003
+    m_Localized: Set in Stone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87030000000000004
+    m_Localized: "Wouldn\u2019t mind a proper paved road before I retire."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87030000000000005
+    m_Localized: 'Paved paths
+
+      +20% movement speed'
     m_Metadata:
       m_Items: []
   references:

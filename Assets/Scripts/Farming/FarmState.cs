@@ -13,6 +13,7 @@ namespace TimelessEchoes.Farming
         public int TwinsLevel = 1;
         public long TwinsXp;
         public bool FirstHarvestCompleted;
+        public FarmProject Projects;
         public bool StatisticsSinceUpdate;
         public long TotalHarvests;
         public double CropsGathered;
@@ -43,6 +44,7 @@ namespace TimelessEchoes.Farming
                 MigratedSeedIds = MigratedSeedIds == null ? new HashSet<string>() : new HashSet<string>(MigratedSeedIds),
                 ProductionRevision = ProductionRevision, TwinsLevel = TwinsLevel, TwinsXp = TwinsXp,
                 FirstHarvestCompleted = FirstHarvestCompleted,
+                Projects = Projects,
                 StatisticsSinceUpdate = StatisticsSinceUpdate, TotalHarvests = TotalHarvests,
                 CropsGathered = CropsGathered, LogsGathered = LogsGathered,
                 GardenCapacity = GardenCapacity, OrchardCapacity = OrchardCapacity,

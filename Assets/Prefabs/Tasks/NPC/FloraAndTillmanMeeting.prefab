@@ -51,24 +51,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   associatedSkill: {fileID: 0}
   taskData: {fileID: 0}
+  enableAutoRemovalWhenBehind: 1
+  autoRemovalDistanceX: 20
+  autoRemovalIntervalSeconds: 2
   npcId: Farmers1
   chatPoint: {fileID: 4487724683361477651}
   meetingPrefab: {fileID: 4473393103591709735, guid: 8ed7138ae18d6d148b1f94dd314d3c1b, type: 3}
   npcSprite: {fileID: 436153096, guid: c5d8ee5cec5f23848af0fa1d1a2881fa, type: 3}
   lines:
-  - Pleasure to meet ya
-  - We came out here looking for some new seeds.
-  - But it seems the slimes have come further than usual.
-  - We could really use your help dealing with them...
-  - Eva wants how many radishes!?
+  - Hello! I'm Flora. That's Tillman. We're looking for seeds.
+  - Mostly we've found chickens.
+  - There's good soil beside the mill site in town. Come and see us when you're back.
   lineKeys:
-  - npc.Farmers1.line.01
-  - npc.Farmers1.line.02
-  - npc.Farmers1.line.03
-  - npc.Farmers1.line.04
-  - npc.Farmers1.line.05
+  - farm.story.meet.01
+  - farm.story.meet.02
+  - farm.story.meet.03
+  dialogueSpeakers:
+  - {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
+  - {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
+  - {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
 --- !u!212 &2843715812355913838
 SpriteRenderer:
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -87,6 +91,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -108,9 +114,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 436153096, guid: c5d8ee5cec5f23848af0fa1d1a2881fa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -120,8 +128,8 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+  m_BlendShapeWeights: []
 --- !u!95 &69090384407675852
 Animator:
   serializedVersion: 7
@@ -144,6 +152,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &9100000000000001001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5909428014693970596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1edc82d60a7141fdbeb425117a02fb2d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.WorldSpeakerAnchor
+  speakerId: Farmers1
+  framingCenter: {x: 0.6, y: 0.5}
+  framingSize: {x: 3.8, y: 2.5}
 --- !u!1 &7381522871324837984
 GameObject:
   m_ObjectHideFlags: 0
@@ -179,6 +202,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3660454715186873599
 SpriteRenderer:
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -197,6 +221,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -218,9 +244,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -807480962, guid: 106650e4c5203924faa8a1942a210e54, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -230,8 +258,8 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
+  m_BlendShapeWeights: []
 --- !u!95 &60993824020601280
 Animator:
   serializedVersion: 7
@@ -285,18 +313,3 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1832289936946605160}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9100000000000001001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5909428014693970596}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1edc82d60a7141fdbeb425117a02fb2d, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.WorldSpeakerAnchor
-  speakerId: Farmers1
-  framingCenter: {x: 0.6, y: 0.5}
-  framingSize: {x: 3.8, y: 2.5}

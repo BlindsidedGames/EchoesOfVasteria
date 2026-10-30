@@ -20,7 +20,9 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly VisualElement portraitColumn, portraitFrame, contentColumn;
         private readonly ScrollView dialogueScroll;
         private bool? portraitLayout;
-        private readonly float portraitPixelScale;
+        private float portraitPixelScale;
+        private string finalLabelKey, finalLabelFallback;
+        public Action<int> LineChanged { get; set; }
         private float portraitOffsetY;
         private int index = -1;
         private bool completed, disposed;
@@ -53,6 +55,13 @@ namespace TimelessEchoes.UI.Toolkit
         public bool AwaitingMeet => index < 0;
 
         public void SetNavigationShortcut(string route) => navigationShortcut = route;
+        public void SetFinalActionLabel(string key, string fallback)
+        { finalLabelKey = key; finalLabelFallback = fallback; Refresh(); }
+        public void SetPortrait(Sprite sprite, float pixelScale)
+        {
+            portraitPixelScale = pixelScale;
+            Root.Q<Image>("portrait").sprite = sprite;
+        }
 
         public string FindNavigationRoute(Func<string, bool> matches)
         {
@@ -138,7 +147,7 @@ namespace TimelessEchoes.UI.Toolkit
                 "Barkley1" => "Barkley", "Ivan1" => "Ivan", "Gill1" => "Gill",
                 "Farmers1" => "Farmers", "OldTimer1" => "OldTimer",
                 "Witch1" or "EvaWateringCanIntroduction" => "Eva",
-                "Orin" or "OrinHubIntroduction" => "Orin", "Reaper1" => "Carl", _ => null
+                "Orin" or "OrinHubIntroduction" => "Orin", "Reaper1" => "Carl", "Flora" or "Tillman" => npcId, _ => null
             };
             speakerKey = identity == null ? null : "npc.name." + identity;
             portraitOffsetY = identity == "Carl" ? 8 : 0;
@@ -323,11 +332,13 @@ namespace TimelessEchoes.UI.Toolkit
                 return;
             }
             index++;
+            LineChanged?.Invoke(index);
             Refresh();
         }
 
         private void Refresh()
         {
+            if (finalLabelKey != null) closeLabel.text = ToolkitLocalization.Text(finalLabelKey, finalLabelFallback);
             if (skipButton != null) skipButton.text = ToolkitLocalization.Text("meeting.skip", "Skip");
             hasTextMeasurement = false; // Locale/font fallback refreshes can change metrics without changing the text.
             var started = index >= 0;

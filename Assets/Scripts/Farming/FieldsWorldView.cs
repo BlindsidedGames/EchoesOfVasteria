@@ -18,16 +18,21 @@ namespace TimelessEchoes.Farming
         [SerializeField] private Transform town;
         private readonly List<Plot> plots = new();
         private readonly List<GameObject> enclosures = new();
+        private readonly List<GameObject> gardenGround = new(), orchardGround = new();
         private readonly Dictionary<SpriteRenderer, bool> hidden = new();
         private readonly List<SpriteRenderer> legacyFarmArt = new();
         private bool legacyFarmArtCached;
-        private readonly Dictionary<(Tilemap map, Vector3Int cell), TileBase> changedPath = new();
-        private readonly Dictionary<(Tilemap map, Vector3Int cell), Matrix4x4> pathMatrices = new();
-        private readonly Dictionary<(Tilemap map, Vector3Int cell), TileFlags> pathFlags = new();
         private readonly Dictionary<Vector3Int, TileBase> changedDecor = new();
+        private readonly Dictionary<Vector3Int, Matrix4x4> decorMatrices = new();
+        private readonly Dictionary<Vector3Int, TileFlags> decorFlags = new();
         private readonly List<GameObject> retainedTrees = new();
-        private Tilemap path, upgradedPath, decor;
+        private Tilemap decor;
         private Transform geometry;
+        private GameObject firstFencePosts;
+        private SpriteRenderer millConstruction;
+        private SpriteRenderer[] originalMill, originalWell;
+        private Bounds millBounds, wellBounds;
+        private FarmProject renderedProjects = (FarmProject)(-1);
         private Blindsided.SaveData.GameData renderedOwner;
         private int garden = -1, orchard = -1;
         private float nextRefresh;
@@ -42,16 +47,26 @@ namespace TimelessEchoes.Farming
             Bounds? bounds = null;
             void Include(Bounds addition) { if (bounds.HasValue) { var current = bounds.Value; current.Encapsulate(addition); bounds = current; } else bounds = addition; }
             for (var i = garden; i < nextGarden; i++) Include(new Bounds(GardenAnchors[i] + Vector2.one, new Vector3(5, 5, 1)));
-            for (var i = orchard; i < nextOrchard; i++) Include(new Bounds(OrchardAnchors[i] + Vector2.one * .5f, new Vector3(4, 4, 1)));
-            var fences = new[] { new Bounds(new Vector3(-59, 2.5f), new Vector3(12, 9, 1)), new Bounds(new Vector3(-58, -7.5f), new Vector3(14, 9, 1)), new Bounds(new Vector3(-58, -26), new Vector3(12, 8, 1)) };
-            for (var i = 0; i < fences.Length; i++) if (garden < i * 2 + 1 && nextGarden >= i * 2 + 1) Include(fences[i]);
+            for (var i = orchard; i < nextOrchard; i++) Include(new Bounds(OrchardAnchors[i], new Vector3(4, 4, 1)));
+            for (var i = 0; i < EnclosureBounds.Length; i++) if (garden < i * 2 + 1 && nextGarden >= i * 2 + 1) Include(EnclosureBounds[i]);
+            var projects = service.State.Projects;
+            if ((projects & (FarmProject.MillBody | FarmProject.MillSails)) != (renderedProjects & (FarmProject.MillBody | FarmProject.MillSails)))
+            { Include(millBounds); if (nextGarden > 0) Include(EnclosureBounds[0]); }
+            if ((projects & FarmProject.Well) != (renderedProjects & FarmProject.Well)) Include(wellBounds);
             if (!bounds.HasValue) return null;
             return new TownVisualChange(bounds.Value, () => { var held = presentationHeld; presentationHeld = false; Refresh(); presentationHeld = held; });
         }
         public int ClearedStumps { get; private set; }
         public int ClearedStandingTrees { get; private set; }
-        public static readonly Vector2[] GardenAnchors = { new(-62,1), new(-58,1), new(-62,-9), new(-57,-9), new(-61,-27), new(-57,-27) };
-        public static readonly Vector2[] OrchardAnchors = { new(-60,-13.5f), new(-56,-13.5f), new(-52,-13.5f), new(-60,-17), new(-56,-17), new(-52,-17) };
+        public static readonly Vector2[] GardenAnchors = { new(-58,1), new(-54,1), new(-56,-9), new(-52,-9), new(-57,-27), new(-53,-27) };
+        public static readonly Vector2[] OrchardAnchors = { new(-56,-13.5f), new(-53,-13.5f), new(-50,-13.5f), new(-56,-16), new(-53,-16), new(-50,-16) };
+        private static readonly Bounds[] EnclosureBounds = {
+            new(new Vector3(-55,2),new Vector3(11,7,10)),
+            new(new Vector3(-53,-8),new Vector3(11,7,10)),
+            new(new Vector3(-54,-26),new Vector3(11,7,10))
+        };
+        private static readonly Vector2[] GardenGroundOrigins = { new(-59.5f,-.5f), new(-57.5f,-10.5f), new(-58.5f,-28.5f) };
+        private static readonly Vector2[] OrchardGroundOrigins = { new(-58,-15.5f), new(-58,-18), new(-58,-18) };
         private sealed class Plot
         {
             public string id;
@@ -66,14 +81,14 @@ namespace TimelessEchoes.Farming
             if (!appearance || !town || !service) { enabled = false; return; }
             geometry = new GameObject("Fields world").transform;
             geometry.SetParent(town,false);
-            path = town.GetComponentsInChildren<Tilemap>(true).FirstOrDefault(t => t.name == "-2 Old Path");
-            upgradedPath = town.GetComponentsInChildren<Tilemap>(true).FirstOrDefault(t => t.name == "-1 Path");
             decor = town.GetComponentsInChildren<Tilemap>(true).FirstOrDefault(t => t.name == "BG_Decor 0");
             for (int i=0;i<6;i++) CreatePlot(FarmCommands.GardenBeds[i], GardenAnchors[i], false);
             for (int i=0;i<6;i++) CreatePlot(FarmCommands.OrchardBeds[i], OrchardAnchors[i], true);
-            Fence(-64,-1,-54,6,false,-61,true);
-            Fence(-64,-11,-52,-4,true,-58,false);
-            Fence(-63,-29,-53,-23,true,-58,false);
+            Fence(-60,-1,-50,5,false,-57,true);
+            Fence(-58,-11,-48,-5,true,-54,false);
+            Fence(-59,-29,-49,-23,true,-54,false);
+            CreateGround();
+            CreateProjects();
             ConfigureScreen();
             Refresh();
         }
@@ -100,13 +115,18 @@ namespace TimelessEchoes.Farming
             var state = service.Ready ? service.State : null;
             var owner = service.Ready ? Blindsided.Oracle.oracle?.saveData : null;
             int capacity = Mathf.Clamp(state?.GardenCapacity ?? 0,0,6), trees = Mathf.Clamp(state?.OrchardCapacity ?? 0,0,6);
+            var projects = state?.Projects ?? FarmProject.None;
             // Credits and harvests replace the farm candidate, but do not change
             // the scenery. Rebuild only for a new save owner or plot layout.
-            if (!ReferenceEquals(renderedOwner,owner) || garden != capacity || orchard != trees)
+            if (!ReferenceEquals(renderedOwner,owner) || garden != capacity || orchard != trees || renderedProjects != projects)
             {
-                RestoreScenery(); renderedOwner = owner; garden = capacity; orchard = trees;
-                ApplyScenery(capacity >= 5 ? 3 : capacity >= 3 ? 2 : capacity >= 1 ? 1 : 0);
-                for (int i=0;i<enclosures.Count;i++) enclosures[i].SetActive(capacity >= i*2+1);
+                RestoreScenery(); renderedOwner = owner; garden = capacity; orchard = trees; renderedProjects = projects;
+                ApplyScenery(capacity >= 5 ? 3 : capacity >= 3 ? 2 : capacity >= 1 ? 1 : 0, trees);
+                for (int i=0;i<enclosures.Count;i++) enclosures[i].SetActive(capacity >= i*2+1 && (i > 0 || FarmProjects.Complete(state,FarmProject.MillBody)));
+                RefreshProjects(state);
+                for (int i=0;i<gardenGround.Count;i++) gardenGround[i].SetActive(capacity >= i*2+1);
+                var orchardStage = (trees + 1) / 2;
+                for (int i=0;i<orchardGround.Count;i++) orchardGround[i].SetActive(orchardStage == i+1);
             }
             // Quest visibility can reactivate legacy farmer decorations; hide only their renderers.
             HideLegacyFarmArt(); // Legacy planted art is never a valid Fields state, including an unbuilt fresh slot.
@@ -159,6 +179,47 @@ namespace TimelessEchoes.Farming
             plots.Add(new Plot { id=id,root=root,wet=wet.ToArray(),plants=plants.ToArray(),orchard=isOrchard });
             root.SetActive(false);
         }
+        private void CreateGround()
+        {
+            void Add(Sprite[] sprites, Vector2[] origins, List<GameObject> roots, string name)
+            {
+                for (var i=0;i<origins.Length;i++)
+                {
+                    var sprite = sprites != null && i < sprites.Length ? sprites[i] : null;
+                    // Clearing artwork covers the path's end cap inside the field.
+                    // Its exterior remains below the Default-layer fence and actors.
+                    var sr = Put(geometry,sprite,origins[i],0,name + " " + (i+1));
+                    sr.sortingLayerName = "Background";
+                    roots.Add(sr.gameObject); sr.gameObject.SetActive(false);
+                }
+            }
+            Add(appearance.gardenGround,GardenGroundOrigins,gardenGround,"Field clearing");
+            Add(appearance.orchardGround,OrchardGroundOrigins,orchardGround,"Orchard clearing");
+        }
+
+        private void CreateProjects()
+        {
+            var mill = town.Find("Farmers/Windmill_0");
+            var well = town.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "Well_0");
+            originalMill = mill ? mill.GetComponentsInChildren<SpriteRenderer>(true) : Array.Empty<SpriteRenderer>();
+            originalWell = well ? well.GetComponentsInChildren<SpriteRenderer>(true) : Array.Empty<SpriteRenderer>();
+            millBounds = mill ? TownQuestReveal.SpriteBounds(mill.gameObject) ?? new Bounds(mill.position, new Vector3(5,8,0)) : default;
+            wellBounds = well ? TownQuestReveal.SpriteBounds(well.gameObject) ?? new Bounds(well.position, new Vector3(3,4,0)) : default;
+            if (mill) millConstruction = Put(geometry, appearance.millPosts, mill.position, 0, "Mill construction");
+            firstFencePosts = new GameObject("First field boundary posts"); firstFencePosts.transform.SetParent(geometry,false);
+            foreach(var point in new [] {new Vector2(-60,5),new Vector2(-50,5),new Vector2(-50,-1),new Vector2(-58,-1),new Vector2(-56,-1)})
+                Put(firstFencePosts.transform,appearance.fence[1],point,-1,"Boundary post");
+        }
+        private void RefreshProjects(FarmState state)
+        {
+            var body = FarmProjects.Complete(state,FarmProject.MillBody);
+            var sails = FarmProjects.AutoReplant(state);
+            foreach(var sr in originalMill ?? Array.Empty<SpriteRenderer>()) if(sr && !sails) Hide(sr);
+            foreach(var sr in originalWell ?? Array.Empty<SpriteRenderer>()) if(sr && !FarmProjects.AutoWater(state)) Hide(sr);
+            if(millConstruction) { millConstruction.sprite = body ? appearance.millBody : appearance.millPosts; millConstruction.enabled = !sails; }
+            if(firstFencePosts) firstFencePosts.SetActive(garden>0 && !body);
+        }
+
         private void Fence(int x0,int y0,int x1,int y1,bool northGate,int gateX,bool original)
         {
             var root = new GameObject("Fields enclosure " + (enclosures.Count+1)); root.transform.SetParent(geometry,false); enclosures.Add(root);
@@ -173,6 +234,7 @@ namespace TimelessEchoes.Farming
             for(int y=y0+1;y<y1;y++)
             { if(!original || y>=5) Put(root.transform,f[1],new(x0,y),original?-1:3,"West fence"); Put(root.transform,f[1],new(x1,y),3,"East fence"); }
             Put(root.transform,f[northGate||original?6:7],new(gateX,northGate?y1+.5f:original?y0+.5f:y0-.5f),original?-1:3,"Open gate");
+            foreach(var renderer in root.GetComponentsInChildren<SpriteRenderer>()) renderer.sortingOrder = -1;
             root.SetActive(false);
         }
         private void Hide(SpriteRenderer sr)
@@ -203,34 +265,42 @@ namespace TimelessEchoes.Farming
         {
             foreach(var pair in hidden) if(pair.Key) pair.Key.enabled=pair.Value;
             hidden.Clear();
-            foreach(var pair in changedPath)
+            if(decor) foreach(var pair in changedDecor)
             {
-                var (map, cell) = pair.Key;
-                if (!map) continue;
-                map.SetTile(cell,pair.Value); map.SetTileFlags(cell,TileFlags.None);
-                map.SetTransformMatrix(cell,pathMatrices[pair.Key]); map.SetTileFlags(cell,pathFlags[pair.Key]);
+                decor.SetTile(pair.Key,pair.Value); decor.SetTileFlags(pair.Key,TileFlags.None);
+                decor.SetTransformMatrix(pair.Key,decorMatrices[pair.Key]); decor.SetTileFlags(pair.Key,decorFlags[pair.Key]);
             }
-            changedPath.Clear(); pathMatrices.Clear(); pathFlags.Clear();
-            if(decor) foreach(var pair in changedDecor) decor.SetTile(pair.Key,pair.Value);
-            changedDecor.Clear();
+            changedDecor.Clear(); decorMatrices.Clear(); decorFlags.Clear();
             foreach(var tree in retainedTrees) if(tree) Destroy(tree); retainedTrees.Clear();
             ClearedStumps=0; ClearedStandingTrees=0;
         }
         private void ClearDecor(Vector3Int cell)
-        { if (!changedDecor.ContainsKey(cell)) changedDecor.Add(cell,decor.GetTile(cell)); decor.SetTile(cell,null); }
-        private void ApplyScenery(int stage)
         {
-            if(stage==0) return;
+            if (!changedDecor.ContainsKey(cell))
+            {
+                changedDecor.Add(cell,decor.GetTile(cell)); decorMatrices.Add(cell,decor.GetTransformMatrix(cell)); decorFlags.Add(cell,decor.GetTileFlags(cell));
+            }
+            decor.SetTile(cell,null);
+        }
+        private void ApplyScenery(int stage, int trees)
+        {
+            if(stage==0 && trees==0) return;
+            bool BuiltArea(Bounds bounds)
+            {
+                for(var i=0;i<stage;i++) if(bounds.Intersects(EnclosureBounds[i])) return true;
+                for(var i=0;i<trees;i++) if(bounds.Intersects(new Bounds(OrchardAnchors[i],new Vector3(4,4,10)))) return true;
+                return false;
+            }
+            var farmers = town.Find("Farmers");
             foreach(var sr in town.GetComponentsInChildren<SpriteRenderer>(true))
             {
                 if(!sr.sprite || sr.transform.IsChildOf(geometry)) continue;
-                var p=sr.transform.position; var name=sr.sprite.name;
-                if(stage>=2 && name.Contains("Stump") && p.x>=-66 && p.x<=-51 && p.y>=-17 && p.y<=-5) { Hide(sr); ClearedStumps++; }
-                else if(stage>=3 && (name.Contains("Tree_Standing") || name.Contains("Tree_Stump")) && sr.bounds.Intersects(new Bounds(new Vector3(-58,-26,0),new Vector3(12,8,10)))) { Hide(sr); ClearedStandingTrees++; }
-                else if((name.StartsWith("Outdoor_Decor_") || name.StartsWith("Crate_")) &&
-                    (sr.bounds.Intersects(new Bounds(new Vector3(-59,2.5f,0),new Vector3(10.9f,7.9f,10))) ||
-                    stage>=2 && sr.bounds.Intersects(new Bounds(new Vector3(-58,-7.5f,0),new Vector3(12.9f,7.9f,10))) ||
-                    stage>=3 && sr.bounds.Intersects(new Bounds(new Vector3(-58,-26,0),new Vector3(10.9f,6.9f,10))))) Hide(sr);
+                if(farmers && sr.transform.IsChildOf(farmers)) continue;
+                var name=sr.sprite.name;
+                if(!BuiltArea(sr.bounds)) continue;
+                if(name.Contains("Stump")) { Hide(sr); ClearedStumps++; }
+                else if(name.Contains("Tree")) { Hide(sr); ClearedStandingTrees++; }
+                else if(name.StartsWith("Outdoor_Decor_") || name.StartsWith("Crate_") || name.Contains("Rock")) Hide(sr);
             }
             if(decor)
             {
@@ -238,75 +308,14 @@ namespace TimelessEchoes.Farming
                 foreach(var cell in new[]{new Vector3Int(13,-13,0),new Vector3Int(23,-5,0)})
                 {
                     var sprite=decor.GetSprite(cell); if(!sprite || sprite.name!="FruitTree_Growth_YoungTree") continue;
-                    var sr=Put(geometry,sprite,decor.GetCellCenterWorld(cell),3,"Retained young tree " + cell); retainedTrees.Add(sr.gameObject); ClearDecor(cell);
+                    var order=cell==new Vector3Int(23,-5,0)?-2:3;
+                    var sr=Put(geometry,sprite,decor.GetCellCenterWorld(cell),order,"Retained young tree " + cell); retainedTrees.Add(sr.gameObject); ClearDecor(cell);
                 }
                 foreach(var cell in decor.cellBounds.allPositionsWithin)
                 {
                     if(!decor.GetTile(cell)) continue; var p=decor.GetCellCenterWorld(cell);
-                    if(p.x>-64&&p.x<-54&&p.y>-1&&p.y<6 || stage>=2&&p.x>-64&&p.x<-52&&p.y>-11&&p.y<-4 || stage>=3&&p.x>-65&&p.x<-50&&p.y>-33&&p.y<-23) ClearDecor(cell);
+                    if(BuiltArea(new Bounds(p,Vector3.one * .1f))) ClearDecor(cell);
                 }
-            }
-            ExtendPaths(stage);
-        }
-        private void ChangePath(Tilemap map,Vector3Int cell,TileBase tile)
-        {
-            var key = (map, cell);
-            if(!changedPath.ContainsKey(key)) { changedPath.Add(key,map.GetTile(cell)); pathMatrices.Add(key,map.GetTransformMatrix(cell)); pathFlags.Add(key,map.GetTileFlags(cell)); }
-            map.SetTile(cell,tile); map.SetTileFlags(cell,TileFlags.None); map.SetTransformMatrix(cell,Matrix4x4.identity);
-        }
-        private void ExtendPaths(int stage)
-        {
-            // Extend both quest-controlled layers, including the inactive one. The
-            // town's normal path upgrade then also replaces the Fields entrances.
-            ExtendPath(path, appearance.pathTiles, stage, false);
-            ExtendPath(upgradedPath, appearance.upgradedPathTiles, stage, true);
-        }
-        private void ExtendPath(Tilemap map,Tile[] tiles,int stage,bool upgraded)
-        {
-            if(!map || tiles==null || tiles.Length==0) return;
-            var changed=new HashSet<Vector3Int>();
-            void Add(int x,int y) => changed.Add(map.WorldToCell(new Vector3(x,y,0)));
-            if(stage>=2) { for(int x=-60;x<=-58;x++) Add(x,-3); for(int x=-59;x<=-58;x++) for(int y=-4;y<=-3;y++) Add(x,y); }
-            if(stage>=3) { for(int x=-60;x<=-58;x++) Add(x,-22); for(int x=-59;x<=-58;x++) for(int y=-23;y<=-22;y++) Add(x,y); }
-            foreach(var cell in changed) ChangePath(map,cell,tiles[0]);
-            var affected=new HashSet<Vector3Int>(changed);
-            foreach(var cell in changed) for(int x=-1;x<=1;x++) for(int y=-1;y<=1;y++) affected.Add(cell+new Vector3Int(x,y,0));
-            foreach(var cell in affected)
-            {
-                if(!map.GetTile(cell)) continue;
-                bool Occupied(int x,int y) => map.GetTile(cell+new Vector3Int(x,y,0));
-                string join=""; if(Occupied(0,1))join+="N";if(Occupied(1,0))join+="E";if(Occupied(0,-1))join+="S";if(Occupied(-1,0))join+="W";
-                var absent=new List<string>();
-                if(!(Occupied(-1,0)&&Occupied(0,1)&&Occupied(-1,1)))absent.Add("NW");
-                if(!(Occupied(1,0)&&Occupied(0,1)&&Occupied(1,1)))absent.Add("NE");
-                if(!(Occupied(1,0)&&Occupied(0,-1)&&Occupied(1,-1)))absent.Add("SE");
-                if(!(Occupied(-1,0)&&Occupied(0,-1)&&Occupied(-1,-1)))absent.Add("SW");
-                string prefix="Farmland_WetOverlay_SoilJoin_"+(join==""?"None":join)+"_AbsentCorners_"+(absent.Count==0?"None":string.Join("_",absent))+"_Variant";
-                Tile tile;
-                if (upgraded)
-                {
-                    // Jagged dirt names describe the exposed edge, while the old
-                    // soil names describe connected neighbours.
-                    var shape = join switch
-                    {
-                        "NESW" => "DirtInterior", "NEW" => "DirtEdge_S", "NES" => "DirtEdge_W",
-                        "NSW" => "DirtEdge_E", "ESW" => "DirtEdge_N", "NS" => "DirtStrip_NS", "EW" => "DirtStrip_EW",
-                        "NE" => "DirtOuterCorner_SW", "NW" => "DirtOuterCorner_SE",
-                        "SE" => "DirtOuterCorner_NW", "SW" => "DirtOuterCorner_NE",
-                        "N" => "DirtCap_S", "E" => "DirtCap_W", "S" => "DirtCap_N", "W" => "DirtCap_E",
-                        _ => "DirtIslet"
-                    };
-                    var notches = new List<string>();
-                    if (Occupied(-1,0) && Occupied(0,1) && !Occupied(-1,1)) notches.Add("NW");
-                    if (Occupied(1,0) && Occupied(0,1) && !Occupied(1,1)) notches.Add("NE");
-                    if (Occupied(1,0) && Occupied(0,-1) && !Occupied(1,-1)) notches.Add("SE");
-                    if (Occupied(-1,0) && Occupied(0,-1) && !Occupied(-1,-1)) notches.Add("SW");
-                    var name = "GrassDirtJagged_" + shape + (notches.Count == 0 ? "" :
-                        (notches.Count == 1 ? "_GrassNotch_" : "_GrassNotches_") + string.Join("_",notches));
-                    tile = Array.Find(tiles,t=>t && t.name == name);
-                }
-                else tile=Array.Find(tiles,t=>t&&t.name.StartsWith(prefix,StringComparison.Ordinal));
-                if(tile) ChangePath(map,cell,tile);
             }
         }
         private void OnDestroy()

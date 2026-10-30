@@ -32,7 +32,7 @@ namespace TimelessEchoes.Farming
         public FarmState State => Oracle.oracle?.saveData?.Farm;
         public bool Ready => Oracle.oracle != null && Oracle.oracle.HasLoadedCurrentSlotData;
         public bool NeedsAttention => Ready && State?.Beds?.Values.Any(bed => bed != null && bed.IsReady &&
-            (!bed.Repeat || State.TwinsLevel < FarmContent.AutoReplantLevel)) == true;
+            (!bed.Repeat || !FarmProjects.AutoReplant(State))) == true;
         private string lastError;
         private GameData yieldPreviewOwner;
         private double nextYieldPreview;
@@ -40,7 +40,11 @@ namespace TimelessEchoes.Farming
         public string LastError => lastError == null ? null : ErrorText(lastError);
         public event Action Changed;
         private bool InTown => Ready && GameManager.Instance != null && GameManager.Instance.IsInTown && !GameManager.Instance.RunLoadingActive;
-        private void Awake() { Instance = this; lastMonotonic = Time.realtimeSinceStartupAsDouble; }
+        private void Awake()
+        {
+            Instance = this; lastMonotonic = Time.realtimeSinceStartupAsDouble;
+            if (!GetComponent<FarmStory>()) gameObject.AddComponent<FarmStory>();
+        }
         private void OnEnable() { Blindsided.EventHandler.OnLoadData += Loaded; Blindsided.EventHandler.OnSaveData += CaptureGrowth; }
         private void OnDisable() { Blindsided.EventHandler.OnLoadData -= Loaded; Blindsided.EventHandler.OnSaveData -= CaptureGrowth; }
         private void OnDestroy() { if (Instance == this) Instance = null; }
@@ -66,7 +70,7 @@ namespace TimelessEchoes.Farming
             var seconds = Time.unscaledDeltaTime;
             if (skipGrowthFrame) skipGrowthFrame = false;
             else if (seconds >= 0 && seconds <= Time.maximumDeltaTime) FarmCommands.TickFields(owner.Farm, seconds);
-            if (Time.realtimeSinceStartupAsDouble >= nextAutomaticHarvestRetry && owner.Farm.TwinsLevel >= FarmContent.AutoReplantLevel && owner.Farm.Beds.Any(b => FarmCommands.KnownBed(b.Key) && b.Value?.Repeat == true && b.Value.IsReady))
+            if (Time.realtimeSinceStartupAsDouble >= nextAutomaticHarvestRetry && FarmProjects.AutoReplant(owner.Farm) && owner.Farm.Beds.Any(b => FarmCommands.KnownBed(b.Key) && b.Value?.Repeat == true && b.Value.IsReady))
             {
                 if (!Execute(state => FarmCommands.HarvestFields(owner, FarmJournal.NextOperation(state, "harvest-auto"), DateTime.UtcNow, Content, true)))
                     nextAutomaticHarvestRetry = Time.realtimeSinceStartupAsDouble + 1;
@@ -129,7 +133,7 @@ namespace TimelessEchoes.Farming
             if (!Ready) return;
             var data = Oracle.oracle.saveData;
             var signature = HashCode.Combine(data.Farm.TwinsLevel, FarmContent.SkillLevel(data, "Farming"),
-                FarmContent.SkillLevel(data, "Woodcutting"), FarmContent.SkillLevel(data, "Mining"), data.General.MaxRunDistance);
+                FarmContent.SkillLevel(data, "Woodcutting"), FarmContent.SkillLevel(data, "Mining"), data.General.MaxRunDistance, data.Farm.FirstHarvestCompleted, data.Farm.Projects);
             if (signature == gateSignature) return;
             gateSignature = signature;
             QuestManager.Instance?.RefreshFieldsProgression();
@@ -285,7 +289,7 @@ namespace TimelessEchoes.Farming
             var radish = recipes.FirstOrDefault(r => r.Id == FarmCommands.RadishRecipeId);
             return new FarmPresentationSnapshot
             {
-                DisplayName=config.DisplayName,TwinsLevel=state.TwinsLevel,TwinsXp=state.TwinsXp,TwinsXpRequired=FarmContent.XpRequired(state.TwinsLevel),
+                DisplayName=config.DisplayName, AutoReplant=FarmProjects.AutoReplant(state), AutoWater=FarmProjects.AutoWater(state),TwinsLevel=state.TwinsLevel,TwinsXp=state.TwinsXp,TwinsXpRequired=FarmContent.XpRequired(state.TwinsLevel),
                 YieldMultiplier=FarmContent.YieldMultiplier(state.TwinsLevel),Recipes=recipes,Builds=builds.ToArray(),
                 Prepared=state.GardenCapacity>0,TownActionsAllowed=Ready,Discovered=radish?.Discovered==true,SeedQuantity=radish?.SeedQuantity >= long.MaxValue ? long.MaxValue : (long)(radish?.SeedQuantity ?? 0),
                 LogQuantity=data?.Resources?.TryGetValue("Log",out var log)==true?log.Amount:0,

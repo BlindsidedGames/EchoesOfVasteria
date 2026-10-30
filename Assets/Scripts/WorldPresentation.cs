@@ -129,6 +129,18 @@ namespace TimelessEchoes
         public sealed class RevealSession : Session
         {
             internal RevealSession(WorldPresentation director, MonoBehaviour owner) : base(director, owner) { }
+            public DialogueSession ContinueAsDialogue(MonoBehaviour owner, string npcId, Transform subject)
+            {
+                if (Interrupted || Director.active != this || !owner) return null;
+                var dialogue = new DialogueSession(Director, owner, npcId, subject, false);
+                Disposed = true;
+                // Keep the active camera and current pose throughout the handover.
+                Director.active = dialogue;
+                Director.approach = 0;
+                Director.dialogueVelocity = Vector3.zero;
+                Director.dialogueZoomVelocity = 0;
+                return dialogue;
+            }
             public IEnumerator Focus(Bounds bounds, float duration)
             {
                 if (!Interrupted) yield return Director.MoveTo(this, bounds, duration, false);

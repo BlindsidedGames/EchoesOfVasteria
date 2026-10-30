@@ -359,7 +359,7 @@ namespace TimelessEchoes.Quests
                 return oracle.saveData.CompletedNpcTasks.Contains("Farmers1");
             var fields = TimelessEchoes.Farming.FarmContent.Load();
             var construction = fields ? fields.Build(quest.questId) : null;
-            if (quest.questId.StartsWith("Farm.Garden.Build", StringComparison.Ordinal) || quest.questId.StartsWith("Farm.Orchard.Build", StringComparison.Ordinal))
+            if (quest.questId.StartsWith("Farm.Garden.Build", StringComparison.Ordinal) || quest.questId.StartsWith("Farm.Orchard.Build", StringComparison.Ordinal) || TimelessEchoes.Farming.FarmProjects.Kind(quest.questId) != TimelessEchoes.Farming.FarmProject.None)
                 return fields && construction != null && fields.BuildGate(oracle.saveData, construction) == null;
             return true;
         }
@@ -549,7 +549,7 @@ namespace TimelessEchoes.Quests
                     !TimelessEchoes.Gear.EquipmentController.Instance.Equip(reward.equipment.CreateItem()))
                     return false;
             using var reveal = TownQuestReveal.Begin();
-            var fieldQuest = inst.data.questId.StartsWith("Farm.Garden.", StringComparison.Ordinal) || inst.data.questId.StartsWith("Farm.Orchard.", StringComparison.Ordinal);
+            var fieldQuest = inst.data.questId.StartsWith("Farm.Garden.", StringComparison.Ordinal) || inst.data.questId.StartsWith("Farm.Orchard.", StringComparison.Ordinal) || TimelessEchoes.Farming.FarmProjects.Kind(inst.data.questId) != TimelessEchoes.Farming.FarmProject.None;
             if (fieldQuest && (TimelessEchoes.Farming.FarmService.Instance == null || !TimelessEchoes.Farming.FarmService.Instance.BuildQuest(inst.data.questId))) return false;
             var id = inst.data.questId;
             if (!oracle.saveData.Quests.TryGetValue(id, out var record))
@@ -580,6 +580,8 @@ namespace TimelessEchoes.Quests
 
             record.Completed = true;
             record.CompletedTimestamp = DateTime.UtcNow.Ticks;
+            if (TownPathProgression.IsPathQuest(id))
+                Hero.HeroStatSystem.MarkDirty(Hero.DirtyMask.Move, Hero.DirtyReason.PerksChanged);
             // Trim transient quest progress to reduce save size
             if (record.KillProgress != null)
             {
@@ -649,7 +651,8 @@ namespace TimelessEchoes.Quests
             {
                 Debug.LogError($"Immediate save after quest completion failed: {ex}");
             }
-            reveal?.Play();
+            reveal?.Play(id);
+            if (reveal == null) TimelessEchoes.Farming.FarmStory.Instance?.QueueCompletion(id);
             return true;
         }
 
@@ -893,7 +896,7 @@ namespace TimelessEchoes.Quests
             foreach (var quest in quests)
                 if (quest && (quest.questId == TimelessEchoes.Farming.FarmContent.IntroductionId ||
                     quest.questId.StartsWith("Farm.Garden.Build", StringComparison.Ordinal) ||
-                    quest.questId.StartsWith("Farm.Orchard.Build", StringComparison.Ordinal))) TryStartQuest(quest);
+                    quest.questId.StartsWith("Farm.Orchard.Build", StringComparison.Ordinal) || TimelessEchoes.Farming.FarmProjects.Kind(quest.questId) != TimelessEchoes.Farming.FarmProject.None)) TryStartQuest(quest);
             UpdateAllProgress();
             RefreshNoticeboard();
         }

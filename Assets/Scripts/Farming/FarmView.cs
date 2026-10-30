@@ -26,6 +26,7 @@ namespace TimelessEchoes.Farming
         public FarmRecipePresentation[] Recipes = Array.Empty<FarmRecipePresentation>();
         public FarmBuildPresentation[] Builds = Array.Empty<FarmBuildPresentation>();
         public bool Prepared;
+        public bool AutoReplant, AutoWater;
         public bool TownActionsAllowed;
         public bool Discovered;
         public long SeedQuantity;

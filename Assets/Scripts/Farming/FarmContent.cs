@@ -15,8 +15,6 @@ namespace TimelessEchoes.Farming
     public sealed class FarmContent : ScriptableObject
     {
         public const string IntroductionId = "Farm.Garden.Introduction.v1";
-        public const int AutoReplantLevel = 20;
-        public const int AutoWaterLevel = 50;
         public static int PlantingCost(bool orchard) => 1;
         public string displayNameKey = "farm.display-name";
         public string displayName = "Fields";
@@ -117,12 +115,14 @@ namespace TimelessEchoes.Farming
         public string BuildGate(GameData data, FarmBuild build)
         {
             if (data?.Farm == null || data.General == null || build == null) return ToolkitLocalization.Text("fields.error.unknown-build", "Unknown construction.");
+            if (build.project != FarmProject.None && !data.Farm.FirstHarvestCompleted)
+                return ToolkitLocalization.Text("fields.projects.first-harvest", "Harvest your first crop.");
             if (!Completed(data, build.previousQuestId) &&
                 !(build.previousQuestId == IntroductionId && data.CompletedNpcTasks?.Contains("Farmers1") == true)) return build.previousQuestId == IntroductionId
                 ? ToolkitLocalization.Text("fields.error.farming-introduction", "Meet Flora and Tillman first.")
                 : ToolkitLocalization.Text("fields.error.preceding-build", "Build the earlier plots first.");
             if (data.Farm.TwinsLevel < build.twinsLevel) return ToolkitLocalization.Text("fields.error.fields-level", "Fields level {0} required.", build.twinsLevel);
-            if (build.sources == null || build.sources.Count == 0) return ToolkitLocalization.Text("fields.error.missing-source", "Missing gathering sources.");
+            if ((build.sources == null || build.sources.Count == 0) && build.project == FarmProject.None) return ToolkitLocalization.Text("fields.error.missing-source", "Missing gathering sources.");
             foreach (var source in build.sources)
                 if (!source || !source.associatedSkill || SkillLevel(data, source.associatedSkill.name) < source.requiredSkillLevel ||
                     data.General.MaxRunDistance < source.GetEffectiveMinX()) return ToolkitLocalization.Text("fields.error.source-inaccessible", "Gathering source not accessible yet.");
@@ -168,6 +168,7 @@ namespace TimelessEchoes.Farming
         public LocalizedString localizedTitle;
         public string DisplayTitle => localizedTitle != null && !localizedTitle.IsEmpty ? localizedTitle.GetLocalizedString() : title;
         public int twinsLevel, gardenCapacity, orchardCapacity;
+        public FarmProject project;
         public List<TaskData> sources = new();
         public List<FarmBuildCost> costs = new();
     }

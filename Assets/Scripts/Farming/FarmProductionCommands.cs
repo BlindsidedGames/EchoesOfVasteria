@@ -18,7 +18,7 @@ namespace TimelessEchoes.Farming
             return char.ToUpperInvariant(crop[0]) + crop.Substring(1) + " Seed Pack";
         }
         public static bool KnownRecipe(string id) => id != null && CropNames.Concat(new[] { "apple", "pear", "peach", "cherry", "oak", "birch", "spruce" }).Any(n => id == "recipe." + n + ".v1");
-        public static bool KnownBuild(string id) => id == FarmContent.IntroductionId ||
+        public static bool KnownBuild(string id) => id == FarmContent.IntroductionId || FarmProjects.Kind(id) != FarmProject.None ||
             Enumerable.Range(1, 6).Any(i => id == "Farm.Garden.Build" + i.ToString("D2") + ".v1") ||
             Enumerable.Range(1, 3).Any(i => id == "Farm.Orchard.Build" + i.ToString("D2") + ".v1");
         public static bool KnownBed(string id) => GardenBeds.Contains(id) || OrchardBeds.Contains(id);
@@ -41,7 +41,8 @@ namespace TimelessEchoes.Farming
             if (gate != null) return Reject(gate);
             if (build.gardenCapacity < 0 || build.gardenCapacity > GardenBeds.Length ||
                 build.orchardCapacity < 0 || build.orchardCapacity > OrchardBeds.Length ||
-                build.gardenCapacity + build.orchardCapacity == 0 || build.costs == null || build.costs.Count == 0) return Reject("InvalidConstruction");
+                build.gardenCapacity + build.orchardCapacity == 0 && build.project == FarmProject.None || build.costs == null || build.costs.Count == 0) return Reject("InvalidConstruction");
+            if (build.project != FarmProjects.Kind(questId)) return Reject("InvalidConstruction");
             foreach (var cost in build.costs)
             {
                 if (cost == null || !cost.resource || cost.amount <= 0) return Reject("InvalidBuildCost");
@@ -54,6 +55,10 @@ namespace TimelessEchoes.Farming
             for (int i = 0; i < build.gardenCapacity; i++) Unlock(result.Candidate, GardenBeds[i]);
             for (int i = 0; i < build.orchardCapacity; i++) Unlock(result.Candidate, OrchardBeds[i]);
             result.CompletedQuests.Add(questId);
+            result.Candidate.Projects |= build.project;
+            if (build.project == FarmProject.Well)
+                foreach (var bed in result.Candidate.Beds.Values)
+                    if (bed?.IsPlanted == true) bed.Watered = true;
             if (build.previousQuestId == FarmContent.IntroductionId && !FarmContent.Completed(owner, FarmContent.IntroductionId))
             {
                 result.CompletedQuests.Add(FarmContent.IntroductionId);
@@ -110,7 +115,7 @@ namespace TimelessEchoes.Farming
             if (!Finite(recipe.secondaryYieldRatio) || recipe.secondaryYieldRatio < 0) return "InvalidRecipeTuning";
             bed.FrozenSecondaryYield = recipe.secondaryOutput ? bed.FrozenYield * recipe.secondaryYieldRatio : 0;
             bed.HarvestXp = content.HarvestExperience(recipe);
-            bed.ElapsedSeconds = 0; bed.Watered = state.TwinsLevel >= FarmContent.AutoWaterLevel; bed.LastGrowthUtcTicks = 0;
+            bed.ElapsedSeconds = 0; bed.Watered = FarmProjects.AutoWater(state); bed.LastGrowthUtcTicks = 0;
             result.OperationReceipt.BatchIds.Add(bed.BatchId);
             return null;
         }
@@ -136,7 +141,7 @@ namespace TimelessEchoes.Farming
         {
             var result = Begin(state, operationId, "repeat:" + id + ":" + (repeat ? "1" : "0"), now);
             if (!result.Accepted) return result;
-            if (!KnownBed(id) || !AccessibleBed(state, id) || repeat && state.TwinsLevel < FarmContent.AutoReplantLevel || !result.Candidate.Beds.TryGetValue(id, out var bed) || bed == null) return Reject("RepeatLocked");
+            if (!KnownBed(id) || !AccessibleBed(state, id) || repeat && !FarmProjects.AutoReplant(state) || !result.Candidate.Beds.TryGetValue(id, out var bed) || bed == null) return Reject("RepeatLocked");
             if ((repeat || bed.Repeat) && bed.IsTimber) bed.GrowFully = true;
             bed.Repeat = repeat;
             return result;
@@ -155,7 +160,7 @@ namespace TimelessEchoes.Farming
         {
             if (owner?.Farm == null || !content) return Reject("MissingFarmContent");
             if (bedId != null && (!KnownBed(bedId) || automatic)) return Reject("UnknownBed");
-            if (automatic && owner.Farm.TwinsLevel < FarmContent.AutoReplantLevel) return Reject("RepeatLocked");
+            if (automatic && !FarmProjects.AutoReplant(owner.Farm)) return Reject("RepeatLocked");
             var result = Begin(owner.Farm, operationId, bedId != null ? "harvest-bed:" + bedId : automatic ? "harvest-auto" : "harvest-fields", now);
             if (!result.Accepted) return result;
             foreach (var id in GardenBeds.Concat(OrchardBeds))
@@ -171,6 +176,7 @@ namespace TimelessEchoes.Farming
                 var gathered = (legacy ? bed.HarvestYield : bed.FrozenYield * bed.GrowthMultiplier) * (1 + bonus / 100d);
                 result.ResourceDeltas[recipe.output.name] = total + gathered;
                 result.Candidate.TotalHarvests++;
+                result.Candidate.FirstHarvestCompleted = true;
                 if (recipe.orchard && recipe.secondaryOutput) result.Candidate.LogsGathered += gathered;
                 else result.Candidate.CropsGathered += gathered;
                 if (recipe.secondaryOutput && bed.FrozenSecondaryYield > 0)
@@ -194,7 +200,7 @@ namespace TimelessEchoes.Farming
                     result.Candidate.FirstHarvestCompleted = true;
                 }
                 bed.BatchId = null; bed.RecipeId = null; bed.DurationSeconds = bed.ElapsedSeconds = bed.FrozenYield = bed.FrozenSecondaryYield = 0; bed.HarvestXp = 0; bed.HarvestYield = 0; bed.LastGrowthUtcTicks = 0; bed.Watered = false; bed.GrowFully = false;
-                if (bed.Repeat && result.Candidate.TwinsLevel >= FarmContent.AutoReplantLevel)
+                if (bed.Repeat && FarmProjects.AutoReplant(result.Candidate))
                 {
                     // Begin one new cycle; never carry elapsed time or watering into it.
                     var error = PlantInto(result, owner, id, content.Recipe(bed.SelectedRecipeId), operationId, content);

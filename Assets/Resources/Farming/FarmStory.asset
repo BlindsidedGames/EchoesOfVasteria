@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6912f8514f4a72e4391aae881b8b716a, type: 3}
+  m_Name: FarmStory
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.Farming.FarmStoryDefinition
+  meetingPrefab: {fileID: 4473393103591709735, guid: 8ed7138ae18d6d148b1f94dd314d3c1b, type: 3}
+  conversations:
+  - id: town-introduction
+    lines:
+    - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
+      key: farm.story.town.01
+      text: "Here\u2014a Radish seed pack for our first bed. Barkley's marking out the boundary."
+  - id: Farm.Garden.Build01.v1
+    lines:
+    - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
+      key: farm.story.patch.01
+      text: Ready for those radishes.
+    - speaker: {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
+      key: farm.story.patch.02
+      text: Give them some water from the river. They'll grow twice as fast.
+  - id: Farm.Project.MillBody.v1
+    lines:
+    - speaker: {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
+      key: farm.story.mill.01
+      text: Barkley's finished the tower. For the sails, I'm thinking feathers.
+    - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
+      key: farm.story.mill.02
+      text: This had better work.
+  - id: Farm.Project.MillSails.v1
+    lines:
+    - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
+      key: farm.story.sails.01
+      text: It works. I owe Tillman an apology.
+    - speaker: {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
+      key: farm.story.sails.02
+      text: Keep the seed packs and saplings coming. We can handle the planting and harvest now.
+  - id: Farm.Project.Well.v1
+    lines:
+    - speaker: {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
+      key: farm.story.well.01
+      text: No more hauling water from the river. My back thanks you.
+    - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
+      key: farm.story.well.02
+      text: We'll keep the plots watered from here.

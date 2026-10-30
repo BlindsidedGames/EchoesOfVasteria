@@ -27,10 +27,13 @@ namespace TimelessEchoes
         private static TownQuestReveal active;
         public static bool IsPlaying => active && active.playing;
         private bool playing, cancelled, restoreMenu;
+        private bool presentingDialogue, openFields;
+        private string completedQuest;
         private TownCameraPan cameraPan;
         private WorldPresentation.RevealSession presentation;
         private QuestObjectStateController[] objects;
         private FieldsWorldView fields;
+        private TownPathNetwork paths;
         private Transform town;
         private Action resumeQuests, removeSkip;
         private Coroutine sequence;
@@ -46,10 +49,10 @@ namespace TimelessEchoes
             private TownQuestReveal owner;
             private bool handedOff;
             internal Scope(TownQuestReveal owner) => this.owner = owner;
-            public void Play()
+            public void Play(string questId = null)
             {
                 if (handedOff || !owner) return;
-                try { owner.Present(); handedOff = true; }
+                try { owner.completedQuest = questId; owner.Present(); handedOff = true; }
                 catch (Exception exception)
                 {
                     // The quest has already committed; presentation failure cannot undo its hand-in.
@@ -73,8 +76,10 @@ namespace TimelessEchoes
             owner.cameraPan = camera; owner.town = root;
             owner.objects = FindObjectsByType<QuestObjectStateController>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             owner.fields = FindAnyObjectByType<FieldsWorldView>();
+            owner.paths = FindAnyObjectByType<TownPathNetwork>();
             foreach (var controller in owner.objects) controller.HoldPresentation();
             owner.fields?.HoldPresentation();
+            owner.paths?.HoldPresentation();
             return new Scope(owner);
         }
 
@@ -128,7 +133,9 @@ namespace TimelessEchoes
             var changes = objects.SelectMany(controller => controller.PendingPresentationChanges(town)).ToList();
             var expansion = fields ? fields.PendingPresentationChange() : null;
             if (expansion.HasValue) changes.Add(expansion.Value);
-            if (changes.Count == 0) { Cleanup(); return; }
+            var routeChange = paths ? paths.PendingPresentationChange() : null;
+            if (routeChange.HasValue) changes.Add(routeChange.Value);
+            if (changes.Count == 0) { FarmStory.Instance?.QueueCompletion(completedQuest); Cleanup(); return; }
             var groups = new List<Group>();
             foreach (var change in changes)
             {
@@ -138,8 +145,8 @@ namespace TimelessEchoes
                 group.Changes.Add(change);
             }
             presentation = WorldPresentation.BeginReveal(this);
-            if (presentation == null) { Cleanup(); return; }
-            cancelled = false; restoreMenu = true; playing = true; active = this;
+            if (presentation == null) { FarmStory.Instance?.QueueCompletion(completedQuest); Cleanup(); return; }
+            cancelled = false; restoreMenu = true; openFields = false; presentingDialogue = false; playing = true; active = this;
             resumeQuests = TownWindowManager.Instance?.SuspendQuestsForReveal();
             var screen = FindAnyObjectByType<ToolkitQuestsScreen>(FindObjectsInactive.Include);
             if (screen && screen.IsConfigured) removeSkip = screen.ShowRevealSkip(() => cancelled = true);
@@ -154,6 +161,7 @@ namespace TimelessEchoes
             {
                 if (!cameraPan || !cameraPan.CanPresent || !GameManager.Instance || !GameManager.Instance.IsInTown)
                 { restoreMenu = false; return true; }
+                if (presentingDialogue) return cancelled;
                 if (TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow)
                 { restoreMenu = false; return true; }
                 return cancelled || presentation == null || presentation.Interrupted;
@@ -162,7 +170,7 @@ namespace TimelessEchoes
 
         private void Update()
         {
-            if (playing && !UI.Toolkit.ToolkitDimScreen.BlocksInput && Keyboard.current != null &&
+            if (playing && !presentingDialogue && !UI.Toolkit.ToolkitDimScreen.BlocksInput && Keyboard.current != null &&
                 (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.spaceKey.wasPressedThisFrame)) cancelled = true;
             // Stop an in-flight shared camera move as soon as Skip or another
             // window interrupts it; the coroutine's finally still settles visuals.
@@ -224,7 +232,15 @@ namespace TimelessEchoes
                     arrivals.Clear();
                     for (var elapsed = 0f; elapsed < .6f && !Interrupted; elapsed += Time.unscaledDeltaTime) yield return null;
                 }
-                if (!Interrupted) yield return presentation.Restore(.55f);
+                if (!Interrupted && FarmStory.Instance && FarmStory.Instance.HasCompletion(completedQuest))
+                {
+                    removeSkip?.Invoke(); removeSkip = null;
+                    presentingDialogue = true;
+                    yield return FarmStory.Instance.ShowCompletion(completedQuest, presentation);
+                    openFields = !Interrupted && FarmStory.Instance.DialogueCompleted && completedQuest == "Farm.Garden.Build01.v1";
+                    presentation = null;
+                }
+                else if (!Interrupted) yield return presentation.Restore(.55f);
             }
             finally { Cleanup(); }
         }
@@ -244,13 +260,19 @@ namespace TimelessEchoes
             arrivals.Clear();
             if (objects != null) foreach (var controller in objects) if (controller) controller.ReleasePresentation();
             if (fields) fields.ReleasePresentation();
-            objects = null; fields = null;
+            if (paths) paths.ReleasePresentation();
+            objects = null; fields = null; paths = null;
             presentation?.Dispose(); presentation = null;
             playing = false; if (active == this) active = null;
             Blindsided.EventHandler.OnLoadData -= Loaded;
             removeSkip?.Invoke(); removeSkip = null;
             var resume = resumeQuests; resumeQuests = null;
-            if (restoreMenu) resume?.Invoke();
+            if (restoreMenu)
+            {
+                if (openFields) TownWindowManager.Instance?.OpenWindow(TownWindowManager.Window.Farm);
+                else resume?.Invoke();
+            }
+            presentingDialogue = false; openFields = false; completedQuest = null;
             sequence = null;
         }
 

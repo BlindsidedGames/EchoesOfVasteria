@@ -482,6 +482,7 @@ MonoBehaviour:
     twinsLevel: 1
     gardenCapacity: 1
     orchardCapacity: 0
+    project: 0
     sources:
     - {fileID: 11400000, guid: b91ced891537788468693fa7afa420f9, type: 2}
     costs:
@@ -504,6 +505,7 @@ MonoBehaviour:
     twinsLevel: 25
     gardenCapacity: 2
     orchardCapacity: 0
+    project: 0
     sources:
     - {fileID: 11400000, guid: bad32546724fba141a4e46b2a217d438, type: 2}
     costs:
@@ -526,6 +528,7 @@ MonoBehaviour:
     twinsLevel: 65
     gardenCapacity: 3
     orchardCapacity: 0
+    project: 0
     sources:
     - {fileID: 11400000, guid: bad32546724fba141a4e46b2a217d438, type: 2}
     - {fileID: 11400000, guid: ba3b6a5aed10ba14299ebe98151f3018, type: 2}
@@ -551,6 +554,7 @@ MonoBehaviour:
     twinsLevel: 130
     gardenCapacity: 4
     orchardCapacity: 0
+    project: 0
     sources:
     - {fileID: 11400000, guid: c3af67c9663141c42a4edfc53141e29a, type: 2}
     costs:
@@ -573,6 +577,7 @@ MonoBehaviour:
     twinsLevel: 190
     gardenCapacity: 5
     orchardCapacity: 0
+    project: 0
     sources:
     - {fileID: 11400000, guid: b2078539e1a537b4ea4da8b90654f82d, type: 2}
     - {fileID: 11400000, guid: ba3b6a5aed10ba14299ebe98151f3018, type: 2}
@@ -598,6 +603,7 @@ MonoBehaviour:
     twinsLevel: 250
     gardenCapacity: 6
     orchardCapacity: 0
+    project: 0
     sources:
     - {fileID: 11400000, guid: b2078539e1a537b4ea4da8b90654f82d, type: 2}
     costs:
@@ -620,6 +626,7 @@ MonoBehaviour:
     twinsLevel: 15
     gardenCapacity: 0
     orchardCapacity: 2
+    project: 0
     sources:
     - {fileID: 11400000, guid: b91ced891537788468693fa7afa420f9, type: 2}
     costs:
@@ -642,6 +649,7 @@ MonoBehaviour:
     twinsLevel: 100
     gardenCapacity: 0
     orchardCapacity: 4
+    project: 0
     sources:
     - {fileID: 11400000, guid: c3af67c9663141c42a4edfc53141e29a, type: 2}
     - {fileID: 11400000, guid: ba3b6a5aed10ba14299ebe98151f3018, type: 2}
@@ -667,6 +675,7 @@ MonoBehaviour:
     twinsLevel: 225
     gardenCapacity: 0
     orchardCapacity: 6
+    project: 0
     sources:
     - {fileID: 11400000, guid: b2078539e1a537b4ea4da8b90654f82d, type: 2}
     - {fileID: 11400000, guid: ba3b6a5aed10ba14299ebe98151f3018, type: 2}
@@ -677,6 +686,75 @@ MonoBehaviour:
       amount: 2000000
     - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
       amount: 1500
+  - questId: Farm.Project.MillBody.v1
+    previousQuestId: Farm.Garden.Build01.v1
+    title: Building the Mill
+    localizedTitle:
+      m_TableReference:
+        m_TableCollectionName: Quests
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: farm.project.mill.title
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    twinsLevel: 1
+    gardenCapacity: 0
+    orchardCapacity: 0
+    project: 1
+    sources:
+    - {fileID: 11400000, guid: bad32546724fba141a4e46b2a217d438, type: 2}
+    costs:
+    - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
+      amount: 5000
+    - resource: {fileID: 11400000, guid: d27f42dac2c64a9fbdaef87b1d68cf83, type: 2}
+      amount: 2000
+    - resource: {fileID: 11400000, guid: 662ac0c8e09545b9a11ae5a1e0ac7125, type: 2}
+      amount: 4000
+  - questId: Farm.Project.MillSails.v1
+    previousQuestId: Farm.Project.MillBody.v1
+    title: Feathered Sails
+    localizedTitle:
+      m_TableReference:
+        m_TableCollectionName: Quests
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: farm.project.sails.title
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    twinsLevel: 1
+    gardenCapacity: 0
+    orchardCapacity: 0
+    project: 2
+    sources: []
+    costs:
+    - resource: {fileID: 11400000, guid: 9b8342747b02439438dbacd529ed8931, type: 2}
+      amount: 5000
+  - questId: Farm.Project.Well.v1
+    previousQuestId: Farm.Garden.Build01.v1
+    title: Water on Hand
+    localizedTitle:
+      m_TableReference:
+        m_TableCollectionName: Quests
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: farm.project.well.title
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    twinsLevel: 1
+    gardenCapacity: 0
+    orchardCapacity: 0
+    project: 4
+    sources:
+    - {fileID: 11400000, guid: b91ced891537788468693fa7afa420f9, type: 2}
+    - {fileID: 11400000, guid: ba3b6a5aed10ba14299ebe98151f3018, type: 2}
+    costs:
+    - resource: {fileID: 11400000, guid: 5bbcfec123bdb15458219aa5fcddc841, type: 2}
+      amount: 50000
+    - resource: {fileID: 11400000, guid: e8ace32c9cea7aa4aa202557d1f972ea, type: 2}
+      amount: 500
   references:
     version: 2
     RefIds: []

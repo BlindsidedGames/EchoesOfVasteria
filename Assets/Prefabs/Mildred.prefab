@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7664923071667762100}
   - component: {fileID: 8427596535389273134}
   - component: {fileID: 4002481538927657160}
+  - component: {fileID: 5657609813517010644}
   m_Layer: 0
   m_Name: Mildred
   m_TagString: Untagged
@@ -169,6 +170,18 @@ MonoBehaviour:
   animator: {fileID: 8023515206360856726}
   hero: {fileID: 0}
   spriteRenderer: {fileID: 1220348859257530222}
+--- !u!114 &5657609813517010644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5229451111164685125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b76367a60f347f04a80408a5b28a722b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.NPC.MildredAppearance
 --- !u!1 &6541737542204284188
 GameObject:
   m_ObjectHideFlags: 0

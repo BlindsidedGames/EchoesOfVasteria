@@ -251,6 +251,8 @@ namespace Blindsided.SaveData.Migrations
             Register(new Migration_SchemaV6Fields());
             Register(new Migration_SchemaV7SeedResources());
             Register(new Migration_SchemaV8TownStatistics());
+            Register(new Migration_SchemaV9FarmProjects());
+            Register(new Migration_SchemaV10TownPaths());
             Register(new Migration_ReturningPlayerGuidance());
         }
     }

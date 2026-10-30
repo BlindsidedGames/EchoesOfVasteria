@@ -23,6 +23,7 @@ namespace TimelessEchoes.Tasks
         [SerializeField] private List<string> lines = new();
         // Stable presentation identities; existing raw lines remain the fallback.
         [SerializeField] private List<string> lineKeys = new();
+        [SerializeField] private QuestSpeaker[] dialogueSpeakers = System.Array.Empty<QuestSpeaker>();
 
         private bool talked;
         private GameObject meetingInstance;
@@ -59,6 +60,7 @@ namespace TimelessEchoes.Tasks
             if (toolkit != null)
             {
                 toolkit.Init(npcSprite, lines, OnMeetingFinished, lineKeys, npcId: npcId, worldSubject: transform);
+                toolkit.SetLineSpeakers(dialogueSpeakers);
                 return;
             }
             var controller = meetingInstance.GetComponent<MeetingController>();

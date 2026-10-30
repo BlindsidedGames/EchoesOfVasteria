@@ -345,12 +345,12 @@ namespace TimelessEchoes.UI.Toolkit
             if (snapshot == null) { plant.SetEnabled(false); harvest.SetEnabled(false); water.SetEnabled(false); repeat.SetEnabled(false); buildSelected.SetEnabled(false); return; }
             feedbackLabel.text = feedback ?? "";
             feedbackLabel.style.visibility = Time.unscaledTime < feedbackUntil ? Visibility.Visible : Visibility.Hidden;
-            replantRequirement.text = ToolkitLocalization.Text("fields.automation.replant-short", "Auto-replant: lvl {0}", FarmContent.AutoReplantLevel);
-            waterRequirement.text = ToolkitLocalization.Text("fields.automation.water-short", "Auto-water: lvl {0}", FarmContent.AutoWaterLevel);
-            Visible(replantRequirement, snapshot.TwinsLevel < FarmContent.AutoReplantLevel);
-            Visible(waterRequirement, snapshot.TwinsLevel < FarmContent.AutoWaterLevel);
-            Visible(automation, snapshot.TwinsLevel < FarmContent.AutoWaterLevel);
-            root.EnableInClassList("fields-automation-locked", snapshot.TwinsLevel < FarmContent.AutoWaterLevel);
+            replantRequirement.text = T("fields.automation.mill", "Build the mill to unlock Auto.");
+            waterRequirement.text = T("fields.automation.well", "Build the well to unlock auto-watering.");
+            Visible(replantRequirement, !snapshot.AutoReplant);
+            Visible(waterRequirement, !snapshot.AutoWater);
+            Visible(automation, !snapshot.AutoReplant || !snapshot.AutoWater);
+            root.EnableInClassList("fields-automation-locked", !snapshot.AutoReplant || !snapshot.AutoWater);
             selectedBed ??= snapshot.Beds.FirstOrDefault(b => b.Unlocked)?.Id ?? snapshot.Beds.FirstOrDefault()?.Id;
             var target = snapshot.Beds.FirstOrDefault(b => b.Id == selectedBed); var orchard = target?.Orchard == true;
             if (target?.Planted == true) selectedRecipe = target.RecipeId;
@@ -394,7 +394,7 @@ namespace TimelessEchoes.UI.Toolkit
             var dryTime = selectedDefinition == null ? 0 : seedContent.GrowthDuration(selectedDefinition, snapshot.TwinsLevel);
             var selectedIsGrowing = target?.Planted == true && target.RecipeId == selected?.Id;
             if (selectedDefinition?.secondaryOutput && (selectedIsGrowing ? target.GrowFully : target?.Repeat == true)) dryTime *= 2;
-            var autoWater = snapshot.TwinsLevel >= FarmContent.AutoWaterLevel;
+            var autoWater = snapshot.AutoWater;
             var growthTime = selectedIsGrowing && target.GrowthSeconds > 0
                 ? target.GrowthSeconds / (autoWater && !target.Watered ? 2 : 1)
                 : dryTime / (autoWater ? 2 : 1);
@@ -460,14 +460,14 @@ namespace TimelessEchoes.UI.Toolkit
             Visible(harvest, target?.Planted == true && !needsWater);
             water.SetEnabled(snapshot.TownActionsAllowed && target?.Watered == false);
             SetWaterLabel(water, T("fields.action.water-once", "Water"), true);
-            repeat.SetEnabled(snapshot.TownActionsAllowed && target?.Unlocked == true && snapshot.TwinsLevel >= FarmContent.AutoReplantLevel);
+            repeat.SetEnabled(snapshot.TownActionsAllowed && target?.Unlocked == true && snapshot.AutoReplant);
             repeat.EnableInClassList("primary", target?.Repeat == true);
             repeat.text = target?.Repeat == true ? T("fields.auto-on", "Auto • On") : T("fields.auto-off", "Auto • Off");
             Visible(keepGrowing.parent, target?.Planted == true && target.Timber && target.Ready && !target.GrowFully && !target.Repeat);
             keepGrowing.SetEnabled(snapshot.TownActionsAllowed);
             keepGrowing.text = T("fields.keep-growing", "Keep growing");
             keepGrowing.tooltip = T("fields.keep-growing-help", "Grow to full size for twice the resources and XP.");
-            repeat.tooltip = ToolkitLocalization.Text("fields.repeat-help-water-on-plant", "Fields level {0}: harvest and replant using one matching seed pack or sapling. Stops when you run out. From Fields level {1}, every new planting is watered automatically, even with Auto off.", FarmContent.AutoReplantLevel, FarmContent.AutoWaterLevel);
+            repeat.tooltip = T("fields.automation.help", "Harvest and replant using a matching seed pack or sapling. Stops when supplies run out. The well waters new plantings automatically.");
             Visible(preview.Root, !orchard && selectedBuild == null); Visible(orchardPreview.Root, orchard && selectedBuild == null);
             if (target != null)
             {
