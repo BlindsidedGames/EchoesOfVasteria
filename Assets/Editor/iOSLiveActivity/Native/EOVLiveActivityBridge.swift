@@ -55,12 +55,10 @@ public final class EOVLiveActivityBridge: NSObject {
 
     // All three commands share a queue. New publication/End invalidates queued old taps;
     // no action requests an activity, and a duplicate tap resamples the same origin.
-    @discardableResult
-    public static func refresh(activityID: String, sourceID: String) async -> Bool {
-        guard UserDefaults.standard.string(forKey: sourceKey) == sourceID else { return false }
+    public static func refresh(activityID: String, sourceID: String) async {
+        guard UserDefaults.standard.string(forKey: sourceKey) == sourceID else { return }
         generation += 1
         let command = generation, previous = pending
-        var refreshed = false
         let task = Task { @MainActor in
             await previous?.value
             defer { if command == generation { pending = nil } }
@@ -82,13 +80,11 @@ public final class EOVLiveActivityBridge: NSObject {
             let before = UIApplication.shared.applicationState.rawValue
             guard let next = presentation(state, after: activity.content.state, attributes: activity.attributes, manualRefresh: true) else { return }
             await activity.update(ActivityContent(state: next, staleDate: Date(timeIntervalSince1970: next.forecastEnd)))
-            refreshed = command == generation && UserDefaults.standard.string(forKey: sourceKey) == sourceID
             NSLog("[EOVLiveActivity] refresh id=%@ source=%@ pid=%d bundle=%@ appStateBefore=%d appStateAfter=%d sampledAt=%.6f distance=%.4f cap=%.4f resources=%.4f reaps=%d tasks=%@ kills=%@ origin=%.0f status=%@", activity.id, sourceID, ProcessInfo.processInfo.processIdentifier, Bundle.main.bundleIdentifier ?? "", before, UIApplication.shared.applicationState.rawValue, state.sampledAt, state.distance, state.cap, state.resources, state.reaps, state.tasks.map { String($0) } ?? "unknown", state.kills.map { String($0) } ?? "unknown", state.backgroundOrigin ?? 0, state.status)
             NSLog("[EOVLiveActivity] presentation portraitLayers=%d refreshRevision=%llu reapRevision=%llu", next.portraitLayers?.count ?? 0, UInt64(next.refreshRevision ?? 0), UInt64(next.reapRevision ?? 0))
         }
         pending = task
         await task.value
-        return refreshed
     }
 
     // Watch requests use the same guarded update as the phone's intent. This
