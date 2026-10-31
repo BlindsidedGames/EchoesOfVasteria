@@ -59,7 +59,20 @@ namespace TimelessEchoes.Stats
 #if UNITY_IOS && !UNITY_EDITOR && EOV_BACKGROUND_PROTOTYPE
         [DllImport("__Internal")] private static extern void EOVLiveActivity_End();
         [DllImport("__Internal")] private static extern int EOVLiveActivity_IsDemoLaunch();
+        [DllImport("__Internal")] private static extern int EOVLiveActivity_IsForeground();
 #endif
+        public static bool NativeForeground
+        {
+            get
+            {
+#if UNITY_IOS && !UNITY_EDITOR && EOV_BACKGROUND_PROTOTYPE
+                return EOVLiveActivity_IsForeground() != 0;
+#else
+                return true;
+#endif
+            }
+        }
+
         public static void Publish(string map, BackgroundRunEstimator.Result forecast, double currentDistance, double resources, WatchForecastTimeline timeline = null)
         {
             var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();

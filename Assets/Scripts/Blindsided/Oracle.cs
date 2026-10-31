@@ -439,11 +439,40 @@ namespace Blindsided
 #endif
 
 #if UNITY_ANDROID || UNITY_IOS
+#if UNITY_IOS && !UNITY_EDITOR && EOV_BACKGROUND_PROTOTYPE
+        private Coroutine mobileForegroundResume;
+
+        private IEnumerator ResumeWhenNativeForeground()
+        {
+            // Unity can deliver a queued resume during the lock transition. Wait
+            // one engine frame and retain the departure until UIKit is truly active.
+            // This coroutine cannot run while the engine is suspended; it also
+            // handles a legitimate resume notification arriving before UIKit active.
+            yield return null;
+            while (_applicationInBackground && !BackgroundRunPrototype.NativeForeground)
+                yield return null;
+            mobileForegroundResume = null;
+            ExitMobileBackground();
+        }
+#endif
         private void OnApplicationPause(bool paused)
         {
             if (oracle != this)
                 return;
 
+#if UNITY_IOS && !UNITY_EDITOR && EOV_BACKGROUND_PROTOTYPE
+            if (!paused)
+            {
+                if (_applicationInBackground && mobileForegroundResume == null)
+                    mobileForegroundResume = StartCoroutine(ResumeWhenNativeForeground());
+                return;
+            }
+            if (mobileForegroundResume != null)
+            {
+                StopCoroutine(mobileForegroundResume);
+                mobileForegroundResume = null;
+            }
+#endif
             if (paused)
                 EnterMobileBackground();
             else

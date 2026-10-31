@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import <objc/message.h>
 
 static Class EOVActivityClass(void) {
@@ -10,6 +11,21 @@ static Class EOVActivityClass(void) {
 // Preserve the prototype's explicit demo launch opt-in using the native arguments.
 extern "C" int EOVLiveActivity_IsDemoLaunch(void) {
     return [[NSProcessInfo processInfo].arguments containsObject:@"-eov-background-demo"] ? 1 : 0;
+}
+
+extern "C" int EOVLiveActivity_IsForeground(void) {
+    __block int active = 0;
+    void (^read)(void) = ^{
+        static NSInteger lastState = -1;
+        NSInteger state = UIApplication.sharedApplication.applicationState;
+        if (state != lastState) {
+            NSLog(@"[EOVLiveActivity] resume UIKit state=%ld", (long)state);
+            lastState = state;
+        }
+        active = state == UIApplicationStateActive ? 1 : 0;
+    };
+    if ([NSThread isMainThread]) read(); else dispatch_sync(dispatch_get_main_queue(), read);
+    return active;
 }
 
 extern "C" void EOVLiveActivity_End(void) {
