@@ -1,11 +1,13 @@
 # Background outings and Live Activities prototype
 
 The approved fallback is main commit `80d98debce913eae3dc9cad1c3d78d037f8412e4`.
-Experimental work is on `background-live-activity-prototype`; it is not a store release.
+Experimental work is on `Matt/background-live-activity-prototype`; it is not a store release.
 
 ## Run it
 
 The estimator is off in normal builds. Enable `EOV_BACKGROUND_PROTOTYPE` for a prototype build, or use the explicit `-eov-background-prototype` launch argument for a desktop evaluation. Native ActivityKit integration additionally requires the prototype iOS build define and its editor postprocessor.
+
+On iOS the native host reads this explicit launch argument because IL2CPP does not expose simulator argv through `System.Environment`.
 
 The `-eov-background-demo` argument creates a synthetic River demonstration only in an app whose bundle identifier ends in `.prototype` (or the existing protected Editor screenshot session). It supplies ten fictional calibration samples, starts at 30 metres and gives a 200-metre reap cap. This demonstrates integration; it is not evidence of estimation accuracy. Prototype builds suppress authenticated online-service bootstrap.
 
