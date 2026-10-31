@@ -48,9 +48,9 @@ The artwork comes from the game. There is no explanatory footer. Apple permits s
 ## Deliberate prototype limits
 
 - A settlement covers at most one hour and 20,000 work events. These are evaluation bounds, not an approved production offline policy.
-- Pace and combat exposure are estimates. Health prediction uses recent damage and authored enemy pressure; survival beyond recorded reach is unvalidated.
+- Pace and combat exposure are estimates. Health prediction uses current player/enemy combat stats and authored encounter density; recorded damage is not a survival baseline. Exact death timing remains unvalidated. See the [combat-model revision and recorded-profile comparison](../background-combat-20261101/README.md).
 - Old history lacks active-time and Echo-performer measurements. New real runs record those small counters. Changing equipment, preferences or balance can make older pace less representative.
-- Active saved reward/reap-distance buffs expire, and the temporary shop boost consumes its budget. Automatic buff recasting, combat-Echo positioning, gathering resonance and Windfall cycles are not yet reproduced. They need accuracy work before production payouts.
+- Active saved reward/reap-distance buffs expire, and the temporary shop boost consumes its budget. The combat forecast accounts for saved and automatically recast ability strength, but settlement does not replay every cast's state/counters. Combat-Echo positioning, gathering resonance and Windfall cycles are not reproduced. They need accuracy work before production payouts.
 - Resource/XP levels update through existing owners during settlement, but the precomputed distance/health forecast does not recalculate pace for every new milestone. The widget resource total is an approximation; the settlement resolves actual eligible drop events.
 - Fields have their existing foreground-only growth policy. This experiment does not add offline farm automation.
 

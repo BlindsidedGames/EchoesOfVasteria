@@ -90,11 +90,13 @@ namespace TimelessEchoes
             {
                 Run = run, Samples = samples, Seconds = seconds, BaseCap = statTracker.MaxRunDistance,
                 StartingDistance = config.entryIntroduction ? Math.Max(startingDistance, config.entryIntroduction.StartingInset) : startingDistance,
-                MaxHealth = Math.Max(1, snapshot.maxHealth), Regen = snapshot.healthRegenPerSecond,
+                MaxHealth = Math.Max(1, snapshot.maxHealth),
+                EnemyDensity = Math.Max(0, config.taskGeneratorSettings.enemyDensity) *
+                    (config.name == "Farmlands" && statTracker.CompletedAdventures == 0 ? .5 : 1),
                 RestartSeconds = SkipRestartCountdown ? 0 : deathWindowDuration,
                 DistanceReaping = entry.ScalingMode != MapScalingMode.KillBased,
                 CapGain = config.allowMaxDistanceReapGain && !Oracle.oracle.demo,
-                GateDistance = gate, StopOnFirstReap = !data.General.FirstReapTownVisited, Pressure = content.Pressure,
+                GateDistance = gate, StopOnFirstReap = !data.General.FirstReapTownVisited, Combat = content.CombatRates,
                 CapModifiers = content.CapModifiers,
                 NextBuffExpiry = run.Buffs?.Active?.Where(b => !float.IsFinite(b.ExpireAtDistance) || b.ExpireAtDistance <= 0).Select(b => (double)b.Remaining)
                     .DefaultIfEmpty(double.PositiveInfinity).Min() ?? double.PositiveInfinity
@@ -193,7 +195,7 @@ namespace TimelessEchoes
             if (run == null) return;
             var entry = generationButtons.FirstOrDefault(e => e?.Config && e.Config.name == run.Map);
             if (entry == null) return;
-            var input = BackgroundInput(run, entry, 900);
+            var input = BackgroundInput(run, entry, BackgroundRunEstimator.MaxAwaySeconds);
             var forecast = BackgroundRunEstimator.Forecast(input);
             var content = new BackgroundRunContent(entry.Config, entry.ScalingMode == MapScalingMode.KillBased,
                 entry.KillsPerLevel, KillLevelIncreasePerTier, run);

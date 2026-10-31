@@ -5,6 +5,12 @@ using Newtonsoft.Json;
 using Blindsided.SaveData;
 using NUnit.Framework;
 using TimelessEchoes.Stats;
+using TimelessEchoes.Hero;
+using TimelessEchoes.Enemies;
+using UnityEngine;
+using Object = UnityEngine.Object;
+using TimelessEchoes.Buffs;
+using TimelessEchoes.MapGeneration;
 
 namespace Tests.EditMode
 {
@@ -14,7 +20,7 @@ namespace Tests.EditMode
         {
             Run = new RunSaveData { Map = "River" }, Seconds = seconds, BaseCap = 50,
             Samples = new[] { new BackgroundRunSample { Seconds = 100, Distance = 100, EndDistance = 100, Tasks = 20, Kills = 10 } },
-            MaxHealth = 100, RestartSeconds = 0, Pressure = (_, _) => 0
+            MaxHealth = 100, RestartSeconds = 0, Combat = (_, _, _, _) => default
         };
 
         [Test]
@@ -91,12 +97,17 @@ namespace Tests.EditMode
             Assert.That(result.Distance, Is.EqualTo(50d / 3).Within(.00001));
         }
 
-        [Test]
-        public void TrueCombatDeathRestartsWithoutGrantingAReapIncrease()
+        [TestCase(0, 10)]
+        [TestCase(20, 10)]
+        [TestCase(2000, 10)]
+        [TestCase(0, 0)]
+        [TestCase(0, 5)]
+        public void CombatDeathUsesCurrentThreatRatherThanRecordedDamage(double recordedDamage, int recordedKills)
         {
             var input = Input(60); input.DistanceReaping = false; input.MaxHealth = 10;
-            input.Pressure = (_, _) => 1;
-            input.Samples = new[] { new BackgroundRunSample { Seconds = 100, Distance = 100, DamageTaken = 20, EndDistance = 100 } };
+            input.Combat = (_, _, _, _) => new(2, 0);
+            input.EnemyDensity = .1;
+            input.Samples = new[] { new BackgroundRunSample { Seconds = 100, Distance = 100, Kills = recordedKills, DamageTaken = recordedDamage, EndDistance = 100 } };
             var result = BackgroundRunEstimator.Forecast(input);
             Assert.That(result.Deaths, Is.EqualTo(1)); Assert.That(result.Reaps, Is.Zero);
             Assert.That(result.BaseCap, Is.EqualTo(50));
@@ -105,13 +116,12 @@ namespace Tests.EditMode
         }
 
         [Test]
-        public void ShortUndamagedHistoryCanReachTheActualDistanceCap()
+        public void ShortHistoryDoesNotCapASurvivableRun()
         {
             var input = Input(3600); input.Run.Map = "Mines";
             input.Run.Distance = 2300; input.BaseCap = 38000;
             input.Samples = new[] { new BackgroundRunSample { Seconds = 240,
                 Distance = 2400, EndDistance = 2400, Tasks = 48, Kills = 24 } };
-            input.Pressure = (distance, _) => distance;
 
             var result = BackgroundRunEstimator.Forecast(input);
 
@@ -121,6 +131,145 @@ namespace Tests.EditMode
             Assert.That(result.BaseCap, Is.EqualTo(38380).Within(.00001));
             Assert.That(result.Distance, Is.EqualTo(300).Within(.00001));
             Assert.That(input.Run.Distance, Is.EqualTo(2300));
+        }
+
+        [TestCase(2, 0, 0, 0, 50)]
+        [TestCase(4, 0, 0, 0, 25)]
+        [TestCase(2, 25, 0, 0, 25)]
+        [TestCase(2, 0, 100, 0, 25)]
+        [TestCase(2, 0, 0, 1, 18.75)]
+        public void EncounterDamageUsesAttackRateDefenseCritsAndSharedEchoHealth(
+            float attacksPerSecond, float defense, float critChance, double echoes, double expected)
+        {
+            var enemy = ScriptableObject.CreateInstance<EnemyData>();
+            try
+            {
+                enemy.maxHealth = 100; enemy.damage = 10; enemy.attackSpeed = 1;
+                var hero = new HeroStatsSnapshot { damage = 10, attacksPerSecond = attacksPerSecond,
+                    defense = defense, critChancePercent = critChance, critDamagePercent = 100 };
+                Assert.That(TimelessEchoes.Combat.ExpectedEncounterDamage(hero, enemy, 1, echoes),
+                    Is.EqualTo(expected).Within(.0001));
+            }
+            finally { Object.DestroyImmediate(enemy); }
+        }
+
+        [TestCase(1, 200)]
+        [TestCase(2, 450)]
+        public void IncreasingMobLevelsRaisesDamageWithoutAnyRecordedDamage(int level, double expected)
+        {
+            var enemy = ScriptableObject.CreateInstance<EnemyData>();
+            try
+            {
+                enemy.maxHealth = 100; enemy.healthPerLevel = 100;
+                enemy.damage = 10; enemy.damagePerLevel = 10; enemy.attackSpeed = 1;
+                var hero = new HeroStatsSnapshot { damage = 10, attacksPerSecond = 2 };
+                Assert.That(TimelessEchoes.Combat.ExpectedEncounterDamage(hero, enemy, level, 0),
+                    Is.EqualTo(expected).Within(.0001));
+            }
+            finally { Object.DestroyImmediate(enemy); }
+        }
+
+        [Test]
+        public void CurrentStrengthDeterminesDeathOrReapWithTheSameUndamagedHistory()
+        {
+            var enemy = ScriptableObject.CreateInstance<EnemyData>();
+            try
+            {
+                enemy.maxHealth = 100; enemy.healthPerLevel = 10;
+                enemy.damage = 1; enemy.damagePerLevel = .5f; enemy.attackSpeed = 1; enemy.distancePerLevel = 10;
+                var hero = new HeroStatsSnapshot { damage = 10, attacksPerSecond = 2 };
+                var input = Input(600); input.BaseCap = 500;
+                input.Combat = (distance, _, _, _) => new(TimelessEchoes.Combat.ExpectedEncounterDamage(
+                    hero, enemy, enemy.GetLevel((float)distance), 0), 0);
+                var weak = BackgroundRunEstimator.Forecast(input);
+                Assert.That(weak.Deaths, Is.GreaterThan(0));
+                Assert.That(weak.Reaps, Is.Zero);
+                Assert.That(weak.Steps.First(s => s.EndsRun).Distance, Is.InRange(1, 499));
+                hero.damage = 10000;
+                var strong = BackgroundRunEstimator.Forecast(input);
+                Assert.That(strong.Deaths, Is.Zero);
+                Assert.That(strong.Reaps, Is.EqualTo(1));
+                Assert.That(strong.Steps.First(s => s.EndsRun).Distance, Is.EqualTo(500));
+            }
+            finally { Object.DestroyImmediate(enemy); }
+        }
+
+        [Test]
+        public void UnbuffedForecastStatsDoNotReplaceOrClearTheLiveStatCache()
+        {
+            var before = HeroStatSystem.GetSnapshot();
+            HeroStatSystem.GetSnapshotWithoutBuffs();
+            Assert.That(HeroStatSystem.GetSnapshot().version, Is.EqualTo(before.version));
+            HeroStatSystem.MarkDirty();
+            HeroStatSystem.GetSnapshotWithoutBuffs();
+            Assert.That(HeroStatSystem.IsDirty, Is.True);
+            HeroStatSystem.GetSnapshot();
+        }
+
+        [Test]
+        public void SavedCombatEchoProtectionExpiresAndDoesNotCarryIntoTheNextRun()
+        {
+            var recipe = Resources.Load<BuffRecipe>("Buffs/Echo Combat");
+            Assert.That(recipe && recipe.GetEchoCount() > 0, Is.True);
+            var map = ScriptableObject.CreateInstance<MapGenerationConfig>();
+            var terrain = ScriptableObject.CreateInstance<TerrainSettings>();
+            var enemy = ScriptableObject.CreateInstance<EnemyData>();
+            var prefab = new GameObject("Forecast enemy");
+            try
+            {
+                terrain.traversal = TerrainSettings.Traversal.Walkable;
+                map.tilemapChunkSettings.middleTerrain = terrain;
+                enemy.prefab = prefab; enemy.spawnTerrains.Add(terrain);
+                enemy.maxHealth = 100; enemy.damage = 10; enemy.attackSpeed = 1;
+                map.taskGeneratorSettings.enemies.Add(enemy);
+                var run = new RunSaveData { Map = "Fixture", Buffs = new BuffManager.BuffRunState() };
+                var normal = new BackgroundRunContent(map, false, 1, 1, run).CombatRates(100, 0, 0, true);
+                run.Buffs.Active.Add(new BuffManager.BuffState { Recipe = recipe.name, Remaining = 4 });
+                var withEcho = new BackgroundRunContent(map, false, 1, 1, run);
+                Assert.That(withEcho.CombatRates(100, 0, 0, true).DamagePerEncounter, Is.LessThan(normal.DamagePerEncounter));
+                Assert.That(withEcho.CombatRates(100, 0, 4, true).DamagePerEncounter, Is.EqualTo(normal.DamagePerEncounter));
+                Assert.That(withEcho.CombatRates(100, 0, 0, false).DamagePerEncounter, Is.EqualTo(normal.DamagePerEncounter));
+                Assert.That(run.Buffs.Active[0].Remaining, Is.EqualTo(4), "Forecasts must not consume the saved ability.");
+            }
+            finally { Object.DestroyImmediate(prefab); Object.DestroyImmediate(enemy); Object.DestroyImmediate(terrain); Object.DestroyImmediate(map); }
+        }
+
+        [TestCase(100, 0)]
+        [TestCase(10, 15)]
+        public void BombschroomOnlyDealsItsBlastWhenItSurvivesTheFuse(float damage, double expected)
+        {
+            var enemy = ScriptableObject.CreateInstance<EnemyData>();
+            var prefab = new GameObject("Forecast Bombschroom");
+            try
+            {
+                prefab.AddComponent<BombschroomFuse>(); enemy.prefab = prefab;
+                enemy.maxHealth = 100; enemy.damage = 10; enemy.attackSpeed = 0;
+                var hero = new HeroStatsSnapshot { damage = damage, attacksPerSecond = 2 };
+                Assert.That(TimelessEchoes.Combat.ExpectedEncounterDamage(hero, enemy, 1, 0),
+                    Is.EqualTo(expected).Within(.0001));
+            }
+            finally { Object.DestroyImmediate(prefab); Object.DestroyImmediate(enemy); }
+        }
+
+        [TestCase(0, .38)]
+        [TestCase(.2, .5)]
+        [TestCase(.3, .56)]
+        public void CurrentRegenerationBalancesExpectedCombatDamage(double regen, double expectedHealth)
+        {
+            var input = Input(60); input.DistanceReaping = false; input.Run.HealthFraction = .5f;
+            input.Combat = (_, _, _, _) => new(2, regen);
+            Assert.That(BackgroundRunEstimator.Forecast(input).HealthFraction, Is.EqualTo(expectedHealth).Within(.00001));
+        }
+
+        [TestCase(120, 120)]
+        [TestCase(28800, 3600)]
+        public void BackgroundAllowanceCreditsAtMostOneHour(double away, double credited)
+        {
+            var input = Input(away); input.BaseCap = 1000000;
+            var result = BackgroundRunEstimator.Forecast(input);
+            Assert.That(result.Seconds, Is.EqualTo(credited).Within(.00001));
+            Assert.That(result.Distance, Is.EqualTo(credited).Within(.00001));
+            Assert.That(result.Kills, Is.EqualTo((int)(credited / 10)));
         }
 
         [Test]

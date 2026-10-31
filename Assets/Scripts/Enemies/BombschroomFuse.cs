@@ -17,6 +17,9 @@ namespace TimelessEchoes.Enemies
         [SerializeField, Min(.1f)] private float explosionDuration = .7f;
         [SerializeField] private GameObject fuseBar;
 
+        public float FuseDuration => Mathf.Max(.1f, fuseDuration);
+        public float BlastDamageMultiplier => Mathf.Max(0f, damageMultiplier);
+
         public float FuseRemainingFraction => armed && !detonated
             ? Mathf.Clamp01(1f - elapsed / Mathf.Max(.1f, fuseDuration)) : 0f;
 
@@ -76,7 +79,7 @@ namespace TimelessEchoes.Enemies
             }
 
             elapsed += Time.deltaTime;
-            if (elapsed >= Mathf.Max(.1f, fuseDuration)) Detonate();
+            if (elapsed >= FuseDuration) Detonate();
         }
 
         private void LateUpdate()
@@ -132,7 +135,7 @@ namespace TimelessEchoes.Enemies
 
             if (multiplier > 0)
                 hero.TakeDamageFromEnemy(enemy.Stats.GetDamageForLevel(enemy.Level) *
-                    damageMultiplier * multiplier, enemy.Level);
+                    BlastDamageMultiplier * multiplier, enemy.Level);
         }
     }
 }

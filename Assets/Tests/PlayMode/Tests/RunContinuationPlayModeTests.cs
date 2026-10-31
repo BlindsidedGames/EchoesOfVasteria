@@ -276,6 +276,11 @@ namespace Tests.PlayMode
                 CreateRuntime(data, "River");
                 owner.AddComponent<EnemyKillTracker>();
                 Events.LoadData();
+                // This fixture tests continuation, not naked starting-character survival.
+                // Supply real offensive stats rather than relying on zero historical damage.
+                var equipment = owner.AddComponent<EquipmentController>();
+                equipment.Equip(new GearItem { slot = "Weapon", rarity = AssetCache.GetAll<RaritySO>().First(r => r.tierIndex == 2),
+                    affixes = new List<GearAffix> { new() { stat = AssetCache.GetAll<StatDefSO>().First(s => s.heroMapping == HeroStatMapping.Damage), value = 10000 } } });
                 yield return WaitForRun();
                 HeroController.Instance.SetActiveState(false);
                 Assert.That(HeroController.Instance.transform.position.x, Is.InRange(109f, 113f));

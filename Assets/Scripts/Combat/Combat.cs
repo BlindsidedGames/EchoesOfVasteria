@@ -13,6 +13,28 @@ namespace TimelessEchoes
     {
         public const float DefaultArmorScalarN = 25f;
 
+        public static float ExpectedDps(Hero.HeroStatsSnapshot hero, float enemyDefense, float damageMultiplier = 1f)
+        {
+            var crit = 1f + Mathf.Clamp01(hero.critChancePercent / 100f) * Mathf.Max(0f, hero.critDamagePercent) / 100f;
+            return ApplyDefense(hero.damage * damageMultiplier * crit, enemyDefense) * Mathf.Max(0f, hero.attacksPerSecond);
+        }
+
+        // Expected exposure across encounters, not a simulation of projectile paths or positioning.
+        // Echoes add attacks and share the target load; only their share transfers half damage.
+        public static double ExpectedEncounterDamage(Hero.HeroStatsSnapshot hero, Enemies.EnemyData enemy,
+            int level, double combatEchoes, float killMultiplier = 1f)
+        {
+            var echoes = System.Math.Max(0, combatEchoes);
+            var defense = enemy.GetDefenseForLevel(level);
+            var dps = (1 + echoes) * ExpectedDps(hero, defense, killMultiplier);
+            var exposure = enemy.GetMaxHealthForLevel(level) / System.Math.Max(.0001, dps);
+            var transferred = 1 - .5 * echoes / (1 + echoes);
+            var damage = ApplyDefense(enemy.GetDamageForLevel(level), hero.defense) * transferred;
+            var fuse = enemy.prefab ? enemy.prefab.GetComponent<Enemies.BombschroomFuse>() : null;
+            if (fuse) return exposure >= fuse.FuseDuration ? damage * fuse.BlastDamageMultiplier : 0;
+            return exposure * System.Math.Max(0, enemy.attackSpeed) * damage;
+        }
+
         public static float ApplyDefense(float incomingDamage, float defense)
         {
             return ApplyDefense(incomingDamage, defense, new DefenseTuning { N = DefaultArmorScalarN });

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-31 20:35:21Z" end-time="2026-10-31 20:35:21Z" duration="0.0507676">
+  <test-suite type="TestSuite" id="1000" name="Echoes of Vasteria" fullname="Echoes of Vasteria" runstate="Runnable" testcasecount="463" result="Failed" site="Child" start-time="2026-10-31 20:35:21Z" end-time="2026-10-31 20:35:21Z" duration="0.050768" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1523" name="EditMode.Tests.dll" fullname="C:/Users/mattr/.codex/worktrees/release-1-5-1/EchoesOfVasteria/Library/ScriptAssemblies/EditMode.Tests.dll" runstate="Runnable" testcasecount="425" result="Failed" site="Child" start-time="2026-10-31 20:35:21Z" end-time="2026-10-31 20:35:21Z" duration="0.041430" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="44560" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1528" name="Tests" fullname="Tests" runstate="Runnable" testcasecount="397" result="Failed" site="Child" start-time="2026-10-31 20:35:21Z" end-time="2026-10-31 20:35:21Z" duration="0.038350" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1529" name="EditMode" fullname="Tests.EditMode" runstate="Runnable" testcasecount="397" result="Failed" site="Child" start-time="2026-10-31 20:35:21Z" end-time="2026-10-31 20:35:21Z" duration="0.036127" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1072" name="BackgroundRunEstimatorTests" fullname="Tests.EditMode.BackgroundRunEstimatorTests" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" testcasecount="16" result="Failed" site="Child" start-time="2026-10-31 20:35:21Z" end-time="2026-10-31 20:35:21Z" duration="0.028766" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="1083" name="CombatDeathUsesCurrentThreatRatherThanRecordedDamage" fullname="Tests.EditMode.BackgroundRunEstimatorTests.CombatDeathUsesCurrentThreatRatherThanRecordedDamage" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-31 20:35:21Z" end-time="2026-10-31 20:35:21Z" duration="0.024840" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1080" name="CombatDeathUsesCurrentThreatRatherThanRecordedDamage(0)" fullname="Tests.EditMode.BackgroundRunEstimatorTests.CombatDeathUsesCurrentThreatRatherThanRecordedDamage(0)" methodname="CombatDeathUsesCurrentThreatRatherThanRecordedDamage" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="1311742598" result="Failed" start-time="2026-10-31 20:35:21Z" end-time="2026-10-31 20:35:21Z" duration="0.014051" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: 1
+  But was:  0
+]]></message>
+                  <stack-trace><![CDATA[at Tests.EditMode.BackgroundRunEstimatorTests.CombatDeathUsesCurrentThreatRatherThanRecordedDamage (System.Double recordedDamage) [0x000a9] in C:\Users\mattr\.codex\worktrees\release-1-5-1\EchoesOfVasteria\Assets\Tests\EditMode\BackgroundRunEstimatorTests.cs:103
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1081" name="CombatDeathUsesCurrentThreatRatherThanRecordedDamage(20)" fullname="Tests.EditMode.BackgroundRunEstimatorTests.CombatDeathUsesCurrentThreatRatherThanRecordedDamage(20)" methodname="CombatDeathUsesCurrentThreatRatherThanRecordedDamage" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="1327877264" result="Passed" start-time="2026-10-31 20:35:21Z" end-time="2026-10-31 20:35:21Z" duration="0.001764" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1082" name="CombatDeathUsesCurrentThreatRatherThanRecordedDamage(2000)" fullname="Tests.EditMode.BackgroundRunEstimatorTests.CombatDeathUsesCurrentThreatRatherThanRecordedDamage(2000)" methodname="CombatDeathUsesCurrentThreatRatherThanRecordedDamage" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="568035321" result="Failed" start-time="2026-10-31 20:35:21Z" end-time="2026-10-31 20:35:21Z" duration="0.000239" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: 1
+  But was:  120
+]]></message>
+                  <stack-trace><![CDATA[at Tests.EditMode.BackgroundRunEstimatorTests.CombatDeathUsesCurrentThreatRatherThanRecordedDamage (System.Double recordedDamage) [0x000a9] in C:\Users\mattr\.codex\worktrees\release-1-5-1\EchoesOfVasteria\Assets\Tests\EditMode\BackgroundRunEstimatorTests.cs:103
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Saving results to: C:/Users/mattr/AppData/LocalLow/Blindsided Games/Echoes of Vasteria\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

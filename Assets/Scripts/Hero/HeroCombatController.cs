@@ -527,19 +527,11 @@ namespace TimelessEchoes.Hero
             var killTracker = EnemyKillTracker.Instance;
             var enemyStats = enemy.Stats;
             float killMult = killTracker != null ? killTracker.GetDamageMultiplier(enemyStats) : 1f;
-            float critChance = Mathf.Clamp01(snap.critChancePercent / 100f);
-            float critDamageMultiplier = 1f + Mathf.Max(0f, snap.critDamagePercent) / 100f;
-            float expectedCritFactor = 1f + critChance * (critDamageMultiplier - 1f);
-
             // Get the attacker's combat controller for its damage multiplier
             var attackerCombat = attacker.CombatController;
             var attackerMultiplier = attackerCombat != null ? attackerCombat.CombatDamageMultiplier : 1f;
 
-            float perHitBeforeDefense = snap.damage * attackerMultiplier * killMult * expectedCritFactor;
-            float defense = enemy.GetDefense();
-            float perHitAfterDefense = Combat.ApplyDefense(perHitBeforeDefense, defense);
-            float attacksPerSecond = Mathf.Max(0f, snap.attacksPerSecond);
-            return perHitAfterDefense * attacksPerSecond;
+            return Combat.ExpectedDps(snap, enemy.GetDefense(), attackerMultiplier * killMult);
         }
 
         /// <summary>

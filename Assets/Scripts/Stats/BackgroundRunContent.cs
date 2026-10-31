@@ -22,6 +22,7 @@ namespace TimelessEchoes.Stats
         private readonly MapGenerationConfig map;
         private readonly SkillController skills;
         private readonly HeroStatsSnapshot hero;
+        private readonly List<CombatBuff> combatBuffs = new();
         private readonly bool killScaling;
         private readonly int killsPerLevel, levelsPerTier;
         private readonly double shopSeconds;
@@ -35,14 +36,42 @@ namespace TimelessEchoes.Stats
             RunSaveData run, double taskShare = 0, double killShare = 0)
         {
             map = config; killScaling = killMode; killsPerLevel = killsPerTier; levelsPerTier = levels;
-            skills = SkillController.Instance; hero = HeroStatSystem.GetSnapshot();
+            skills = SkillController.Instance; hero = HeroStatSystem.GetSnapshotWithoutBuffs();
             var shop = ShopService.Instance; permanentShop = shop && shop.PermanentEnabled; shopSeconds = shop ? shop.Remaining : 0;
+            var recipes = Blindsided.Utilities.AssetCache.GetAll<BuffRecipe>().Where(r => r && !r.IsRetired).ToArray();
             if (run.Buffs?.Active != null)
                 foreach (var state in run.Buffs.Active)
                 {
-                    var recipe = Blindsided.Utilities.AssetCache.GetAll<BuffRecipe>().FirstOrDefault(r => r && r.name == state.Recipe && !r.IsRetired);
+                    if (state == null) continue;
+                    var recipe = recipes.FirstOrDefault(r => r.name == state.Recipe);
                     if (recipe) savedBuffs.Add((state, recipe.GetAggregatedEffects()));
                 }
+            var manager = BuffManager.Instance;
+            var automatic = new HashSet<BuffRecipe>();
+            if (manager)
+                for (var slot = 0; slot < manager.UnlockedSlots; slot++)
+                {
+                    var recipe = manager.GetAssigned(slot);
+                    if (manager.IsSlotAutoCasting(slot) && recipe && recipe.IsUnlocked && !recipe.IsRetired)
+                        automatic.Add(recipe);
+                }
+            foreach (var recipe in recipes.Where(r => automatic.Contains(r) || savedBuffs.Any(b => b.state.Recipe == r.name)))
+            {
+                var state = run.Buffs?.Active?.FirstOrDefault(b => b != null && b.Recipe == recipe.name);
+                var effects = recipe.GetAggregatedEffects();
+                var cooldown = run.Buffs?.Cooldowns != null && run.Buffs.Cooldowns.TryGetValue(recipe.name, out var cd) ? cd : 0;
+                combatBuffs.Add(new CombatBuff
+                {
+                    Effects = effects, Auto = automatic.Contains(recipe), Remaining = state?.Remaining ?? 0,
+                    ExpireAtDistance = state?.ExpireAtDistance ?? 0, InitialCooldown = cooldown,
+                    Duration = recipe.GetDuration(), Cooldown = recipe.GetCooldown(),
+                    DistanceBased = recipe.durationType == BuffDurationType.DistancePercent,
+                    DistanceLimit = Mathf.Max(1, GameplayStatTracker.Instance ? GameplayStatTracker.Instance.LongestRun : 1) * recipe.GetDuration(),
+                    ConcurrentCooldown = effects.Any(e => e.type == BuffEffectType.MaxDistancePercent || e.type == BuffEffectType.MaxDistanceIncrease),
+                    Echoes = recipe.echoConfig != null && (recipe.echoConfig.echoType == EchoType.Combat || recipe.echoConfig.echoType == EchoType.All)
+                        ? recipe.GetEchoCount() : 0
+                });
+            }
             echoTaskShare = taskShare; echoKillShare = killShare;
             random = new System.Random(unchecked((int)(run.CheckpointUtcTicks ^ (run.CheckpointUtcTicks >> 32) ^ run.Stats.Kills)));
             var settings = map.taskGeneratorSettings;
@@ -65,23 +94,53 @@ namespace TimelessEchoes.Stats
 
         public void EndRun() => savedBuffs.Clear();
 
-        public double Pressure(double distance, int kills)
+        private sealed class CombatBuff
         {
-            double total = 0, pressure = 0;
+            public List<BuffEffect> Effects;
+            public double Remaining, ExpireAtDistance, InitialCooldown, Duration, Cooldown, DistanceLimit;
+            public int Echoes;
+            public bool Auto, DistanceBased, ConcurrentCooldown;
+
+            public bool Active(double seconds, double distance, bool firstRun)
+            {
+                if (DistanceBased)
+                    return firstRun && ExpireAtDistance > distance && Remaining > 0 ||
+                           Auto && distance < DistanceLimit && seconds >= (firstRun ? InitialCooldown : 0);
+                if (firstRun && Remaining > 0)
+                {
+                    if (seconds < Remaining) return true;
+                    seconds -= Remaining + (ConcurrentCooldown ? Math.Max(0, InitialCooldown - Remaining) : Cooldown);
+                }
+                else if (firstRun) seconds -= InitialCooldown;
+                var period = ConcurrentCooldown ? Math.Max(Duration, Cooldown) : Duration + Cooldown;
+                return Auto && Duration > 0 && seconds >= 0 && period > 0 && seconds % period < Duration;
+            }
+        }
+
+        public BackgroundRunEstimator.CombatRates CombatRates(double distance, int kills, double seconds, bool firstRun)
+        {
+            var stats = hero;
+            float Value(BuffEffectType type) => combatBuffs.Where(b => b.Active(seconds, distance, firstRun))
+                .Sum(b => b.Effects.Where(e => e.type == type).Sum(e => e.value));
+            stats.damage *= Math.Max(0, 1 + Value(BuffEffectType.DamagePercent) / 100);
+            stats.attacksPerSecond *= Math.Max(0, 1 + Value(BuffEffectType.AttackSpeedPercent) / 100);
+            stats.defense *= Math.Max(0, 1 + Value(BuffEffectType.DefensePercent) / 100);
+            stats.critChancePercent += Math.Max(0, Value(BuffEffectType.CritChancePercent));
+            stats.critDamagePercent += Math.Max(0, Value(BuffEffectType.CritDamagePercent));
+            stats.healthRegenPerSecond *= 1 + Math.Max(0, Value(BuffEffectType.HealthRegenPercent)) / 100;
+            var echoes = combatBuffs.Where(b => b.Active(seconds, distance, firstRun)).Sum(b => b.Echoes);
+            double total = 0, damage = 0;
             foreach (var enemy in map.taskGeneratorSettings.enemies)
             {
                 var weight = EnemyWeight(enemy, (float)distance);
                 if (weight <= 0) continue;
                 var level = enemy.GetLevel((float)distance - map.taskGeneratorSettings.enemySpawnXOffset - enemy.minX);
                 if (killScaling && killsPerLevel > 0) level += kills / killsPerLevel * levelsPerTier;
-                var crit = 1 + Mathf.Clamp01(hero.critChancePercent / 100) * Mathf.Max(0, hero.critDamagePercent) / 100;
                 var killBonus = EnemyKillTracker.Instance ? EnemyKillTracker.Instance.GetDamageMultiplier(enemy) : 1;
-                var dps = Combat.ApplyDefense(hero.damage * crit * killBonus, enemy.GetDefenseForLevel(level)) * hero.attacksPerSecond;
-                var exposure = enemy.GetMaxHealthForLevel(level) / Math.Max(.01, dps);
-                pressure += weight * exposure * enemy.attackSpeed * Combat.ApplyDefense(enemy.GetDamageForLevel(level), hero.defense);
+                damage += weight * Combat.ExpectedEncounterDamage(stats, enemy, level, echoes, killBonus);
                 total += weight;
             }
-            return total > 0 ? pressure / total : 0;
+            return new BackgroundRunEstimator.CombatRates(total > 0 ? damage / total : 0, stats.healthRegenPerSecond);
         }
 
         private float EnemyWeight(TimelessEchoes.Enemies.EnemyData enemy, float x)

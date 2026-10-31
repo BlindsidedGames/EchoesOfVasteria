@@ -36,17 +36,26 @@ namespace TimelessEchoes.Stats
     // player/content observations and applies the returned work through normal owners.
     public static class BackgroundRunEstimator
     {
+        public const double MaxAwaySeconds = 3600;
         public sealed class Input
         {
             public RunSaveData Run;
             public IReadOnlyList<BackgroundRunSample> Samples;
             public double Seconds, StartingDistance, BaseCap, CapMultiplier = 1, CapFlat;
-            public double MaxHealth = 1, Regen, RestartSeconds = 20;
+            public double MaxHealth = 1, RestartSeconds = 20;
+            public double EnemyDensity;
             public double GateDistance = double.PositiveInfinity;
             public bool DistanceReaping = true, CapGain = true, StopOnFirstReap;
-            public Func<double, int, double> Pressure;
+            public Func<double, int, double, bool, CombatRates> Combat;
             public Func<double, double, (double multiplier, double flat)> CapModifiers;
             public double NextBuffExpiry = double.PositiveInfinity;
+        }
+
+        public readonly struct CombatRates
+        {
+            public readonly double DamagePerEncounter, Regen;
+            public CombatRates(double damagePerEncounter, double regen)
+            { DamagePerEncounter = damagePerEncounter; Regen = regen; }
         }
 
         public sealed class Step
@@ -86,26 +95,28 @@ namespace TimelessEchoes.Stats
             if (run.ReturnQueued || run.Dead || input.GateDistance <= run.Distance)
             { result.StopReason = "Player input required"; return result; }
 
-            double seconds = 0, distance = 0, tasks = 0, kills = 0, damage = 0, reference = 0;
-            double echoTasks = 0, echoKills = 0, weightSum = 0;
+            double seconds = 0, distance = 0, tasks = 0, kills = 0;
+            double echoTasks = 0, echoKills = 0;
             for (var i = 0; i < samples.Length; i++)
             {
                 var s = samples[i]; var weight = i + 1;
                 seconds += weight * s.Seconds; distance += weight * s.Distance;
-                tasks += weight * s.Tasks; kills += weight * s.Kills; damage += weight * s.DamageTaken;
-                reference += weight * s.EndDistance * .5; weightSum += weight;
+                tasks += weight * s.Tasks; kills += weight * s.Kills;
                 echoTasks += weight * s.EchoTasks; echoKills += weight * s.EchoKills;
             }
             var speed = distance / seconds;
             if (!(speed > 0)) { result.Status = "insufficientHistory"; return result; }
             var taskRate = tasks / seconds; var killRate = kills / seconds;
+            // Kills omit enemies still attacking or not yet reached. Authored spawn
+            // density is the encounter floor, even when the recorded kill rate is low.
+            var encounterRate = Math.Max(killRate, Math.Max(0, input.EnemyDensity) * speed);
             result.EchoTaskShare = tasks > 0 ? Math.Clamp(echoTasks / tasks, 0, 1) : 0;
             result.EchoKillShare = kills > 0 ? Math.Clamp(echoKills / kills, 0, 1) : 0;
-            var referencePressure = Math.Max(.0001, input.Pressure?.Invoke(reference / weightSum, (int)(kills / weightSum * .5)) ?? 1);
             var health = input.MaxHealth * run.HealthFraction;
             var runKills = run.Stats.Kills;
+            double runMovingSeconds = 0;
             // Deliberately bounded prototype, not a new production offline policy.
-            var remaining = Math.Min(input.Seconds, 3600);
+            var remaining = Math.Min(input.Seconds, MaxAwaySeconds);
             if (input.Seconds > remaining) result.StopReason = "Prototype limited to one hour";
             if ((taskRate + killRate) * remaining > 20000)
             { remaining = 20000 / (taskRate + killRate); result.StopReason = "Prototype work limit"; }
@@ -120,11 +131,12 @@ namespace TimelessEchoes.Stats
                 if (result.MovingSeconds < input.NextBuffExpiry)
                     dt = Math.Min(dt, input.NextBuffExpiry - result.MovingSeconds);
                 dt = Math.Min(dt, Math.Max(0, boundary - result.Distance) / speed);
-                var pressure = Math.Max(0, input.Pressure?.Invoke(result.Distance, runKills) ?? 1);
-                // History calibrates observed damage, not a distance limit. Passing
-                // its furthest run must not invent damage or an early restart.
-                var incoming = damage / seconds * pressure / referencePressure;
-                var netDamage = incoming - input.Regen;
+                var combat = input.Combat?.Invoke(result.Distance, runKills, runMovingSeconds,
+                    result.Reaps + result.Deaths == 0) ?? default;
+                // History supplies encounter pace. Current combat stats determine exposure;
+                // zero recorded damage and the furthest saved run are not survival boundaries.
+                var incoming = Math.Max(0, combat.DamagePerEncounter) * encounterRate;
+                var netDamage = incoming - Math.Max(0, combat.Regen);
                 if (netDamage > 0) dt = Math.Min(dt, health / netDamage);
                 var step = new Step { Seconds = dt, Distance = result.Distance + speed * dt, DamageTaken = incoming * dt,
                     Cap = input.DistanceReaping ? cap : 0 };
@@ -133,7 +145,7 @@ namespace TimelessEchoes.Stats
                 result.TaskRemainder -= step.Tasks; result.KillRemainder -= step.Kills;
                 result.Tasks += step.Tasks; result.Kills += step.Kills; runKills += step.Kills;
                 health = Math.Clamp(health - netDamage * dt, 0, input.MaxHealth);
-                remaining -= dt; result.Seconds += dt; result.MovingSeconds += dt; result.Distance = step.Distance;
+                remaining -= dt; result.Seconds += dt; result.MovingSeconds += dt; runMovingSeconds += dt; result.Distance = step.Distance;
                 if (result.Distance >= input.GateDistance - .00001)
                 { result.StopReason = "NPC encounter"; result.Steps.Add(step); break; }
                 if (health <= .00001 || result.Distance >= cap - .00001)
@@ -154,7 +166,7 @@ namespace TimelessEchoes.Stats
                     // Preserve a partly elapsed countdown, rather than granting a free restart.
                     if (step.RestartSeconds + .00001 < input.RestartSeconds) break;
                     step.Restarted = true;
-                    health = input.MaxHealth; result.Distance = input.StartingDistance; runKills = 0;
+                    health = input.MaxHealth; result.Distance = input.StartingDistance; runKills = 0; runMovingSeconds = 0;
                     continue;
                 }
                 result.Steps.Add(step);

@@ -68,6 +68,10 @@ namespace TimelessEchoes.Hero
             return _cache;
         }
 
+        // Background forecasts apply saved ability lifetimes to the same base calculation.
+        // This query does not replace the live cache or publish a stat-change event.
+        public static HeroStatsSnapshot GetSnapshotWithoutBuffs() => Recalculate(false);
+
         public static float GetDamage(bool isCrit = false)
         {
             var s = GetSnapshot();
@@ -83,7 +87,7 @@ namespace TimelessEchoes.Hero
             Recalculate();
         }
 
-                private static void Recalculate()
+        private static HeroStatsSnapshot Recalculate(bool includeBuffs = true)
         {
             if (!_initialized)
             {
@@ -91,7 +95,8 @@ namespace TimelessEchoes.Hero
                 _initialized = _hero != null;
             }
 
-            var buffs = BuffManager.Instance;
+            var buffs = includeBuffs ? BuffManager.Instance : null;
+            var mask = includeBuffs ? _dirtyMask : DirtyMask.All;
             var equip = EquipmentController.Instance;
             var crafting = CraftingService.Instance;
 
@@ -106,7 +111,7 @@ namespace TimelessEchoes.Hero
             var newSnapshot = _cache; // start from previous and update only dirty fields
             var cauldron = CauldronManager.Instance;
 
-            if ((_dirtyMask & DirtyMask.Damage) != 0)
+            if ((mask & DirtyMask.Damage) != 0)
             {
                 var baseDamage = damageStat != null ? BaseStatService.GetTotalValue(damageStat) : 0f;
                 var gearDamage = equip != null ? equip.GetTotalForMapping(HeroStatMapping.Damage) : 0f;
@@ -115,7 +120,7 @@ namespace TimelessEchoes.Hero
                 newSnapshot.damage = (baseDamage + gearDamage + infDmg) * buffMult;
             }
 
-            if ((_dirtyMask & DirtyMask.AttackRate) != 0)
+            if ((mask & DirtyMask.AttackRate) != 0)
             {
                 var baseAttack = attackRateStat != null ? BaseStatService.GetTotalValue(attackRateStat) : 0f;
                 var gearAttack = equip != null ? equip.GetTotalForMapping(HeroStatMapping.AttackRate) : 0f;
@@ -124,7 +129,7 @@ namespace TimelessEchoes.Hero
                 newSnapshot.attacksPerSecond = (baseAttack + gearAttack + infAps) * buffMult;
             }
 
-            if ((_dirtyMask & DirtyMask.CritChance) != 0)
+            if ((mask & DirtyMask.CritChance) != 0)
             {
                 var critPercent = critChanceStat != null ? BaseStatService.GetTotalValue(critChanceStat) : 0f;
                 if (equip != null && crafting != null)
@@ -149,7 +154,7 @@ namespace TimelessEchoes.Hero
                 newSnapshot.critChancePercent = Mathf.Clamp(critPercent, 0f, 100f);
             }
 
-            if ((_dirtyMask & DirtyMask.CritDamage) != 0)
+            if ((mask & DirtyMask.CritDamage) != 0)
             {
                 var critDamagePercent = critDamageStat != null ? BaseStatService.GetTotalValue(critDamageStat) : 0f;
                 if (equip != null && crafting != null)
@@ -175,7 +180,7 @@ namespace TimelessEchoes.Hero
                 newSnapshot.critDamagePercent = Mathf.Max(0f, critDamagePercent);
             }
 
-            if ((_dirtyMask & DirtyMask.Move) != 0)
+            if ((mask & DirtyMask.Move) != 0)
             {
                 var ratingBase = moveSpeedStat != null ? BaseStatService.GetTotalValue(moveSpeedStat) : 0f;
                 var gearRating = equip != null ? equip.GetTotalForMapping(HeroStatMapping.MoveSpeed) : 0f;
@@ -196,7 +201,7 @@ namespace TimelessEchoes.Hero
                 newSnapshot.movementSpeed = Mathf.Max(3f, finalSpeed);
             }
 
-            if ((_dirtyMask & DirtyMask.Defense) != 0)
+            if ((mask & DirtyMask.Defense) != 0)
             {
                 var baseDef = defenseStat != null ? BaseStatService.GetTotalValue(defenseStat) : 0f;
                 var gearDef = equip != null ? equip.GetTotalForMapping(HeroStatMapping.Defense) : 0f;
@@ -205,7 +210,7 @@ namespace TimelessEchoes.Hero
                 newSnapshot.defense = (baseDef + gearDef + Mathf.Max(0f, infDef)) * buffMult;
             }
 
-            if ((_dirtyMask & DirtyMask.MaxHealth) != 0)
+            if ((mask & DirtyMask.MaxHealth) != 0)
             {
                 var baseHp = healthStat != null ? BaseStatService.GetTotalValue(healthStat) : 0f;
                 var gearHp = equip != null ? equip.GetTotalForMapping(HeroStatMapping.MaxHealth) : 0f;
@@ -213,7 +218,7 @@ namespace TimelessEchoes.Hero
                 newSnapshot.maxHealth = baseHp + gearHp + Mathf.Max(0f, infHp);
             }
 
-            if ((_dirtyMask & DirtyMask.Regen) != 0)
+            if ((mask & DirtyMask.Regen) != 0)
             {
                 var upgradeRegen = regenStat != null ? BaseStatService.GetTotalValue(regenStat) : 0f;
                 var gearRegen = equip != null ? equip.GetTotalForMapping(HeroStatMapping.HealthRegen) : 0f;
@@ -230,6 +235,7 @@ namespace TimelessEchoes.Hero
             }
 
             newSnapshot.version = _version + 1;
+            if (!includeBuffs) return newSnapshot;
 
             var changed = !_initialized ||
                           !Mathf.Approximately(_cache.damage, newSnapshot.damage) ||
@@ -248,6 +254,7 @@ namespace TimelessEchoes.Hero
 
             if (changed && OnStatsRecalculated != null)
                 OnStatsRecalculated.Invoke(_cache);
+            return _cache;
         }
 
 #if UNITY_EDITOR

@@ -1,0 +1,72 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using UnityEditor;
+using UnityEngine;
+using Blindsided.SaveData;
+using TimelessEchoes;
+using TimelessEchoes.Hero;
+using TimelessEchoes.Stats;
+using TimelessEchoes.MapGeneration;
+
+// Temporary read-only diagnostic: invokes the production model against recorded QA inputs.
+public static class BackgroundCombatReplay
+{
+    public static void Run()
+    {
+        if (EditorApplication.isPlaying) throw new InvalidOperationException("Replay requires Edit mode.");
+        var folder = "Artifacts/BackgroundRunExperiment20261031";
+        var results = new List<object>();
+        foreach (var cohort in new[] { "early-woods", "mid-woods", "late-ordinary" })
+        foreach (var file in Directory.GetFiles(folder, cohort + "-*-input.json"))
+        {
+            var source = JObject.Parse(File.ReadAllText(file));
+            var actual = JObject.Parse(File.ReadAllText(file.Replace("-input.json", "-actual.json")));
+            var samples = (JArray)actual["samples"];
+            var last = samples.Last;
+            if ((double)last["elapsed"] < 60) continue;
+            var calibration = samples.FirstOrDefault(s => (int)s["deaths"] > 0 || (int)s["reaps"] > 0) ?? last;
+            var hero = source["hero"].ToObject<HeroStatsSnapshot>();
+            var initial = source["initial"];
+            var map = AssetDatabase.LoadAssetAtPath<MapGenerationConfig>("Assets/Scriptables/MapSettings/" + source["map"] + ".asset");
+            var data = source["enemies"].ToDictionary(e => (string)e["id"]);
+            var bonuses = source["enemyDetails"].ToDictionary(e => (string)e["id"], e => (float)e["killDamageMultiplier"]);
+            var input = new BackgroundRunEstimator.Input
+            {
+                Run = new RunSaveData { Map = (string)source["map"], Distance = (float)initial["distance"],
+                    HealthFraction = (float)initial["health"] / hero.maxHealth },
+                Seconds = (double)source["duration"], BaseCap = (double)initial["maxDistance"],
+                MaxHealth = hero.maxHealth, RestartSeconds = 20, EnemyDensity = map.taskGeneratorSettings.enemyDensity,
+                Samples = new[] { new BackgroundRunSample { Seconds = (double)calibration["elapsed"],
+                    Distance = (double)calibration["distance"] - (double)initial["distance"], EndDistance = (double)calibration["distance"],
+                    Tasks = (int)calibration["tasks"], Kills = (int)calibration["kills"], DamageTaken = (double)calibration["stats"]["DamageTaken"] } },
+                Combat = (distance, _, _, _) =>
+                {
+                    double weight = 0, damage = 0;
+                    foreach (var enemy in map.taskGeneratorSettings.enemies)
+                    {
+                        if (!data.TryGetValue(enemy.name, out var observed) || distance < (double)observed["minX"] || distance > (double)observed["maxX"]) continue;
+                        var w = (double)observed["weight"];
+                        var level = enemy.GetLevel((float)distance - map.taskGeneratorSettings.enemySpawnXOffset - enemy.minX);
+                        damage += w * Combat.ExpectedEncounterDamage(hero, enemy, level, 0, bonuses[enemy.name]); weight += w;
+                    }
+                    return new(weight > 0 ? damage / weight : 0, hero.healthRegenPerSecond);
+                }
+            };
+            var forecast = BackgroundRunEstimator.Forecast(input);
+            input.Seconds = 3600;
+            var extended = BackgroundRunEstimator.Forecast(input);
+            results.Add(new { source = file, comparison = "In-sample pace replay, captured stats and eligible weights, current authored enemy data. No combat Echo abilities in these profiles. Not a fresh foreground run or an accuracy guarantee.",
+                forecast.Deaths, forecast.Reaps, forecast.Distance, forecast.HealthFraction,
+                firstEndingDistance = forecast.Steps.FirstOrDefault(s => s.EndsRun)?.Distance,
+                firstEndingWithinHour = extended.Steps.FirstOrDefault(s => s.EndsRun)?.Distance,
+                firstEndingIsReap = extended.Steps.FirstOrDefault(s => s.EndsRun)?.Reaped,
+                actualDeaths = (int)last["deaths"], actualReaps = (int)last["reaps"], actualDistance = (double)last["distance"], actualHealth = (double)last["health"] });
+        }
+        File.WriteAllText("Artifacts/BackgroundCombat20261101/profile-replay.json", JsonConvert.SerializeObject(results, Formatting.Indented));
+        Debug.Log("Replayed " + results.Count + " recorded QA runs without loading or modifying a player save.");
+    }
+}
