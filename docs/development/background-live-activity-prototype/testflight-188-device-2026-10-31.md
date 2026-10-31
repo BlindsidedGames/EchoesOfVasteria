@@ -1,6 +1,8 @@
 # Internal iPhone and Watch TestFlight build 188
 
-Apple accepted **1.5.9 (188)** from source `ae4e2a6c69acf3998e8e0143f82b8910c620bc13` at **2026-10-31 10:46:36 UTC**. The structured upload record is `05bfe8b3-882f-474a-a1e5-aa4ae92f570a`, initially **Processing**, with no errors or warnings in that record. Upload acceptance does not establish tester availability. The coordinating thread owns the subsequent App Store Connect testing-notes, existing Internal group and Testing-state verification.
+Apple accepted **1.5.9 (188)** from source `ae4e2a6c69acf3998e8e0143f82b8910c620bc13` at **2026-10-31 10:46:36 UTC**. The structured upload record and final build ID are `05bfe8b3-882f-474a-a1e5-aa4ae92f570a`, initially **Processing**, with no errors or warnings in that record. At **10:52 UTC**, App Store Connect showed **Testing**, assigned to the existing **Internal** group with **three testers**. The exact approved English (Australia) What to Test notes were saved; the UI confirmed Saved. This verifies availability, not installation or gameplay on physical hardware.
+
+[Testing status](testflight-188-testing.jpg) and [saved notes](testflight-188-notes-saved.jpg) record the final Apple UI state.
 
 This updates the previously uploaded build 187 with the run-resume fixes, native background Refresh, current distance and elapsed time, four icon metrics, saved character/equipment appearance, and measured brief portrait bob. Background progress remains experimental and **off by default**. Existing opt-in preferences remain user choices. The approved internal testing instructions are recorded in the accompanying JSON; public Library/store release notes were preserved.
 

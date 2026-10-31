@@ -98,7 +98,7 @@
     "xcodeUploadSucceeded": true,
     "actualUploadPackageSHA256": "92cdd5a43b1947c0809f64644e99ffcda6e19730e7b8014eca817fd52c7ce7bc",
     "compiledAndSerializedContentMatchesPrepared": true,
-    "testerAvailabilityVerified": false
+    "testerAvailabilityVerified": true
   },
   "tests": {
     "source": "ae4e2a6c69acf3998e8e0143f82b8910c620bc13",
@@ -129,12 +129,18 @@
   "testingNotes": {
     "approvedByUser": true,
     "whatToTest": "\u2022 Fixed resuming runs after locking your phone or switching apps.\n\u2022 Live Activity now shows current distance, elapsed time, tasks, kills, resources and reaps.\n\u2022 Added Refresh to update the estimates without opening the game.\n\u2022 Shows your character and equipped gear, with a small animation on Refresh.\n\nBackground progress remains experimental and off by default.\n",
-    "savedInAppStoreConnect": "Pending root UI verification"
+    "savedInAppStoreConnect": true,
+    "locale": "English (Australia)",
+    "saveConfirmation": "Saved"
   },
   "availability": {
-    "state": "Processing",
-    "confirmed": false,
-    "internalGroup": "Existing Internal group; pending Apple UI verification"
+    "state": "Testing",
+    "confirmed": true,
+    "internalGroup": "Internal",
+    "testers": 3,
+    "buildId": "05bfe8b3-882f-474a-a1e5-aa4ae92f570a",
+    "observedAtUTC": "2026-10-31T10:52:26Z",
+    "evidence": ["testflight-188-testing.jpg", "testflight-188-notes-saved.jpg"]
   },
   "scope": {
     "publicAppStoreSubmission": false,
