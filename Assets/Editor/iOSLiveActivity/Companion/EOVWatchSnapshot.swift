@@ -103,7 +103,8 @@ struct EOVWatchSnapshot: Codable {
         }
     }
 
-    // Mirrors the established ActivityKit JSON without importing ActivityKit on Watch.
+    // Managed forecast endpoint retained for the standalone Watch presentation.
+    // Live Activity snapshots sample Timeline instead; sourceID binds their refresh actions.
     struct Forecast: Codable {
         let sourceID: String?
         let schemaVersion: Int

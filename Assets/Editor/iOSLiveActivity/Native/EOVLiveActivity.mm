@@ -12,19 +12,6 @@ extern "C" int EOVLiveActivity_IsDemoLaunch(void) {
     return [[NSProcessInfo processInfo].arguments containsObject:@"-eov-background-demo"] ? 1 : 0;
 }
 
-extern "C" int EOVLiveActivity_IsSupported(void) {
-    __block int supported = 0;
-    void (^read)(void) = ^{
-        Class bridge = EOVActivityClass();
-        SEL selector = NSSelectorFromString(@"isSupported");
-        if (bridge && [bridge respondsToSelector:selector])
-            supported = ((BOOL (*)(id, SEL))objc_msgSend)(bridge, selector) ? 1 : 0;
-    };
-    if ([NSThread isMainThread]) read();
-    else dispatch_sync(dispatch_get_main_queue(), read);
-    return supported;
-}
-
 extern "C" void EOVLiveActivity_End(void) {
     dispatch_async(dispatch_get_main_queue(), ^{
         Class bridge = EOVActivityClass();

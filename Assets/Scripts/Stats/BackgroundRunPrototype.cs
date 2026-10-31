@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace TimelessEchoes.Stats
