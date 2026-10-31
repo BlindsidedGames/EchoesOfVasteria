@@ -99,8 +99,10 @@ private struct ElapsedStatus: View {
         if let origin = state.backgroundOrigin {
             HStack(spacing: 4) {
                 Text("Elapsed").foregroundStyle(.secondary)
-                Text("0:00:00").hidden().overlay(alignment: .leading) {
-                    Text(Date(timeIntervalSince1970: origin), style: .timer)
+                // The system can replace seconds with words on a dimmed display.
+                Text("00:00:00").hidden().frame(width: 84, alignment: .leading).overlay(alignment: .leading) {
+                    Text(timerInterval: Date(timeIntervalSince1970: origin)...Date(timeIntervalSince1970: origin + 8 * 3600),
+                         countsDown: false, showsHours: true)
                         .lineLimit(1).minimumScaleFactor(0.8)
                 }.monospacedDigit().fixedSize(horizontal: true, vertical: false)
             }.font(.caption)
