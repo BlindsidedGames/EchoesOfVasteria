@@ -26,4 +26,12 @@ Stage art with `python3 docs/development/watch-ui-polish-20261101/Harness/prepar
 
 The primary checkout and old release worktree remain read-only. Decoder and native phone bridge were not edited. Other projects' simulators were not selected or changed. No new tests, dependencies or production testing seams were added.
 
-Watch input follow-up, if attainable through native AX gestures, will be recorded separately before final handoff.
+## Actual Watch Refresh response
+
+The actual Store target was rebuilt with the current ring fix, then its isolated QA cache was staged using the existing `Integration/Tools/store-cache.py`. CUA selected **Window → Echoes Watch Prototype 42mm**, then **Device → Gestures → Double Tap**. The native gesture activated the production Refresh button's primary action. After its visual feedback settled, [the after capture](captures/watch-store-after-refresh.png) changed from [Cached with age](captures/watch-store-before-refresh.png) to **Cached · iPhone unavailable**, while retaining48/212m,90% health,11tasks,1kill and16resources. This is the real store's unreachable branch, not Preview Refresh state substitution. It does not establish paired message delivery or phone recomputation.
+
+The42mm status line visually truncates the unavailable message; the source supplies the complete meaning in its accessibility label. Spoken accessibility output was not verified. One bounded coordinate attempt to open the integrated Watch menu failed before delivery with `windowNotFoundAtPosition((59.0, 163.0))`. The Watch app's content was not exposed by the Simulator AX tree, so menu→another selected screen→dial remains unverified. No further coordinate retries or test seams were added.
+
+## Final state
+
+Watch Preview, actual Watch Store, and the isolated host plus exact production widget extension all finish with BUILD SUCCEEDED. The final generated Xcode project was rebuilt after its app-icon build setting was made explicit in the harness. The disposable phone host was uninstalled after capture and its log stream stopped; only its own QA activity/cache were removed. The phone orientation was restored to Portrait. The old Unity activity/build188 were retained, and the Watch remains on the owned Store QA app. Primary user binary-diff SHA256 still matches `7d45e5d114159fefba437f0b4df201af1939c4ffc59e6c29725a468ee1c68ec2`. No production source changed in this validation follow-up.

@@ -1,0 +1,52 @@
+{
+  "sourceRevision": "4d7519865f422100d3f613aea1a1478c5f32cabb",
+  "nativeSDK": "Xcode26.4.1; watchOS/iOS Simulator26.4",
+  "builds": {
+    "watchPreview": "passed",
+    "watchActualStore": "passed",
+    "isolatedNativeHostAndProductionWidget": "passed"
+  },
+  "watchGesture": {
+    "delivered": "Simulator Device/Gestures/Double Tap via CUA",
+    "target": "actual Store primary Refresh action",
+    "observed": "unavailable; cached run values retained",
+    "pairedRoundtrip": false
+  },
+  "phoneEdgeTaps": {
+    "delivered": false,
+    "result": "unverified; coordinate backend rejected before input",
+    "intentReceiptProduced": false,
+    "physicalUnlockBehaviorVerified": false
+  },
+  "remaining": [
+    "physical phone near-edge hit acceptance",
+    "narrow phone/small-family rendering",
+    "expanded Dynamic Island rendering/input",
+    "true landscape widget layout",
+    "integrated Watch menu navigation"
+  ],
+  "productionSourceSHA256": {
+    "Assets/Editor/iOSLiveActivity/Companion/EOVWatchComponents.swift": "f74d9bc47c87114ed97312ccd8bd0c5bf210e188dfc1f93b3a275c78d43eddf0",
+    "Assets/Editor/iOSLiveActivity/Templates/EOVForecastWidget.swift": "0d28abbb5b7a452f5d5e2621dccfbd3d9674e0199132c061e2f1cb7b0b0e98e3",
+    "Assets/Editor/iOSLiveActivity/Native/EOVForecastAttributes.swift": "af74aee8419423af815edc026924e3c094bba7d8abe52b0851125c9e61e22683",
+    "Assets/Editor/iOSLiveActivity/Native/EOVRefreshIntent.swift": "fd1882c253d9ce6e92c1e624b5f4b379289b064aadc4a559cd42975361cc05a1",
+    "Assets/Editor/iOSLiveActivity/Native/EOVLiveActivityBridge.swift": "efdee6005850094f6eed9b318a8fb55284ab0f195dbf1d1abbf135d509e7b144",
+    "Assets/Editor/iOSLiveActivity/Companion/EOVWatchSnapshot.swift": "6a44a526fd74021004e3e36426eac90a9033a531ffb1f7b9c4d2f85be47ac8cb"
+  },
+  "captureSHA256": {
+    "captures/expedition-42-after.png": "bc54a294df037595e3e707a2470010720b98759f4a699a757dffcd5a50c04f86",
+    "captures/expedition-46-after.png": "43267328919cc5c238be0fa069a5ae12deb4653da367ac7ed23d5b831e3f3fb9",
+    "captures/live-activity-portrait-after.png": "7e844e9ca894d85c4e2ad2e1cd283acd4f095a1dbca165cdd6d57b2ad232b8ea",
+    "captures/live-activity-portrait-before.png": "63b06dada3841917e3842a85caf23e1965b82d9dbb76ff44341164f4641dcc90",
+    "captures/live-activity-rotated-lockscreen.png": "24294d42ad488a31bc0d7f427c85dd7bf2dada4b300c291a244339da140a5baf",
+    "captures/watch-store-after-refresh.png": "07e316b51476a4489ec93a75f9cb2db9c044c59dd5228dfc1d2361ae932c9357",
+    "captures/watch-store-before-refresh.png": "b212f63d4ef519a8c657823eeab83b9ae5e53d908d4989d5eb8c76258ddbdc7b"
+  },
+  "cleanup": {
+    "qaPhoneBundleUninstalled": true,
+    "phoneRestoredPortrait": true,
+    "logStreamStopped": true,
+    "productionBuild188Untouched": true,
+    "primaryUserDiffSHA256": "7d45e5d114159fefba437f0b4df201af1939c4ffc59e6c29725a468ee1c68ec2"
+  }
+}
