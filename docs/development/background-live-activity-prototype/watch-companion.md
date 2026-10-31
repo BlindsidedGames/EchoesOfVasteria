@@ -1,6 +1,6 @@
 # Read-only Watch companion prototype
 
-The prototype adds a normal installed watchOS app with Current run, Skills and Recent runs screens. Current run shows estimated resources gained inside a distance-to-reap dial, using a Watch-only timeline from the phone estimator and the existing pixel artwork. It is enabled only by the existing `EOV_BACKGROUND_PROTOTYPE` build lane and is not a store release.
+The prototype adds a normal installed watchOS app with Current run, Skills and Recent runs screens. Current run shows actual recorded run values while the phone is foregrounded, then estimated gains and distance while the phone explicitly reports that it is backgrounded. It uses a distance-to-reap dial, a Watch-only timeline from the phone estimator and the existing pixel artwork. It is enabled only by the existing `EOV_BACKGROUND_PROTOTYPE` build lane and is not a store release.
 
 The phone owns skills, history, saves and rewards. The Watch displays a snapshot and can request Refresh. It never runs an independent simulation, awards progress, changes settings, starts a run or creates a save checkpoint. Empty data remains empty. The Demo badge comes from the game's explicit isolated demo launch flag.
 
@@ -38,7 +38,7 @@ Current run now opens on a full-screen time-progress dial with Carl, the map, es
 
 ## Distance and resource dial
 
-The current dial uses the distance at the sampled time divided by that run's effective reap limit. It resets when a predicted reap ends the run, stays at zero throughout the restart pause, and resumes at the estimator's actual next-run starting distance. Cap changes are retained at their observed times. There is no forecast countdown.
+When the optional `phoneInBackground` field is explicitly true, the current dial uses the distance at the sampled time divided by that run's effective reap limit. It resets when a predicted reap ends the run, stays at zero throughout the restart pause, and resumes at the estimator's actual next-run starting distance. Cap changes are retained at their observed times. There is no forecast countdown.
 
 The large centre value is **Est. resources** gained since this forecast's origin. It starts at zero and uses the estimator's task/kill work totals with the same per-work constants used by the existing phone forecast. It does not include current-run resources or add the previous projection when a newer snapshot arrives. Gains interpolate linearly within each straight movement segment between its observed work-total endpoints; run endings, cap changes and restart pauses are explicit boundaries.
 
@@ -47,3 +47,9 @@ The Watch-only optional `timeline` object has version 1, map ID, UTC origin, hor
 Without a compatible timeline, the dial uses only published actual run distance, effective cap and resources, with an **Actual resources** label and no invented reap count. An explicit source flag disables distance-to-reap progress for Hollow and other maps without distance reaps. Older snapshots lacking that flag conservatively omit reap progress. Dead runs remain gray and show their actual resources; expired timelines retain their final estimated gain and show **Estimate ended** below the dial.
 
 The distance-v3 verification is recorded separately in `watch-companion-distance-v3-evidence.json`: 13 focused managed tests, 21 native sampling checks, a rebuilt Unity/iPhone/Watch app, byte-identical paired delivery of a 54-frame real game-produced timeline, both Watch sizes, actual dead fallback, and a clearly labelled managed-estimator fixture clip through two reap resets and expiry. The 128-frame bound case includes six skills and ten history entries in 7,145 bytes. The isolated prototype apps are installed; no store/main changes were made.
+
+## Foreground/background mode
+
+Only `phoneInBackground == true` permits timeline estimates. Foreground `false`, missing/older fields and null fields use actual recorded run distance, effective cap and current-run resources, with the **Actual resources** label. The Watch never infers phone mode from connectivity or snapshot age. The background state comes from the existing game lifecycle after background handling, with an immediate publication at both transitions. Foreground resume immediately clears estimated mode, then a stable run snapshot follows the normal update path; the existing 15-second cadence remains.
+
+The mode-v4 receipts are separate from the historical distance-v3 evidence. No lifetime reap total is introduced: actual mode shows no invented reap count, while background estimates retain reaps since that forecast began.

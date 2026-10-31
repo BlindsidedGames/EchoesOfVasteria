@@ -1,0 +1,194 @@
+{
+  "managedCommit": "f1ebcc15c",
+  "nativeCommit": "d02698889",
+  "mediaCommit": "fa6ab601e",
+  "contract": "Only explicit phoneInBackground=true permits estimates. False/missing/null use recorded actual values, independent of reachability or snapshot age. No lifetime reap count added.",
+  "baselineRegression": {
+    "productionFilesFrom": "070e34610 GameManager.cs and GameManager.WatchCompanion.cs only, new test retained",
+    "expectedFailureObserved": "Expected: True\n  But was:  False",
+    "location": "Assets/Tests/PlayMode/Tests/RunContinuationPlayModeTests.cs:267",
+    "restoredManagedFilesBeforeFixedRun": true
+  },
+  "focusedPlayMode": {
+    "total": 2,
+    "passed": 2,
+    "failed": 0,
+    "cases": [
+      "CompanionSnapshotReadsRealOwnersWithoutAwardingProgress",
+      "BackgroundSettlementCommitsOnceAndWarmResumeRebuildsTheWorld"
+    ]
+  },
+  "nativeWireChecks": {
+    "checks": [
+      "foreground: exact optional state, actual values777/8/10 and same estimator timeline retained",
+      "background: exact optional state, actual values777/8/10 and same estimator timeline retained",
+      "legacy: exact optional state, actual values777/8/10 and same estimator timeline retained",
+      "null: exact optional state, actual values777/8/10 and same estimator timeline retained"
+    ],
+    "note": "Wire decode and unchanged actual/timeline data checks; mode selection is verified by direct production-view renders and actual paired lifecycle separately.",
+    "passed": true
+  },
+  "build": {
+    "unity": "6000.6.0f1",
+    "unityResult": {
+      "result": "Succeeded",
+      "errors": 0,
+      "warnings": 37,
+      "bytes": 2182742325,
+      "duration": "00:00:47.8851500"
+    },
+    "iteration": "Scripts-only managed reexport using prior complete isolated export",
+    "xcode": "26.4.1 (17E202)",
+    "combinedNative": "BUILD SUCCEEDED"
+  },
+  "actualPairedLifecycle": [
+    {
+      "phase": "foreground",
+      "capturedAtUnix": 1793425955.7869,
+      "expectedPhoneInBackground": false,
+      "bothMatchExpected": true,
+      "snapshots": {
+        "phone": {
+          "generatedAt": 1793425954,
+          "phoneInBackground": false,
+          "state": "run",
+          "dead": true,
+          "bytes": 3036,
+          "sha256": "e0b0dd147ca854b3a64680b5619fbdd86b258d587005b731454c30c63a6a65df"
+        },
+        "watch": {
+          "generatedAt": 1793425954,
+          "phoneInBackground": false,
+          "state": "run",
+          "dead": true,
+          "bytes": 3036,
+          "sha256": "e0b0dd147ca854b3a64680b5619fbdd86b258d587005b731454c30c63a6a65df"
+        }
+      }
+    },
+    {
+      "phase": "background",
+      "capturedAtUnix": 1793425979.5037498,
+      "expectedPhoneInBackground": true,
+      "bothMatchExpected": true,
+      "snapshots": {
+        "phone": {
+          "generatedAt": 1793425971,
+          "phoneInBackground": true,
+          "state": "run",
+          "dead": true,
+          "bytes": 3035,
+          "sha256": "6e08fac69b773c2660203f47d66086765a4fc18b4b05f12508cce2f48358a1e6"
+        },
+        "watch": {
+          "generatedAt": 1793425971,
+          "phoneInBackground": true,
+          "state": "run",
+          "dead": true,
+          "bytes": 3035,
+          "sha256": "6e08fac69b773c2660203f47d66086765a4fc18b4b05f12508cce2f48358a1e6"
+        }
+      }
+    },
+    {
+      "phase": "resumed",
+      "capturedAtUnix": 1793425997.7940211,
+      "expectedPhoneInBackground": false,
+      "bothMatchExpected": true,
+      "snapshots": {
+        "phone": {
+          "generatedAt": 1793425996,
+          "phoneInBackground": false,
+          "state": "run",
+          "dead": true,
+          "bytes": 3036,
+          "sha256": "8a35a87a48501a887ca5d07afda2f85c0705f4a29089e9bd2992950eb91cdb37"
+        },
+        "watch": {
+          "generatedAt": 1793425996,
+          "phoneInBackground": false,
+          "state": "run",
+          "dead": true,
+          "bytes": 3036,
+          "sha256": "8a35a87a48501a887ca5d07afda2f85c0705f4a29089e9bd2992950eb91cdb37"
+        }
+      }
+    }
+  ],
+  "resumeLog": "Native phone published loading at16:53:16.504 and stable run at16:53:16.960 Sydney time; immediate clearing of flag independently verified by protected lifecycle test. Latest-context transport may coalesce loading.",
+  "lifecycleLimitation": "Existing protected demo run was dead, so real cycle proves explicit mode delivery; it correctly remains Actual/Died. Positive living Actual/Est contrast is the controlled exact-view render below. No save reset performed.",
+  "controlledRender": {
+    "basisFile": "watch-companion-distance-v3-managed-reaping.json",
+    "basis": "Existing actual-managed-estimator fixture with actual resources777,distance8,cap10 and retained timeline",
+    "commonUtcOrigin": 1793425776.5791628,
+    "onlyModeVaries": true,
+    "normalizedDatasetSha256": "dd9ac8b2567e2a1668494c7b35f24548a8fc9310297959f806249ce27b99c722",
+    "mutations": "Common root/timeline UTC timestamps rebased once for filming, shared across all five cases; only phoneInBackground is false/true/missing thereafter",
+    "captureReceipt": [
+      {
+        "mode": "background42",
+        "phoneInBackground": true,
+        "file": "mode-v4-42-background-fixture.png",
+        "timelineOffsetAtCapture": 9.218217372894287
+      },
+      {
+        "mode": "foreground42",
+        "phoneInBackground": false,
+        "file": "mode-v4-42-foreground-fixture.png",
+        "timelineOffsetAtCapture": 11.475213050842285
+      },
+      {
+        "mode": "background46",
+        "phoneInBackground": true,
+        "file": "mode-v4-46-background-fixture.png",
+        "timelineOffsetAtCapture": 13.782809019088745
+      },
+      {
+        "mode": "foreground46",
+        "phoneInBackground": false,
+        "file": "mode-v4-46-foreground-fixture.png",
+        "timelineOffsetAtCapture": 16.442750215530396
+      },
+      {
+        "mode": "legacy",
+        "phoneInBackground": null,
+        "file": "mode-v4-42-legacy-fixture.png",
+        "timelineOffsetAtCapture": 19.056156158447266
+      }
+    ],
+    "viewStoreUnchangedExceptHarnessEntry": true,
+    "productionUiSha256": "aae31daf6321813ee656c2ea8b408f05326ddf8118206bf2194272b445d47ac6",
+    "harnessUiSha256": "fdda7b15072a7517889dccc3c3ef5d60ed5187905c6c79155ad1cde3c36f87ba",
+    "hostEntry": "import SwiftUI\nimport WatchConnectivity\n\n@main\nstruct EOVWatchCompanionApp: App {\n    @StateObject private var store = EOVWatchCompanionStore()\n    @State private var path = [\"run\"]\n    var body: some Scene {\n        WindowGroup {\n            NavigationStack(path: $path) {\n                Text(\"Echoes\").navigationDestination(for: String.self) { _ in CurrentRunScreen() }\n            }.environmentObject(store)\n        }\n    }\n}\n\n",
+    "images": "watch-companion-mode-v4-{42,46}-{foreground,background}.png and watch-companion-mode-v4-42-legacy.png",
+    "observed": "Foreground and legacy Actual777,8/10m,no invented reaps; background Est.resources with timeline distance/reaps"
+  },
+  "installedProductionApps": {
+    "phone": {
+      "bundle": "com.blindsidedgames.echoes.background.prototype",
+      "executableSha256": "9ba04de44d6e9c0d36334fd7c4fceeabdaff0a4f4de883d17ac13f60a27b1e7e",
+      "matchesBuiltExecutable": true,
+      "version": "1.5.8",
+      "build": "186"
+    },
+    "watch": {
+      "bundle": "com.blindsidedgames.echoes.background.prototype.watchkitapp",
+      "executableSha256": "1267210f333caa983eaead55000d610d1b58b702a57d2d9e5ea9f96fa7b2d907",
+      "matchesBuiltExecutable": true,
+      "version": "1.5.8",
+      "build": "186"
+    }
+  },
+  "preservation": {
+    "primaryCheckoutUnchanged": true,
+    "realSaveFilesChecked": 228,
+    "changedRealSaveFiles": [],
+    "protectedDemoBankNotReset": true
+  },
+  "limits": [
+    "Manual navigation/Crown and hardware remain unverified",
+    "Mode comparison images are controlled direct native renders, not paired UI interaction proof",
+    "Existing v3 estimator/reap proof retained; no broad old suite repeated"
+  ],
+  "scope": "Experimental branch only, no deployment/main changes. Phone remains save/reward authority."
+}
