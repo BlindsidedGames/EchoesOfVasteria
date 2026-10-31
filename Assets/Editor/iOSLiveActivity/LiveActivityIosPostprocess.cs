@@ -74,6 +74,7 @@ namespace TimelessEchoes.Editor
                     "{\"images\":[{\"filename\":\"" + name + "\",\"idiom\":\"universal\",\"scale\":\"1x\"}],\"info\":{\"author\":\"xcode\",\"version\":1}}");
             }
             AddSource(project, extension, folder + "/ForecastArt.xcassets");
+            ConfigureCompanion(project, main, framework, source, destination, folder);
 
             foreach (var guid in new[] { framework, extension })
             {
@@ -98,6 +99,66 @@ namespace TimelessEchoes.Editor
             appInfo.root.SetBoolean("NSSupportsLiveActivities", true);
             appInfo.WriteToFile(appInfoPath);
             Debug.Log("[EOVLiveActivity] Prototype-only native bridge and widget extension configured.");
+        }
+
+        private static void ConfigureCompanion(PBXProject project, string main, string framework,
+            string source, string destination, string folder)
+        {
+            var companionFolder = folder + "/Companion";
+            Directory.CreateDirectory(Path.Combine(destination, "Companion"));
+            foreach (var name in new[] { "EOVWatchSnapshot.swift", "EOVWatchPhoneSession.swift", "EOVWatchApp.swift" })
+                File.Copy(Path.Combine(source, "Companion", name), Path.Combine(destination, "Companion", name), true);
+            AddSource(project, framework, companionFolder + "/EOVWatchSnapshot.swift");
+            AddSource(project, framework, companionFolder + "/EOVWatchPhoneSession.swift");
+            project.AddFrameworkToProject(framework, "WatchConnectivity.framework", true);
+
+            const string nameOfTarget = "EchoesWatchCompanion";
+            var watch = project.TargetGuidByName(nameOfTarget);
+            if (string.IsNullOrEmpty(watch))
+                {
+                watch = project.AddTarget(nameOfTarget, "app", "com.apple.product-type.application");
+                project.AddSourcesBuildPhase(watch);
+                project.AddResourcesBuildPhase(watch);
+                project.AddFrameworksBuildPhase(watch);
+            }
+            var hostId = PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.iOS);
+            var info = new PlistDocument();
+            info.root.SetString("CFBundleExecutable", "$(EXECUTABLE_NAME)");
+            info.root.SetString("CFBundleIdentifier", "$(PRODUCT_BUNDLE_IDENTIFIER)");
+            info.root.SetString("CFBundleName", "$(PRODUCT_NAME)");
+            info.root.SetString("CFBundleDisplayName", "Echoes");
+            info.root.SetString("CFBundlePackageType", "APPL");
+            info.root.SetString("CFBundleInfoDictionaryVersion", "6.0");
+            info.root.SetString("CFBundleShortVersionString", PlayerSettings.bundleVersion);
+            info.root.SetString("CFBundleVersion", PlayerSettings.iOS.buildNumber);
+            info.root.SetBoolean("WKApplication", true);
+            info.root.SetBoolean("WKWatchOnly", false);
+            info.root.SetBoolean("WKRunsIndependentlyOfCompanionApp", false);
+            info.root.SetString("WKCompanionAppBundleIdentifier", hostId);
+            var infoPath = companionFolder + "/WatchInfo.plist";
+            info.WriteToFile(Path.Combine(destination, "Companion/WatchInfo.plist"));
+            project.SetBuildProperty(watch, "INFOPLIST_FILE", infoPath);
+            project.SetBuildProperty(watch, "PRODUCT_NAME", nameOfTarget);
+            project.SetBuildProperty(watch, "PRODUCT_BUNDLE_IDENTIFIER", hostId + ".watchkitapp");
+            project.SetBuildProperty(watch, "SWIFT_VERSION", "5.0");
+            project.SetBuildProperty(watch, "CLANG_ENABLE_MODULES", "YES");
+            project.SetBuildProperty(watch, "WATCHOS_DEPLOYMENT_TARGET", "11.0");
+            project.SetBuildProperty(watch, "TARGETED_DEVICE_FAMILY", "4");
+            var simulator = PlayerSettings.iOS.sdkVersion == iOSSdkVersion.SimulatorSDK;
+            project.SetBuildProperty(watch, "SDKROOT", simulator ? "watchsimulator" : "watchos");
+            project.SetBuildProperty(watch, "SUPPORTED_PLATFORMS", simulator ? "watchsimulator" : "watchos watchsimulator");
+            project.SetBuildProperty(watch, "ASSETCATALOG_COMPILER_APPICON_NAME", "");
+            project.SetBuildProperty(watch, "SKIP_INSTALL", "YES");
+            project.SetBuildProperty(watch, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
+            project.AddFrameworkToProject(watch, "SwiftUI.framework", false);
+            project.AddFrameworkToProject(watch, "WatchConnectivity.framework", false);
+            AddSource(project, watch, companionFolder + "/EOVWatchSnapshot.swift");
+            AddSource(project, watch, companionFolder + "/EOVWatchApp.swift");
+            AddSource(project, watch, folder + "/EOVWatchForecastView.swift");
+            AddSource(project, watch, folder + "/ForecastArt.xcassets");
+            project.AddTargetDependency(main, watch);
+            var embed = project.AddCopyFilesBuildPhase(main, "Embed Watch Content", "$(CONTENTS_FOLDER_PATH)/Watch", "16");
+            project.AddFileToBuildSection(main, embed, project.GetTargetProductFileRef(watch));
         }
 
         private static void AddSource(PBXProject project, string target, string path)

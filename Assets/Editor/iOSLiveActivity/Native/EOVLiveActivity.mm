@@ -45,3 +45,27 @@ extern "C" void EOVLiveActivity_End(void) {
             ((void (*)(id, SEL))objc_msgSend)(bridge, selector);
     });
 }
+
+extern "C" void EOVWatchCompanion_Publish(const char *json) {
+    if (!json) return;
+    NSString *payload = [[NSString alloc] initWithUTF8String:json];
+    if (!payload) return;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        Class bridge = NSClassFromString(@"EOVWatchPhoneSession");
+        SEL selector = NSSelectorFromString(@"publish:");
+        if (bridge && [bridge respondsToSelector:selector])
+            ((void (*)(id, SEL, NSString *))objc_msgSend)(bridge, selector, payload);
+    });
+}
+
+extern "C" int EOVWatchCompanion_ConsumeRefreshRequest(void) {
+    __block int requested = 0;
+    void (^read)(void) = ^{
+        Class bridge = NSClassFromString(@"EOVWatchPhoneSession");
+        SEL selector = NSSelectorFromString(@"consumeRefreshRequest");
+        if (bridge && [bridge respondsToSelector:selector])
+            requested = ((int (*)(id, SEL))objc_msgSend)(bridge, selector);
+    };
+    if ([NSThread isMainThread]) read(); else dispatch_sync(dispatch_get_main_queue(), read);
+    return requested;
+}
