@@ -1,0 +1,12 @@
+PASS Foreground opens dial using a current phone snapshot
+PASS Away UI shows gain-only resources and never forecasts phone health
+PASS Cached, unavailable or old foreground data cannot animate as current
+PASS Opted-out snapshots cannot select an away estimate
+PASS Legacy unknown task/kill gains stay unknown at the view boundary
+PASS A different map's trajectory cannot replace phone data
+PASS Earlier forecast expiry freezes the UI without silently reverting to totals
+PASS Watch time before the forecast origin does not sample future gains
+PASS Terminal dead remains static
+PASS Terminal reaped remains static
+PASS Town retains skills/history; missing run data stays empty
+11 Watch presentation contracts passed. No transport or managed-estimator claim.

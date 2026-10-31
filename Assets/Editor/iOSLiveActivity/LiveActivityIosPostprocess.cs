@@ -115,7 +115,7 @@ namespace TimelessEchoes.Editor
         {
             var companionFolder = folder + "/Companion";
             Directory.CreateDirectory(Path.Combine(destination, "Companion"));
-            foreach (var name in new[] { "EOVWatchSnapshot.swift", "EOVWatchPhoneSession.swift", "EOVWatchApp.swift" })
+            foreach (var name in new[] { "EOVWatchSnapshot.swift", "EOVWatchPhoneSession.swift", "EOVWatchApp.swift", "EOVWatchCompanionStore.swift", "EOVWatchPresentation.swift", "EOVWatchComponents.swift", "EOVWatchViews.swift" })
                 File.Copy(Path.Combine(source, "Companion", name), Path.Combine(destination, "Companion", name), true);
             AddSource(project, framework, companionFolder + "/EOVWatchSnapshot.swift");
             AddSource(project, main, companionFolder + "/EOVWatchSnapshot.swift");
@@ -175,7 +175,22 @@ namespace TimelessEchoes.Editor
             project.AddFrameworkToProject(watch, "SwiftUI.framework", false);
             project.AddFrameworkToProject(watch, "WatchConnectivity.framework", false);
             AddSource(project, watch, companionFolder + "/EOVWatchSnapshot.swift");
-            AddSource(project, watch, companionFolder + "/EOVWatchApp.swift");
+            foreach (var name in new[] { "EOVWatchApp.swift", "EOVWatchCompanionStore.swift", "EOVWatchPresentation.swift", "EOVWatchComponents.swift", "EOVWatchViews.swift" })
+                AddSource(project, watch, companionFolder + "/" + name);
+            var watchArt = Path.Combine(destination, "Companion/WatchArt.xcassets");
+            Directory.CreateDirectory(watchArt);
+            File.WriteAllText(Path.Combine(watchArt, "Contents.json"), "{\"info\":{\"author\":\"xcode\",\"version\":1}}");
+            foreach (var art in Directory.GetFiles(Path.Combine(source, "Companion/Art"), "*.png"))
+            {
+                var file = Path.GetFileName(art);
+                var imageSet = Path.Combine(watchArt, Path.GetFileNameWithoutExtension(art) + ".imageset");
+                Directory.CreateDirectory(imageSet);
+                File.Copy(art, Path.Combine(imageSet, file), true);
+                File.WriteAllText(Path.Combine(imageSet, "Contents.json"),
+                    "{\"images\":[{\"filename\":\"" + file + "\",\"idiom\":\"universal\"}],\"info\":{\"author\":\"xcode\",\"version\":1}}");
+            }
+            CharacterPortraitIosAssets.ExportWatchAnimation(watchArt);
+            AddSource(project, watch, companionFolder + "/WatchArt.xcassets");
             AddSource(project, watch, folder + "/EOVWatchForecastView.swift");
             AddSource(project, watch, folder + "/ForecastArt.xcassets");
             project.AddTargetDependency(main, watch);

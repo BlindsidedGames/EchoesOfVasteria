@@ -1,0 +1,55 @@
+name: EchoesWatchIntegration
+options:
+  deploymentTarget:
+    watchOS: "11.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CODE_SIGNING_ALLOWED: NO
+targetTemplates:
+  Watch:
+    type: application
+    platform: watchOS
+    settings:
+      base:
+        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_WKApplication: YES
+        INFOPLIST_KEY_WKWatchOnly: YES
+        TARGETED_DEVICE_FAMILY: "4"
+        MARKETING_VERSION: "0.1"
+        CURRENT_PROJECT_VERSION: "1"
+targets:
+  EchoesWatchPreview:
+    templates: [Watch]
+    sources:
+      - Sources/PreviewApp.swift
+      - Fixtures
+      - path: ../../../Artifacts/WatchIntegration/Assets.xcassets
+      - ../../../Assets/Editor/iOSLiveActivity/Companion/EOVWatchSnapshot.swift
+      - ../../../Assets/Editor/iOSLiveActivity/Companion/EOVWatchPresentation.swift
+      - ../../../Assets/Editor/iOSLiveActivity/Companion/EOVWatchComponents.swift
+      - ../../../Assets/Editor/iOSLiveActivity/Companion/EOVWatchViews.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.blindsidedgames.echoes.watch.integration.preview
+        INFOPLIST_KEY_CFBundleDisplayName: Echoes UI Preview
+  EchoesWatchStore:
+    templates: [Watch]
+    sources:
+      - path: ../../../Artifacts/WatchIntegration/Assets.xcassets
+      - path: ../../../Assets/Editor/iOSLiveActivity/Companion
+        excludes: [EOVWatchPhoneSession.swift, Art, "*.meta"]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.blindsidedgames.echoes.watch.integration.store
+        INFOPLIST_KEY_CFBundleDisplayName: Echoes Store Check
+schemes:
+  EchoesWatchPreview:
+    build:
+      targets:
+        EchoesWatchPreview: all
+  EchoesWatchStore:
+    build:
+      targets:
+        EchoesWatchStore: all
