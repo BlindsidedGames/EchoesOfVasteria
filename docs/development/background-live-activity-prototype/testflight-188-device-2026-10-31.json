@@ -1,0 +1,148 @@
+{
+  "source": "ae4e2a6c69acf3998e8e0143f82b8910c620bc13",
+  "version": "1.5.9",
+  "iosBuild": "188",
+  "androidBuildUnchanged": 186,
+  "appId": "6749265146",
+  "lane": "Existing app, internal TestFlight only",
+  "unity": "6000.6.0f1",
+  "xcode": "Xcode 26.4.1\nBuild version 17E202",
+  "normalContent": {
+    "demo": false,
+    "beta": false,
+    "development": false,
+    "deviceExport": "Fresh full DeviceSDK export",
+    "phone": "IL2CPP arm64",
+    "watch": [
+      "arm64_32",
+      "arm64"
+    ],
+    "backgroundProgressDefault": "Off; compiled PlayerPrefs fallback0 verified",
+    "editorQAFixtureHelpersAbsent": true,
+    "noDemoLaunchArguments": true
+  },
+  "bundleVersions": [
+    {
+      "bundle": "com.blindsidedgames.echoesofvasteria",
+      "version": "1.5.9",
+      "build": "188",
+      "architectures": [
+        "arm64"
+      ],
+      "platform": "/Users/matthewrushworth/.codex/worktrees/mac-live-activity-prototype/EchoesOfVasteria/Artifacts/LiveActivityTestFlight20261031-188/Echoes-1.5.9-188.xcarchive/Products/Applications/EchoesofVasteria.app/EchoesofVasteria:\nLoad command 11\n      cmd LC_BUILD_VERSION\n  cmdsize 32\n platform IOS\n    minos 15.0\n      sdk 26.4\n   ntools 1\n     tool LD\n  version 1266.8\n",
+      "binarySHA256": "5886185329ac3b0cd5768bdaa4358f642b024f344ecec8c5c81cbb28a8e5a2db"
+    },
+    {
+      "bundle": "com.blindsidedgames.echoesofvasteria.watchkitapp",
+      "version": "1.5.9",
+      "build": "188",
+      "architectures": [
+        "arm64_32",
+        "arm64"
+      ],
+      "platform": "/Users/matthewrushworth/.codex/worktrees/mac-live-activity-prototype/EchoesOfVasteria/Artifacts/LiveActivityTestFlight20261031-188/Echoes-1.5.9-188.xcarchive/Products/Applications/EchoesofVasteria.app/Watch/EchoesWatchCompanion.app/EchoesWatchCompanion (architecture arm64_32):\nLoad command 11\n      cmd LC_BUILD_VERSION\n  cmdsize 32\n platform WATCHOS\n    minos 11.0\n      sdk 26.4\n   ntools 1\n     tool LD\n  version 1266.8\n/Users/matthewrushworth/.codex/worktrees/mac-live-activity-prototype/EchoesOfVasteria/Artifacts/LiveActivityTestFlight20261031-188/Echoes-1.5.9-188.xcarchive/Products/Applications/EchoesofVasteria.app/Watch/EchoesWatchCompanion.app/EchoesWatchCompanion (architecture arm64):\nLoad command 11\n      cmd LC_BUILD_VERSION\n  cmdsize 32\n platform WATCHOS\n    minos 26.0\n      sdk 26.4\n   ntools 1\n     tool LD\n  version 1266.8\n",
+      "binarySHA256": "7b454ba46bae73f260e38dac743aa62fb726769e1d4f4d5d9fe1e3724b1b2f85"
+    },
+    {
+      "bundle": "com.blindsidedgames.echoesofvasteria.liveactivity",
+      "version": "1.5.9",
+      "build": "188",
+      "architectures": [
+        "arm64"
+      ],
+      "platform": "/Users/matthewrushworth/.codex/worktrees/mac-live-activity-prototype/EchoesOfVasteria/Artifacts/LiveActivityTestFlight20261031-188/Echoes-1.5.9-188.xcarchive/Products/Applications/EchoesofVasteria.app/PlugIns/EchoesLiveActivity.appex/EchoesLiveActivity:\nLoad command 11\n      cmd LC_BUILD_VERSION\n  cmdsize 32\n platform IOS\n    minos 16.2\n      sdk 26.4\n   ntools 1\n     tool LD\n  version 1266.8\n",
+      "binarySHA256": "9b1e3804435e5afe8055b79ce2ef1fc25c24e20e5fb84651af47fdefadbbced3"
+    }
+  ],
+  "validation": {
+    "appleValidationPassed": true,
+    "combinedHostAndWidgetIntentMetadataVerified": true,
+    "nativeCBridgesRetained": [
+      "_EOVLiveActivity_IsDemoLaunch",
+      "_EOVLiveActivity_IsForeground",
+      "_EOVLiveActivity_End",
+      "_EOVWatchCompanion_Publish",
+      "_EOVWatchCompanion_ConsumeRefreshRequest"
+    ],
+    "nativeFrameworkDsymUUIDMatches": true,
+    "portraitAssetsCompiled": 179,
+    "allPortraitAssetsRetained": true,
+    "nonblockingWarnings": [
+      "warning: exportArchive Upload Symbols Failed. The archive did not include a dSYM for the UnityRuntime.framework with the UUIDs [2BD78E22-3005-3496-A8F7-B1E155876640]. Ensure that the archive's dSYM folder includes a DWARF file for UnityRuntime.framework with the expected UUIDs."
+    ]
+  },
+  "preparedIPA": {
+    "bytes": 250837524,
+    "sha256": "5073fab0c6aeb4e8bf1b0573425aa8536052af938dc114e0da5008302e67e41a",
+    "internalOnly": true,
+    "CRCAllEntriesPassed": true
+  },
+  "actualUploadIPA": {
+    "bytes": 250837522,
+    "sha256": "92cdd5a43b1947c0809f64644e99ffcda6e19730e7b8014eca817fd52c7ce7bc",
+    "compiledAndSerializedContentMatchesPrepared": true
+  },
+  "appleUpload": {
+    "source": "ae4e2a6c69acf3998e8e0143f82b8910c620bc13",
+    "version": "1.5.9",
+    "build": "188",
+    "buildUploadID": "05bfe8b3-882f-474a-a1e5-aa4ae92f570a",
+    "state": {
+      "errors": [],
+      "warnings": [],
+      "infos": [],
+      "state": "PROCESSING"
+    },
+    "uploadedDate": "2026-10-31T03:46:36-07:00",
+    "internalOnly": true,
+    "xcodeUploadSucceeded": true,
+    "actualUploadPackageSHA256": "92cdd5a43b1947c0809f64644e99ffcda6e19730e7b8014eca817fd52c7ce7bc",
+    "compiledAndSerializedContentMatchesPrepared": true,
+    "testerAvailabilityVerified": false
+  },
+  "tests": {
+    "source": "ae4e2a6c69acf3998e8e0143f82b8910c620bc13",
+    "passed": 2,
+    "failed": 0,
+    "actualReleasePrototypeDefineEnabled": true,
+    "forceEnableCLIArgumentUsed": false,
+    "cases": [
+      "CompanionSnapshotReadsRealOwnersWithoutAwardingProgress",
+      "BackgroundSettlementCommitsOnceAndWarmResumeRebuildsTheWorld"
+    ]
+  },
+  "preservation": {
+    "primaryHeadUnchanged": true,
+    "primaryTrackedUserDiffUnchanged": true,
+    "primaryHead": "aa17b243787c3e1988ae06c12e4cc9a568786776",
+    "diffSHA256": "7d45e5d114159fefba437f0b4df201af1939c4ffc59e6c29725a468ee1c68ec2",
+    "originalFiles": 228,
+    "unchangedFiles": 226,
+    "changedProgressionFiles": [],
+    "changedNonProgressionFiles": [
+      "generated TestResults.xml",
+      "Unity Editor Analytics cache"
+    ],
+    "ownedSimulatorFixture": "unchanged by release work; original QA backup retained",
+    "noOtherDistribution": "Android and Steam untouched"
+  },
+  "testingNotes": {
+    "approvedByUser": true,
+    "whatToTest": "\u2022 Fixed resuming runs after locking your phone or switching apps.\n\u2022 Live Activity now shows current distance, elapsed time, tasks, kills, resources and reaps.\n\u2022 Added Refresh to update the estimates without opening the game.\n\u2022 Shows your character and equipped gear, with a small animation on Refresh.\n\nBackground progress remains experimental and off by default.\n",
+    "savedInAppStoreConnect": "Pending root UI verification"
+  },
+  "availability": {
+    "state": "Processing",
+    "confirmed": false,
+    "internalGroup": "Existing Internal group; pending Apple UI verification"
+  },
+  "scope": {
+    "publicAppStoreSubmission": false,
+    "externalTestersChanged": false,
+    "mainBranchMerged": false,
+    "androidDistribution": false,
+    "steamDistribution": false,
+    "physicalDeviceGameplayQA": false
+  },
+  "observedAtUTC": "2026-10-31T10:48:35.849589+00:00"
+}

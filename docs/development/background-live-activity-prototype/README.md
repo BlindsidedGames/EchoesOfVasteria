@@ -65,4 +65,4 @@ Windows Unity 6000.6.0f1:
 
 Mac simulator evidence and exact native build inputs are recorded alongside the native implementation. Native harness checks and the full Unity app checks must be reported separately. Simulator success does not establish physical-device battery behaviour or forecast accuracy.
 
-The [2026-10-31 Unity integration receipt](refresh-integration-20261031/README.md) records actual Lock Screen Refresh taps, unchanged save/cache/settlement hashes during those taps, one subsequent managed resume settlement, and the final numeric elapsed-clock preview. This remains a local prototype at version 1.5.9 (187).
+The [2026-10-31 Unity integration receipt](refresh-integration-20261031/README.md) records actual Lock Screen Refresh taps, unchanged save/cache/settlement hashes during those taps, one subsequent managed resume settlement, and the final numeric elapsed-clock preview. That local simulator evidence was captured at version 1.5.9 (187). The [updated internal TestFlight build 188 receipt](testflight-188-device-2026-10-31.md) records the subsequent device build and Apple upload; tester availability is verified separately.
