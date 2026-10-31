@@ -16,35 +16,38 @@ struct EOVWatchForecastView: View {
     }
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 6) {
             ZStack {
                 if stale || ended {
                     Circle().stroke(.secondary.opacity(0.35), lineWidth: 4)
                 } else {
-                    ProgressView(timerInterval: timeRange, countsDown: false)
+                    ProgressView(timerInterval: timeRange, countsDown: false) {
+                        EmptyView()
+                    } currentValueLabel: {
+                        EmptyView()
+                    }
                         .progressViewStyle(.circular).labelsHidden().tint(accent)
                 }
                 Image(projectedReaps.isMultiple(of: 2) ? "EOVCarl" : "EOVCarlSwing")
                     .resizable().interpolation(.none).scaledToFit()
                     .frame(width: 26, height: 26).accessibilityHidden(true)
             }
-            .frame(width: 48, height: 48)
+            .frame(width: 44, height: 44)
             VStack(alignment: .leading, spacing: 2) {
                 Text(mapTitle).font(.caption2.bold()).lineLimit(1).minimumScaleFactor(0.8)
                 if stale || ended {
-                    Text(ended ? "Run ended" : "Forecast ended")
-                        .font(.caption).foregroundStyle(.secondary).lineLimit(2)
+                    Text(ended ? "Ended" : "Forecast ended")
+                        .font(.caption).foregroundStyle(.secondary).lineLimit(1).minimumScaleFactor(0.7)
                 } else {
                     Text(timerInterval: timeRange, countsDown: true)
                         .font(.headline.monospacedDigit()).lineLimit(1).minimumScaleFactor(0.7)
                 }
-                Text("Est. " + projectedDistance.formatted(.number.precision(.fractionLength(0))) + " m")
-                    .font(.caption).lineLimit(1).minimumScaleFactor(0.8)
-                Text("\(projectedReaps) " + (projectedReaps == 1 ? "reap" : "reaps"))
-                    .font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+                Text("Est. " + projectedDistance.formatted(.number.precision(.fractionLength(0))) +
+                    " m · \(projectedReaps) " + (projectedReaps == 1 ? "reap" : "reaps"))
+                    .font(.caption2).foregroundStyle(.secondary).lineLimit(1).minimumScaleFactor(0.7)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(8)
+        .padding(6)
     }
 }
