@@ -37,8 +37,8 @@ namespace TimelessEchoes.Editor
                 File.Copy(Path.Combine(source, "Native", name), Path.Combine(destination, name), true);
                 AddSource(project, framework, folder + "/" + name);
             }
-            File.Copy(Path.Combine(source, "Templates/EOVForecastWidget.swift"),
-                Path.Combine(destination, "EOVForecastWidget.swift"), true);
+            foreach (var name in new[] { "EOVForecastWidget.swift", "EOVWatchForecastView.swift" })
+                File.Copy(Path.Combine(source, "Templates", name), Path.Combine(destination, name), true);
 
             var info = new PlistDocument();
             info.root.SetString("CFBundleExecutable", "$(EXECUTABLE_NAME)");
@@ -59,6 +59,7 @@ namespace TimelessEchoes.Editor
                     PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.iOS) + ".liveactivity", infoPath);
             AddSource(project, extension, folder + "/EOVForecastAttributes.swift");
             AddSource(project, extension, folder + "/EOVForecastWidget.swift");
+            AddSource(project, extension, folder + "/EOVWatchForecastView.swift");
             // WidgetKit resolves named images through a compiled asset catalog.
             var catalog = Path.Combine(destination, "ForecastArt.xcassets");
             Directory.CreateDirectory(catalog);

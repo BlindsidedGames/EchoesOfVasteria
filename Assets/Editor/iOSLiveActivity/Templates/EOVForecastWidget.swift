@@ -3,8 +3,31 @@ import SwiftUI
 import WidgetKit
 
 @main
+@MainActor
+enum EOVForecastWidgetEntry {
+    static func main() {
+        if #available(iOS 18.0, *) {
+            EOVSupplementalWidgetBundle.main()
+        } else {
+            EOVForecastWidgetBundle.main()
+        }
+    }
+}
+
 struct EOVForecastWidgetBundle: WidgetBundle {
     var body: some Widget { EOVForecastWidget() }
+}
+
+@available(iOS 18.0, *)
+private struct EOVSupplementalWidgetBundle: WidgetBundle {
+    var body: some Widget { EOVSupplementalForecastWidget() }
+}
+
+@available(iOS 18.0, *)
+private struct EOVSupplementalForecastWidget: Widget {
+    var body: some WidgetConfiguration {
+        EOVForecastWidget().body.supplementalActivityFamilies([.small, .medium])
+    }
 }
 
 struct EOVForecastWidget: Widget {
@@ -12,7 +35,13 @@ struct EOVForecastWidget: Widget {
 
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: EOVForecastAttributes.self) { context in
-            ForecastPanel(state: context.state, stale: context.isStale)
+            Group {
+                if #available(iOS 18.0, *) {
+                    ForecastFamilyContent(context: context)
+                } else {
+                    ForecastPanel(state: context.state, stale: context.isStale)
+                }
+            }
                 .activityBackgroundTint(Color(red: 0.08, green: 0.11, blue: 0.12))
                 .activitySystemActionForegroundColor(accent)
         } dynamicIsland: { context in
@@ -42,6 +71,24 @@ struct EOVForecastWidget: Widget {
                 PixelArt(name: "EOVCarl", size: 20)
             }
             .keylineTint(accent)
+        }
+    }
+}
+
+@available(iOS 18.0, *)
+private struct ForecastFamilyContent: View {
+    @Environment(\.activityFamily) private var family
+    let context: ActivityViewContext<EOVForecastAttributes>
+
+    var body: some View {
+        if family == .small {
+            EOVWatchForecastView(mapTitle: context.state.mapTitle,
+                projectedDistance: context.state.projectedDistance,
+                projectedReaps: context.state.projectedReaps,
+                timeRange: context.state.timeRange, stale: context.isStale,
+                ended: context.state.status == "ended")
+        } else {
+            ForecastPanel(state: context.state, stale: context.isStale)
         }
     }
 }
