@@ -131,6 +131,11 @@ private struct ForecastNumber: View {
 private struct ForecastTime: View {
     let state: EOVForecastAttributes.ContentState
     let stale: Bool
+    private var timerWidthTemplate: String {
+        let duration = state.forecastEnd - state.generatedAt
+        return duration >= 3600 ? "0:00:00" : duration >= 600 ? "00:00" : "0:00"
+    }
+
     var body: some View {
         if stale {
             Text("Forecast ended").font(.caption).foregroundStyle(.secondary)
@@ -139,10 +144,16 @@ private struct ForecastTime: View {
                 ProgressView(timerInterval: state.timeRange, countsDown: false)
                     .labelsHidden().tint(Color(red: 0.94, green: 0.75, blue: 0.42))
                     .frame(maxWidth: .infinity).layoutPriority(1)
-                Text(timerInterval: state.timeRange, countsDown: true)
-                    .font(.caption.monospacedDigit()).multilineTextAlignment(.trailing)
-                    .lineLimit(1).minimumScaleFactor(0.8)
-                    .frame(width: 56, alignment: .trailing)
+                // The hidden template measures the same scalable font without making
+                // the date-driven Text reserve an oversized timer layout region.
+                Text(timerWidthTemplate).hidden()
+                    .overlay(alignment: .trailing) {
+                        Text(timerInterval: state.timeRange, countsDown: true)
+                            .multilineTextAlignment(.trailing)
+                            .lineLimit(1).minimumScaleFactor(0.8)
+                    }
+                    .font(.caption.monospacedDigit())
+                    .fixedSize(horizontal: true, vertical: false)
             }
             .frame(maxWidth: .infinity)
         }
