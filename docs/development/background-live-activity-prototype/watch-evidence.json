@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-31",
+  "codeCommit": "56aeb6bbf1ade0db87843319c11e59d753bdeba3",
+  "scope": "Custom small-family production Live Activity plus actual direct native Watch rendering; visible Smart Stack card NOT verified.",
+  "runtime": {
+    "xcode": "26.4.1 (17E202)",
+    "watchOS": "26.4 (23T240b)",
+    "iOS": "26.4.1",
+    "runtimeInstalledFrom": "xcodebuild -downloadPlatform watchOS -architectureVariant arm64, official Apple runtime"
+  },
+  "devices": {
+    "phone": "B9CAF457-C4E9-454A-BC0B-AD7D765A1CDC",
+    "watch42": "6EFA4422-289B-471C-A2B8-B2ADEDE14CDA",
+    "watch46": "00B97A91-5573-4DFA-827B-0783D7096191",
+    "pair": "776AE0B3-E22B-41EE-9D5A-11CD459EB9CE",
+    "pairStatus": "active, connected",
+    "watch46Paired": false
+  },
+  "production": {
+    "availability": "Public entry main dispatch selects supplemental bundle on iOS18+, legacy bundle on iOS16.2-17; swiftc typecheck at min iOS16.2 passed",
+    "nativeBuilds": "Full Unity iPhone app/extension and Watch rendering harness BUILD SUCCEEDED",
+    "sharedView": "Assets/Editor/iOSLiveActivity/Templates/EOVWatchForecastView.swift",
+    "sharedViewSHA256": "4688f2ab598ba544d097d2bb89f337c79598e35f704ac900cc8724b0b347844d",
+    "sameSharedFileCompiledInWatchAndIphone": true,
+    "postprocess": "Copies shared Swift source and adds it to extension target only in prototype exports",
+    "gameplayOrSettingsChanged": false
+  },
+  "transferEvidence": {
+    "phoneActivity": "5C73BD56-51E0-4B40-9B6B-0DD43B2DEBAA",
+    "watchChronod": "Ingested production app remote activity archive; fam:small, w176.00 h72.50, replicator reload",
+    "sanitizedLogExcerpt": "Ingested activity archive from file://<HOME>/Library/Developer/CoreSimulator/Devices/6EFA4422-289B-471C-A2B8-B2ADEDE14CDA/data/Library/chronod/replicator/7E4918E4-1F66-47DE-A615-6D0A6F310484 to file://<HOME>/Library/Developer/CoreSimulator/Devices/6EFA4422-289B-471C-A2B8-B2ADEDE14CDA/data/Library/chronod/remoteArchives/C7CF8839-A371-4A7A-B0AB-13B6D6F89028/com.blindsidedgames.echoes.background.prototype/com.apple.chrono/activities/5C73BD56-51E0-4B40-9B6B-0DD43B2DEBAA-w:dyn-176.00-176.00-h:fix-72.50-cr:12.5-s:1.0.fam:small.activity-archive",
+    "visibleCard": "Not verified; Smart Stack opened but only default Messages card visible; navigation investigation stopped"
+  },
+  "directRendering": {
+    "watchBundle": "com.blindsidedgames.echoes.watch.renderingprototype",
+    "kind": "Foreground disposable SwiftUI Watch app; NOT actual Smart Stack or independent game",
+    "card42Points": [
+      176,
+      72.5
+    ],
+    "card46Points": [
+      194,
+      80.5
+    ],
+    "harnessSource": "watch-harness-source.swift",
+    "harnessSHA256": "15264529ac20fe68645654d5eb02cc10aa478a3bf5ccea55d4a6158ae6fe7a08",
+    "fixture": "River demo, Est.1800m,2reaps,60sec date range beginning15sec before launch",
+    "clock": "Built-in date ProgressView and Text render ring/countdown; no repeating app ticker. Harness supplies stale input once at actual deadline using one foreground task; production gets context.isStale from ActivityKit. Ended input supplied by explicit launch flag.",
+    "observed": [
+      "Carl clear inside determinate gold ring; no default progress-value label overlap",
+      "42mm countdown0:32 with partial ring ->0:01 with nearly complete ring, then Forecast ended with grey ring",
+      "46mm layout fits all3lines at194x80.5",
+      "Ended presentation replaces timer and keeps distance clearly labelled Est.",
+      "Phone remained backgrounded during Watch ring recording"
+    ],
+    "screenshots": [
+      "watch-42-direct-active.png",
+      "watch-42-direct-advanced.png",
+      "watch-42-direct-stale.png",
+      "watch-42-direct-ended.png",
+      "watch-46-direct-active.png"
+    ],
+    "clip": "watch-42-direct-lifecycle.mp4",
+    "clipEdits": "H264 re-encode and20fps only; actual simulator frames, no staged visuals"
+  },
+  "preservation": {
+    "headUnchanged": true,
+    "diffUnchanged": true,
+    "savedFilesVerified": 228,
+    "changedSavedFiles": 0
+  },
+  "remainingLimits": [
+    "Actual Smart Stack visible card, Always On behavior and Watch end-removal not established by direct harness",
+    "No hardware/store validation",
+    "iPhone final regression capture being finalized separately; medium/Island layout source unchanged"
+  ],
+  "references": [
+    "https://developer.apple.com/videos/play/wwdc2024/10068/",
+    "https://developer.apple.com/documentation/activitykit/creating-custom-views-for-live-activities",
+    "https://developer.apple.com/design/human-interface-guidelines/live-activities"
+  ]
+}
