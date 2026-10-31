@@ -1,0 +1,46 @@
+{
+  "baseline": "659ba5e9d05fe60c529d1d7b4e7b3253c278edb4",
+  "buildLogSha256": {
+    "extension": "d9fe1ec649e9d4462c3a8f7f9195728de4063238e8902365c5ae8c113772e684",
+    "liveintent": "2255f7cab531b0327d3ad014b6640289b234d3518fdfedd00e0985322fc90ddb"
+  },
+  "bothBuildsSucceeded": true,
+  "builtSuccessBinaries": {
+    "TimeFormatLab": {
+      "sha256": "9017edf72cdde643ff1ecf3fc9171b9d1bd5ce1b0008aaece91523d595dbbfa5",
+      "bytes": 40352
+    },
+    "PlugIns/TimeFormatWidget.appex/TimeFormatWidget": {
+      "sha256": "33adbbe605f4540a99bf69da8ff285868cdb67dce42a30c533fce1911b33236e",
+      "bytes": 40352
+    },
+    "TimeFormatLab.debug.dylib": {
+      "sha256": "f2de302301f4330b07b6791797dc4960d97e2a6bcf751c6250a3349d9f35a8cf",
+      "bytes": 318376
+    },
+    "PlugIns/TimeFormatWidget.appex/TimeFormatWidget.debug.dylib": {
+      "sha256": "1234a8e611534c68e38c7b04448c21c5e2e5c8fc9080f9feaffbffa715df5c14",
+      "bytes": 316544
+    }
+  },
+  "clip": {
+    "rawVideoMetadata": {
+      "format": {
+        "duration": "59.430000",
+        "size": "19625482",
+        "tags": {
+          "creation_time": "2026-10-31T07:57:29.000000Z"
+        }
+      }
+    },
+    "edit": "Concatenation of raw video seconds [14,20] and [49,56]. A visible time jump separates the two real taps; not a continuous 13-second session. No speed changes or number overlays.",
+    "output": {
+      "format": {
+        "duration": "12.500000",
+        "size": "689622"
+      }
+    }
+  },
+  "rawArtifacts": "Artifacts/LiveActivityRefresh20261031 (local ignored only)",
+  "noProductionFilesChanged": true
+}

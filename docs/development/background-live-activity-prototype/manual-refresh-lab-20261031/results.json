@@ -1,0 +1,228 @@
+{
+  "schemaVersion": 1,
+  "result": "PASS: real LiveActivityIntent refreshes native system-hosted Lock Screen while host remains background",
+  "actualObservations": [
+    {
+      "image": "liveintent/before.png",
+      "refreshCount": 0,
+      "distance": 150,
+      "cap": 200,
+      "resources": 0,
+      "reaps": 0,
+      "segment": "MOVE",
+      "sampledText": "6:57:25 pm",
+      "executorText": "initial host"
+    },
+    {
+      "image": "liveintent/after-first.png",
+      "refreshCount": 1,
+      "distance": 150,
+      "cap": 200,
+      "resources": 40,
+      "reaps": 2,
+      "segment": "MOVE",
+      "sampledText": "6:57:45 pm",
+      "executorText": "com.blindsidedgames.timeformatlab"
+    },
+    {
+      "image": "liveintent/after-reset.png",
+      "refreshCount": 2,
+      "distance": 25,
+      "cap": 200,
+      "resources": 110,
+      "reaps": 6,
+      "segment": "MOVE",
+      "sampledText": "6:58:21 pm",
+      "executorText": "com.blindsidedgames.timeformatlab"
+    }
+  ],
+  "actualIntentReceipts": [
+    {
+      "activityID": "FF6F5437-AE94-4D2E-9BA7-248A6138DAA7",
+      "at": 1793433465.939203,
+      "bundle": "com.blindsidedgames.timeformatlab",
+      "cap": 200,
+      "distance": 150,
+      "event": "intent.sample",
+      "origin": 1793433445.154296,
+      "pid": 43081,
+      "reaps": 2,
+      "refreshCount": 1,
+      "resources": 40,
+      "sampledAt": 1793433465.934362,
+      "segment": "MOVE"
+    },
+    {
+      "activityID": "FF6F5437-AE94-4D2E-9BA7-248A6138DAA7",
+      "at": 1793433501.059298,
+      "bundle": "com.blindsidedgames.timeformatlab",
+      "cap": 200,
+      "distance": 25,
+      "event": "intent.sample",
+      "origin": 1793433445.154296,
+      "pid": 43081,
+      "reaps": 6,
+      "refreshCount": 2,
+      "resources": 110,
+      "sampledAt": 1793433501.058375,
+      "segment": "MOVE"
+    }
+  ],
+  "applicationStates": [
+    {
+      "at": 1793433465.934417,
+      "backgroundRawValue": 2,
+      "bundle": "com.blindsidedgames.timeformatlab",
+      "event": "intent.applicationState.before",
+      "pid": 43081,
+      "rawValue": 2
+    },
+    {
+      "at": 1793433465.9433231,
+      "backgroundRawValue": 2,
+      "bundle": "com.blindsidedgames.timeformatlab",
+      "event": "intent.applicationState.after",
+      "pid": 43081,
+      "rawValue": 2
+    },
+    {
+      "at": 1793433501.058409,
+      "backgroundRawValue": 2,
+      "bundle": "com.blindsidedgames.timeformatlab",
+      "event": "intent.applicationState.before",
+      "pid": 43081,
+      "rawValue": 2
+    },
+    {
+      "at": 1793433501.0607371,
+      "backgroundRawValue": 2,
+      "bundle": "com.blindsidedgames.timeformatlab",
+      "event": "intent.applicationState.after",
+      "pid": 43081,
+      "rawValue": 2
+    }
+  ],
+  "extensionControl": {
+    "result": "No update",
+    "observedBeforeAndAfter": {
+      "distance": 150,
+      "cap": 200,
+      "resources": 0,
+      "reaps": 0,
+      "refreshCount": 0
+    },
+    "intentExecution": [
+      {
+        "activities": [],
+        "at": 1793433346.863622,
+        "bundle": "com.blindsidedgames.timeformatlab.widget",
+        "event": "intent.start",
+        "intentProtocol": "AppIntent",
+        "modeRequested": "background",
+        "pid": 40301,
+        "run": "332D2398-4255-4C24-9C2D-E68E2BBDAFEC",
+        "targetPlacement": "widget only"
+      },
+      {
+        "at": 1793433346.864798,
+        "bundle": "com.blindsidedgames.timeformatlab.widget",
+        "event": "intent.end",
+        "pid": 40301
+      }
+    ],
+    "interpretation": "The regular AppIntent ran in the widget extension but this query returned no activities. This trial did not update a Live Activity from the extension."
+  },
+  "modelExpectationsComputedFromRecordedSampleTime": [
+    {
+      "refreshCount": 1,
+      "sampledAt": 1793433465.934362,
+      "elapsedSeconds": 20.78006601333618,
+      "quantizedSeconds": 20,
+      "expectedDistance": 150,
+      "expectedResources": 40,
+      "expectedReaps": 2,
+      "expectedSegment": "MOVE"
+    },
+    {
+      "refreshCount": 2,
+      "sampledAt": 1793433501.058375,
+      "elapsedSeconds": 55.9040789604187,
+      "quantizedSeconds": 55,
+      "expectedDistance": 25,
+      "expectedResources": 110,
+      "expectedReaps": 6,
+      "expectedSegment": "MOVE"
+    }
+  ],
+  "scope": {
+    "simulator": "iPhone 17 Pro",
+    "runtimeName": "iOS 26.4",
+    "runtimeVersion": "26.4.1",
+    "runtimeBuild": "23E254a",
+    "xcode": "26.4.1 (17E202)",
+    "SDK": "iPhoneSimulator26.4",
+    "minimumTarget": "26.0",
+    "actualSuccessExecutionBundle": "com.blindsidedgames.timeformatlab",
+    "actualSuccessPID": 43081,
+    "hostNormallySuspendedBeforeAndAfterTaps": true,
+    "hostSIGSTOP": false,
+    "hostForegroundedByTaps": false,
+    "hostTerminatedDuringSuccessTrial": false,
+    "physicalLockedDeviceAuthenticationTested": false,
+    "UnityIntegrationTested": false,
+    "server": false,
+    "rewardOrSaveMutation": false,
+    "backgroundPeriodicRefresh": false
+  },
+  "limits": "Observed native mechanism only. Simulator Lock Screen UI does not establish authenticated/locked hardware behavior; no Face ID or Unity engine startup claim. State is a synthetic estimate sampled at tap time and remains static until another tap.",
+  "additionalInvocationsOutsideMeasuredCaptureWindow": {
+    "source": "unattributed; not part of the two measured tap assertions",
+    "receipts": [
+      {
+        "activityID": "FF6F5437-AE94-4D2E-9BA7-248A6138DAA7",
+        "at": 1793433567.1497788,
+        "bundle": "com.blindsidedgames.timeformatlab",
+        "cap": 200,
+        "distance": 175,
+        "event": "intent.sample",
+        "origin": 1793433445.154296,
+        "pid": 43081,
+        "reaps": 12,
+        "refreshCount": 3,
+        "resources": 242,
+        "sampledAt": 1793433567.148974,
+        "segment": "MOVE"
+      },
+      {
+        "activityID": "FF6F5437-AE94-4D2E-9BA7-248A6138DAA7",
+        "at": 1793433567.793637,
+        "bundle": "com.blindsidedgames.timeformatlab",
+        "cap": 200,
+        "distance": 200,
+        "event": "intent.sample",
+        "origin": 1793433445.154296,
+        "pid": 43081,
+        "reaps": 12,
+        "refreshCount": 4,
+        "resources": 244,
+        "sampledAt": 1793433567.792728,
+        "segment": "RESTART"
+      },
+      {
+        "activityID": "FF6F5437-AE94-4D2E-9BA7-248A6138DAA7",
+        "at": 1793433568.061055,
+        "bundle": "com.blindsidedgames.timeformatlab",
+        "cap": 200,
+        "distance": 200,
+        "event": "intent.sample",
+        "origin": 1793433445.154296,
+        "pid": 43081,
+        "reaps": 12,
+        "refreshCount": 5,
+        "resources": 244,
+        "sampledAt": 1793433568.060071,
+        "segment": "RESTART"
+      }
+    ]
+  }
+}

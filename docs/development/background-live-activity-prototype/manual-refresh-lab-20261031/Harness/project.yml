@@ -1,0 +1,41 @@
+name: TimeFormatLab
+options:
+  deploymentTarget:
+    iOS: "26.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CODE_SIGNING_ALLOWED: NO
+    SDKROOT: iphonesimulator
+    TARGETED_DEVICE_FAMILY: "1"
+    ASSETCATALOG_COMPILER_APPICON_NAME: ""
+targets:
+  TimeFormatLab:
+    type: application
+    platform: iOS
+    sources: [Host.swift, Shared.swift, RefreshIntent.swift]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.blindsidedgames.timeformatlab
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) NATIVE_HOST"
+        INFOPLIST_FILE: HostInfo.plist
+    dependencies:
+      - target: TimeFormatWidget
+        embed: true
+  TimeFormatWidget:
+    type: app-extension
+    platform: iOS
+    sources: [Widget.swift, Shared.swift, RefreshIntent.swift]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.blindsidedgames.timeformatlab.widget
+        INFOPLIST_FILE: WidgetInfo.plist
+        APPLICATION_EXTENSION_API_ONLY: YES
+        SKIP_INSTALL: YES
+schemes:
+  TimeFormatLab:
+    build:
+      targets:
+        TimeFormatLab: all
+    run:
+      config: Debug
