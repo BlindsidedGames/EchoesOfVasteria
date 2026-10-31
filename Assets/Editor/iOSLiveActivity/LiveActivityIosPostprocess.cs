@@ -80,6 +80,7 @@ namespace TimelessEchoes.Editor
                 File.WriteAllText(Path.Combine(imageSet, "Contents.json"),
                     "{\"images\":[{\"filename\":\"" + name + "\",\"idiom\":\"universal\",\"scale\":\"1x\"}],\"info\":{\"author\":\"xcode\",\"version\":1}}");
             }
+            CharacterPortraitIosAssets.Export(catalog);
             AddSource(project, extension, folder + "/ForecastArt.xcassets");
             ConfigureCompanion(project, main, framework, source, destination, folder);
 

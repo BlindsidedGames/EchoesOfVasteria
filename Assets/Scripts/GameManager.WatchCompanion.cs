@@ -102,6 +102,7 @@ namespace TimelessEchoes
                 schemaVersion = 1, generatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), demo = BackgroundRunPrototype.Demo,
                 state = mode, phoneInBackground = watchPhoneInBackground,
                 backgroundProgressEnabled = BackgroundRunPrototype.Enabled, run,
+                portraitLayers = run == null ? null : Characters.CharacterActivityPortrait.Capture(data.Character),
                 forecast = run == null ? null : WatchCompanionPrototype.GetForecast(map, data), timeline, skills, recentRuns = history
             });
             var json = Serialize();
