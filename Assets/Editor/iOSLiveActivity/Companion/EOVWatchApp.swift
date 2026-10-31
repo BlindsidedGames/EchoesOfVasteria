@@ -167,8 +167,8 @@ private struct CurrentRunRadial: View {
                     resources: sample.resources, estimated: true, distance: sample.distance, cap: sample.cap,
                     distanceReaping: timeline.distanceReaping, reaps: timeline.distanceReaping ? sample.reaps : nil,
                     inactive: sample.expired || sample.phase == 2,
-                    status: sample.expired ? "Estimate ended" : sample.phase == 1 ? "Restarting" :
-                        sample.phase == 2 ? "Return to iPhone" : timeline.truncated ? "Short forecast" : "This forecast",
+                    status: sample.phase == 2 ? "Return to iPhone" : sample.expired ? "Estimate ended" :
+                        sample.phase == 1 ? "Restarting" : timeline.truncated ? "Short forecast" : "",
                     demo: s.demo)
             } else {
                 DistanceResourceFace(diameter: diameter, mapTitle: run.mapTitle,
@@ -224,18 +224,18 @@ private struct DistanceResourceFace: View {
                         Text(amount(resources)).font(.system(size: min(headlineSize, diameter * 0.19), weight: .bold, design: .rounded))
                             .lineLimit(1).minimumScaleFactor(0.6).monospacedDigit()
                     } else { Text("—").font(.title2) }
-                    if let reaps { Text("\(reaps) " + (reaps == 1 ? "reap" : "reaps")).font(.system(size: 12)).foregroundStyle(.secondary) }
                     if let distance {
                         Text(distanceReaping != false && (cap ?? 0) > 0 ? metres(distance) + " / " + metres(cap!) : metres(distance))
                             .font(.system(size: 10)).foregroundStyle(.secondary).lineLimit(1).minimumScaleFactor(0.7)
                     }
+                    if let reaps { Text("\(reaps) " + (reaps == 1 ? "reap" : "reaps")).font(.system(size: 12)).foregroundStyle(.secondary) }
                     if distanceReaping == false, resources != nil { Text("No distance reap").font(.system(size: 9)).foregroundStyle(.secondary) }
                     if demo { Text("Demo").font(.system(size: 9)).foregroundStyle(.secondary) }
                 }
                 .frame(width: diameter * 0.7)
                 .foregroundStyle(inactive ? .secondary : .primary)
             }.frame(width: diameter, height: diameter)
-            Text(status).font(.system(size: 11)).foregroundStyle(.secondary).lineLimit(1).minimumScaleFactor(0.7)
+            Text(status).font(.system(size: 11)).foregroundStyle(.secondary).lineLimit(1).minimumScaleFactor(0.7).frame(height: 14)
         }
     }
 }
