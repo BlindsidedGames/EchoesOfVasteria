@@ -1,0 +1,54 @@
+{
+  "settlementLogCountBefore": 1,
+  "settlementLogCountAfter": 2,
+  "newSettlementCount": 1,
+  "newReport": {
+    "map": "River",
+    "awaySeconds": 198.001104,
+    "SampleCount": 10,
+    "Seconds": 198.001104,
+    "Distance": 199.3014984867343,
+    "Reaps": 0,
+    "Deaths": 0,
+    "Tasks": 54,
+    "Kills": 15,
+    "StopReason": null,
+    "resources": 121.81049449443753,
+    "checkpointUtcTicks": 639290341739809300,
+    "prototype": true
+  },
+  "runBefore": {
+    "mapId": "River",
+    "mapTitle": "River",
+    "distance": 79.88780212402344,
+    "cap": 208.12081909179688,
+    "distanceReaping": true,
+    "healthFraction": 0.9985392093658447,
+    "dead": false,
+    "reaped": false,
+    "durationSeconds": 112.60316467285156,
+    "tasks": 25,
+    "kills": 4,
+    "resources": 43.246873199939714
+  },
+  "runAfter": {
+    "mapId": "River",
+    "mapTitle": "River",
+    "distance": 199.30149841308594,
+    "cap": 208.12081909179688,
+    "distanceReaping": true,
+    "healthFraction": 0.9466721415519714,
+    "dead": false,
+    "reaped": false,
+    "durationSeconds": 311.087646484375,
+    "tasks": 79,
+    "kills": 19,
+    "resources": 165.05736769437792
+  },
+  "observedRunDeltas": {
+    "tasks": 54,
+    "kills": 15,
+    "resources": 121.8104944944382
+  },
+  "appForegroundGate": "UIKit actual state0 before managed resume"
+}

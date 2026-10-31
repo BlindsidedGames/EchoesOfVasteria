@@ -1,0 +1,88 @@
+{
+  "sourceCommit": "9fdaf86b6",
+  "version": "1.5.9 (187)",
+  "sourceAndExport": {
+    "Native/EOVLiveActivityBridge.swift": {
+      "sha256": "524e39594ae2d5cec373e3eb3156e490a1c886582a9fee089d4e957f42a790f8",
+      "matchingExportFiles": [
+        "EchoesLiveActivity/EOVLiveActivityBridge.swift"
+      ]
+    },
+    "Native/EOVForecastAttributes.swift": {
+      "sha256": "5a38c5b91901c114ba43438110851a3935b874ed29e65d277a9e6c037a09b1df",
+      "matchingExportFiles": [
+        "EchoesLiveActivity/EOVForecastAttributes.swift"
+      ]
+    },
+    "Native/EOVRefreshIntent.swift": {
+      "sha256": "fd1882c253d9ce6e92c1e624b5f4b379289b064aadc4a559cd42975361cc05a1",
+      "matchingExportFiles": [
+        "EchoesLiveActivity/EOVRefreshIntent.swift"
+      ]
+    },
+    "Native/EOVLiveActivity.mm": {
+      "sha256": "0866a2105e52dc49162a8d08f6fe24e9e210118137a1cda49d9c5b6d0f5a2275",
+      "matchingExportFiles": [
+        "EchoesLiveActivity/EOVLiveActivity.mm"
+      ]
+    },
+    "Templates/EOVForecastWidget.swift": {
+      "sha256": "e4acd6215d623def9d848e6568e507c4b5e3ea82ad1bb6667a1c5b8f295ee86c",
+      "matchingExportFiles": [
+        "EchoesLiveActivity/EOVForecastWidget.swift"
+      ]
+    },
+    "Companion/EOVWatchSnapshot.swift": {
+      "sha256": "86fb3b9badea70b3aec4bd4480740df7330b5216a0f86fe363ebd258f669a8f3",
+      "matchingExportFiles": [
+        "EchoesLiveActivity/Companion/EOVWatchSnapshot.swift"
+      ]
+    },
+    "Art/EOVChest.png": {
+      "sha256": "d3015ece1becba17de736437248119b3554e13ff4ea90b2b99fa61fd7ecedef8",
+      "matchingExportFiles": [
+        "EchoesLiveActivity/ForecastArt.xcassets/EOVChest.imageset/EOVChest.png"
+      ]
+    }
+  },
+  "binarySHA256": {
+    "EchoesBackgroundPrototype": "9c5cf9c7789d20e4e4327c8baa88be5b30a5af1855a1407e4efed62e0518cae1",
+    "Frameworks/UnityFramework.framework/UnityFramework": "8719607af4f5c59ad56d36a392826fcd61e155c000cad73c472731abef8b4984",
+    "PlugIns/EchoesLiveActivity.appex/EchoesLiveActivity": "9388c38fa64c7da922024445593bab98da8a72f64de9cdfd261360be1f2ad24e"
+  },
+  "xcodeBuild": "BUILD SUCCEEDED; singular-label widget incremental build",
+  "simulator": "iOS 26.4.1 (23E254a), iPhone 17 Pro",
+  "testResults": {
+    "elapsed-counter-tests.xml": {
+      "result": "Passed",
+      "total": "13",
+      "passed": "13",
+      "failed": "0"
+    },
+    "continuation-counter-final.xml": {
+      "result": "Passed",
+      "total": "5",
+      "passed": "5",
+      "failed": "0"
+    },
+    "brief-resume-before.xml": {
+      "result": "Failed(Child)",
+      "total": "1",
+      "passed": "0",
+      "failed": "1"
+    }
+  },
+  "primaryCheckoutUnchanged": {
+    "head": "aa17b243787c3e1988ae06c12e4cc9a568786776",
+    "diffSHA256": "7d45e5d114159fefba437f0b4df201af1939c4ffc59e6c29725a468ee1c68ec2"
+  },
+  "originalPlayerFiles": {
+    "total": 228,
+    "matching": 226,
+    "changed": [
+      "Unity Editor Analytics values cache",
+      "TestResults.xml generated test report"
+    ],
+    "progressionFiles": "unchanged"
+  }
+}

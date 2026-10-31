@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Passed" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-31 08:48:26Z" end-time="2026-10-31 08:48:28Z" duration="2.7624891">
+  <test-suite type="TestSuite" id="1187" name="Echoes Background Prototype" fullname="Echoes Background Prototype" runstate="Runnable" testcasecount="159" result="Passed" start-time="2026-10-31 08:48:26Z" end-time="2026-10-31 08:48:28Z" duration="2.762489" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1363" name="Tests.dll" fullname="/Users/matthewrushworth/.codex/worktrees/mac-live-activity-prototype/EchoesOfVasteria/Library/ScriptAssemblies/Tests.dll" runstate="Runnable" testcasecount="159" result="Passed" start-time="2026-10-31 08:48:26Z" end-time="2026-10-31 08:48:28Z" duration="2.754745" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="16481" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1368" name="Tests" fullname="Tests" runstate="Runnable" testcasecount="149" result="Passed" start-time="2026-10-31 08:48:26Z" end-time="2026-10-31 08:48:28Z" duration="2.686687" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1370" name="PlayMode" fullname="Tests.PlayMode" runstate="Runnable" testcasecount="148" result="Passed" start-time="2026-10-31 08:48:26Z" end-time="2026-10-31 08:48:28Z" duration="2.679932" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1312" name="RunContinuationPlayModeTests" fullname="Tests.PlayMode.RunContinuationPlayModeTests" classname="Tests.PlayMode.RunContinuationPlayModeTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-31 08:48:26Z" end-time="2026-10-31 08:48:28Z" duration="2.676401" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1314" name="BackgroundSettlementCommitsOnceAndWarmResumeRebuildsTheWorld" fullname="Tests.PlayMode.RunContinuationPlayModeTests.BackgroundSettlementCommitsOnceAndWarmResumeRebuildsTheWorld" methodname="BackgroundSettlementCommitsOnceAndWarmResumeRebuildsTheWorld" classname="Tests.PlayMode.RunContinuationPlayModeTests" runstate="Runnable" seed="2112610621" result="Passed" start-time="2026-10-31 08:48:26Z" end-time="2026-10-31 08:48:27Z" duration="1.261185" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Background prototype] {"map":"River","awaySeconds":60.082442,"SampleCount":10,"Seconds":60.082442,"Distance":110.04122100000001,"Reaps":0,"Deaths":0,"Tasks":0,"Kills":6,"StopReason":null,"resources":9.0,"checkpointUtcTicks":639290333068578100,"prototype":true}
+[Background prototype] {"map":"River","awaySeconds":20.003432,"SampleCount":10,"Seconds":20.003432,"Distance":120.04294524804688,"Reaps":0,"Deaths":0,"Tasks":0,"Kills":2,"StopReason":null,"resources":3.0,"checkpointUtcTicks":639290333074800270,"prototype":true}
+]]></output>
+            </test-case>
+            <test-case id="1313" name="CompanionSnapshotReadsRealOwnersWithoutAwardingProgress" fullname="Tests.PlayMode.RunContinuationPlayModeTests.CompanionSnapshotReadsRealOwnersWithoutAwardingProgress" methodname="CompanionSnapshotReadsRealOwnersWithoutAwardingProgress" classname="Tests.PlayMode.RunContinuationPlayModeTests" runstate="Runnable" seed="303383424" result="Passed" start-time="2026-10-31 08:48:27Z" end-time="2026-10-31 08:48:27Z" duration="0.196317" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1316" name="HollowRestoresKillScalingBeforeGeneratingEnemiesAndDeathDoesNotRevive" fullname="Tests.PlayMode.RunContinuationPlayModeTests.HollowRestoresKillScalingBeforeGeneratingEnemiesAndDeathDoesNotRevive" methodname="HollowRestoresKillScalingBeforeGeneratingEnemiesAndDeathDoesNotRevive" classname="Tests.PlayMode.RunContinuationPlayModeTests" runstate="Runnable" seed="1097286264" result="Passed" start-time="2026-10-31 08:48:27Z" end-time="2026-10-31 08:48:28Z" duration="0.461691" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Background prototype] {"map":"Haloween","awaySeconds":30.01815,"SampleCount":0,"Seconds":0.0,"Distance":777.0,"Reaps":0,"Deaths":0,"Tasks":0,"Kills":0,"StopReason":null,"resources":0.0,"checkpointUtcTicks":639290333078261530,"prototype":true}
+[Background prototype] {"map":"Haloween","awaySeconds":30.017967,"SampleCount":0,"Seconds":0.0,"Distance":777.0,"Reaps":0,"Deaths":0,"Tasks":0,"Kills":0,"StopReason":null,"resources":0.0,"checkpointUtcTicks":639290333080584300,"prototype":true}
+]]></output>
+            </test-case>
+            <test-case id="1315" name="RelaunchKeepsDistanceLootAndBonusWithoutDuplicatingProgress" fullname="Tests.PlayMode.RunContinuationPlayModeTests.RelaunchKeepsDistanceLootAndBonusWithoutDuplicatingProgress" methodname="RelaunchKeepsDistanceLootAndBonusWithoutDuplicatingProgress" classname="Tests.PlayMode.RunContinuationPlayModeTests" runstate="Runnable" seed="1251938396" result="Passed" start-time="2026-10-31 08:48:28Z" end-time="2026-10-31 08:48:28Z" duration="0.435635" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1317" name="UnfinishedNpcCanBeMetAgainAndCompletedIvanStillWaitsForTown" fullname="Tests.PlayMode.RunContinuationPlayModeTests.UnfinishedNpcCanBeMetAgainAndCompletedIvanStillWaitsForTown" methodname="UnfinishedNpcCanBeMetAgainAndCompletedIvanStillWaitsForTown" classname="Tests.PlayMode.RunContinuationPlayModeTests" runstate="Runnable" seed="1398580277" result="Passed" start-time="2026-10-31 08:48:28Z" end-time="2026-10-31 08:48:28Z" duration="0.311807" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: /Users/matthewrushworth/Library/Application Support/Blindsided Games/Echoes Background Prototype/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

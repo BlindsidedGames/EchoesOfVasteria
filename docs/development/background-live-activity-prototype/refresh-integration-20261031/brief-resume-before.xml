@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-31 08:37:18Z" end-time="2026-10-31 08:37:19Z" duration="1.3488076">
+  <test-suite type="TestSuite" id="1187" name="Echoes Background Prototype" fullname="Echoes Background Prototype" runstate="Runnable" testcasecount="159" result="Failed" site="Child" start-time="2026-10-31 08:37:18Z" end-time="2026-10-31 08:37:19Z" duration="1.348808" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1363" name="Tests.dll" fullname="/Users/matthewrushworth/.codex/worktrees/mac-live-activity-prototype/EchoesOfVasteria/Library/ScriptAssemblies/Tests.dll" runstate="Runnable" testcasecount="159" result="Failed" site="Child" start-time="2026-10-31 08:37:18Z" end-time="2026-10-31 08:37:19Z" duration="1.338245" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1045" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1368" name="Tests" fullname="Tests" runstate="Runnable" testcasecount="149" result="Failed" site="Child" start-time="2026-10-31 08:37:18Z" end-time="2026-10-31 08:37:19Z" duration="1.255832" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1370" name="PlayMode" fullname="Tests.PlayMode" runstate="Runnable" testcasecount="148" result="Failed" site="Child" start-time="2026-10-31 08:37:18Z" end-time="2026-10-31 08:37:19Z" duration="1.249182" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1312" name="RunContinuationPlayModeTests" fullname="Tests.PlayMode.RunContinuationPlayModeTests" classname="Tests.PlayMode.RunContinuationPlayModeTests" runstate="Runnable" testcasecount="5" result="Failed" site="Child" start-time="2026-10-31 08:37:18Z" end-time="2026-10-31 08:37:19Z" duration="1.245618" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1314" name="BackgroundSettlementCommitsOnceAndWarmResumeRebuildsTheWorld" fullname="Tests.PlayMode.RunContinuationPlayModeTests.BackgroundSettlementCommitsOnceAndWarmResumeRebuildsTheWorld" methodname="BackgroundSettlementCommitsOnceAndWarmResumeRebuildsTheWorld" classname="Tests.PlayMode.RunContinuationPlayModeTests" runstate="Runnable" seed="143219267" result="Failed" start-time="2026-10-31 08:37:18Z" end-time="2026-10-31 08:37:19Z" duration="1.235505" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A brief foreground bounce must not start world regeneration.
+  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at Tests.PlayMode.RunContinuationPlayModeTests+<BackgroundSettlementCommitsOnceAndWarmResumeRebuildsTheWorld>d__29.MoveNext () [0x00381] in /Users/matthewrushworth/.codex/worktrees/mac-live-activity-prototype/EchoesOfVasteria/Assets/Tests/PlayMode/Tests/RunContinuationPlayModeTests.cs:273
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@7a3849e09bd0/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:52
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Background prototype] {"map":"River","awaySeconds":60.066419,"SampleCount":10,"Seconds":60.066419,"Distance":110.0332095,"Reaps":0,"Deaths":0,"Tasks":0,"Kills":6,"StopReason":null,"resources":7.0,"checkpointUtcTicks":639290326392949530,"prototype":true}
+Saving results to: /Users/matthewrushworth/Library/Application Support/Blindsided Games/Echoes Background Prototype/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -35,6 +35,8 @@ Each forecast has a fresh source ID. A button must match the current activity ID
 
 The generated main executable contains the intent metadata, activity owner and snapshot reader; UnityFramework retains its Objective-C transport and Watch service. Full Unity initialization and normal foreground settlement remain owned by Unity's lifecycle. The button's native code does not provide a periodic suspended refresh mechanism. There is no server, APNs dependency, keepalive or opportunistic background scheduler.
 
+Prototype iOS resume waits until UIKit reports actual foreground activity before entering managed settlement. This handles the simulator's queued resume notification during locking. A foreground bounce shorter than two seconds restores the paused run without rebuilding its world.
+
 The artwork comes from the game. There is no explanatory footer. Apple permits short animation on content updates, not an indefinitely looping sprite while suspended; the icons remain still between updates.
 
 ## Deliberate prototype limits
@@ -56,3 +58,5 @@ Windows Unity 6000.6.0f1:
 - 379 protected local save-file hashes remained unchanged.
 
 Mac simulator evidence and exact native build inputs are recorded alongside the native implementation. Native harness checks and the full Unity app checks must be reported separately. Simulator success does not establish physical-device battery behaviour or forecast accuracy.
+
+The [2026-10-31 Unity integration receipt](refresh-integration-20261031/README.md) records actual Lock Screen Refresh taps, unchanged save/cache/settlement hashes during those taps, one subsequent managed resume settlement, and the final numeric elapsed-clock preview. This remains a local prototype at version 1.5.9 (187).

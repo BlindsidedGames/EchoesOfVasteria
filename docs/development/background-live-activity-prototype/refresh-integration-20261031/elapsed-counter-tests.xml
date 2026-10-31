@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="13" result="Passed" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.0580675">
+  <test-suite type="TestSuite" id="1000" name="Echoes Background Prototype" fullname="Echoes Background Prototype" runstate="Runnable" testcasecount="460" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.058068" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1519" name="EditMode.Tests.dll" fullname="/Users/matthewrushworth/.codex/worktrees/mac-live-activity-prototype/EchoesOfVasteria/Library/ScriptAssemblies/EditMode.Tests.dll" runstate="Runnable" testcasecount="422" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.051873" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="13155" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1524" name="Tests" fullname="Tests" runstate="Runnable" testcasecount="394" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.049774" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1525" name="EditMode" fullname="Tests.EditMode" runstate="Runnable" testcasecount="394" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.047867" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1072" name="BackgroundRunEstimatorTests" fullname="Tests.EditMode.BackgroundRunEstimatorTests" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.032386" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1075" name="BuffedDistanceCapRaisesTheBaseByOnePercentOfTheEffectiveCap" fullname="Tests.EditMode.BackgroundRunEstimatorTests.BuffedDistanceCapRaisesTheBaseByOnePercentOfTheEffectiveCap" methodname="BuffedDistanceCapRaisesTheBaseByOnePercentOfTheEffectiveCap" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="1375307675" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.010140" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1076" name="CountdownConsumesAwayTimeWithoutCreatingMoreWork" fullname="Tests.EditMode.BackgroundRunEstimatorTests.CountdownConsumesAwayTimeWithoutCreatingMoreWork" methodname="CountdownConsumesAwayTimeWithoutCreatingMoreWork" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="1777786972" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.000464" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1077" name="EncounterStopsProgressUntilThePlayerReturns" fullname="Tests.EditMode.BackgroundRunEstimatorTests.EncounterStopsProgressUntilThePlayerReturns" methodname="EncounterStopsProgressUntilThePlayerReturns" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="1545543337" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.000234" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1081" name="EstimatedRunsCannotReplaceTheTenRealCalibrationSamples" fullname="Tests.EditMode.BackgroundRunEstimatorTests.EstimatedRunsCannotReplaceTheTenRealCalibrationSamples" methodname="EstimatedRunsCannotReplaceTheTenRealCalibrationSamples" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="925418732" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.001970" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1078" name="MapWithoutItsOwnEvidenceGetsNoInventedProgress" fullname="Tests.EditMode.BackgroundRunEstimatorTests.MapWithoutItsOwnEvidenceGetsNoInventedProgress" methodname="MapWithoutItsOwnEvidenceGetsNoInventedProgress" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="1928301355" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.000440" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1079" name="NewestRunsInfluencePaceMoreThanOlderRuns" fullname="Tests.EditMode.BackgroundRunEstimatorTests.NewestRunsInfluencePaceMoreThanOlderRuns" methodname="NewestRunsInfluencePaceMoreThanOlderRuns" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="1071931654" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.000088" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1073" name="ReapingContinuesIntoTheNextRunAndRaisesItsCap" fullname="Tests.EditMode.BackgroundRunEstimatorTests.ReapingContinuesIntoTheNextRunAndRaisesItsCap" methodname="ReapingContinuesIntoTheNextRunAndRaisesItsCap" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="882399904" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.000453" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1074" name="SuccessiveReapsUseTheRaisedCapEachTime" fullname="Tests.EditMode.BackgroundRunEstimatorTests.SuccessiveReapsUseTheRaisedCapEachTime" methodname="SuccessiveReapsUseTheRaisedCapEachTime" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="114661072" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.000085" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1080" name="TrueCombatDeathRestartsWithoutGrantingAReapIncrease" fullname="Tests.EditMode.BackgroundRunEstimatorTests.TrueCombatDeathRestartsWithoutGrantingAReapIncrease" methodname="TrueCombatDeathRestartsWithoutGrantingAReapIncrease" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="762316730" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.000161" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1086" name="WatchTimelineBoundsCapChangesAndSerializesHollowWithoutInfinity" fullname="Tests.EditMode.BackgroundRunEstimatorTests.WatchTimelineBoundsCapChangesAndSerializesHollowWithoutInfinity" methodname="WatchTimelineBoundsCapChangesAndSerializesHollowWithoutInfinity" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="502496887" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.007115" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1082" name="WatchTimelinePreservesReapResetPauseAndWindowScopedResources" fullname="Tests.EditMode.BackgroundRunEstimatorTests.WatchTimelinePreservesReapResetPauseAndWindowScopedResources" methodname="WatchTimelinePreservesReapResetPauseAndWindowScopedResources" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="585547890" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.000674" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1085" name="WatchTimelineRecordsEffectiveCapAndStopsWithoutInventingRestart" fullname="Tests.EditMode.BackgroundRunEstimatorTests.WatchTimelineRecordsEffectiveCapAndStopsWithoutInventingRestart" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.001884" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1083" name="WatchTimelineRecordsEffectiveCapAndStopsWithoutInventingRestart(True)" fullname="Tests.EditMode.BackgroundRunEstimatorTests.WatchTimelineRecordsEffectiveCapAndStopsWithoutInventingRestart(True)" methodname="WatchTimelineRecordsEffectiveCapAndStopsWithoutInventingRestart" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="1018389976" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.000357" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1084" name="WatchTimelineRecordsEffectiveCapAndStopsWithoutInventingRestart(False)" fullname="Tests.EditMode.BackgroundRunEstimatorTests.WatchTimelineRecordsEffectiveCapAndStopsWithoutInventingRestart(False)" methodname="WatchTimelineRecordsEffectiveCapAndStopsWithoutInventingRestart" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="1931966712" result="Passed" start-time="2026-10-31 08:46:14Z" end-time="2026-10-31 08:46:14Z" duration="0.000041" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: /Users/matthewrushworth/Library/Application Support/Blindsided Games/Echoes Background Prototype/TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
