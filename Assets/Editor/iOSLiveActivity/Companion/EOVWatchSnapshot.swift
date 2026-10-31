@@ -59,6 +59,8 @@ struct EOVWatchSnapshot: Codable {
             let distance: Double
             let cap: Double
             let resources: Double
+            let tasks: Double?
+            let kills: Double?
             let reaps: Int
             let phase: Int
             let expired: Bool
@@ -68,15 +70,19 @@ struct EOVWatchSnapshot: Codable {
             let index = frames.lastIndex(where: { $0[0] <= seconds }) ?? 0
             let point = frames[index]
             var distance = point[1], resources = point[3]
+            var tasks: Double? = point.count == 8 ? point[6] : nil
+            var kills: Double? = point.count == 8 ? point[7] : nil
             if index + 1 < frames.count {
                 let next = frames[index + 1]
                 if point[5] == 0, next[0] > point[0] {
                     let fraction = min(1, max(0, (seconds - point[0]) / (next[0] - point[0])))
                     distance += (next[1] - distance) * fraction
                     resources += (next[3] - resources) * fraction
+                    if let value = tasks { tasks = value + (next[6] - value) * fraction }
+                    if let value = kills { kills = value + (next[7] - value) * fraction }
                 }
             }
-            return Sample(distance: distance, cap: point[2], resources: resources,
+            return Sample(distance: distance, cap: point[2], resources: resources, tasks: tasks, kills: kills,
                 reaps: Int(point[4]), phase: Int(point[5]), expired: unix >= generatedAt + horizonSeconds)
         }
         func validate() throws {
@@ -84,15 +90,25 @@ struct EOVWatchSnapshot: Codable {
                   generatedAt.isFinite, generatedAt > 0, generatedAt <= Date().timeIntervalSince1970 + 60,
                   horizonSeconds.isFinite, horizonSeconds > 0, horizonSeconds <= 3600,
                   frames.count >= 2, frames.count <= 128,
-                  frames.allSatisfy({ $0.count == 6 && $0.allSatisfy({ $0.isFinite && $0 >= 0 }) }),
+                  frames.allSatisfy({ [6, 8].contains($0.count) && $0.count == frames[0].count && $0.allSatisfy({ $0.isFinite && $0 >= 0 }) }),
                   frames[0][0] == 0, frames[0][3] == 0, frames[0][4] == 0,
+                  frames[0].count == 6 || (frames[0][6] == 0 && frames[0][7] == 0),
                   frames.last![0] == horizonSeconds else { throw Invalid.snapshot }
             for (index, frame) in frames.enumerated() {
                 guard frame[0] <= horizonSeconds, frame[4] <= 20000, frame[4].rounded(.down) == frame[4],
                       [0, 1, 2].contains(frame[5]), distanceReaping || frame[2] == 0,
                       frame[5] != 1 || frame[1] == 0 else { throw Invalid.snapshot }
+                if frame.count == 8 {
+                    guard frame[6] <= 20000, frame[7] <= 20000,
+                          frame[6].rounded(.down) == frame[6], frame[7].rounded(.down) == frame[7] else { throw Invalid.snapshot }
+                }
                 guard index > 0 else { continue }
                 let prior = frames[index - 1]
+                if frame.count == 8 {
+                    guard frame[6] >= prior[6], frame[7] >= prior[7],
+                          frame[0] == prior[0] || prior[5] != 1 ||
+                            (frame[6] == prior[6] && frame[7] == prior[7]) else { throw Invalid.snapshot }
+                }
                 guard frame[0] >= prior[0], frame[3] >= prior[3], frame[4] >= prior[4] else { throw Invalid.snapshot }
                 if frame[0] > prior[0] {
                     guard frame[2] == prior[2], frame[4] == prior[4], frame[5] == prior[5],

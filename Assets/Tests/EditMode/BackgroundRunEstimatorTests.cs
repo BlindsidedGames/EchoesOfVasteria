@@ -122,18 +122,23 @@ namespace Tests.EditMode
             var input = Input(30); input.Run.Distance = 8; input.BaseCap = 10;
             input.StartingDistance = 2; input.RestartSeconds = 5;
             input.Run.Stats.Resources = 777;
+            input.Run.Stats.Tasks = 123; input.Run.Stats.Kills = 45;
             input.Samples = new[] { new BackgroundRunSample { Seconds = 100, Distance = 100,
                 EndDistance = 100, Tasks = 100, Kills = 50 } };
             var forecast = BackgroundRunEstimator.Forecast(input);
             var timeline = WatchForecastTimeline.Create(input, forecast, 2, 3);
             Assert.That(timeline.frames[0][3], Is.Zero, "Gain scope begins at forecast origin, not current-run total.");
+            Assert.That(timeline.frames[0][6], Is.Zero);
+            Assert.That(timeline.frames[0][7], Is.Zero);
             var atReap = timeline.frames.Last(f => f[0] == 2);
-            Assert.That(atReap, Is.EqualTo(new[] { 2d, 0, 10.1, 7, 1, 1 }));
+            Assert.That(atReap, Is.EqualTo(new[] { 2d, 0, 10.1, 7, 1, 1, 2, 1 }));
             var atRestart = timeline.frames.Last(f => f[0] == 7);
-            Assert.That(atRestart, Is.EqualTo(new[] { 7d, 2, 10.1, 7, 1, 0 }));
+            Assert.That(atRestart, Is.EqualTo(new[] { 7d, 2, 10.1, 7, 1, 0, 2, 1 }));
             Assert.That(timeline.frames.Last()[3], Is.EqualTo(forecast.Tasks * 2 + forecast.Kills * 3));
             Assert.That(input.Run.Distance, Is.EqualTo(8));
             Assert.That(input.Run.Stats.Resources, Is.EqualTo(777));
+            Assert.That(input.Run.Stats.Tasks, Is.EqualTo(123));
+            Assert.That(input.Run.Stats.Kills, Is.EqualTo(45));
             var replaced = WatchForecastTimeline.Create(input, forecast, 2, 3);
             Assert.That(replaced.frames[0][3], Is.Zero, "A replacement forecast must not add the old projection.");
         }

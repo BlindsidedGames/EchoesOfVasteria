@@ -35,6 +35,12 @@ struct EOVForecastWidget: Widget {
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) { PixelArt(name: "EOVHero", size: 24) }
+                DynamicIslandExpandedRegion(.center) {
+                    VStack(spacing: 2) {
+                        Text(context.state.mapTitle).font(.headline).lineLimit(1)
+                        ElapsedStatus(state: context.state)
+                    }
+                }
                 DynamicIslandExpandedRegion(.trailing) { RefreshAction(context: context) }
                 DynamicIslandExpandedRegion(.bottom) { SnapshotValues(state: context.state, stale: context.isStale).padding(8) }
             } compactLeading: { PixelArt(name: "EOVHero", size: 24) }
@@ -73,50 +79,85 @@ private struct SnapshotFamilyContent: View {
 private struct SnapshotPanel: View {
     let context: ActivityViewContext<EOVForecastAttributes>
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 8) {
-                PixelArt(name: "EOVHero", size: 26)
-                Text(context.state.mapTitle).font(.headline).lineLimit(1)
+        VStack(alignment: .leading, spacing: 7) {
+            HStack(spacing: 10) {
+                PixelArt(name: "EOVHero", size: 32)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(context.state.mapTitle).font(.headline).lineLimit(1)
+                    ElapsedStatus(state: context.state)
+                }
                 Spacer(minLength: 0)
                 RefreshAction(context: context)
             }
             SnapshotValues(state: context.state, stale: context.isStale)
-        }.padding(12).foregroundStyle(.white)
+        }.padding(.horizontal, 14).padding(.vertical, 10).foregroundStyle(.white)
+    }
+}
+private struct ElapsedStatus: View {
+    let state: EOVForecastAttributes.ContentState
+    var body: some View {
+        if let origin = state.backgroundOrigin {
+            HStack(spacing: 4) {
+                Text("Elapsed").foregroundStyle(.secondary)
+                Text("0:00:00").hidden().overlay(alignment: .leading) {
+                    Text(Date(timeIntervalSince1970: origin), style: .timer)
+                        .lineLimit(1).minimumScaleFactor(0.8)
+                }.monospacedDigit().fixedSize(horizontal: true, vertical: false)
+            }.font(.caption)
+        } else { Text("Live · this run").font(.caption).foregroundStyle(.secondary) }
     }
 }
 private struct SnapshotValues: View {
     let state: EOVForecastAttributes.ContentState
     let stale: Bool
     var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            HStack {
-                Text(distance(state.distance) + (state.cap > 0 ? " / " + distance(state.cap) : ""))
-                    .font(.system(.subheadline, design: .rounded).bold()).lineLimit(1).minimumScaleFactor(0.7)
-                Spacer(minLength: 4)
-                Text(stale ? "Estimate ended" : state.status == "live" ? "Live" : state.status == "waiting" ? "Waiting for you" : state.status == "restarting" ? "Restarting · est." : "Estimated")
-                    .font(.caption2).foregroundStyle(.secondary)
-            }
-            if state.cap > 0 {
-                // Snapshot distance, not a date-driven bar that would cross an unmodelled restart.
-                ProgressView(value: min(state.cap, state.distance), total: state.cap)
-                    .tint(Color(red: 0.94, green: 0.75, blue: 0.42))
-            }
-            HStack(spacing: 6) {
-                PixelArt(name: "EOVResource", size: 16)
-                Text(state.resources.rounded(.down).formatted(.number.precision(.fractionLength(0))))
-                Text(state.status == "live" ? "this run" : "since departure").foregroundStyle(.secondary)
-                Spacer(minLength: 2)
-                if state.status != "live" {
-                    PixelArt(name: "EOVCarl", size: 18)
-                    Text("\(state.reaps) " + (state.reaps == 1 ? "reap" : "reaps"))
+        VStack(alignment: .leading, spacing: 7) {
+            VStack(spacing: 4) {
+                HStack {
+                    Text(distance(state.distance) + (state.cap > 0 ? " / " + distance(state.cap) : ""))
+                        .font(.subheadline.monospacedDigit().bold()).lineLimit(1).minimumScaleFactor(0.7)
+                    Spacer(minLength: 4)
+                    Text(stale ? "Estimate ended" : state.status == "live" ? "Live" : state.status == "waiting" ? "Waiting for you" : state.status == "restarting" ? "Restarting · est." : "Estimated")
+                        .font(.caption2).foregroundStyle(.secondary)
                 }
-            }.font(.caption.monospacedDigit()).lineLimit(1).minimumScaleFactor(0.7)
-            HStack(spacing: 3) {
-                Text("Updated")
-                Text(Date(timeIntervalSince1970: state.sampledAt), style: .relative)
-                Text("ago")
-            }.font(.caption2).foregroundStyle(.secondary)
+                if state.cap > 0 {
+                    ProgressView(value: min(state.cap, state.distance), total: state.cap)
+                        .tint(Color(red: 0.94, green: 0.75, blue: 0.42))
+                }
+            }
+            HStack(spacing: 20) {
+                ActivityMetric(art: "EOVTask", count: state.tasks, label: "tasks")
+                ActivityMetric(art: "EOVKill", count: state.kills, label: "kills")
+                Spacer(minLength: 0)
+            }.foregroundStyle(.secondary)
+            HStack(spacing: 20) {
+                HStack(spacing: 5) {
+                    PixelArt(name: "EOVChest", size: 20)
+                    Text((state.backgroundOrigin == nil ? "" : "+") + count(state.resources))
+                        .font(.subheadline.monospacedDigit().bold())
+                    Text(state.backgroundOrigin == nil ? "this run" : "gained").font(.caption2).foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
+                if state.backgroundOrigin != nil {
+                    HStack(spacing: 4) {
+                        PixelArt(name: state.reaps.isMultiple(of: 2) ? "EOVCarl" : "EOVCarlSwing", size: 20)
+                        Text("\(state.reaps) " + (state.reaps == 1 ? "reap" : "reaps")).font(.caption.monospacedDigit())
+                    }.foregroundStyle(.secondary)
+                }
+            }
         }
+    }
+}
+private struct ActivityMetric: View {
+    let art: String
+    let count: Double?
+    let label: String
+    var body: some View {
+        HStack(spacing: 4) {
+            PixelArt(name: art, size: 16)
+            Text(count.map { $0.rounded(.down).formatted(.number.precision(.fractionLength(0))) } ?? "—")
+            Text(label)
+        }.font(.caption.monospacedDigit())
     }
 }
 private struct RefreshAction: View {
@@ -126,16 +167,18 @@ private struct RefreshAction: View {
         if context.state.canRefresh && !context.isStale {
             if #available(iOS 17.0, *) {
                 Button(intent: EOVRefreshIntent(activityID: context.activityID, sourceID: context.state.sourceID)) {
-                    if compact {
-                        Image(systemName: "arrow.clockwise").frame(minWidth: 32, minHeight: 44)
-                    } else { Label("Refresh", systemImage: "arrow.clockwise").font(.caption.bold()) }
-                }.buttonStyle(.bordered).accessibilityLabel("Refresh outing estimate")
-            } else {
-                Text("Open Echoes to refresh").font(.caption2).foregroundStyle(.secondary)
-            }
+                    Image(systemName: "arrow.clockwise").font(.system(size: 16, weight: .semibold))
+                        .frame(width: 30, height: 30)
+                        .background(.white.opacity(0.05), in: RoundedRectangle(cornerRadius: 8))
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(.white.opacity(0.12)))
+                        .frame(minWidth: compact ? 32 : 44, minHeight: 44)
+                }.buttonStyle(.plain).tint(Color(red: 0.94, green: 0.75, blue: 0.42))
+                    .accessibilityLabel("Refresh outing estimate")
+            } else { Text("Open Echoes to refresh").font(.caption2).foregroundStyle(.secondary) }
         }
     }
 }
+private func count(_ value: Double) -> String { value.rounded(.down).formatted(.number.precision(.fractionLength(0))) }
 private struct PixelArt: View {
     let name: String
     let size: CGFloat

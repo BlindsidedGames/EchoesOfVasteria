@@ -75,7 +75,7 @@ public final class EOVLiveActivityBridge: NSObject {
             }
             let before = UIApplication.shared.applicationState.rawValue
             await activity.update(ActivityContent(state: state, staleDate: Date(timeIntervalSince1970: state.forecastEnd)))
-            NSLog("[EOVLiveActivity] refresh id=%@ source=%@ pid=%d bundle=%@ appStateBefore=%d appStateAfter=%d sampledAt=%.6f distance=%.4f cap=%.4f resources=%.4f reaps=%d status=%@", activity.id, sourceID, ProcessInfo.processInfo.processIdentifier, Bundle.main.bundleIdentifier ?? "", before, UIApplication.shared.applicationState.rawValue, state.sampledAt, state.distance, state.cap, state.resources, state.reaps, state.status)
+            NSLog("[EOVLiveActivity] refresh id=%@ source=%@ pid=%d bundle=%@ appStateBefore=%d appStateAfter=%d sampledAt=%.6f distance=%.4f cap=%.4f resources=%.4f reaps=%d tasks=%@ kills=%@ origin=%.0f status=%@", activity.id, sourceID, ProcessInfo.processInfo.processIdentifier, Bundle.main.bundleIdentifier ?? "", before, UIApplication.shared.applicationState.rawValue, state.sampledAt, state.distance, state.cap, state.resources, state.reaps, state.tasks.map { String($0) } ?? "unknown", state.kills.map { String($0) } ?? "unknown", state.backgroundOrigin ?? 0, state.status)
         }
         pending = task
         await task.value
@@ -96,10 +96,13 @@ public final class EOVLiveActivityBridge: NSObject {
         let sample = timeline.sample(at: now)
         return .init(sourceID: source, mapTitle: run.mapTitle,
             sampledAt: background ? now : snapshot.generatedAt,
+            backgroundOrigin: background ? timeline.generatedAt : nil,
             forecastEnd: min(forecast.forecastEnd, timeline.generatedAt + timeline.horizonSeconds),
             distance: background ? sample.distance : run.distance,
             cap: background ? sample.cap : run.cap,
             resources: background ? sample.resources : run.resources,
+            tasks: background ? sample.tasks : Double(run.tasks),
+            kills: background ? sample.kills : Double(run.kills),
             reaps: background ? sample.reaps : 0,
             status: !background ? "live" : sample.phase == 2 ? "waiting" : sample.phase == 1 ? "restarting" : "estimate")
     }

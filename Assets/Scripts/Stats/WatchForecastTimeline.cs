@@ -4,8 +4,8 @@ using System.Linq;
 
 namespace TimelessEchoes.Stats
 {
-    // Watch-only wire format. Frames are [seconds, distance, effective cap,
-    // estimated resources gained since origin, reaps since origin, phase].
+    // Presentation wire format. Frames are [seconds, distance, effective cap,
+    // estimated resource gain, reaps, phase, task gain, kill gain] since origin.
     // Phase: 0 moving, 1 restart pause, 2 stopped pending player input.
     public sealed class WatchForecastTimeline
     {
@@ -22,31 +22,32 @@ namespace TimelessEchoes.Stats
             if (result.Status != "forecast" || result.Steps.Count == 0 || result.Seconds <= 0 ||
                 !Finite(resourcesPerTask) || !Finite(resourcesPerKill)) return null;
             var timeline = new WatchForecastTimeline { mapId = input.Run.Map, distanceReaping = input.DistanceReaping };
-            timeline.frames.Add(new[] { 0d, (double)input.Run.Distance, result.Steps[0].Cap, 0, 0, 0 });
-            double seconds = 0, resources = 0, reaps = 0;
+            timeline.frames.Add(new[] { 0d, (double)input.Run.Distance, result.Steps[0].Cap, 0, 0, 0, 0, 0 });
+            double seconds = 0, resources = 0, reaps = 0, tasks = 0, kills = 0;
             foreach (var step in result.Steps)
             {
                 var oldCount = timeline.frames.Count;
                 var oldLast = timeline.frames[oldCount - 1];
                 var last = oldLast;
                 if (last[2] != step.Cap)
-                    timeline.Add(new[] { seconds, last[1], step.Cap, resources, reaps, 0 }, false);
+                    timeline.Add(new[] { seconds, last[1], step.Cap, resources, reaps, 0, tasks, kills }, false);
                 seconds += step.Seconds;
                 resources += step.Tasks * resourcesPerTask + step.Kills * resourcesPerKill;
-                timeline.Add(new[] { seconds, step.Distance, step.Cap, resources, reaps, 0 }, true);
+                tasks += step.Tasks; kills += step.Kills;
+                timeline.Add(new[] { seconds, step.Distance, step.Cap, resources, reaps, 0, tasks, kills }, true);
                 if (step.EndsRun)
                 {
                     if (step.Reaped) reaps++;
                     // A completed run no longer fills a distance ring during its restart pause.
                     timeline.Add(new[] { seconds, 0, step.RestartCap, resources, reaps,
-                        step.Reaped && input.StopOnFirstReap ? 2d : 1d }, false);
+                        step.Reaped && input.StopOnFirstReap ? 2d : 1d, tasks, kills }, false);
                     if (step.RestartSeconds > 0)
                     {
                         seconds += step.RestartSeconds;
-                        timeline.Add(new[] { seconds, 0, step.RestartCap, resources, reaps, 1 }, false);
+                        timeline.Add(new[] { seconds, 0, step.RestartCap, resources, reaps, 1, tasks, kills }, false);
                     }
                     if (step.Restarted)
-                        timeline.Add(new[] { seconds, input.StartingDistance, step.RestartCap, resources, reaps, 0 }, false);
+                        timeline.Add(new[] { seconds, input.StartingDistance, step.RestartCap, resources, reaps, 0, tasks, kills }, false);
                 }
                 if (timeline.frames.Count <= MaxFrames) continue;
                 timeline.frames.RemoveRange(oldCount, timeline.frames.Count - oldCount);
