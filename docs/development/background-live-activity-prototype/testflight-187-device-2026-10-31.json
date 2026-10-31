@@ -1,0 +1,132 @@
+{
+  "observedAt": "2026-10-31T06:46:37.889675+00:00",
+  "source": "ff3639d031a190110246f99ab1af540969aa5812",
+  "version": "1.5.9",
+  "iosBuild": "187",
+  "androidBuildUnchanged": 186,
+  "appId": "6749265146",
+  "bundleId": "com.blindsidedgames.echoesofvasteria",
+  "lane": "Existing app, internal TestFlight only",
+  "unity": "6000.6.0f1",
+  "xcode": "26.4.1 (17E202)",
+  "normalContent": {
+    "demo": false,
+    "beta": false,
+    "development": false,
+    "deviceExport": "Fresh full export",
+    "phone": "IL2CPP arm64",
+    "watch": [
+      "arm64_32",
+      "arm64"
+    ],
+    "compression": "CompressWithLz4HC",
+    "syntheticSaveSeed": false,
+    "backgroundProgressDefault": "Off; PlayerPrefs fallback0 compiled and verified"
+  },
+  "bundleVersions": [
+    {
+      "bundle": "com.blindsidedgames.echoesofvasteria",
+      "version": "1.5.9",
+      "build": "187",
+      "architectures": "arm64"
+    },
+    {
+      "bundle": "com.blindsidedgames.echoesofvasteria.watchkitapp",
+      "version": "1.5.9",
+      "build": "187",
+      "architectures": "arm64_32 arm64"
+    },
+    {
+      "bundle": "com.blindsidedgames.echoesofvasteria.liveactivity",
+      "version": "1.5.9",
+      "build": "187",
+      "architectures": "arm64"
+    }
+  ],
+  "validation": {
+    "appleValidationPassed": true,
+    "optionalWarning": "Prebuilt UnityRuntime.framework vendor dSYM unavailable; game UnityFramework matching dSYM retained"
+  },
+  "preparedIPA": {
+    "bytes": 250659437,
+    "sha256": "2742e89fbec6ae5cfffe3e56116e84070d79a06eb273c768c635f8ca92c5a0e3",
+    "internalOnly": true,
+    "CRCAllEntriesPassed": true
+  },
+  "actualUploadIPA": {
+    "bytes": 250659428,
+    "sha256": "2385ebb0450f9de4ea9d7147c0d30fb11c80b630f8215a150f5d15f2d9023158",
+    "compiledAndSerializedContentMatchesPrepared": true
+  },
+  "appleUpload": {
+    "buildUploadID": "2143b5bc-6f13-45a1-b948-020ae734e56b",
+    "source": "ff3639d031a190110246f99ab1af540969aa5812",
+    "version": "1.5.9",
+    "build": "187",
+    "state": {
+      "errors": [],
+      "warnings": [],
+      "infos": [],
+      "state": "PROCESSING"
+    },
+    "uploadedDate": "2026-10-30T23:45:41-07:00",
+    "internalOnly": true,
+    "xcodeUploadSucceeded": true,
+    "uploadedPackageSHA256": "2385ebb0450f9de4ea9d7147c0d30fb11c80b630f8215a150f5d15f2d9023158",
+    "actualCompiledAndSerializedContentVerified": true,
+    "testerAvailabilityVerified": false
+  },
+  "tests": {
+    "source": "1ab7fdd9a (same managed/UI code in frozen device source)",
+    "passed": 2,
+    "failed": 0,
+    "prototypeCompileDefineVerified": true,
+    "cases": [
+      {
+        "name": "BackgroundSettlementCommitsOnceAndWarmResumeRebuildsTheWorld",
+        "result": "Passed"
+      },
+      {
+        "name": "CompanionSnapshotReadsRealOwnersWithoutAwardingProgress",
+        "result": "Passed"
+      }
+    ]
+  },
+  "ui": {
+    "scope": "Actual configured Options prefab in protected offline editor session; targeted setting row, not full device/game acceptance",
+    "sequence": [
+      "960x540landscape",
+      "540x960portrait",
+      "960x540landscape"
+    ],
+    "labelContained": true,
+    "buttonCenterHit": true,
+    "defaultOff": true,
+    "minimumButtonHeightLogicalUnits": 24,
+    "screenshots": [
+      "testflight-optin-landscape.png",
+      "testflight-optin-portrait.png"
+    ]
+  },
+  "preservation": {
+    "primaryHeadUnchanged": true,
+    "primaryTrackedUserDiffUnchanged": true,
+    "recordedFiles": 228,
+    "unchangedRecordedFiles": 227,
+    "changedProgressionFiles": [],
+    "changedNonProgressionFiles": [
+      "Unity Editor Analytics cache values"
+    ]
+  },
+  "availability": {
+    "state": "Apple processing; internal tester availability being verified separately",
+    "confirmed": false
+  },
+  "scope": {
+    "publicAppStoreSubmission": false,
+    "externalTestersChanged": false,
+    "androidDistribution": false,
+    "steamDistribution": false,
+    "physicalDeviceGameplayQA": false
+  }
+}
