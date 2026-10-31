@@ -264,8 +264,10 @@ namespace TimelessEchoes.UI.Toolkit
                 background.style.marginTop = 6;
                 background.style.height = StyleKeyword.Auto;
                 background.style.minHeight = 24;
+                background.style.maxWidth = Length.Percent(100);
                 var backgroundLabel = ToolkitGameplay.L(background, "", "eov-options-label");
                 backgroundLabel.style.whiteSpace = WhiteSpace.Normal;
+                backgroundLabel.style.flexShrink = 1;
                 ToolkitLocalization.Bind(backgroundLabel, "options.background-progress", "Enable background progress (Experimental)");
             }
         }
