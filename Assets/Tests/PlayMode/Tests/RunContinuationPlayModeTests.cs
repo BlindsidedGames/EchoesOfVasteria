@@ -211,7 +211,8 @@ namespace Tests.PlayMode
             Assert.That(run.run.kills, Is.EqualTo(7));
             Assert.That(run.run.resources, Is.EqualTo(321));
             Assert.IsFalse(run.phoneInBackground);
-            Assert.IsNull(run.portraitLayers, "The original legacy character keeps its original bundled art.");
+            Assert.That(run.portraitLayers, Is.Null.Or.Empty,
+                "The original legacy character publishes no custom layers; JsonUtility reads JSON null arrays as empty.");
 
             string PortraitAsset(string id) => "EOVPortrait_" + Hash128.Compute(id);
             CompanionContract Portrait() => JsonUtility.FromJson<CompanionContract>(game.CaptureWatchCompanionSnapshot());
