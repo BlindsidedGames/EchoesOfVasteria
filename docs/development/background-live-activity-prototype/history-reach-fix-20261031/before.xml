@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-31 11:10:14Z" end-time="2026-10-31 11:10:14Z" duration="0.0437932">
+  <test-suite type="TestSuite" id="1000" name="Echoes of Vasteria" fullname="Echoes of Vasteria" runstate="Runnable" testcasecount="461" result="Failed" site="Child" start-time="2026-10-31 11:10:14Z" end-time="2026-10-31 11:10:14Z" duration="0.043793" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1520" name="EditMode.Tests.dll" fullname="C:/Users/mattr/.codex/worktrees/release-1-5-1/EchoesOfVasteria/Library/ScriptAssemblies/EditMode.Tests.dll" runstate="Runnable" testcasecount="423" result="Failed" site="Child" start-time="2026-10-31 11:10:14Z" end-time="2026-10-31 11:10:14Z" duration="0.035693" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="60580" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1525" name="Tests" fullname="Tests" runstate="Runnable" testcasecount="395" result="Failed" site="Child" start-time="2026-10-31 11:10:14Z" end-time="2026-10-31 11:10:14Z" duration="0.032778" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1526" name="EditMode" fullname="Tests.EditMode" runstate="Runnable" testcasecount="395" result="Failed" site="Child" start-time="2026-10-31 11:10:14Z" end-time="2026-10-31 11:10:14Z" duration="0.030730" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1072" name="BackgroundRunEstimatorTests" fullname="Tests.EditMode.BackgroundRunEstimatorTests" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" testcasecount="14" result="Failed" site="Child" start-time="2026-10-31 11:10:14Z" end-time="2026-10-31 11:10:14Z" duration="0.025501" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1081" name="ShortUndamagedHistoryCanReachTheActualDistanceCap" fullname="Tests.EditMode.BackgroundRunEstimatorTests.ShortUndamagedHistoryCanReachTheActualDistanceCap" methodname="ShortUndamagedHistoryCanReachTheActualDistanceCap" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="193202975" result="Failed" start-time="2026-10-31 11:10:14Z" end-time="2026-10-31 11:10:14Z" duration="0.014303" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Passing the recorded reach is not evidence of a combat death.
+  Expected: 0
+  But was:  15
+]]></message>
+                <stack-trace><![CDATA[at Tests.EditMode.BackgroundRunEstimatorTests.ShortUndamagedHistoryCanReachTheActualDistanceCap () [0x000ca] in C:\Users\mattr\.codex\worktrees\release-1-5-1\EchoesOfVasteria\Assets\Tests\EditMode\BackgroundRunEstimatorTests.cs:118
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[Saving results to: C:/Users/mattr/AppData/LocalLow/Blindsided Games/Echoes of Vasteria\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
