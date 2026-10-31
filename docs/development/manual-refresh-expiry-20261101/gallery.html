@@ -14,10 +14,12 @@
 <figure><h3>After normal wake</h3><a href="captures/limit-after-normal-wake.png"><img class="phone" src="captures/limit-after-normal-wake.png" alt="System Lock Screen showing elapsed 1:00:00, Limit reached, and preloaded final estimated totals"></a><figcaption>Final estimates appeared without opening the app or pressing Refresh.</figcaption></figure>
 </section>
 <details><summary>Dimmed display timing</summary><p>The dimmed display retained its earlier counters after the deadline. A normal wake displayed the final values. iOS controls the redraw timing.</p><a href="captures/limit-after-deadline-before-wake.png"><img src="captures/limit-after-deadline-before-wake.png" alt="Dimmed Lock Screen retaining the older counters after the clock stopped"></a></details>
+<details><summary>When the estimate ends earlier</summary><p>An earlier forecast endpoint says “Estimate ended”. It does not claim the one-hour allowance was used.</p><a href="captures/early-estimate-ended.png"><img src="captures/early-estimate-ended.png" alt="Live Activity showing Estimate ended and its earlier final estimated gains"></a></details>
 <h2>Watch</h2>
 <section>
 <figure><h3>42 mm · at the limit</h3><a href="captures/watch42-at-limit-away.png"><img class="watch" src="captures/watch42-at-limit-away.png" alt="42 mm Watch showing Limit reached, elapsed 1:00:00 and frozen final gains"></a><figcaption>Elapsed time and estimated gains stop at the allowance.</figcaption></figure>
 <figure><h3>46 mm · after the limit</h3><a href="captures/watch46-after-limit-away.png"><img class="watch" src="captures/watch46-after-limit-away.png" alt="46 mm Watch retaining the same one-hour elapsed time and final estimated gains"></a><figcaption>Staying away longer does not increase the displayed allowance.</figcaption></figure>
+<figure><h3>Refresh from Watch</h3><a href="captures/paired-watch-background-refresh.png"><img class="watch" src="captures/paired-watch-background-refresh.png" alt="Paired Watch after refreshing the backgrounded phone through WatchConnectivity"></a><figcaption>A real Watch request updated the existing phone activity. The saved departure snapshot stayed unchanged.</figcaption></figure>
 </section>
 <footer><a href="README.md">Validation details and limits</a></footer>
 </html>
