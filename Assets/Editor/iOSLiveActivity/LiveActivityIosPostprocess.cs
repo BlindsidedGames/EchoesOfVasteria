@@ -144,6 +144,9 @@ namespace TimelessEchoes.Editor
             project.SetBuildProperty(watch, "CLANG_ENABLE_MODULES", "YES");
             project.SetBuildProperty(watch, "WATCHOS_DEPLOYMENT_TARGET", "11.0");
             project.SetBuildProperty(watch, "TARGETED_DEVICE_FAMILY", "4");
+            // Unity's project-wide arm64 setting is for iOS. watchOS 11 also needs arm64_32.
+            project.SetBuildProperty(watch, "ARCHS", "$(ARCHS_STANDARD)");
+            project.SetBuildProperty(watch, "ONLY_ACTIVE_ARCH", "NO");
             var simulator = PlayerSettings.iOS.sdkVersion == iOSSdkVersion.SimulatorSDK;
             project.SetBuildProperty(watch, "SDKROOT", simulator ? "watchsimulator" : "watchos");
             project.SetBuildProperty(watch, "SUPPORTED_PLATFORMS", simulator ? "watchsimulator" : "watchos watchsimulator");
