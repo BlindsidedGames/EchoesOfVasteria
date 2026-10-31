@@ -8,6 +8,7 @@ namespace Blindsided.SaveData
     public class GameData
     {
         public RunSaveData ActiveRun;
+        public Dictionary<string, List<TimelessEchoes.Stats.BackgroundRunSample>> BackgroundSamples = new();
         public TimelessEchoes.Shop.ShopProgress Shop = new();
         // Short-lived candidate for a synchronous in-memory economic mutation. Unrelated
         // state is read-only; every collection/record these commands may write is
@@ -328,6 +329,9 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker]
         public class RunRecord
         {
+            public bool Estimated;
+            public float ActiveSeconds, StartingDistance;
+            public int EchoTasks, EchoKills;
             public int RunNumber;
             public string MapType;
             public float Duration;

@@ -17,8 +17,8 @@ namespace TimelessEchoes.Platform
         public static TestMode Mode { get; private set; }
         public static bool ChoiceReady { get; private set; }
         public static bool AwaitingActivation { get; set; }
-        public static bool SkipGameCenter => EditorScreenshotSession || Enabled && ChoiceReady && (Mode == TestMode.NoGameCenterSignIn || Mode == TestMode.Minimal);
-        public static bool SkipOnlineServices => EditorScreenshotSession || Enabled && ChoiceReady && (Mode == TestMode.NoOnlineServices || Mode == TestMode.Minimal);
+        public static bool SkipGameCenter => TimelessEchoes.Stats.BackgroundRunPrototype.Enabled || EditorScreenshotSession || Enabled && ChoiceReady && (Mode == TestMode.NoGameCenterSignIn || Mode == TestMode.Minimal);
+        public static bool SkipOnlineServices => TimelessEchoes.Stats.BackgroundRunPrototype.Enabled || EditorScreenshotSession || Enabled && ChoiceReady && (Mode == TestMode.NoOnlineServices || Mode == TestMode.Minimal);
         public static bool EditorScreenshotSession
         {
             get
@@ -122,7 +122,7 @@ namespace TimelessEchoes.Platform
                         PreviousAttempt = $"Last incomplete launch ({previous.version}, {previous.test ?? "Normal"}): {previous.phase}\n" + Describe(previous);
                 }
                 foreach (var pair in Results)
-                    PreviousResults += $"{pair.Key}: {(pair.Value.completed ? "Reached town" : pair.Value.phase)} · {pair.Value.elapsedSeconds:0.0}s\n";
+                    PreviousResults += $"{pair.Key}: {(pair.Value.completed ? "Reached town" : pair.Value.phase)} Â· {pair.Value.elapsedSeconds:0.0}s\n";
             }
             catch (Exception) { /* Diagnostics must never prevent startup. */ }
             Clock.Restart();
@@ -277,12 +277,12 @@ namespace TimelessEchoes.Platform
 
         private static string Describe(Checkpoint value)
         {
-            var text = $"{value.elapsedSeconds:0.0}s elapsed · main thread gap {value.mainThreadStallSeconds:0.0}s\n";
+            var text = $"{value.elapsedSeconds:0.0}s elapsed Â· main thread gap {value.mainThreadStallSeconds:0.0}s\n";
             text += value.nativeMemoryAvailable ?
-                $"Memory {value.physicalFootprintBytes / 1048576.0:0} MiB · sampled peak {value.peakFootprintBytes / 1048576.0:0} MiB\n" +
-                $"Headroom {value.availableMemoryBytes / 1048576.0:0} MiB · lowest {value.minimumAvailableMemoryBytes / 1048576.0:0} MiB\n" :
+                $"Memory {value.physicalFootprintBytes / 1048576.0:0} MiB Â· sampled peak {value.peakFootprintBytes / 1048576.0:0} MiB\n" +
+                $"Headroom {value.availableMemoryBytes / 1048576.0:0} MiB Â· lowest {value.minimumAvailableMemoryBytes / 1048576.0:0} MiB\n" :
                 $"Unity allocations {value.allocatedBytes / 1048576.0:0} MiB (native memory unavailable)\n";
-            text += $"Memory warnings {value.memoryWarnings} · Game Center: {value.gameServices}";
+            text += $"Memory warnings {value.memoryWarnings} Â· Game Center: {value.gameServices}";
             if (!string.IsNullOrEmpty(value.operation)) text += "\nLast operation: " + value.operation;
             if (!string.IsNullOrEmpty(value.lastException))
                 text += "\nIssue: " + value.lastException.Split('\n')[0];

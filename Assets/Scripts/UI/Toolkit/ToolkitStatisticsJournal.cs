@@ -189,7 +189,7 @@ namespace TimelessEchoes.UI.Toolkit
             journalRecent.Clear();
             var key = journalMap < 0 ? null : definition.maps[journalMap].config.name;
             var runs = tracker.RecentRuns.Where(r => key == null || r.MapType == key).ToList();
-            Text(journalRecent, ToolkitLocalization.Text("history.recent-count", "{0} recent runs · up to 10 per map", runs.Count), 6).AddToClassList("journal-note");
+            Text(journalRecent, ToolkitLocalization.Text("history.recent-count", "{0} recent runs Â· up to 10 per map", runs.Count), 6).AddToClassList("journal-note");
             if (runs.Count == 0)
             {
                 Text(journalRecent, ToolkitLocalization.Text("journal.no-runs", "No saved runs here."), 7).AddToClassList("journal-empty");
@@ -204,7 +204,7 @@ namespace TimelessEchoes.UI.Toolkit
                     button.AddToClassList("journal-run-overall");
                     Text(heading, JournalMapName(run.MapType), 7).AddToClassList("journal-run-map");
                 }
-                var duration = Text(heading, JournalDuration(run.Duration), 7);
+                var duration = Text(heading, JournalDuration(run.Duration) + (run.Estimated ? " · " + ToolkitLocalization.Text("graph.estimated", "Estimated") : ""), 7);
                 duration.AddToClassList("journal-run-duration");
                 duration.tooltip = CalcUtils.FormatTime(run.Duration);
                 var totals = journalMap < 0 ? ToolkitGameplay.E(button, "journal-run-line") : button;

@@ -58,7 +58,7 @@ namespace TimelessEchoes.UI.Toolkit
             var copy=ToolkitGameplay.E(heading,"graph-summary-copy");
             summary=Text(copy,"","graph-summary");sample=Text(copy,"","graph-sample");
             var zoom=ToolkitGameplay.E(heading,"graph-zoom-controls");
-            zoomOut=Choice(zoom,"graph-zoom-out","−",()=>{zoomSteps=Math.Max(0,zoomSteps-1);Refresh();});
+            zoomOut=Choice(zoom,"graph-zoom-out","âˆ’",()=>{zoomSteps=Math.Max(0,zoomSteps-1);Refresh();});
             zoomIn=Choice(zoom,"graph-zoom-in","+",()=>{zoomSteps=Math.Min(MaximumZoomSteps,zoomSteps+1);Refresh();});
             resetZoom=Choice(zoom,"graph-reset-zoom",ToolkitLocalization.Text("graph.reset-zoom", "Reset"),()=>{zoomSteps=0;Refresh();});
             ToolkitLocalization.BindTooltip(zoomOut,"graph.zoom-out","Zoom out");
@@ -124,7 +124,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var key = map < 0 ? null : definition.maps[map].config.name;
             var previous = MapRunHistory.Previous(previousHistory?.Invoke(), key);
-            previousHistoryButton.text = StatisticsPresentation.PreviousHistoryTitle(previous) + (previousExpanded ? "  −" : "  +");
+            previousHistoryButton.text = StatisticsPresentation.PreviousHistoryTitle(previous) + (previousExpanded ? "  âˆ’" : "  +");
             previousHistoryButton.style.display = previous.Runs > 0 ? DisplayStyle.Flex : DisplayStyle.None;
             previousDetails.style.display = previous.Runs > 0 && previousExpanded ? DisplayStyle.Flex : DisplayStyle.None;
             previousDetails.Clear();
@@ -175,11 +175,11 @@ namespace TimelessEchoes.UI.Toolkit
             units.style.display = SupportsRate ? DisplayStyle.Flex : DisplayStyle.None;
             rates.SetEnabled(SupportsRate); rates.EnableInClassList("active",perMinute);totals.EnableInClassList("active",!perMinute);
             var suffix=perMinute?ToolkitLocalization.Text("graph.rate-suffix", " / min"):"";
-            summary.text=values.Length==0?ToolkitLocalization.Text("graph.no-data", "No recent data"):ToolkitLocalization.Text("graph.average-best", "Average {0}{1}   ·   {2} {3}{1}", Format(avg), suffix, metric==Metric.Duration?ToolkitLocalization.Text("graph.longest", "Longest"):ToolkitLocalization.Text("graph.best", "Best"), Format(max));
-            var omittedText = omitted > 0 ? ToolkitLocalization.Text("graph.omitted", " · {0} without duration omitted", omitted) : "";
+            summary.text=values.Length==0?ToolkitLocalization.Text("graph.no-data", "No recent data"):ToolkitLocalization.Text("graph.average-best", "Average {0}{1}   Â·   {2} {3}{1}", Format(avg), suffix, metric==Metric.Duration?ToolkitLocalization.Text("graph.longest", "Longest"):ToolkitLocalization.Text("graph.best", "Best"), Format(max));
+            var omittedText = omitted > 0 ? ToolkitLocalization.Text("graph.omitted", " Â· {0} without duration omitted", omitted) : "";
             sample.text = ToolkitResponsiveLayout.IsPortrait
                 ? ToolkitLocalization.Text("graph.recent-sample", "Latest {0} runs{1}", visible.Count, omittedText)
-                : ToolkitLocalization.Text("history.recent-count", "{0} recent runs · up to 10 per map", visible.Count) + omittedText;
+                : ToolkitLocalization.Text("history.recent-count", "{0} recent runs Â· up to 10 per map", visible.Count) + omittedText;
             ceiling=max>0?NiceCeiling(max):1;
             for(var step=0;step<zoomSteps;step++)ceiling=LowerCeiling(ceiling);
             if(!perMinute)ceiling=Math.Max(1,ceiling);
@@ -196,7 +196,7 @@ namespace TimelessEchoes.UI.Toolkit
                 var fill=ToolkitGameplay.E(hit,"graph-run-fill");fill.pickingMode=PickingMode.Ignore;fill.style.height=Length.Percent((float)(Math.Min(value/ceiling,1)*100));
                 fill.AddToClassList("graph-outcome-"+(run.Abandoned?"abandoned":run.Reaped?"reaped":run.Died?"died":"retreated"));
                 hit.tooltip=Format(value)+suffix;
-                if(value>ceiling){var overflow=Text(hit,"↑","graph-overflow-marker");overflow.pickingMode=PickingMode.Ignore;}
+                if(value>ceiling){var overflow=Text(hit,"â†‘","graph-overflow-marker");overflow.pickingMode=PickingMode.Ignore;}
                 hit.RegisterCallback<PointerEnterEvent>(_=>ShowDetails(run));hit.RegisterCallback<PointerLeaveEvent>(_=>ShowSelected());
                 hit.RegisterCallback<FocusInEvent>(_=>ShowDetails(run));hit.RegisterCallback<FocusOutEvent>(_=>ShowSelected());
                 hit.userData=run.RunNumber;
@@ -224,7 +224,7 @@ namespace TimelessEchoes.UI.Toolkit
             overflowValue.userData=run?.RunNumber;PositionOverflowValue();
             details.Clear();if(run==null){detailTitle.text=ToolkitLocalization.Text("graph.details", "Run details");Text(details,ToolkitLocalization.Text("graph.select-map", "Select a map with saved runs to inspect its history."),"graph-detail-hint");return;}
             var mapName=definition.maps.FirstOrDefault(m=>m.config&&m.config.name==run.MapType).label;
-            detailTitle.text=ToolkitLocalization.Text("graph.detail-title", "Run #{0} · {1} · {2}", run.RunNumber, ToolkitLocalization.Text("map." + run.MapType, string.IsNullOrWhiteSpace(mapName)?run.MapType:mapName.Trim()), Outcome(run));
+            detailTitle.text=ToolkitLocalization.Text("graph.detail-title", "Run #{0} Â· {1} Â· {2}", run.RunNumber, ToolkitLocalization.Text("map." + run.MapType, string.IsNullOrWhiteSpace(mapName)?run.MapType:mapName.Trim()), Outcome(run)) + (run.Estimated ? " · " + ToolkitLocalization.Text("graph.estimated", "Estimated") : "");
             Detail(ToolkitLocalization.Text("graph.duration", "Duration"),CalcUtils.FormatTime(run.Duration));Detail(ToolkitLocalization.Text("graph.distance", "Distance"),ItemStatisticsPresentation.Number(run.Distance));Detail(ToolkitLocalization.Text("graph.tasks", "Tasks"),ItemStatisticsPresentation.Number(run.TasksCompleted));
             Detail(ToolkitLocalization.Text("graph.resources", "Resources"),ItemStatisticsPresentation.Number(run.ResourcesCollected));Detail(ToolkitLocalization.Text("graph.bonus-resources", "Bonus resources"),ItemStatisticsPresentation.Number(run.BonusResourcesCollected));Detail(ToolkitLocalization.Text("graph.kills", "Kills"),ItemStatisticsPresentation.Number(run.EnemiesKilled));
             Detail(ToolkitLocalization.Text("graph.damage-dealt", "Damage dealt"),ItemStatisticsPresentation.Number(run.DamageDealtAsDouble));Detail(ToolkitLocalization.Text("graph.damage-taken", "Damage taken"),ItemStatisticsPresentation.Number(run.DamageTakenAsDouble));

@@ -650,6 +650,7 @@ namespace TimelessEchoes.Tasks
         {
             if (index < 0 || index >= tasks.Count) return;
             var task = tasks[index];
+            var completedByEcho = task is BaseTask claimed && claimed.ClaimedBy != null && claimed.ClaimedBy.IsEcho;
             if (task is BaseTask baseTask)
                 baseTask.TaskCompleted -= OnTaskCompleted;
             tasks.RemoveAt(index);
@@ -722,6 +723,7 @@ namespace TimelessEchoes.Tasks
                               FindAnyObjectByType<GameplayStatTracker>();
                 var data = (task as BaseTask)?.taskData;
                 var xp = (task as BaseTask)?.LastGrantedXp ?? 0f;
+                if (completedByEcho) tracker?.RecordEchoWork(false);
                 tracker?.RegisterTaskComplete(data, duration, xp);
             }
 

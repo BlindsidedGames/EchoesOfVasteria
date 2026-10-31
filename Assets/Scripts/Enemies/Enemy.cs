@@ -591,6 +591,7 @@ namespace TimelessEchoes.Enemies
                 }
             }
 
+            var killedByEcho = lastDamageFromEcho;
             lastDamageFromEcho = false;
             var tracker = EnemyKillTracker.Instance;
             if (tracker == null)
@@ -601,7 +602,10 @@ namespace TimelessEchoes.Enemies
             if (statsTracker == null)
                 Log("GameplayStatTracker missing", TELogCategory.Combat, this);
             else
+                {
+                if (killedByEcho) statsTracker.RecordEchoWork(true);
                 statsTracker.AddKill(stats);
+            }
         }
 
         private float GrantCombatExperience(SkillController controller, Skill skill, bool fromEcho)

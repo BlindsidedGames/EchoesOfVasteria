@@ -9,6 +9,7 @@ namespace Blindsided.SaveData
     public sealed class RunSaveData
     {
         public int Version = 1;
+        public long CheckpointUtcTicks;
         public string Map;
         public float Distance;
         public float HealthFraction = 1f;
@@ -25,6 +26,9 @@ namespace Blindsided.SaveData
         [Serializable]
         public sealed class Statistics
         {
+            public float ActiveSeconds, StartingDistance, EstimatedSeconds;
+            public int EchoTasks, EchoKills;
+            public double TaskRemainder, KillRemainder;
             public float Distance, Steps, Duration, ScaledDuration;
             public int Tasks, Kills;
             public double Resources, BonusResources, DamageDealt, DamageTaken;

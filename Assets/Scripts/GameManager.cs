@@ -361,6 +361,8 @@ namespace TimelessEchoes
             if (Instance != this) return;
             EventHandler.OnSaveData += SaveActiveRun;
             EventHandler.OnLoadData += LoadActiveRun;
+            EventHandler.ApplicationBackgrounded += EnterRunBackground;
+            EventHandler.ApplicationForegrounded += ExitRunBackground;
             cloudSpawner = CloudSpawner.Instance;
             foreach (var entry in generationButtons)
             {
@@ -399,6 +401,8 @@ namespace TimelessEchoes
         {
             EventHandler.OnSaveData -= SaveActiveRun;
             EventHandler.OnLoadData -= LoadActiveRun;
+            EventHandler.ApplicationBackgrounded -= EnterRunBackground;
+            EventHandler.ApplicationForegrounded -= ExitRunBackground;
             base.OnDestroy();
             if (returnToTavernButton != null)
                 returnToTavernButton.onClick.RemoveListener(OnReturnToTavernButton);
@@ -475,6 +479,7 @@ namespace TimelessEchoes
 
         private void Update()
         {
+            UpdateBackgroundPrototype();
             if (Time.time >= nextStatsUpdateTime)
             {
                 UpdateGenerationButtonStats();

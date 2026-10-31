@@ -17,7 +17,7 @@ using static Blindsided.Oracle;
 namespace TimelessEchoes.Stats
 {
     [DefaultExecutionOrder(-1)]
-    public class GameplayStatTracker : MonoBehaviour
+    public partial class GameplayStatTracker : MonoBehaviour
     {
         public static GameplayStatTracker Instance { get; private set; }
         public event Action<float> OnMaxRunDistanceChanged;
@@ -385,6 +385,7 @@ namespace TimelessEchoes.Stats
             {
                 // First sample of a run: set baseline and ensure current run distance starts here
                 lastHeroPos = position;
+                if (activeSeconds < 1 && CurrentRunDistance <= 0) runStartingDistance = position.x;
                 if (RunInProgress)
                     CurrentRunDistance = Mathf.Max(CurrentRunDistance, position.x);
             }
@@ -524,6 +525,8 @@ namespace TimelessEchoes.Stats
 
         public RunSaveData.Statistics CaptureRunState() => new()
         {
+            ActiveSeconds = activeSeconds, StartingDistance = runStartingDistance, EstimatedSeconds = estimatedSeconds,
+            EchoTasks = echoTasks, EchoKills = echoKills, TaskRemainder = taskRemainder, KillRemainder = killRemainder,
             Distance = CurrentRunDistance, Steps = CurrentRunSteps,
             Duration = CurrentRunElapsedSeconds, ScaledDuration = runScaledDuration,
             Tasks = currentRunTasks, Kills = CurrentRunKills,
@@ -542,6 +545,8 @@ namespace TimelessEchoes.Stats
             currentMapKey = config.name;
             currentRunScalingMode = scalingMode;
             RunInProgress = true;
+            activeSeconds = saved.ActiveSeconds; runStartingDistance = saved.StartingDistance; estimatedSeconds = saved.EstimatedSeconds;
+            echoTasks = saved.EchoTasks; echoKills = saved.EchoKills; taskRemainder = saved.TaskRemainder; killRemainder = saved.KillRemainder;
             CurrentRunDistance = saved.Distance;
             CurrentRunSteps = saved.Steps;
             runStartTime = Time.unscaledTime - saved.Duration;
@@ -568,6 +573,7 @@ namespace TimelessEchoes.Stats
             if (record == null || record.Distance <= 0f) return;
             recentRuns.Add(record);
             MapRunHistory.Compact(recentRuns, previousRuns);
+            if (BackgroundRunPrototype.Enabled && oracle?.saveData != null) BackgroundRunSample.Remember(oracle.saveData, record);
 
             if (record.Distance > LongestRun) LongestRun = record.Distance;
             if (ShortestRun <= 0f || record.Distance < ShortestRun) ShortestRun = record.Distance;
@@ -601,17 +607,19 @@ namespace TimelessEchoes.Stats
             }
         }
 
-        public void EndRun(bool died, bool reaped = false)
+        public void EndRun(bool died, bool reaped = false, bool estimated = false, float? durationOverride = null)
         {
             if (!RunInProgress)
                 return;
-            var duration = Time.unscaledTime - runStartTime;
+            var duration = durationOverride ?? (Time.unscaledTime - runStartTime);
             LastRunDuration = duration;
             SessionDuration += duration;
             var durationForRates = runScaledDuration > 0f ? runScaledDuration : duration;
             UpdateBestResourcePerMinute(durationForRates);
             var record = new GameData.RunRecord
             {
+                Estimated = estimated || estimatedSeconds > 0, ActiveSeconds = activeSeconds, StartingDistance = runStartingDistance,
+                EchoTasks = echoTasks, EchoKills = echoKills,
                 RunNumber = nextRunNumber,
                 MapType = currentMapKey,
                 Duration = duration,
@@ -658,6 +666,8 @@ namespace TimelessEchoes.Stats
             UpdateBestResourcePerMinute(durationForRates);
             var record = new GameData.RunRecord
             {
+                Estimated = estimatedSeconds > 0, ActiveSeconds = activeSeconds, StartingDistance = runStartingDistance,
+                EchoTasks = echoTasks, EchoKills = echoKills,
                 RunNumber = nextRunNumber,
                 MapType = currentMapKey,
                 Duration = duration,
@@ -706,6 +716,9 @@ namespace TimelessEchoes.Stats
             if (delta <= 0f) return;
 
             runScaledDuration += delta * GetNormalizedTimeScale();
+            var gm = TimelessEchoes.GameManager.Instance;
+            if (Time.timeScale > 0 && gm && !gm.HeroIsDead && !gm.RunLoadingActive &&
+                Blindsided.SaveData.StaticReferences.ActiveNpcMeetings.Count == 0) activeSeconds += delta;
         }
 
         private static float GetNormalizedTimeScale()
@@ -740,6 +753,7 @@ namespace TimelessEchoes.Stats
 
         private void ResetCurrentRun()
         {
+            activeSeconds = runStartingDistance = estimatedSeconds = 0; echoTasks = echoKills = 0; taskRemainder = killRemainder = 0;
             CurrentRunDistance = 0f;
             currentRunTasks = 0;
             currentRunResources = 0;

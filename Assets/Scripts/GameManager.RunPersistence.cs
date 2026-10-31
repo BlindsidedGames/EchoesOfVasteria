@@ -35,6 +35,7 @@ namespace TimelessEchoes
 
         private RunSaveData CaptureRun(float distance, float healthFraction) => new()
         {
+            CheckpointUtcTicks = System.DateTime.UtcNow.Ticks,
             Map = CurrentGenerationConfig.name, Distance = distance,
             HealthFraction = Mathf.Clamp01(healthFraction), Dead = heroDead,
             Reaped = runEndedByReaper, ReturnQueued = retreatQueued,
@@ -62,6 +63,8 @@ namespace TimelessEchoes
                     if (entry?.Config && entry.Config.name == saved.Map)
                     {
                         StaticReferences.ActiveNpcMeetings.Clear();
+                        if (!TrySettleBackground(saved, entry)) yield break;
+                        saved = Oracle.oracle.saveData.ActiveRun;
                         if (BeginAdventure(entry.Config, saved)) yield break;
                         break;
                     }
