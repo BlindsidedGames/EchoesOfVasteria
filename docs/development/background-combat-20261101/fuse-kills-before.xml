@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-31 21:05:24Z" end-time="2026-10-31 21:05:24Z" duration="0.0635324">
+  <test-suite type="TestSuite" id="1000" name="Echoes of Vasteria" fullname="Echoes of Vasteria" runstate="Runnable" testcasecount="482" result="Failed" site="Child" start-time="2026-10-31 21:05:24Z" end-time="2026-10-31 21:05:24Z" duration="0.063532" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1547" name="EditMode.Tests.dll" fullname="C:/Users/mattr/.codex/worktrees/release-1-5-1/EchoesOfVasteria/Library/ScriptAssemblies/EditMode.Tests.dll" runstate="Runnable" testcasecount="444" result="Failed" site="Child" start-time="2026-10-31 21:05:24Z" end-time="2026-10-31 21:05:24Z" duration="0.053259" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="61912" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1552" name="Tests" fullname="Tests" runstate="Runnable" testcasecount="416" result="Failed" site="Child" start-time="2026-10-31 21:05:24Z" end-time="2026-10-31 21:05:24Z" duration="0.049812" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1553" name="EditMode" fullname="Tests.EditMode" runstate="Runnable" testcasecount="416" result="Failed" site="Child" start-time="2026-10-31 21:05:24Z" end-time="2026-10-31 21:05:24Z" duration="0.046988" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1072" name="BackgroundRunEstimatorTests" fullname="Tests.EditMode.BackgroundRunEstimatorTests" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" testcasecount="35" result="Failed" site="Child" start-time="2026-10-31 21:05:24Z" end-time="2026-10-31 21:05:24Z" duration="0.038939" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="1101" name="BombschroomOnlyGrantsKillsWhenDefeatedBeforeTheFuse" fullname="Tests.EditMode.BackgroundRunEstimatorTests.BombschroomOnlyGrantsKillsWhenDefeatedBeforeTheFuse" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-31 21:05:24Z" end-time="2026-10-31 21:05:24Z" duration="0.033628" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1099" name="BombschroomOnlyGrantsKillsWhenDefeatedBeforeTheFuse(100,0,6)" fullname="Tests.EditMode.BackgroundRunEstimatorTests.BombschroomOnlyGrantsKillsWhenDefeatedBeforeTheFuse(100,0,6)" methodname="BombschroomOnlyGrantsKillsWhenDefeatedBeforeTheFuse" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="1611162259" result="Passed" start-time="2026-10-31 21:05:24Z" end-time="2026-10-31 21:05:24Z" duration="0.018987" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1100" name="BombschroomOnlyGrantsKillsWhenDefeatedBeforeTheFuse(10,15,0)" fullname="Tests.EditMode.BackgroundRunEstimatorTests.BombschroomOnlyGrantsKillsWhenDefeatedBeforeTheFuse(10,15,0)" methodname="BombschroomOnlyGrantsKillsWhenDefeatedBeforeTheFuse" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="170115837" result="Failed" start-time="2026-10-31 21:05:24Z" end-time="2026-10-31 21:05:24Z" duration="0.004290" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: 0
+  But was:  6
+]]></message>
+                  <stack-trace><![CDATA[at Tests.EditMode.BackgroundRunEstimatorTests.BombschroomOnlyGrantsKillsWhenDefeatedBeforeTheFuse (System.Single damage, System.Double expected, System.Int32 kills) [0x000e2] in C:\Users\mattr\.codex\worktrees\release-1-5-1\EchoesOfVasteria\Assets\Tests\EditMode\BackgroundRunEstimatorTests.cs:252
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Saving results to: C:/Users/mattr/AppData/LocalLow/Blindsided Games/Echoes of Vasteria\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

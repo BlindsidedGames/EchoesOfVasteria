@@ -53,9 +53,9 @@ namespace TimelessEchoes.Stats
 
         public readonly struct CombatRates
         {
-            public readonly double DamagePerEncounter, Regen;
-            public CombatRates(double damagePerEncounter, double regen)
-            { DamagePerEncounter = damagePerEncounter; Regen = regen; }
+            public readonly double DamagePerEncounter, Regen, KillFraction;
+            public CombatRates(double damagePerEncounter, double regen, double killFraction = 1)
+            { DamagePerEncounter = damagePerEncounter; Regen = regen; KillFraction = killFraction; }
         }
 
         public sealed class Step
@@ -140,7 +140,8 @@ namespace TimelessEchoes.Stats
                 if (netDamage > 0) dt = Math.Min(dt, health / netDamage);
                 var step = new Step { Seconds = dt, Distance = result.Distance + speed * dt, DamageTaken = incoming * dt,
                     Cap = input.DistanceReaping ? cap : 0 };
-                result.TaskRemainder += taskRate * dt; result.KillRemainder += killRate * dt;
+                result.TaskRemainder += taskRate * dt;
+                result.KillRemainder += killRate * Math.Clamp(combat.KillFraction, 0, 1) * dt;
                 step.Tasks = (int)Math.Floor(result.TaskRemainder); step.Kills = (int)Math.Floor(result.KillRemainder);
                 result.TaskRemainder -= step.Tasks; result.KillRemainder -= step.Kills;
                 result.Tasks += step.Tasks; result.Kills += step.Kills; runKills += step.Kills;

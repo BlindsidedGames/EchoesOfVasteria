@@ -131,13 +131,14 @@ namespace TimelessEchoes
                     runResourceTracker?.RestoreRunState(run.Loot);
                     var oldRandom = UnityEngine.Random.state;
                     UnityEngine.Random.InitState(unchecked((int)run.CheckpointUtcTicks));
-                    double elapsed = 0;
+                    double elapsed = 0, runSeconds = 0;
+                    var firstRun = true;
                     try
                     {
                         foreach (var step in forecast.Steps)
                         {
-                            statTracker.AdvanceEstimatedRun(step); elapsed += step.Seconds;
-                            content.Award(step, elapsed);
+                            statTracker.AdvanceEstimatedRun(step); elapsed += step.Seconds; runSeconds += step.Seconds;
+                            content.Award(step, elapsed, runSeconds, firstRun);
                             if (!step.EndsRun) continue;
                             content.EndRun();
                             if (step.Reaped)
@@ -150,6 +151,7 @@ namespace TimelessEchoes
                             if (!restarts) continue;
                             statTracker.EndRun(true, step.Reaped, true);
                             statTracker.BeginRun(entry.Config, entry.ScalingMode);
+                            runSeconds = 0; firstRun = false;
                             statTracker.RecordHeroPosition(new Vector3((float)input.StartingDistance, 0, 0));
                             elapsed += step.RestartSeconds;
                         }

@@ -21,7 +21,7 @@ namespace TimelessEchoes
 
         // Expected exposure across encounters, not a simulation of projectile paths or positioning.
         // Echoes add attacks and share the target load; only their share transfers half damage.
-        public static double ExpectedEncounterDamage(Hero.HeroStatsSnapshot hero, Enemies.EnemyData enemy,
+        public static (double damage, bool defeated) ExpectedEncounter(Hero.HeroStatsSnapshot hero, Enemies.EnemyData enemy,
             int level, double combatEchoes, float killMultiplier = 1f)
         {
             var echoes = System.Math.Max(0, combatEchoes);
@@ -31,8 +31,8 @@ namespace TimelessEchoes
             var transferred = 1 - .5 * echoes / (1 + echoes);
             var damage = ApplyDefense(enemy.GetDamageForLevel(level), hero.defense) * transferred;
             var fuse = enemy.prefab ? enemy.prefab.GetComponent<Enemies.BombschroomFuse>() : null;
-            if (fuse) return exposure >= fuse.FuseDuration ? damage * fuse.BlastDamageMultiplier : 0;
-            return exposure * System.Math.Max(0, enemy.attackSpeed) * damage;
+            if (fuse) return exposure >= fuse.FuseDuration ? (damage * fuse.BlastDamageMultiplier, false) : (0, true);
+            return (exposure * System.Math.Max(0, enemy.attackSpeed) * damage, dps > 0);
         }
 
         public static float ApplyDefense(float incomingDamage, float defense)

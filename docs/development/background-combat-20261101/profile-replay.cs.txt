@@ -51,7 +51,7 @@ public static class BackgroundCombatReplay
                         if (!data.TryGetValue(enemy.name, out var observed) || distance < (double)observed["minX"] || distance > (double)observed["maxX"]) continue;
                         var w = (double)observed["weight"];
                         var level = enemy.GetLevel((float)distance - map.taskGeneratorSettings.enemySpawnXOffset - enemy.minX);
-                        damage += w * Combat.ExpectedEncounterDamage(hero, enemy, level, 0, bonuses[enemy.name]); weight += w;
+                        damage += w * Combat.ExpectedEncounter(hero, enemy, level, 0, bonuses[enemy.name]).damage; weight += w;
                     }
                     return new(weight > 0 ? damage / weight : 0, hero.healthRegenPerSecond);
                 }

@@ -117,7 +117,7 @@ namespace TimelessEchoes.Stats
             }
         }
 
-        public BackgroundRunEstimator.CombatRates CombatRates(double distance, int kills, double seconds, bool firstRun)
+        private (HeroStatsSnapshot stats, int echoes) CombatProfile(double distance, double seconds, bool firstRun)
         {
             var stats = hero;
             float Value(BuffEffectType type) => combatBuffs.Where(b => b.Active(seconds, distance, firstRun))
@@ -129,18 +129,33 @@ namespace TimelessEchoes.Stats
             stats.critDamagePercent += Math.Max(0, Value(BuffEffectType.CritDamagePercent));
             stats.healthRegenPerSecond *= 1 + Math.Max(0, Value(BuffEffectType.HealthRegenPercent)) / 100;
             var echoes = combatBuffs.Where(b => b.Active(seconds, distance, firstRun)).Sum(b => b.Echoes);
-            double total = 0, damage = 0;
+            return (stats, echoes);
+        }
+
+        private (double damage, bool defeated) Encounter(TimelessEchoes.Enemies.EnemyData enemy,
+            double distance, int kills, (HeroStatsSnapshot stats, int echoes) profile)
+        {
+            var level = enemy.GetLevel((float)distance - map.taskGeneratorSettings.enemySpawnXOffset - enemy.minX);
+            if (killScaling && killsPerLevel > 0) level += kills / killsPerLevel * levelsPerTier;
+            var killBonus = EnemyKillTracker.Instance ? EnemyKillTracker.Instance.GetDamageMultiplier(enemy) : 1;
+            return Combat.ExpectedEncounter(profile.stats, enemy, level, profile.echoes, killBonus);
+        }
+
+        public BackgroundRunEstimator.CombatRates CombatRates(double distance, int kills, double seconds, bool firstRun)
+        {
+            var profile = CombatProfile(distance, seconds, firstRun);
+            double total = 0, damage = 0, defeated = 0;
             foreach (var enemy in map.taskGeneratorSettings.enemies)
             {
                 var weight = EnemyWeight(enemy, (float)distance);
                 if (weight <= 0) continue;
-                var level = enemy.GetLevel((float)distance - map.taskGeneratorSettings.enemySpawnXOffset - enemy.minX);
-                if (killScaling && killsPerLevel > 0) level += kills / killsPerLevel * levelsPerTier;
-                var killBonus = EnemyKillTracker.Instance ? EnemyKillTracker.Instance.GetDamageMultiplier(enemy) : 1;
-                damage += weight * Combat.ExpectedEncounterDamage(stats, enemy, level, echoes, killBonus);
+                var encounter = Encounter(enemy, distance, kills, profile);
+                damage += weight * encounter.damage;
+                if (encounter.defeated) defeated += weight;
                 total += weight;
             }
-            return new BackgroundRunEstimator.CombatRates(total > 0 ? damage / total : 0, stats.healthRegenPerSecond);
+            return new BackgroundRunEstimator.CombatRates(total > 0 ? damage / total : 0,
+                profile.stats.healthRegenPerSecond, total > 0 ? defeated / total : 0);
         }
 
         private float EnemyWeight(TimelessEchoes.Enemies.EnemyData enemy, float x)
@@ -176,9 +191,10 @@ namespace TimelessEchoes.Stats
             return candidates.LastOrDefault();
         }
 
-        public void Award(BackgroundRunEstimator.Step step, double elapsed)
+        public void Award(BackgroundRunEstimator.Step step, double elapsed, double runSeconds, bool firstRun)
         {
             var tracker = GameplayStatTracker.Instance;
+            var combat = CombatProfile(step.Distance, runSeconds, firstRun);
             for (var i = 0; i < step.Tasks; i++)
             {
                 var category = Choose(categories, c => CategoryWeight(c, (float)step.Distance));
@@ -193,7 +209,11 @@ namespace TimelessEchoes.Stats
             }
             for (var i = 0; i < step.Kills; i++)
             {
-                var enemy = Choose(map.taskGeneratorSettings.enemies, e => EnemyWeight(e, (float)step.Distance));
+                var enemy = Choose(map.taskGeneratorSettings.enemies, e =>
+                {
+                    var weight = EnemyWeight(e, (float)step.Distance);
+                    return weight > 0 && Encounter(e, step.Distance, tracker.CurrentRunKills, combat).defeated ? weight : 0;
+                });
                 if (!enemy) continue;
                 Experience(skills ? skills.CombatSkill : null, enemy.experience, echoKillShare, elapsed, step.Distance, false);
                 Drops(enemy.resourceDrops, enemy.additionalLootChances, skills ? skills.CombatSkill : null, elapsed, step.Distance);

@@ -20,7 +20,7 @@ namespace Tests.EditMode
         {
             Run = new RunSaveData { Map = "River" }, Seconds = seconds, BaseCap = 50,
             Samples = new[] { new BackgroundRunSample { Seconds = 100, Distance = 100, EndDistance = 100, Tasks = 20, Kills = 10 } },
-            MaxHealth = 100, RestartSeconds = 0, Combat = (_, _, _, _) => default
+            MaxHealth = 100, RestartSeconds = 0, Combat = (_, _, _, _) => new(0, 0)
         };
 
         [Test]
@@ -147,7 +147,7 @@ namespace Tests.EditMode
                 enemy.maxHealth = 100; enemy.damage = 10; enemy.attackSpeed = 1;
                 var hero = new HeroStatsSnapshot { damage = 10, attacksPerSecond = attacksPerSecond,
                     defense = defense, critChancePercent = critChance, critDamagePercent = 100 };
-                Assert.That(TimelessEchoes.Combat.ExpectedEncounterDamage(hero, enemy, 1, echoes),
+                Assert.That(TimelessEchoes.Combat.ExpectedEncounter(hero, enemy, 1, echoes).damage,
                     Is.EqualTo(expected).Within(.0001));
             }
             finally { Object.DestroyImmediate(enemy); }
@@ -163,7 +163,7 @@ namespace Tests.EditMode
                 enemy.maxHealth = 100; enemy.healthPerLevel = 100;
                 enemy.damage = 10; enemy.damagePerLevel = 10; enemy.attackSpeed = 1;
                 var hero = new HeroStatsSnapshot { damage = 10, attacksPerSecond = 2 };
-                Assert.That(TimelessEchoes.Combat.ExpectedEncounterDamage(hero, enemy, level, 0),
+                Assert.That(TimelessEchoes.Combat.ExpectedEncounter(hero, enemy, level, 0).damage,
                     Is.EqualTo(expected).Within(.0001));
             }
             finally { Object.DestroyImmediate(enemy); }
@@ -179,8 +179,8 @@ namespace Tests.EditMode
                 enemy.damage = 1; enemy.damagePerLevel = .5f; enemy.attackSpeed = 1; enemy.distancePerLevel = 10;
                 var hero = new HeroStatsSnapshot { damage = 10, attacksPerSecond = 2 };
                 var input = Input(600); input.BaseCap = 500;
-                input.Combat = (distance, _, _, _) => new(TimelessEchoes.Combat.ExpectedEncounterDamage(
-                    hero, enemy, enemy.GetLevel((float)distance), 0), 0);
+                input.Combat = (distance, _, _, _) => new(TimelessEchoes.Combat.ExpectedEncounter(
+                    hero, enemy, enemy.GetLevel((float)distance), 0).damage, 0);
                 var weak = BackgroundRunEstimator.Forecast(input);
                 Assert.That(weak.Deaths, Is.GreaterThan(0));
                 Assert.That(weak.Reaps, Is.Zero);
@@ -234,9 +234,9 @@ namespace Tests.EditMode
             finally { Object.DestroyImmediate(prefab); Object.DestroyImmediate(enemy); Object.DestroyImmediate(terrain); Object.DestroyImmediate(map); }
         }
 
-        [TestCase(100, 0)]
-        [TestCase(10, 15)]
-        public void BombschroomOnlyDealsItsBlastWhenItSurvivesTheFuse(float damage, double expected)
+        [TestCase(100, 0, 6)]
+        [TestCase(10, 15, 0)]
+        public void BombschroomOnlyGrantsKillsWhenDefeatedBeforeTheFuse(float damage, double expected, int kills)
         {
             var enemy = ScriptableObject.CreateInstance<EnemyData>();
             var prefab = new GameObject("Forecast Bombschroom");
@@ -245,8 +245,11 @@ namespace Tests.EditMode
                 prefab.AddComponent<BombschroomFuse>(); enemy.prefab = prefab;
                 enemy.maxHealth = 100; enemy.damage = 10; enemy.attackSpeed = 0;
                 var hero = new HeroStatsSnapshot { damage = damage, attacksPerSecond = 2 };
-                Assert.That(TimelessEchoes.Combat.ExpectedEncounterDamage(hero, enemy, 1, 0),
-                    Is.EqualTo(expected).Within(.0001));
+                var encounter = TimelessEchoes.Combat.ExpectedEncounter(hero, enemy, 1, 0);
+                Assert.That(encounter.damage, Is.EqualTo(expected).Within(.0001));
+                var input = Input(60); input.BaseCap = 1000;
+                input.Combat = (_, _, _, _) => new(encounter.damage, 0, encounter.defeated ? 1 : 0);
+                Assert.That(BackgroundRunEstimator.Forecast(input).Kills, Is.EqualTo(kills));
             }
             finally { Object.DestroyImmediate(prefab); Object.DestroyImmediate(enemy); }
         }
