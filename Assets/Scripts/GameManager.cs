@@ -363,7 +363,8 @@ namespace TimelessEchoes
             EventHandler.OnLoadData += LoadActiveRun;
             EventHandler.ApplicationBackgrounded += EnterRunBackground;
             EventHandler.ApplicationForegrounded += ExitRunBackground;
-            EventHandler.ApplicationBackgrounded += PublishWatchCompanionSnapshot;
+            EventHandler.ApplicationBackgrounded += WatchPhoneBackgrounded;
+            EventHandler.ApplicationForegrounded += WatchPhoneForegrounded;
             cloudSpawner = CloudSpawner.Instance;
             foreach (var entry in generationButtons)
             {
@@ -404,7 +405,8 @@ namespace TimelessEchoes
             EventHandler.OnLoadData -= LoadActiveRun;
             EventHandler.ApplicationBackgrounded -= EnterRunBackground;
             EventHandler.ApplicationForegrounded -= ExitRunBackground;
-            EventHandler.ApplicationBackgrounded -= PublishWatchCompanionSnapshot;
+            EventHandler.ApplicationBackgrounded -= WatchPhoneBackgrounded;
+            EventHandler.ApplicationForegrounded -= WatchPhoneForegrounded;
             base.OnDestroy();
             if (returnToTavernButton != null)
                 returnToTavernButton.onClick.RemoveListener(OnReturnToTavernButton);
