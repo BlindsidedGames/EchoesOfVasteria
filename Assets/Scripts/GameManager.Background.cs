@@ -143,9 +143,9 @@ namespace TimelessEchoes
                     finally { UnityEngine.Random.state = oldRandom; }
                     statTracker.SetEstimatedRemainders(forecast);
                     var last = forecast.Steps.LastOrDefault();
-                    var dead = last != null && last.EndsRun && ((last.Reaped && input.StopOnFirstReap) || last.RestartSeconds + .00001 < input.RestartSeconds);
+                    var dead = last == null ? run.Dead : last.EndsRun && ((last.Reaped && input.StopOnFirstReap) || last.RestartSeconds + .00001 < input.RestartSeconds);
                     run.Distance = (float)forecast.Distance; run.HealthFraction = dead ? 0 : (float)forecast.HealthFraction;
-                    run.Dead = dead; run.Reaped = dead && last.Reaped;
+                    run.Dead = dead; run.Reaped = dead && (last == null ? run.Reaped : last.Reaped);
                     run.Stats = statTracker.CaptureRunState();
                     run.Loot = runResourceTracker ? runResourceTracker.CaptureRunState() : run.Loot;
                     if (forecast.Reaps + forecast.Deaths > 0) run.Buffs = null;
