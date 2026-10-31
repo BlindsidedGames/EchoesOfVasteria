@@ -207,11 +207,12 @@ private struct RefreshAction: View {
         if context.state.canRefresh && !context.isStale {
             if #available(iOS 17.0, *) {
                 Button(intent: EOVRefreshIntent(activityID: context.activityID, sourceID: context.state.sourceID)) {
-                    Image(systemName: "arrow.clockwise").font(.system(size: 16, weight: .semibold))
-                        .frame(width: 30, height: 30)
+                    Image(systemName: "arrow.clockwise").font(.system(size: compact ? 16 : 18, weight: .semibold))
+                        .frame(width: compact ? 32 : 36, height: compact ? 32 : 36)
                         .background(.white.opacity(0.05), in: RoundedRectangle(cornerRadius: 8))
                         .overlay(RoundedRectangle(cornerRadius: 8).stroke(.white.opacity(0.12)))
-                        .frame(minWidth: compact ? 32 : 44, minHeight: 44)
+                        .frame(width: compact ? 44 : 48, height: compact ? 44 : 48)
+                        .contentShape(Rectangle())
                 }.buttonStyle(.plain).tint(Color(red: 0.94, green: 0.75, blue: 0.42))
                     .accessibilityLabel("Refresh outing estimate")
             } else { Text("Open Echoes to refresh").font(.caption2).foregroundStyle(.secondary) }

@@ -179,8 +179,9 @@ struct EOVWatchRing: View {
         let color = active ? EOVWatchPalette.gold : EOVWatchPalette.muted
         ZStack {
             if let fraction {
-                Circle().stroke(color.opacity(0.16), lineWidth: 7)
-                if fraction > 0 { Circle().trim(from: 0, to: min(1, fraction)).stroke(color, style: StrokeStyle(lineWidth: 7, lineCap: .round)).rotationEffect(.degrees(-90)) }
+                // Keep the entire stroke inside the dial's frame and scroll viewport.
+                Circle().strokeBorder(color.opacity(0.16), lineWidth: 7)
+                if fraction > 0 { Circle().inset(by: 3.5).trim(from: 0, to: min(1, fraction)).stroke(color, style: StrokeStyle(lineWidth: 7, lineCap: .round)).rotationEffect(.degrees(-90)) }
             } else { RoundedRectangle(cornerRadius: 18).stroke(EOVWatchPalette.muted.opacity(0.2), lineWidth: 1) }
         }
     }
