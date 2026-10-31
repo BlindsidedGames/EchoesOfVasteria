@@ -1,5 +1,8 @@
 using System;
 using System.Linq;
+using System.Text;
+using TimelessEchoes.Buffs;
+using TimelessEchoes.MapGeneration;
 using Blindsided;
 using Newtonsoft.Json;
 using TimelessEchoes.Hero;
@@ -48,10 +51,15 @@ namespace TimelessEchoes
             var map = CurrentGenerationConfig ? CurrentGenerationConfig.name : data.ActiveRun?.Map;
             var runStats = mode == "run" && tracker && tracker.RunInProgress ? tracker.CaptureRunState() : null;
             var health = hero ? hero.GetComponent<HeroHealth>() : null;
+            var buff = BuffManager.Instance;
+            var cap = tracker ? RunDistanceRules.EffectiveCap(tracker.MaxRunDistance,
+                buff ? buff.MaxDistanceMultiplier : 1, buff ? buff.MaxDistanceFlatBonus : 0) : 0;
+            if (oracle.demo) cap = Math.Min(cap, 300);
             var run = runStats == null || string.IsNullOrEmpty(map) ? null : new
             {
                 mapId = WatchText(map, 80), mapTitle = WatchMapTitle(map),
-                distance = WatchNumber(runStats.Distance), cap = WatchNumber(tracker.MaxRunDistance),
+                distance = WatchNumber(runStats.Distance), cap = WatchNumber(cap),
+                distanceReaping = !IsKillScalingMode,
                 healthFraction = Math.Clamp(WatchNumber(health && health.MaxHealth > 0
                     ? health.CurrentHealth / health.MaxHealth : data.ActiveRun?.HealthFraction ?? 1), 0, 1),
                 dead = heroDead, reaped = runEndedByReaper,
@@ -75,12 +83,17 @@ namespace TimelessEchoes
                     result = r.Reaped ? "reaped" : r.Died ? "died" : r.Abandoned ? "abandoned" : "completed",
                     estimated = r.Estimated
                 }).ToArray();
-            return JsonConvert.SerializeObject(new
+            var timeline = run == null ? null : WatchCompanionPrototype.GetTimeline(map, data);
+            string Serialize() => JsonConvert.SerializeObject(new
             {
                 schemaVersion = 1, generatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), demo = BackgroundRunPrototype.Demo,
                 state = mode, backgroundProgressEnabled = BackgroundRunPrototype.Enabled, run,
-                forecast = run == null ? null : WatchCompanionPrototype.GetForecast(map, data), skills, recentRuns = history
+                forecast = run == null ? null : WatchCompanionPrototype.GetForecast(map, data), timeline, skills, recentRuns = history
             });
+            var json = Serialize();
+            while (Encoding.UTF8.GetByteCount(json) > 32768 && timeline != null)
+            { timeline = timeline.LimitedTo(timeline.frames.Count / 2); json = Serialize(); }
+            return Encoding.UTF8.GetByteCount(json) <= 32768 ? json : null;
         }
 
         private static string WatchMapTitle(string map)

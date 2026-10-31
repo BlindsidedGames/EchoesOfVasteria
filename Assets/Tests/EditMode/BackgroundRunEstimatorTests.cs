@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Text;
+using Newtonsoft.Json;
 using Blindsided.SaveData;
 using NUnit.Framework;
 using TimelessEchoes.Stats;
@@ -114,5 +116,62 @@ namespace Tests.EditMode
             Assert.That(data.BackgroundSamples["River"].First().Distance, Is.EqualTo(3));
             Assert.That(data.BackgroundSamples["River"].Last().Distance, Is.EqualTo(12));
         }
+        [Test]
+        public void WatchTimelinePreservesReapResetPauseAndWindowScopedResources()
+        {
+            var input = Input(30); input.Run.Distance = 8; input.BaseCap = 10;
+            input.StartingDistance = 2; input.RestartSeconds = 5;
+            input.Run.Stats.Resources = 777;
+            input.Samples = new[] { new BackgroundRunSample { Seconds = 100, Distance = 100,
+                EndDistance = 100, Tasks = 100, Kills = 50 } };
+            var forecast = BackgroundRunEstimator.Forecast(input);
+            var timeline = WatchForecastTimeline.Create(input, forecast, 2, 3);
+            Assert.That(timeline.frames[0][3], Is.Zero, "Gain scope begins at forecast origin, not current-run total.");
+            var atReap = timeline.frames.Last(f => f[0] == 2);
+            Assert.That(atReap, Is.EqualTo(new[] { 2d, 0, 10.1, 7, 1, 1 }));
+            var atRestart = timeline.frames.Last(f => f[0] == 7);
+            Assert.That(atRestart, Is.EqualTo(new[] { 7d, 2, 10.1, 7, 1, 0 }));
+            Assert.That(timeline.frames.Last()[3], Is.EqualTo(forecast.Tasks * 2 + forecast.Kills * 3));
+            Assert.That(input.Run.Distance, Is.EqualTo(8));
+            Assert.That(input.Run.Stats.Resources, Is.EqualTo(777));
+            var replaced = WatchForecastTimeline.Create(input, forecast, 2, 3);
+            Assert.That(replaced.frames[0][3], Is.Zero, "A replacement forecast must not add the old projection.");
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void WatchTimelineRecordsEffectiveCapAndStopsWithoutInventingRestart(bool firstReap)
+        {
+            var input = Input(1); input.Run.Distance = 99;
+            input.CapModifiers = (_, _) => (2, 0); input.StopOnFirstReap = firstReap;
+            input.RestartSeconds = 5;
+            var forecast = BackgroundRunEstimator.Forecast(input);
+            var timeline = WatchForecastTimeline.Create(input, forecast, 2, 3);
+            Assert.That(timeline.frames[0][2], Is.EqualTo(100));
+            Assert.That(timeline.horizonSeconds, Is.EqualTo(1));
+            var end = timeline.frames.Last();
+            Assert.That(end[1], Is.Zero); Assert.That(end[2], Is.EqualTo(51));
+            Assert.That(end[4], Is.EqualTo(1));
+            Assert.That(end[5], Is.EqualTo(firstReap ? 2 : 1));
+        }
+
+        [Test]
+        public void WatchTimelineBoundsCapChangesAndSerializesHollowWithoutInfinity()
+        {
+            var input = Input(900); input.BaseCap = 10000;
+            input.CapModifiers = (seconds, _) => (1, seconds);
+            var forecast = BackgroundRunEstimator.Forecast(input);
+            var bounded = WatchForecastTimeline.Create(input, forecast, 2, 3);
+            Assert.That(bounded.frames.Count, Is.LessThanOrEqualTo(WatchForecastTimeline.MaxFrames));
+            Assert.IsTrue(bounded.truncated);
+            Assert.That(bounded.horizonSeconds, Is.LessThan(forecast.Seconds));
+            Assert.That(Encoding.UTF8.GetByteCount(JsonConvert.SerializeObject(bounded)), Is.LessThan(24000));
+            input.DistanceReaping = false;
+            var hollow = WatchForecastTimeline.Create(input, BackgroundRunEstimator.Forecast(input), 2, 3);
+            Assert.IsFalse(hollow.distanceReaping);
+            Assert.That(hollow.frames.All(f => f[2] == 0 && f.All(double.IsFinite)), Is.True);
+            Assert.That(hollow.frames.Last()[4], Is.Zero);
+        }
+
     }
 }

@@ -126,10 +126,11 @@ private struct CurrentRunScreen: View {
             ScrollView {
                 VStack(spacing: 14) {
                     CurrentRunRadial(snapshot: store.snapshot,
-                        diameter: max(80, min(geometry.size.width - 16, geometry.size.height + 16)))
+                        diameter: max(80, min(geometry.size.width - 16, geometry.size.height)))
                         .frame(width: geometry.size.width, height: geometry.size.height + 18)
                     VStack(spacing: 10) {
                         if let s = store.snapshot, let run = s.run, s.state == "run" {
+                            Text("Phone snapshot").font(.caption2).foregroundStyle(.secondary)
                             DataRow(name: "Distance", value: metres(run.distance) + " / " + metres(run.cap))
                             DataRow(name: "Health", value: Int((run.healthFraction * 100).rounded()).formatted() + "%")
                             DataRow(name: "Time", value: duration(run.durationSeconds))
@@ -152,99 +153,90 @@ private struct CurrentRunRadial: View {
     let snapshot: EOVWatchSnapshot?
     let diameter: CGFloat
     var body: some View {
-        if let s = snapshot {
-            if s.state == "run", let run = s.run {
-                if !run.dead, !run.reaped, s.backgroundProgressEnabled,
-                   let f = s.forecast, f.mapId == run.mapId, f.status == "forecast" {
-                    CompanionForecast(forecast: f, diameter: diameter, demo: s.demo)
-                } else {
-                    RadialRunFace(diameter: diameter, mapTitle: run.mapTitle,
-                        headline: run.reaped ? "Reaped" : run.dead ? "Died" : metres(run.distance),
-                        caption: run.dead || run.reaped ? metres(run.distance) : "Awaiting forecast",
-                        timeRange: nil, reaps: nil, demo: s.demo)
-                }
+        // UI sampling only. The phone estimator already supplied every run boundary.
+        TimelineView(.periodic(from: .now, by: 1)) { context in
+            face(at: context.date.timeIntervalSince1970)
+        }
+    }
+    @ViewBuilder private func face(at unix: Double) -> some View {
+        if let s = snapshot, s.state == "run", let run = s.run {
+            if !run.dead, !run.reaped, s.backgroundProgressEnabled,
+               let timeline = s.timeline, timeline.mapId == run.mapId {
+                let sample = timeline.sample(at: unix)
+                DistanceResourceFace(diameter: diameter, mapTitle: run.mapTitle,
+                    resources: sample.resources, estimated: true, distance: sample.distance, cap: sample.cap,
+                    distanceReaping: timeline.distanceReaping, reaps: timeline.distanceReaping ? sample.reaps : nil,
+                    inactive: sample.expired || sample.phase == 2,
+                    status: sample.expired ? "Estimate ended" : sample.phase == 1 ? "Restarting" :
+                        sample.phase == 2 ? "Return to iPhone" : timeline.truncated ? "Short forecast" : "This forecast",
+                    demo: s.demo)
             } else {
-                RadialRunFace(diameter: diameter, mapTitle: "Echoes",
-                    headline: s.state == "town" ? "In town" : s.state == "loading" ? "Loading" : "No run",
-                    caption: s.state == "loading" ? "On iPhone" : "No active run",
-                    timeRange: nil, reaps: nil, demo: s.demo)
+                DistanceResourceFace(diameter: diameter, mapTitle: run.mapTitle,
+                    resources: run.resources, estimated: false, distance: run.distance, cap: run.cap,
+                    distanceReaping: run.distanceReaping, reaps: nil, inactive: run.dead || run.reaped,
+                    status: run.reaped ? "Reaped" : run.dead ? "Died" : "Phone snapshot", demo: s.demo)
             }
         } else {
-            RadialRunFace(diameter: diameter, mapTitle: "Echoes", headline: "Open iPhone",
-                caption: "Waiting for data", timeRange: nil, reaps: nil, demo: false)
+            DistanceResourceFace(diameter: diameter, mapTitle: "Echoes", resources: nil,
+                estimated: false, distance: nil, cap: nil, distanceReaping: nil, reaps: nil, inactive: true,
+                status: snapshot?.state == "town" ? "In town" : snapshot?.state == "loading" ? "Loading on iPhone" : "Open Echoes on iPhone",
+                demo: snapshot?.demo ?? false)
         }
     }
 }
 
-private struct CompanionForecast: View {
-    let forecast: EOVWatchSnapshot.Forecast
-    let diameter: CGFloat
-    let demo: Bool
-    @Environment(\.scenePhase) private var scenePhase
-    @State private var expired = false
-    private var ended: Bool { expired || forecast.forecastEnd <= Date().timeIntervalSince1970 }
-    var body: some View {
-        RadialRunFace(diameter: diameter, mapTitle: forecast.mapTitle,
-            headline: "Est. " + metres(forecast.projectedDistance),
-            caption: ended ? "Forecast ended" : nil,
-            timeRange: ended ? nil : forecast.timeRange, reaps: forecast.projectedReaps, demo: demo)
-            .task(id: forecast.forecastEnd) {
-                let remaining = forecast.forecastEnd - Date().timeIntervalSince1970
-                expired = remaining <= 0
-                guard remaining > 0 else { return }
-                do { try await Task.sleep(for: .seconds(remaining)) } catch { return }
-                guard !Task.isCancelled else { return }
-                expired = true
-            }
-            .onChange(of: scenePhase) { _, phase in
-                if phase == .active { expired = forecast.forecastEnd <= Date().timeIntervalSince1970 }
-            }
-    }
-}
-
-private struct RadialRunFace: View {
+private struct DistanceResourceFace: View {
     let diameter: CGFloat
     let mapTitle: String
-    let headline: String
-    let caption: String?
-    let timeRange: ClosedRange<Date>?
+    let resources: Double?
+    let estimated: Bool
+    let distance: Double?
+    let cap: Double?
+    let distanceReaping: Bool?
     let reaps: Int?
+    let inactive: Bool
+    let status: String
     let demo: Bool
     @Environment(\.isLuminanceReduced) private var reducedLuminance
-    @ScaledMetric(relativeTo: .headline) private var headlineSize = 21
+    @ScaledMetric(relativeTo: .headline) private var headlineSize = 27
     private var accent: Color { Color(red: 0.94, green: 0.75, blue: 0.42).opacity(reducedLuminance ? 0.65 : 1) }
+    private var fraction: Double? {
+        guard distanceReaping == true, let distance, let cap, cap > 0 else { return nil }
+        return min(1, max(0, distance / cap))
+    }
     var body: some View {
-        ZStack {
-            if let timeRange {
-                ProgressView(timerInterval: timeRange, countsDown: false) { EmptyView() }
-                    currentValueLabel: { EmptyView() }
-                    .progressViewStyle(.circular).labelsHidden().tint(accent)
-                    .frame(width: 44, height: 44).scaleEffect(diameter / 44)
-            } else {
-                Circle().stroke(.secondary.opacity(0.3), lineWidth: diameter * 0.055)
-            }
-            VStack(spacing: 3) {
-                Image("EOVCarl").resizable().interpolation(.none).scaledToFit()
-                    .frame(width: diameter * 0.14, height: diameter * 0.14).accessibilityHidden(true)
-                Text(mapTitle).font(.system(size: min(13, diameter * 0.08), weight: .semibold))
-                    .lineLimit(1).minimumScaleFactor(0.65)
-                Text(headline).font(.system(size: min(headlineSize, diameter * 0.14), weight: .bold, design: .rounded))
-                    .lineLimit(1).minimumScaleFactor(0.65)
-                if let timeRange {
-                    Text(timerInterval: timeRange, countsDown: true)
-                        .font(.system(size: diameter * 0.095, weight: .medium, design: .monospaced))
-                        .lineLimit(1).minimumScaleFactor(0.7)
-                } else if let caption {
-                    Text(caption).font(.system(size: min(12, diameter * 0.075)))
-                        .foregroundStyle(.secondary).lineLimit(1).minimumScaleFactor(0.65)
+        VStack(spacing: 6) {
+            ZStack {
+                Circle().stroke((inactive || fraction == nil ? Color.secondary : accent).opacity(0.25), lineWidth: diameter * 0.085)
+                if !inactive, let fraction, fraction > 0 {
+                    Circle().trim(from: 0, to: fraction)
+                        .stroke(accent, style: StrokeStyle(lineWidth: diameter * 0.085, lineCap: .round))
+                        .rotationEffect(.degrees(-90))
                 }
-                if let reaps { Text("\(reaps) " + (reaps == 1 ? "reap" : "reaps")).font(.system(size: diameter * 0.065)).foregroundStyle(.secondary) }
-                if demo { Text("Demo").font(.system(size: 9)).foregroundStyle(.secondary) }
-            }
-            .frame(width: diameter * 0.7)
-            .foregroundStyle(timeRange == nil ? .secondary : .primary)
+                VStack(spacing: 2) {
+                    Image("EOVCarl").resizable().interpolation(.none).scaledToFit()
+                        .frame(width: diameter * 0.13, height: diameter * 0.13).accessibilityHidden(true)
+                    Text(mapTitle).font(.system(size: min(13, diameter * 0.08), weight: .semibold))
+                        .lineLimit(1).minimumScaleFactor(0.65)
+                    if let resources {
+                        Text(estimated ? "Est. resources" : "Actual resources")
+                            .font(.system(size: 10)).foregroundStyle(.secondary)
+                        Text(amount(resources)).font(.system(size: min(headlineSize, diameter * 0.19), weight: .bold, design: .rounded))
+                            .lineLimit(1).minimumScaleFactor(0.6).monospacedDigit()
+                    } else { Text("—").font(.title2) }
+                    if let reaps { Text("\(reaps) " + (reaps == 1 ? "reap" : "reaps")).font(.system(size: 12)).foregroundStyle(.secondary) }
+                    if let distance {
+                        Text(distanceReaping != false && (cap ?? 0) > 0 ? metres(distance) + " / " + metres(cap!) : metres(distance))
+                            .font(.system(size: 10)).foregroundStyle(.secondary).lineLimit(1).minimumScaleFactor(0.7)
+                    }
+                    if distanceReaping == false, resources != nil { Text("No distance reap").font(.system(size: 9)).foregroundStyle(.secondary) }
+                    if demo { Text("Demo").font(.system(size: 9)).foregroundStyle(.secondary) }
+                }
+                .frame(width: diameter * 0.7)
+                .foregroundStyle(inactive ? .secondary : .primary)
+            }.frame(width: diameter, height: diameter)
+            Text(status).font(.system(size: 11)).foregroundStyle(.secondary).lineLimit(1).minimumScaleFactor(0.7)
         }
-        .frame(width: diameter, height: diameter)
     }
 }
 

@@ -179,14 +179,17 @@ namespace TimelessEchoes
             SaveActiveRun();
             var run = Oracle.oracle?.saveData?.ActiveRun;
             if (run == null) return;
-            var forecast = ForecastBackgroundRun(900);
-            if (forecast == null) return;
-            var entry = generationButtons.First(e => e?.Config && e.Config.name == run.Map);
+            var entry = generationButtons.FirstOrDefault(e => e?.Config && e.Config.name == run.Map);
+            if (entry == null) return;
+            var input = BackgroundInput(run, entry, 900);
+            var forecast = BackgroundRunEstimator.Forecast(input);
             var content = new BackgroundRunContent(entry.Config, entry.ScalingMode == MapScalingMode.KillBased,
                 entry.KillsPerLevel, KillLevelIncreasePerTier, run);
-            var resources = forecast.Tasks * content.EstimateResourcesPerWork(false, run.Distance) +
-                forecast.Kills * content.EstimateResourcesPerWork(true, run.Distance);
-            BackgroundRunPrototype.Publish(run.Map, forecast, run.Distance, resources);
+            var resourcesPerTask = content.EstimateResourcesPerWork(false, run.Distance);
+            var resourcesPerKill = content.EstimateResourcesPerWork(true, run.Distance);
+            var resources = forecast.Tasks * resourcesPerTask + forecast.Kills * resourcesPerKill;
+            var timeline = WatchForecastTimeline.Create(input, forecast, resourcesPerTask, resourcesPerKill);
+            BackgroundRunPrototype.Publish(run.Map, forecast, run.Distance, resources, timeline);
             activityVisible = true;
         }
 

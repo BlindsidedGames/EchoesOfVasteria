@@ -1,6 +1,6 @@
 # Read-only Watch companion prototype
 
-The prototype adds a normal installed watchOS app with Current run, Skills and Recent runs screens. It uses the same pixel artwork and forecast view as the existing Live Activity. It is enabled only by the existing `EOV_BACKGROUND_PROTOTYPE` build lane and is not a store release.
+The prototype adds a normal installed watchOS app with Current run, Skills and Recent runs screens. Current run shows estimated resources gained inside a distance-to-reap dial, using a Watch-only timeline from the phone estimator and the existing pixel artwork. It is enabled only by the existing `EOV_BACKGROUND_PROTOTYPE` build lane and is not a store release.
 
 The phone owns skills, history, saves and rewards. The Watch displays a snapshot and can request Refresh. It never runs an independent simulation, awards progress, changes settings, starts a run or creates a save checkpoint. Empty data remains empty. The Demo badge comes from the game's explicit isolated demo launch flag.
 
@@ -10,7 +10,7 @@ The phone owns skills, history, saves and rewards. The Watch displays a snapshot
 
 Refresh uses reachable `sendMessage` with command `requestSnapshot`. The native phone service replies with its cached bytes marked `cached=true` and queues a flag consumed on the next actual Unity frame. Only managed publication creates a new timestamp. An immediate cached reply never represents newly simulated or awarded progress. When the phone cannot be reached, the app keeps its saved data and reports that state.
 
-Both caches retain the original UTC Unix `generatedAt`. On Watch relaunch, already-received context is treated as cached. The UI shows connection/cache status and the original date/time. Current-run values are snapshot values; the forecast is explicitly an estimate. Its ring uses system date-driven progress, expires with one deadline task, and rechecks expiry when the app becomes active. It does not continuously run the game on watchOS.
+Both caches retain the original UTC Unix `generatedAt`. On Watch relaunch, already-received context is treated as cached. The UI shows connection/cache status and the original date/time. Current-run values are snapshot values; the forecast is explicitly an estimate. Its ring samples estimated current distance and the effective reap limit from bounded estimator keyframes. A UI-only periodic view updates the dial and estimated gains; it freezes at the timeline horizon and marks the estimate ended. It does not continuously run the game on watchOS.
 
 ## Generated native targets
 
@@ -26,12 +26,22 @@ The full Unity phone app delivered real snapshots over the paired simulators. Ph
 
 The native Refresh boundary was exercised with a disposable same-bundle test host invoking the existing store method once after activation. The phone returned a cached acknowledgement and the next real Unity frame published a new snapshot 37 ms after the request was queued. The test host was then replaced with the exact production Watch app. This proves the request/consume/publication path; a manual Refresh tap was not verified.
 
-Simulator coordinate input failed even on the Simulator's own Home toolbar, while its accessibility action worked. Screen navigation could not be verified through that input path. The three direct screen captures and 30-second clip use unchanged production store/view code in a disposable standalone app, importing the exact snapshot previously received over real WC. Entry-point differences and hashes are recorded in `watch-companion-harness-provenance.json`; these captures are not represented as navigation proof.
+Simulator coordinate input failed even on the Simulator's own Home toolbar, while its accessibility action worked. Screen navigation could not be verified through that input path. The three direct screen captures and screen clip use unchanged production store/view code in a disposable standalone app, importing the exact snapshot previously received over real WC. Entry-point differences and hashes are recorded in `watch-companion-harness-provenance.json`; these captures are not represented as navigation proof.
 
 The simulator also reported Watch Connectivity reachability after the phone simulator shut down, despite a disconnected pair and the OS red phone icon. Cached timestamps remained correct. Hardware connection behaviour, Watch app icon artwork, manual navigation and distribution remain outside the verified result.
 
-## Full-screen radial revision
+## Earlier full-screen radial revision
 
 Current run now opens on a full-screen time-progress dial with Carl, the map, estimated distance, system countdown and reaps in the centre. The native Back control remains visible. Actual run counters, Refresh and the original cache timestamp sit below the first viewport. A dead or reaped run cannot show an active forecast; town, loading, missing-forecast and expired states use a gray ring.
 
 `watch-companion-radial-v2-evidence.json` records 42 mm and 46 mm native renders using unchanged data received from the game, an actual received dead-run render, and a separate short-deadline timing fixture. In that fixture the same production view and process changed from the active countdown to gray “Forecast ended” without another snapshot or relaunch, closing the earlier foreground deadline verification gap. The fixture modifies only the forecast's two dates and is explicitly labelled in its screenshots and clip. These direct renders do not establish manual navigation or Crown scrolling.
+
+## Distance and resource dial
+
+The current dial uses the distance at the sampled time divided by that run's effective reap limit. It resets when a predicted reap ends the run, stays at zero throughout the restart pause, and resumes at the estimator's actual next-run starting distance. Cap changes are retained at their observed times. There is no forecast countdown.
+
+The large centre value is **Est. resources** gained since this forecast's origin. It starts at zero and uses the estimator's task/kill work totals with the same per-work constants used by the existing phone forecast. It does not include current-run resources or add the previous projection when a newer snapshot arrives. Gains interpolate linearly within each straight movement segment between its observed work-total endpoints; run endings, cap changes and restart pauses are explicit boundaries.
+
+The Watch-only optional `timeline` object has version 1, map ID, UTC origin, horizon seconds, a distance-reaping flag, a truncated flag and at most 128 compact frames. Each frame is `[seconds, distance, effectiveCap, cumulativeEstimatedGain, reapsSinceOrigin, phase]`; phases are moving 0, restarting 1 and waiting for input 2. Duplicate timestamps represent discontinuities; the last frame at the sampled time wins. Positive-duration segments cannot change cap, reap count or phase. The horizon shortens honestly if the frame or 32 KiB snapshot budget is reached. ActivityKit's existing forecast JSON and behaviour remain separate.
+
+Without a compatible timeline, the dial uses only published actual run distance, effective cap and resources, with an **Actual resources** label and no invented reap count. An explicit source flag disables distance-to-reap progress for Hollow and other maps without distance reaps. Older snapshots lacking that flag conservatively omit reap progress. Dead runs remain gray and show their actual resources; expired timelines retain their final estimated gain and show **Estimate ended** below the dial.
