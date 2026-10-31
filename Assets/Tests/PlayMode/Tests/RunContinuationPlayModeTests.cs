@@ -231,7 +231,7 @@ namespace Tests.PlayMode
             Assert.That(armoured, Does.Not.Contain(PortraitAsset(data.Character.Head)));
             data.EquipmentVisibility.Helmet = false;
             data.Character = data.Character.Copy();
-            data.Character.Head = "Head/Hair_2/Hair_2_Green";
+            data.Character.Head = "Head/Hair_2/Hair_2_Blue";
             var changed = Portrait().portraitLayers;
             Assert.That(changed, Does.Contain(PortraitAsset(data.Character.Head)), "A changed appearance must replace the prior portrait.");
             Assert.That(changed, Does.Not.Contain(PortraitAsset("Head/Hair_2/Hair_2_Purple")));
