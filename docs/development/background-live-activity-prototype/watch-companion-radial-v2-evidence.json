@@ -1,0 +1,140 @@
+{
+  "sourceCommit": "ea6affc41",
+  "sourceFile": "Assets/Editor/iOSLiveActivity/Companion/EOVWatchApp.swift",
+  "sourceSha256": "4fd046c8416dfdfc0eeff650ca8bf23ff5191ee2876d660cc5c93f6f38d8638d",
+  "nativeBuild": "Combined Xcode BUILD SUCCEEDED, watchOS11 minimum, Xcode26.4.1; native UI only, no C# changes or Unity export",
+  "harness": {
+    "bundle": "com.blindsidedgames.echoes.watch.radialv2rendering",
+    "entryPointOnlyDifference": true,
+    "allProductionStoreAndViewsIdentical": true,
+    "sourceSha256": "b57e03e6e1cc4de77276584a7dd43e41a8f59c8f3160cf4e958757075b573a4c",
+    "entryPoint": "import SwiftUI\nimport WatchConnectivity\n\n@main\nstruct EOVWatchCompanionApp: App {\n    @StateObject private var store = EOVWatchCompanionStore()\n    @State private var path = [\"run\"]\n    var body: some Scene {\n        WindowGroup {\n            NavigationStack(path: $path) {\n                Text(\"Echoes\").navigationDestination(for: String.self) { _ in CurrentRunScreen() }\n            }.environmentObject(store)\n        }\n    }\n}\n\n",
+    "navigation": "Disposable NavigationStack pushes CurrentRunScreen so native Back is rendered; manual navigation remains unverified because prior Simulator coordinate input failed"
+  },
+  "realActive": {
+    "fixtureFile": "watch-companion-radial-v2-real-snapshot.json",
+    "generatedAt": 1793420475,
+    "sha256": "0f7e3bcd6603276930be35b9508f2085b3bf804a4b0f72cfc954039a1b4c74ce",
+    "run": {
+      "mapId": "River",
+      "mapTitle": "River",
+      "distance": 66.2037124633789,
+      "cap": 200.0,
+      "healthFraction": 0.3499998450279236,
+      "dead": false,
+      "reaped": false,
+      "durationSeconds": 60.41636657714844,
+      "tasks": 10,
+      "kills": 2,
+      "resources": 15.8079993724823
+    },
+    "forecast": {
+      "schemaVersion": 1,
+      "mapId": "River",
+      "mapTitle": "River",
+      "sampleCount": 10,
+      "generatedAt": 1793420471,
+      "currentDistance": 57.82179260253906,
+      "projectedDistance": 66.19925230876414,
+      "reapCap": 200.0,
+      "projectedReaps": 0,
+      "projectedTasks": 100,
+      "projectedKills": 18,
+      "projectedResources": 167.3871838748455,
+      "forecastEnd": 1793421371.0,
+      "status": "forecast"
+    },
+    "mutations": null,
+    "screens": [
+      "watch-companion-radial-v2-42-active.png",
+      "watch-companion-radial-v2-46-active.png"
+    ],
+    "devices": [
+      "42mm Series11 374x446",
+      "46mm Series11 416x496"
+    ],
+    "meaning": "Actual native renders of production view in disposable host using exact bytes previously delivered by real WC; not new transport/navigation proof"
+  },
+  "realDead": {
+    "generatedAt": 1793419643,
+    "sha256": "e02697921512c9995741394070b13427fec622c6f4292bce87d20ea9cede0b5b",
+    "run": {
+      "mapId": "River",
+      "mapTitle": "River",
+      "distance": 68.07881927490234,
+      "cap": 200.0,
+      "healthFraction": 0.0,
+      "dead": true,
+      "reaped": false,
+      "durationSeconds": 50.191490173339844,
+      "tasks": 8,
+      "kills": 0,
+      "resources": 11.72599983215332
+    },
+    "screen": "watch-companion-radial-v2-46-dead.png",
+    "mutations": null,
+    "observed": "Gray ring, Died, actual68.1m, no countdown or active forecast",
+    "fixtureFile": "watch-companion-radial-v2-dead-snapshot.json"
+  },
+  "deadline": {
+    "fixture": "Only forecast.generatedAt and forecast.forecastEnd changed from actual received snapshot; game values unchanged",
+    "fixtureCreatedUnix": 1793420721.877772,
+    "forecastEndUnix": 1793420733.877772,
+    "cacheSha256": "131a55b6a0d5b8d496af646d6007081914237ecef1e05fe92269f0c7517635d2",
+    "afterCaptureUnix": 1793420746.432829,
+    "sameCacheBytesAfterDeadline": true,
+    "appPid": 51681,
+    "relaunchBetweenCaptures": false,
+    "newSnapshotBetweenCaptures": false,
+    "observedBefore": "Gold time progress ring, Est.66.2m, countdown0:11",
+    "observedAfter": "Gray ring, Est.66.2m, Forecast ended, no countdown",
+    "fixtureFile": "watch-companion-radial-v2-expiry-fixture.json",
+    "screens": [
+      "watch-companion-radial-v2-expiry-before.png",
+      "watch-companion-radial-v2-expiry-after.png"
+    ]
+  },
+  "deadlineClip": {
+    "file": "watch-companion-radial-v2-expiry-fixture.mp4",
+    "metadata": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 374,
+          "height": 446
+        }
+      ],
+      "format": {
+        "duration": "11.922342"
+      }
+    },
+    "bytes": 76853,
+    "label": "Explicit 12-second timing fixture; not an actual game forecast/real transport event",
+    "lastFrameVerified": "Decoded final video frame shows gray Forecast ended"
+  },
+  "preservation": {
+    "primaryCheckoutUnchanged": true,
+    "realSaveFilesChecked": 228,
+    "changedRealSaveFiles": []
+  },
+  "unchangedScope": [
+    "Phone remains reward/save authority",
+    "WC and Skills/History screens unchanged",
+    "Default Home screen unchanged",
+    "No production launch flags or test-only seams",
+    "No store/main changes"
+  ],
+  "limits": [
+    "Manual Crown scrolling and navigation are not verified by these direct renders",
+    "Hardware and store deployment remain unverified",
+    "Town/loading/missing-forecast fallback implemented; focused captures cover active, actual dead and timed expiry states"
+  ],
+  "finalInstalledWatch": {
+    "bundle": "com.blindsidedgames.echoes.background.prototype.watchkitapp",
+    "executableSha256": "c1a78f09bb3309c933f2f7bea3d8efb489cdc980c47fb54aeb1136548a00cf2d",
+    "matchesFinalBuiltNativeProductionApp": true,
+    "state": "Default Home left open on paired42mm;46mm standalone radial rendering host left showing unchanged real active cache"
+  }
+}

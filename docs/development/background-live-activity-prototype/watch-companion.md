@@ -29,3 +29,9 @@ The native Refresh boundary was exercised with a disposable same-bundle test hos
 Simulator coordinate input failed even on the Simulator's own Home toolbar, while its accessibility action worked. Screen navigation could not be verified through that input path. The three direct screen captures and 30-second clip use unchanged production store/view code in a disposable standalone app, importing the exact snapshot previously received over real WC. Entry-point differences and hashes are recorded in `watch-companion-harness-provenance.json`; these captures are not represented as navigation proof.
 
 The simulator also reported Watch Connectivity reachability after the phone simulator shut down, despite a disconnected pair and the OS red phone icon. Cached timestamps remained correct. Hardware connection behaviour, Watch app icon artwork, manual navigation and distribution remain outside the verified result.
+
+## Full-screen radial revision
+
+Current run now opens on a full-screen time-progress dial with Carl, the map, estimated distance, system countdown and reaps in the centre. The native Back control remains visible. Actual run counters, Refresh and the original cache timestamp sit below the first viewport. A dead or reaped run cannot show an active forecast; town, loading, missing-forecast and expired states use a gray ring.
+
+`watch-companion-radial-v2-evidence.json` records 42 mm and 46 mm native renders using unchanged data received from the game, an actual received dead-run render, and a separate short-deadline timing fixture. In that fixture the same production view and process changed from the active countdown to gray “Forecast ended” without another snapshot or relaunch, closing the earlier foreground deadline verification gap. The fixture modifies only the forecast's two dates and is explicitly labelled in its screenshots and clip. These direct renders do not establish manual navigation or Crown scrolling.
