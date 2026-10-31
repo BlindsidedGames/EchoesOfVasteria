@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Watch companion — selected screens</title>
+<style>
+:root{color-scheme:dark;font:16px/1.5 system-ui,sans-serif;background:#07171a;color:#f7edda}
+*{box-sizing:border-box}body{margin:0}main{max-width:1180px;margin:auto;padding:32px 24px 70px}h1{font-size:clamp(25px,4vw,36px);margin:0 0 8px;line-height:1.2}p{color:#a8bdb7;margin:8px 0 18px}a{color:#f2c36f}nav{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0 24px}label{display:flex;align-items:center;gap:8px}select{font:inherit;background:#143033;border:1px solid #496260;color:inherit;padding:9px 12px;border-radius:5px;max-width:100%}select:focus-visible,a:focus-visible{outline:2px solid #f2c36f;outline-offset:3px}.shots{display:flex;align-items:flex-start;justify-content:center;gap:32px;flex-wrap:wrap;padding:22px 10px;background:#051114;border:1px solid #243f40;border-radius:8px}figure{margin:0;text-align:center}figure img{display:block;width:min(100%,322px);height:auto;image-rendering:auto;border-radius:6px}figcaption{color:#a8bdb7;padding-top:9px;font-size:14px}h2{font-size:24px;margin:0 0 8px}.scope{max-width:800px;margin-top:24px}.scope p{font-size:14px}.overview{margin-top:38px}.overview img{display:block;width:100%;height:auto}.links{display:flex;gap:22px;flex-wrap:wrap;font-size:14px}.hidden{display:none}@media(max-width:600px){main{padding:22px 14px}.shots{gap:22px}label{width:100%;justify-content:space-between}select{width:70%}}
+</style></head>
+<body><main>
+<h1>Watch companion</h1>
+<p>Seven selected screens, rendered from the integrated SwiftUI views in the 42 mm and 46 mm simulators.</p>
+<nav aria-label="Screenshot controls">
+<label>Screen <select id="screen">
+<option value="01">Expedition dial</option><option value="03">Health</option><option value="04">Resources</option><option value="05">Since you left</option><option value="07">Skillbook</option><option value="08">Recent runs</option><option value="09">Compare runs</option>
+</select></label>
+<label>Size <select id="size"><option value="both">Both sizes</option><option value="42">42 mm</option><option value="46">46 mm</option></select></label>
+</nav>
+<h2 id="heading">Expedition dial</h2>
+<p id="detail">Distance dial with your saved character. Tap the dial to switch its main metric.</p>
+<div class="shots">
+<figure id="watch42"><a id="link42" href="captures/01-42-final.png"><img id="image42" src="captures/01-42-final.png" alt="Expedition dial on the 42 mm Watch simulator"></a><figcaption>42 mm</figcaption></figure>
+<figure id="watch46"><a id="link46" href="captures/01-46-final.png"><img id="image46" src="captures/01-46-final.png" alt="Expedition dial on the 46 mm Watch simulator"></a><figcaption>46 mm</figcaption></figure>
+</div>
+<div class="scope">
+<p id="data">Screenshots use controlled snapshots to render the production views. The real app reads WatchConnectivity snapshots and the Watch clock.</p>
+<p>Fresh phone values arrive while the game is active. Background estimates advance locally until their saved limit. Refresh asks the phone for new data; it cannot wake suspended Unity.</p>
+<p>Integrated on the review branch. Not uploaded to TestFlight; build 188 is unchanged.</p>
+<div class="links"><a href="README.md">Native verification</a><a href="../background-combat-20261101/README.md">Combat estimate and test results</a></div>
+</div>
+<section class="overview"><h2>All seven screens</h2><p>Select a screen above for the full-size pair.</p><a href="captures/contact-42-final.png"><img src="captures/contact-42-final.png" alt="Overview of the seven selected Watch screens at 42 mm" loading="lazy"></a></section>
+</main><script>
+const details={
+"01":["Expedition dial","Distance dial with your saved character. Tap the dial to switch its main metric."],
+"03":["Health","Health and totals from the last phone snapshot; background estimates do not invent a live health reading."],
+"04":["Resources","Current run resources, tasks and kills. Switch between totals and run averages."],
+"05":["Since you left","Elapsed away time, estimated gains and reaps, plus current projected distance."],
+"07":["Skillbook","All six skill levels. Tap a skill to pin it first."],
+"08":["Recent runs","Select a run using the chart or Crown, switch its metric, then open the run receipt."],
+"09":["Compare runs","Compare resource rates and open either run receipt. Same-map pairs are preferred."]
+};
+const screen=document.getElementById("screen"),size=document.getElementById("size");
+const params=new URLSearchParams(location.search);
+if(details[params.get("screen")])screen.value=params.get("screen");
+if(["both","42","46"].includes(params.get("size")))size.value=params.get("size");
+function render(){
+const id=screen.value,[title,detail]=details[id];
+document.getElementById("heading").textContent=title;
+document.getElementById("detail").textContent=detail;
+for(const mm of ["42","46"]){
+ const src="captures/"+id+"-"+mm+"-final.png";
+ document.getElementById("image"+mm).src=src;
+ document.getElementById("image"+mm).alt=title+" on the "+mm+" mm Watch simulator";
+ document.getElementById("link"+mm).href=src;
+ document.getElementById("watch"+mm).classList.toggle("hidden",size.value!=="both"&&size.value!==mm);
+}
+const url=new URL(location.href);url.searchParams.set("screen",id);url.searchParams.set("size",size.value);history.replaceState(null,"",url);
+}
+screen.addEventListener("change",render);size.addEventListener("change",render);render();
+</script></body></html>
