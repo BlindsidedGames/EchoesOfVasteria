@@ -1,0 +1,94 @@
+{
+  "status": "Native build and real delivery verified; Refresh boundary check in progress",
+  "phoneBundle": "com.blindsidedgames.echoes.background.prototype",
+  "watchBundle": "com.blindsidedgames.echoes.background.prototype.watchkitapp",
+  "managedSource": "52d0a5ef25a7384c52fff12b44e07c12b9616702",
+  "nativeSourceBase": "bb223a694",
+  "runtime": {
+    "phone": "iOS 26.4.1 iPhone 17 Pro",
+    "watch": "watchOS 26.4 Series 11 42mm paired; direct-render screenshots on 46mm"
+  },
+  "actualTransport": {
+    "phone": {
+      "generatedAt": 1793419643,
+      "sha256": "e02697921512c9995741394070b13427fec622c6f4292bce87d20ea9cede0b5b",
+      "state": "run",
+      "skills": 6,
+      "runs": 10,
+      "run": {
+        "mapId": "River",
+        "mapTitle": "River",
+        "distance": 68.07881927490234,
+        "cap": 200.0,
+        "healthFraction": 0.0,
+        "dead": true,
+        "reaped": false,
+        "durationSeconds": 50.191490173339844,
+        "tasks": 8,
+        "kills": 0,
+        "resources": 11.72599983215332
+      }
+    },
+    "watch": {
+      "generatedAt": 1793419643,
+      "sha256": "e02697921512c9995741394070b13427fec622c6f4292bce87d20ea9cede0b5b",
+      "state": "run",
+      "skills": 6,
+      "runs": 10,
+      "run": {
+        "mapId": "River",
+        "mapTitle": "River",
+        "distance": 68.07881927490234,
+        "cap": 200.0,
+        "healthFraction": 0.0,
+        "dead": true,
+        "reaped": false,
+        "durationSeconds": 50.191490173339844,
+        "tasks": 8,
+        "kills": 0,
+        "resources": 11.72599983215332
+      }
+    }
+  },
+  "cacheRelaunch": {
+    "phoneSimulatorShutdown": true,
+    "watchRelaunchPid": 31064,
+    "originalGeneratedAt": 1793419800,
+    "afterGeneratedAt": 1793419800,
+    "bytesUnchanged": true,
+    "sha256": "c651d97b68b10dae2a08c5965b3c5cd99e8ea1553e84c4d81e28882edec783d8",
+    "note": "Watch native session activated reachable=0; Simulator later reports reachable despite phone shutdown. OS disconnection icon visible; cache timestamp remains original."
+  },
+  "validation": {
+    "cases": [
+      "actual managed snapshot accepted",
+      "malformed retains cache",
+      "unsupported version retains cache",
+      "oversized retains cache"
+    ],
+    "passed": true
+  },
+  "screenshots": {
+    "watch-companion-home-connected.png": "Actual installed companion after real Watch Connectivity delivery, earlier full date status layout",
+    "watch-companion-cache-relaunch.png": "Actual installed companion after phone simulator shutdown and Watch app relaunch; original cache timestamp retained; red OS disconnection icon but framework later reported reachable",
+    "watch-companion-current-direct.png": "Production CurrentRunScreen, standalone rendering harness using exact real Watch cache; no invented rows, no interaction claim",
+    "watch-companion-skills-direct.png": "Production SkillsScreen, same real imported snapshot; Combat Lv4, Mining Lv1",
+    "watch-companion-history-direct.png": "Production RecentRunsScreen, same real imported snapshot; recorded and estimated runs marked",
+    "watch-companion-empty.png": "Actual installed companion before initial phone snapshot; empty state"
+  },
+  "limitations": [
+    "Coordinate input failed even on Simulator Home toolbar; AX Home worked. Actual in-app navigation and manual Refresh tap remain unverified.",
+    "Reachability was inconsistent in Simulator after phone shutdown; the OS pair was disconnected, cache bytes remained unchanged.",
+    "Placeholder Watch app icon; no store deployment or hardware test."
+  ],
+  "preservation": {
+    "primaryUnchanged": true,
+    "primaryNow": {
+      "head": "aa17b243787c3e1988ae06c12e4cc9a568786776",
+      "diffSha256": "7d45e5d114159fefba437f0b4df201af1939c4ffc59e6c29725a468ee1c68ec2",
+      "status": " M \"Assets/Localization/Tables/Town/TownUI Shared Data.asset\"\n M \"Assets/Resources_moved/Fonts/Noto_Sans/static/NotoSans-ExtraBold SDF.asset\"\n"
+    },
+    "realSaveFilesChecked": 228,
+    "changedRealSaveFiles": []
+  }
+}

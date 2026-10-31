@@ -105,17 +105,17 @@ private struct SnapshotStatus: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
             Text((store.snapshot?.demo == true ? "Demo · " : "") + connection)
-                .font(.caption2).foregroundStyle(.secondary)
+                .font(.caption2).foregroundStyle(.secondary).lineLimit(1).minimumScaleFactor(0.8)
             if let snapshot = store.snapshot {
-                Text("Updated " + Date(timeIntervalSince1970: snapshot.generatedAt).formatted(date: .abbreviated, time: .standard))
-                    .font(.caption2).foregroundStyle(.secondary)
+                Text("Updated " + Date(timeIntervalSince1970: snapshot.generatedAt).formatted(.dateTime.month(.abbreviated).day().hour(.twoDigits(amPM: .omitted)).minute(.twoDigits).second(.twoDigits)))
+                    .font(.system(size: 10)).foregroundStyle(.secondary)
             }
             if !store.message.isEmpty { Text(store.message).font(.caption2).foregroundStyle(.secondary) }
         }
     }
     private var connection: String {
-        guard store.snapshot != nil else { return store.reachable ? "Connected · waiting for data" : "iPhone unavailable" }
-        return store.reachable ? (store.cached ? "Connected · cached" : "iPhone connected") : "iPhone unavailable · cached"
+        guard store.snapshot != nil else { return store.reachable ? "Connected · waiting" : "iPhone unavailable" }
+        return store.reachable ? (store.cached ? "Connected · cached" : "Connected") : "Offline · cached"
     }
 }
 
@@ -125,6 +125,11 @@ private struct CurrentRunScreen: View {
         List {
             SnapshotStatus()
             if let s = store.snapshot {
+                if let f = s.forecast, s.backgroundProgressEnabled, f.status == "forecast" {
+                    Section("Estimate") {
+                        CompanionForecast(forecast: f)
+                    }
+                }
                 if s.state == "loading" { Text("iPhone is loading") }
                 else if let run = s.run, s.state == "run" {
                     Section(run.mapTitle) {
@@ -137,11 +142,6 @@ private struct CurrentRunScreen: View {
                         DataRow(name: "Resources", value: amount(run.resources))
                     }
                 } else { Text(s.state == "town" ? "In town" : "No active run") }
-                if let f = s.forecast, s.backgroundProgressEnabled, f.status == "forecast" {
-                    Section("Estimate") {
-                        CompanionForecast(forecast: f)
-                    }
-                }
             } else { Text("Open Echoes on iPhone to see your current run.") }
             Button("Refresh", systemImage: "arrow.clockwise") { store.refresh() }
         }.navigationTitle("Current run")
@@ -220,9 +220,10 @@ private struct DataRow: View {
     let name: String
     let value: String
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
+        HStack(alignment: .firstTextBaseline) {
             Text(name).font(.caption2).foregroundStyle(.secondary)
-            Text(value).lineLimit(2).minimumScaleFactor(0.8)
+            Spacer(minLength: 4)
+            Text(value).multilineTextAlignment(.trailing).lineLimit(2).minimumScaleFactor(0.8)
         }
     }
 }
