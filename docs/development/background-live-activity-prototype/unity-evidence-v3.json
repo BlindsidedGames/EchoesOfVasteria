@@ -1,0 +1,102 @@
+{
+  "scope": "Actual Unity IL2CPP iOS simulator app with ten synthetic River calibration samples in a separate prototype save container.",
+  "date": "2026-10-31",
+  "codeCommit": "af3224995c205267b35d109c084d2546295ab4e6",
+  "managedCodeCommit": "5afceb9554bdcee617abc2a595e7b13929e3d0b9",
+  "fallbackMain": "80d98debce913eae3dc9cad1c3d78d037f8412e4",
+  "environment": {
+    "unity": "6000.6.0f1",
+    "xcode": "26.4.1 (17E202)",
+    "device": "iPhone 17 Pro simulator",
+    "os": "iOS 26.4",
+    "bundle": "com.blindsidedgames.echoes.background.prototype",
+    "version": "1.5.8 (186)"
+  },
+  "build": {
+    "completeExport": "Succeeded",
+    "managedFinalIteration": "Succeeded, BuildScriptsOnly after complete export; changes were C# methods only",
+    "xcodeAppAndExtension": "BUILD SUCCEEDED",
+    "finalWidgetMatchesTrackedTemplate": true,
+    "localBuildAdaptations": [
+      "Restored missing protected VoxelBusters dependencies from the established Mac build source with verified hashes",
+      "Added local runtime asmdef references for restored vendor assemblies",
+      "Set isolated app identity and ARM64 Simulator SDK"
+    ]
+  },
+  "launchArgumentFinding": {
+    "observed": "OS process argv included -eov-background-demo while LLDB confirmed IL2CPP GetNumMainArgs() == 1",
+    "fix": "Prototype-only native NSProcessInfo argument adapter; explicit demo option and isolated bundle guard retained"
+  },
+  "warm": {
+    "receipt": "unity-warm-settlement-v2.json",
+    "awaySeconds": 58.099923,
+    "distance": 68.16500277804852,
+    "tasks": 15,
+    "kills": 4,
+    "resources": 25.24999976158142,
+    "settlementReportsForForegroundReturn": 1,
+    "receiptByteIdenticalDuringSubsequentForegroundPlay": true
+  },
+  "cold": {
+    "receipt": "unity-cold-settlement-v2.json",
+    "awaySeconds": 29.484253,
+    "distance": 76.45109368017117,
+    "tasks": 7,
+    "kills": 2,
+    "resources": 11.18999981880188,
+    "settlementReportsForColdLoad": 1,
+    "savedRunWasNotReseededAt30m": true
+  },
+  "finalRecordedCycle": {
+    "video": "unity-lifecycle-v3.mp4",
+    "receipt": "unity-video-settlement-v3.json",
+    "awaySeconds": 41.841426,
+    "distance": 45.005509385523375,
+    "tasks": 11,
+    "kills": 3,
+    "resources": 17.339999675750732,
+    "capture": "Actual simulator recording; only scaled to 480 pixels wide, encoded H264, no staged frames or altered game values"
+  },
+  "additionalObserved": [
+    "Typed loot panel displayed Slime, Flippy, Stick, Log and Bronze Crystal; XP floats rendered during resumed gameplay",
+    "Portrait and landscape game/loot layouts and transitions inspected",
+    "Dead checkpoint produced zero-work Player input required receipt and retained death UI until normal Restart input",
+    "Returning to town ended the final ActivityKit activity; Home Screen had no remaining activity",
+    "Full app left open in simulator on completed River Run Summary"
+  ],
+  "deadInputGateReceipt": "unity-dead-input-gate-v3.json",
+  "ui": {
+    "latestIsland": "unity-dynamic-island-v3.png",
+    "latestLockScreen": "unity-lockscreen-aligned-v3.png",
+    "latestResumedGame": "unity-river-resumed-v3.png",
+    "countdownAlignedUnderReaps": true,
+    "islandRoundedCornerClippingFixedAndVisuallyChecked": true,
+    "unlockedTimerObserved": "14:46, all digits readable",
+    "lockedTimerObserved": "14:--, simulator/system rendered dashes for seconds; cause not isolated on hardware",
+    "explanatoryFooter": false,
+    "art": "Original game pixels; provenance in Art/SourceSprites.json"
+  },
+  "preservation": {
+    "primaryHeadUnchanged": true,
+    "primaryDiffUnchanged": true,
+    "primaryStatusUnchanged": true,
+    "savedFilesVerified": 228,
+    "changedSavedFiles": 0
+  },
+  "limits": [
+    "Synthetic River fixture and one simulator; no hardware or store distribution validation",
+    "No comprehensive save compatibility or arbitrary duplicate-callback coverage claimed from simulator; one report per observed lifecycle return",
+    "Short update animations only; sprites do not run a continuous background loop",
+    "Expired short forecasts may remain visible at 0:00 until system stale presentation or next app update"
+  ],
+  "deployment": {
+    "mainUnchanged": true,
+    "storeUploaded": false,
+    "prototypeBranchOnly": true
+  },
+  "references": [
+    "https://developer.apple.com/documentation/activitykit/displaying-live-data-with-live-activities",
+    "https://developer.apple.com/documentation/widgetkit/animating-data-updates-in-widgets-and-live-activities",
+    "https://docs.unity.com/en-us/engine/6000.0/script-reference/unityeditor/buildoptions/buildscriptsonly"
+  ]
+}

@@ -2,8 +2,15 @@
   "scope": "Native ActivityKit boundary only; full Unity background settlement is not established by these screenshots.",
   "date": "2026-10-31",
   "managedSource": "7f4304a629221832ba58af19bb015f9451bb2bf4",
-  "environment": {"xcode": "26.4.1 (17E202)", "simulator": "iPhone 17 Pro, iOS 26.4", "isolatedBundle": "com.blindsidedgames.echoes.liveactivity.nativeprototype"},
-  "screenshots": ["native-dynamic-island.png", "native-lockscreen.png"],
+  "environment": {
+    "xcode": "26.4.1 (17E202)",
+    "simulator": "iPhone 17 Pro, iOS 26.4",
+    "isolatedBundle": "com.blindsidedgames.echoes.liveactivity.nativeprototype"
+  },
+  "screenshots": [
+    "native-dynamic-island.png",
+    "native-lockscreen.png"
+  ],
   "observed": [
     "Actual exported C bridge started, updated and immediately ended the same ActivityKit activity.",
     "Compact forecast changed from approximately 1.8k to 2.8k and disappeared on End.",
@@ -11,9 +18,29 @@
     "System countdown/progress continued while the host was backgrounded.",
     "Fractional projectedResources 468.75 decoded successfully and displayed as 468."
   ],
-  "ui": {"explanatoryFooter": false, "estimatesLabeled": true, "artProvenance": "Assets/Editor/iOSLiveActivity/Art/SourceSprites.json", "animation": "Brief numeric and Carl-pose transitions on data updates; sprites remain still between updates. Date-based countdown and progress are system driven."},
+  "ui": {
+    "explanatoryFooter": false,
+    "estimatesLabeled": true,
+    "artProvenance": "Assets/Editor/iOSLiveActivity/Art/SourceSprites.json",
+    "animation": "Brief numeric and Carl-pose transitions on data updates; sprites remain still between updates. Date-based countdown and progress are system driven."
+  },
   "integration": "Enabled only by EOV_BACKGROUND_PROTOTYPE iOS define or explicit -eov-background-prototype export argument; ordinary exports return before adding native sources/frameworks/extension.",
-  "pending": ["Full Unity export/build/install", "Actual managed demo background and resume settlement", "Repeated foreground notification without duplicate rewards", "Full game portrait and landscape inspection"],
-  "limits": {"hardwareValidated": false, "storeUploaded": false, "mainMerged": false, "maximumForecastHours": 8, "maximumInputBytes": 3500},
-  "appleReferences": ["https://developer.apple.com/documentation/activitykit/displaying-live-data-with-live-activities", "https://developer.apple.com/documentation/widgetkit/animating-data-updates-in-widgets-and-live-activities"]
+  "limits": {
+    "hardwareValidated": false,
+    "storeUploaded": false,
+    "mainMerged": false,
+    "maximumForecastHours": 8,
+    "maximumInputBytes": 3500
+  },
+  "appleReferences": [
+    "https://developer.apple.com/documentation/activitykit/displaying-live-data-with-live-activities",
+    "https://developer.apple.com/documentation/widgetkit/animating-data-updates-in-widgets-and-live-activities"
+  ],
+  "pendingAtNativeCapture": [
+    "Full Unity export/build/install",
+    "Actual managed demo background and resume settlement",
+    "Repeated foreground notification without duplicate rewards",
+    "Full game portrait and landscape inspection"
+  ],
+  "followUp": "unity-evidence-v3.json"
 }
