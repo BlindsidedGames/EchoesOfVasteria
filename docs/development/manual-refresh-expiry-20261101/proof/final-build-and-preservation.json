@@ -1,0 +1,26 @@
+{
+  "productionSource": "a0da19366",
+  "xcode": "26.4.1 (17E202)",
+  "runtime": "iOS/watchOS Simulator 26.4",
+  "deploymentTargets": {
+    "iOS": "16.2",
+    "watchOS": "11.0"
+  },
+  "builds": {
+    "final-build.log": true,
+    "watch-store-build.log": true,
+    "watch-preview-build.log": true
+  },
+  "gameVersionUnchanged": "1.5.9 (188)",
+  "qaBundlesUninstalled": [
+    "com.blindsidedgames.echoes.manualexpiryqa (wide and narrow)",
+    "com.blindsidedgames.echoes.manualexpiryqa.watchkitapp (42mm)"
+  ],
+  "narrowSimulatorRestored": "shutdown",
+  "productionFilesChangedByValidation": [],
+  "primaryDirtyDiffSha256": "7d45e5d114159fefba437f0b4df201af1939c4ffc59e6c29725a468ee1c68ec2",
+  "primaryDirtyPaths": [
+    " M \"Assets/Localization/Tables/Town/TownUI Shared Data.asset\"",
+    " M \"Assets/Resources_moved/Fonts/Noto_Sans/static/NotoSans-ExtraBold SDF.asset\""
+  ]
+}
