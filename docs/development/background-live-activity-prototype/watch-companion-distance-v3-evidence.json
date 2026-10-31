@@ -1,0 +1,321 @@
+{
+  "implementationCommit": "190382281",
+  "finalUiCommit": "12c8c5860",
+  "mediaCommit": "259b554d7",
+  "managedTests": {
+    "total": 13,
+    "passed": 13,
+    "failed": 0,
+    "result": "Passed"
+  },
+  "nativeSampling": {
+    "checks": [
+      "midpoint samples movement and gained resources, not endpoint totals",
+      "just before reap retains current distance and old cap",
+      "just after reap resets distance, raises cap, increments one reap and retains only7 gained",
+      "restart pause creates no movement or extra resources",
+      "restart resumes at authored starting distance with effective next cap",
+      "successive reap resets using next effective cap and cumulative forecast gain",
+      "expiry freezes final estimate without extrapolating",
+      "current-run total is not added to gained resources",
+      "replacement forecast supersedes previous projection without accumulation",
+      "observed buffed cap is replaced by actual post-reap cap",
+      "Hollow has finite no-cap timeline and no invented distance reap",
+      "combat death restarts without claiming a reap",
+      "frame budget shortens horizon honestly",
+      "reaping real-six-skill/ten-history wire payload fits32KiB",
+      "effective-cap real-six-skill/ten-history wire payload fits32KiB",
+      "hollow real-six-skill/ten-history wire payload fits32KiB",
+      "death real-six-skill/ten-history wire payload fits32KiB",
+      "bounded real-six-skill/ten-history wire payload fits32KiB",
+      "time-varying effective cap changes exactly at its observed boundary",
+      "arbitrary midpoint within final bounded segment keeps current cap and gained scope",
+      "old snapshot without timeline remains decodable"
+    ],
+    "count": 21,
+    "passed": true
+  },
+  "build": {
+    "unity": "6000.6.0f1",
+    "unityExport": "Scripts-only IL2CPP reexport using successful prior complete isolated simulator export",
+    "unityResult": {
+      "result": "Succeeded",
+      "errors": 0,
+      "warnings": 37,
+      "bytes": 2182721734,
+      "duration": "00:00:47.5682210"
+    },
+    "xcode": "26.4.1 (17E202)",
+    "nativeCombinedBuild": "BUILD SUCCEEDED after final UI metric-order/status changes",
+    "marketingVersion": "1.5.8",
+    "buildNumber": "186"
+  },
+  "model": {
+    "wire": "Optional Watch-only timeline version1; existing ActivityKit forecast fields/behaviour retained",
+    "frameColumns": [
+      "seconds",
+      "distance",
+      "effectiveCap",
+      "estimatedResourcesGainedSinceOrigin",
+      "reapsSinceOrigin",
+      "phase"
+    ],
+    "phaseCodes": {
+      "0": "moving",
+      "1": "restarting",
+      "2": "waiting for player input"
+    },
+    "boundaries": "Duplicate-time entries represent reap/death reset, cap change and next-run start. Last at sampled time wins; no interpolation across event boundaries.",
+    "resources": "Estimator step task/kill counts multiplied by same two constants used by existing RefreshBackgroundForecast. Linear estimate between work-total endpoints inside each straight movement segment; zero at forecast origin, never add recorded run total or previous projection.",
+    "frameLimit": 128,
+    "snapshotByteLimit": 32768,
+    "expiry": "Clamp time at horizon; freeze final gain/distance/reaps and gray ring. Player-input stop retains Return to iPhone status.",
+    "hollow": "Explicit distanceReaping=false and cap0; no distance-to-reap arc or invented reap count",
+    "fallback": "Actual distance/effective cap/resources labelled Actual; optional source flag supports old snapshots conservatively"
+  },
+  "actualPairedTransfer": {
+    "phone": {
+      "generatedAt": 1793422644,
+      "sha256": "766316f08668717ff43f05315c99a2b7a2fab2b5866d00072020d789b3f06247",
+      "bytes": 6472,
+      "run": {
+        "mapId": "River",
+        "mapTitle": "River",
+        "distance": 46.31509017944336,
+        "cap": 200.0,
+        "distanceReaping": true,
+        "healthFraction": 0.5687499642372131,
+        "dead": false,
+        "reaped": false,
+        "durationSeconds": 32.31901550292969,
+        "tasks": 4,
+        "kills": 1,
+        "resources": 7.507499575614929
+      },
+      "timeline": {
+        "schemaVersion": 1,
+        "mapId": "River",
+        "generatedAt": 1793422644.0,
+        "horizonSeconds": 900.0,
+        "distanceReaping": true,
+        "truncated": false
+      },
+      "frames": 54,
+      "firstFrame": [
+        0.0,
+        46.31509017944336,
+        200.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "watch": {
+      "generatedAt": 1793422644,
+      "sha256": "766316f08668717ff43f05315c99a2b7a2fab2b5866d00072020d789b3f06247",
+      "bytes": 6472,
+      "run": {
+        "mapId": "River",
+        "mapTitle": "River",
+        "distance": 46.31509017944336,
+        "cap": 200.0,
+        "distanceReaping": true,
+        "healthFraction": 0.5687499642372131,
+        "dead": false,
+        "reaped": false,
+        "durationSeconds": 32.31901550292969,
+        "tasks": 4,
+        "kills": 1,
+        "resources": 7.507499575614929
+      },
+      "timeline": {
+        "schemaVersion": 1,
+        "mapId": "River",
+        "generatedAt": 1793422644.0,
+        "horizonSeconds": 900.0,
+        "distanceReaping": true,
+        "truncated": false
+      },
+      "frames": 54,
+      "firstFrame": [
+        0.0,
+        46.31509017944336,
+        200.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "realDataScreens": {
+    "watch-companion-distance-v3-42-real-active.png": "Unchanged real WC-received isolated-demo snapshot, production native view in direct-render harness;31.9estimated gained,53.2m/cap200,0reaps",
+    "watch-companion-distance-v3-46-real-active.png": "Same received payload and unchanged UTC origin;32.2estimated gained,54.1m/cap200,0reaps at slightly later wallclock",
+    "watch-companion-distance-v3-46-real-dead.png": "Later actual dead snapshot has timeline=null; Actualresources10.7,59.8m/cap200,Died gray, no invented reaps"
+  },
+  "controlledEstimatorFixtures": {
+    "reaping": {
+      "bytes": 2994,
+      "sha256": "c34c4a29117e2339ec6177aa8f21579c7c7c5298e0ce41bca29826bb33b18cde",
+      "skills": 6,
+      "history": 10,
+      "frames": 8,
+      "horizonSeconds": 20.0,
+      "truncated": false,
+      "distanceReaping": true
+    },
+    "effective-cap": {
+      "bytes": 2937,
+      "sha256": "6bcd03e9da82a02de7c9ae995da42e6aa4f9795b21bef3821b3d883a6467cc9e",
+      "skills": 6,
+      "history": 10,
+      "frames": 6,
+      "horizonSeconds": 10.0,
+      "truncated": false,
+      "distanceReaping": true
+    },
+    "hollow": {
+      "bytes": 2829,
+      "sha256": "3412fa6f8c668ba35381c170c94238efcacdda61963eb3221b63b4367313687e",
+      "skills": 6,
+      "history": 10,
+      "frames": 2,
+      "horizonSeconds": 20.0,
+      "truncated": false,
+      "distanceReaping": false
+    },
+    "death": {
+      "bytes": 3103,
+      "sha256": "39e3f8750dab38cc5080c12ea00d1253d9e2efcd66aec3fcc4f561a68351ca39",
+      "skills": 6,
+      "history": 10,
+      "frames": 12,
+      "horizonSeconds": 20.0,
+      "truncated": false,
+      "distanceReaping": true
+    },
+    "bounded": {
+      "bytes": 7145,
+      "sha256": "66bdabb747140dbe31a99b8024b16b4cfaff01f1682e5b9f31ee262d72fa5484",
+      "skills": 6,
+      "history": 10,
+      "frames": 128,
+      "horizonSeconds": 128.0,
+      "truncated": true,
+      "distanceReaping": true
+    }
+  },
+  "fixtureReceipt": {
+    "fixture": "Actual managed estimator keyframes; only UTC origin rebased for filming, no altered movement/reward math",
+    "originUnix": 1793422794.797416,
+    "screens": [
+      {
+        "file": "distance-v3-42-fixture-before-reap.png",
+        "wallOffsetSeconds": 1.503730058670044
+      },
+      {
+        "file": "distance-v3-42-fixture-restart.png",
+        "wallOffsetSeconds": 3.010338068008423
+      },
+      {
+        "file": "distance-v3-42-fixture-after-restart.png",
+        "wallOffsetSeconds": 8.509742975234985
+      },
+      {
+        "file": "distance-v3-42-fixture-second-reap.png",
+        "wallOffsetSeconds": 15.801700115203857
+      },
+      {
+        "file": "distance-v3-42-fixture-expired.png",
+        "wallOffsetSeconds": 21.30010199546814
+      }
+    ]
+  },
+  "fixtureVisualObservations": [
+    "Before first reap: distance8.7/10m,estimatedgain2.3,0reaps",
+    "Restart pause: distance0/cap10.1,gain7,1reap; no movement/resources during pause",
+    "After restart: distance2.7/cap10.1,gain9.3,1reap",
+    "Second reap: distance0/cap10.201,gain35,2reaps",
+    "Expiry: gray/frozen gain35,2reaps,Estimate ended",
+    "Hollow: finite gain with No distance reap, no arc/cap/reap counter"
+  ],
+  "clip": {
+    "file": "watch-companion-distance-v3-reap-reset-fixture.mp4",
+    "metadata": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 374,
+          "height": 446
+        }
+      ],
+      "format": {
+        "duration": "23.818744"
+      }
+    },
+    "bytes": 55650,
+    "label": "Explicit managed-estimator fixture. Only UTC origin rebased for filming. No altered step/distance/cap/resource values, no endpoint interpolation across reaps.",
+    "lastFrameVerified": "Gray Estimate ended, gain35,2reaps"
+  },
+  "noAccumulation": {
+    "managedAndNativeReplacementChecksPassed": true,
+    "actualFirstTimelineStartsGainAtZero": true,
+    "actualFirstRunResourceTotal": 7.507499575614929,
+    "laterObservedLiveSnapshot": "Dead with timeline=null, captured as actual fallback; no claim that this is a second-origin live gain-reset proof"
+  },
+  "harness": {
+    "bundle": "com.blindsidedgames.echoes.watch.distancev3rendering",
+    "productionViewAndStoreBodyIdentical": true,
+    "onlyEntryPointChanged": "import SwiftUI\nimport WatchConnectivity\n\n@main\nstruct EOVWatchCompanionApp: App {\n    @StateObject private var store = EOVWatchCompanionStore()\n    @State private var path = [\"run\"]\n    var body: some Scene {\n        WindowGroup {\n            NavigationStack(path: $path) {\n                Text(\"Echoes\").navigationDestination(for: String.self) { _ in CurrentRunScreen() }\n            }.environmentObject(store)\n        }\n    }\n}\n\n",
+    "productionUiSha256": "d2c350c6cbbc30ba0e107fa868b26b247b127763eee092a0cc8e9eddec2843d1",
+    "hostSha256": "94d95f6028b431f26bc3618a76b94416e595d2e76a23bb81edf33362a7960991",
+    "navigation": "Native Back rendered; manual taps/Crown/navigation remain unverified due existing Simulator coordinate input limitation"
+  },
+  "sourceSha256": {
+    "Assets/Scripts/Stats/WatchForecastTimeline.cs": "6867f575a636837acdfd5ab497b3f0755fbbd69186e7a3733a0b7214c697fe75",
+    "Assets/Scripts/Stats/BackgroundRunEstimator.cs": "7f12c7e12ac8450b4a9406227b7e1f17df188a92778bdc50b9b582a65237788d",
+    "Assets/Scripts/Stats/BackgroundRunPrototype.cs": "fddb81459e73ab0b038d4b6c93e7bfe277714ced1432d939199d4fb6e08c89b6",
+    "Assets/Scripts/Stats/WatchCompanionPrototype.cs": "82c26a60d44f6806a9d0c01f8daea4aab5da8cd865b9ee66066ba7b0c92ffff0",
+    "Assets/Scripts/GameManager.WatchCompanion.cs": "ae6b15e21dc0cf131904acf67d8ccc428fb2a421366b9aac12b01fd84601533e",
+    "Assets/Scripts/GameManager.Background.cs": "a6e03c41e02477ec1dad189860d8be928441b55ae46c5b132be6407eb1040cf8",
+    "Assets/Editor/iOSLiveActivity/Companion/EOVWatchApp.swift": "d2c350c6cbbc30ba0e107fa868b26b247b127763eee092a0cc8e9eddec2843d1",
+    "Assets/Editor/iOSLiveActivity/Companion/EOVWatchSnapshot.swift": "809d48431a6cc50ccc0f8df251133468894b6a54a1c44fc6d46c1fddd6aa86a4"
+  },
+  "scope": [
+    "Experimental branch only",
+    "Phone progression/rewards/save authority retained",
+    "Protected isolated demo app/save only",
+    "No main/store/deployment changes",
+    "Skills/history/WC refresh behaviour retained"
+  ],
+  "limits": [
+    "Direct native screen renders are not manual in-app navigation proof",
+    "Controlled reaping film is actual estimator output, not a real-play or WC event",
+    "Resource interpolation is an estimate within movement segments, not continuously awarded gameplay",
+    "No hardware or store availability verification"
+  ],
+  "finalInstalledProductionApps": {
+    "phone": {
+      "bundle": "com.blindsidedgames.echoes.background.prototype",
+      "executableSha256": "9ba04de44d6e9c0d36334fd7c4fceeabdaff0a4f4de883d17ac13f60a27b1e7e",
+      "version": "1.5.8",
+      "build": "186",
+      "executableMatchesFinalBuiltProduct": true
+    },
+    "watch": {
+      "bundle": "com.blindsidedgames.echoes.background.prototype.watchkitapp",
+      "executableSha256": "5bbef14bc22a454623d797ca313a8ee63588e43fc1b1b0003568a6cef3c77b00",
+      "version": "1.5.8",
+      "build": "186",
+      "executableMatchesFinalBuiltProduct": true
+    }
+  },
+  "preservation": {
+    "primaryCheckoutUnchanged": true,
+    "realSaveFilesChecked": 228,
+    "changedRealSaveFiles": []
+  },
+  "transportLog": "watch-companion-distance-v3-transport.txt",
+  "reviewState": "Final production phone and paired42mm Watch apps installed and open;46mm disposable direct-render host left on unchanged real received snapshot. No builds/tests running."
+}

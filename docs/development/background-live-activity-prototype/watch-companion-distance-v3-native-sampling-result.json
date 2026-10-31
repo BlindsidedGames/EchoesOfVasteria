@@ -1,0 +1,27 @@
+{
+  "checks" : [
+    "midpoint samples movement and gained resources, not endpoint totals",
+    "just before reap retains current distance and old cap",
+    "just after reap resets distance, raises cap, increments one reap and retains only7 gained",
+    "restart pause creates no movement or extra resources",
+    "restart resumes at authored starting distance with effective next cap",
+    "successive reap resets using next effective cap and cumulative forecast gain",
+    "expiry freezes final estimate without extrapolating",
+    "current-run total is not added to gained resources",
+    "replacement forecast supersedes previous projection without accumulation",
+    "observed buffed cap is replaced by actual post-reap cap",
+    "Hollow has finite no-cap timeline and no invented distance reap",
+    "combat death restarts without claiming a reap",
+    "frame budget shortens horizon honestly",
+    "reaping real-six-skill\/ten-history wire payload fits32KiB",
+    "effective-cap real-six-skill\/ten-history wire payload fits32KiB",
+    "hollow real-six-skill\/ten-history wire payload fits32KiB",
+    "death real-six-skill\/ten-history wire payload fits32KiB",
+    "bounded real-six-skill\/ten-history wire payload fits32KiB",
+    "time-varying effective cap changes exactly at its observed boundary",
+    "arbitrary midpoint within final bounded segment keeps current cap and gained scope",
+    "old snapshot without timeline remains decodable"
+  ],
+  "count" : 21,
+  "passed" : true
+}
