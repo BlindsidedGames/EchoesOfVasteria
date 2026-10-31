@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Manual Refresh and expiry</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#071416;color:#efe7d5}body{max-width:1100px;margin:32px auto;padding:0 22px}h1{font-size:28px;margin:0 0 12px}h2{font-size:21px;margin:28px 0 14px}p,figcaption,summary{line-height:1.5;color:#b5c3c1}a{color:#efc16c}section{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}figure{margin:0;padding:14px;background:#102426;border:1px solid #2e4242;border-radius:8px}figure h3{font-size:17px;margin:0 0 10px}figure img{display:block;max-width:100%;margin:auto;border-radius:4px}img.phone{width:100%;height:330px;object-fit:cover;object-position:bottom}img.watch{width:auto;height:360px;object-fit:contain}figcaption{font-size:14px;margin-top:12px}details{margin:20px 0}details img{display:block;width:330px;max-width:100%;margin:14px 0}footer{margin:26px 0;font-size:14px;color:#b5c3c1}
+</style>
+<h1>Manual Refresh and expiry</h1>
+<p>The clock stops at one hour. The activity carries its final estimates before the deadline; the system shows them when it redraws the stale card. These native captures use a controlled high-rate fixture.</p>
+<h2>Phone</h2>
+<section>
+<figure><h3>Before the limit</h3><a href="captures/limit-before-deadline.png"><img class="phone" src="captures/limit-before-deadline.png" alt="System Lock Screen before the one-hour allowance expires, with manual Refresh available"></a><figcaption>The card shows the last sampled values. Click for the full Lock Screen.</figcaption></figure>
+<figure><h3>After normal wake</h3><a href="captures/limit-after-normal-wake.png"><img class="phone" src="captures/limit-after-normal-wake.png" alt="System Lock Screen showing elapsed 1:00:00, Limit reached, and preloaded final estimated totals"></a><figcaption>Final estimates appeared without opening the app or pressing Refresh.</figcaption></figure>
+</section>
+<details><summary>Dimmed display timing</summary><p>The dimmed display retained its earlier counters after the deadline. A normal wake displayed the final values. iOS controls the redraw timing.</p><a href="captures/limit-after-deadline-before-wake.png"><img src="captures/limit-after-deadline-before-wake.png" alt="Dimmed Lock Screen retaining the older counters after the clock stopped"></a></details>
+<h2>Watch</h2>
+<section>
+<figure><h3>42 mm · at the limit</h3><a href="captures/watch42-at-limit-away.png"><img class="watch" src="captures/watch42-at-limit-away.png" alt="42 mm Watch showing Limit reached, elapsed 1:00:00 and frozen final gains"></a><figcaption>Elapsed time and estimated gains stop at the allowance.</figcaption></figure>
+<figure><h3>46 mm · after the limit</h3><a href="captures/watch46-after-limit-away.png"><img class="watch" src="captures/watch46-after-limit-away.png" alt="46 mm Watch retaining the same one-hour elapsed time and final estimated gains"></a><figcaption>Staying away longer does not increase the displayed allowance.</figcaption></figure>
+</section>
+<footer><a href="README.md">Validation details and limits</a></footer>
+</html>
