@@ -264,15 +264,19 @@ namespace Tests.EditMode
             Assert.That(BackgroundRunEstimator.Forecast(input).HealthFraction, Is.EqualTo(expectedHealth).Within(.00001));
         }
 
-        [TestCase(120, 120)]
-        [TestCase(28800, 3600)]
-        public void BackgroundAllowanceCreditsAtMostOneHour(double away, double credited)
+        [TestCase(120, 120, 20, 10)]
+        [TestCase(28800, 3600, 20, 10)]
+        [TestCase(28800, 3600, 10000, 5000)]
+        public void BackgroundAllowanceCreditsAtMostOneHour(double away, double credited, int tasks, int kills)
         {
             var input = Input(away); input.BaseCap = 1000000;
+            input.Samples = new[] { new BackgroundRunSample { Seconds = 100, Distance = 100, EndDistance = 100,
+                Tasks = tasks, Kills = kills } };
             var result = BackgroundRunEstimator.Forecast(input);
             Assert.That(result.Seconds, Is.EqualTo(credited).Within(.00001));
             Assert.That(result.Distance, Is.EqualTo(credited).Within(.00001));
-            Assert.That(result.Kills, Is.EqualTo((int)(credited / 10)));
+            Assert.That(result.Tasks, Is.EqualTo((int)(credited * tasks / 100)));
+            Assert.That(result.Kills, Is.EqualTo((int)(credited * kills / 100)));
         }
 
         [Test]

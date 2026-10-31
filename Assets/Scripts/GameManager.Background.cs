@@ -133,6 +133,8 @@ namespace TimelessEchoes
                     UnityEngine.Random.InitState(unchecked((int)run.CheckpointUtcTicks));
                     double elapsed = 0, runSeconds = 0;
                     var firstRun = true;
+                    var inventory = TimelessEchoes.Upgrades.ResourceManager.Instance;
+                    if (inventory) inventory.BeginBatch();
                     try
                     {
                         foreach (var step in forecast.Steps)
@@ -156,7 +158,11 @@ namespace TimelessEchoes
                             elapsed += step.RestartSeconds;
                         }
                     }
-                    finally { UnityEngine.Random.state = oldRandom; }
+                    finally
+                    {
+                        UnityEngine.Random.state = oldRandom;
+                        if (inventory) inventory.EndBatch();
+                    }
                     statTracker.SetEstimatedRemainders(forecast);
                     var last = forecast.Steps.LastOrDefault();
                     var dead = last == null ? run.Dead : last.EndsRun && ((last.Reaped && input.StopOnFirstReap) || last.RestartSeconds + .00001 < input.RestartSeconds);

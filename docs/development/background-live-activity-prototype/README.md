@@ -47,7 +47,7 @@ The artwork comes from the game. There is no explanatory footer. Apple permits s
 
 ## Deliberate prototype limits
 
-- A settlement covers at most one hour and 20,000 work events. These are evaluation bounds, not an approved production offline policy.
+- A settlement covers at most one hour. The former 20,000-task/kill ceiling was removed on 1 November; eligibility is prepared per projected step and inventory notifications use the existing batch boundary. Rewards still resolve each event. See the [allowance and native UI follow-up](../background-allowance-ui-20261101/gallery.html).
 - Pace and combat exposure are estimates. Health prediction uses current player/enemy combat stats and authored encounter density; recorded damage is not a survival baseline. Exact death timing remains unvalidated. See the [combat-model revision and recorded-profile comparison](../background-combat-20261101/README.md).
 - Old history lacks active-time and Echo-performer measurements. New real runs record those small counters. Changing equipment, preferences or balance can make older pace less representative.
 - Active saved reward/reap-distance buffs expire, and the temporary shop boost consumes its budget. The combat forecast accounts for saved and automatically recast ability strength, but settlement does not replay every cast's state/counters. Combat-Echo positioning, gathering resonance and Windfall cycles are not reproduced. They need accuracy work before production payouts.

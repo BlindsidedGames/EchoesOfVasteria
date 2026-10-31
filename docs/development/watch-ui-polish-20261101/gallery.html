@@ -9,7 +9,7 @@
 <div class="phone"><a href="captures/live-activity-portrait-after.png"><img src="captures/live-activity-portrait-after.png" alt="Actual Lock Screen: the lower QA activity shows the enlarged Refresh control"></a></div>
 <p class="note">The lower card is the current production widget running in an isolated native host. The upper, expired card is from an earlier run. Near-edge taps could not be delivered by simulator automation, so accidental unlock behaviour still needs physical-device acceptance. <a href="README.md">Native validation and limits</a></p>
 <h2>Remaining limitations</h2><ul>
-<li>Background progress has a one-hour maximum and a 20,000-task/kill work limit. High rates can reach the work limit much sooner.</li>
+<li>The former 20,000-event ceiling has now been removed. Background progress retains its one-hour maximum. <a href="../background-allowance-ui-20261101/gallery.html">Latest allowance and Watch layout</a>.</li>
 <li>Survival and loot remain estimates. Recorded early-game comparisons predict death about 10–16% too late; positioning, bursts and some ability effects are simplified.</li>
 <li>Foreground phone snapshots publish every 15 seconds. Watch Refresh cannot force suspended Unity to generate fresh game data.</li>
 <li>The Watch advances the saved background estimate locally. Phone Live Activity counters update on Refresh; its elapsed timer advances separately.</li>

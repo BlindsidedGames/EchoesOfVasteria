@@ -1,4 +1,12 @@
-# Background allowance native UI
+# Background allowance and native UI
+
+The managed allowance remains one hour. The former 20,000-task/kill ceiling is removed from the estimator and native timeline decoder. The producer sends `backgroundLimitSeconds` from the existing policy constant; no save schema or version changes are required.
+
+Settlement prepares weighted task/enemy choices once per projected step, rather than rebuilding them for every event. Eligibility is refreshed each step, at most two seconds apart; completion-tier or combat eligibility changes within a step take effect on the next step. Every completion still resolves its own loot, bonuses, XP and typed statistics. Existing inventory batching coalesces inventory-change notifications without suppressing resource-added events or tier rolls.
+
+Managed verification on Unity 6000.6.0f1: **36 EditMode cases and six isolated PlayMode continuation cases passed**. The new high-rate allowance case failed before the repair: an eight-hour absence at 100 tasks and 50 kills per second credited only 133.33 seconds instead of 3600. Its final lifecycle case credits 360,000 tasks and 180,000 kills, persists the full hour and counts, grants typed resources, and rejects duplicate foreground payouts. It took **12.276 seconds on this desktop**, including world restoration. This is a stress fixture, not mobile performance or real-game pace validation. Phone profiling remains necessary.
+
+The first large settlement did complete but failed the Editor screenshot-session watchdog. A headless probe also logged an Editor localization exception and exceeded its 300-second timeout; it is not passing evidence. The fixture's unrestricted skill asset lookup was replaced by a scoped authored-asset lookup. The subsequent optimized D3D11 run and the full six-case suite completed successfully. [Managed receipts](managed-results/) retain the intended pre-fix failure and final passing runs. No new arbitrary event or reward ceiling replaces the old one.
 
 The native wire now accepts optional `backgroundLimitSeconds` as presentation metadata and carries it through the real Live Activity bridge into optional ContentState. Both phone and Watch use one shared formatter for the transmitted allowance. Missing or malformed optional values are omitted without dropping valid progress. The maximum is never inferred from a trajectory or forecast end, which may be shorter than the background policy.
 

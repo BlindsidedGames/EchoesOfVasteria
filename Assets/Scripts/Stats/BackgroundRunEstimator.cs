@@ -115,11 +115,9 @@ namespace TimelessEchoes.Stats
             var health = input.MaxHealth * run.HealthFraction;
             var runKills = run.Stats.Kills;
             double runMovingSeconds = 0;
-            // Deliberately bounded prototype, not a new production offline policy.
+            // The allowance is time-based; faster characters keep their full hour.
             var remaining = Math.Min(input.Seconds, MaxAwaySeconds);
             if (input.Seconds > remaining) result.StopReason = "Prototype limited to one hour";
-            if ((taskRate + killRate) * remaining > 20000)
-            { remaining = 20000 / (taskRate + killRate); result.StopReason = "Prototype work limit"; }
             while (remaining > .00001 && result.Steps.Count < 10000)
             {
                 var modifiers = result.Reaps + result.Deaths == 0

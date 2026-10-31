@@ -186,6 +186,7 @@ namespace Tests.PlayMode
             var checkpoint = data.ActiveRun;
             var town = JsonUtility.FromJson<CompanionContract>(game.CaptureWatchCompanionSnapshot());
             Assert.That(town.schemaVersion, Is.EqualTo(1));
+            Assert.That(town.backgroundLimitSeconds, Is.EqualTo(3600));
             Assert.That(town.state, Is.EqualTo("town"));
             Assert.That(town.generatedAt, Is.GreaterThan(DateTimeOffset.UtcNow.ToUnixTimeSeconds() - 5));
             Assert.That(town.skills.Single().level, Is.EqualTo(29));
@@ -250,6 +251,7 @@ namespace Tests.PlayMode
             public string state;
             public bool phoneInBackground;
             public bool backgroundProgressEnabled;
+            public double backgroundLimitSeconds;
             public string[] portraitLayers;
             public CompanionRun run;
             public CompanionSkill[] skills;
@@ -258,6 +260,47 @@ namespace Tests.PlayMode
         [Serializable] private class CompanionRun { public string mapId; public double distance, resources; public int kills; }
         [Serializable] private class CompanionSkill { public int level; }
         [Serializable] private class CompanionHistory { public int runNumber; public bool estimated; }
+
+        [UnityTest]
+        public IEnumerator FastBackgroundRunCreditsItsFullHourAndCommitsOnce()
+        {
+            PlayerPrefs.SetInt("Gameplay.BackgroundRunPrototype", 1);
+            var data = Progress();
+            data.BackgroundSamples["River"] = new List<BackgroundRunSample>
+                { new() { Seconds = 100, Distance = 50, EndDistance = 2000, Tasks = 10000, Kills = 5000 } };
+            data.ActiveRun = new RunSaveData { Map = "River", Distance = 80,
+                CheckpointUtcTicks = DateTime.UtcNow.AddHours(-8).Ticks,
+                Stats = new RunSaveData.Statistics { Distance = 80 } };
+            CreateRuntime(data, "River");
+            owner.AddComponent<EnemyKillTracker>();
+            var controller = owner.AddComponent<SkillController>();
+            var allSkills = AssetDatabase.FindAssets("t:Skill", new[] { "Assets/Scriptables/Skills" })
+                .Select(guid => AssetDatabase.LoadAssetAtPath<Skill>(AssetDatabase.GUIDToAssetPath(guid))).ToList();
+            Set(controller, "skills", allSkills);
+            foreach (var skill in allSkills) data.SkillData[skill.name] = new GameData.SkillProgress { Level = 50 };
+            Events.LoadData();
+            var equipment = owner.AddComponent<EquipmentController>();
+            equipment.Equip(new GearItem { slot = "Weapon", rarity = AssetCache.GetAll<RaritySO>().First(r => r.tierIndex == 2),
+                affixes = new List<GearAffix> { new() { stat = AssetCache.GetAll<StatDefSO>().First(s => s.heroMapping == HeroStatMapping.Damage), value = 1e12f } } });
+            var timer = System.Diagnostics.Stopwatch.StartNew();
+            yield return WaitForRun();
+            timer.Stop();
+            HeroController.Instance.SetActiveState(false);
+            Assert.That(stats.TasksCompleted, Is.GreaterThanOrEqualTo(360000));
+            Assert.That(stats.TotalKills, Is.GreaterThanOrEqualTo(180000));
+            Assert.That(stats.TotalResourcesGathered, Is.GreaterThan(0));
+            var tasks = stats.TasksCompleted; var kills = stats.TotalKills; var resources = stats.TotalResourcesGathered;
+            Events.ApplicationForeground(); Events.ApplicationForeground();
+            Assert.That(stats.TasksCompleted, Is.EqualTo(tasks));
+            Assert.That(stats.TotalKills, Is.EqualTo(kills));
+            Assert.That(stats.TotalResourcesGathered, Is.EqualTo(resources));
+            Assert.IsTrue(oracle.PrepareForQuit());
+            var saved = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult().Data;
+            Assert.That(saved.ActiveRun.Stats.EstimatedSeconds, Is.EqualTo(3600).Within(.01));
+            Assert.That(saved.ActiveRun.Stats.Tasks, Is.GreaterThanOrEqualTo(360000));
+            Assert.That(saved.ActiveRun.Stats.Kills, Is.GreaterThanOrEqualTo(180000));
+            TestContext.Out.WriteLine($"Full-hour high-rate resume: {timer.Elapsed.TotalSeconds:F3}s; tasks={tasks}, kills={kills}, resources={resources}.");
+        }
 
         [UnityTest]
         public IEnumerator BackgroundSettlementCommitsOnceAndWarmResumeRebuildsTheWorld()

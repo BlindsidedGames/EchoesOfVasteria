@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-31 21:43:41Z" end-time="2026-10-31 21:43:41Z" duration="0.048311">
+  <test-suite type="TestSuite" id="1000" name="Echoes of Vasteria" fullname="Echoes of Vasteria" runstate="Runnable" testcasecount="483" result="Failed" site="Child" start-time="2026-10-31 21:43:41Z" end-time="2026-10-31 21:43:41Z" duration="0.048311" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1548" name="EditMode.Tests.dll" fullname="C:/Users/mattr/.codex/worktrees/release-1-5-1/EchoesOfVasteria/Library/ScriptAssemblies/EditMode.Tests.dll" runstate="Runnable" testcasecount="445" result="Failed" site="Child" start-time="2026-10-31 21:43:41Z" end-time="2026-10-31 21:43:41Z" duration="0.039864" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="62844" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1553" name="Tests" fullname="Tests" runstate="Runnable" testcasecount="417" result="Failed" site="Child" start-time="2026-10-31 21:43:41Z" end-time="2026-10-31 21:43:41Z" duration="0.037112" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1554" name="EditMode" fullname="Tests.EditMode" runstate="Runnable" testcasecount="417" result="Failed" site="Child" start-time="2026-10-31 21:43:41Z" end-time="2026-10-31 21:43:41Z" duration="0.034910" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1072" name="BackgroundRunEstimatorTests" fullname="Tests.EditMode.BackgroundRunEstimatorTests" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" testcasecount="36" result="Failed" site="Child" start-time="2026-10-31 21:43:41Z" end-time="2026-10-31 21:43:41Z" duration="0.030103" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="1109" name="BackgroundAllowanceCreditsAtMostOneHour" fullname="Tests.EditMode.BackgroundRunEstimatorTests.BackgroundAllowanceCreditsAtMostOneHour" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-31 21:43:41Z" end-time="2026-10-31 21:43:41Z" duration="0.025952" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1106" name="BackgroundAllowanceCreditsAtMostOneHour(120,120,20,10)" fullname="Tests.EditMode.BackgroundRunEstimatorTests.BackgroundAllowanceCreditsAtMostOneHour(120,120,20,10)" methodname="BackgroundAllowanceCreditsAtMostOneHour" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="1677844415" result="Passed" start-time="2026-10-31 21:43:41Z" end-time="2026-10-31 21:43:41Z" duration="0.012634" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1107" name="BackgroundAllowanceCreditsAtMostOneHour(28800,3600,20,10)" fullname="Tests.EditMode.BackgroundRunEstimatorTests.BackgroundAllowanceCreditsAtMostOneHour(28800,3600,20,10)" methodname="BackgroundAllowanceCreditsAtMostOneHour" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="843011743" result="Passed" start-time="2026-10-31 21:43:41Z" end-time="2026-10-31 21:43:41Z" duration="0.000358" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1108" name="BackgroundAllowanceCreditsAtMostOneHour(28800,3600,10000,5000)" fullname="Tests.EditMode.BackgroundRunEstimatorTests.BackgroundAllowanceCreditsAtMostOneHour(28800,3600,10000,5000)" methodname="BackgroundAllowanceCreditsAtMostOneHour" classname="Tests.EditMode.BackgroundRunEstimatorTests" runstate="Runnable" seed="1441336937" result="Failed" start-time="2026-10-31 21:43:41Z" end-time="2026-10-31 21:43:41Z" duration="0.003743" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: 3600.0d +/- 1.0000000000000001E-05d
+  But was:  133.33333333333334d
+]]></message>
+                  <stack-trace><![CDATA[at Tests.EditMode.BackgroundRunEstimatorTests.BackgroundAllowanceCreditsAtMostOneHour (System.Double away, System.Double credited, System.Int32 tasks, System.Int32 kills) [0x00070] in C:\Users\mattr\.codex\worktrees\release-1-5-1\EchoesOfVasteria\Assets\Tests\EditMode\BackgroundRunEstimatorTests.cs:276
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Saving results to: C:/Users/mattr/AppData/LocalLow/Blindsided Games/Echoes of Vasteria\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

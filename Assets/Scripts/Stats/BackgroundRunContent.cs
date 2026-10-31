@@ -182,24 +182,54 @@ namespace TimelessEchoes.Stats
             return task.GetWeight(x) * task.GetTerrainMultiplier(terrain.bottomTerrain, terrain.middleTerrain, terrain.topTerrain);
         }
 
-        private T Choose<T>(IEnumerable<T> source, Func<T, float> weight) where T : class
+        private sealed class Choices<T> where T : class
         {
-            var candidates = source.Where(x => weight(x) > 0).ToArray();
-            var total = candidates.Sum(x => (double)weight(x));
-            var roll = random.NextDouble() * total;
-            foreach (var entry in candidates) { roll -= weight(entry); if (roll <= 0) return entry; }
-            return candidates.LastOrDefault();
+            private readonly (T item, double upper)[] entries;
+            private readonly double total;
+            public Choices(IEnumerable<T> source, Func<T, float> weight)
+            {
+                var list = new List<(T, double)>();
+                foreach (var item in source)
+                {
+                    var value = weight(item);
+                    if (!(value > 0)) continue;
+                    total += value; list.Add((item, total));
+                }
+                entries = list.ToArray();
+            }
+            public T Pick(System.Random random)
+            {
+                var roll = random.NextDouble() * total;
+                foreach (var entry in entries) if (roll <= entry.upper) return entry.item;
+                return entries.Length > 0 ? entries[entries.Length - 1].item : null;
+            }
         }
+
+        private T Choose<T>(IEnumerable<T> source, Func<T, float> weight) where T : class => new Choices<T>(source, weight).Pick(random);
 
         public void Award(BackgroundRunEstimator.Step step, double elapsed, double runSeconds, bool firstRun)
         {
             var tracker = GameplayStatTracker.Instance;
             var combat = CombatProfile(step.Distance, runSeconds, firstRun);
+            // Content eligibility is sampled per projected step (at most two seconds),
+            // while each completion still rolls and awards its own loot and experience.
+            var tasks = new Dictionary<ProceduralTaskGenerator.WeightedTaskCategory, Choices<TaskData>>();
+            if (step.Tasks > 0)
+                foreach (var category in categories)
+                    if (CategoryWeight(category, (float)step.Distance) > 0)
+                        tasks[category] = new Choices<TaskData>(category.tasks, task => TaskWeight(task, (float)step.Distance));
+            var taskCategories = new Choices<ProceduralTaskGenerator.WeightedTaskCategory>(tasks.Keys,
+                category => category.GetWeight((float)step.Distance));
+            var enemies = step.Kills > 0 ? new Choices<TimelessEchoes.Enemies.EnemyData>(map.taskGeneratorSettings.enemies, enemy =>
+            {
+                var weight = EnemyWeight(enemy, (float)step.Distance);
+                return weight > 0 && Encounter(enemy, step.Distance, tracker.CurrentRunKills, combat).defeated ? weight : 0;
+            }) : null;
             for (var i = 0; i < step.Tasks; i++)
             {
-                var category = Choose(categories, c => CategoryWeight(c, (float)step.Distance));
+                var category = taskCategories.Pick(random);
                 if (category == null) continue;
-                var task = Choose(category.tasks, t => TaskWeight(t, (float)step.Distance));
+                var task = tasks[category].Pick(random);
                 if (!task) continue;
                 var xp = Experience(task.associatedSkill, task.xpForCompletion, echoTaskShare, elapsed, step.Distance, true);
                 Drops(task.resourceDrops, task.additionalLootChances, task.associatedSkill, elapsed, step.Distance);
@@ -209,11 +239,7 @@ namespace TimelessEchoes.Stats
             }
             for (var i = 0; i < step.Kills; i++)
             {
-                var enemy = Choose(map.taskGeneratorSettings.enemies, e =>
-                {
-                    var weight = EnemyWeight(e, (float)step.Distance);
-                    return weight > 0 && Encounter(e, step.Distance, tracker.CurrentRunKills, combat).defeated ? weight : 0;
-                });
+                var enemy = enemies.Pick(random);
                 if (!enemy) continue;
                 Experience(skills ? skills.CombatSkill : null, enemy.experience, echoKillShare, elapsed, step.Distance, false);
                 Drops(enemy.resourceDrops, enemy.additionalLootChances, skills ? skills.CombatSkill : null, elapsed, step.Distance);
