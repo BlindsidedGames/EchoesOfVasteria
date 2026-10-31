@@ -26,7 +26,10 @@ struct EOVForecastWidget: Widget {
     private let accent = Color(red: 0.94, green: 0.75, blue: 0.42)
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: EOVForecastAttributes.self) { context in
-            SnapshotPanel(context: context)
+            Group {
+                if #available(iOS 18.0, *) { SnapshotFamilyContent(context: context) }
+                else { SnapshotPanel(context: context) }
+            }
                 .activityBackgroundTint(Color(red: 0.08, green: 0.11, blue: 0.12))
                 .activitySystemActionForegroundColor(accent)
         } dynamicIsland: { context in
@@ -41,6 +44,30 @@ struct EOVForecastWidget: Widget {
             } minimal: { PixelArt(name: "EOVCarl", size: 20) }
             .keylineTint(accent)
         }
+    }
+}
+@available(iOS 18.0, *)
+private struct SnapshotFamilyContent: View {
+    @Environment(\.activityFamily) private var family
+    let context: ActivityViewContext<EOVForecastAttributes>
+    var body: some View {
+        if family == .small {
+            HStack(spacing: 4) {
+                PixelArt(name: "EOVHero", size: 22)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(context.state.mapTitle).font(.caption2.bold())
+                    Text(context.isStale ? "Estimate ended" :
+                        (context.state.status == "live" ? "" : "Est. ") +
+                        compactDistance(context.state.distance) +
+                        (context.state.cap > 0 ? " / " + compactDistance(context.state.cap) : ""))
+                        .font(.caption.monospacedDigit().bold())
+                    Text(context.state.resources.rounded(.down).formatted(.number.precision(.fractionLength(0))) +
+                        (context.state.status == "live" ? " this run" : " since dep. · \(context.state.reaps) reaps"))
+                        .font(.caption2).foregroundStyle(.secondary)
+                }.lineLimit(1).minimumScaleFactor(0.6).frame(maxWidth: .infinity, alignment: .leading)
+                RefreshAction(context: context, compact: true)
+            }.padding(6).foregroundStyle(.white)
+        } else { SnapshotPanel(context: context) }
     }
 }
 private struct SnapshotPanel: View {
@@ -94,11 +121,14 @@ private struct SnapshotValues: View {
 }
 private struct RefreshAction: View {
     let context: ActivityViewContext<EOVForecastAttributes>
+    var compact = false
     var body: some View {
         if context.state.canRefresh && !context.isStale {
             if #available(iOS 17.0, *) {
                 Button(intent: EOVRefreshIntent(activityID: context.activityID, sourceID: context.state.sourceID)) {
-                    Label("Refresh", systemImage: "arrow.clockwise").font(.caption.bold())
+                    if compact {
+                        Image(systemName: "arrow.clockwise").frame(minWidth: 32, minHeight: 44)
+                    } else { Label("Refresh", systemImage: "arrow.clockwise").font(.caption.bold()) }
                 }.buttonStyle(.bordered).accessibilityLabel("Refresh outing estimate")
             } else {
                 Text("Open Echoes to refresh").font(.caption2).foregroundStyle(.secondary)
