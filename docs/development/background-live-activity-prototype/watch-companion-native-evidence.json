@@ -138,10 +138,11 @@
   },
   "clip": {
     "file": "watch-companion-direct-screens.mp4",
-    "seconds": 30.34,
+    "seconds": 22.116667,
     "width": 416,
     "height": 496,
-    "content": "Directly rendered production CurrentRunScreen, SkillsScreen and RecentRunsScreen in disposable standalone harness with exact real received JSON. Host restarts between roots; not an in-app navigation demonstration."
+    "content": "Directly rendered production CurrentRunScreen, SkillsScreen and RecentRunsScreen in disposable standalone harness with exact real received JSON. Host restarts between roots; not an in-app navigation demonstration.",
+    "verification": "Windows ffprobe metadata and full ffmpeg decode verified after fetching the committed artifact."
   },
   "sourceHashes": {
     "Assets/Editor/iOSLiveActivity/LiveActivityIosPostprocess.cs": "c811b4619e32cc43b42cfbcf059d1d23704d2f7e8198e8ac2be80de9b9c0b466",
