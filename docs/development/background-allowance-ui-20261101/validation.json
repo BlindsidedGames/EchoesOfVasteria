@@ -1,0 +1,46 @@
+{
+  "sourceCheckpoint": "fbae88173eb3e00b6e95e2b766eb835466a1bfce",
+  "nativeSourceSHA256": {
+    "Assets/Editor/iOSLiveActivity/Companion/EOVWatchSnapshot.swift": "1142a954c5933369dc16b428c730c7c50067a470bc29b2310aabaaecb2f99824",
+    "Assets/Editor/iOSLiveActivity/Companion/EOVWatchPresentation.swift": "a7c5ef0a3b07bdce07be53d2675f45e73d8cfe9511405caba6ffcb0d4e057fc5",
+    "Assets/Editor/iOSLiveActivity/Companion/EOVWatchViews.swift": "65dd0cda1da9403c22b1d5e70a0a53e615c83dfaecae36899d0471a9bbb0ca67",
+    "Assets/Editor/iOSLiveActivity/Companion/EOVWatchComponents.swift": "f74d9bc47c87114ed97312ccd8bd0c5bf210e188dfc1f93b3a275c78d43eddf0",
+    "Assets/Editor/iOSLiveActivity/Native/EOVBackgroundAllowance.swift": "2e733fcbaef3018be1f5bb97fb705c50f51f36b0759bc70daa39abdc878494f1",
+    "Assets/Editor/iOSLiveActivity/Native/EOVForecastAttributes.swift": "906b83e9c2fdda6ddc16947a09bcc8b34899baf025b72124436c53f9a1d4b3b8",
+    "Assets/Editor/iOSLiveActivity/Native/EOVLiveActivityBridge.swift": "7a0c80477e6da27837121a609011d3e2d8409dd9b313750694e67cb9ebc6f6cb",
+    "Assets/Editor/iOSLiveActivity/Templates/EOVForecastWidget.swift": "521ca440a56736b21195abe922979e8e3483d349be8f656b4e133f9a662f7412",
+    "Assets/Editor/iOSLiveActivity/LiveActivityIosPostprocess.cs": "3da7fb1b1f337ec7357b91109add3b105dfafefabf4de1d0c81d546e294ffe5b"
+  },
+  "checksPassed": {
+    "nativeAllowance": 10,
+    "existingSampler": 21,
+    "existingPresentation": 11
+  },
+  "builds": {
+    "WatchPreview": "BUILD SUCCEEDED; min11",
+    "WatchActualStore": "BUILD SUCCEEDED; min11",
+    "NativePhoneHostAndProductionWidget": "BUILD SUCCEEDED; min16.2",
+    "EditorPackaging": "Unity6000.6 SDK typecheck passed; no full export"
+  },
+  "observedPhonePolicySeconds": 3600,
+  "observedPhoneForecastSeconds": 900,
+  "legacyMaximumOmitted": true,
+  "inputLimits": [
+    "Island long press rejected before delivery at864,199",
+    "expanded Island and supplemental small-family rendering not accepted",
+    "physical near-edge tap/unlock behavior not accepted",
+    "true landscape card layout not accepted"
+  ],
+  "cleanup": {
+    "qaPhoneAppsUninstalled": true,
+    "newNarrowSimulatorShutdown": true,
+    "mainBuild188AndSavesUnchanged": true,
+    "primaryUserDiffSHA256": "7d45e5d114159fefba437f0b4df201af1939c4ffc59e6c29725a468ee1c68ec2"
+  },
+  "dialTimeFocus": {
+    "estimatedWithAllowance": "away \u00b7 1h max",
+    "legacyEstimated": "away time",
+    "foreground": "run time",
+    "inputVerified": false
+  }
+}

@@ -127,12 +127,11 @@ struct EOVWatchSnapshot: Codable {
                   frames[0].count == 6 || (frames[0][6] == 0 && frames[0][7] == 0),
                   frames.last![0] == horizonSeconds else { throw Invalid.snapshot }
             for (index, frame) in frames.enumerated() {
-                guard frame[0] <= horizonSeconds, frame[4] < Double(Int.max), frame[4].rounded(.down) == frame[4],
+                guard frame[0] <= horizonSeconds, Int(exactly: frame[4]) != nil,
                       [0, 1, 2].contains(frame[5]), distanceReaping || frame[2] == 0,
                       frame[5] != 1 || frame[1] == 0 else { throw Invalid.snapshot }
                 if frame.count == 8 {
-                    guard frame[6] < Double(Int.max), frame[7] < Double(Int.max),
-                          frame[6].rounded(.down) == frame[6], frame[7].rounded(.down) == frame[7] else { throw Invalid.snapshot }
+                    guard Int(exactly: frame[6]) != nil, Int(exactly: frame[7]) != nil else { throw Invalid.snapshot }
                 }
                 guard index > 0 else { continue }
                 let prior = frames[index - 1]

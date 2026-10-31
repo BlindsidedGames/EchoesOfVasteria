@@ -7,6 +7,7 @@ struct EOVWatchDial: View {
     @Environment(\.dynamicTypeSize) private var textSize
     var body: some View {
         let run = presentation.display
+        let timeCaption = run.estimated ? (presentation.backgroundLimitLabel.map { "away · " + $0 } ?? "away time") : "run time"
         GeometryReader { viewport in
             // The original content needs135pt plus88pt of header/insets. Spend
             // additional height on the ring and lower row, without a device check.
@@ -23,7 +24,7 @@ struct EOVWatchDial: View {
                                 else {
                                     Text(focus == 1 ? eovWatchNumber(run.resources) : run.estimated ? eovWatchDuration(presentation.away?.elapsed ?? 0) : eovWatchDuration(run.seconds))
                                         .eovWatchFont(26, weight: .bold, design: .rounded).monospacedDigit()
-                                    Text(focus == 1 ? (run.estimated ? "gained" : "resources") : run.estimated ? "away time" : "run time").eovWatchFont(10).foregroundStyle(EOVWatchPalette.muted)
+                                    Text(focus == 1 ? (run.estimated ? "gained" : "resources") : timeCaption).eovWatchFont(10).foregroundStyle(EOVWatchPalette.muted)
                                 }
                                 HStack(spacing: 2) {
                                     EOVWatchGlyph(name: "Heart", size: 9)
