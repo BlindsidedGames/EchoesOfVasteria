@@ -88,7 +88,8 @@ namespace TimelessEchoes.Stats
         {
             if (!enemy || !enemy.prefab || enemy.GetSpawnTerrainError() != null) return 0;
             var settings = map.taskGeneratorSettings; var local = x - settings.enemySpawnXOffset;
-            if (local < Mathf.Max(settings.minX, enemy.minX) || local > enemy.maxX) return 0;
+            var opening = map.name == "Woods" && !StaticReferences.CompletedNpcTasks.Contains("Ivan1") ? 50 : 0;
+            if (local < Mathf.Max(settings.minX, enemy.minX, opening) || local > enemy.maxX) return 0;
             var t = map.tilemapChunkSettings;
             if (!enemy.spawnTerrains.Any(terrain => terrain == t.bottomTerrain || terrain == t.middleTerrain || terrain == t.topTerrain)) return 0;
             var curve = settings.GetEnemyWeightCurve(enemy);
