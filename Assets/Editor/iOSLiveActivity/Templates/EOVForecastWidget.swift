@@ -112,6 +112,7 @@ private struct ElapsedStatus: View {
 private struct SnapshotValues: View {
     let state: EOVForecastAttributes.ContentState
     let stale: Bool
+    private var metricScope: String { state.backgroundOrigin == nil ? "this run" : "since departure" }
     var body: some View {
         VStack(alignment: .leading, spacing: 7) {
             VStack(spacing: 4) {
@@ -127,26 +128,14 @@ private struct SnapshotValues: View {
                         .tint(Color(red: 0.94, green: 0.75, blue: 0.42))
                 }
             }
-            HStack(spacing: 20) {
-                ActivityMetric(art: "EOVTask", count: state.tasks, label: "task")
-                ActivityMetric(art: "EOVKill", count: state.kills, label: "kill")
-                Spacer(minLength: 0)
+            HStack(spacing: 4) {
+                ActivityMetric(art: "EOVTask", count: state.tasks, label: "Tasks " + metricScope)
+                ActivityMetric(art: "EOVKill", count: state.kills, label: "Kills " + metricScope)
+                ActivityMetric(art: "EOVChest", count: state.resources, label: "Resources " + metricScope,
+                               prefix: state.backgroundOrigin == nil ? "" : "+")
+                ActivityMetric(art: state.reaps.isMultiple(of: 2) ? "EOVCarl" : "EOVCarlSwing",
+                               count: Double(state.reaps), label: "Reaps " + metricScope)
             }.foregroundStyle(.secondary)
-            HStack(spacing: 20) {
-                HStack(spacing: 5) {
-                    PixelArt(name: "EOVChest", size: 20)
-                    Text((state.backgroundOrigin == nil ? "" : "+") + count(state.resources))
-                        .font(.subheadline.monospacedDigit().bold())
-                    Text(state.backgroundOrigin == nil ? "this run" : "gained").font(.caption2).foregroundStyle(.secondary)
-                }
-                Spacer(minLength: 0)
-                if state.backgroundOrigin != nil {
-                    HStack(spacing: 4) {
-                        PixelArt(name: state.reaps.isMultiple(of: 2) ? "EOVCarl" : "EOVCarlSwing", size: 20)
-                        Text("\(state.reaps) " + (state.reaps == 1 ? "reap" : "reaps")).font(.caption.monospacedDigit())
-                    }.foregroundStyle(.secondary)
-                }
-            }
         }
     }
 }
@@ -154,12 +143,19 @@ private struct ActivityMetric: View {
     let art: String
     let count: Double?
     let label: String
+    var prefix = ""
+    private var value: String {
+        count.map { prefix + $0.rounded(.down).formatted(.number.precision(.fractionLength(0))) } ?? "—"
+    }
     var body: some View {
         HStack(spacing: 4) {
             PixelArt(name: art, size: 16)
-            Text(count.map { $0.rounded(.down).formatted(.number.precision(.fractionLength(0))) } ?? "—")
-            Text(count?.rounded(.down) == 1 ? label : label + "s")
+            Text(value).lineLimit(1).minimumScaleFactor(0.7)
         }.font(.caption.monospacedDigit())
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(label)
+            .accessibilityValue(value)
     }
 }
 private struct RefreshAction: View {
@@ -180,7 +176,6 @@ private struct RefreshAction: View {
         }
     }
 }
-private func count(_ value: Double) -> String { value.rounded(.down).formatted(.number.precision(.fractionLength(0))) }
 private struct PixelArt: View {
     let name: String
     let size: CGFloat
