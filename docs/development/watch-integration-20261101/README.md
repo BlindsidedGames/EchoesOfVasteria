@@ -1,0 +1,17 @@
+# Selected Watch screens in the real companion
+
+The shipping Watch source now uses the reviewed Expedition, Health, Resources, Since you left, Skillbook, Recent runs and Compare runs presentations. A menu in the clock row groups Run, Skills and History. Current run opens on the dial while foregrounded and on the validated away trajectory while backgrounded; expired trajectories stay frozen and explicitly ended. Run Goal, Maps and Living Trail are not in this navigation.
+
+The production app uses `EOVWatchCompanionStore`, real WatchConnectivity, its existing isolated app cache and the current Watch clock. No fixture, QA process argument, frozen clock or fixed character is compiled into that app. Health/resources remain last-phone values. Away counters are managed trajectory gains, never phone totals plus gains. History remains the retained global ten, with estimates marked and same-map comparisons preferred. Pins are a local Watch UI preference, not game progression.
+
+Refresh requests the existing phone `requestSnapshot` command. The phone replies with saved data and queues a flag consumed by the active Unity loop. Suspended Unity cannot be forced to recompute. The Watch samples its saved trajectory locally; Refresh does not extend its origin, actual horizon or earlier forecast end. Active Unity already publishes every 15 seconds and on mode changes. No new AppIntent or wake guarantee was added.
+
+Personalization uses the existing validated portrait layer IDs and the actual character catalog. The Watch exporter adds six authored Idle_Down frames for every supported part in a separate Watch-only catalog. The Live Activity's base assets and decoder remain unchanged. The compositor preserves layer order, fits the full outfit bounds across all frames, and falls back safely when optional art is unavailable. Animation requires a recent uncached foreground phone snapshot, reachability, active scene, normal luminance and Reduce Motion disabled.
+
+## Native validation checkpoint
+
+`captures/*-final.png` and `captures/contact-{42,46}-final.png` are fresh simulator renders of these production SwiftUI views through the separate fixture adapter under `Prototypes/WatchDesignLab/Integration`. They are not old lab screenshots. Both sizes use the real source views, complete production catalog IDs and reviewed game art. Fixture input and frozen presentation time exist only in the adapter target. A first cold-launch initial capture was black before the initial frame; it is retained as a rejected startup capture, not visual acceptance.
+
+Eleven focused presentation contracts pass: automatic routing, phone/gain scope separation, stale animation guards, opt-out, legacy unknown counters, map/origin safety, actual forecast expiry, terminal state and empty/town handling. Existing decoder/sampler and managed-estimator tests retain their own ownership. The editor packaging files compile against the installed Unity 6000.6 SDK and existing character runtime assembly. Both isolated native Preview and real Store targets compile. This is not execution of a fresh full Unity iOS export or a TestFlight upload.
+
+Additional real-store cache, refresh-state and scenario evidence is being completed before the final handoff. The unpaired isolated Store bundle exercises the real app/store without replacing the production Watch bundle or touching its cache. Neither native target changes a player save, shipping version, main branch or build 188.
