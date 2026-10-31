@@ -18,7 +18,7 @@ final class EOVWatchCompanionStore: NSObject, ObservableObject, WCSessionDelegat
     override init() {
         if let data = EOVWatchSnapshotCache.load() { snapshot = try? EOVWatchSnapshot.decode(data) }
         super.init()
-        message = snapshot == nil ? "Open Echoes on iPhone" : "Cached snapshot"
+        message = snapshot == nil ? "Open Echoes on iPhone" : ""
         if WCSession.isSupported() {
             WCSession.default.delegate = self
             WCSession.default.activate()
@@ -51,7 +51,7 @@ final class EOVWatchCompanionStore: NSObject, ObservableObject, WCSessionDelegat
             snapshot = next
             self.cached = cached
             EOVWatchSnapshotCache.save(data)
-            message = cached ? "Cached reply" : "Received from iPhone"
+            message = ""
             NSLog("[EOVWatch] received generatedAt=%.0f cached=%d", next.generatedAt, cached)
         } catch { message = "Update unavailable · keeping cache"; NSLog("[EOVWatch] invalid update rejected") }
     }
@@ -59,7 +59,8 @@ final class EOVWatchCompanionStore: NSObject, ObservableObject, WCSessionDelegat
         DispatchQueue.main.async {
             self.reachable = session.isReachable
             if let data = session.receivedApplicationContext["snapshot"] as? Data {
-                self.accept(data, cached: session.receivedApplicationContext["cached"] as? Bool ?? true)
+                // Already-received context is a cache on relaunch, with its original timestamp.
+                self.accept(data, cached: true)
             }
             NSLog("[EOVWatch] watch session activated=%d reachable=%d", activationState.rawValue, session.isReachable)
         }
@@ -103,15 +104,18 @@ private struct SnapshotStatus: View {
     @EnvironmentObject private var store: EOVWatchCompanionStore
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
-            if store.snapshot?.demo == true { Text("Demo").font(.caption2.bold()).foregroundStyle(.orange) }
-            Text(store.reachable ? (store.cached ? "Connected · cached" : "iPhone connected") : (store.snapshot == nil ? "iPhone unavailable" : "iPhone unavailable · cached"))
+            Text((store.snapshot?.demo == true ? "Demo · " : "") + connection)
                 .font(.caption2).foregroundStyle(.secondary)
             if let snapshot = store.snapshot {
                 Text("Updated " + Date(timeIntervalSince1970: snapshot.generatedAt).formatted(date: .abbreviated, time: .standard))
                     .font(.caption2).foregroundStyle(.secondary)
             }
-            Text(store.message).font(.caption2).foregroundStyle(.secondary)
+            if !store.message.isEmpty { Text(store.message).font(.caption2).foregroundStyle(.secondary) }
         }
+    }
+    private var connection: String {
+        guard store.snapshot != nil else { return store.reachable ? "Connected · waiting for data" : "iPhone unavailable" }
+        return store.reachable ? (store.cached ? "Connected · cached" : "iPhone connected") : "iPhone unavailable · cached"
     }
 }
 
@@ -135,14 +139,34 @@ private struct CurrentRunScreen: View {
                 } else { Text(s.state == "town" ? "In town" : "No active run") }
                 if let f = s.forecast, s.backgroundProgressEnabled, f.status == "forecast" {
                     Section("Estimate") {
-                        EOVWatchForecastView(mapTitle: f.mapTitle, projectedDistance: f.projectedDistance,
-                            projectedReaps: f.projectedReaps, timeRange: f.timeRange,
-                            stale: f.forecastEnd <= Date().timeIntervalSince1970, ended: false)
+                        CompanionForecast(forecast: f)
                     }
                 }
             } else { Text("Open Echoes on iPhone to see your current run.") }
             Button("Refresh", systemImage: "arrow.clockwise") { store.refresh() }
         }.navigationTitle("Current run")
+    }
+}
+
+private struct CompanionForecast: View {
+    let forecast: EOVWatchSnapshot.Forecast
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var expired = false
+    var body: some View {
+        EOVWatchForecastView(mapTitle: forecast.mapTitle, projectedDistance: forecast.projectedDistance,
+            projectedReaps: forecast.projectedReaps, timeRange: forecast.timeRange,
+            stale: expired || forecast.forecastEnd <= Date().timeIntervalSince1970, ended: false)
+            .task(id: forecast.forecastEnd) {
+                let remaining = forecast.forecastEnd - Date().timeIntervalSince1970
+                expired = remaining <= 0
+                guard remaining > 0 else { return }
+                do { try await Task.sleep(for: .seconds(remaining)) } catch { return }
+                guard !Task.isCancelled else { return }
+                expired = true
+            }
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .active { expired = forecast.forecastEnd <= Date().timeIntervalSince1970 }
+            }
     }
 }
 

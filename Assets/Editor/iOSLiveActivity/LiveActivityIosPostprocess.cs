@@ -157,7 +157,8 @@ namespace TimelessEchoes.Editor
             AddSource(project, watch, folder + "/EOVWatchForecastView.swift");
             AddSource(project, watch, folder + "/ForecastArt.xcassets");
             project.AddTargetDependency(main, watch);
-            var embed = project.AddCopyFilesBuildPhase(main, "Embed Watch Content", "$(CONTENTS_FOLDER_PATH)/Watch", "16");
+            // Embed before Unity's dSYM postprocess to avoid an Info.plist dependency cycle.
+            var embed = project.AddCopyFilesBuildPhaseBeforeTargetPostprocess(main, "Embed Watch Content", "$(CONTENTS_FOLDER_PATH)/Watch", "16");
             project.AddFileToBuildSection(main, embed, project.GetTargetProductFileRef(watch));
         }
 
