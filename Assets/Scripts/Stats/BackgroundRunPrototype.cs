@@ -41,7 +41,7 @@ namespace TimelessEchoes.Stats
         [DllImport("__Internal")] private static extern int EOVLiveActivity_IsSupported();
         [DllImport("__Internal")] private static extern int EOVLiveActivity_IsDemoLaunch();
 #endif
-        public static void Publish(string map, BackgroundRunEstimator.Result forecast, double currentDistance, double resources)
+        public static void Publish(string map, BackgroundRunEstimator.Result forecast, double currentDistance, double resources, WatchForecastTimeline timeline = null)
         {
             var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var payload = new
@@ -52,7 +52,8 @@ namespace TimelessEchoes.Stats
                 projectedReaps = forecast.Reaps, projectedTasks = forecast.Tasks, projectedKills = forecast.Kills,
                 projectedResources = resources, forecastEnd = now + Math.Max(1, forecast.Seconds), status = forecast.Status
             };
-            WatchCompanionPrototype.RememberForecast(map, payload, Blindsided.Oracle.oracle?.saveData);
+            if (timeline != null) timeline.generatedAt = now;
+            WatchCompanionPrototype.RememberForecast(map, payload, Blindsided.Oracle.oracle?.saveData, timeline);
             var json = JsonConvert.SerializeObject(payload);
 #if UNITY_IOS && !UNITY_EDITOR && EOV_BACKGROUND_PROTOTYPE
             if (EOVLiveActivity_IsSupported() != 0) EOVLiveActivity_StartOrUpdate(json);

@@ -8,6 +8,7 @@ namespace TimelessEchoes.Stats
     public static class WatchCompanionPrototype
     {
         private static object forecast;
+        private static WatchForecastTimeline timeline;
         private static string forecastMap;
         private static GameData forecastOwner;
 
@@ -15,19 +16,24 @@ namespace TimelessEchoes.Stats
         private static void Reset()
         {
             forecast = null;
+            timeline = null;
             forecastMap = null;
             forecastOwner = null;
         }
 
-        internal static void RememberForecast(string map, object value, GameData owner)
+        internal static void RememberForecast(string map, object value, GameData owner, WatchForecastTimeline watchTimeline)
         {
             forecastMap = map;
             forecast = value;
+            timeline = watchTimeline;
             forecastOwner = owner;
         }
 
         internal static object GetForecast(string map, GameData owner) =>
             ReferenceEquals(owner, forecastOwner) && map == forecastMap ? forecast : null;
+
+        internal static WatchForecastTimeline GetTimeline(string map, GameData owner) =>
+            ReferenceEquals(owner, forecastOwner) && map == forecastMap ? timeline : null;
 
         internal static void ClearForecast() => Reset();
 

@@ -52,6 +52,9 @@ namespace TimelessEchoes.Stats
         public sealed class Step
         {
             public double Seconds, Distance, DamageTaken, RestartSeconds, CapIncrease;
+            // Observations for presentation; these do not participate in simulation.
+            public double Cap, RestartCap;
+            public bool Restarted;
             public int Tasks, Kills;
             public bool EndsRun, Reaped;
         }
@@ -126,7 +129,8 @@ namespace TimelessEchoes.Stats
                     incoming = (pressure - observedPressure) * killRate;
                 var netDamage = incoming - input.Regen;
                 if (netDamage > 0) dt = Math.Min(dt, health / netDamage);
-                var step = new Step { Seconds = dt, Distance = result.Distance + speed * dt, DamageTaken = incoming * dt };
+                var step = new Step { Seconds = dt, Distance = result.Distance + speed * dt, DamageTaken = incoming * dt,
+                    Cap = input.DistanceReaping ? cap : 0 };
                 result.TaskRemainder += taskRate * dt; result.KillRemainder += killRate * dt;
                 step.Tasks = (int)Math.Floor(result.TaskRemainder); step.Kills = (int)Math.Floor(result.KillRemainder);
                 result.TaskRemainder -= step.Tasks; result.KillRemainder -= step.Kills;
@@ -144,6 +148,7 @@ namespace TimelessEchoes.Stats
                         if (input.CapGain) { step.CapIncrease = RunDistanceRules.ReapGain(cap, 1, 0); result.BaseCap += step.CapIncrease; }
                     }
                     else result.Deaths++;
+                    step.RestartCap = input.DistanceReaping ? result.BaseCap : 0;
                     if (step.Reaped && input.StopOnFirstReap)
                     { result.StopReason = "First reap dialogue"; result.Steps.Add(step); break; }
                     step.RestartSeconds = Math.Min(remaining, input.RestartSeconds);
@@ -151,6 +156,7 @@ namespace TimelessEchoes.Stats
                     result.Steps.Add(step);
                     // Preserve a partly elapsed countdown, rather than granting a free restart.
                     if (step.RestartSeconds + .00001 < input.RestartSeconds) break;
+                    step.Restarted = true;
                     health = input.MaxHealth; result.Distance = input.StartingDistance; runKills = 0;
                     continue;
                 }
