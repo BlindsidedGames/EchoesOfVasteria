@@ -38,17 +38,9 @@ struct EOVWatchPresentation {
             now >= (snapshot?.generatedAt ?? now) && age <= 45
     }
     var away: EOVWatchAway? {
-        guard let snapshot, let run = phone, ending == nil,
-              snapshot.phoneInBackground == true, snapshot.backgroundProgressEnabled,
-              let timeline = snapshot.timeline, timeline.mapId == run.mapId, now >= timeline.generatedAt else { return nil }
-        var end = timeline.generatedAt + timeline.horizonSeconds
-        if let forecast = snapshot.forecast {
-            guard forecast.mapId == run.mapId, forecast.generatedAt == timeline.generatedAt else { return nil }
-            end = min(end, forecast.forecastEnd)
-        }
-        let sample = timeline.sample(at: min(now, end))
-        return EOVWatchAway(sample: sample, distanceReaping: timeline.distanceReaping,
-            elapsed: max(0, now - timeline.generatedAt), expired: now >= end)
+        guard let snapshot, let estimate = snapshot.backgroundEstimate(at: now), let timeline = snapshot.timeline else { return nil }
+        return EOVWatchAway(sample: estimate.sample, distanceReaping: timeline.distanceReaping,
+            elapsed: estimate.elapsed, expired: estimate.expired, status: estimate.status)
     }
     var refreshDescription: String {
         switch refreshState {
@@ -65,7 +57,8 @@ struct EOVWatchPresentation {
             return refreshState == .requesting ? "Asking iPhone…" : refreshState == .unavailable ? "iPhone unavailable" : "Open Echoes on iPhone"
         }
         if estimated, let away, away.expired || away.sample.phase == 2 {
-            let stopped = away.expired ? "Estimate ended" : "Return to iPhone"
+            let stopped = away.status == "limitReached" ? "Limit reached" :
+                away.status == "waiting" ? "Return to iPhone" : "Estimate ended"
             return demo + stopped + (refreshState == .queued ? " · queued" : "")
         }
         let scope = estimated ? "Est." : "Cached"
@@ -91,6 +84,7 @@ struct EOVWatchAway {
     let distanceReaping: Bool
     let elapsed: Double
     let expired: Bool
+    let status: String
     var active: Bool { !expired && sample.phase != 2 }
 }
 

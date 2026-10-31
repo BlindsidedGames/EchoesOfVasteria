@@ -174,6 +174,65 @@ struct EOVWatchSnapshot: Codable {
         }
     }
 
+    // One read-only resolution for Watch, its phone reply and the Live Activity.
+    // A shorter transmitted trajectory never becomes a new background allowance.
+    struct BackgroundEstimate {
+        let sourceID: String?
+        let origin: Double
+        let end: Double
+        let clockEnd: Double
+        let elapsed: Double
+        let sample: Timeline.Sample
+        let endpoint: Timeline.Sample
+        let endpointStatus: String
+        let expired: Bool
+        var status: String {
+            expired ? endpointStatus : sample.phase == 2 ? "waiting" : sample.phase == 1 ? "restarting" : "estimate"
+        }
+    }
+    func backgroundEstimate(at now: Double) -> BackgroundEstimate? {
+        guard now.isFinite, backgroundProgressEnabled, phoneInBackground == true, state == "run",
+              let run, !run.dead, !run.reaped, let timeline,
+              timeline.mapId == run.mapId, now >= timeline.generatedAt else { return nil }
+        if let forecast {
+            guard forecast.status == "forecast", forecast.sampleCount > 0,
+                  forecast.mapId == run.mapId, timeline.generatedAt == forecast.generatedAt else { return nil }
+        }
+        let source = (forecast?.sourceID).flatMap { value in
+            value.count == 32 && value.allSatisfy { "0123456789abcdef".contains($0) } ? value : nil
+        }
+        let origin = timeline.generatedAt
+        let allowanceEnd = backgroundLimitSeconds.map { origin + $0 }
+        let end = min(forecast?.forecastEnd ?? .infinity, origin + timeline.horizonSeconds, allowanceEnd ?? .infinity)
+        guard end > origin else { return nil }
+        let endpoint = timeline.sample(at: end)
+        let endpointStatus = endpoint.phase == 2 ? "waiting" :
+            allowanceEnd.map { end >= $0 - 0.001 } == true ? "limitReached" : "estimateEnded"
+        // Legacy snapshots do not declare an allowance; only their known coverage
+        // can bound the clock. Their UI continues to omit the maximum label.
+        let clockEnd = allowanceEnd ?? end
+        return BackgroundEstimate(sourceID: source, origin: origin, end: end, clockEnd: clockEnd,
+            elapsed: min(max(0, now - origin), clockEnd - origin),
+            sample: timeline.sample(at: min(now, end)), endpoint: endpoint,
+            endpointStatus: endpointStatus, expired: now >= end)
+    }
+
+    // A native phone reply confirms evaluation of this same saved estimate. It
+    // does not replace the snapshot's departure time or claim new gameplay data.
+    struct EstimateReceipt: Codable {
+        let mapId: String
+        let sourceID: String?
+        let origin: Double
+        let end: Double
+        let evaluatedAt: Double
+        func matches(_ snapshot: EOVWatchSnapshot, at now: Double) -> Bool {
+            guard evaluatedAt.isFinite, evaluatedAt <= now + 60,
+                  let estimate = snapshot.backgroundEstimate(at: evaluatedAt) else { return false }
+            return mapId == snapshot.run?.mapId && sourceID == estimate.sourceID &&
+                origin == estimate.origin && end == estimate.end
+        }
+    }
+
     enum Invalid: Error { case snapshot }
     static func decode(_ data: Data) throws -> EOVWatchSnapshot {
         guard !data.isEmpty, data.count <= 32 * 1024 else { throw Invalid.snapshot }

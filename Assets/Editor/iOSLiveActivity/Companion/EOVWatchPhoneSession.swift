@@ -1,5 +1,6 @@
 import Foundation
 import WatchConnectivity
+import UIKit
 
 @objc(EOVWatchPhoneSession)
 final class EOVWatchPhoneSession: NSObject, WCSessionDelegate {
@@ -72,11 +73,41 @@ final class EOVWatchPhoneSession: NSObject, WCSessionDelegate {
             guard message["command"] as? String == "requestSnapshot" else {
                 replyHandler(["error": "unsupportedRequest"]); return
             }
-            self.refreshRequested = true
-            // Only Unity can generate a new snapshot. This acknowledgement is cache only.
-            if let data = self.latest { replyHandler(["snapshot": data, "cached": true]) }
-            else { replyHandler(["cached": true, "waitingForPhone": true]) }
-            NSLog("[EOVWatch] refresh queued; reply cached=%d", self.latest != nil)
+            if UIApplication.shared.applicationState != .background {
+                self.refreshRequested = true
+                var reply: [String: Any] = ["cached": true, "refreshStatus": "queued"]
+                if let data = self.latest { reply["snapshot"] = data }
+                replyHandler(reply)
+                return
+            }
+            // Unity remains paused. Evaluate the native cache and, if present,
+            // update the phone's existing activity through its normal owner.
+            Task { @MainActor in
+                guard let data = self.latest, let snapshot = try? EOVWatchSnapshot.decode(data),
+                      let estimate = snapshot.backgroundEstimate(at: Date().timeIntervalSince1970) else {
+                    replyHandler(self.cachedReply()); return
+                }
+                if #available(iOS 16.2, *), let source = estimate.sourceID {
+                    await EOVLiveActivityBridge.refreshCurrentEstimate(sourceID: source)
+                }
+                // Publication or foregrounding during await invalidates this reply.
+                guard self.latest == data, UIApplication.shared.applicationState == .background else {
+                    replyHandler(self.cachedReply()); return
+                }
+                let now = Date().timeIntervalSince1970
+                let receipt = EOVWatchSnapshot.EstimateReceipt(mapId: snapshot.run!.mapId,
+                    sourceID: estimate.sourceID, origin: estimate.origin, end: estimate.end, evaluatedAt: now)
+                guard receipt.matches(snapshot, at: now), let encoded = try? JSONEncoder().encode(receipt) else {
+                    replyHandler(self.cachedReply()); return
+                }
+                replyHandler(["snapshot": data, "cached": true, "refreshStatus": "estimated", "estimateReceipt": encoded])
+                NSLog("[EOVWatch] native estimate refreshed; gameplay snapshot unchanged")
+            }
         }
+    }
+    private func cachedReply() -> [String: Any] {
+        var reply: [String: Any] = ["cached": true, "refreshStatus": "unavailable"]
+        if let data = latest { reply["snapshot"] = data }
+        return reply
     }
 }

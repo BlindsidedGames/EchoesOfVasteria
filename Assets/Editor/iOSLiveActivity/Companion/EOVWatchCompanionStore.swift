@@ -29,6 +29,13 @@ final class EOVWatchCompanionStore: NSObject, ObservableObject, WCSessionDelegat
         let generation = refreshGeneration
         let requestedAt = snapshot?.generatedAt ?? 0
         refreshState = .requesting
+        Task { @MainActor [weak self] in
+            try? await Task.sleep(nanoseconds: 20_000_000_000)
+            guard let self, generation == self.refreshGeneration,
+                  self.refreshState == .requesting || self.refreshState == .queued else { return }
+            self.refreshGeneration += 1
+            self.refreshState = .unavailable
+        }
         WCSession.default.sendMessage(["command": "requestSnapshot"], replyHandler: { reply in
             DispatchQueue.main.async {
                 guard generation == self.refreshGeneration else { return }
@@ -36,7 +43,18 @@ final class EOVWatchCompanionStore: NSObject, ObservableObject, WCSessionDelegat
                     // A stale reply cannot replace a newer context, or hide a rejection.
                     if self.refreshState == .rejected { return }
                 }
-                self.refreshState = (self.snapshot?.generatedAt ?? 0) > requestedAt && !self.cached ? .idle : .queued
+                if reply["refreshStatus"] as? String == "estimated" {
+                    guard let data = reply["estimateReceipt"] as? Data,
+                          let receipt = try? JSONDecoder().decode(EOVWatchSnapshot.EstimateReceipt.self, from: data),
+                          let snapshot = self.snapshot, receipt.matches(snapshot, at: Date().timeIntervalSince1970) else {
+                        self.refreshState = .rejected; return
+                    }
+                    self.refreshState = .idle
+                } else if reply["refreshStatus"] as? String == "unavailable" {
+                    self.refreshState = .unavailable
+                } else {
+                    self.refreshState = (self.snapshot?.generatedAt ?? 0) > requestedAt && !self.cached ? .idle : .queued
+                }
             }
         }, errorHandler: { _ in
             DispatchQueue.main.async {
