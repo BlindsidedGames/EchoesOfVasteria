@@ -113,7 +113,7 @@ public final class EOVLiveActivityBridge: NSObject {
         else { return nil }
         let background = snapshot.phoneInBackground == true
         let estimate = snapshot.backgroundEstimate(at: now)
-        if background && estimate == nil { return nil }
+        if background && estimate?.sourceID != source { return nil }
         if !background && now >= min(forecast.forecastEnd, timeline.generatedAt + timeline.horizonSeconds) { return nil }
         let sample = estimate?.sample ?? timeline.sample(at: now)
         let terminal = estimate.map { value in
