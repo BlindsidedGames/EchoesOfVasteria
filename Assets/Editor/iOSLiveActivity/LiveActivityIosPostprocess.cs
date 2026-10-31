@@ -147,7 +147,16 @@ namespace TimelessEchoes.Editor
             var simulator = PlayerSettings.iOS.sdkVersion == iOSSdkVersion.SimulatorSDK;
             project.SetBuildProperty(watch, "SDKROOT", simulator ? "watchsimulator" : "watchos");
             project.SetBuildProperty(watch, "SUPPORTED_PLATFORMS", simulator ? "watchsimulator" : "watchos watchsimulator");
-            project.SetBuildProperty(watch, "ASSETCATALOG_COMPILER_APPICON_NAME", "");
+            var iconCatalog = companionFolder + "/WatchAssets.xcassets";
+            var iconSet = Path.Combine(destination, "Companion/WatchAssets.xcassets/AppIcon.appiconset");
+            Directory.CreateDirectory(iconSet);
+            File.Copy(Path.Combine(Application.dataPath, "Art/AppIcon.png"), Path.Combine(iconSet, "AppIcon.png"), true);
+            File.WriteAllText(Path.Combine(iconSet, "Contents.json"),
+                "{\"images\":[{\"filename\":\"AppIcon.png\",\"idiom\":\"universal\",\"platform\":\"watchos\",\"size\":\"1024x1024\"}],\"info\":{\"author\":\"xcode\",\"version\":1}}");
+            File.WriteAllText(Path.Combine(Path.GetDirectoryName(iconSet), "Contents.json"),
+                "{\"info\":{\"author\":\"xcode\",\"version\":1}}");
+            AddSource(project, watch, iconCatalog);
+            project.SetBuildProperty(watch, "ASSETCATALOG_COMPILER_APPICON_NAME", "AppIcon");
             project.SetBuildProperty(watch, "SKIP_INSTALL", "YES");
             project.SetBuildProperty(watch, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
             project.AddFrameworkToProject(watch, "SwiftUI.framework", false);
