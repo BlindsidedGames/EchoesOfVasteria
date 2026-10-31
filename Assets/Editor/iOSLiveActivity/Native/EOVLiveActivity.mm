@@ -25,18 +25,6 @@ extern "C" int EOVLiveActivity_IsSupported(void) {
     return supported;
 }
 
-extern "C" void EOVLiveActivity_StartOrUpdate(const char *json) {
-    if (!json) return;
-    NSString *payload = [[NSString alloc] initWithUTF8String:json];
-    if (!payload) return;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        Class bridge = EOVActivityClass();
-        SEL selector = NSSelectorFromString(@"startOrUpdate:");
-        if (bridge && [bridge respondsToSelector:selector])
-            ((void (*)(id, SEL, NSString *))objc_msgSend)(bridge, selector, payload);
-    });
-}
-
 extern "C" void EOVLiveActivity_End(void) {
     dispatch_async(dispatch_get_main_queue(), ^{
         Class bridge = EOVActivityClass();
@@ -53,6 +41,10 @@ extern "C" void EOVWatchCompanion_Publish(const char *json) {
     dispatch_async(dispatch_get_main_queue(), ^{
         Class bridge = NSClassFromString(@"EOVWatchPhoneSession");
         SEL selector = NSSelectorFromString(@"publish:");
+        if (bridge && [bridge respondsToSelector:selector])
+            ((void (*)(id, SEL, NSString *))objc_msgSend)(bridge, selector, payload);
+        bridge = EOVActivityClass();
+        selector = NSSelectorFromString(@"publishSnapshot:");
         if (bridge && [bridge respondsToSelector:selector])
             ((void (*)(id, SEL, NSString *))objc_msgSend)(bridge, selector, payload);
     });

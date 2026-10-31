@@ -16,14 +16,20 @@ The `-eov-background-demo` argument creates a synthetic River demonstration only
 - `BackgroundRunEstimator` calculates distance, work, approximate health, deaths, reaps and restart time without generating a scene or changing inventory.
 - `BackgroundRunContent` reads authored map/category/task/enemy/drop rules and applies projected work through existing inventory, skill, typed-kill and statistics owners. Drop slots and propagation bonuses use the existing resolver. Tier rolls still occur per resource award.
 - `GameplayStatTracker` retains at most ten real calibration samples per map. Estimated or abandoned runs do not train the model; estimated history is labelled.
-- `GameManager.Background` coordinates cold and warm resume, rebuilds the world at the projected distance, and publishes the same forecast to the native bridge.
+- `GameManager.Background` coordinates cold and warm resume, rebuilds the world at the projected distance, and supplies the trajectory included in the companion snapshot.
 - `Oracle.Background` commits rewards, active run and timestamp together. A rejected or partial publication blocks further saves and requires checkpoint recovery; it cannot silently apply the payment again.
 
 Mobile backgrounding freezes foreground work until settlement and regeneration finish. Desktop loss of focus continues live and earns no second estimated payment. Reopening a stopped desktop session uses the checkpoint. An undiscovered map with no evidence receives no invented pace. Required NPC/tutorial interactions and queued town returns stop the projection.
 
 ## Live Activity
 
-The Swift WidgetKit extension and ActivityKit bridge display estimated map progress on the Lock Screen and Dynamic Island. A foreground snapshot supplies a forecast window; system timer/progress views continue without game execution. There is no server or APNs dependency. Actual rewards are applied only by the game on resume.
+The Swift WidgetKit extension and ActivityKit bridge display a current snapshot on the Lock Screen and Dynamic Island. While the game is awake, automatic local publication shows actual run distance, effective cap and resources labelled "this run". Background snapshots use the existing Watch trajectory sampler and show estimated distance/current effective cap, resources and reaps since departure. A snapshot progress bar stays fixed between publications; the system-rendered update age can advance without game execution. There is no future-endpoint arrow or forecast countdown.
+
+On iOS 17 and later, **Refresh** runs a `LiveActivityIntent` in the native app process, samples the cached trajectory at the current time, and updates the existing activity. It does not request foreground presentation, invoke Unity, save, settle progress, or award rewards. Actual settlement remains exclusively in the managed resume path. iOS 26 explicitly requests background intent mode; iOS 17–25 use `openAppWhenRun = false`. iOS 16.2 displays an instruction to open Echoes instead. These availability gates compile against the simulator SDK; physical-device and older-runtime behavior require separate validation.
+
+Each forecast has a fresh source ID. A button must match the current activity ID, persisted valid-source marker and cached run/map/trajectory. End and opt-out invalidate that marker immediately. Publication, Refresh and End share a queue so stale taps cannot start an activity or overwrite a later retirement. Expired trajectories are not extrapolated. Cached data and native state are presentation inputs, never authoritative rewards.
+
+The generated main executable contains the intent metadata, activity owner and snapshot reader; UnityFramework retains its Objective-C transport and Watch service. Full Unity initialization and normal foreground settlement remain owned by Unity's lifecycle. The button's native code does not provide a periodic suspended refresh mechanism. There is no server, APNs dependency, keepalive or opportunistic background scheduler.
 
 The artwork comes from the game. There is no explanatory footer. Apple permits short animation on content updates, not an indefinitely looping sprite while suspended; the icons remain still between updates.
 

@@ -45,7 +45,7 @@ struct EOVWatchSnapshot: Codable {
         let estimated: Bool
         var id: Int { runNumber }
     }
-    // Watch-only keyframes produced by the managed estimator. This sampler merely
+    // Presentation keyframes produced by the managed estimator. This sampler merely
     // interpolates a single movement segment and never crosses a run boundary.
     struct Timeline: Codable {
         let schemaVersion: Int
@@ -105,6 +105,7 @@ struct EOVWatchSnapshot: Codable {
 
     // Mirrors the established ActivityKit JSON without importing ActivityKit on Watch.
     struct Forecast: Codable {
+        let sourceID: String?
         let schemaVersion: Int
         let mapId: String
         let mapTitle: String

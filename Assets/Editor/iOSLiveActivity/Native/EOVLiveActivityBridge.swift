@@ -2,13 +2,15 @@ import ActivityKit
 import Foundation
 import UIKit
 
-// This class never estimates progress, writes saves, or schedules background work.
+// Presentation only. This owner reads the managed trajectory; it never enters Unity,
+// checkpoints, settles rewards, changes gameplay time, or requests background time.
 @available(iOS 16.2, *)
 @MainActor
 @objc(EOVLiveActivityBridge)
 public final class EOVLiveActivityBridge: NSObject {
     private static var generation = 0
     private static var pending: Task<Void, Never>?
+    private static let sourceKey = "EOVLiveActivity.ValidSource"
 
     @objc(isSupported)
     public static func isSupported() -> Bool {
@@ -16,62 +18,103 @@ public final class EOVLiveActivityBridge: NSObject {
             && ActivityAuthorizationInfo().areActivitiesEnabled
     }
 
-    @objc(startOrUpdate:)
-    public static func startOrUpdate(_ json: NSString) {
-        do {
-            let data = Data((json as String).utf8)
-            // Reserve room for immutable attributes within ActivityKit's combined 4 KB limit.
-            guard data.count <= 3500 else { throw EOVForecastAttributes.ForecastError.payloadTooLarge }
-            let state = try JSONDecoder().decode(EOVForecastAttributes.ContentState.self, from: data)
-            try state.validate()
-            guard state.status == "forecast", state.sampleCount > 0,
-                  state.forecastEnd > Date().timeIntervalSince1970 else { end(); return }
-            guard isSupported() else { NSLog("[EOVLiveActivity] unavailable or disabled"); return }
-            generation += 1
-            let command = generation
-            let previous = pending
-            pending = Task { @MainActor in
-                await previous?.value
-                defer { if command == generation { pending = nil } }
-                guard command == generation, !Task.isCancelled else { return }
-                let content = ActivityContent(state: state,
-                    staleDate: Date(timeIntervalSince1970: state.forecastEnd))
-                if let activity = Activity<EOVForecastAttributes>.activities.first(where: { $0.attributes.mapId == state.mapId }) {
-                    await activity.update(content)
-                    guard command == generation, !Task.isCancelled else { return }
-                    NSLog("[EOVLiveActivity] updated id=%@", activity.id)
-                } else {
-                    // An existing activity may update on pause. A new one starts only in foreground.
-                    guard UIApplication.shared.applicationState == .active else {
-                        NSLog("[EOVLiveActivity] skipped start while not foreground"); return
-                    }
-                    for old in Activity<EOVForecastAttributes>.activities {
-                        await old.end(nil, dismissalPolicy: .immediate)
-                    }
-                    guard command == generation, !Task.isCancelled else { return }
-                    do {
-                        let activity = try Activity.request(
-                            attributes: EOVForecastAttributes(mapId: state.mapId),
-                            content: content, pushType: nil)
-                        NSLog("[EOVLiveActivity] started id=%@", activity.id)
-                    } catch {
-                        NSLog("[EOVLiveActivity] start failed: %@", String(describing: error))
-                    }
-                }
+    // Called only after the Watch transport accepted and atomically cached this data.
+    @objc(publishSnapshot:)
+    public static func publishSnapshot(_ json: NSString) {
+        let data = Data((json as String).utf8)
+        guard EOVWatchSnapshotCache.load() == data else { return }
+        guard let snapshot = try? EOVWatchSnapshot.decode(data),
+              let state = content(snapshot, at: Date().timeIntervalSince1970),
+              let run = snapshot.run, isSupported() else { end(); return }
+        UserDefaults.standard.set(state.sourceID, forKey: sourceKey)
+        generation += 1
+        let command = generation, previous = pending
+        pending = Task { @MainActor in
+            await previous?.value
+            defer { if command == generation { pending = nil } }
+            guard command == generation else { return }
+            let content = ActivityContent(state: state, staleDate: Date(timeIntervalSince1970: state.forecastEnd))
+            if let activity = Activity<EOVForecastAttributes>.activities.first(where: { $0.attributes.mapId == run.mapId && $0.activityState == .active }) {
+                await activity.update(content)
+                NSLog("[EOVLiveActivity] published id=%@ status=%@ distance=%.2f cap=%.2f", activity.id, state.status, state.distance, state.cap)
+            } else {
+                // A cached background snapshot can update an existing activity, never start one.
+                guard UIApplication.shared.applicationState == .active else { return }
+                for old in Activity<EOVForecastAttributes>.activities { await old.end(nil, dismissalPolicy: .immediate) }
+                guard command == generation else { return }
+                do {
+                    let activity = try Activity.request(attributes: EOVForecastAttributes(mapId: run.mapId), content: content, pushType: nil)
+                    NSLog("[EOVLiveActivity] started id=%@ source=%@", activity.id, state.sourceID)
+                } catch { NSLog("[EOVLiveActivity] start failed: %@", String(describing: error)) }
             }
-        } catch {
-            NSLog("[EOVLiveActivity] rejected forecast: %@", String(describing: error))
         }
+    }
+
+    // All three commands share a queue. New publication/End invalidates queued old taps;
+    // no action requests an activity, and a duplicate tap resamples the same origin.
+    public static func refresh(activityID: String, sourceID: String) async {
+        guard UserDefaults.standard.string(forKey: sourceKey) == sourceID else { return }
+        generation += 1
+        let command = generation, previous = pending
+        let task = Task { @MainActor in
+            await previous?.value
+            defer { if command == generation { pending = nil } }
+            let now = Date().timeIntervalSince1970
+            guard command == generation,
+                  isSupported(),
+                  UIApplication.shared.applicationState == .background,
+                  UserDefaults.standard.string(forKey: sourceKey) == sourceID,
+                  let data = EOVWatchSnapshotCache.load(), let snapshot = try? EOVWatchSnapshot.decode(data),
+                  snapshot.phoneInBackground == true,
+                  let state = content(snapshot, at: now), state.sourceID == sourceID,
+                  let activity = Activity<EOVForecastAttributes>.activities.first(where: { $0.id == activityID }),
+                  activity.activityState == .active, activity.attributes.mapId == snapshot.run?.mapId,
+                  activity.content.state.sourceID == sourceID,
+                  now >= activity.content.state.sampledAt else {
+                NSLog("[EOVLiveActivity] ignored stale/inactive refresh id=%@", activityID); return
+            }
+            let before = UIApplication.shared.applicationState.rawValue
+            await activity.update(ActivityContent(state: state, staleDate: Date(timeIntervalSince1970: state.forecastEnd)))
+            NSLog("[EOVLiveActivity] refresh id=%@ source=%@ pid=%d bundle=%@ appStateBefore=%d appStateAfter=%d sampledAt=%.6f distance=%.4f cap=%.4f resources=%.4f reaps=%d status=%@", activity.id, sourceID, ProcessInfo.processInfo.processIdentifier, Bundle.main.bundleIdentifier ?? "", before, UIApplication.shared.applicationState.rawValue, state.sampledAt, state.distance, state.cap, state.resources, state.reaps, state.status)
+        }
+        pending = task
+        await task.value
+    }
+
+    // Shared by awake publication and background intent. The same validated sampler
+    // already used on Watch owns effective caps, restart boundaries and resource deltas.
+    private static func content(_ snapshot: EOVWatchSnapshot, at now: Double) -> EOVForecastAttributes.ContentState? {
+        guard snapshot.backgroundProgressEnabled, snapshot.state == "run",
+              let run = snapshot.run, let forecast = snapshot.forecast,
+              let source = forecast.sourceID, source.count == 32,
+              forecast.status == "forecast", forecast.sampleCount > 0,
+              let timeline = snapshot.timeline, timeline.mapId == run.mapId, forecast.mapId == run.mapId,
+              forecast.generatedAt == timeline.generatedAt,
+              now >= timeline.generatedAt, now < min(forecast.forecastEnd, timeline.generatedAt + timeline.horizonSeconds)
+        else { return nil }
+        let background = snapshot.phoneInBackground == true
+        let sample = timeline.sample(at: now)
+        return .init(sourceID: source, mapTitle: run.mapTitle,
+            sampledAt: background ? now : snapshot.generatedAt,
+            forecastEnd: min(forecast.forecastEnd, timeline.generatedAt + timeline.horizonSeconds),
+            distance: background ? sample.distance : run.distance,
+            cap: background ? sample.cap : run.cap,
+            resources: background ? sample.resources : run.resources,
+            reaps: background ? sample.reaps : 0,
+            status: !background ? "live" : sample.phase == 2 ? "waiting" : sample.phase == 1 ? "restarting" : "estimate")
     }
 
     @objc(end)
     public static func end() {
+        // Persist invalidation before any suspension or async end: old cached snapshots
+        // and buttons cannot re-enable an opted-out/retired session after a cold launch.
+        UserDefaults.standard.removeObject(forKey: sourceKey)
         generation += 1
-        let command = generation
-        let previous = pending
+        let command = generation, previous = pending
         pending = Task { @MainActor in
             await previous?.value
             defer { if command == generation { pending = nil } }
+            guard command == generation else { return }
             for activity in Activity<EOVForecastAttributes>.activities {
                 await activity.end(nil, dismissalPolicy: .immediate)
                 NSLog("[EOVLiveActivity] ended id=%@", activity.id)

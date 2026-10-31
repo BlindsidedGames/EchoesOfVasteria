@@ -32,10 +32,15 @@ namespace TimelessEchoes.Editor
             var main = project.GetUnityMainTargetGuid();
             var framework = project.GetUnityFrameworkTargetGuid();
 
-            foreach (var name in new[] { "EOVForecastAttributes.swift", "EOVLiveActivityBridge.swift", "EOVLiveActivity.mm" })
+            foreach (var name in new[] { "EOVForecastAttributes.swift", "EOVLiveActivityBridge.swift", "EOVRefreshIntent.swift", "EOVLiveActivity.mm" })
             {
                 File.Copy(Path.Combine(source, "Native", name), Path.Combine(destination, name), true);
-                AddSource(project, framework, folder + "/" + name);
+                if (name.EndsWith(".swift"))
+                {
+                    var oldGuid = project.FindFileGuidByProjectPath(folder + "/" + name);
+                    if (!string.IsNullOrEmpty(oldGuid)) project.RemoveFileFromBuild(framework, oldGuid);
+                }
+                AddSource(project, name.EndsWith(".mm") ? framework : main, folder + "/" + name);
             }
             foreach (var name in new[] { "EOVForecastWidget.swift", "EOVWatchForecastView.swift" })
                 File.Copy(Path.Combine(source, "Templates", name), Path.Combine(destination, name), true);
@@ -58,6 +63,8 @@ namespace TimelessEchoes.Editor
                 extension = project.AddAppExtension(main, folder,
                     PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.iOS) + ".liveactivity", infoPath);
             AddSource(project, extension, folder + "/EOVForecastAttributes.swift");
+            AddSource(project, extension, folder + "/EOVRefreshIntent.swift");
+            project.UpdateBuildProperty(main, "SWIFT_ACTIVE_COMPILATION_CONDITIONS", new[] { "EOV_LIVE_ACTIVITY_HOST" }, null);
             AddSource(project, extension, folder + "/EOVForecastWidget.swift");
             AddSource(project, extension, folder + "/EOVWatchForecastView.swift");
             // WidgetKit resolves named images through a compiled asset catalog.
@@ -76,12 +83,13 @@ namespace TimelessEchoes.Editor
             AddSource(project, extension, folder + "/ForecastArt.xcassets");
             ConfigureCompanion(project, main, framework, source, destination, folder);
 
-            foreach (var guid in new[] { framework, extension })
+            foreach (var guid in new[] { main, framework, extension })
             {
                 project.SetBuildProperty(guid, "SWIFT_VERSION", "5.0");
                 project.SetBuildProperty(guid, "CLANG_ENABLE_MODULES", "YES");
                 project.AddFrameworkToProject(guid, "ActivityKit.framework", true);
                 project.AddFrameworkToProject(guid, "SwiftUI.framework", true);
+                project.AddFrameworkToProject(guid, "AppIntents.framework", true);
             }
             project.AddFrameworkToProject(extension, "WidgetKit.framework", false);
             project.SetBuildProperty(extension, "IPHONEOS_DEPLOYMENT_TARGET", "16.2");
@@ -109,6 +117,7 @@ namespace TimelessEchoes.Editor
             foreach (var name in new[] { "EOVWatchSnapshot.swift", "EOVWatchPhoneSession.swift", "EOVWatchApp.swift" })
                 File.Copy(Path.Combine(source, "Companion", name), Path.Combine(destination, "Companion", name), true);
             AddSource(project, framework, companionFolder + "/EOVWatchSnapshot.swift");
+            AddSource(project, main, companionFolder + "/EOVWatchSnapshot.swift");
             AddSource(project, framework, companionFolder + "/EOVWatchPhoneSession.swift");
             project.AddFrameworkToProject(framework, "WatchConnectivity.framework", true);
 
