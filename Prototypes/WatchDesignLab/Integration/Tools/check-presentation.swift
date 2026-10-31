@@ -45,7 +45,14 @@ struct CheckWatchPresentation {
               atLimit.display.resources == 540000 && afterLimit.display.resources == 540000 &&
               afterLimit.source(estimated: true).contains("Limit reached"),
               "One-hour allowance freezes elapsed and endpoint gains with an honest limit status")
-        let earlyCoverage = try snapshot("allowance-away")
+        let earlyCoverage = try snapshot("allowance-away") { value in
+            var timeline = value["timeline"] as! [String: Any]
+            // Remove the distinct player-input stop: this case owns coverage expiry.
+            var frames = timeline["frames"] as! [[Double]]
+            frames.removeLast()
+            timeline["frames"] = frames
+            value["timeline"] = timeline
+        }
         let earlyExpired = model(earlyCoverage, 7200)
         check(earlyExpired.away?.elapsed == 3600 && earlyExpired.away?.expired == true &&
               earlyExpired.source(estimated: true).contains("Estimate ended") &&
