@@ -102,8 +102,6 @@ namespace TimelessEchoes.Stats
             result.EchoTaskShare = tasks > 0 ? Math.Clamp(echoTasks / tasks, 0, 1) : 0;
             result.EchoKillShare = kills > 0 ? Math.Clamp(echoKills / kills, 0, 1) : 0;
             var referencePressure = Math.Max(.0001, input.Pressure?.Invoke(reference / weightSum, (int)(kills / weightSum * .5)) ?? 1);
-            var observedDistance = samples.Max(s => s.EndDistance);
-            var observedPressure = Math.Max(referencePressure, input.Pressure?.Invoke(observedDistance, (int)samples.Max(s => s.Kills)) ?? referencePressure);
             var health = input.MaxHealth * run.HealthFraction;
             var runKills = run.Stats.Kills;
             // Deliberately bounded prototype, not a new production offline policy.
@@ -123,10 +121,9 @@ namespace TimelessEchoes.Stats
                     dt = Math.Min(dt, input.NextBuffExpiry - result.MovingSeconds);
                 dt = Math.Min(dt, Math.Max(0, boundary - result.Distance) / speed);
                 var pressure = Math.Max(0, input.Pressure?.Invoke(result.Distance, runKills) ?? 1);
+                // History calibrates observed damage, not a distance limit. Passing
+                // its furthest run must not invent damage or an early restart.
                 var incoming = damage / seconds * pressure / referencePressure;
-                // Zero-damage history does not establish immunity beyond observed threat.
-                if (result.Distance > observedDistance && pressure > observedPressure && incoming <= 0)
-                    incoming = (pressure - observedPressure) * killRate;
                 var netDamage = incoming - input.Regen;
                 if (netDamage > 0) dt = Math.Min(dt, health / netDamage);
                 var step = new Step { Seconds = dt, Distance = result.Distance + speed * dt, DamageTaken = incoming * dt,

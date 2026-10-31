@@ -105,6 +105,25 @@ namespace Tests.EditMode
         }
 
         [Test]
+        public void ShortUndamagedHistoryCanReachTheActualDistanceCap()
+        {
+            var input = Input(3600); input.Run.Map = "Mines";
+            input.Run.Distance = 2300; input.BaseCap = 38000;
+            input.Samples = new[] { new BackgroundRunSample { Seconds = 240,
+                Distance = 2400, EndDistance = 2400, Tasks = 48, Kills = 24 } };
+            input.Pressure = (distance, _) => distance;
+
+            var result = BackgroundRunEstimator.Forecast(input);
+
+            Assert.That(result.Deaths, Is.Zero, "Passing the recorded reach is not evidence of a combat death.");
+            Assert.That(result.Reaps, Is.EqualTo(1));
+            Assert.That(result.Steps.First(s => s.EndsRun).Distance, Is.EqualTo(38000).Within(.00001));
+            Assert.That(result.BaseCap, Is.EqualTo(38380).Within(.00001));
+            Assert.That(result.Distance, Is.EqualTo(300).Within(.00001));
+            Assert.That(input.Run.Distance, Is.EqualTo(2300));
+        }
+
+        [Test]
         public void EstimatedRunsCannotReplaceTheTenRealCalibrationSamples()
         {
             var data = new GameData();
