@@ -72,11 +72,25 @@
   "remainingLimits": [
     "Actual Smart Stack visible card, Always On behavior and Watch end-removal not established by direct harness",
     "No hardware/store validation",
-    "iPhone final regression capture being finalized separately; medium/Island layout source unchanged"
+    "Phone end cleanup and Watch end removal not established in this follow-up; direct Ended rendering is input-state proof only."
   ],
   "references": [
     "https://developer.apple.com/videos/play/wwdc2024/10068/",
     "https://developer.apple.com/documentation/activitykit/creating-custom-views-for-live-activities",
     "https://developer.apple.com/design/human-interface-guidelines/live-activities"
-  ]
+  ],
+  "iphoneFollowUp": {
+    "capture": "watch-iphone-regression.png",
+    "observed": "Fresh compact iPhone Island still renders player pixel art and approximate metres after final Watch-capable source install; native full-app build passed.",
+    "source": "Medium panel, measured timer and Island region implementation unchanged from v4.",
+    "limit": "Final expanded/Lock presentation and end removal were not revalidated; bounded Return to Town inputs did not complete before normal run/death transitions. No further navigation attempted."
+  },
+  "clipDetails": {
+    "durationSeconds": 34.9,
+    "dimensionsPixels": [
+      374,
+      446
+    ],
+    "h264Bytes": 61817
+  }
 }
