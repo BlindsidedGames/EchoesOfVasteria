@@ -1,0 +1,43 @@
+{
+  "backgroundEvent": {
+    "at": 1793432538.975219,
+    "event": "phase",
+    "phase": "background"
+  },
+  "hostStoppedAtUnix": 1793432539.048266,
+  "checkpoints": [
+    {
+      "targetElapsedSeconds": 0,
+      "screenshotRequestedAtUnix": 1793432559.729943,
+      "screenshotRequestedAtUTC": "2026-10-31T07:42:39.729943+00:00",
+      "elapsedAtScreenshotRequestSeconds": 0.0015461444854736328,
+      "hostPID": 23639,
+      "hostProcessState": "Ts",
+      "hostCPUTime": "0:01.74",
+      "screenshot": "lockscreen-t00.png",
+      "screenshotIncluded": false
+    },
+    {
+      "targetElapsedSeconds": 3,
+      "screenshotRequestedAtUnix": 1793432562.730253,
+      "screenshotRequestedAtUTC": "2026-10-31T07:42:42.730253+00:00",
+      "elapsedAtScreenshotRequestSeconds": 3.0018560886383057,
+      "hostPID": 23639,
+      "hostProcessState": "Ts",
+      "hostCPUTime": "0:01.74",
+      "screenshot": "lockscreen-t03.png",
+      "screenshotIncluded": true
+    },
+    {
+      "targetElapsedSeconds": 6,
+      "screenshotRequestedAtUnix": 1793432565.733844,
+      "screenshotRequestedAtUTC": "2026-10-31T07:42:45.733844+00:00",
+      "elapsedAtScreenshotRequestSeconds": 6.005447149276733,
+      "hostPID": 23639,
+      "hostProcessState": "Ts",
+      "hostCPUTime": "0:01.74",
+      "screenshot": "lockscreen-t06.png",
+      "screenshotIncluded": true
+    }
+  ]
+}

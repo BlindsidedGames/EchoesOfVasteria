@@ -1,0 +1,33 @@
+{
+  "checkoutHead": "f32dbd726dd8c796ee00d705c699bcb744d93a1e",
+  "initialRootContextSource": "9633c918d23b3e1f3ca480bf921c69b4972c672b",
+  "standaloneHarness": "No Unity source dependency; checkout revision is provenance only",
+  "builtBinaries": {
+    "TimeFormatLab": {
+      "sha256": "9017edf72cdde643ff1ecf3fc9171b9d1bd5ce1b0008aaece91523d595dbbfa5",
+      "bytes": 40352
+    },
+    "PlugIns/TimeFormatWidget.appex/TimeFormatWidget": {
+      "sha256": "33adbbe605f4540a99bf69da8ff285868cdb67dce42a30c533fce1911b33236e",
+      "bytes": 40352
+    },
+    "TimeFormatLab.debug.dylib": {
+      "sha256": "b2bb905b9c27fc0cdced992f381ca0d5217079126ccaae2f050b40c807d0e397",
+      "bytes": 251256
+    },
+    "PlugIns/TimeFormatWidget.appex/TimeFormatWidget.debug.dylib": {
+      "sha256": "87ff09d45d2ac5f476b5eada40a6dfc0f9070ddaefa60a456e28ef7192b112d3",
+      "bytes": 330784
+    }
+  },
+  "buildLogSha256": "936435b234f60ffaaed3e5ad0315cc8e9003ba4a96e5538f8865ed5daeef2801",
+  "buildSucceeded": true,
+  "rawArtifacts": "Artifacts/LiveActivityTimeFormat20261031 (local ignored artifacts; raw process logs not committed)",
+  "controlClip": {
+    "durationSeconds": 12.985,
+    "bytes": 1722538,
+    "trimStartInRawVideoSeconds": 29,
+    "trimDurationRequestedSeconds": 13,
+    "timing": "Approximately origin-1 through origin+12; use onscreen timer and dated screenshots, not assumed video timestamps"
+  }
+}
