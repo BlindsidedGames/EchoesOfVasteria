@@ -23,9 +23,62 @@
           "final": "captures/01-46-final.png"
         }
       },
-      "states": [],
-      "clip": null,
-      "clips": []
+      "states": [
+        {
+          "title": "empty \u00b7 42mm \u00b7 fixture adapter",
+          "file": "captures/01-42-empty.png"
+        },
+        {
+          "title": "ended \u00b7 42mm \u00b7 fixture adapter",
+          "file": "captures/01-42-ended.png"
+        },
+        {
+          "title": "offline \u00b7 42mm \u00b7 fixture adapter",
+          "file": "captures/01-42-offline.png"
+        },
+        {
+          "title": "personalized-hair \u00b7 42mm \u00b7 fixture adapter",
+          "file": "captures/01-42-personalized-hair.png"
+        },
+        {
+          "title": "store-foreground \u00b7 42mm \u00b7 real app/store, staged QA cache",
+          "file": "captures/01-42-store-foreground.png"
+        },
+        {
+          "title": "empty \u00b7 46mm \u00b7 fixture adapter",
+          "file": "captures/01-46-empty.png"
+        },
+        {
+          "title": "ended \u00b7 46mm \u00b7 fixture adapter",
+          "file": "captures/01-46-ended.png"
+        },
+        {
+          "title": "offline \u00b7 46mm \u00b7 fixture adapter",
+          "file": "captures/01-46-offline.png"
+        },
+        {
+          "title": "personalized-hair \u00b7 46mm \u00b7 fixture adapter",
+          "file": "captures/01-46-personalized-hair.png"
+        },
+        {
+          "title": "store-foreground \u00b7 46mm \u00b7 real app/store, staged QA cache",
+          "file": "captures/01-46-store-foreground.png"
+        }
+      ],
+      "clip": {
+        "file": "clips/personalized-hair-active-42.mp4",
+        "title": "Personalized active phone presentation (fixture adapter)"
+      },
+      "clips": [
+        {
+          "file": "clips/personalized-hair-active-42.mp4",
+          "title": "Personalized active phone presentation (fixture adapter)"
+        },
+        {
+          "file": "clips/real-store-cached-static-42.mp4",
+          "title": "Actual app/store cached snapshot (staged QA cache)"
+        }
+      ]
     },
     {
       "id": "03",
@@ -49,7 +102,16 @@
           "final": "captures/03-46-final.png"
         }
       },
-      "states": [],
+      "states": [
+        {
+          "title": "personalized-hair \u00b7 42mm \u00b7 fixture adapter",
+          "file": "captures/03-42-personalized-hair.png"
+        },
+        {
+          "title": "personalized-hair \u00b7 46mm \u00b7 fixture adapter",
+          "file": "captures/03-46-personalized-hair.png"
+        }
+      ],
       "clip": null,
       "clips": []
     },
@@ -101,7 +163,48 @@
           "final": "captures/05-46-final.png"
         }
       },
-      "states": [],
+      "states": [
+        {
+          "title": "automatic-away \u00b7 42mm \u00b7 fixture adapter",
+          "file": "captures/05-42-automatic-away.png"
+        },
+        {
+          "title": "expired \u00b7 42mm \u00b7 fixture adapter",
+          "file": "captures/05-42-expired.png"
+        },
+        {
+          "title": "restart \u00b7 42mm \u00b7 fixture adapter",
+          "file": "captures/05-42-restart.png"
+        },
+        {
+          "title": "store-away \u00b7 42mm \u00b7 real app/store, staged QA cache",
+          "file": "captures/05-42-store-away.png"
+        },
+        {
+          "title": "store-expired \u00b7 42mm \u00b7 real app/store, staged QA cache",
+          "file": "captures/05-42-store-expired.png"
+        },
+        {
+          "title": "automatic-away \u00b7 46mm \u00b7 fixture adapter",
+          "file": "captures/05-46-automatic-away.png"
+        },
+        {
+          "title": "expired \u00b7 46mm \u00b7 fixture adapter",
+          "file": "captures/05-46-expired.png"
+        },
+        {
+          "title": "restart \u00b7 46mm \u00b7 fixture adapter",
+          "file": "captures/05-46-restart.png"
+        },
+        {
+          "title": "store-away \u00b7 46mm \u00b7 real app/store, staged QA cache",
+          "file": "captures/05-46-store-away.png"
+        },
+        {
+          "title": "store-expired \u00b7 46mm \u00b7 real app/store, staged QA cache",
+          "file": "captures/05-46-store-expired.png"
+        }
+      ],
       "clip": null,
       "clips": []
     },
@@ -127,7 +230,16 @@
           "final": "captures/07-46-final.png"
         }
       },
-      "states": [],
+      "states": [
+        {
+          "title": "large-text \u00b7 42mm \u00b7 fixture adapter",
+          "file": "captures/07-42-large-text.png"
+        },
+        {
+          "title": "large-text \u00b7 46mm \u00b7 fixture adapter",
+          "file": "captures/07-46-large-text.png"
+        }
+      ],
       "clip": null,
       "clips": []
     },
