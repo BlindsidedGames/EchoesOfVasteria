@@ -9,6 +9,7 @@ revision=sys.argv[1] if len(sys.argv)>1 else 'initial'
 for size,device in devices.items():
  subprocess.run(['xcrun','simctl','install',device,str(app)],check=True)
  for design in range(1,11):
+  if len(sys.argv)>2 and str(design) not in sys.argv[2].split(","): continue
   subprocess.run(['xcrun','simctl','launch','--terminate-running-process',device,bundle,f'--design={design}'],check=True,stdout=subprocess.DEVNULL)
   time.sleep(1)
   out=dest/f'{design:02d}-{size}-{revision}.png'

@@ -30,6 +30,7 @@ final class LabStore: ObservableObject {
         let origin = decoded?.timeline?.generatedAt ?? decoded?.generatedAt ?? 0
         clock = Double(argument("clock") ?? "") ?? origin + (variant == "stale" ? 7200 : variant == "restart" ? 110 : ["away", "large-away"].contains(variant) ? 85 : 15)
     }
+    var runStatus: String? { snapshot?.run?.dead == true ? "Died" : snapshot?.run?.reaped == true ? "Reaped" : nil }
     var display: RunDisplay { RunDisplay(snapshot, at: clock) }
     var offline: Bool { variant == "offline" || variant == "stale" || variant == "empty" }
     var canAnimate: Bool { !offline && snapshot?.phoneInBackground != true && display.active }
@@ -73,12 +74,12 @@ struct RunDisplay {
     var expired = false
     var active = false
     var fraction: Double? { reaping && cap > 0 ? min(1, max(0, distance / cap)) : nil }
-    init(_ snapshot: EOVWatchSnapshot?, at unix: Double) {
+    init(_ snapshot: EOVWatchSnapshot?, at unix: Double, allowEstimate: Bool = true) {
         guard let s = snapshot, let run = s.run, s.state == "run" else { return }
         map = run.mapTitle; distance = run.distance; cap = run.cap; resources = run.resources
         tasks = Double(run.tasks); kills = Double(run.kills); health = run.healthFraction; seconds = run.durationSeconds
         reaping = run.distanceReaping != false; active = !run.dead && !run.reaped
-        if active, s.phoneInBackground == true, s.backgroundProgressEnabled, let timeline = s.timeline,
+        if allowEstimate, active, s.phoneInBackground == true, s.backgroundProgressEnabled, let timeline = s.timeline,
            timeline.mapId == run.mapId {
             let sample = timeline.sample(at: unix)
             distance = sample.distance; cap = sample.cap; resources = sample.resources
@@ -93,7 +94,7 @@ struct RunDisplay {
 func number(_ value: Double?, compact: Bool = true) -> String {
     guard let value else { return "—" }
     if compact {
-        for (divisor, suffix) in [(1e9, "b"), (1e6, "m"), (1e3, "k")] where value >= divisor {
+        for (divisor, suffix) in [(1e9, "B"), (1e6, "M"), (1e3, "K")] where value >= divisor {
             return (value / divisor).formatted(.number.precision(.fractionLength(value / divisor >= 10 ? 0 : 1))) + suffix
         }
     }
@@ -107,4 +108,4 @@ func duration(_ value: Double) -> String {
 func rate(_ resources: Double, _ seconds: Double) -> String { seconds > 0 ? number(resources / seconds * 60) : "—" }
 func skillArt(_ id: String) -> String { "Skill_" + id }
 func outcome(_ run: EOVWatchSnapshot.RecentRun) -> String { run.result == "reaped" ? "EOVCarl" : run.result == "died" ? "Heart" : "EOVHero" }
-func mapArt(_ id: String) -> String { "Map_" + id }
+func mapArt(_ id: String) -> String { ["River", "Woods", "Mines", "Farmlands", "Haloween"].contains(id) ? "Map_" + id : "MapFallback" }

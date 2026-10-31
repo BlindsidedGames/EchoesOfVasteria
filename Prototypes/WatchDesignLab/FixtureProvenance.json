@@ -3,6 +3,8 @@
   "baselineSource": "Actual Unity helmet snapshot recorded 2026-10-31, build188 character integration. Source retained verbatim.",
   "variants": {
     "live": "Actual Unity-produced saved run, portrait, skills and history. Only phoneInBackground false for foreground presentation.",
+    "dead": "Controlled ended run: explicit status, static portrait, no invented cumulative reaps.",
+    "reaped": "Controlled ended run: explicit status, static portrait, no invented cumulative reaps.",
     "away": "Controlled eight-column trajectory for gained counters, reap/restart pause and expiry. Not an observed forecast.",
     "large-away": "Controlled trajectory resource gains scaled one million times to stress compact values.",
     "restart": "Same controlled trajectory, sampled at 110s restart.",
@@ -13,6 +15,8 @@
     "town": "Controlled town state; retained skills/history remain available.",
     "large-history": "Controlled retained-history distances scaled1000 and resources one million times for compact chart/comparison/map stress.",
     "history": "CONTROLLED varied retained global ten for trends/comparison/dossier, not real player history. Same-map records include estimated and recorded outcomes.",
+    "map-gap": "Controlled known current Farmlands run with no retained Farmlands records. Does not reveal undiscovered maps.",
+    "town-empty": "Controlled town with no current map or retained records; no known map selector.",
     "no-history": "Controlled no retained history; current River map known, no invented best/rate.",
     "beyond-history": "Controlled current Mines distance 5200 beyond recent best2550, actual effective cap38000. Does not assert managed estimator behavior."
   },

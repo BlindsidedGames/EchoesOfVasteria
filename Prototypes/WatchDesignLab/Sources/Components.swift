@@ -15,7 +15,8 @@ struct Pixel: View {
     var size: CGFloat = 20
     var body: some View {
         Group {
-            if name == "Heart" { Image(systemName: "heart.fill").foregroundStyle(Palette.red) }
+            if name == "MapFallback" { Image(systemName: "map.fill").foregroundStyle(Palette.gold) }
+            else if name == "Heart" { Image(systemName: "heart.fill").foregroundStyle(Palette.red) }
             else { Image(name).resizable().interpolation(.none).scaledToFit() }
         }.frame(width: size, height: size).accessibilityHidden(true)
     }
@@ -38,19 +39,35 @@ struct Hero: View {
         }.accessibilityLabel("Your saved character wearing a gold helmet and blue shirt")
     }
 }
+struct TrailHero: View {
+    @EnvironmentObject var lab: LabStore
+    @Environment(\.scenePhase) var phase
+    @Environment(\.isLuminanceReduced) var dimmed
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
+    var body: some View {
+        let enabled = lab.canAnimate && phase == .active && !dimmed && !reduceMotion
+        TimelineView(.animation(minimumInterval: 1.0 / 8, paused: !enabled)) { context in
+            let frame = enabled ? Int(context.date.timeIntervalSince1970 * 8) % 6 : 0
+            Image("HeroRun_" + String(frame)).resizable().interpolation(.none).frame(width: 80, height: 80)
+        }.accessibilityLabel("Your saved character, authored running animation")
+    }
+}
 struct CarlArrival: View {
     @EnvironmentObject var lab: LabStore
     @Environment(\.scenePhase) var phase
     @Environment(\.isLuminanceReduced) var dimmed
     @Environment(\.accessibilityReduceMotion) var reduceMotion
-    var size: CGFloat = 30
+    @State private var start = Date()
     var body: some View {
         let enabled = lab.canAnimate && phase == .active && !dimmed && !reduceMotion
-        TimelineView(.explicit(enabled ? (0...3).map { lab.animationStart.addingTimeInterval(Double($0) / 12) } : [lab.animationStart])) { context in
-            let elapsed = max(0, context.date.timeIntervalSince(lab.animationStart))
-            let frame = enabled ? min(3, Int(elapsed * 12)) : 3
-            Pixel(name: "CarlFly_" + String(frame), size: size)
-        }
+        TimelineView(.explicit(enabled ? (0...3).map { start.addingTimeInterval(Double($0) / 12) } : [start])) { context in
+            let elapsed = max(0, context.date.timeIntervalSince(start))
+            let frame = enabled ? min(3, Int(elapsed * 12 + 0.001)) : 3
+            Image("CarlFly_" + String(frame)).resizable().interpolation(.none).frame(width: 80, height: 80)
+        }.accessibilityLabel("Carl, authored arrival animation")
+            .onAppear { start = .now }
+            .onChange(of: lab.refreshCount) { _, _ in start = .now }
+            .onChange(of: enabled) { _, value in if value { start = .now } }
     }
 }
 struct ScaledLabFont: ViewModifier {
@@ -74,8 +91,9 @@ struct LabHeader: View {
     @EnvironmentObject var lab: LabStore
     private var shortSource: String {
         if lab.refreshing { return "Asking iPhone…" }
+        if let status = lab.runStatus { return status + " · phone " + lab.age + " ago" }
         if lab.offline { return lab.variant == "stale" ? "Estimate ended" : "Offline · cached" }
-        if lab.design == 6 { return "Session goal · " + lab.age + " ago" }
+        if lab.design == 6 { return "Session · phone " + lab.age + " ago" }
         if [3, 4, 7, 8, 9, 10].contains(lab.design) { return "Phone · " + lab.age + " ago" }
         if lab.display.expired { return "Estimate ended" }
         if lab.design == 5 && lab.display.estimated { return lab.display.phase == 1 ? "Restarting · estimated" : "Estimated away gains" }
@@ -88,7 +106,7 @@ struct LabHeader: View {
             VStack(alignment: .leading, spacing: 1) {
                 Text(title).labFont(19, weight: .bold, design: .rounded).foregroundStyle(Palette.cream)
                     .lineLimit(1).minimumScaleFactor(0.7)
-                if ![7, 8, 9, 10].contains(lab.design) || lab.offline {
+                if ![3, 7, 8, 9, 10].contains(lab.design) || lab.offline {
                     Text(shortSource).labFont(10).foregroundStyle(Palette.muted)
                         .lineLimit(1).accessibilityLabel(lab.source)
                 }
@@ -124,11 +142,21 @@ struct Metric: View {
     let value: String
     let label: String
     var big = false
+    var stacked = false
     var body: some View {
+        Group {
+            if stacked {
+                VStack(spacing: 1) {
+                    Pixel(name: art, size: 13)
+                    Text(value).labFont(12, weight: .semibold, design: .rounded).monospacedDigit().lineLimit(1)
+                }
+            } else {
         HStack(spacing: 3) {
             Pixel(name: art, size: big ? 23 : 16)
-            Text(value).font(.system(size: big ? 25 : 13, weight: .semibold, design: .rounded))
+            Text(value).labFont(big ? 25 : 13, weight: .semibold, design: .rounded)
                 .monospacedDigit().lineLimit(1).minimumScaleFactor(0.65)
+        }
+            }
         }.frame(maxWidth: .infinity, alignment: .center)
             .accessibilityElement(children: .ignore).accessibilityLabel(label).accessibilityValue(value)
     }
@@ -136,12 +164,13 @@ struct Metric: View {
 struct Quartet: View {
     let run: RunDisplay
     var body: some View {
+        let stacked = max(run.tasks ?? 0, run.kills ?? 0, run.resources) >= 10000
         HStack(spacing: 1) {
-            Metric(art: "EOVTask", value: number(run.tasks), label: "Tasks")
-            Metric(art: "EOVKill", value: number(run.kills), label: "Kills")
-            Metric(art: "EOVChest", value: (run.estimated ? "+" : "") + number(run.resources), label: run.estimated ? "Resources gained since departure" : "Run resources")
-            Metric(art: "EOVCarl", value: run.reaps.map(String.init) ?? "—", label: "Reaps since departure")
-        }.frame(height: 25)
+            Metric(art: "EOVTask", value: (run.estimated && run.tasks != nil ? "+" : "") + number(run.tasks), label: run.estimated ? "Task gains since departure" : "Tasks", stacked: stacked)
+            Metric(art: "EOVKill", value: (run.estimated && run.kills != nil ? "+" : "") + number(run.kills), label: run.estimated ? "Kill gains since departure" : "Kills", stacked: stacked)
+            Metric(art: "EOVChest", value: (run.estimated ? "+" : "") + number(run.resources), label: run.estimated ? "Resources gained since departure" : "Run resources", stacked: stacked)
+            Metric(art: "EOVCarl", value: run.reaps.map(String.init) ?? "—", label: "Reaps since departure", stacked: stacked)
+        }.frame(height: stacked ? 32 : 25)
     }
 }
 struct DistanceLine: View {

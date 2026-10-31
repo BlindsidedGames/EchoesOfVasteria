@@ -1,0 +1,595 @@
+{
+  "provenance": "Native Watch-only simulator fixture prototype, not production transport or a deployed Watch update. Real game art and saved-character baseline; controlled scenario/history variants explicitly documented in Prototypes/WatchDesignLab/FixtureProvenance.json. Raw simulator PNGs preserved.",
+  "designs": [
+    {
+      "id": "01",
+      "slug": "expedition-dial",
+      "title": "Expedition dial",
+      "purpose": "How far is this run from its real distance reap?",
+      "interaction": "Tap the dial to focus distance, resources or run duration. Refresh is a local fixture interaction.",
+      "data": "Actual saved hero, distance/effective cap and run counts; controlled background trajectory gains when away.",
+      "short": "The saved hero, a readable arc and four compact counters.",
+      "changes": [
+        "Enlarged the selected saved portrait and rounded the actual phone health percentage.",
+        "Placed static last-phone health inside the dial and bounded the shared clock region."
+      ],
+      "captures": {
+        "42": {
+          "initial": "captures/01-42-initial.png",
+          "final": "captures/01-42-final.png"
+        },
+        "46": {
+          "initial": "captures/01-46-initial.png",
+          "final": "captures/01-46-final.png"
+        }
+      },
+      "states": [
+        {
+          "title": "Large type \u00b7 42mm",
+          "file": "captures/01-42-large-text.png"
+        },
+        {
+          "title": "Large values \u00b7 42mm",
+          "file": "captures/01-42-large-values.png"
+        },
+        {
+          "title": "Beyond historical best \u00b7 42mm",
+          "file": "captures/01-42-beyond-history.png"
+        },
+        {
+          "title": "No snapshot \u00b7 42mm",
+          "file": "captures/01-42-empty.png"
+        },
+        {
+          "title": "Town \u00b7 42mm",
+          "file": "captures/01-42-town.png"
+        },
+        {
+          "title": "Offline cached \u00b7 42mm",
+          "file": "captures/01-42-offline.png"
+        },
+        {
+          "title": "No distance reap \u00b7 42mm",
+          "file": "captures/01-42-no-reap.png"
+        },
+        {
+          "title": "Died \u00b7 42mm",
+          "file": "captures/01-42-dead.png"
+        },
+        {
+          "title": "Reaped \u00b7 42mm",
+          "file": "captures/01-42-reaped.png"
+        },
+        {
+          "title": "Large type \u00b7 46mm",
+          "file": "captures/01-46-large-text.png"
+        },
+        {
+          "title": "Large values \u00b7 46mm",
+          "file": "captures/01-46-large-values.png"
+        },
+        {
+          "title": "Beyond historical best \u00b7 46mm",
+          "file": "captures/01-46-beyond-history.png"
+        },
+        {
+          "title": "No snapshot \u00b7 46mm",
+          "file": "captures/01-46-empty.png"
+        },
+        {
+          "title": "Town \u00b7 46mm",
+          "file": "captures/01-46-town.png"
+        },
+        {
+          "title": "Offline cached \u00b7 46mm",
+          "file": "captures/01-46-offline.png"
+        },
+        {
+          "title": "No distance reap \u00b7 46mm",
+          "file": "captures/01-46-no-reap.png"
+        },
+        {
+          "title": "Died \u00b7 46mm",
+          "file": "captures/01-46-dead.png"
+        },
+        {
+          "title": "Reaped \u00b7 46mm",
+          "file": "captures/01-46-reaped.png"
+        }
+      ],
+      "clip": null,
+      "clips": []
+    },
+    {
+      "id": "02",
+      "slug": "living-trail",
+      "title": "Living trail",
+      "purpose": "Where am I on this route?",
+      "interaction": "Watch the authored running animation; tap refresh for the one-shot authored Carl arrival.",
+      "data": "Distance fraction uses the actual effective cap, never the best retained run. Terrain is a decorative schematic.",
+      "short": "A pixel riverbank, moving saved hero and Carl at the distance endpoint.",
+      "changes": [
+        "Rebuilt the clipped bank from source water tiles and game grass.",
+        "Reduced the trail height so distance, endpoint and all counters fit42mm."
+      ],
+      "captures": {
+        "42": {
+          "initial": "captures/02-42-initial.png",
+          "final": "captures/02-42-final.png"
+        },
+        "46": {
+          "initial": "captures/02-46-initial.png",
+          "final": "captures/02-46-final.png"
+        }
+      },
+      "states": [
+        {
+          "title": "Large type \u00b7 42mm",
+          "file": "captures/02-42-large-text.png"
+        },
+        {
+          "title": "Beyond historical best \u00b7 42mm",
+          "file": "captures/02-42-beyond-history.png"
+        },
+        {
+          "title": "Offline cached \u00b7 42mm",
+          "file": "captures/02-42-offline.png"
+        },
+        {
+          "title": "No distance reap \u00b7 42mm",
+          "file": "captures/02-42-no-reap.png"
+        },
+        {
+          "title": "Large type \u00b7 46mm",
+          "file": "captures/02-46-large-text.png"
+        },
+        {
+          "title": "Beyond historical best \u00b7 46mm",
+          "file": "captures/02-46-beyond-history.png"
+        },
+        {
+          "title": "Offline cached \u00b7 46mm",
+          "file": "captures/02-46-offline.png"
+        },
+        {
+          "title": "No distance reap \u00b7 46mm",
+          "file": "captures/02-46-no-reap.png"
+        }
+      ],
+      "clip": null,
+      "clips": []
+    },
+    {
+      "id": "03",
+      "slug": "combat-watch",
+      "title": "Combat watch",
+      "purpose": "What was my last phone health?",
+      "interaction": "Refresh the local fixture presentation; inspect the age beside static phone health.",
+      "data": "Every value is a last-phone snapshot, including distance and totals. Health never forecasts or animates as live work.",
+      "short": "Hero and last phone health dominate a quiet combat glance.",
+      "changes": [
+        "Removed excess top space and stamped last phone health with its source age.",
+        "Kept all values in the same phone snapshot scope during background states."
+      ],
+      "captures": {
+        "42": {
+          "initial": "captures/03-42-initial.png",
+          "final": "captures/03-42-final.png"
+        },
+        "46": {
+          "initial": "captures/03-46-initial.png",
+          "final": "captures/03-46-final.png"
+        }
+      },
+      "states": [
+        {
+          "title": "Large type \u00b7 42mm",
+          "file": "captures/03-42-large-text.png"
+        },
+        {
+          "title": "Phone background \u00b7 42mm",
+          "file": "captures/03-42-away.png"
+        },
+        {
+          "title": "Died \u00b7 42mm",
+          "file": "captures/03-42-dead.png"
+        },
+        {
+          "title": "Reaped \u00b7 42mm",
+          "file": "captures/03-42-reaped.png"
+        },
+        {
+          "title": "Large type \u00b7 46mm",
+          "file": "captures/03-46-large-text.png"
+        },
+        {
+          "title": "Phone background \u00b7 46mm",
+          "file": "captures/03-46-away.png"
+        },
+        {
+          "title": "Died \u00b7 46mm",
+          "file": "captures/03-46-dead.png"
+        },
+        {
+          "title": "Reaped \u00b7 46mm",
+          "file": "captures/03-46-reaped.png"
+        }
+      ],
+      "clip": null,
+      "clips": []
+    },
+    {
+      "id": "04",
+      "slug": "harvest-counter",
+      "title": "Harvest counter",
+      "purpose": "How much did this run collect, and at what run-average rate?",
+      "interaction": "Toggle totals and run averages in place.",
+      "data": "Phone totals divided by the matching phone duration, per minute; never instantaneous rates.",
+      "short": "Resource-first display with task and kill tallies.",
+      "changes": [
+        "Shortened the counter cards so the full44pt average toggle remains visible.",
+        "Kept source age explicit and matching totals/duration together."
+      ],
+      "captures": {
+        "42": {
+          "initial": "captures/04-42-initial.png",
+          "final": "captures/04-42-final.png"
+        },
+        "46": {
+          "initial": "captures/04-46-initial.png",
+          "final": "captures/04-46-final.png"
+        }
+      },
+      "states": [
+        {
+          "title": "Large type \u00b7 42mm",
+          "file": "captures/04-42-large-text.png"
+        },
+        {
+          "title": "Large values \u00b7 42mm",
+          "file": "captures/04-42-large-values.png"
+        },
+        {
+          "title": "Phone background \u00b7 42mm",
+          "file": "captures/04-42-away.png"
+        },
+        {
+          "title": "Large type \u00b7 46mm",
+          "file": "captures/04-46-large-text.png"
+        },
+        {
+          "title": "Large values \u00b7 46mm",
+          "file": "captures/04-46-large-values.png"
+        },
+        {
+          "title": "Phone background \u00b7 46mm",
+          "file": "captures/04-46-away.png"
+        }
+      ],
+      "clip": null,
+      "clips": []
+    },
+    {
+      "id": "05",
+      "slug": "since-you-left",
+      "title": "Since you left",
+      "purpose": "What does the managed trajectory estimate I gained while away?",
+      "interaction": "Inspect the restart and expired variants; counters freeze while restarting and after the horizon.",
+      "data": "Eight-column trajectory gains only: tasks, kills, resources, reaps; distance and cap are current trajectory values.",
+      "short": "One elapsed reading, four gained counters and current distance.",
+      "changes": [
+        "Removed duplicate elapsed text and compressed four gains without clipping distance.",
+        "Corrected the controlled first-reap cap to214.12 and validated restart/expiry freezes."
+      ],
+      "captures": {
+        "42": {
+          "initial": "captures/05-42-initial.png",
+          "final": "captures/05-42-final.png"
+        },
+        "46": {
+          "initial": "captures/05-46-initial.png",
+          "final": "captures/05-46-final.png"
+        }
+      },
+      "states": [
+        {
+          "title": "Large type \u00b7 42mm",
+          "file": "captures/05-42-large-text.png"
+        },
+        {
+          "title": "Large values \u00b7 42mm",
+          "file": "captures/05-42-large-values.png"
+        },
+        {
+          "title": "Restart pause \u00b7 42mm",
+          "file": "captures/05-42-restart.png"
+        },
+        {
+          "title": "Estimate expired \u00b7 42mm",
+          "file": "captures/05-42-expired.png"
+        },
+        {
+          "title": "Large type \u00b7 46mm",
+          "file": "captures/05-46-large-text.png"
+        },
+        {
+          "title": "Large values \u00b7 46mm",
+          "file": "captures/05-46-large-values.png"
+        },
+        {
+          "title": "Restart pause \u00b7 46mm",
+          "file": "captures/05-46-restart.png"
+        },
+        {
+          "title": "Estimate expired \u00b7 46mm",
+          "file": "captures/05-46-expired.png"
+        }
+      ],
+      "clip": null,
+      "clips": []
+    },
+    {
+      "id": "06",
+      "slug": "run-goal",
+      "title": "Run goal",
+      "purpose": "How much remains to my chosen Watch-session goal?",
+      "interaction": "Tap remaining for Crown editing or open Choose goal to change metric and use44pt +/- controls.",
+      "data": "Session-only local target. No quests, awards, persistent goals or inferred run identity. Current quantity always uses the last phone snapshot and freezes while away; no accumulation across reaps.",
+      "short": "A linear stepped goal track with remaining quantity, current/target and a native editor.",
+      "changes": [
+        "Compared the segmented arc against a distinct linear stepped goal; selected the clear linear remaining/current/target layout.",
+        "Added a native goal editor and rounded remaining distance upward."
+      ],
+      "captures": {
+        "42": {
+          "initial": "captures/06-42-initial.png",
+          "final": "captures/06-42-final.png"
+        },
+        "46": {
+          "initial": "captures/06-46-initial.png",
+          "final": "captures/06-46-final.png"
+        }
+      },
+      "states": [
+        {
+          "title": "Large type \u00b7 42mm",
+          "file": "captures/06-42-large-text.png"
+        },
+        {
+          "title": "Large values \u00b7 42mm",
+          "file": "captures/06-42-large-values.png"
+        },
+        {
+          "title": "Phone background \u00b7 42mm",
+          "file": "captures/06-42-away.png"
+        },
+        {
+          "title": "Large type \u00b7 46mm",
+          "file": "captures/06-46-large-text.png"
+        },
+        {
+          "title": "Large values \u00b7 46mm",
+          "file": "captures/06-46-large-values.png"
+        },
+        {
+          "title": "Phone background \u00b7 46mm",
+          "file": "captures/06-46-away.png"
+        }
+      ],
+      "clip": null,
+      "clips": []
+    },
+    {
+      "id": "07",
+      "slug": "skillbook",
+      "title": "Skillbook",
+      "purpose": "What are my six actual skill levels?",
+      "interaction": "Tap a skill to pin/unpin it for the lab session. Crown-scroll large text.",
+      "data": "Actual skill IDs, levels and source icon art; no unknown XP progress.",
+      "short": "Six crisp skill cells in a readable2\u00d73 grid.",
+      "changes": [
+        "Removed nested scrolling and excess top space.",
+        "Fit six44pt tappable cells in the normal42mm first viewport."
+      ],
+      "captures": {
+        "42": {
+          "initial": "captures/07-42-initial.png",
+          "final": "captures/07-42-final.png"
+        },
+        "46": {
+          "initial": "captures/07-46-initial.png",
+          "final": "captures/07-46-final.png"
+        }
+      },
+      "states": [
+        {
+          "title": "Large type \u00b7 42mm",
+          "file": "captures/07-42-large-text.png"
+        },
+        {
+          "title": "Large type \u00b7 46mm",
+          "file": "captures/07-46-large-text.png"
+        }
+      ],
+      "clip": null,
+      "clips": []
+    },
+    {
+      "id": "08",
+      "slug": "run-ribbon",
+      "title": "Run ribbon",
+      "purpose": "How do the retained runs vary?",
+      "interaction": "Touch or turn Crown to select a genuine bar; toggle distance/resources; open a receipt.",
+      "data": "Last retained global ten, common zero baseline, distinct estimate marks and selected outcome.",
+      "short": "A compact run chart with a useful selected receipt.",
+      "changes": [
+        "Added explicit metric units and outcome icon.",
+        "Reduced the chart to keep metric switching and receipt navigation visible."
+      ],
+      "captures": {
+        "42": {
+          "initial": "captures/08-42-initial.png",
+          "final": "captures/08-42-final.png"
+        },
+        "46": {
+          "initial": "captures/08-46-initial.png",
+          "final": "captures/08-46-final.png"
+        }
+      },
+      "states": [
+        {
+          "title": "Large type \u00b7 42mm",
+          "file": "captures/08-42-large-text.png"
+        },
+        {
+          "title": "Large values \u00b7 42mm",
+          "file": "captures/08-42-large-values.png"
+        },
+        {
+          "title": "No retained history \u00b7 42mm",
+          "file": "captures/08-42-no-history.png"
+        },
+        {
+          "title": "Large type \u00b7 46mm",
+          "file": "captures/08-46-large-text.png"
+        },
+        {
+          "title": "Large values \u00b7 46mm",
+          "file": "captures/08-46-large-values.png"
+        },
+        {
+          "title": "No retained history \u00b7 46mm",
+          "file": "captures/08-46-no-history.png"
+        }
+      ],
+      "clip": null,
+      "clips": []
+    },
+    {
+      "id": "09",
+      "slug": "run-comparison",
+      "title": "Run comparison",
+      "purpose": "How do two retained runs compare on matching run-average rates?",
+      "interaction": "Cycle the selected pair and open either receipt. Same-map records are preferred.",
+      "data": "Two retained records, map/outcome/duration/distance/resources-per-minute. Mixed estimates visibly qualified; no equipment causality.",
+      "short": "Rate delta first, then two compact actionable run cards.",
+      "changes": [
+        "Moved delta above the cards and added proportional rate bars.",
+        "Used shared display precision for both rates and their delta."
+      ],
+      "captures": {
+        "42": {
+          "initial": "captures/09-42-initial.png",
+          "final": "captures/09-42-final.png"
+        },
+        "46": {
+          "initial": "captures/09-46-initial.png",
+          "final": "captures/09-46-final.png"
+        }
+      },
+      "states": [
+        {
+          "title": "Large type \u00b7 42mm",
+          "file": "captures/09-42-large-text.png"
+        },
+        {
+          "title": "Large values \u00b7 42mm",
+          "file": "captures/09-42-large-values.png"
+        },
+        {
+          "title": "No retained history \u00b7 42mm",
+          "file": "captures/09-42-no-history.png"
+        },
+        {
+          "title": "Large type \u00b7 46mm",
+          "file": "captures/09-46-large-text.png"
+        },
+        {
+          "title": "Large values \u00b7 46mm",
+          "file": "captures/09-46-large-values.png"
+        },
+        {
+          "title": "No retained history \u00b7 46mm",
+          "file": "captures/09-46-no-history.png"
+        }
+      ],
+      "clip": null,
+      "clips": []
+    },
+    {
+      "id": "10",
+      "slug": "map-dossier",
+      "title": "Map dossier",
+      "purpose": "What do the retained ten tell me about this map?",
+      "interaction": "Tap or turn Crown to select a map; open its latest retained receipt. Empty maps show honest no-records text.",
+      "data": "Latest retained run, recent recorded-only best, current run where applicable, sample count and estimate-qualified recent rate.",
+      "short": "Map, last-run distance, recorded best and a recent-rate summary.",
+      "changes": [
+        "Combined map and latest distance, removed the detached chevron pill and added current run context.",
+        "Used matching distance formatting, visible estimate qualification and selectable known no-history maps."
+      ],
+      "captures": {
+        "42": {
+          "initial": "captures/10-42-initial.png",
+          "final": "captures/10-42-final.png"
+        },
+        "46": {
+          "initial": "captures/10-46-initial.png",
+          "final": "captures/10-46-final.png"
+        }
+      },
+      "states": [
+        {
+          "title": "Large type \u00b7 42mm",
+          "file": "captures/10-42-large-text.png"
+        },
+        {
+          "title": "Large values \u00b7 42mm",
+          "file": "captures/10-42-large-values.png"
+        },
+        {
+          "title": "Beyond historical best \u00b7 42mm",
+          "file": "captures/10-42-beyond-history.png"
+        },
+        {
+          "title": "No retained history \u00b7 42mm",
+          "file": "captures/10-42-no-history.png"
+        },
+        {
+          "title": "Known map with no records \u00b7 42mm",
+          "file": "captures/10-42-map-empty.png"
+        },
+        {
+          "title": "No current or retained map \u00b7 42mm",
+          "file": "captures/10-42-town-empty.png"
+        },
+        {
+          "title": "Large type \u00b7 46mm",
+          "file": "captures/10-46-large-text.png"
+        },
+        {
+          "title": "Large values \u00b7 46mm",
+          "file": "captures/10-46-large-values.png"
+        },
+        {
+          "title": "Beyond historical best \u00b7 46mm",
+          "file": "captures/10-46-beyond-history.png"
+        },
+        {
+          "title": "No retained history \u00b7 46mm",
+          "file": "captures/10-46-no-history.png"
+        },
+        {
+          "title": "Known map with no records \u00b7 46mm",
+          "file": "captures/10-46-map-empty.png"
+        },
+        {
+          "title": "No current or retained map \u00b7 46mm",
+          "file": "captures/10-46-town-empty.png"
+        }
+      ],
+      "clip": null,
+      "clips": []
+    }
+  ]
+}

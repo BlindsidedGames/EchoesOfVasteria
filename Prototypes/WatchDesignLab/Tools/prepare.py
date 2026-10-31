@@ -41,7 +41,7 @@ for name in ['Combat','Mining','Woodcutting','Fishing','Farming','Looting']:
 for name,guid,fid in [('Farmlands','e36f7692c71d2a34383e21fe9d44dc80','-2997195532997922311'),('River','674345f33219f70418aca2a3db04ecbc','-4548796474974412338'),('Woods','b45d02bebb0bae34490e63de2e1440b9','621266246945384593'),('Mines','17ab04ce672d2cf4fbe3b9314f205693','-7112000108182893260'),('Haloween','3683944cef7e6bd4cae5ecd76295b35f','2029275289')]:add('Map_'+name,[layer(guid,fid)])
 for name,path,rect in [
  ('TrailGrass','Assets/Art/Packs/Cute_Fantasy/Tiles/Grass/Grass_ForestGreen_Fill.png',None),
- ('TrailWater','Assets/Art/Packs/Cute_Fantasy/Tiles/Water/Water_Tile_2.png',[8,64,16,16]),
+ ('TrailWater','Assets/Art/Packs/Cute_Fantasy/Tiles/Water/Water_Tile_2.png',[16,48,16,24]),
  ('TrailReeds','Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Grass_1_Anim.png',None)]:
     p=root/path;w,h=struct.unpack('>II',p.read_bytes()[16:24]);crop=rect or [0,h-16,16,16]
     add(name,[{'path':str(p),'rect':crop,'sha256':sha(p)}])
