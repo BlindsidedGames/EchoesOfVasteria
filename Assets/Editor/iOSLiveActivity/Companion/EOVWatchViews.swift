@@ -24,6 +24,7 @@ struct EOVWatchDial: View {
                                 else {
                                     Text(focus == 1 ? eovWatchNumber(run.resources) : run.estimated ? eovWatchDuration(presentation.away?.elapsed ?? 0) : eovWatchDuration(run.seconds))
                                         .eovWatchFont(26, weight: .bold, design: .rounded).monospacedDigit()
+                                        .lineLimit(1).minimumScaleFactor(0.75)
                                     Text(focus == 1 ? (run.estimated ? "gained" : "resources") : timeCaption).eovWatchFont(10).foregroundStyle(EOVWatchPalette.muted)
                                 }
                                 HStack(spacing: 2) {
@@ -31,6 +32,9 @@ struct EOVWatchDial: View {
                                     Text((run.estimated ? "Last " : "") + eovWatchNumber((run.health * 100).rounded()) + "%").eovWatchFont(9).foregroundStyle(EOVWatchPalette.muted)
                                 }
                             }
+                            // Keep the rectangular content inside the ring, including
+                            // its narrower upper/lower arcs on the smaller Watch.
+                            .frame(width: diameter - 20).scaleEffect(0.8)
                         }.frame(width: diameter, height: diameter)
                     }.buttonStyle(.plain).accessibilityLabel("Expedition dial. Tap to change the highlighted metric")
                     EOVWatchQuartet(run: run)
