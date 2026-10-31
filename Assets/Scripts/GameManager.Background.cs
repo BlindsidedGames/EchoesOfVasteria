@@ -197,7 +197,7 @@ namespace TimelessEchoes
                 StartBackgroundDemo();
             if (backgroundSuspended || backgroundSettling) return;
             if (IsInTown && activityVisible) { BackgroundRunPrototype.End(); activityVisible = false; }
-            if (!IsInTown && Time.unscaledTime >= nextBackgroundForecast)
+            if (!IsInTown && !runLoadingActive && (!activityVisible || Time.unscaledTime >= nextBackgroundForecast))
             { nextBackgroundForecast = Time.unscaledTime + 15; RefreshBackgroundForecast(); }
         }
 
