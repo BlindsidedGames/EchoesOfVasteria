@@ -120,8 +120,12 @@ namespace TimelessEchoes.Editor
                 File.Copy(Path.Combine(source, "Companion", name), Path.Combine(destination, "Companion", name), true);
             AddSource(project, framework, companionFolder + "/EOVWatchSnapshot.swift");
             AddSource(project, main, companionFolder + "/EOVWatchSnapshot.swift");
-            AddSource(project, framework, companionFolder + "/EOVWatchPhoneSession.swift");
-            project.AddFrameworkToProject(framework, "WatchConnectivity.framework", true);
+            // The native phone session shares the host's Live Activity owner.
+            // Remove an older framework membership when reprocessing an export.
+            var sessionGuid = project.FindFileGuidByProjectPath(companionFolder + "/EOVWatchPhoneSession.swift");
+            if (!string.IsNullOrEmpty(sessionGuid)) project.RemoveFileFromBuild(framework, sessionGuid);
+            AddSource(project, main, companionFolder + "/EOVWatchPhoneSession.swift");
+            project.AddFrameworkToProject(main, "WatchConnectivity.framework", true);
 
             const string nameOfTarget = "EchoesWatchCompanion";
             var watch = project.TargetGuidByName(nameOfTarget);

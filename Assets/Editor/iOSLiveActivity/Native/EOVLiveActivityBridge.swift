@@ -55,10 +55,12 @@ public final class EOVLiveActivityBridge: NSObject {
 
     // All three commands share a queue. New publication/End invalidates queued old taps;
     // no action requests an activity, and a duplicate tap resamples the same origin.
-    public static func refresh(activityID: String, sourceID: String) async {
-        guard UserDefaults.standard.string(forKey: sourceKey) == sourceID else { return }
+    @discardableResult
+    public static func refresh(activityID: String, sourceID: String) async -> Bool {
+        guard UserDefaults.standard.string(forKey: sourceKey) == sourceID else { return false }
         generation += 1
         let command = generation, previous = pending
+        var refreshed = false
         let task = Task { @MainActor in
             await previous?.value
             defer { if command == generation { pending = nil } }
@@ -71,7 +73,8 @@ public final class EOVLiveActivityBridge: NSObject {
                   snapshot.phoneInBackground == true,
                   let state = content(snapshot, at: now), state.sourceID == sourceID,
                   let activity = Activity<EOVForecastAttributes>.activities.first(where: { $0.id == activityID }),
-                  activity.activityState == .active, activity.attributes.mapId == snapshot.run?.mapId,
+                  (activity.activityState == .active || activity.activityState == .stale),
+                  activity.attributes.mapId == snapshot.run?.mapId,
                   activity.content.state.sourceID == sourceID,
                   now >= activity.content.state.sampledAt else {
                 NSLog("[EOVLiveActivity] ignored stale/inactive refresh id=%@", activityID); return
@@ -79,11 +82,22 @@ public final class EOVLiveActivityBridge: NSObject {
             let before = UIApplication.shared.applicationState.rawValue
             guard let next = presentation(state, after: activity.content.state, attributes: activity.attributes, manualRefresh: true) else { return }
             await activity.update(ActivityContent(state: next, staleDate: Date(timeIntervalSince1970: next.forecastEnd)))
+            refreshed = command == generation && UserDefaults.standard.string(forKey: sourceKey) == sourceID
             NSLog("[EOVLiveActivity] refresh id=%@ source=%@ pid=%d bundle=%@ appStateBefore=%d appStateAfter=%d sampledAt=%.6f distance=%.4f cap=%.4f resources=%.4f reaps=%d tasks=%@ kills=%@ origin=%.0f status=%@", activity.id, sourceID, ProcessInfo.processInfo.processIdentifier, Bundle.main.bundleIdentifier ?? "", before, UIApplication.shared.applicationState.rawValue, state.sampledAt, state.distance, state.cap, state.resources, state.reaps, state.tasks.map { String($0) } ?? "unknown", state.kills.map { String($0) } ?? "unknown", state.backgroundOrigin ?? 0, state.status)
             NSLog("[EOVLiveActivity] presentation portraitLayers=%d refreshRevision=%llu reapRevision=%llu", next.portraitLayers?.count ?? 0, UInt64(next.refreshRevision ?? 0), UInt64(next.reapRevision ?? 0))
         }
         pending = task
         await task.value
+        return refreshed
+    }
+
+    // Watch requests use the same guarded update as the phone's intent. This
+    // never requests an activity or starts Unity to obtain fresh game data.
+    public static func refreshCurrentEstimate(sourceID: String) async {
+        guard let activity = Activity<EOVForecastAttributes>.activities.first(where: {
+            $0.content.state.sourceID == sourceID && ($0.activityState == .active || $0.activityState == .stale)
+        }) else { return }
+        await refresh(activityID: activity.id, sourceID: sourceID)
     }
 
     // Shared by awake publication and background intent. The same validated sampler
@@ -95,22 +109,32 @@ public final class EOVLiveActivityBridge: NSObject {
               forecast.status == "forecast", forecast.sampleCount > 0,
               let timeline = snapshot.timeline, timeline.mapId == run.mapId, forecast.mapId == run.mapId,
               forecast.generatedAt == timeline.generatedAt,
-              now >= timeline.generatedAt, now < min(forecast.forecastEnd, timeline.generatedAt + timeline.horizonSeconds)
+              now >= timeline.generatedAt
         else { return nil }
         let background = snapshot.phoneInBackground == true
-        let sample = timeline.sample(at: now)
+        let estimate = snapshot.backgroundEstimate(at: now)
+        if background && estimate == nil { return nil }
+        if !background && now >= min(forecast.forecastEnd, timeline.generatedAt + timeline.horizonSeconds) { return nil }
+        let sample = estimate?.sample ?? timeline.sample(at: now)
+        let terminal = estimate.map { value in
+            let point = value.endpoint
+            return EOVForecastAttributes.Endpoint(distance: point.distance, cap: point.cap,
+                resources: point.resources, tasks: point.tasks, kills: point.kills,
+                reaps: point.reaps, status: value.endpointStatus)
+        }
         return .init(sourceID: source, mapTitle: run.mapTitle,
             sampledAt: background ? now : snapshot.generatedAt,
             backgroundOrigin: background ? timeline.generatedAt : nil,
-            forecastEnd: min(forecast.forecastEnd, timeline.generatedAt + timeline.horizonSeconds),
+            forecastEnd: estimate?.end ?? min(forecast.forecastEnd, timeline.generatedAt + timeline.horizonSeconds),
             distance: background ? sample.distance : run.distance,
             cap: background ? sample.cap : run.cap,
             resources: background ? sample.resources : run.resources,
             tasks: background ? sample.tasks : Double(run.tasks),
             kills: background ? sample.kills : Double(run.kills),
             reaps: background ? sample.reaps : 0,
-            status: !background ? "live" : sample.phase == 2 ? "waiting" : sample.phase == 1 ? "restarting" : "estimate",
-            portraitLayers: snapshot.portraitLayers, backgroundLimitSeconds: snapshot.backgroundLimitSeconds)
+            status: !background ? "live" : estimate!.status,
+            portraitLayers: snapshot.portraitLayers, backgroundLimitSeconds: snapshot.backgroundLimitSeconds,
+            terminal: terminal)
     }
 
     private static func presentation(_ state: EOVForecastAttributes.ContentState,
