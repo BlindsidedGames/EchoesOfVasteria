@@ -3,10 +3,11 @@
 The normal game, Watch companion, and Live Activity extension were built from
 `ff3639d031a190110246f99ab1af540969aa5812` and uploaded as **1.5.9 (187)** to
 existing App Store Connect app `6749265146`. Apple accepted the upload at
-2026-10-31 06:45:41 UTC and initially reported **Processing**. Internal tester
-availability is a separate check; see the accompanying JSON for its latest
-recorded state. This does not establish installation or gameplay acceptance on
-physical hardware.
+2026-10-31 06:45:41 UTC and initially reported **Processing**. App Store Connect
+subsequently showed **Testing**, with the existing Internal group assigned
+(three testers). The approved What to Test instructions were saved. The final
+build ID is `2143b5bc-6f13-45a1-b948-020ae734e56b`. This verifies internal
+availability, not installation or gameplay acceptance on physical hardware.
 
 The build uses Unity 6000.6.0f1, Xcode 26.4.1, a fresh full DeviceSDK export,
 IL2CPP arm64 for iPhone, Release native compilation, and Lz4HC compression.

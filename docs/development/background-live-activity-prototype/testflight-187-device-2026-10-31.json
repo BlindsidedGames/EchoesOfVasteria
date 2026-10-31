@@ -74,7 +74,7 @@
     "xcodeUploadSucceeded": true,
     "uploadedPackageSHA256": "2385ebb0450f9de4ea9d7147c0d30fb11c80b630f8215a150f5d15f2d9023158",
     "actualCompiledAndSerializedContentVerified": true,
-    "testerAvailabilityVerified": false
+    "testerAvailabilityVerified": true
   },
   "tests": {
     "source": "1ab7fdd9a (same managed/UI code in frozen device source)",
@@ -119,8 +119,13 @@
     ]
   },
   "availability": {
-    "state": "Apple processing; internal tester availability being verified separately",
-    "confirmed": false
+    "state": "Testing",
+    "confirmed": true,
+    "buildId": "2143b5bc-6f13-45a1-b948-020ae734e56b",
+    "internalGroupId": "5b623722-4adc-445c-9196-7877d4d7aa2e",
+    "internalTesters": 3,
+    "approvedWhatToTestSaved": true,
+    "verification": "Authenticated App Store Connect build list and Test Information page"
   },
   "scope": {
     "publicAppStoreSubmission": false,
