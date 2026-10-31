@@ -21,12 +21,25 @@ namespace TimelessEchoes.Stats
             }
         }
 
-        public static bool Demo => Enabled && Environment.GetCommandLineArgs().Contains("-eov-background-demo");
+        public static bool Demo
+        {
+            get
+            {
+                if (!Enabled) return false;
+#if UNITY_IOS && !UNITY_EDITOR && EOV_BACKGROUND_PROTOTYPE
+                // Unity's iOS IL2CPP host need not forward argv into System.Environment.
+                return EOVLiveActivity_IsDemoLaunch() != 0;
+#else
+                return Environment.GetCommandLineArgs().Contains("-eov-background-demo");
+#endif
+            }
+        }
 
 #if UNITY_IOS && !UNITY_EDITOR && EOV_BACKGROUND_PROTOTYPE
         [DllImport("__Internal")] private static extern void EOVLiveActivity_StartOrUpdate(string json);
         [DllImport("__Internal")] private static extern void EOVLiveActivity_End();
         [DllImport("__Internal")] private static extern int EOVLiveActivity_IsSupported();
+        [DllImport("__Internal")] private static extern int EOVLiveActivity_IsDemoLaunch();
 #endif
         public static void Publish(string map, BackgroundRunEstimator.Result forecast, double currentDistance, double resources)
         {
