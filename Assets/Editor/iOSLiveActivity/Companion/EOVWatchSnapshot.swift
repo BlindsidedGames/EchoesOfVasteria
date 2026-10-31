@@ -6,6 +6,7 @@ struct EOVWatchSnapshot: Codable {
     let demo: Bool
     let state: String
     let backgroundProgressEnabled: Bool
+    let phoneInBackground: Bool?
     let run: Run?
     let forecast: Forecast?
     let timeline: Timeline?

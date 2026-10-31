@@ -160,7 +160,7 @@ private struct CurrentRunRadial: View {
     }
     @ViewBuilder private func face(at unix: Double) -> some View {
         if let s = snapshot, s.state == "run", let run = s.run {
-            if !run.dead, !run.reaped, s.backgroundProgressEnabled,
+            if s.phoneInBackground == true, !run.dead, !run.reaped, s.backgroundProgressEnabled,
                let timeline = s.timeline, timeline.mapId == run.mapId {
                 let sample = timeline.sample(at: unix)
                 DistanceResourceFace(diameter: diameter, mapTitle: run.mapTitle,
