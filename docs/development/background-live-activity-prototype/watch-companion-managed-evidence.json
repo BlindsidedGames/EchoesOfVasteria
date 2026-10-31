@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-31",
+  "managedSource": "52d0a5ef25a7384c52fff12b44e07c12b9616702",
+  "platform": "Windows Unity 6000.6.0f1 PlayMode",
+  "result": "Passed",
+  "passed": 5,
+  "failed": 0,
+  "cases": [
+    {
+      "name": "BackgroundSettlementCommitsOnceAndWarmResumeRebuildsTheWorld",
+      "result": "Passed"
+    },
+    {
+      "name": "CompanionSnapshotReadsRealOwnersWithoutAwardingProgress",
+      "result": "Passed"
+    },
+    {
+      "name": "HollowRestoresKillScalingBeforeGeneratingEnemiesAndDeathDoesNotRevive",
+      "result": "Passed"
+    },
+    {
+      "name": "RelaunchKeepsDistanceLootAndBonusWithoutDuplicatingProgress",
+      "result": "Passed"
+    },
+    {
+      "name": "UnfinishedNpcCanBeMetAgainAndCompletedIvanStillWaitsForTown",
+      "result": "Passed"
+    }
+  ],
+  "scope": "Real protected run loader, read-only companion snapshot contract, cold/warm continuation and repeat-resume guards. Includes both portrait and landscape continuation coverage. Does not verify native WatchConnectivity or Watch UI.",
+  "preservation": "Existing fixture uses disposable save root and restores save-root override and preference keys. No native Watch transport runs in Editor.",
+  "initialAttempt": "Initial fixture tried AssetCache before its normal bootstrap and failed to find Mining; fixture now loads authored asset directly. Final five-case suite passed."
+}
