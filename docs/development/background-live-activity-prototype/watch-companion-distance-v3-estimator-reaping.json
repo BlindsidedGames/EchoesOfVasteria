@@ -1,0 +1,193 @@
+{
+  "description": "Explicit fixture: actual BackgroundRunEstimator output, not a real gameplay/transport event",
+  "input": {
+    "Seconds": 20.0,
+    "BaseCap": 10.0,
+    "StartingDistance": 2.0,
+    "RestartSeconds": 5.0,
+    "DistanceReaping": true,
+    "MaxHealth": 100.0,
+    "startingDistance": 8.0,
+    "actualRunResources": 777.0,
+    "resourcesPerTask": 2,
+    "resourcesPerKill": 3
+  },
+  "forecast": {
+    "Steps": [
+      {
+        "Seconds": 2.0,
+        "Distance": 10.0,
+        "DamageTaken": 0.0,
+        "RestartSeconds": 5.0,
+        "CapIncrease": 0.1,
+        "Cap": 10.0,
+        "RestartCap": 10.1,
+        "Restarted": true,
+        "Tasks": 2,
+        "Kills": 1,
+        "EndsRun": true,
+        "Reaped": true
+      },
+      {
+        "Seconds": 2.0,
+        "Distance": 4.0,
+        "DamageTaken": 0.0,
+        "RestartSeconds": 0.0,
+        "CapIncrease": 0.0,
+        "Cap": 10.1,
+        "RestartCap": 0.0,
+        "Restarted": false,
+        "Tasks": 2,
+        "Kills": 1,
+        "EndsRun": false,
+        "Reaped": false
+      },
+      {
+        "Seconds": 2.0,
+        "Distance": 6.0,
+        "DamageTaken": 0.0,
+        "RestartSeconds": 0.0,
+        "CapIncrease": 0.0,
+        "Cap": 10.1,
+        "RestartCap": 0.0,
+        "Restarted": false,
+        "Tasks": 2,
+        "Kills": 1,
+        "EndsRun": false,
+        "Reaped": false
+      },
+      {
+        "Seconds": 2.0,
+        "Distance": 8.0,
+        "DamageTaken": 0.0,
+        "RestartSeconds": 0.0,
+        "CapIncrease": 0.0,
+        "Cap": 10.1,
+        "RestartCap": 0.0,
+        "Restarted": false,
+        "Tasks": 2,
+        "Kills": 1,
+        "EndsRun": false,
+        "Reaped": false
+      },
+      {
+        "Seconds": 2.0,
+        "Distance": 10.0,
+        "DamageTaken": 0.0,
+        "RestartSeconds": 0.0,
+        "CapIncrease": 0.0,
+        "Cap": 10.1,
+        "RestartCap": 0.0,
+        "Restarted": false,
+        "Tasks": 2,
+        "Kills": 1,
+        "EndsRun": false,
+        "Reaped": false
+      },
+      {
+        "Seconds": 0.099999999999999645,
+        "Distance": 10.1,
+        "DamageTaken": 0.0,
+        "RestartSeconds": 4.9,
+        "CapIncrease": 0.10099999999999999,
+        "Cap": 10.1,
+        "RestartCap": 10.201,
+        "Restarted": false,
+        "Tasks": 0,
+        "Kills": 0,
+        "EndsRun": true,
+        "Reaped": true
+      }
+    ],
+    "SampleCount": 1,
+    "Reaps": 2,
+    "Deaths": 0,
+    "Tasks": 10,
+    "Kills": 5,
+    "Distance": 10.1,
+    "BaseCap": 10.201,
+    "HealthFraction": 1.0,
+    "Seconds": 20.0,
+    "MovingSeconds": 10.1,
+    "TaskRemainder": 0.099999999999999645,
+    "KillRemainder": 0.049999999999999822,
+    "EchoTaskShare": 0.0,
+    "EchoKillShare": 0.0,
+    "Status": "forecast",
+    "StopReason": null
+  },
+  "timeline": {
+    "schemaVersion": 1,
+    "mapId": "River",
+    "generatedAt": 1793422375.0,
+    "horizonSeconds": 20.0,
+    "distanceReaping": true,
+    "truncated": false,
+    "frames": [
+      [
+        0.0,
+        8.0,
+        10.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        2.0,
+        10.0,
+        10.0,
+        7.0,
+        0.0,
+        0.0
+      ],
+      [
+        2.0,
+        0.0,
+        10.1,
+        7.0,
+        1.0,
+        1.0
+      ],
+      [
+        7.0,
+        0.0,
+        10.1,
+        7.0,
+        1.0,
+        1.0
+      ],
+      [
+        7.0,
+        2.0,
+        10.1,
+        7.0,
+        1.0,
+        0.0
+      ],
+      [
+        15.1,
+        10.1,
+        10.1,
+        35.0,
+        1.0,
+        0.0
+      ],
+      [
+        15.1,
+        0.0,
+        10.201,
+        35.0,
+        2.0,
+        1.0
+      ],
+      [
+        20.0,
+        0.0,
+        10.201,
+        35.0,
+        2.0,
+        1.0
+      ]
+    ]
+  }
+}
