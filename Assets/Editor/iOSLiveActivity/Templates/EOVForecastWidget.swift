@@ -128,8 +128,8 @@ private struct SnapshotValues: View {
                 }
             }
             HStack(spacing: 20) {
-                ActivityMetric(art: "EOVTask", count: state.tasks, label: "tasks")
-                ActivityMetric(art: "EOVKill", count: state.kills, label: "kills")
+                ActivityMetric(art: "EOVTask", count: state.tasks, label: "task")
+                ActivityMetric(art: "EOVKill", count: state.kills, label: "kill")
                 Spacer(minLength: 0)
             }.foregroundStyle(.secondary)
             HStack(spacing: 20) {
@@ -158,7 +158,7 @@ private struct ActivityMetric: View {
         HStack(spacing: 4) {
             PixelArt(name: art, size: 16)
             Text(count.map { $0.rounded(.down).formatted(.number.precision(.fractionLength(0))) } ?? "—")
-            Text(label)
+            Text(count?.rounded(.down) == 1 ? label : label + "s")
         }.font(.caption.monospacedDigit())
     }
 }
