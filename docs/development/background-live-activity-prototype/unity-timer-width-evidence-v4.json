@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-31",
+  "scope": "Widget-only progress-track sizing follow-up in existing full Unity prototype export",
+  "codeCommit": "2c568b49ff377875f360b42c22821c8692ab5eff",
+  "managedCodeUnchanged": true,
+  "unityReexported": false,
+  "build": "BUILD SUCCEEDED",
+  "device": "iPhone 17 Pro iOS 26.4 simulator",
+  "bundle": "com.blindsidedgames.echoes.background.prototype",
+  "implementation": "Hidden caption.monospacedDigit template measured at the current Dynamic Type font size; date-driven Text overlaid trailing. Flexible progress fills remaining row with 10-point spacing. No fixed 56-point slot. Existing Island safe insets retained.",
+  "templates": {
+    "underTenMinutes": "0:00",
+    "tenMinutesToUnderOneHour": "00:00",
+    "oneToEightHours": "0:00:00"
+  },
+  "observed": {
+    "expandedIsland": "All 14:53 timer digits visible and track extends near timer left edge; right edge remains aligned under reaps",
+    "lockScreen": "Track extends near timer left edge and trailing timer stays beneath reaps",
+    "screenShots": [
+      "unity-dynamic-island-v4.png",
+      "unity-lockscreen-aligned-v4.png"
+    ],
+    "rawTrackRightmostPixelComparison": {
+      "lockScreenRow2073": {
+        "v3": 913,
+        "v4": 977,
+        "extensionPixels": 64
+      },
+      "islandRow400": {
+        "v3": 886,
+        "v4": 952,
+        "extensionPixels": 66
+      }
+    },
+    "measurement": "Read unchanged 1206px-wide screenshot pixels; approximately21-22points more track at3x scale. No edited image supplied."
+  },
+  "updateCadence": {
+    "foreground": "15 seconds, plus first forecast after map generation",
+    "pause": "One forecast update before suspension",
+    "suspended": "System date-driven countdown and progress; no custom game/background timer and no continuous sprite loop"
+  },
+  "limits": [
+    "15-minute actual game forecast visually checked; hour/short templates and Dynamic Type sizing retain the same scalable font but were not separately rendered in this check",
+    "Simulator Lock Screen still substitutes dashes for seconds while unlocked Island shows full digits"
+  ],
+  "preservation": {
+    "primaryHeadUnchanged": true,
+    "primaryDiffUnchanged": true,
+    "savedFilesVerified": 228,
+    "changedSavedFiles": 0
+  },
+  "previousLifecycleEvidence": "unity-evidence-v3.json"
+}
