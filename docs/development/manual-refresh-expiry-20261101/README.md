@@ -1,8 +1,8 @@
 # Manual Refresh and estimate expiry validation
 
-The core native allowance, endpoint, stale Refresh and paired Watch request paths pass. One remaining visual issue is flagged for production-owner review: the 42mm dial clips the distance/health text at the 212/212m endpoint. The away screen and 46mm dial remain readable. See [42mm dial](captures/watch42-after-limit-dial.png) and [46mm dial](captures/watch46-at-limit-dial.png).
+The core native allowance, endpoint, stale Refresh and paired Watch request paths pass. The 42mm endpoint dial clipping is now resolved by `dd3d800fc`: fresh 42mm and 46mm native captures keep the full distance and health line inside the circle. See the [clipped 42mm before](captures/watch42-after-limit-dial.png), [42mm after](captures/watch42-limit-dial-dd3d800-distance.png), and [46mm after](captures/watch46-limit-dial-dd3d800-distance.png).
 
-Final production source: `a0da19366` (includes `91b0d309c`, `b22cea9ea`, `0f5ad93a4`). The final cleanup removes an unused stored property without changing behavior. Earlier UI captures use that same behavior before the property cleanup. Work is confined to the existing Mac validation checkout and disposable native bundles. No production Swift/C# edits, player-save writes, gameplay settlement, release, version/build changes, or store mutations occurred here. Root owns `gallery.html`.
+Final production source: `dd3d800fc` (includes `a0da19366`, `91b0d309c`, `b22cea9ea`, `0f5ad93a4`). The combined native/transport proof below uses `a0da19366`; the final Watch-only view adjustment is separately rebuilt and captured on `dd3d800fc`. Work is confined to the existing Mac validation checkout and disposable native bundles. No production Swift/C# edits, player-save writes, gameplay settlement, release, version/build changes, or store mutations occurred here. Root owns `gallery.html`.
 
 ## Executable proof
 
@@ -47,8 +47,16 @@ This proves the two real foreground/background delivery branches on these simula
 - Native wide and [narrow phone portrait](captures/phone-narrow-portrait.png) cards fit the elapsed time, allowance, gains and control. Actual Refresh input succeeded on the wide phone.
 - A real long press expands the portrait Dynamic Island. [Before Refresh](captures/island-expanded-before-refresh.png) and [after the paired Watch Refresh](captures/island-expanded-after-watch-refresh.png) show the production content and terminal control retirement.
 - The system Lock Screen stays in portrait when the physical simulator rotates; [the narrow rotated capture](captures/phone-narrow-rotated-lockscreen.png) is not a landscape card pass. Safari runs in actual landscape, but a bounded long press on its side Island did not expand the activity; [that system limitation is captured](captures/phone-landscape-system-island-unavailable.png). Both phones were restored to Portrait.
-- Watch 42/46mm away screens show a capped 1:00:00/Limit reached or the earlier Estimate ended as appropriate. Fixed-clock Preview evidence is distinct from the actual Store/transport evidence. The 42mm dial clipping above remains flagged; the 46mm dial is readable.
+- Watch 42/46mm away screens show a capped 1:00:00/Limit reached or the earlier Estimate ended as appropriate. Fixed-clock Preview evidence is distinct from the actual Store/transport evidence. The fresh 42/46mm dial captures on `dd3d800fc` resolve the earlier distance/health clipping.
 - The supplemental small-family source compiles. A mirrored system pill appeared on Watch, but a complete small-family card was not accepted as rendered proof in this pass.
+
+## Final Watch dial follow-up
+
+Both existing Watch Preview and actual Store targets rebuild successfully against exact production commit `dd3d800fca01dd624e16ce0e47d2c6a0677674a8`. Fresh native Preview captures use the same high-rate fixture at offset 3600, screen dial. Full `212 / 212 m` and the heart/`Last 90%` line fit inside the circle on both 42mm and 46mm; the original clipped image is preserved for comparison. These are native renders of the exact production view, with a fixture clock rather than transport substitution claims.
+
+A real coordinate tap on each dial was attempted to inspect resource/time focus. Both failed before input delivery: 42mm `windowNotFoundAtPosition((127.0, 270.0))`, 46mm `windowNotFoundAtPosition((1151.0, 336.0))`. No dial button is exposed in the Simulator accessibility tree, so no AX replacement was available. Resource/time focus therefore remains unverified; this is an automation delivery limit, not a failed product hit test. No test-only production hook or injected focus was added. No transport/content suite repetition was needed for this four-line view adjustment.
+
+The temporary Preview apps were removed from both owned Watches after capture, and the existing 42mm Store QA app was restored. The primary dirty diff SHA256 remains unchanged. Root's gallery is untouched.
 
 ## Reproduction and preservation
 

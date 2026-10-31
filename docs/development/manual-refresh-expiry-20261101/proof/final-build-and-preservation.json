@@ -22,5 +22,23 @@
   "primaryDirtyPaths": [
     " M \"Assets/Localization/Tables/Town/TownUI Shared Data.asset\"",
     " M \"Assets/Resources_moved/Fonts/Noto_Sans/static/NotoSans-ExtraBold SDF.asset\""
-  ]
+  ],
+  "watchDialFollowUp": {
+    "productionSource": "dd3d800fca01dd624e16ce0e47d2c6a0677674a8",
+    "builds": {
+      "dial-fix-preview-build.log": true,
+      "dial-fix-store-build.log": true
+    },
+    "clippingResolvedByNativeInspection": true,
+    "captures": [
+      "watch42-limit-dial-dd3d800-distance.png",
+      "watch46-limit-dial-dd3d800-distance.png"
+    ],
+    "resourceTimeFocus": "unverified: CUA coordinate delivery blocked on both simulators",
+    "previewAppsRemoved": [
+      "42mm",
+      "46mm"
+    ],
+    "previous42mmStoreQaRestored": true
+  }
 }
