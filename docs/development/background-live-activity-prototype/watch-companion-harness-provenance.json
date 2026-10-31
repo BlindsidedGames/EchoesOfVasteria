@@ -1,0 +1,19 @@
+{
+  "source": "Assets/Editor/iOSLiveActivity/Companion/EOVWatchApp.swift",
+  "productionSourceSha256": "9d4f2db97672f02a3d8e9dff015df329cb38065b3876921797cf03a12afc90b8",
+  "renderHarnessSha256": "64f91c1b01d9f8b756d3b5f8ec65e0f41f38f2cee4ac7b77c55146ecd3cbc14b",
+  "rpcHarnessSha256": "4463bcf232014216184e7726135d99042ad1beb5218e4448cbde0d3db610fb02",
+  "renderAllStoreAndViewsIdentical": true,
+  "rpcAllStoreAndViewsIdentical": true,
+  "renderEntryPoint": "import SwiftUI\nimport WatchConnectivity\n\n@main\nstruct EOVWatchCompanionApp: App {\n    @StateObject private var store = EOVWatchCompanionStore()\n    var body: some Scene {\n        WindowGroup {\n            NavigationStack {\n                if ProcessInfo.processInfo.arguments.contains(\"skills\") { SkillsScreen() }\n                else if ProcessInfo.processInfo.arguments.contains(\"history\") { RecentRunsScreen() }\n                else { CurrentRunScreen() }\n            }.environmentObject(store)\n        }\n    }\n}\n\n",
+  "rpcEntryPoint": "import SwiftUI\nimport WatchConnectivity\n\n@main\nstruct EOVWatchCompanionApp: App {\n    @StateObject private var store = EOVWatchCompanionStore()\n    var body: some Scene {\n        WindowGroup {\n            NavigationStack { CurrentRunScreen() }.environmentObject(store)\n                .task {\n                    try? await Task.sleep(for: .seconds(8))\n                    NSLog(\"[EOVWatchBoundary] invoking refresh activation=%d reachable=%d\", WCSession.default.activationState.rawValue, WCSession.default.isReachable)\n                    store.refresh()\n                    NSLog(\"[EOVWatchBoundary] refresh status=%@\", store.message)\n                }\n        }\n    }\n}\n\n",
+  "renderBundle": "com.blindsidedgames.echoes.watch.companionrendering",
+  "rpcBundle": "com.blindsidedgames.echoes.background.prototype.watchkitapp",
+  "renderFixture": "watch-companion-real-snapshot.json",
+  "renderFixtureSha256": "c651d97b68b10dae2a08c5965b3c5cd99e8ea1553e84c4d81e28882edec783d8",
+  "notes": [
+    "Only disposable harness app entry points differ. No production arguments/hooks were added.",
+    "Rendering harness imports exact bytes previously delivered through real Watch Connectivity.",
+    "RPC harness uses the same paired bundle identifier, calls existing refresh once after eight seconds, and is replaced with the exact production app after the check."
+  ]
+}

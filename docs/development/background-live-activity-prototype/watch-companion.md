@@ -19,3 +19,13 @@ The prototype Unity postprocess copies shared snapshot decoding and the phone se
 Watch deployment target is watchOS 11; the existing Live Activity's iOS 16.2 fallback remains separate. Simulator builds use a Watch simulator SDK on the Watch target and an iPhone simulator SDK on the phone targets. Do not globally override the entire mixed-platform project with `-sdk iphonesimulator`.
 
 See `watch-companion-native-evidence.json` for the final source revision, build and device observations. Direct rendering or cache import must be distinguished there from actual Watch Connectivity delivery.
+
+## Observed prototype results
+
+The full Unity phone app delivered real snapshots over the paired simulators. Phone and Watch cache bytes matched exactly, including six real skills and ten real saved runs. After the phone simulator shut down and the Watch process relaunched, the Watch retained the same original timestamp and cache bytes. Native publication accepted actual managed JSON and rejected malformed, unsupported-version and oversized payloads without replacing that cache.
+
+The native Refresh boundary was exercised with a disposable same-bundle test host invoking the existing store method once after activation. The phone returned a cached acknowledgement and the next real Unity frame published a new snapshot 37 ms after the request was queued. The test host was then replaced with the exact production Watch app. This proves the request/consume/publication path; a manual Refresh tap was not verified.
+
+Simulator coordinate input failed even on the Simulator's own Home toolbar, while its accessibility action worked. Screen navigation could not be verified through that input path. The three direct screen captures and 30-second clip use unchanged production store/view code in a disposable standalone app, importing the exact snapshot previously received over real WC. Entry-point differences and hashes are recorded in `watch-companion-harness-provenance.json`; these captures are not represented as navigation proof.
+
+The simulator also reported Watch Connectivity reachability after the phone simulator shut down, despite a disconnected pair and the OS red phone icon. Cached timestamps remained correct. Hardware connection behaviour, Watch app icon artwork, manual navigation and distribution remain outside the verified result.

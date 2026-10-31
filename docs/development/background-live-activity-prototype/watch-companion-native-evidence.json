@@ -1,9 +1,9 @@
 {
-  "status": "Native build and real delivery verified; Refresh boundary check in progress",
+  "status": "Native companion prototype validated with explicit simulator/UI limits",
   "phoneBundle": "com.blindsidedgames.echoes.background.prototype",
   "watchBundle": "com.blindsidedgames.echoes.background.prototype.watchkitapp",
   "managedSource": "52d0a5ef25a7384c52fff12b44e07c12b9616702",
-  "nativeSourceBase": "bb223a694",
+  "nativeSourceBase": "23851a2f6 plus final idempotent Watch product guard in this evidence commit",
   "runtime": {
     "phone": "iOS 26.4.1 iPhone 17 Pro",
     "watch": "watchOS 26.4 Series 11 42mm paired; direct-render screenshots on 46mm"
@@ -74,7 +74,8 @@
     "watch-companion-current-direct.png": "Production CurrentRunScreen, standalone rendering harness using exact real Watch cache; no invented rows, no interaction claim",
     "watch-companion-skills-direct.png": "Production SkillsScreen, same real imported snapshot; Combat Lv4, Mining Lv1",
     "watch-companion-history-direct.png": "Production RecentRunsScreen, same real imported snapshot; recorded and estimated runs marked",
-    "watch-companion-empty.png": "Actual installed companion before initial phone snapshot; empty state"
+    "watch-companion-empty.png": "Actual installed companion before initial phone snapshot; empty state",
+    "watch-companion-home-final.png": "Final actual installed companion Home after real WC delivery, compact final status layout; exact production app restored after RPC harness"
   },
   "limitations": [
     "Coordinate input failed even on Simulator Home toolbar; AX Home worked. Actual in-app navigation and manual Refresh tap remain unverified.",
@@ -83,12 +84,90 @@
   ],
   "preservation": {
     "primaryUnchanged": true,
-    "primaryNow": {
-      "head": "aa17b243787c3e1988ae06c12e4cc9a568786776",
-      "diffSha256": "7d45e5d114159fefba437f0b4df201af1939c4ffc59e6c29725a468ee1c68ec2",
-      "status": " M \"Assets/Localization/Tables/Town/TownUI Shared Data.asset\"\n M \"Assets/Resources_moved/Fonts/Noto_Sans/static/NotoSans-ExtraBold SDF.asset\"\n"
-    },
     "realSaveFilesChecked": 228,
     "changedRealSaveFiles": []
+  },
+  "nativeUiSource": "23851a2f6",
+  "build": {
+    "unity": "6000.6.0f1",
+    "xcode": "26.4.1 (17E202)",
+    "appVersion": "1.5.8 (186)",
+    "unityIteration": "Scripts-only managed reexport using prior successful complete isolated simulator export; no asset changes",
+    "unityResult": {
+      "result": "Succeeded",
+      "errors": 0,
+      "warnings": 37,
+      "bytes": 2182644419,
+      "duration": "00:00:51.9110110"
+    },
+    "combinedXcode": "Succeeded; final repeat-postprocess build result recorded separately below",
+    "watchEmbedding": "Single-target Watch app embedded in phone app; developer simctl installation used on paired Watch",
+    "finalRepeatPostprocessCombinedXcode": "BUILD SUCCEEDED",
+    "embeddedWatchAppPresent": true
+  },
+  "refresh": {
+    "boundary": "Actual paired WC request from disposable same-bundle app host calling unchanged production store.refresh; no manual tap claim",
+    "watchRequestUtcLocal": "2026-10-31 15:14:31.312 +1100",
+    "phoneQueuedUtcLocal": "2026-10-31 15:14:31.911 +1100",
+    "phonePublishedUtcLocal": "2026-10-31 15:14:31.948 +1100",
+    "queueToManagedPublicationMs": 37,
+    "cachedReplyMarkedTrue": true,
+    "newGeneratedAt": 1793420071,
+    "watchReceivedUtcLocal": "2026-10-31 15:14:33.552 +1100",
+    "directRenderOrImportedSnapshot": false,
+    "testOnlyProductionSeams": false
+  },
+  "postprocess": {
+    "afterRepeatedConfigureNative": true,
+    "watchTargetCount": 1,
+    "embedWatchContentPhaseCount": 1,
+    "mainPhaseOrder": [
+      "PBXResourcesBuildPhase",
+      "PBXCopyFilesBuildPhase",
+      "PBXSourcesBuildPhase",
+      "PBXFrameworksBuildPhase",
+      "Embed Frameworks",
+      "Embed App Extensions",
+      "Embed Watch Content",
+      "Unity Phony Postprocess Target",
+      "Unity Process symbols for Unity-iPhone"
+    ],
+    "watchCopyFileCount": 1,
+    "preFixRepeatedCopyEntryCount": 2,
+    "fix": "Guard matching phase and product insertion together; existing ignored export duplicate removed before repeating corrected postprocess."
+  },
+  "clip": {
+    "file": "watch-companion-direct-screens.mp4",
+    "seconds": 30.34,
+    "width": 416,
+    "height": 496,
+    "content": "Directly rendered production CurrentRunScreen, SkillsScreen and RecentRunsScreen in disposable standalone harness with exact real received JSON. Host restarts between roots; not an in-app navigation demonstration."
+  },
+  "sourceHashes": {
+    "Assets/Editor/iOSLiveActivity/LiveActivityIosPostprocess.cs": "c811b4619e32cc43b42cfbcf059d1d23704d2f7e8198e8ac2be80de9b9c0b466",
+    "Assets/Editor/iOSLiveActivity/Companion/EOVWatchApp.swift": "9d4f2db97672f02a3d8e9dff015df329cb38065b3876921797cf03a12afc90b8",
+    "Assets/Editor/iOSLiveActivity/Companion/EOVWatchPhoneSession.swift": "3452e7add2fda22c8b414eef7f146b7603f26b13a46d72761b02fffd729faea8",
+    "Assets/Editor/iOSLiveActivity/Companion/EOVWatchSnapshot.swift": "bd4c60da0d3e930914af0e2cbe91aee4b8dd913aa6d0b4fda3f687a95db7f6bf"
+  },
+  "harnessProvenance": "watch-companion-harness-provenance.json",
+  "transportLog": "watch-companion-transport.txt",
+  "notVerified": [
+    "Manual in-app screen navigation and manual Refresh tap (Simulator coordinate input failure)",
+    "Watch hardware operation, store distribution and production release",
+    "Companion deadline transition in a running foreground app after the one-shot expiry change; existing shared ring expiry was verified in prior Live Activity work"
+  ],
+  "finalInstalledProductionApps": {
+    "phone": {
+      "bundle": "com.blindsidedgames.echoes.background.prototype",
+      "productExecutable": "EchoesBackgroundPrototype",
+      "executableSha256": "9ba04de44d6e9c0d36334fd7c4fceeabdaff0a4f4de883d17ac13f60a27b1e7e",
+      "matchesFinalBuiltProductionExecutable": true
+    },
+    "watch": {
+      "bundle": "com.blindsidedgames.echoes.background.prototype.watchkitapp",
+      "productExecutable": "EchoesWatchCompanion",
+      "executableSha256": "08b207b1e56f8fbc05c89601a4ab01bd549b6c5796620e2b38c85d456cdfb84f",
+      "matchesFinalBuiltProductionExecutable": true
+    }
   }
 }
