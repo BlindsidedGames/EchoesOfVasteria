@@ -1,0 +1,298 @@
+{
+  "schemaVersion": 1,
+  "actualMeasurements": [
+    {
+      "trial": "control",
+      "activityIDs": [
+        "D6B3BCA5-5A71-43A7-A7E0-D248D2174C96"
+      ],
+      "result": "pass",
+      "measurements": "control/measurements.json"
+    },
+    {
+      "trial": "attributed",
+      "activityIDs": [
+        "D6C9E5D2-2FFB-4330-A9FB-9238688E4007"
+      ],
+      "result": "fail",
+      "measurements": "attributed/measurements.json"
+    },
+    {
+      "trial": "string",
+      "activityIDs": [
+        "940EC143-9D8A-4123-A6D4-42968D19BEA5"
+      ],
+      "result": "fail",
+      "measurements": "string/measurements.json"
+    },
+    {
+      "trial": "system",
+      "activityIDs": [
+        "3B792B4E-FFCB-4FA3-9579-A1D6611C3713"
+      ],
+      "result": "pass",
+      "measurements": "system/measurements.json"
+    }
+  ],
+  "visualObservations": {
+    "control": {
+      "t03": {
+        "elapsedText": "0:03",
+        "fastBar": "approximately half full",
+        "shortBar": "full"
+      },
+      "t30": {
+        "elapsedText": "0:30",
+        "fastBar": "full",
+        "shortBar": "full",
+        "longBar": "visibly farther than t03"
+      },
+      "shortBarRestart": "No reset after cap; remains full at t30",
+      "reducedLuminanceLabel": "no"
+    },
+    "attributed": {
+      "t03": "Activity placeholder/skeleton; no formatted counters",
+      "t08": "Activity placeholder/skeleton; no formatted counters",
+      "error": "WidgetRenderer_Activities archive decode Errors.noType for LabAttributedStyle"
+    },
+    "string": {
+      "t03": "Activity placeholder/skeleton; no formatted counters",
+      "t06": "Activity placeholder/skeleton; no formatted counters",
+      "error": "WidgetRenderer_Activities archive decode Errors.noType for LabStringStyle"
+    },
+    "system": {
+      "t03": {
+        "stopwatchText": "00:03.15",
+        "clockText": "6:44:38 pm"
+      },
+      "t06": {
+        "stopwatchText": "00:06.14",
+        "clockText": "6:44:41 pm"
+      },
+      "reducedLuminanceLabel": "no",
+      "noTypeErrorMatchesInCapturedLog": 0
+    }
+  },
+  "modelExpectationsNotRenderedOrMeasured": [
+    {
+      "trial": "control",
+      "modelOnlyNotObservedCounters": [
+        {
+          "targetElapsedSeconds": 0,
+          "actualElapsedSeconds": 0.0036268234252929688,
+          "expectedLongDistance": 2000,
+          "expectedResources": 0,
+          "expectedRestartDistance": 180,
+          "nativeLongExpectedFraction": 0.052220268100111045,
+          "nativeFastExpectedFraction": 0.2003626823425293,
+          "nativeShortExpectedFraction": 0.9001813411712647
+        },
+        {
+          "targetElapsedSeconds": 3,
+          "actualElapsedSeconds": 3.004744052886963,
+          "expectedLongDistance": 2030,
+          "expectedResources": 6,
+          "expectedRestartDistance": 200,
+          "nativeLongExpectedFraction": 0.0530038496221637,
+          "nativeFastExpectedFraction": 0.5004744052886962,
+          "nativeShortExpectedFraction": 1
+        },
+        {
+          "targetElapsedSeconds": 8,
+          "actualElapsedSeconds": 8.003497123718262,
+          "expectedLongDistance": 2080,
+          "expectedResources": 16,
+          "expectedRestartDistance": 40,
+          "nativeLongExpectedFraction": 0.054309007081910776,
+          "nativeFastExpectedFraction": 1,
+          "nativeShortExpectedFraction": 1
+        },
+        {
+          "targetElapsedSeconds": 15,
+          "actualElapsedSeconds": 15.001190185546875,
+          "expectedLongDistance": 2150,
+          "expectedResources": 30,
+          "expectedRestartDistance": 110,
+          "nativeLongExpectedFraction": 0.05613608098839344,
+          "nativeFastExpectedFraction": 1,
+          "nativeShortExpectedFraction": 1
+        },
+        {
+          "targetElapsedSeconds": 30,
+          "actualElapsedSeconds": 30.005038022994995,
+          "expectedLongDistance": 2300,
+          "expectedResources": 60,
+          "expectedRestartDistance": 40,
+          "nativeLongExpectedFraction": 0.06005353473185248,
+          "nativeFastExpectedFraction": 1,
+          "nativeShortExpectedFraction": 1
+        },
+        {
+          "targetElapsedSeconds": 45,
+          "actualElapsedSeconds": 45.003257036209106,
+          "expectedLongDistance": 2450,
+          "expectedResources": 90,
+          "expectedRestartDistance": 190,
+          "nativeLongExpectedFraction": 0.06396951880840969,
+          "nativeFastExpectedFraction": 1,
+          "nativeShortExpectedFraction": 1
+        }
+      ]
+    },
+    {
+      "trial": "attributed",
+      "modelOnlyNotObservedCounters": [
+        {
+          "targetElapsedSeconds": 0,
+          "actualElapsedSeconds": 0.003674030303955078,
+          "expectedLongDistance": 2000,
+          "expectedResources": 0,
+          "expectedRestartDistance": 180,
+          "nativeLongExpectedFraction": 0.05222028042566683,
+          "nativeFastExpectedFraction": 0.20036740303039552,
+          "nativeShortExpectedFraction": 0.9001837015151978
+        },
+        {
+          "targetElapsedSeconds": 3,
+          "actualElapsedSeconds": 3.0042479038238525,
+          "expectedLongDistance": 2030,
+          "expectedResources": 6,
+          "expectedRestartDistance": 200,
+          "nativeLongExpectedFraction": 0.053003720079327375,
+          "nativeFastExpectedFraction": 0.5004247903823853,
+          "nativeShortExpectedFraction": 1
+        },
+        {
+          "targetElapsedSeconds": 8,
+          "actualElapsedSeconds": 8.003540754318237,
+          "expectedLongDistance": 2080,
+          "expectedResources": 16,
+          "expectedRestartDistance": 40,
+          "nativeLongExpectedFraction": 0.054309018473712334,
+          "nativeFastExpectedFraction": 1,
+          "nativeShortExpectedFraction": 1
+        },
+        {
+          "targetElapsedSeconds": 15,
+          "actualElapsedSeconds": 15.005752801895142,
+          "expectedLongDistance": 2150,
+          "expectedResources": 30,
+          "expectedRestartDistance": 110,
+          "nativeLongExpectedFraction": 0.056137272272035285,
+          "nativeFastExpectedFraction": 1,
+          "nativeShortExpectedFraction": 1
+        },
+        {
+          "targetElapsedSeconds": 30,
+          "actualElapsedSeconds": 30.005670070648193,
+          "expectedLongDistance": 2300,
+          "expectedResources": 60,
+          "expectedRestartDistance": 40,
+          "nativeLongExpectedFraction": 0.0600536997573494,
+          "nativeFastExpectedFraction": 1,
+          "nativeShortExpectedFraction": 1
+        },
+        {
+          "targetElapsedSeconds": 45,
+          "actualElapsedSeconds": 45.00698471069336,
+          "expectedLongDistance": 2450,
+          "expectedResources": 90,
+          "expectedRestartDistance": 190,
+          "nativeLongExpectedFraction": 0.06397049209156484,
+          "nativeFastExpectedFraction": 1,
+          "nativeShortExpectedFraction": 1
+        }
+      ]
+    },
+    {
+      "trial": "string",
+      "modelOnlyNotObservedCounters": [
+        {
+          "targetElapsedSeconds": 0,
+          "actualElapsedSeconds": 0.0015461444854736328,
+          "expectedLongDistance": 2000,
+          "expectedResources": 0,
+          "expectedRestartDistance": 180,
+          "nativeLongExpectedFraction": 0.05221972484190221,
+          "nativeFastExpectedFraction": 0.20015461444854737,
+          "nativeShortExpectedFraction": 0.9000773072242737
+        },
+        {
+          "targetElapsedSeconds": 3,
+          "actualElapsedSeconds": 3.0018560886383057,
+          "expectedLongDistance": 2030,
+          "expectedResources": 6,
+          "expectedRestartDistance": 200,
+          "nativeLongExpectedFraction": 0.053003095584500864,
+          "nativeFastExpectedFraction": 0.5001856088638306,
+          "nativeShortExpectedFraction": 1
+        },
+        {
+          "targetElapsedSeconds": 6,
+          "actualElapsedSeconds": 6.005447149276733,
+          "expectedLongDistance": 2060,
+          "expectedResources": 12,
+          "expectedRestartDistance": 20,
+          "nativeLongExpectedFraction": 0.05378732301547695,
+          "nativeFastExpectedFraction": 0.8005447149276733,
+          "nativeShortExpectedFraction": 1
+        }
+      ]
+    },
+    {
+      "trial": "system",
+      "modelOnlyNotObservedCounters": [
+        {
+          "targetElapsedSeconds": 0,
+          "actualElapsedSeconds": 0.002685070037841797,
+          "expectedLongDistance": 2000,
+          "expectedResources": 0,
+          "expectedRestartDistance": 180,
+          "nativeLongExpectedFraction": 0.05222002221149813,
+          "nativeFastExpectedFraction": 0.20026850700378418,
+          "nativeShortExpectedFraction": 0.9001342535018921
+        },
+        {
+          "targetElapsedSeconds": 3,
+          "actualElapsedSeconds": 3.002122163772583,
+          "expectedLongDistance": 2030,
+          "expectedResources": 6,
+          "expectedRestartDistance": 200,
+          "nativeLongExpectedFraction": 0.053003165055815295,
+          "nativeFastExpectedFraction": 0.5002122163772583,
+          "nativeShortExpectedFraction": 1
+        },
+        {
+          "targetElapsedSeconds": 6,
+          "actualElapsedSeconds": 6.005046367645264,
+          "expectedLongDistance": 2060,
+          "expectedResources": 12,
+          "expectedRestartDistance": 20,
+          "nativeLongExpectedFraction": 0.05378721837275333,
+          "nativeFastExpectedFraction": 0.8005046367645263,
+          "nativeShortExpectedFraction": 1
+        }
+      ]
+    }
+  ],
+  "measurementTiming": "Timestamp is recorded just before simctl screenshot; renderer values may be later by capture latency. No pixel timestamp inference.",
+  "scope": {
+    "surface": "system-hosted ActivityKit Lock Screen",
+    "simulatorModel": "iPhone 17 Pro",
+    "runtimeIdentifier": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+    "runtimeVersion": "26.4.1",
+    "runtimeBuild": "23E254a",
+    "xcode": "26.4.1 (17E202)",
+    "sdk": "iPhoneSimulator26.4.sdk",
+    "harnessDeploymentTarget": "26.0",
+    "debuggerAttached": false,
+    "activityUpdates": 0,
+    "hostStoppedAtAllCheckpoints": true,
+    "physicalDevice": false,
+    "physicalAlwaysOnCadenceValidated": false,
+    "dynamicIslandIndependentlyCaptured": false,
+    "productionIntegration": false
+  },
+  "excludedSetup": "setup-incomplete-attributed: failed to background host in allotted setup time; not a measured trial",
+  "conclusion": "Custom DiscreteFormatStyle overloads compile but both tested app-defined types fail system archive decoding. Built-in TimeDataSource and native timer/progress controls advance with host stopped. Date progress is a single segment that saturates; repeated custom restart is unverified."
+}

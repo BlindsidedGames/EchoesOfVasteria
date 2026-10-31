@@ -1,0 +1,27 @@
+{
+  "atUTC": "2026-10-31T07:47:47.328092+00:00",
+  "actions": [
+    {
+      "pid": 18897,
+      "trial": "control",
+      "action": "no signal; original harness process absent"
+    },
+    {
+      "pid": 21297,
+      "trial": "attributed",
+      "action": "no signal; original harness process absent"
+    },
+    {
+      "pid": 23639,
+      "trial": "string",
+      "action": "no signal; original harness process absent"
+    },
+    {
+      "pid": 26225,
+      "trial": "system",
+      "action": "SIGCONT own verified harness process"
+    }
+  ],
+  "finalAction": "terminate only disposable harness bundle",
+  "otherAppsSignalled": false
+}
