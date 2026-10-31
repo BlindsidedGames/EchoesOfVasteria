@@ -268,7 +268,7 @@ namespace TimelessEchoes.UI.Toolkit
                 var backgroundLabel = ToolkitGameplay.L(background, "", "eov-options-label");
                 backgroundLabel.style.whiteSpace = WhiteSpace.Normal;
                 backgroundLabel.style.flexShrink = 1;
-                ToolkitLocalization.Bind(backgroundLabel, "options.background-progress", "Enable background progress (Experimental)");
+                ToolkitLocalization.Bind(backgroundLabel, "options.background-progress", "Enable background progress (Experimental, 1-hour limit)");
             }
         }
         private static void ApplyFps()
