@@ -158,8 +158,12 @@ namespace TimelessEchoes.Editor
             AddSource(project, watch, folder + "/ForecastArt.xcassets");
             project.AddTargetDependency(main, watch);
             // Embed before Unity's dSYM postprocess to avoid an Info.plist dependency cycle.
-            var embed = project.AddCopyFilesBuildPhaseBeforeTargetPostprocess(main, "Embed Watch Content", "$(CONTENTS_FOLDER_PATH)/Watch", "16");
-            project.AddFileToBuildSection(main, embed, project.GetTargetProductFileRef(watch));
+            var embed = project.GetCopyFilesBuildPhaseByTarget(main, "Embed Watch Content", "$(CONTENTS_FOLDER_PATH)/Watch", "16");
+            if (string.IsNullOrEmpty(embed))
+            {
+                embed = project.AddCopyFilesBuildPhaseBeforeTargetPostprocess(main, "Embed Watch Content", "$(CONTENTS_FOLDER_PATH)/Watch", "16");
+                project.AddFileToBuildSection(main, embed, project.GetTargetProductFileRef(watch));
+            }
         }
 
         private static void AddSource(PBXProject project, string target, string path)
