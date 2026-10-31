@@ -122,40 +122,72 @@ private struct SnapshotStatus: View {
 private struct CurrentRunScreen: View {
     @EnvironmentObject private var store: EOVWatchCompanionStore
     var body: some View {
-        List {
-            SnapshotStatus()
-            if let s = store.snapshot {
-                if let f = s.forecast, s.backgroundProgressEnabled, f.status == "forecast" {
-                    Section("Estimate") {
-                        CompanionForecast(forecast: f)
-                    }
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(spacing: 14) {
+                    CurrentRunRadial(snapshot: store.snapshot,
+                        diameter: max(80, min(geometry.size.width - 16, geometry.size.height + 16)))
+                        .frame(width: geometry.size.width, height: geometry.size.height + 18)
+                    VStack(spacing: 10) {
+                        if let s = store.snapshot, let run = s.run, s.state == "run" {
+                            DataRow(name: "Distance", value: metres(run.distance) + " / " + metres(run.cap))
+                            DataRow(name: "Health", value: Int((run.healthFraction * 100).rounded()).formatted() + "%")
+                            DataRow(name: "Time", value: duration(run.durationSeconds))
+                            DataRow(name: "Tasks", value: run.tasks.formatted())
+                            DataRow(name: "Kills", value: run.kills.formatted())
+                            DataRow(name: "Resources", value: amount(run.resources))
+                        }
+                        Button("Refresh", systemImage: "arrow.clockwise") { store.refresh() }
+                        SnapshotStatus()
+                    }.padding(.horizontal, 10)
+                }.padding(.bottom, 12)
+            }
+        }
+        // Keep the system back button while giving the first viewport to the dial.
+        .navigationTitle("").toolbarTitleDisplayMode(.inline)
+    }
+}
+
+private struct CurrentRunRadial: View {
+    let snapshot: EOVWatchSnapshot?
+    let diameter: CGFloat
+    var body: some View {
+        if let s = snapshot {
+            if s.state == "run", let run = s.run {
+                if !run.dead, !run.reaped, s.backgroundProgressEnabled,
+                   let f = s.forecast, f.mapId == run.mapId, f.status == "forecast" {
+                    CompanionForecast(forecast: f, diameter: diameter, demo: s.demo)
+                } else {
+                    RadialRunFace(diameter: diameter, mapTitle: run.mapTitle,
+                        headline: run.reaped ? "Reaped" : run.dead ? "Died" : metres(run.distance),
+                        caption: run.dead || run.reaped ? metres(run.distance) : "Awaiting forecast",
+                        timeRange: nil, reaps: nil, demo: s.demo)
                 }
-                if s.state == "loading" { Text("iPhone is loading") }
-                else if let run = s.run, s.state == "run" {
-                    Section(run.mapTitle) {
-                        Text(run.dead ? (run.reaped ? "Reaped" : "Died") : "Adventure in progress")
-                        DataRow(name: "Distance", value: metres(run.distance) + " / " + metres(run.cap))
-                        DataRow(name: "Health", value: Int((run.healthFraction * 100).rounded()).formatted() + "%")
-                        DataRow(name: "Time", value: duration(run.durationSeconds))
-                        DataRow(name: "Tasks", value: run.tasks.formatted())
-                        DataRow(name: "Kills", value: run.kills.formatted())
-                        DataRow(name: "Resources", value: amount(run.resources))
-                    }
-                } else { Text(s.state == "town" ? "In town" : "No active run") }
-            } else { Text("Open Echoes on iPhone to see your current run.") }
-            Button("Refresh", systemImage: "arrow.clockwise") { store.refresh() }
-        }.navigationTitle("Current run")
+            } else {
+                RadialRunFace(diameter: diameter, mapTitle: "Echoes",
+                    headline: s.state == "town" ? "In town" : s.state == "loading" ? "Loading" : "No run",
+                    caption: s.state == "loading" ? "On iPhone" : "No active run",
+                    timeRange: nil, reaps: nil, demo: s.demo)
+            }
+        } else {
+            RadialRunFace(diameter: diameter, mapTitle: "Echoes", headline: "Open iPhone",
+                caption: "Waiting for data", timeRange: nil, reaps: nil, demo: false)
+        }
     }
 }
 
 private struct CompanionForecast: View {
     let forecast: EOVWatchSnapshot.Forecast
+    let diameter: CGFloat
+    let demo: Bool
     @Environment(\.scenePhase) private var scenePhase
     @State private var expired = false
+    private var ended: Bool { expired || forecast.forecastEnd <= Date().timeIntervalSince1970 }
     var body: some View {
-        EOVWatchForecastView(mapTitle: forecast.mapTitle, projectedDistance: forecast.projectedDistance,
-            projectedReaps: forecast.projectedReaps, timeRange: forecast.timeRange,
-            stale: expired || forecast.forecastEnd <= Date().timeIntervalSince1970, ended: false)
+        RadialRunFace(diameter: diameter, mapTitle: forecast.mapTitle,
+            headline: "Est. " + metres(forecast.projectedDistance),
+            caption: ended ? "Forecast ended" : nil,
+            timeRange: ended ? nil : forecast.timeRange, reaps: forecast.projectedReaps, demo: demo)
             .task(id: forecast.forecastEnd) {
                 let remaining = forecast.forecastEnd - Date().timeIntervalSince1970
                 expired = remaining <= 0
@@ -167,6 +199,52 @@ private struct CompanionForecast: View {
             .onChange(of: scenePhase) { _, phase in
                 if phase == .active { expired = forecast.forecastEnd <= Date().timeIntervalSince1970 }
             }
+    }
+}
+
+private struct RadialRunFace: View {
+    let diameter: CGFloat
+    let mapTitle: String
+    let headline: String
+    let caption: String?
+    let timeRange: ClosedRange<Date>?
+    let reaps: Int?
+    let demo: Bool
+    @Environment(\.isLuminanceReduced) private var reducedLuminance
+    @ScaledMetric(relativeTo: .headline) private var headlineSize = 21
+    private var accent: Color { Color(red: 0.94, green: 0.75, blue: 0.42).opacity(reducedLuminance ? 0.65 : 1) }
+    var body: some View {
+        ZStack {
+            if let timeRange {
+                ProgressView(timerInterval: timeRange, countsDown: false) { EmptyView() }
+                    currentValueLabel: { EmptyView() }
+                    .progressViewStyle(.circular).labelsHidden().tint(accent)
+                    .frame(width: 44, height: 44).scaleEffect(diameter / 44)
+            } else {
+                Circle().stroke(.secondary.opacity(0.3), lineWidth: diameter * 0.055)
+            }
+            VStack(spacing: 3) {
+                Image("EOVCarl").resizable().interpolation(.none).scaledToFit()
+                    .frame(width: diameter * 0.14, height: diameter * 0.14).accessibilityHidden(true)
+                Text(mapTitle).font(.system(size: min(13, diameter * 0.08), weight: .semibold))
+                    .lineLimit(1).minimumScaleFactor(0.65)
+                Text(headline).font(.system(size: min(headlineSize, diameter * 0.14), weight: .bold, design: .rounded))
+                    .lineLimit(1).minimumScaleFactor(0.65)
+                if let timeRange {
+                    Text(timerInterval: timeRange, countsDown: true)
+                        .font(.system(size: diameter * 0.095, weight: .medium, design: .monospaced))
+                        .lineLimit(1).minimumScaleFactor(0.7)
+                } else if let caption {
+                    Text(caption).font(.system(size: min(12, diameter * 0.075)))
+                        .foregroundStyle(.secondary).lineLimit(1).minimumScaleFactor(0.65)
+                }
+                if let reaps { Text("\(reaps) " + (reaps == 1 ? "reap" : "reaps")).font(.system(size: diameter * 0.065)).foregroundStyle(.secondary) }
+                if demo { Text("Demo").font(.system(size: 9)).foregroundStyle(.secondary) }
+            }
+            .frame(width: diameter * 0.7)
+            .foregroundStyle(timeRange == nil ? .secondary : .primary)
+        }
+        .frame(width: diameter, height: diameter)
     }
 }
 
