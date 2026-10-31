@@ -1,0 +1,128 @@
+[
+  {
+    "clip": "clips/02-42-always-on-transition.mp4",
+    "raw": "clips/raw/02-42-always-on-transition.mp4",
+    "rawSHA256": "8c88598d04c433eba84314acdff7f0e85a56b4eb450326485cdd582f4b610edf",
+    "nativeMetadata": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "width": 374,
+          "height": 446,
+          "nb_frames": "113"
+        }
+      ],
+      "format": {
+        "duration": "10.375000"
+      }
+    },
+    "requestedObservationSeconds": 10,
+    "presentationTransform": "Unmodified native simulator recording."
+  },
+  {
+    "clip": "clips/02-42-dimmed-static.mp4",
+    "raw": "clips/raw/02-42-dimmed-static.mp4",
+    "rawSHA256": "d58631d4bd916b8651fc2d40a5248fb8505dcc2645413df02a97e998c9af99bb",
+    "nativeMetadata": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "width": 374,
+          "height": 446,
+          "nb_frames": "1"
+        }
+      ],
+      "format": {
+        "duration": "0.066667"
+      }
+    },
+    "requestedObservationSeconds": 4,
+    "presentationTransform": "Playback hold of last captured frame to4.5s. NativeVFR emitted no further changing frames during requested4s observation; no generated motion or interpolation. Original retained."
+  },
+  {
+    "clip": "clips/02-42-foreground-animation.mp4",
+    "raw": "clips/raw/02-42-foreground-animation.mp4",
+    "rawSHA256": "3b5709487141f3d5928b72212801ee6adb64c0659cdf6665a25f17dc13178334",
+    "nativeMetadata": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "width": 374,
+          "height": 446,
+          "nb_frames": "100"
+        }
+      ],
+      "format": {
+        "duration": "6.648333"
+      }
+    },
+    "requestedObservationSeconds": 6,
+    "presentationTransform": "Unmodified native simulator recording."
+  },
+  {
+    "clip": "clips/02-46-foreground-animation.mp4",
+    "raw": "clips/raw/02-46-foreground-animation.mp4",
+    "rawSHA256": "1affc5ab9582e3eb3af53dcddde8ea2e2e8f6bbb739fb8e752d887e68071d388",
+    "nativeMetadata": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "width": 416,
+          "height": 496,
+          "nb_frames": "97"
+        }
+      ],
+      "format": {
+        "duration": "6.593333"
+      }
+    },
+    "requestedObservationSeconds": 6,
+    "presentationTransform": "Unmodified native simulator recording."
+  },
+  {
+    "clip": "clips/03-42-background-static.mp4",
+    "raw": "clips/raw/03-42-background-static.mp4",
+    "rawSHA256": "0d5041c73b4164476c770383215143e2b4dc9fe374fc86850ebfc533031c688c",
+    "nativeMetadata": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "width": 374,
+          "height": 446,
+          "nb_frames": "56"
+        }
+      ],
+      "format": {
+        "duration": "1.296667"
+      }
+    },
+    "requestedObservationSeconds": 6,
+    "presentationTransform": "Playback hold of last captured frame to6.5s. NativeVFR emitted no further changing frames during requested6s observation; no generated motion or interpolation. Original retained."
+  },
+  {
+    "clip": "clips/06-42-goal-editor.mp4",
+    "raw": "clips/raw/06-42-goal-editor.mp4",
+    "rawSHA256": "6f6ae494400dbf222f8780eb2da34be530a6af287bf126b50cd341ca10cabac2",
+    "nativeMetadata": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "width": 374,
+          "height": 446,
+          "nb_frames": "2219"
+        }
+      ],
+      "format": {
+        "duration": "77.501667"
+      }
+    },
+    "requestedObservationSeconds": null,
+    "presentationTransform": "First18 seconds, codec stream copy. Native100\u2192500 resource preset interaction; full77.5s original retained."
+  }
+]

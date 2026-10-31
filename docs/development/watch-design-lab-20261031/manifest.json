@@ -140,6 +140,10 @@
           "file": "captures/02-42-no-reap.png"
         },
         {
+          "title": "Always On \u00b7 42mm",
+          "file": "captures/02-42-dimmed.png"
+        },
+        {
           "title": "Large type \u00b7 46mm",
           "file": "captures/02-46-large-text.png"
         },
@@ -156,8 +160,13 @@
           "file": "captures/02-46-no-reap.png"
         }
       ],
-      "clip": null,
-      "clips": []
+      "clip": "clips/02-42-foreground-animation.mp4",
+      "clips": [
+        "clips/02-42-always-on-transition.mp4",
+        "clips/02-42-dimmed-static.mp4",
+        "clips/02-42-foreground-animation.mp4",
+        "clips/02-46-foreground-animation.mp4"
+      ]
     },
     {
       "id": "03",
@@ -215,8 +224,10 @@
           "file": "captures/03-46-reaped.png"
         }
       ],
-      "clip": null,
-      "clips": []
+      "clip": "clips/03-42-background-static.mp4",
+      "clips": [
+        "clips/03-42-background-static.mp4"
+      ]
     },
     {
       "id": "04",
@@ -244,6 +255,10 @@
         {
           "title": "Large type \u00b7 42mm",
           "file": "captures/04-42-large-text.png"
+        },
+        {
+          "title": "Large type after native scrolling \u00b7 42mm",
+          "file": "captures/04-42-large-scrolled.png"
         },
         {
           "title": "Large values \u00b7 42mm",
@@ -364,6 +379,14 @@
           "file": "captures/06-42-away.png"
         },
         {
+          "title": "Goal editor \u00b7 42mm",
+          "file": "captures/06-42-goal-editor.png"
+        },
+        {
+          "title": "Edited goal \u00b7 42mm",
+          "file": "captures/06-42-goal-edited.png"
+        },
+        {
           "title": "Large type \u00b7 46mm",
           "file": "captures/06-46-large-text.png"
         },
@@ -376,8 +399,10 @@
           "file": "captures/06-46-away.png"
         }
       ],
-      "clip": null,
-      "clips": []
+      "clip": "clips/06-42-goal-editor.mp4",
+      "clips": [
+        "clips/06-42-goal-editor.mp4"
+      ]
     },
     {
       "id": "07",
@@ -405,6 +430,10 @@
         {
           "title": "Large type \u00b7 42mm",
           "file": "captures/07-42-large-text.png"
+        },
+        {
+          "title": "Large type after native scrolling \u00b7 42mm",
+          "file": "captures/07-42-large-scrolled.png"
         },
         {
           "title": "Large type \u00b7 46mm",
