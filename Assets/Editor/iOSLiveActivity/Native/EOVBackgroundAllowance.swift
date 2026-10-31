@@ -3,7 +3,7 @@ import Foundation
 // Display metadata from the managed policy, independent of a shorter forecast.
 // Optional invalid/legacy values do not invalidate otherwise useful progress.
 enum EOVBackgroundAllowance {
-    static func validated(_ seconds: Double?) -> Double? {
+    private static func validated(_ seconds: Double?) -> Double? {
         guard let seconds, seconds.isFinite, seconds > 0 else { return nil }
         return seconds
     }

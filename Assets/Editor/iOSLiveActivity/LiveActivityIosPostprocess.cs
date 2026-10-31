@@ -42,7 +42,6 @@ namespace TimelessEchoes.Editor
                 }
                 AddSource(project, name.EndsWith(".mm") ? framework : main, folder + "/" + name);
             }
-            AddSource(project, framework, folder + "/EOVBackgroundAllowance.swift");
             foreach (var name in new[] { "EOVForecastWidget.swift", "EOVWatchForecastView.swift" })
                 File.Copy(Path.Combine(source, "Templates", name), Path.Combine(destination, name), true);
 

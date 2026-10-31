@@ -27,7 +27,8 @@ struct EOVWatchSnapshot: Codable {
         state = try values.decode(String.self, forKey: .state)
         backgroundProgressEnabled = try values.decode(Bool.self, forKey: .backgroundProgressEnabled)
         phoneInBackground = try values.decodeIfPresent(Bool.self, forKey: .phoneInBackground)
-        backgroundLimitSeconds = EOVBackgroundAllowance.validated(try? values.decode(Double.self, forKey: .backgroundLimitSeconds))
+        let allowance = try? values.decode(Double.self, forKey: .backgroundLimitSeconds)
+        backgroundLimitSeconds = allowance.flatMap { $0.isFinite && $0 > 0 ? $0 : nil }
         run = try values.decodeIfPresent(Run.self, forKey: .run)
         forecast = try values.decodeIfPresent(Forecast.self, forKey: .forecast)
         timeline = try values.decodeIfPresent(Timeline.self, forKey: .timeline)
