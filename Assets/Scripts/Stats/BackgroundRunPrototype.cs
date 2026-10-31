@@ -44,14 +44,16 @@ namespace TimelessEchoes.Stats
         public static void Publish(string map, BackgroundRunEstimator.Result forecast, double currentDistance, double resources)
         {
             var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            var json = JsonConvert.SerializeObject(new
+            var payload = new
             {
                 schemaVersion = 1, mapId = map, mapTitle = (map == "Haloween" ? "Hollow" : map) + (Demo ? " · demo" : ""),
                 sampleCount = forecast.SampleCount, generatedAt = now, currentDistance,
                 projectedDistance = forecast.Distance, reapCap = forecast.BaseCap,
                 projectedReaps = forecast.Reaps, projectedTasks = forecast.Tasks, projectedKills = forecast.Kills,
                 projectedResources = resources, forecastEnd = now + Math.Max(1, forecast.Seconds), status = forecast.Status
-            });
+            };
+            WatchCompanionPrototype.RememberForecast(map, payload, Blindsided.Oracle.oracle?.saveData);
+            var json = JsonConvert.SerializeObject(payload);
 #if UNITY_IOS && !UNITY_EDITOR && EOV_BACKGROUND_PROTOTYPE
             if (EOVLiveActivity_IsSupported() != 0) EOVLiveActivity_StartOrUpdate(json);
 #endif
@@ -59,6 +61,7 @@ namespace TimelessEchoes.Stats
 
         public static void End()
         {
+            WatchCompanionPrototype.ClearForecast();
 #if UNITY_IOS && !UNITY_EDITOR && EOV_BACKGROUND_PROTOTYPE
             EOVLiveActivity_End();
 #endif

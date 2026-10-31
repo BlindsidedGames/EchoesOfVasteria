@@ -16,6 +16,7 @@ using TimelessEchoes.Enemies;
 using TimelessEchoes.Hero;
 using TimelessEchoes.MapGeneration;
 using TimelessEchoes.Stats;
+using TimelessEchoes.Skills;
 using TimelessEchoes.Upgrades;
 using UnityEditor;
 using UnityEngine;
@@ -163,6 +164,69 @@ namespace Tests.PlayMode
                 yield return null;
             }
         }
+
+        [UnityTest]
+        public IEnumerator CompanionSnapshotReadsRealOwnersWithoutAwardingProgress()
+        {
+            var data = Progress();
+            data.General.RecentRuns = Enumerable.Range(1, 18).Select(i => new GameData.RunRecord
+            {
+                RunNumber = i, MapType = i % 2 == 0 ? "River" : "Farmlands", Duration = 100,
+                Distance = i * 10, EnemiesKilled = i, Estimated = i == 18, Reaped = true
+            }).ToList();
+            var skill = AssetDatabase.LoadAssetAtPath<Skill>("Assets/Scriptables/Skills/Mining.asset");
+            data.SkillData[skill.name] = new GameData.SkillProgress { Level = 29, CurrentXP = 12 };
+            CreateRuntime(data, "Farmlands");
+            var controller = owner.AddComponent<SkillController>();
+            Set(controller, "skills", new List<Skill> { skill });
+            Events.LoadData();
+            yield return null;
+            var checkpoint = data.ActiveRun;
+            var town = JsonUtility.FromJson<CompanionContract>(game.CaptureWatchCompanionSnapshot());
+            Assert.That(town.schemaVersion, Is.EqualTo(1));
+            Assert.That(town.state, Is.EqualTo("town"));
+            Assert.That(town.generatedAt, Is.GreaterThan(DateTimeOffset.UtcNow.ToUnixTimeSeconds() - 5));
+            Assert.That(town.skills.Single().level, Is.EqualTo(29));
+            Assert.That(town.recentRuns.Select(r => r.runNumber), Is.EqualTo(Enumerable.Range(9, 10).Reverse()));
+            Assert.IsTrue(town.recentRuns[0].estimated);
+            Assert.AreSame(checkpoint, data.ActiveRun, "Publishing must not create a save checkpoint.");
+
+            Assert.IsTrue(game.BeginAdventure(config));
+            yield return WaitForRun();
+            HeroController.Instance.SetActiveState(false);
+            HeroController.Instance.transform.position = new Vector3(77, 0, 0);
+            stats.RecordHeroPosition(HeroController.Instance.transform.position);
+            for (var i = 0; i < 7; i++) stats.AddKill(null);
+            stats.AddResources(321);
+            var kills = stats.TotalKills;
+            var resources = stats.TotalResourcesGathered;
+            var currentCheckpoint = data.ActiveRun;
+            var json = game.CaptureWatchCompanionSnapshot();
+            var run = JsonUtility.FromJson<CompanionContract>(json);
+            Assert.That(run.state, Is.EqualTo("run"));
+            Assert.That(run.run.mapId, Is.EqualTo("Farmlands"));
+            Assert.That(run.run.distance, Is.EqualTo(77).Within(.01));
+            Assert.That(run.run.kills, Is.EqualTo(7));
+            Assert.That(run.run.resources, Is.EqualTo(321));
+            game.CaptureWatchCompanionSnapshot();
+            Assert.That(stats.TotalKills, Is.EqualTo(kills));
+            Assert.That(stats.TotalResourcesGathered, Is.EqualTo(resources));
+            Assert.AreSame(currentCheckpoint, data.ActiveRun);
+            Assert.That(data.SkillData[skill.name].CurrentXP, Is.EqualTo(12));
+        }
+
+        [Serializable] private class CompanionContract
+        {
+            public int schemaVersion;
+            public long generatedAt;
+            public string state;
+            public CompanionRun run;
+            public CompanionSkill[] skills;
+            public CompanionHistory[] recentRuns;
+        }
+        [Serializable] private class CompanionRun { public string mapId; public double distance, resources; public int kills; }
+        [Serializable] private class CompanionSkill { public int level; }
+        [Serializable] private class CompanionHistory { public int runNumber; public bool estimated; }
 
         [UnityTest]
         public IEnumerator BackgroundSettlementCommitsOnceAndWarmResumeRebuildsTheWorld()
