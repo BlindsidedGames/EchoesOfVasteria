@@ -206,6 +206,8 @@ namespace TimelessEchoes
             // Demo input may only modify an isolated prototype app/Editor screenshot bank.
             if (!Application.identifier.EndsWith(".prototype", StringComparison.Ordinal) && !Platform.StartupDiagnostics.EditorScreenshotSession) return;
             backgroundDemoStarted = true;
+            // Relaunching the demonstration must restore its outing, not reseed it.
+            if (Oracle.oracle.saveData.ActiveRun != null) return;
             var entry = generationButtons.FirstOrDefault(e => e?.Config && e.Config.name == "River");
             if (entry == null) return;
             var data = Oracle.oracle.saveData;
