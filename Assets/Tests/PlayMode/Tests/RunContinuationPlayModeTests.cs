@@ -159,6 +159,56 @@ namespace Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator BackgroundSettlementCommitsOnceAndWarmResumeRebuildsTheWorld()
+        {
+            var key = "Gameplay.BackgroundRunPrototype";
+            var existed = PlayerPrefs.HasKey(key); var old = PlayerPrefs.GetInt(key);
+            PlayerPrefs.SetInt(key, 1);
+            try
+            {
+                var data = Progress();
+                data.BackgroundSamples["River"] = Enumerable.Range(0, 10).Select(_ => new BackgroundRunSample
+                    { Seconds = 100, Distance = 50, EndDistance = 500, Kills = 10 }).ToList();
+                data.ActiveRun = new RunSaveData { Map = "River", Distance = 80,
+                    CheckpointUtcTicks = DateTime.UtcNow.AddSeconds(-60).Ticks,
+                    Stats = new RunSaveData.Statistics { Distance = 80, Duration = 100 } };
+                CreateRuntime(data, "River");
+                owner.AddComponent<EnemyKillTracker>();
+                Events.LoadData();
+                yield return WaitForRun();
+                HeroController.Instance.SetActiveState(false);
+                Assert.That(HeroController.Instance.transform.position.x, Is.InRange(109f, 113f));
+                Assert.That(stats.TotalKills, Is.InRange(6, 7));
+                Assert.That(inventory.GetAmount(AssetCache.GetAll<Resource>().Single(r => r.name == "Slime")), Is.GreaterThan(0));
+                var amount = stats.TotalResourcesGathered; var totalKills = stats.TotalKills;
+                Events.ApplicationForeground(); Events.ApplicationForeground();
+                Assert.That(stats.TotalResourcesGathered, Is.EqualTo(amount));
+                Assert.That(stats.TotalKills, Is.EqualTo(totalKills));
+                Assert.IsTrue(oracle.PrepareForQuit());
+                var saved = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult().Data;
+                Assert.That(saved.ActiveRun.Stats.EstimatedSeconds, Is.GreaterThan(59));
+                Assert.That(saved.ActiveRun.CheckpointUtcTicks, Is.GreaterThan(DateTime.UtcNow.AddSeconds(-10).Ticks));
+                Assert.That(saved.BackgroundSamples["River"].Count, Is.EqualTo(10));
+                // Exercise the real warm lifecycle, not just cold loading.
+                Events.ApplicationBackground();
+                Assert.That(Time.timeScale, Is.Zero);
+                var before = game.CurrentMap;
+                oracle.saveData.ActiveRun.CheckpointUtcTicks = DateTime.UtcNow.AddSeconds(-20).Ticks;
+                Events.ApplicationForeground();
+                yield return null;
+                yield return WaitForRun();
+                HeroController.Instance.SetActiveState(false);
+                Assert.That(game.CurrentMap, Is.Not.EqualTo(before));
+                Assert.That(HeroController.Instance.transform.position.x, Is.GreaterThan(119));
+                Assert.That(stats.TotalKills, Is.GreaterThan(totalKills));
+            }
+            finally
+            {
+                if (existed) PlayerPrefs.SetInt(key, old); else PlayerPrefs.DeleteKey(key);
+            }
+        }
+
+        [UnityTest]
         public IEnumerator RelaunchKeepsDistanceLootAndBonusWithoutDuplicatingProgress()
         {
             foreach (var portrait in new[] { false, true })

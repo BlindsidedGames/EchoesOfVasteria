@@ -89,11 +89,8 @@ namespace TimelessEchoes.Hero
             {
                 _hero = _hero != null ? _hero : HeroController.Instance;
                 _initialized = _hero != null;
-                if (!_initialized)
-                    return;
             }
 
-            var hero = _hero;
             var buffs = BuffManager.Instance;
             var equip = EquipmentController.Instance;
             var crafting = CraftingService.Instance;

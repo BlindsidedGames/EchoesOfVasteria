@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Blindsided.SaveData;
+using TimelessEchoes.MapGeneration;
 
 namespace TimelessEchoes.Stats
 {
@@ -44,11 +45,13 @@ namespace TimelessEchoes.Stats
             public double GateDistance = double.PositiveInfinity;
             public bool DistanceReaping = true, CapGain = true, StopOnFirstReap;
             public Func<double, int, double> Pressure;
+            public Func<double, double, (double multiplier, double flat)> CapModifiers;
+            public double NextBuffExpiry = double.PositiveInfinity;
         }
 
         public sealed class Step
         {
-            public double Seconds, Distance, DamageTaken, RestartSeconds;
+            public double Seconds, Distance, DamageTaken, RestartSeconds, CapIncrease;
             public int Tasks, Kills;
             public bool EndsRun, Reaped;
         }
@@ -95,22 +98,32 @@ namespace TimelessEchoes.Stats
             var taskRate = tasks / seconds; var killRate = kills / seconds;
             result.EchoTaskShare = tasks > 0 ? Math.Clamp(echoTasks / tasks, 0, 1) : 0;
             result.EchoKillShare = kills > 0 ? Math.Clamp(echoKills / kills, 0, 1) : 0;
-            var referencePressure = Math.Max(.0001, input.Pressure?.Invoke(reference / weightSum, 0) ?? 1);
+            var referencePressure = Math.Max(.0001, input.Pressure?.Invoke(reference / weightSum, (int)(kills / weightSum * .5)) ?? 1);
+            var observedDistance = samples.Max(s => s.EndDistance);
+            var observedPressure = Math.Max(referencePressure, input.Pressure?.Invoke(observedDistance, (int)samples.Max(s => s.Kills)) ?? referencePressure);
             var health = input.MaxHealth * run.HealthFraction;
             var runKills = run.Stats.Kills;
             // Deliberately bounded prototype, not a new production offline policy.
             var remaining = Math.Min(input.Seconds, 3600);
             if (input.Seconds > remaining) result.StopReason = "Prototype limited to one hour";
+            if ((taskRate + killRate) * remaining > 20000)
+            { remaining = 20000 / (taskRate + killRate); result.StopReason = "Prototype work limit"; }
             while (remaining > .00001 && result.Steps.Count < 10000)
             {
-                var cap = input.DistanceReaping ? EffectiveCap(result.BaseCap, input.CapMultiplier, input.CapFlat) : double.PositiveInfinity;
+                var modifiers = result.Reaps + result.Deaths == 0
+                    ? input.CapModifiers?.Invoke(result.MovingSeconds, result.Distance) ?? (input.CapMultiplier, input.CapFlat)
+                    : (1d, 0d);
+                var cap = input.DistanceReaping ? RunDistanceRules.EffectiveCap(result.BaseCap, modifiers.Item1, modifiers.Item2) : double.PositiveInfinity;
                 var boundary = Math.Min(cap, input.GateDistance);
                 var dt = Math.Min(2, remaining);
+                if (result.MovingSeconds < input.NextBuffExpiry)
+                    dt = Math.Min(dt, input.NextBuffExpiry - result.MovingSeconds);
                 dt = Math.Min(dt, Math.Max(0, boundary - result.Distance) / speed);
                 var pressure = Math.Max(0, input.Pressure?.Invoke(result.Distance, runKills) ?? 1);
                 var incoming = damage / seconds * pressure / referencePressure;
                 // Zero-damage history does not establish immunity beyond observed threat.
-                if (pressure > referencePressure && incoming <= 0) incoming = (pressure - referencePressure) * killRate;
+                if (result.Distance > observedDistance && pressure > observedPressure && incoming <= 0)
+                    incoming = (pressure - observedPressure) * killRate;
                 var netDamage = incoming - input.Regen;
                 if (netDamage > 0) dt = Math.Min(dt, health / netDamage);
                 var step = new Step { Seconds = dt, Distance = result.Distance + speed * dt, DamageTaken = incoming * dt };
@@ -128,7 +141,7 @@ namespace TimelessEchoes.Stats
                     if (step.Reaped)
                     {
                         result.Reaps++;
-                        if (input.CapGain) result.BaseCap += ReapGain(result.BaseCap, input.CapMultiplier, input.CapFlat);
+                        if (input.CapGain) { step.CapIncrease = RunDistanceRules.ReapGain(cap, 1, 0); result.BaseCap += step.CapIncrease; }
                     }
                     else result.Deaths++;
                     if (step.Reaped && input.StopOnFirstReap)
@@ -148,8 +161,6 @@ namespace TimelessEchoes.Stats
             return result;
         }
 
-        public static double EffectiveCap(double cap, double multiplier, double flat) => Math.Max(0, cap * multiplier + flat);
-        public static double ReapGain(double cap, double multiplier, double flat) => EffectiveCap(cap, multiplier, flat) * .01;
         private static bool Finite(double value) => !double.IsNaN(value) && !double.IsInfinity(value) && value >= 0;
     }
 }

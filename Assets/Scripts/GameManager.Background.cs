@@ -46,6 +46,7 @@ namespace TimelessEchoes
             if (entry != null && TrySettleBackground(saved, entry))
             {
                 Time.timeScale = backgroundTimeScale;
+                runLoadingActive = false;
                 BeginAdventure(entry.Config, Oracle.oracle.saveData.ActiveRun);
             }
             else if (Oracle.oracle?.HasLoadedCurrentSlotData == true)
@@ -81,7 +82,10 @@ namespace TimelessEchoes
                 RestartSeconds = SkipRestartCountdown ? 0 : deathWindowDuration,
                 DistanceReaping = entry.ScalingMode != MapScalingMode.KillBased,
                 CapGain = config.allowMaxDistanceReapGain && !Oracle.oracle.demo,
-                GateDistance = gate, StopOnFirstReap = !data.General.FirstReapTownVisited, Pressure = content.Pressure
+                GateDistance = gate, StopOnFirstReap = !data.General.FirstReapTownVisited, Pressure = content.Pressure,
+                CapModifiers = content.CapModifiers,
+                NextBuffExpiry = run.Buffs?.Active?.Where(b => !float.IsFinite(b.ExpireAtDistance) || b.ExpireAtDistance <= 0).Select(b => (double)b.Remaining)
+                    .DefaultIfEmpty(double.PositiveInfinity).Min() ?? double.PositiveInfinity
             };
         }
 
@@ -121,10 +125,11 @@ namespace TimelessEchoes
                             statTracker.AdvanceEstimatedRun(step); elapsed += step.Seconds;
                             content.Award(step, elapsed);
                             if (!step.EndsRun) continue;
+                            content.EndRun();
                             if (step.Reaped)
                             {
                                 statTracker.AddTimesReaped();
-                                if (input.CapGain) statTracker.IncreaseMaxRunDistance((float)BackgroundRunEstimator.ReapGain(statTracker.MaxRunDistance, 1, 0));
+                                if (step.CapIncrease > 0) statTracker.IncreaseMaxRunDistance((float)step.CapIncrease);
                             }
                             else statTracker.AddDeath();
                             var restarts = !(step.Reaped && input.StopOnFirstReap) && step.RestartSeconds + .00001 >= input.RestartSeconds;
@@ -159,7 +164,8 @@ namespace TimelessEchoes
                     forecast.Distance, forecast.Reaps, forecast.Deaths, forecast.Tasks, forecast.Kills,
                     forecast.StopReason, resources = statTracker.TotalResourcesGathered - initialResources,
                     checkpointUtcTicks = run.CheckpointUtcTicks, prototype = true };
-                File.WriteAllText(Path.Combine(Application.persistentDataPath, "background-last-settlement.json"), JsonConvert.SerializeObject(report, Formatting.Indented));
+                try { File.WriteAllText(Path.Combine(Platform.StartupDiagnostics.EditorScreenshotRoot ?? Application.persistentDataPath, "background-last-settlement.json"), JsonConvert.SerializeObject(report, Formatting.Indented)); }
+                catch (IOException ex) { Debug.LogWarning("Could not write background prototype diagnostics: " + ex.Message); }
                 Debug.Log("[Background prototype] " + JsonConvert.SerializeObject(report));
                 BackgroundRunPrototype.End(); activityVisible = false;
                 return true;
@@ -204,6 +210,10 @@ namespace TimelessEchoes
             if (entry == null) return;
             var data = Oracle.oracle.saveData;
             data.General.FirstReapTownVisited = true;
+            data.General.BuffTutorialStage = 4;
+            data.Character = Characters.CharacterProfile.Legacy();
+            data.Quests["Meeting Ivan"] = new GameData.QuestRecord { Completed = true };
+            if (entry.Config.entryIntroduction) data.CompletedNpcTasks.Add(entry.Config.entryIntroduction.npcId);
             foreach (var npc in entry.Config.taskGeneratorSettings.npcTasks) if (npc != null) data.CompletedNpcTasks.Add(npc.id);
             foreach (var category in new[] { entry.Config.taskGeneratorSettings.fishing, entry.Config.taskGeneratorSettings.farming,
                 entry.Config.taskGeneratorSettings.mining, entry.Config.taskGeneratorSettings.woodcutting, entry.Config.taskGeneratorSettings.looting })

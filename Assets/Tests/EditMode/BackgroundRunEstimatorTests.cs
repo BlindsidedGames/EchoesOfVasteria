@@ -39,6 +39,15 @@ namespace Tests.EditMode
         }
 
         [Test]
+        public void BuffedDistanceCapRaisesTheBaseByOnePercentOfTheEffectiveCap()
+        {
+            var input = Input(1); input.Run.Distance = 99; input.CapModifiers = (_, _) => (2, 0);
+            var result = BackgroundRunEstimator.Forecast(input);
+            Assert.That(result.Reaps, Is.EqualTo(1));
+            Assert.That(result.BaseCap, Is.EqualTo(51).Within(.00001));
+        }
+
+        [Test]
         public void CountdownConsumesAwayTimeWithoutCreatingMoreWork()
         {
             var input = Input(15); input.Run.Distance = 40; input.RestartSeconds = 20;

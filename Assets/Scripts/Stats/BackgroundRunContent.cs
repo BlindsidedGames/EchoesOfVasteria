@@ -26,7 +26,7 @@ namespace TimelessEchoes.Stats
         private readonly int killsPerLevel, levelsPerTier;
         private readonly double shopSeconds;
         private readonly bool permanentShop;
-        private readonly float resourceBuff, xpBuff, buffSeconds;
+        private readonly List<(BuffManager.BuffState state, List<BuffEffect> effects)> savedBuffs = new();
         private readonly double echoTaskShare, echoKillShare;
         private readonly System.Random random;
         private readonly ProceduralTaskGenerator.WeightedTaskCategory[] categories;
@@ -37,14 +37,33 @@ namespace TimelessEchoes.Stats
             map = config; killScaling = killMode; killsPerLevel = killsPerTier; levelsPerTier = levels;
             skills = SkillController.Instance; hero = HeroStatSystem.GetSnapshot();
             var shop = ShopService.Instance; permanentShop = shop && shop.PermanentEnabled; shopSeconds = shop ? shop.Remaining : 0;
-            resourceBuff = BuffManager.Instance ? BuffManager.Instance.ResourceGainMultiplier : 1;
-            xpBuff = BuffManager.Instance ? BuffManager.Instance.ExperienceGainMultiplier : 1;
-            buffSeconds = run.Buffs?.Active?.Count > 0 ? run.Buffs.Active.Max(b => b.Remaining) : 0;
+            if (run.Buffs?.Active != null)
+                foreach (var state in run.Buffs.Active)
+                {
+                    var recipe = Blindsided.Utilities.AssetCache.GetAll<BuffRecipe>().FirstOrDefault(r => r && r.name == state.Recipe && !r.IsRetired);
+                    if (recipe) savedBuffs.Add((state, recipe.GetAggregatedEffects()));
+                }
             echoTaskShare = taskShare; echoKillShare = killShare;
             random = new System.Random(unchecked((int)(run.CheckpointUtcTicks ^ (run.CheckpointUtcTicks >> 32) ^ run.Stats.Kills)));
             var settings = map.taskGeneratorSettings;
             categories = new[] { settings.woodcutting, settings.mining, settings.farming, settings.fishing, settings.looting };
         }
+
+        private float BuffValue(BuffEffectType type, double elapsed, double distance)
+        {
+            float total = 0;
+            foreach (var buff in savedBuffs)
+                if (float.IsFinite(buff.state.ExpireAtDistance) && buff.state.ExpireAtDistance > 0 ? distance < buff.state.ExpireAtDistance : elapsed < buff.state.Remaining)
+                    foreach (var effect in buff.effects)
+                        if (effect.type == type) total += type == BuffEffectType.ResourceMultiplier && Mathf.Approximately(effect.value, 1) ? 100 : effect.value;
+            return total;
+        }
+
+        public (double multiplier, double flat) CapModifiers(double elapsed, double distance) =>
+            (1 + BuffValue(BuffEffectType.MaxDistancePercent, elapsed, distance) / 100d,
+                BuffValue(BuffEffectType.MaxDistanceIncrease, elapsed, distance));
+
+        public void EndRun() => savedBuffs.Clear();
 
         public double Pressure(double distance, int kills)
         {
@@ -106,8 +125,8 @@ namespace TimelessEchoes.Stats
                 if (category == null) continue;
                 var task = Choose(category.tasks, t => TaskWeight(t, (float)step.Distance));
                 if (!task) continue;
-                var xp = Experience(task.associatedSkill, task.xpForCompletion, echoTaskShare, elapsed, true);
-                Drops(task.resourceDrops, task.additionalLootChances, task.associatedSkill, elapsed);
+                var xp = Experience(task.associatedSkill, task.xpForCompletion, echoTaskShare, elapsed, step.Distance, true);
+                Drops(task.resourceDrops, task.additionalLootChances, task.associatedSkill, elapsed, step.Distance);
                 foreach (var bonus in DropResolver.RollBonusDrops(task.bonusDrops, () => (float)random.NextDouble()))
                     ResourceManager.Instance.Add(bonus.resource, bonus.count, eligibleForTierRoll: false);
                 tracker.RegisterTaskComplete(task, task.taskDuration, xp);
@@ -116,28 +135,28 @@ namespace TimelessEchoes.Stats
             {
                 var enemy = Choose(map.taskGeneratorSettings.enemies, e => EnemyWeight(e, (float)step.Distance));
                 if (!enemy) continue;
-                Experience(skills ? skills.CombatSkill : null, enemy.experience, echoKillShare, elapsed, false);
-                Drops(enemy.resourceDrops, enemy.additionalLootChances, skills ? skills.CombatSkill : null, elapsed);
+                Experience(skills ? skills.CombatSkill : null, enemy.experience, echoKillShare, elapsed, step.Distance, false);
+                Drops(enemy.resourceDrops, enemy.additionalLootChances, skills ? skills.CombatSkill : null, elapsed, step.Distance);
                 EnemyKillTracker.Instance?.RegisterKill(enemy); tracker.AddKill(enemy);
             }
         }
 
-        private float Experience(Skill skill, float amount, double echoShare, double elapsed, bool task)
+        private float Experience(Skill skill, float amount, double echoShare, double elapsed, double distance, bool task)
         {
             if (!skills || !skill) return 0;
             if (task) amount *= 1 + Mathf.Max(0, skills.Aggregator.GetProcChance(skill, MilestoneProcType.DoubleXP));
             amount *= (float)(1 - .75 * echoShare);
             amount *= 1 + skills.Aggregator.GetExperienceBonus(skill);
-            amount *= elapsed < buffSeconds ? xpBuff : 1;
+            amount *= 1 + BuffValue(BuffEffectType.ExperienceBonusFraction, elapsed, distance);
             // Already accounted for foreground multipliers; do not multiply a second time.
             return skills.GrantQuestExperience(skill, amount);
         }
 
-        private void Drops(IEnumerable<ResourceDrop> drops, IList<float> extra, Skill skill, double elapsed)
+        private void Drops(IEnumerable<ResourceDrop> drops, IList<float> extra, Skill skill, double elapsed, double distance)
         {
             var stack = skills ? 1 + Mathf.Max(0, skills.Aggregator.GetProcChance(skill, MilestoneProcType.DoubleResources)) : 1;
             var gain = skills ? skills.GetResourceGainMultiplier() * skills.GetResourceBonusMultiplier(skill) : 1;
-            var buff = elapsed < buffSeconds ? resourceBuff : 1;
+            var buff = 1 + BuffValue(BuffEffectType.ResourceMultiplier, elapsed, distance) / 100;
             var shop = permanentShop || elapsed < shopSeconds ? ShopRules.GatheringMultiplier : 1;
             foreach (var drop in DropResolver.RollDrops(drops, extra, skill, false, () => (float)random.NextDouble()))
             {

@@ -57,7 +57,7 @@ namespace TimelessEchoes.MapGeneration
             var buff = BuffManager.Instance;
             var baseDist = tracker.MaxRunDistance;
             var buffed = baseDist;
-            if (buff != null) buffed = baseDist * buff.MaxDistanceMultiplier + buff.MaxDistanceFlatBonus;
+            if (buff != null) buffed = (float)RunDistanceRules.EffectiveCap(baseDist, buff.MaxDistanceMultiplier, buff.MaxDistanceFlatBonus);
 
             var oc = Blindsided.Oracle.oracle;
             var isDemo = oc != null && oc.demo;
