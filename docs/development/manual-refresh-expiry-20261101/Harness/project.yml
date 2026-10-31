@@ -1,0 +1,68 @@
+name: EchoesManualExpiryQA
+options:
+  deploymentTarget:
+    iOS: "16.2"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CODE_SIGNING_ALLOWED: NO
+    TARGETED_DEVICE_FAMILY: "1"
+    ASSETCATALOG_COMPILER_APPICON_NAME: ""
+targets:
+  EchoesManualExpiryQA:
+    type: application
+    platform: iOS
+    sources:
+      - Host.swift
+      - snapshot.json
+      - Assets.xcassets
+      - ../../../../Assets/Editor/iOSLiveActivity/Native/EOVForecastAttributes.swift
+      - ../../../../Assets/Editor/iOSLiveActivity/Native/EOVBackgroundAllowance.swift
+      - ../../../../Assets/Editor/iOSLiveActivity/Native/EOVRefreshIntent.swift
+      - ../../../../Assets/Editor/iOSLiveActivity/Native/EOVLiveActivityBridge.swift
+      - ../../../../Assets/Editor/iOSLiveActivity/Companion/EOVWatchSnapshot.swift
+      - ../../../../Assets/Editor/iOSLiveActivity/Companion/EOVWatchPhoneSession.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.blindsidedgames.echoes.manualexpiryqa
+        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        INFOPLIST_FILE: HostInfo.plist
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) EOV_LIVE_ACTIVITY_HOST
+    dependencies:
+      - target: EchoesManualExpiryQAWidget
+        embed: true
+      - target: EOVTransportQA
+        embed: true
+  EOVTransportQA:
+    type: framework
+    platform: iOS
+    sources:
+      - ../../../../Assets/Editor/iOSLiveActivity/Native/EOVLiveActivity.mm
+      - ../../../../Assets/Editor/iOSLiveActivity/Companion/EOVWatchSnapshot.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.blindsidedgames.echoes.manualexpiryqa.transport
+        GENERATE_INFOPLIST_FILE: YES
+        DEFINES_MODULE: YES
+    dependencies:
+      - sdk: UIKit.framework
+  EchoesManualExpiryQAWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - Assets.xcassets
+      - ../../../../Assets/Editor/iOSLiveActivity/Native/EOVForecastAttributes.swift
+      - ../../../../Assets/Editor/iOSLiveActivity/Native/EOVBackgroundAllowance.swift
+      - ../../../../Assets/Editor/iOSLiveActivity/Native/EOVRefreshIntent.swift
+      - ../../../../Assets/Editor/iOSLiveActivity/Templates/EOVForecastWidget.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.blindsidedgames.echoes.manualexpiryqa.widget
+        INFOPLIST_FILE: WidgetInfo.plist
+        APPLICATION_EXTENSION_API_ONLY: YES
+        SKIP_INSTALL: YES
+schemes:
+  EchoesManualExpiryQA:
+    build:
+      targets:
+        EchoesManualExpiryQA: all
