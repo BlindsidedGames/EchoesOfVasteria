@@ -191,8 +191,11 @@ namespace TimelessEchoes.Stats
                 var gain = skills ? skills.GetResourceGainMultiplier() * skills.GetResourceBonusMultiplier(skill) : 1;
                 foreach (var drop in DropResolver.RollDrops(drops, extra, skill, false, () => (float)sampleRandom.NextDouble()))
                 {
-                    var tier = ResourceManager.Instance ? 1 + ResourceManager.Instance.GetTierBonusPercent(ResourceManager.Instance.GetTier(drop.resource)) / 100d : 1;
-                    total += drop.count * stack * gain * tier;
+                    var tier = !drop.resource.DisableAlterEcho && ResourceManager.Instance ? 1 + ResourceManager.Instance.GetTierBonusPercent(ResourceManager.Instance.GetTier(drop.resource)) / 100d : 1;
+                    var buff = 1 + BuffValue(BuffEffectType.ResourceMultiplier, 0, x) / 100;
+                    var shop = permanentShop || shopSeconds > 0 ? ShopRules.GatheringMultiplier : 1;
+                    var raw = drop.count * stack;
+                    total += (raw * gain * buff + CauldronResourceYield.Supplement(Oracle.oracle?.saveData, drop.resource, raw)) * shop * tier;
                 }
             }
             return total / 128;

@@ -41,11 +41,15 @@ namespace Tests.PlayMode
         private MapGenerationConfig config;
         private uint width, height;
         private float timeScale;
+        private bool prototypeOptionExisted;
+        private int prototypeOptionValue;
         private readonly Dictionary<string, (bool existed, float number, string text)> slotMetadata = new();
 
         [SetUp]
         public void SetUp()
         {
+            prototypeOptionExisted = PlayerPrefs.HasKey("Gameplay.BackgroundRunPrototype");
+            prototypeOptionValue = PlayerPrefs.GetInt("Gameplay.BackgroundRunPrototype");
             Assert.IsNull(Oracle.oracle);
             Assert.IsTrue(TimelessEchoes.Platform.StartupDiagnostics.SkipOnlineServices);
             previousRoot = (string)typeof(SaveManager).GetField("rootPathOverride", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
@@ -62,6 +66,8 @@ namespace Tests.PlayMode
         public IEnumerator TearDown()
         {
             DestroyRuntime();
+            if (prototypeOptionExisted) PlayerPrefs.SetInt("Gameplay.BackgroundRunPrototype", prototypeOptionValue);
+            else PlayerPrefs.DeleteKey("Gameplay.BackgroundRunPrototype");
             foreach (var pair in slotMetadata)
                 if (!pair.Value.existed) PlayerPrefs.DeleteKey(pair.Key);
                 else if (pair.Key.EndsWith("_Date", StringComparison.Ordinal)) PlayerPrefs.SetString(pair.Key, pair.Value.text);
@@ -288,12 +294,14 @@ namespace Tests.PlayMode
         [UnityTest]
         public IEnumerator HollowRestoresKillScalingBeforeGeneratingEnemiesAndDeathDoesNotRevive()
         {
+            PlayerPrefs.SetInt("Gameplay.BackgroundRunPrototype", 1);
             foreach (var reaped in new[] { false, true })
             {
                 var data = Progress();
                 data.ActiveRun = new RunSaveData
                 {
                     Map = "Haloween", Distance = 777, HealthFraction = 0, Dead = true, Reaped = reaped,
+                    CheckpointUtcTicks = DateTime.UtcNow.AddSeconds(-30).Ticks,
                     Stats = new RunSaveData.Statistics { Distance = 777, Kills = 75, SessionKills = 75 }
                 };
                 data.General.Deaths = 3;
