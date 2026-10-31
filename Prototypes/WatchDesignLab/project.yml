@@ -1,0 +1,35 @@
+name: EchoesWatchDesignLab
+options:
+  deploymentTarget:
+    watchOS: "11.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CODE_SIGNING_ALLOWED: NO
+    ASSETCATALOG_COMPILER_APPICON_NAME: ""
+targets:
+  EchoesWatchDesignLab:
+    type: application
+    platform: watchOS
+    sources:
+      - Sources
+      - Assets.xcassets
+      - path: Fixtures
+        buildPhase: resources
+      - ../../Assets/Editor/iOSLiveActivity/Companion/EOVWatchSnapshot.swift
+    settings:
+      base:
+        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        PRODUCT_BUNDLE_IDENTIFIER: com.blindsidedgames.echoes.watch.designlab
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_WKApplication: YES
+        INFOPLIST_KEY_WKWatchOnly: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Echoes Design Lab
+        TARGETED_DEVICE_FAMILY: "4"
+        MARKETING_VERSION: "0.1"
+        CURRENT_PROJECT_VERSION: "1"
+schemes:
+  EchoesWatchDesignLab:
+    build:
+      targets:
+        EchoesWatchDesignLab: all

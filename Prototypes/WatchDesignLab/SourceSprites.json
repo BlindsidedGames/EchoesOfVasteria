@@ -1,0 +1,1278 @@
+{
+  "method": "Exact Unity sprite rects, bottom-left to top-left crop. Source-over RGBA in saved portrait order. No interpolation or source/importer edits.",
+  "assets": [
+    {
+      "asset": "EOVHero",
+      "source": "Assets/Editor/iOSLiveActivity/Art/EOVHero.png",
+      "sha256": "66dce7e4adf7e12e9a4906343ef00cd3a2473577916159c64da7ef232f71d986"
+    },
+    {
+      "asset": "EOVTask",
+      "source": "Assets/Editor/iOSLiveActivity/Art/EOVTask.png",
+      "sha256": "9bbcb4ffeeb65a2fdff1e2fac9499609461ad36239ea27e56a7ff82abe928224"
+    },
+    {
+      "asset": "EOVKill",
+      "source": "Assets/Editor/iOSLiveActivity/Art/EOVKill.png",
+      "sha256": "52c19d39bee5f9f502c0bb123c973e9aa9bdeb66886c2996a1fa8dd2371b5fc2"
+    },
+    {
+      "asset": "EOVChest",
+      "source": "Assets/Editor/iOSLiveActivity/Art/EOVChest.png",
+      "sha256": "d3015ece1becba17de736437248119b3554e13ff4ea90b2b99fa61fd7ecedef8"
+    },
+    {
+      "asset": "EOVCarl",
+      "source": "Assets/Editor/iOSLiveActivity/Art/EOVCarl.png",
+      "sha256": "83a535f6ef489b319bcff58e194ddb4d30fbef9163ed2c884d35c1742e2f662c"
+    },
+    {
+      "asset": "EOVCarlSwing",
+      "source": "Assets/Editor/iOSLiveActivity/Art/EOVCarlSwing.png",
+      "sha256": "d6f74d15af4abaa6e33eee9f435a720cc5babd8fa9bb3128c4c718235f99ea51"
+    },
+    {
+      "asset": "EOVResource",
+      "source": "Assets/Editor/iOSLiveActivity/Art/EOVResource.png",
+      "sha256": "28529b124c2532d83cec4910374ae14bd1d1078b500c73ebbab4341fecc98705"
+    },
+    {
+      "asset": "HeroIdle_0",
+      "pose": "Idle_Down frame 0, 8fps",
+      "layers": [
+        {
+          "path": "Assets/Art/Character/Modular/Player_Base/Player_Base_animations.png",
+          "rect": [
+            0,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-4666699784959995733",
+          "guid": "c65645bba14846109f56ff224793b4d6",
+          "sha256": "311608be854ab145e351e793d45a187b59e6d7834a62a1acd72e266de9852acc"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Head/Plate_Helmet_1/Plate_Helmet_1_Gold.png",
+          "rect": [
+            0,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-4666699784959995733",
+          "guid": "09e1d096f5104809b03a10afd30d85dc",
+          "sha256": "cdb4ee6a187c478b2ee11bb5eccb05427a40e99193b79242122c7c8a5201bf2c"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Legs/OG_Pants/Pants_1_Black.png",
+          "rect": [
+            0,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-4666699784959995733",
+          "guid": "cd27e967e77d41c1b934b32d1ab72538",
+          "sha256": "217feb7baa3c477b63a88e21287d57e994b2e4748e901642da23d18a3620f424"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Feet/Shoes_1_Brown.png",
+          "rect": [
+            0,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-4666699784959995733",
+          "guid": "541bf2390ae542cba3339506cc82e06e",
+          "sha256": "703492775813ff865bffd8fb35f5cb0194bddf56f739b10c4eeae410b18e6c8a"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Chest/Farmer_Shirt/Farmer_Shirt_1_Blue.png",
+          "rect": [
+            0,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-4666699784959995733",
+          "guid": "749ed60f800341e8b2a39a73b6f5d96e",
+          "sha256": "d254e7fd08be7402506810b55d36d03d2d751a57815a93bac3ae3cf5a5c218ac"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Hands/Hands_1_Bare.png",
+          "rect": [
+            0,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-4666699784959995733",
+          "guid": "0a2e364850124765b706754cba3a3d70",
+          "sha256": "b35ed8345956f1241209d0e0a7b90ce79f40830c27f8359078c48197daa0aa4d"
+        }
+      ]
+    },
+    {
+      "asset": "HeroIdle_1",
+      "pose": "Idle_Down frame 1, 8fps",
+      "layers": [
+        {
+          "path": "Assets/Art/Character/Modular/Player_Base/Player_Base_animations.png",
+          "rect": [
+            64,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "2595904650507484239",
+          "guid": "c65645bba14846109f56ff224793b4d6",
+          "sha256": "311608be854ab145e351e793d45a187b59e6d7834a62a1acd72e266de9852acc"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Head/Plate_Helmet_1/Plate_Helmet_1_Gold.png",
+          "rect": [
+            64,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "2595904650507484239",
+          "guid": "09e1d096f5104809b03a10afd30d85dc",
+          "sha256": "cdb4ee6a187c478b2ee11bb5eccb05427a40e99193b79242122c7c8a5201bf2c"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Legs/OG_Pants/Pants_1_Black.png",
+          "rect": [
+            64,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "2595904650507484239",
+          "guid": "cd27e967e77d41c1b934b32d1ab72538",
+          "sha256": "217feb7baa3c477b63a88e21287d57e994b2e4748e901642da23d18a3620f424"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Feet/Shoes_1_Brown.png",
+          "rect": [
+            64,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "2595904650507484239",
+          "guid": "541bf2390ae542cba3339506cc82e06e",
+          "sha256": "703492775813ff865bffd8fb35f5cb0194bddf56f739b10c4eeae410b18e6c8a"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Chest/Farmer_Shirt/Farmer_Shirt_1_Blue.png",
+          "rect": [
+            64,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "2595904650507484239",
+          "guid": "749ed60f800341e8b2a39a73b6f5d96e",
+          "sha256": "d254e7fd08be7402506810b55d36d03d2d751a57815a93bac3ae3cf5a5c218ac"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Hands/Hands_1_Bare.png",
+          "rect": [
+            64,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "2595904650507484239",
+          "guid": "0a2e364850124765b706754cba3a3d70",
+          "sha256": "b35ed8345956f1241209d0e0a7b90ce79f40830c27f8359078c48197daa0aa4d"
+        }
+      ]
+    },
+    {
+      "asset": "HeroIdle_2",
+      "pose": "Idle_Down frame 2, 8fps",
+      "layers": [
+        {
+          "path": "Assets/Art/Character/Modular/Player_Base/Player_Base_animations.png",
+          "rect": [
+            128,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-1532922328599646692",
+          "guid": "c65645bba14846109f56ff224793b4d6",
+          "sha256": "311608be854ab145e351e793d45a187b59e6d7834a62a1acd72e266de9852acc"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Head/Plate_Helmet_1/Plate_Helmet_1_Gold.png",
+          "rect": [
+            128,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-1532922328599646692",
+          "guid": "09e1d096f5104809b03a10afd30d85dc",
+          "sha256": "cdb4ee6a187c478b2ee11bb5eccb05427a40e99193b79242122c7c8a5201bf2c"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Legs/OG_Pants/Pants_1_Black.png",
+          "rect": [
+            128,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-1532922328599646692",
+          "guid": "cd27e967e77d41c1b934b32d1ab72538",
+          "sha256": "217feb7baa3c477b63a88e21287d57e994b2e4748e901642da23d18a3620f424"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Feet/Shoes_1_Brown.png",
+          "rect": [
+            128,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-1532922328599646692",
+          "guid": "541bf2390ae542cba3339506cc82e06e",
+          "sha256": "703492775813ff865bffd8fb35f5cb0194bddf56f739b10c4eeae410b18e6c8a"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Chest/Farmer_Shirt/Farmer_Shirt_1_Blue.png",
+          "rect": [
+            128,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-1532922328599646692",
+          "guid": "749ed60f800341e8b2a39a73b6f5d96e",
+          "sha256": "d254e7fd08be7402506810b55d36d03d2d751a57815a93bac3ae3cf5a5c218ac"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Hands/Hands_1_Bare.png",
+          "rect": [
+            128,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-1532922328599646692",
+          "guid": "0a2e364850124765b706754cba3a3d70",
+          "sha256": "b35ed8345956f1241209d0e0a7b90ce79f40830c27f8359078c48197daa0aa4d"
+        }
+      ]
+    },
+    {
+      "asset": "HeroIdle_3",
+      "pose": "Idle_Down frame 3, 8fps",
+      "layers": [
+        {
+          "path": "Assets/Art/Character/Modular/Player_Base/Player_Base_animations.png",
+          "rect": [
+            192,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-2702969985393004714",
+          "guid": "c65645bba14846109f56ff224793b4d6",
+          "sha256": "311608be854ab145e351e793d45a187b59e6d7834a62a1acd72e266de9852acc"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Head/Plate_Helmet_1/Plate_Helmet_1_Gold.png",
+          "rect": [
+            192,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-2702969985393004714",
+          "guid": "09e1d096f5104809b03a10afd30d85dc",
+          "sha256": "cdb4ee6a187c478b2ee11bb5eccb05427a40e99193b79242122c7c8a5201bf2c"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Legs/OG_Pants/Pants_1_Black.png",
+          "rect": [
+            192,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-2702969985393004714",
+          "guid": "cd27e967e77d41c1b934b32d1ab72538",
+          "sha256": "217feb7baa3c477b63a88e21287d57e994b2e4748e901642da23d18a3620f424"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Feet/Shoes_1_Brown.png",
+          "rect": [
+            192,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-2702969985393004714",
+          "guid": "541bf2390ae542cba3339506cc82e06e",
+          "sha256": "703492775813ff865bffd8fb35f5cb0194bddf56f739b10c4eeae410b18e6c8a"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Chest/Farmer_Shirt/Farmer_Shirt_1_Blue.png",
+          "rect": [
+            192,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-2702969985393004714",
+          "guid": "749ed60f800341e8b2a39a73b6f5d96e",
+          "sha256": "d254e7fd08be7402506810b55d36d03d2d751a57815a93bac3ae3cf5a5c218ac"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Hands/Hands_1_Bare.png",
+          "rect": [
+            192,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-2702969985393004714",
+          "guid": "0a2e364850124765b706754cba3a3d70",
+          "sha256": "b35ed8345956f1241209d0e0a7b90ce79f40830c27f8359078c48197daa0aa4d"
+        }
+      ]
+    },
+    {
+      "asset": "HeroIdle_4",
+      "pose": "Idle_Down frame 4, 8fps",
+      "layers": [
+        {
+          "path": "Assets/Art/Character/Modular/Player_Base/Player_Base_animations.png",
+          "rect": [
+            256,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "5371307563659723434",
+          "guid": "c65645bba14846109f56ff224793b4d6",
+          "sha256": "311608be854ab145e351e793d45a187b59e6d7834a62a1acd72e266de9852acc"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Head/Plate_Helmet_1/Plate_Helmet_1_Gold.png",
+          "rect": [
+            256,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "5371307563659723434",
+          "guid": "09e1d096f5104809b03a10afd30d85dc",
+          "sha256": "cdb4ee6a187c478b2ee11bb5eccb05427a40e99193b79242122c7c8a5201bf2c"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Legs/OG_Pants/Pants_1_Black.png",
+          "rect": [
+            256,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "5371307563659723434",
+          "guid": "cd27e967e77d41c1b934b32d1ab72538",
+          "sha256": "217feb7baa3c477b63a88e21287d57e994b2e4748e901642da23d18a3620f424"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Feet/Shoes_1_Brown.png",
+          "rect": [
+            256,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "5371307563659723434",
+          "guid": "541bf2390ae542cba3339506cc82e06e",
+          "sha256": "703492775813ff865bffd8fb35f5cb0194bddf56f739b10c4eeae410b18e6c8a"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Chest/Farmer_Shirt/Farmer_Shirt_1_Blue.png",
+          "rect": [
+            256,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "5371307563659723434",
+          "guid": "749ed60f800341e8b2a39a73b6f5d96e",
+          "sha256": "d254e7fd08be7402506810b55d36d03d2d751a57815a93bac3ae3cf5a5c218ac"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Hands/Hands_1_Bare.png",
+          "rect": [
+            256,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "5371307563659723434",
+          "guid": "0a2e364850124765b706754cba3a3d70",
+          "sha256": "b35ed8345956f1241209d0e0a7b90ce79f40830c27f8359078c48197daa0aa4d"
+        }
+      ]
+    },
+    {
+      "asset": "HeroIdle_5",
+      "pose": "Idle_Down frame 5, 8fps",
+      "layers": [
+        {
+          "path": "Assets/Art/Character/Modular/Player_Base/Player_Base_animations.png",
+          "rect": [
+            320,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-8237129243831809501",
+          "guid": "c65645bba14846109f56ff224793b4d6",
+          "sha256": "311608be854ab145e351e793d45a187b59e6d7834a62a1acd72e266de9852acc"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Head/Plate_Helmet_1/Plate_Helmet_1_Gold.png",
+          "rect": [
+            320,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-8237129243831809501",
+          "guid": "09e1d096f5104809b03a10afd30d85dc",
+          "sha256": "cdb4ee6a187c478b2ee11bb5eccb05427a40e99193b79242122c7c8a5201bf2c"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Legs/OG_Pants/Pants_1_Black.png",
+          "rect": [
+            320,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-8237129243831809501",
+          "guid": "cd27e967e77d41c1b934b32d1ab72538",
+          "sha256": "217feb7baa3c477b63a88e21287d57e994b2e4748e901642da23d18a3620f424"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Feet/Shoes_1_Brown.png",
+          "rect": [
+            320,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-8237129243831809501",
+          "guid": "541bf2390ae542cba3339506cc82e06e",
+          "sha256": "703492775813ff865bffd8fb35f5cb0194bddf56f739b10c4eeae410b18e6c8a"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Chest/Farmer_Shirt/Farmer_Shirt_1_Blue.png",
+          "rect": [
+            320,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-8237129243831809501",
+          "guid": "749ed60f800341e8b2a39a73b6f5d96e",
+          "sha256": "d254e7fd08be7402506810b55d36d03d2d751a57815a93bac3ae3cf5a5c218ac"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Hands/Hands_1_Bare.png",
+          "rect": [
+            320,
+            3520,
+            64,
+            64
+          ],
+          "fileID": "-8237129243831809501",
+          "guid": "0a2e364850124765b706754cba3a3d70",
+          "sha256": "b35ed8345956f1241209d0e0a7b90ce79f40830c27f8359078c48197daa0aa4d"
+        }
+      ]
+    },
+    {
+      "asset": "HeroRun_0",
+      "pose": "Running_Right frame 0, 8fps",
+      "layers": [
+        {
+          "path": "Assets/Art/Character/Modular/Player_Base/Player_Base_animations.png",
+          "rect": [
+            0,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-1847283372073423230",
+          "guid": "c65645bba14846109f56ff224793b4d6",
+          "sha256": "311608be854ab145e351e793d45a187b59e6d7834a62a1acd72e266de9852acc"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Head/Plate_Helmet_1/Plate_Helmet_1_Gold.png",
+          "rect": [
+            0,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-1847283372073423230",
+          "guid": "09e1d096f5104809b03a10afd30d85dc",
+          "sha256": "cdb4ee6a187c478b2ee11bb5eccb05427a40e99193b79242122c7c8a5201bf2c"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Legs/OG_Pants/Pants_1_Black.png",
+          "rect": [
+            0,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-1847283372073423230",
+          "guid": "cd27e967e77d41c1b934b32d1ab72538",
+          "sha256": "217feb7baa3c477b63a88e21287d57e994b2e4748e901642da23d18a3620f424"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Feet/Shoes_1_Brown.png",
+          "rect": [
+            0,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-1847283372073423230",
+          "guid": "541bf2390ae542cba3339506cc82e06e",
+          "sha256": "703492775813ff865bffd8fb35f5cb0194bddf56f739b10c4eeae410b18e6c8a"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Chest/Farmer_Shirt/Farmer_Shirt_1_Blue.png",
+          "rect": [
+            0,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-1847283372073423230",
+          "guid": "749ed60f800341e8b2a39a73b6f5d96e",
+          "sha256": "d254e7fd08be7402506810b55d36d03d2d751a57815a93bac3ae3cf5a5c218ac"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Hands/Hands_1_Bare.png",
+          "rect": [
+            0,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-1847283372073423230",
+          "guid": "0a2e364850124765b706754cba3a3d70",
+          "sha256": "b35ed8345956f1241209d0e0a7b90ce79f40830c27f8359078c48197daa0aa4d"
+        }
+      ]
+    },
+    {
+      "asset": "HeroRun_1",
+      "pose": "Running_Right frame 1, 8fps",
+      "layers": [
+        {
+          "path": "Assets/Art/Character/Modular/Player_Base/Player_Base_animations.png",
+          "rect": [
+            64,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "6173374538543969210",
+          "guid": "c65645bba14846109f56ff224793b4d6",
+          "sha256": "311608be854ab145e351e793d45a187b59e6d7834a62a1acd72e266de9852acc"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Head/Plate_Helmet_1/Plate_Helmet_1_Gold.png",
+          "rect": [
+            64,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "6173374538543969210",
+          "guid": "09e1d096f5104809b03a10afd30d85dc",
+          "sha256": "cdb4ee6a187c478b2ee11bb5eccb05427a40e99193b79242122c7c8a5201bf2c"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Legs/OG_Pants/Pants_1_Black.png",
+          "rect": [
+            64,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "6173374538543969210",
+          "guid": "cd27e967e77d41c1b934b32d1ab72538",
+          "sha256": "217feb7baa3c477b63a88e21287d57e994b2e4748e901642da23d18a3620f424"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Feet/Shoes_1_Brown.png",
+          "rect": [
+            64,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "6173374538543969210",
+          "guid": "541bf2390ae542cba3339506cc82e06e",
+          "sha256": "703492775813ff865bffd8fb35f5cb0194bddf56f739b10c4eeae410b18e6c8a"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Chest/Farmer_Shirt/Farmer_Shirt_1_Blue.png",
+          "rect": [
+            64,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "6173374538543969210",
+          "guid": "749ed60f800341e8b2a39a73b6f5d96e",
+          "sha256": "d254e7fd08be7402506810b55d36d03d2d751a57815a93bac3ae3cf5a5c218ac"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Hands/Hands_1_Bare.png",
+          "rect": [
+            64,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "6173374538543969210",
+          "guid": "0a2e364850124765b706754cba3a3d70",
+          "sha256": "b35ed8345956f1241209d0e0a7b90ce79f40830c27f8359078c48197daa0aa4d"
+        }
+      ]
+    },
+    {
+      "asset": "HeroRun_2",
+      "pose": "Running_Right frame 2, 8fps",
+      "layers": [
+        {
+          "path": "Assets/Art/Character/Modular/Player_Base/Player_Base_animations.png",
+          "rect": [
+            128,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-7508820028037436652",
+          "guid": "c65645bba14846109f56ff224793b4d6",
+          "sha256": "311608be854ab145e351e793d45a187b59e6d7834a62a1acd72e266de9852acc"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Head/Plate_Helmet_1/Plate_Helmet_1_Gold.png",
+          "rect": [
+            128,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-7508820028037436652",
+          "guid": "09e1d096f5104809b03a10afd30d85dc",
+          "sha256": "cdb4ee6a187c478b2ee11bb5eccb05427a40e99193b79242122c7c8a5201bf2c"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Legs/OG_Pants/Pants_1_Black.png",
+          "rect": [
+            128,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-7508820028037436652",
+          "guid": "cd27e967e77d41c1b934b32d1ab72538",
+          "sha256": "217feb7baa3c477b63a88e21287d57e994b2e4748e901642da23d18a3620f424"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Feet/Shoes_1_Brown.png",
+          "rect": [
+            128,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-7508820028037436652",
+          "guid": "541bf2390ae542cba3339506cc82e06e",
+          "sha256": "703492775813ff865bffd8fb35f5cb0194bddf56f739b10c4eeae410b18e6c8a"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Chest/Farmer_Shirt/Farmer_Shirt_1_Blue.png",
+          "rect": [
+            128,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-7508820028037436652",
+          "guid": "749ed60f800341e8b2a39a73b6f5d96e",
+          "sha256": "d254e7fd08be7402506810b55d36d03d2d751a57815a93bac3ae3cf5a5c218ac"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Hands/Hands_1_Bare.png",
+          "rect": [
+            128,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-7508820028037436652",
+          "guid": "0a2e364850124765b706754cba3a3d70",
+          "sha256": "b35ed8345956f1241209d0e0a7b90ce79f40830c27f8359078c48197daa0aa4d"
+        }
+      ]
+    },
+    {
+      "asset": "HeroRun_3",
+      "pose": "Running_Right frame 3, 8fps",
+      "layers": [
+        {
+          "path": "Assets/Art/Character/Modular/Player_Base/Player_Base_animations.png",
+          "rect": [
+            192,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "5113499862329567550",
+          "guid": "c65645bba14846109f56ff224793b4d6",
+          "sha256": "311608be854ab145e351e793d45a187b59e6d7834a62a1acd72e266de9852acc"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Head/Plate_Helmet_1/Plate_Helmet_1_Gold.png",
+          "rect": [
+            192,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "5113499862329567550",
+          "guid": "09e1d096f5104809b03a10afd30d85dc",
+          "sha256": "cdb4ee6a187c478b2ee11bb5eccb05427a40e99193b79242122c7c8a5201bf2c"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Legs/OG_Pants/Pants_1_Black.png",
+          "rect": [
+            192,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "5113499862329567550",
+          "guid": "cd27e967e77d41c1b934b32d1ab72538",
+          "sha256": "217feb7baa3c477b63a88e21287d57e994b2e4748e901642da23d18a3620f424"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Feet/Shoes_1_Brown.png",
+          "rect": [
+            192,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "5113499862329567550",
+          "guid": "541bf2390ae542cba3339506cc82e06e",
+          "sha256": "703492775813ff865bffd8fb35f5cb0194bddf56f739b10c4eeae410b18e6c8a"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Chest/Farmer_Shirt/Farmer_Shirt_1_Blue.png",
+          "rect": [
+            192,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "5113499862329567550",
+          "guid": "749ed60f800341e8b2a39a73b6f5d96e",
+          "sha256": "d254e7fd08be7402506810b55d36d03d2d751a57815a93bac3ae3cf5a5c218ac"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Hands/Hands_1_Bare.png",
+          "rect": [
+            192,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "5113499862329567550",
+          "guid": "0a2e364850124765b706754cba3a3d70",
+          "sha256": "b35ed8345956f1241209d0e0a7b90ce79f40830c27f8359078c48197daa0aa4d"
+        }
+      ]
+    },
+    {
+      "asset": "HeroRun_4",
+      "pose": "Running_Right frame 4, 8fps",
+      "layers": [
+        {
+          "path": "Assets/Art/Character/Modular/Player_Base/Player_Base_animations.png",
+          "rect": [
+            256,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-2794812369022134113",
+          "guid": "c65645bba14846109f56ff224793b4d6",
+          "sha256": "311608be854ab145e351e793d45a187b59e6d7834a62a1acd72e266de9852acc"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Head/Plate_Helmet_1/Plate_Helmet_1_Gold.png",
+          "rect": [
+            256,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-2794812369022134113",
+          "guid": "09e1d096f5104809b03a10afd30d85dc",
+          "sha256": "cdb4ee6a187c478b2ee11bb5eccb05427a40e99193b79242122c7c8a5201bf2c"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Legs/OG_Pants/Pants_1_Black.png",
+          "rect": [
+            256,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-2794812369022134113",
+          "guid": "cd27e967e77d41c1b934b32d1ab72538",
+          "sha256": "217feb7baa3c477b63a88e21287d57e994b2e4748e901642da23d18a3620f424"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Feet/Shoes_1_Brown.png",
+          "rect": [
+            256,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-2794812369022134113",
+          "guid": "541bf2390ae542cba3339506cc82e06e",
+          "sha256": "703492775813ff865bffd8fb35f5cb0194bddf56f739b10c4eeae410b18e6c8a"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Chest/Farmer_Shirt/Farmer_Shirt_1_Blue.png",
+          "rect": [
+            256,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-2794812369022134113",
+          "guid": "749ed60f800341e8b2a39a73b6f5d96e",
+          "sha256": "d254e7fd08be7402506810b55d36d03d2d751a57815a93bac3ae3cf5a5c218ac"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Hands/Hands_1_Bare.png",
+          "rect": [
+            256,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-2794812369022134113",
+          "guid": "0a2e364850124765b706754cba3a3d70",
+          "sha256": "b35ed8345956f1241209d0e0a7b90ce79f40830c27f8359078c48197daa0aa4d"
+        }
+      ]
+    },
+    {
+      "asset": "HeroRun_5",
+      "pose": "Running_Right frame 5, 8fps",
+      "layers": [
+        {
+          "path": "Assets/Art/Character/Modular/Player_Base/Player_Base_animations.png",
+          "rect": [
+            320,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-2353169456897031005",
+          "guid": "c65645bba14846109f56ff224793b4d6",
+          "sha256": "311608be854ab145e351e793d45a187b59e6d7834a62a1acd72e266de9852acc"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Head/Plate_Helmet_1/Plate_Helmet_1_Gold.png",
+          "rect": [
+            320,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-2353169456897031005",
+          "guid": "09e1d096f5104809b03a10afd30d85dc",
+          "sha256": "cdb4ee6a187c478b2ee11bb5eccb05427a40e99193b79242122c7c8a5201bf2c"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Legs/OG_Pants/Pants_1_Black.png",
+          "rect": [
+            320,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-2353169456897031005",
+          "guid": "cd27e967e77d41c1b934b32d1ab72538",
+          "sha256": "217feb7baa3c477b63a88e21287d57e994b2e4748e901642da23d18a3620f424"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Feet/Shoes_1_Brown.png",
+          "rect": [
+            320,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-2353169456897031005",
+          "guid": "541bf2390ae542cba3339506cc82e06e",
+          "sha256": "703492775813ff865bffd8fb35f5cb0194bddf56f739b10c4eeae410b18e6c8a"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Chest/Farmer_Shirt/Farmer_Shirt_1_Blue.png",
+          "rect": [
+            320,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-2353169456897031005",
+          "guid": "749ed60f800341e8b2a39a73b6f5d96e",
+          "sha256": "d254e7fd08be7402506810b55d36d03d2d751a57815a93bac3ae3cf5a5c218ac"
+        },
+        {
+          "path": "Assets/Art/Character/Modular/Hands/Hands_1_Bare.png",
+          "rect": [
+            320,
+            3264,
+            64,
+            64
+          ],
+          "fileID": "-2353169456897031005",
+          "guid": "0a2e364850124765b706754cba3a3d70",
+          "sha256": "b35ed8345956f1241209d0e0a7b90ce79f40830c27f8359078c48197daa0aa4d"
+        }
+      ]
+    },
+    {
+      "asset": "CarlFly_0",
+      "pose": "FlyIn frame 0, 12fps one-shot",
+      "layers": [
+        {
+          "path": "Assets/Art/Character/Reaper/Angel_2.png",
+          "rect": [
+            192,
+            0,
+            64,
+            64
+          ],
+          "fileID": "7436478308486094104",
+          "guid": "76e09a37f606a514dbee18ee1fa1ebcc",
+          "sha256": "dbbe74b67232af4b88ffe24a2229b0659e0b297f080cf45cc4f3b450c17d083f"
+        }
+      ]
+    },
+    {
+      "asset": "CarlFly_1",
+      "pose": "FlyIn frame 1, 12fps one-shot",
+      "layers": [
+        {
+          "path": "Assets/Art/Character/Reaper/Angel_2.png",
+          "rect": [
+            256,
+            0,
+            64,
+            64
+          ],
+          "fileID": "-1723881984",
+          "guid": "76e09a37f606a514dbee18ee1fa1ebcc",
+          "sha256": "dbbe74b67232af4b88ffe24a2229b0659e0b297f080cf45cc4f3b450c17d083f"
+        }
+      ]
+    },
+    {
+      "asset": "CarlFly_2",
+      "pose": "FlyIn frame 2, 12fps one-shot",
+      "layers": [
+        {
+          "path": "Assets/Art/Character/Reaper/Angel_2.png",
+          "rect": [
+            320,
+            0,
+            64,
+            64
+          ],
+          "fileID": "718037692",
+          "guid": "76e09a37f606a514dbee18ee1fa1ebcc",
+          "sha256": "dbbe74b67232af4b88ffe24a2229b0659e0b297f080cf45cc4f3b450c17d083f"
+        }
+      ]
+    },
+    {
+      "asset": "CarlFly_3",
+      "pose": "FlyIn frame 3, 12fps one-shot",
+      "layers": [
+        {
+          "path": "Assets/Art/Character/Reaper/Angel_2.png",
+          "rect": [
+            384,
+            0,
+            64,
+            64
+          ],
+          "fileID": "629843019",
+          "guid": "76e09a37f606a514dbee18ee1fa1ebcc",
+          "sha256": "dbbe74b67232af4b88ffe24a2229b0659e0b297f080cf45cc4f3b450c17d083f"
+        }
+      ]
+    },
+    {
+      "asset": "Skill_Combat",
+      "pose": null,
+      "layers": [
+        {
+          "path": "Assets/Art/Packs/Cute_Fantasy_UI/Tools_Icons-Recovered.png",
+          "rect": [
+            96,
+            64,
+            16,
+            16
+          ],
+          "fileID": "-9180514438392417110",
+          "guid": "22ed88aefbda3ed4bb433eff8c8ce8ad",
+          "sha256": "d96b7a120d753651d6c703c02c45350ea1c56676efeb38911cd941dfe1fa1f73"
+        }
+      ]
+    },
+    {
+      "asset": "Skill_Mining",
+      "pose": null,
+      "layers": [
+        {
+          "path": "Assets/Art/Packs/Cute_Fantasy_UI/Tools_Icons-Recovered.png",
+          "rect": [
+            0,
+            64,
+            16,
+            16
+          ],
+          "fileID": "-6623575528231689321",
+          "guid": "22ed88aefbda3ed4bb433eff8c8ce8ad",
+          "sha256": "d96b7a120d753651d6c703c02c45350ea1c56676efeb38911cd941dfe1fa1f73"
+        }
+      ]
+    },
+    {
+      "asset": "Skill_Woodcutting",
+      "pose": null,
+      "layers": [
+        {
+          "path": "Assets/Art/Packs/Cute_Fantasy_UI/Tools_Icons-Recovered.png",
+          "rect": [
+            16,
+            64,
+            16,
+            16
+          ],
+          "fileID": "3201700494366066137",
+          "guid": "22ed88aefbda3ed4bb433eff8c8ce8ad",
+          "sha256": "d96b7a120d753651d6c703c02c45350ea1c56676efeb38911cd941dfe1fa1f73"
+        }
+      ]
+    },
+    {
+      "asset": "Skill_Fishing",
+      "pose": null,
+      "layers": [
+        {
+          "path": "Assets/Art/Packs/Cute_Fantasy_UI/Tools_Icons-Recovered.png",
+          "rect": [
+            32,
+            64,
+            16,
+            16
+          ],
+          "fileID": "-5728692859750609351",
+          "guid": "22ed88aefbda3ed4bb433eff8c8ce8ad",
+          "sha256": "d96b7a120d753651d6c703c02c45350ea1c56676efeb38911cd941dfe1fa1f73"
+        }
+      ]
+    },
+    {
+      "asset": "Skill_Farming",
+      "pose": null,
+      "layers": [
+        {
+          "path": "Assets/Art/Packs/Cute_Fantasy_UI/Tools_Icons-Recovered.png",
+          "rect": [
+            48,
+            64,
+            16,
+            16
+          ],
+          "fileID": "-263682996174179970",
+          "guid": "22ed88aefbda3ed4bb433eff8c8ce8ad",
+          "sha256": "d96b7a120d753651d6c703c02c45350ea1c56676efeb38911cd941dfe1fa1f73"
+        }
+      ]
+    },
+    {
+      "asset": "Skill_Looting",
+      "pose": null,
+      "layers": [
+        {
+          "path": "Assets/Art/Packs/Cute_Fantasy_UI/Cores.png",
+          "rect": [
+            144,
+            0,
+            16,
+            16
+          ],
+          "fileID": "-1161659511",
+          "guid": "9a7553022bc32ea4cab234021aded58a",
+          "sha256": "56947191fd34f9e2e9d4a09c80d144e5384efd9fd68803f7d6a338cfc44c3124"
+        }
+      ]
+    },
+    {
+      "asset": "Map_Farmlands",
+      "pose": null,
+      "layers": [
+        {
+          "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Scarecrows.png",
+          "rect": [
+            128,
+            0,
+            32,
+            32
+          ],
+          "fileID": "-2997195532997922311",
+          "guid": "e36f7692c71d2a34383e21fe9d44dc80",
+          "sha256": "96d6f186678296e067b0bbc67821209153ece8293a44b0b165ea8a60b10d5680"
+        }
+      ]
+    },
+    {
+      "asset": "Map_River",
+      "pose": null,
+      "layers": [
+        {
+          "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Boat.png",
+          "rect": [
+            1,
+            2,
+            42,
+            33
+          ],
+          "fileID": "-4548796474974412338",
+          "guid": "674345f33219f70418aca2a3db04ecbc",
+          "sha256": "418e9d2cb193c4fe3484d19cfd8ff3b0164e0cf2bf22ed63cef5b74464fb04e5"
+        }
+      ]
+    },
+    {
+      "asset": "Map_Woods",
+      "pose": null,
+      "layers": [
+        {
+          "path": "Assets/Art/Packs/Cute_Fantasy/Trees/Big_Fruit_Tree.png",
+          "rect": [
+            32,
+            0,
+            32,
+            64
+          ],
+          "fileID": "621266246945384593",
+          "guid": "b45d02bebb0bae34490e63de2e1440b9",
+          "sha256": "358f6fa0af5485bde61c61bbacc7c294b03cf7bf19ed870e2dd68b455c3a7470"
+        }
+      ]
+    },
+    {
+      "asset": "Map_Mines",
+      "pose": null,
+      "layers": [
+        {
+          "path": "Assets/Art/Packs/Cute_Fantasy/Outdoor decoration/Minecrats.png",
+          "rect": [
+            15,
+            194,
+            17,
+            18
+          ],
+          "fileID": "-7112000108182893260",
+          "guid": "17ab04ce672d2cf4fbe3b9314f205693",
+          "sha256": "83e9a73a0fa50f81cad390793f88ebe992eb9e68c5b6b5deaa6bb0b738de428e"
+        }
+      ]
+    },
+    {
+      "asset": "Map_Haloween",
+      "pose": null,
+      "layers": [
+        {
+          "path": "Assets/Art/Packs/Cute_Fantasy_Halloween/Decorations/Decorations.png",
+          "rect": [
+            96,
+            32,
+            16,
+            16
+          ],
+          "fileID": "2029275289",
+          "guid": "3683944cef7e6bd4cae5ecd76295b35f",
+          "sha256": "876b6c7b9b0b5605f5b5ccb2c103487af64b1925df2e1b155e1b8b2d54540c26"
+        }
+      ]
+    },
+    {
+      "asset": "TrailGrass",
+      "pose": null,
+      "layers": [
+        {
+          "path": "Assets/Art/Packs/Cute_Fantasy/Tiles/Grass/Grass_ForestGreen_Fill.png",
+          "rect": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "sha256": "5c90408111bfb21f3c75b41c910df2ff5278bdf7db2994179440f2454da71c8a"
+        }
+      ]
+    },
+    {
+      "asset": "TrailWater",
+      "pose": null,
+      "layers": [
+        {
+          "path": "Assets/Art/Packs/Cute_Fantasy/Tiles/Cave/Cave_Water.png",
+          "rect": [
+            0,
+            64,
+            16,
+            16
+          ],
+          "sha256": "1373821d4d6739d76efba0f7f9369d0b16efb08d4eca94f5731b2ff392958c57"
+        }
+      ]
+    }
+  ]
+}

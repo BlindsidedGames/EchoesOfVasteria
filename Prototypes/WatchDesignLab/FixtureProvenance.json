@@ -1,0 +1,18 @@
+{
+  "baselineSHA256": "a80854c99e10c1dc7d363a00e6be236e6903c9593d6e41a608c44b16bc32789c",
+  "baselineSource": "Actual Unity helmet snapshot recorded 2026-10-31, build188 character integration. Source retained verbatim.",
+  "variants": {
+    "live": "Actual Unity-produced saved run, portrait, skills and history. Only phoneInBackground false for foreground presentation.",
+    "away": "Controlled eight-column trajectory for gained counters, reap/restart pause and expiry. Not an observed forecast.",
+    "restart": "Same controlled trajectory, sampled at 110s restart.",
+    "stale": "Same controlled trajectory, sampled at 7200s expired.",
+    "offline": "Same controlled trajectory, sampled at 15s cached offline.",
+    "no-reap": "Controlled distance reaping disabled; no distance cap or percent may appear.",
+    "large": "Controlled large values and low health, real source shape.",
+    "town": "Controlled town state; retained skills/history remain available.",
+    "history": "CONTROLLED varied retained global ten for trends/comparison/dossier, not real player history. Same-map records include estimated and recorded outcomes.",
+    "no-history": "Controlled no retained history; current River map known, no invented best/rate.",
+    "beyond-history": "Controlled current Mines distance 5200 beyond recent best2550, actual effective cap38000. Does not assert managed estimator behavior."
+  },
+  "clock": "Frozen source generatedAt +15 seconds; away +85; restart +110; stale +7200. Animation clock only is real time. Empty uses nil."
+}

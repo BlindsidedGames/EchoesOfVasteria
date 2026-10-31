@@ -1,0 +1,13 @@
+# Native Watch design lab
+
+Ten separate watchOS presentations of the existing Echoes companion contract. This is an isolated Watch-only executable with bundle ID `com.blindsidedgames.echoes.watch.designlab`. It never creates WCSession, reads the production snapshot cache, changes a player save, awards progress, or uploads a build. Its 0.1 version belongs only to this scratch target; Echoes 1.5.9 (188) remains unchanged.
+
+Generate assets with `python3 Prototypes/WatchDesignLab/Tools/prepare.py`, fixtures with `python3 Prototypes/WatchDesignLab/Tools/fixtures.py`, and the Xcode project with `xcodegen generate --spec Prototypes/WatchDesignLab/project.yml`. Build scheme `EchoesWatchDesignLab` for a watchOS Simulator. `capture.py initial` and `capture.py final` preserve native simulator screen pixels on the two named lab simulators. Capture generation is not visual acceptance.
+
+Launch arguments: `--design=1` through `--design=10`; `--state=live|away|restart|stale|offline|large|no-reap|town|history|no-history|beyond-history|empty`; `--text=large`; optional source-relative Unix `--clock=`. The default state is live, except Since you left uses away and retained-history designs use history. Refresh is a 450ms local presentation simulation and does not prove WatchConnectivity transport. Goal and pin choices exist only for the current lab process.
+
+`FixtureProvenance.json` distinguishes the verbatim actual Unity baseline from controlled variants. `SourceSprites.json` records exact Unity source paths, sprite fileIDs, rects and SHA256 hashes. Hero idle and running frames come from the saved six-layer character; Carl's four frames come from the authored non-looping FlyIn animation. Art extraction performs exact crops and RGBA source-over composition without resampling or editing importers.
+
+Native data decoding references the shipping `EOVWatchSnapshot.swift` unchanged. Foreground totals and static last-phone health are snapshots, not live forecasts. Background gains sample the eight-column managed trajectory, freeze in restart/terminal/expired states and never accrue speculative health. Unknown reap counts display a dash. No distance cap or percentage appears with distance reaping disabled. History is limited to the retained global ten and estimated records remain marked. Resource rates use resources divided by duration in minutes, never instantaneous throughput or causal equipment claims.
+
+Review evidence and observed revisions are under `docs/development/watch-design-lab-20261031`. No shipping Watch UI, shared contract, production version, main branch, store state or player progression is changed by this lab.
