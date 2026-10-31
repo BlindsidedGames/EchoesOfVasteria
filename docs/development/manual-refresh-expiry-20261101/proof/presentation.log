@@ -1,0 +1,16 @@
+PASS Foreground opens dial using a current phone snapshot
+PASS Away UI shows gain-only resources and never forecasts phone health
+PASS Cached, unavailable or old foreground data cannot animate as current
+PASS Opted-out snapshots cannot select an away estimate
+PASS Legacy unknown task/kill gains stay unknown at the view boundary
+PASS A different map's trajectory cannot replace phone data
+PASS Earlier forecast expiry freezes the UI without silently reverting to totals
+PASS One-hour allowance freezes elapsed and endpoint gains with an honest limit status
+PASS Early coverage expiry stays distinct from the elapsed allowance cap
+PASS Legacy data bounds elapsed to known coverage without inventing an allowance
+PASS Sampling stops at a transmitted allowance before serialized coverage ends
+PASS Watch time before the forecast origin does not sample future gains
+PASS Terminal dead remains static
+PASS Terminal reaped remains static
+PASS Town retains skills/history; missing run data stays empty
+15 Watch presentation contracts passed; 0 failed. No transport or managed-estimator claim.
