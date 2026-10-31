@@ -180,7 +180,6 @@ struct EOVWatchSnapshot: Codable {
         let sourceID: String?
         let origin: Double
         let end: Double
-        let clockEnd: Double
         let elapsed: Double
         let sample: Timeline.Sample
         let endpoint: Timeline.Sample
@@ -211,7 +210,7 @@ struct EOVWatchSnapshot: Codable {
         // Legacy snapshots do not declare an allowance; only their known coverage
         // can bound the clock. Their UI continues to omit the maximum label.
         let clockEnd = allowanceEnd ?? end
-        return BackgroundEstimate(sourceID: source, origin: origin, end: end, clockEnd: clockEnd,
+        return BackgroundEstimate(sourceID: source, origin: origin, end: end,
             elapsed: min(max(0, now - origin), clockEnd - origin),
             sample: timeline.sample(at: min(now, end)), endpoint: endpoint,
             endpointStatus: endpointStatus, expired: now >= end)
