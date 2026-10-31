@@ -17,6 +17,19 @@ namespace TimelessEchoes
     {
         private float nextWatchSnapshot;
         private string lastWatchMode;
+        private bool watchPhoneInBackground;
+
+        private void WatchPhoneBackgrounded()
+        {
+            watchPhoneInBackground = true;
+            PublishWatchCompanionSnapshot();
+        }
+
+        private void WatchPhoneForegrounded()
+        {
+            watchPhoneInBackground = false;
+            PublishWatchCompanionSnapshot();
+        }
 
         private string WatchMode => runLoadingActive || backgroundSettling || resumeScheduled
             ? "loading" : IsInTown ? "town" : "run";
@@ -87,7 +100,8 @@ namespace TimelessEchoes
             string Serialize() => JsonConvert.SerializeObject(new
             {
                 schemaVersion = 1, generatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), demo = BackgroundRunPrototype.Demo,
-                state = mode, backgroundProgressEnabled = BackgroundRunPrototype.Enabled, run,
+                state = mode, phoneInBackground = watchPhoneInBackground,
+                backgroundProgressEnabled = BackgroundRunPrototype.Enabled, run,
                 forecast = run == null ? null : WatchCompanionPrototype.GetForecast(map, data), timeline, skills, recentRuns = history
             });
             var json = Serialize();

@@ -208,6 +208,7 @@ namespace Tests.PlayMode
             Assert.That(run.run.distance, Is.EqualTo(77).Within(.01));
             Assert.That(run.run.kills, Is.EqualTo(7));
             Assert.That(run.run.resources, Is.EqualTo(321));
+            Assert.IsFalse(run.phoneInBackground);
             game.CaptureWatchCompanionSnapshot();
             Assert.That(stats.TotalKills, Is.EqualTo(kills));
             Assert.That(stats.TotalResourcesGathered, Is.EqualTo(resources));
@@ -220,6 +221,7 @@ namespace Tests.PlayMode
             public int schemaVersion;
             public long generatedAt;
             public string state;
+            public bool phoneInBackground;
             public CompanionRun run;
             public CompanionSkill[] skills;
             public CompanionHistory[] recentRuns;
@@ -262,13 +264,18 @@ namespace Tests.PlayMode
                 // Exercise the real warm lifecycle, not just cold loading.
                 Events.ApplicationBackground();
                 Assert.That(Time.timeScale, Is.Zero);
+                Assert.IsTrue(JsonUtility.FromJson<CompanionContract>(game.CaptureWatchCompanionSnapshot()).phoneInBackground);
                 var before = game.CurrentMap;
                 oracle.saveData.ActiveRun.CheckpointUtcTicks = DateTime.UtcNow.AddSeconds(-20).Ticks;
                 Events.ApplicationForeground();
+                Assert.IsFalse(JsonUtility.FromJson<CompanionContract>(game.CaptureWatchCompanionSnapshot()).phoneInBackground);
                 yield return null;
                 yield return WaitForRun();
                 HeroController.Instance.SetActiveState(false);
                 Assert.That(game.CurrentMap, Is.Not.EqualTo(before));
+                var resumedWatch = JsonUtility.FromJson<CompanionContract>(game.CaptureWatchCompanionSnapshot());
+                Assert.IsFalse(resumedWatch.phoneInBackground);
+                Assert.That(resumedWatch.state, Is.EqualTo("run"));
                 Assert.That(HeroController.Instance.transform.position.x, Is.GreaterThan(119));
                 Assert.That(stats.TotalKills, Is.GreaterThan(totalKills));
             }
