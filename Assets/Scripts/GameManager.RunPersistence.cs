@@ -16,7 +16,8 @@ namespace TimelessEchoes
         {
             var data = Oracle.oracle?.saveData;
             if (data == null || resumeScheduled) return;
-            // Generation spans frames. Save its starting checkpoint, never a half-loaded world.
+            // Suspension and generation retain their continuation checkpoint until
+            // the world is rebuilt. A save must not replace its departure timestamp.
             if (loadingRun != null) { data.ActiveRun = loadingRun; return; }
             if (IsInTown || !CurrentMap || !hero || statTracker?.RunInProgress != true)
             {

@@ -268,6 +268,9 @@ namespace Tests.PlayMode
                 Assert.IsTrue(JsonUtility.FromJson<CompanionContract>(game.CaptureWatchCompanionSnapshot()).phoneInBackground);
                 var before = game.CurrentMap;
                 oracle.saveData.ActiveRun.CheckpointUtcTicks = DateTime.UtcNow.AddSeconds(-20).Ticks;
+                // A due autosave may run before the mobile resume callback.
+                // It must retain the departure time so all 20 seconds are settled.
+                oracle.RequestCheckpointSave();
                 Events.ApplicationForeground();
                 Assert.IsFalse(JsonUtility.FromJson<CompanionContract>(game.CaptureWatchCompanionSnapshot()).phoneInBackground);
                 yield return null;

@@ -24,6 +24,9 @@ namespace TimelessEchoes
             if (!BackgroundRunPrototype.Enabled || IsInTown || backgroundSuspended || runLoadingActive) return;
             SaveActiveRun();
             RefreshBackgroundForecast();
+            // Saves must retain the departure time until this checkpoint is settled
+            // and the world is rebuilt, just as they do during run generation.
+            loadingRun = Oracle.oracle?.saveData?.ActiveRun;
             backgroundSuspended = true;
             backgroundTimeScale = Time.timeScale;
             Time.timeScale = 0;
