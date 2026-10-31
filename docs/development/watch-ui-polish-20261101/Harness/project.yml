@@ -17,6 +17,7 @@ targets:
       - snapshot.json
       - Assets.xcassets
       - ../../../../Assets/Editor/iOSLiveActivity/Native/EOVForecastAttributes.swift
+      - ../../../../Assets/Editor/iOSLiveActivity/Native/EOVBackgroundAllowance.swift
       - ../../../../Assets/Editor/iOSLiveActivity/Native/EOVRefreshIntent.swift
       - ../../../../Assets/Editor/iOSLiveActivity/Native/EOVLiveActivityBridge.swift
       - ../../../../Assets/Editor/iOSLiveActivity/Companion/EOVWatchSnapshot.swift
@@ -35,6 +36,7 @@ targets:
     sources:
       - Assets.xcassets
       - ../../../../Assets/Editor/iOSLiveActivity/Native/EOVForecastAttributes.swift
+      - ../../../../Assets/Editor/iOSLiveActivity/Native/EOVBackgroundAllowance.swift
       - ../../../../Assets/Editor/iOSLiveActivity/Native/EOVRefreshIntent.swift
       - ../../../../Assets/Editor/iOSLiveActivity/Templates/EOVForecastWidget.swift
     settings:

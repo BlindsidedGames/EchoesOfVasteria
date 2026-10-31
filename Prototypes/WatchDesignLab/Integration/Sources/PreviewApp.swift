@@ -19,7 +19,7 @@ struct EOVWatchIntegrationPreview: App {
         let data = url.flatMap { try? Data(contentsOf: $0) }.flatMap { try? EOVWatchSnapshot.decode($0) }
         snapshot = state == "empty" ? nil : data
         let origin = data?.timeline?.generatedAt ?? data?.generatedAt ?? 0
-        clock = origin + (state == "stale" ? 7200 : state == "restart" ? 110 : state == "away" || state == "large-away" ? 85 : 15)
+        clock = origin + (arg("offset").flatMap(Double.init) ?? (state == "stale" ? 7200 : state == "restart" ? 110 : state == "away" || state == "large-away" ? 85 : 15))
         _screen = State(initialValue: EOVWatchScreen(rawValue: arg("screen") ?? "automatic") ?? .automatic)
         largeText = arg("text") == "large"
         reachable = state != "offline" && state != "stale" && state != "empty"

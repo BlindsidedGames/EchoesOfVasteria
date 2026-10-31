@@ -32,7 +32,7 @@ namespace TimelessEchoes.Editor
             var main = project.GetUnityMainTargetGuid();
             var framework = project.GetUnityFrameworkTargetGuid();
 
-            foreach (var name in new[] { "EOVForecastAttributes.swift", "EOVLiveActivityBridge.swift", "EOVRefreshIntent.swift", "EOVLiveActivity.mm" })
+            foreach (var name in new[] { "EOVForecastAttributes.swift", "EOVBackgroundAllowance.swift", "EOVLiveActivityBridge.swift", "EOVRefreshIntent.swift", "EOVLiveActivity.mm" })
             {
                 File.Copy(Path.Combine(source, "Native", name), Path.Combine(destination, name), true);
                 if (name.EndsWith(".swift"))
@@ -42,6 +42,7 @@ namespace TimelessEchoes.Editor
                 }
                 AddSource(project, name.EndsWith(".mm") ? framework : main, folder + "/" + name);
             }
+            AddSource(project, framework, folder + "/EOVBackgroundAllowance.swift");
             foreach (var name in new[] { "EOVForecastWidget.swift", "EOVWatchForecastView.swift" })
                 File.Copy(Path.Combine(source, "Templates", name), Path.Combine(destination, name), true);
 
@@ -63,6 +64,7 @@ namespace TimelessEchoes.Editor
                 extension = project.AddAppExtension(main, folder,
                     PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.iOS) + ".liveactivity", infoPath);
             AddSource(project, extension, folder + "/EOVForecastAttributes.swift");
+            AddSource(project, extension, folder + "/EOVBackgroundAllowance.swift");
             AddSource(project, extension, folder + "/EOVRefreshIntent.swift");
             project.UpdateBuildProperty(main, "SWIFT_ACTIVE_COMPILATION_CONDITIONS", new[] { "EOV_LIVE_ACTIVITY_HOST" }, null);
             AddSource(project, extension, folder + "/EOVForecastWidget.swift");
@@ -175,6 +177,7 @@ namespace TimelessEchoes.Editor
             project.AddFrameworkToProject(watch, "SwiftUI.framework", false);
             project.AddFrameworkToProject(watch, "WatchConnectivity.framework", false);
             AddSource(project, watch, companionFolder + "/EOVWatchSnapshot.swift");
+            AddSource(project, watch, folder + "/EOVBackgroundAllowance.swift");
             foreach (var name in new[] { "EOVWatchApp.swift", "EOVWatchCompanionStore.swift", "EOVWatchPresentation.swift", "EOVWatchComponents.swift", "EOVWatchViews.swift" })
                 AddSource(project, watch, companionFolder + "/" + name);
             var watchArt = Path.Combine(destination, "Companion/WatchArt.xcassets");

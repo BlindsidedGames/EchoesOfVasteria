@@ -31,6 +31,7 @@ struct EOVWatchPresentation {
     var history: [EOVWatchSnapshot.RecentRun] { snapshot?.recentRuns.sorted { $0.runNumber > $1.runNumber } ?? [] }
     var age: Double { max(0, now - (snapshot?.generatedAt ?? now)) }
     var ageLabel: String { eovWatchDuration(age) }
+    var backgroundLimitLabel: String? { EOVBackgroundAllowance.label(snapshot?.backgroundLimitSeconds) }
     var ending: String? { phone?.reaped == true ? "Reaped" : phone?.dead == true ? "Died" : nil }
     var heroCanAnimate: Bool {
         reachable && !cached && snapshot?.phoneInBackground == false && phone != nil && ending == nil &&

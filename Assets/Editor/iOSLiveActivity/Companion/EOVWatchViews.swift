@@ -4,29 +4,36 @@ struct EOVWatchDial: View {
     let presentation: EOVWatchPresentation
     let refresh: () -> Void
     @State private var focus = 0
+    @Environment(\.dynamicTypeSize) private var textSize
     var body: some View {
         let run = presentation.display
-        EOVWatchPanel(title: run.map, presentation: presentation, refresh: refresh, estimated: run.estimated) {
-            VStack(spacing: 6) {
-                Button { focus = (focus + 1) % 3 } label: {
-                    ZStack {
-                        EOVWatchRing(fraction: run.fraction, active: run.active)
-                        VStack(spacing: 0) {
-                            EOVWatchHero(presentation: presentation, size: 44, animate: presentation.heroCanAnimate)
-                            if focus == 0 { EOVWatchDistance(distance: run.distance, cap: run.cap, reaping: run.reaping) }
-                            else {
-                                Text(focus == 1 ? eovWatchNumber(run.resources) : run.estimated ? eovWatchDuration(presentation.away?.elapsed ?? 0) : eovWatchDuration(run.seconds))
-                                    .eovWatchFont(26, weight: .bold, design: .rounded).monospacedDigit()
-                                Text(focus == 1 ? (run.estimated ? "gained" : "resources") : run.estimated ? "away time" : "run time").eovWatchFont(10).foregroundStyle(EOVWatchPalette.muted)
+        GeometryReader { viewport in
+            // The original content needs135pt plus88pt of header/insets. Spend
+            // additional height on the ring and lower row, without a device check.
+            let spare = textSize.isAccessibilitySize ? 0 : max(0, min(28, viewport.size.height - 223))
+            let diameter = 100 + spare * 0.7
+            EOVWatchPanel(title: run.map, presentation: presentation, refresh: refresh, estimated: run.estimated) {
+                VStack(spacing: 6 + spare * 0.3) {
+                    Button { focus = (focus + 1) % 3 } label: {
+                        ZStack {
+                            EOVWatchRing(fraction: run.fraction, active: run.active)
+                            VStack(spacing: 0) {
+                                EOVWatchHero(presentation: presentation, size: 44, animate: presentation.heroCanAnimate)
+                                if focus == 0 { EOVWatchDistance(distance: run.distance, cap: run.cap, reaping: run.reaping) }
+                                else {
+                                    Text(focus == 1 ? eovWatchNumber(run.resources) : run.estimated ? eovWatchDuration(presentation.away?.elapsed ?? 0) : eovWatchDuration(run.seconds))
+                                        .eovWatchFont(26, weight: .bold, design: .rounded).monospacedDigit()
+                                    Text(focus == 1 ? (run.estimated ? "gained" : "resources") : run.estimated ? "away time" : "run time").eovWatchFont(10).foregroundStyle(EOVWatchPalette.muted)
+                                }
+                                HStack(spacing: 2) {
+                                    EOVWatchGlyph(name: "Heart", size: 9)
+                                    Text((run.estimated ? "Last " : "") + eovWatchNumber((run.health * 100).rounded()) + "%").eovWatchFont(9).foregroundStyle(EOVWatchPalette.muted)
+                                }
                             }
-                            HStack(spacing: 2) {
-                                EOVWatchGlyph(name: "Heart", size: 9)
-                                Text((run.estimated ? "Last " : "") + eovWatchNumber((run.health * 100).rounded()) + "%").eovWatchFont(9).foregroundStyle(EOVWatchPalette.muted)
-                            }
-                        }
-                    }.frame(width: 100, height: 100)
-                }.buttonStyle(.plain).accessibilityLabel("Expedition dial. Tap to change the highlighted metric")
-                EOVWatchQuartet(run: run)
+                        }.frame(width: diameter, height: diameter)
+                    }.buttonStyle(.plain).accessibilityLabel("Expedition dial. Tap to change the highlighted metric")
+                    EOVWatchQuartet(run: run)
+                }
             }
         }
     }
@@ -104,10 +111,17 @@ struct EOVWatchSinceAway: View {
         EOVWatchPanel(title: "Since you left", presentation: presentation, refresh: refresh, estimated: run.estimated) {
             if run.estimated {
                 VStack(spacing: 3) {
-                    HStack(alignment: .lastTextBaseline) {
+                    HStack(alignment: .lastTextBaseline, spacing: 4) {
+                        Text("Elapsed").eovWatchFont(10).foregroundStyle(EOVWatchPalette.muted)
                         Text(eovWatchDuration(presentation.away?.elapsed ?? 0)).eovWatchFont(27, weight: .bold, design: .rounded).monospacedDigit()
+                            .lineLimit(1).minimumScaleFactor(0.65)
                         Spacer(minLength: 0)
-                        if (run.reaps ?? 0) > 0 && run.phase == 0 && !run.expired { Text("New run").eovWatchFont(10).foregroundStyle(EOVWatchPalette.gold) }
+                        VStack(alignment: .trailing, spacing: 0) {
+                            if let label = presentation.backgroundLimitLabel {
+                                Text(label).eovWatchFont(11, weight: .medium).fixedSize().foregroundStyle(EOVWatchPalette.gold)
+                            }
+                            if (run.reaps ?? 0) > 0 && run.phase == 0 && !run.expired { Text("New run").eovWatchFont(10).foregroundStyle(EOVWatchPalette.gold) }
+                        }
                     }
                     HStack(spacing: 5) {
                         EOVWatchGain(art: "EOVTask", value: eovWatchNumber(run.tasks), label: "Task gains since departure")

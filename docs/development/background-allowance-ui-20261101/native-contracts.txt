@@ -1,0 +1,11 @@
+PASS 540k/hour native trajectory decodes and presents 405k gains at45min
+PASS One-hour allowance survives a shorter five-minute trajectory
+PASS Shared phone/Watch label follows allowance and omits a missing value
+PASS Legacy payload does not invent an allowance
+PASS Invalid optional allowance omitted while valid progress remains: <null>
+PASS Invalid optional allowance omitted while valid progress remains: 3600
+PASS Invalid optional allowance omitted while valid progress remains: true
+PASS Invalid optional allowance omitted while valid progress remains: 0
+PASS Invalid optional allowance omitted while valid progress remains: -1
+PASS Native policy follows transmitted value rather than hardcoded one hour
+10 native allowance/high-rate boundary checks passed.

@@ -67,6 +67,7 @@ private struct SnapshotFamilyContent: View {
                         compactDistance(context.state.distance) +
                         (context.state.cap > 0 ? " / " + compactDistance(context.state.cap) : ""))
                         .font(.caption.monospacedDigit().bold())
+                    if context.state.backgroundOrigin != nil { ElapsedStatus(state: context.state, compact: true) }
                     Text(context.state.resources.rounded(.down).formatted(.number.precision(.fractionLength(0))) +
                         (context.state.status == "live" ? " this run" : " since dep. · \(context.state.reaps) reaps"))
                         .font(.caption2).foregroundStyle(.secondary)
@@ -95,18 +96,35 @@ private struct SnapshotPanel: View {
 }
 private struct ElapsedStatus: View {
     let state: EOVForecastAttributes.ContentState
+    var compact = false
     var body: some View {
         if let origin = state.backgroundOrigin {
-            HStack(spacing: 4) {
-                Text("Elapsed").foregroundStyle(.secondary)
-                // The system can replace seconds with words on a dimmed display.
-                Text("00:00:00").hidden().frame(width: 84, alignment: .leading).overlay(alignment: .leading) {
-                    Text(timerInterval: Date(timeIntervalSince1970: origin)...Date(timeIntervalSince1970: origin + 8 * 3600),
-                         countsDown: false, showsHours: true)
-                        .lineLimit(1).minimumScaleFactor(0.8)
-                }.monospacedDigit().fixedSize(horizontal: true, vertical: false)
-            }.font(.caption)
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 4) {
+                    clock(origin)
+                    if let label = EOVBackgroundAllowance.label(state.backgroundLimitSeconds) {
+                        Text("· " + label).foregroundStyle(.secondary)
+                    }
+                }.fixedSize(horizontal: true, vertical: false)
+                VStack(alignment: .leading, spacing: 1) {
+                    clock(origin)
+                    if let label = EOVBackgroundAllowance.label(state.backgroundLimitSeconds) {
+                        Text(label).foregroundStyle(.secondary)
+                    }
+                }
+            }.font(compact ? .caption2 : .caption)
         } else { Text("Live · this run").font(.caption).foregroundStyle(.secondary) }
+    }
+    private func clock(_ origin: Double) -> some View {
+        HStack(spacing: 4) {
+            if !compact { Text("Elapsed").foregroundStyle(.secondary) }
+            // The system can replace seconds with words on a dimmed display.
+            Text(compact ? "00:00" : "00:00:00").hidden().frame(width: compact ? 48 : 84, alignment: .leading).overlay(alignment: .leading) {
+                Text(timerInterval: Date(timeIntervalSince1970: origin)...Date(timeIntervalSince1970: origin + 8 * 3600),
+                     countsDown: false, showsHours: !compact)
+                    .lineLimit(1).minimumScaleFactor(0.8)
+            }.monospacedDigit().fixedSize(horizontal: true, vertical: false)
+        }
     }
 }
 private struct SnapshotValues: View {

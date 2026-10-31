@@ -110,7 +110,7 @@ public final class EOVLiveActivityBridge: NSObject {
             kills: background ? sample.kills : Double(run.kills),
             reaps: background ? sample.reaps : 0,
             status: !background ? "live" : sample.phase == 2 ? "waiting" : sample.phase == 1 ? "restarting" : "estimate",
-            portraitLayers: snapshot.portraitLayers)
+            portraitLayers: snapshot.portraitLayers, backgroundLimitSeconds: snapshot.backgroundLimitSeconds)
     }
 
     private static func presentation(_ state: EOVForecastAttributes.ContentState,
