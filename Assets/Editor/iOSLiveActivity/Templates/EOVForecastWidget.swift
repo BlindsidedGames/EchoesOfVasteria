@@ -138,9 +138,13 @@ private struct ForecastTime: View {
             HStack(spacing: 10) {
                 ProgressView(timerInterval: state.timeRange, countsDown: false)
                     .labelsHidden().tint(Color(red: 0.94, green: 0.75, blue: 0.42))
+                    .frame(maxWidth: .infinity).layoutPriority(1)
                 Text(timerInterval: state.timeRange, countsDown: true)
-                    .font(.caption.monospacedDigit()).frame(width: 64, alignment: .trailing)
+                    .font(.caption.monospacedDigit()).multilineTextAlignment(.trailing)
+                    .lineLimit(1).minimumScaleFactor(0.8)
+                    .frame(width: 56, alignment: .trailing)
             }
+            .frame(maxWidth: .infinity)
         }
     }
 }
