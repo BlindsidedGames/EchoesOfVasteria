@@ -38,6 +38,15 @@ namespace TimelessEchoes
             backgroundSuspended = false;
             var saved = Oracle.oracle?.saveData?.ActiveRun;
             if (saved == null) { Time.timeScale = backgroundTimeScale; return; }
+            // Lock/authentication can briefly reactivate before pausing again. The
+            // existing settlement threshold awards nothing for this interval; keep
+            // the live world ready to capture a new departure instead of rebuilding.
+            if ((DateTime.UtcNow.Ticks - saved.CheckpointUtcTicks) / (double)TimeSpan.TicksPerSecond < 2)
+            {
+                loadingRun = null;
+                Time.timeScale = backgroundTimeScale;
+                return;
+            }
             StartCoroutine(ResumeBackgroundRun(saved));
         }
 

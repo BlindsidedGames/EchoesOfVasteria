@@ -267,6 +267,14 @@ namespace Tests.PlayMode
                 Assert.That(Time.timeScale, Is.Zero);
                 Assert.IsTrue(JsonUtility.FromJson<CompanionContract>(game.CaptureWatchCompanionSnapshot()).phoneInBackground);
                 var before = game.CurrentMap;
+                // iOS can briefly reactivate while locking, then pause again. An interval
+                // below the settlement threshold must leave the live world ready to pause.
+                Events.ApplicationForeground();
+                Assert.IsFalse(game.RunLoadingActive, "A brief foreground bounce must not start world regeneration.");
+                Assert.AreSame(before, game.CurrentMap);
+                Assert.That(Time.timeScale, Is.GreaterThan(0));
+                Events.ApplicationBackground();
+                Assert.That(Time.timeScale, Is.Zero);
                 oracle.saveData.ActiveRun.CheckpointUtcTicks = DateTime.UtcNow.AddSeconds(-20).Ticks;
                 // A due autosave may run before the mobile resume callback.
                 // It must retain the departure time so all 20 seconds are settled.
