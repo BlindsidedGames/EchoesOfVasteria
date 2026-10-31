@@ -12,6 +12,35 @@ struct EOVWatchSnapshot: Codable {
     let timeline: Timeline?
     let skills: [Skill]
     let recentRuns: [RecentRun]
+    let portraitLayers: [String]?
+
+    private enum CodingKeys: String, CodingKey {
+        case schemaVersion, generatedAt, demo, state, backgroundProgressEnabled, phoneInBackground
+        case run, forecast, timeline, skills, recentRuns, portraitLayers
+    }
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        schemaVersion = try values.decode(Int.self, forKey: .schemaVersion)
+        generatedAt = try values.decode(Double.self, forKey: .generatedAt)
+        demo = try values.decode(Bool.self, forKey: .demo)
+        state = try values.decode(String.self, forKey: .state)
+        backgroundProgressEnabled = try values.decode(Bool.self, forKey: .backgroundProgressEnabled)
+        phoneInBackground = try values.decodeIfPresent(Bool.self, forKey: .phoneInBackground)
+        run = try values.decodeIfPresent(Run.self, forKey: .run)
+        forecast = try values.decodeIfPresent(Forecast.self, forKey: .forecast)
+        timeline = try values.decodeIfPresent(Timeline.self, forKey: .timeline)
+        skills = try values.decode([Skill].self, forKey: .skills)
+        recentRuns = try values.decode([RecentRun].self, forKey: .recentRuns)
+        // A malformed optional portrait must never discard valid progress data.
+        let layers = try? values.decode([String].self, forKey: .portraitLayers)
+        portraitLayers = layers.flatMap { items in
+            guard (1...8).contains(items.count), items.allSatisfy({ name in
+                name.hasPrefix("EOVPortrait_") && name.count == 44 &&
+                    name.suffix(32).allSatisfy { "0123456789abcdef".contains($0) }
+            }) else { return nil }
+            return items
+        }
+    }
 
     struct Run: Codable {
         let mapId: String

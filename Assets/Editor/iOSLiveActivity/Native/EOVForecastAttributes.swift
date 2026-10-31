@@ -16,6 +16,9 @@ public struct EOVForecastAttributes: ActivityAttributes {
         public var kills: Double?
         public var reaps: Int
         public var status: String
+        public var portraitLayers: [String]? = nil
+        public var refreshRevision: UInt? = nil
+        public var reapRevision: UInt? = nil
         public var canRefresh: Bool { status == "estimate" || status == "restarting" }
     }
     public var mapId: String

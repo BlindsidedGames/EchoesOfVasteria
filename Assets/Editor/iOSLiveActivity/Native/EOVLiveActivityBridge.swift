@@ -33,9 +33,9 @@ public final class EOVLiveActivityBridge: NSObject {
             await previous?.value
             defer { if command == generation { pending = nil } }
             guard command == generation else { return }
-            let content = ActivityContent(state: state, staleDate: Date(timeIntervalSince1970: state.forecastEnd))
             if let activity = Activity<EOVForecastAttributes>.activities.first(where: { $0.attributes.mapId == run.mapId && $0.activityState == .active }) {
-                await activity.update(content)
+                guard let next = presentation(state, after: activity.content.state, attributes: activity.attributes) else { return }
+                await activity.update(ActivityContent(state: next, staleDate: Date(timeIntervalSince1970: next.forecastEnd)))
                 NSLog("[EOVLiveActivity] published id=%@ status=%@ distance=%.2f cap=%.2f", activity.id, state.status, state.distance, state.cap)
             } else {
                 // A cached background snapshot can update an existing activity, never start one.
@@ -43,8 +43,11 @@ public final class EOVLiveActivityBridge: NSObject {
                 for old in Activity<EOVForecastAttributes>.activities { await old.end(nil, dismissalPolicy: .immediate) }
                 guard command == generation else { return }
                 do {
-                    let activity = try Activity.request(attributes: EOVForecastAttributes(mapId: run.mapId), content: content, pushType: nil)
-                    NSLog("[EOVLiveActivity] started id=%@ source=%@", activity.id, state.sourceID)
+                    let attributes = EOVForecastAttributes(mapId: run.mapId)
+                    guard let next = presentation(state, attributes: attributes) else { return }
+                    let content = ActivityContent(state: next, staleDate: Date(timeIntervalSince1970: next.forecastEnd))
+                    let activity = try Activity.request(attributes: attributes, content: content, pushType: nil)
+                    NSLog("[EOVLiveActivity] started id=%@ source=%@ portraitLayers=%d", activity.id, state.sourceID, next.portraitLayers?.count ?? 0)
                 } catch { NSLog("[EOVLiveActivity] start failed: %@", String(describing: error)) }
             }
         }
@@ -74,8 +77,10 @@ public final class EOVLiveActivityBridge: NSObject {
                 NSLog("[EOVLiveActivity] ignored stale/inactive refresh id=%@", activityID); return
             }
             let before = UIApplication.shared.applicationState.rawValue
-            await activity.update(ActivityContent(state: state, staleDate: Date(timeIntervalSince1970: state.forecastEnd)))
+            guard let next = presentation(state, after: activity.content.state, attributes: activity.attributes, manualRefresh: true) else { return }
+            await activity.update(ActivityContent(state: next, staleDate: Date(timeIntervalSince1970: next.forecastEnd)))
             NSLog("[EOVLiveActivity] refresh id=%@ source=%@ pid=%d bundle=%@ appStateBefore=%d appStateAfter=%d sampledAt=%.6f distance=%.4f cap=%.4f resources=%.4f reaps=%d tasks=%@ kills=%@ origin=%.0f status=%@", activity.id, sourceID, ProcessInfo.processInfo.processIdentifier, Bundle.main.bundleIdentifier ?? "", before, UIApplication.shared.applicationState.rawValue, state.sampledAt, state.distance, state.cap, state.resources, state.reaps, state.tasks.map { String($0) } ?? "unknown", state.kills.map { String($0) } ?? "unknown", state.backgroundOrigin ?? 0, state.status)
+            NSLog("[EOVLiveActivity] presentation portraitLayers=%d refreshRevision=%llu reapRevision=%llu", next.portraitLayers?.count ?? 0, UInt64(next.refreshRevision ?? 0), UInt64(next.reapRevision ?? 0))
         }
         pending = task
         await task.value
@@ -104,7 +109,34 @@ public final class EOVLiveActivityBridge: NSObject {
             tasks: background ? sample.tasks : Double(run.tasks),
             kills: background ? sample.kills : Double(run.kills),
             reaps: background ? sample.reaps : 0,
-            status: !background ? "live" : sample.phase == 2 ? "waiting" : sample.phase == 1 ? "restarting" : "estimate")
+            status: !background ? "live" : sample.phase == 2 ? "waiting" : sample.phase == 1 ? "restarting" : "estimate",
+            portraitLayers: snapshot.portraitLayers)
+    }
+
+    private static func presentation(_ state: EOVForecastAttributes.ContentState,
+                                     after previous: EOVForecastAttributes.ContentState? = nil,
+                                     attributes: EOVForecastAttributes,
+                                     manualRefresh: Bool = false) -> EOVForecastAttributes.ContentState? {
+        var next = state
+        next.refreshRevision = (previous?.refreshRevision ?? 0) &+ (manualRefresh ? 1 : 0)
+        let gainedReap = previous.map {
+            state.backgroundOrigin != nil && state.backgroundOrigin == $0.backgroundOrigin &&
+                state.sourceID == $0.sourceID && state.reaps > $0.reaps
+        } ?? false
+        next.reapRevision = (previous?.reapRevision ?? 0) &+ (gainedReap ? 1 : 0)
+        // ActivityKit bounds attributes and state together. Portraits are optional;
+        // shedding one must not suppress otherwise valid forecast presentation.
+        guard let attributesData = try? JSONEncoder().encode(attributes) else { return nil }
+        func bytes(_ value: EOVForecastAttributes.ContentState) -> Int {
+            ((try? JSONEncoder().encode(value).count) ?? 4096) + attributesData.count
+        }
+        if bytes(next) > 3900 { next.portraitLayers = nil }
+        let payloadBytes = bytes(next)
+        guard payloadBytes <= 3900 else { return nil }
+        if manualRefresh || previous == nil {
+            NSLog("[EOVLiveActivity] payload bytes=%d portraitLayers=%d", payloadBytes, next.portraitLayers?.count ?? 0)
+        }
+        return next
     }
 
     @objc(end)

@@ -34,7 +34,7 @@ struct EOVForecastWidget: Widget {
                 .activitySystemActionForegroundColor(accent)
         } dynamicIsland: { context in
             DynamicIsland {
-                DynamicIslandExpandedRegion(.leading) { PixelArt(name: "EOVHero", size: 24) }
+                DynamicIslandExpandedRegion(.leading) { HeroPortrait(state: context.state, size: 24) }
                 DynamicIslandExpandedRegion(.center) {
                     VStack(spacing: 2) {
                         Text(context.state.mapTitle).font(.headline).lineLimit(1)
@@ -43,7 +43,7 @@ struct EOVForecastWidget: Widget {
                 }
                 DynamicIslandExpandedRegion(.trailing) { RefreshAction(context: context) }
                 DynamicIslandExpandedRegion(.bottom) { SnapshotValues(state: context.state, stale: context.isStale).padding(8) }
-            } compactLeading: { PixelArt(name: "EOVHero", size: 24) }
+            } compactLeading: { HeroPortrait(state: context.state, size: 24) }
               compactTrailing: {
                 Text((context.state.status == "live" ? "" : "~") + compactDistance(context.state.distance))
                     .font(.caption2.monospacedDigit()).foregroundStyle(accent)
@@ -59,7 +59,7 @@ private struct SnapshotFamilyContent: View {
     var body: some View {
         if family == .small {
             HStack(spacing: 4) {
-                PixelArt(name: "EOVHero", size: 22)
+                HeroPortrait(state: context.state, size: 22)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(context.state.mapTitle).font(.caption2.bold())
                     Text(context.isStale ? "Estimate ended" :
@@ -81,7 +81,7 @@ private struct SnapshotPanel: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 7) {
             HStack(spacing: 10) {
-                PixelArt(name: "EOVHero", size: 32)
+                HeroPortrait(state: context.state, size: 32)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(context.state.mapTitle).font(.headline).lineLimit(1)
                     ElapsedStatus(state: context.state)
@@ -134,7 +134,8 @@ private struct SnapshotValues: View {
                 ActivityMetric(art: "EOVChest", count: state.resources, label: "Resources " + metricScope,
                                prefix: state.backgroundOrigin == nil ? "" : "+")
                 ActivityMetric(art: state.reaps.isMultiple(of: 2) ? "EOVCarl" : "EOVCarlSwing",
-                               count: Double(state.reaps), label: "Reaps " + metricScope)
+                               count: Double(state.reaps), label: "Reaps " + metricScope,
+                               movementRevision: state.reapRevision)
             }.foregroundStyle(.secondary)
         }
     }
@@ -144,12 +145,15 @@ private struct ActivityMetric: View {
     let count: Double?
     let label: String
     var prefix = ""
+    var movementRevision: UInt? = nil
     private var value: String {
         count.map { prefix + $0.rounded(.down).formatted(.number.precision(.fractionLength(0))) } ?? "—"
     }
     var body: some View {
         HStack(spacing: 4) {
-            PixelArt(name: art, size: 16)
+            if let movementRevision {
+                ReapIcon(name: art, revision: movementRevision)
+            } else { PixelArt(name: art, size: 16) }
             Text(value).lineLimit(1).minimumScaleFactor(0.7)
         }.font(.caption.monospacedDigit())
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -157,6 +161,47 @@ private struct ActivityMetric: View {
             .accessibilityLabel(label)
             .accessibilityValue(value)
     }
+}
+private struct HeroPortrait: View {
+    let state: EOVForecastAttributes.ContentState
+    let size: CGFloat
+    @Environment(\.isLuminanceReduced) private var dimmed
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var body: some View {
+        Group {
+            if let layers = state.portraitLayers, !layers.isEmpty {
+                ZStack {
+                    ForEach(Array(layers.enumerated()), id: \.offset) { _, name in
+                        Image(name).resizable().interpolation(.none).scaledToFit()
+                            .frame(width: size * 2, height: size * 2)
+                    }
+                }.frame(width: size, height: size).clipped()
+            } else { PixelArt(name: "EOVHero", size: size) }
+        }
+        .id(state.refreshRevision ?? 0)
+        .transition(dimmed || reduceMotion ? .identity :
+            .asymmetric(insertion: .offset(y: 3).combined(with: .opacity), removal: .opacity))
+        .animation(updateAnimation(disabled: dimmed || reduceMotion), value: state.refreshRevision)
+        .accessibilityElement(children: .ignore).accessibilityLabel("Your character")
+    }
+}
+private struct ReapIcon: View {
+    let name: String
+    let revision: UInt
+    @Environment(\.isLuminanceReduced) private var dimmed
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var body: some View {
+        PixelArt(name: name, size: 16)
+            .id(revision)
+            .transition(dimmed || reduceMotion ? .identity :
+                .asymmetric(insertion: .offset(x: 3).combined(with: .opacity), removal: .opacity))
+            .animation(updateAnimation(disabled: dimmed || reduceMotion), value: revision)
+    }
+}
+private func updateAnimation(disabled: Bool) -> Animation? {
+    guard !disabled else { return nil }
+    if #available(iOS 17.0, *) { return .spring(duration: 0.35, bounce: 0.2) }
+    return nil
 }
 private struct RefreshAction: View {
     let context: ActivityViewContext<EOVForecastAttributes>

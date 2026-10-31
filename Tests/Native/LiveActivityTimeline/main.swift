@@ -15,8 +15,8 @@ let frames: [[Double]] = [
     [7, 2, 10.1, 7, 1, 0, 2, 1],
     [8, 3, 10.1, 12, 1, 0, 3, 2]
 ]
-func decode(_ rows: [[Double]]) throws -> EOVWatchSnapshot {
-    let payload: [String: Any] = [
+func decode(_ rows: [[Double]], portrait: Any? = nil) throws -> EOVWatchSnapshot {
+    var payload: [String: Any] = [
         "schemaVersion": 1, "generatedAt": origin, "demo": true, "state": "run",
         "backgroundProgressEnabled": true, "phoneInBackground": true,
         "run": ["mapId": "River", "mapTitle": "River", "distance": 8, "cap": 10,
@@ -26,6 +26,7 @@ func decode(_ rows: [[Double]]) throws -> EOVWatchSnapshot {
                      "horizonSeconds": 8, "distanceReaping": true, "truncated": false, "frames": rows],
         "skills": [], "recentRuns": []
     ]
+    if let portrait { payload["portraitLayers"] = portrait }
     return try EOVWatchSnapshot.decode(JSONSerialization.data(withJSONObject: payload))
 }
 let snapshot = try decode(frames), timeline = snapshot.timeline!
@@ -61,4 +62,18 @@ invalid = frames; invalid[1][6] = 2.1
 rejected(invalid, "wire endpoints must contain whole work counts")
 invalid = frames; invalid[0][6] = 1
 rejected(invalid, "departure counters begin at zero")
+let portrait = (1...8).map { "EOVPortrait_" + String(repeating: String($0), count: 32) }
+let dressed = try decode(frames, portrait: portrait)
+require(dressed.portraitLayers == portrait, "native transport preserves all eight layers in managed draw order")
+let singleLayer = try decode(frames, portrait: [portrait[0]])
+require(singleLayer.portraitLayers == [portrait[0]], "one-layer portrait remains valid")
+require(snapshot.portraitLayers == nil, "old caches without a portrait retain the legacy hero")
+let badPortraits: [Any] = [NSNull(), "not an array", [], portrait + [portrait[0]],
+                          ["../../host-file"], ["EOVPortrait_" + String(repeating: "g", count: 32)],
+                          [portrait[0], 1], [portrait[0], "EOVHero"]]
+for bad in badPortraits {
+    let fallback = try decode(frames, portrait: bad)
+    require(fallback.portraitLayers == nil && fallback.run?.tasks == 777 && fallback.timeline?.frames == frames,
+            "invalid optional portrait falls back without discarding valid progress")
+}
 print("PASS \(checked) native timeline compatibility and counter checks")
