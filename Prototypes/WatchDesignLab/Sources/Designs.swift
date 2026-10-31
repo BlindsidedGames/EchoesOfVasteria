@@ -9,14 +9,14 @@ struct ExpeditionDial: View {
             VStack(spacing: 6) {
                 Button { focus = (focus + 1) % 3 } label: {
                     ZStack {
-                        Ring(fraction: run.fraction)
+                        Ring(fraction: run.fraction, color: run.active ? Palette.gold : Palette.muted)
                         VStack(spacing: 0) {
                             Hero(size: 44, animate: lab.canAnimate)
                             if focus == 0 { DistanceLine(run: run) }
                             else {
-                                Text(focus == 1 ? number(run.resources) : duration(run.seconds))
+                                Text(focus == 1 ? number(run.resources) : run.estimated ? lab.elapsed : duration(run.seconds))
                                     .labFont(26, weight: .bold, design: .rounded).monospacedDigit()
-                                Text(focus == 1 ? (run.estimated ? "gained" : "resources") : "run time").labFont(10).foregroundStyle(Palette.muted)
+                                Text(focus == 1 ? (run.estimated ? "gained" : "resources") : run.estimated ? "away time" : "run time").labFont(10).foregroundStyle(Palette.muted)
                             }
                             HStack(spacing: 2) {
                                 Pixel(name: "Heart", size: 9)
@@ -43,13 +43,13 @@ struct LivingTrail: View {
                         HStack(spacing: 0) { ForEach(0..<8) { _ in Image("TrailGrass").resizable().interpolation(.none).frame(width: 24, height: 24) } }
                             .frame(width: geo.size.width, height: 24, alignment: .leading).clipped().offset(y: 17)
                         HStack(spacing: 0) { ForEach(0..<8) { _ in Image("TrailWater").resizable().interpolation(.none).frame(width: 24, height: 36) } }
-                            .frame(width: geo.size.width, height: 36, alignment: .leading).clipped().offset(y: 28)
+                            .frame(width: geo.size.width, height: 20, alignment: .leading).clipped().offset(y: 28)
                         Pixel(name: "TrailReeds", size: 21).offset(x: 12, y: 5)
                         Pixel(name: "TrailReeds", size: 17).offset(x: geo.size.width * 0.65, y: 15)
-                        TrailHero().position(x: 18 + (geo.size.width - 56) * (run.fraction ?? 0.4), y: 26.75)
-                        if run.reaping { CarlArrival().position(x: geo.size.width - 21.125, y: 26.75) }
+                        TrailHero().position(x: 18 + (geo.size.width - 56) * (run.fraction ?? 0.4), y: 20.25)
+                        if run.reaping { CarlArrival().position(x: geo.size.width - 21.125, y: 20.25) }
                     }
-                }.frame(height: 54).clipped()
+                }.frame(height: 48).padding(.top, 6)
                 if let f = run.fraction {
                     GeometryReader { geo in
                         Capsule().fill(Palette.panel)
@@ -148,7 +148,7 @@ struct SinceAway: View {
                     HStack(alignment: .lastTextBaseline) {
                         Text(lab.elapsed).labFont(27, weight: .bold, design: .rounded).monospacedDigit()
                         Spacer(minLength: 0)
-                        if (run.reaps ?? 0) > 0 { Text(run.phase == 1 ? "Restarting" : "New run").labFont(10).foregroundStyle(Palette.gold) }
+                        if (run.reaps ?? 0) > 0 && run.phase == 0 && !run.expired { Text("New run").labFont(10).foregroundStyle(Palette.gold) }
                     }
                     HStack(spacing: 5) {
                         GainCell(art: "EOVTask", value: number(run.tasks), label: "Task gains since departure")
@@ -174,21 +174,27 @@ struct SinceAway: View {
     }
 }
 
+let watchGoalTargets: [Double] = [100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1e6, 5e6, 1e7, 5e7, 1e8, 5e8, 1e9, 5e9, 1e10, 5e10, 1e11]
+
 struct SteppedGoalTrack: View {
     let fraction: Double
     var body: some View {
-        HStack(spacing: 3) {
-            ForEach(0..<10) { index in
-                GeometryReader { geo in
-                    RoundedRectangle(cornerRadius: 2).fill(Palette.teal.opacity(0.15))
-                    RoundedRectangle(cornerRadius: 2).fill(Palette.teal)
-                        .frame(width: geo.size.width * CGFloat(max(0, min(1, fraction * 10 - Double(index)))))
+        Canvas { context, size in
+            let gap: CGFloat = 3
+            let width = (size.width - 9 * gap) / 10
+            for index in 0..<10 {
+                let x = CGFloat(index) * (width + gap)
+                let rect = CGRect(x: x, y: 0, width: width, height: size.height)
+                context.fill(Path(roundedRect: rect, cornerRadius: 2), with: .color(Palette.teal.opacity(0.22)))
+                let filled = CGFloat(max(0, min(1, fraction * 10 - Double(index))))
+                if filled > 0 {
+                    let fill = CGRect(x: x, y: 0, width: width * filled, height: size.height)
+                    context.fill(Path(roundedRect: fill, cornerRadius: min(2, fill.width / 2)), with: .color(Palette.teal))
                 }
             }
         }.frame(height: 8).accessibilityLabel("Watch-session goal progress")
     }
 }
-let watchGoalTargets: [Double] = [100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1e6, 5e6, 1e7, 5e7, 1e8, 5e8, 1e9, 5e9, 1e10, 5e10, 1e11]
 struct RunGoal: View {
     @EnvironmentObject var lab: LabStore
     @State private var resourceGoal = true
@@ -225,7 +231,7 @@ struct RunGoal: View {
                     HStack(spacing: 5) { Image(systemName: "pencil"); Text("Edit goal") }.font(.caption2)
                         .frame(maxWidth: .infinity, minHeight: 44)
                         .background(Palette.panel, in: RoundedRectangle(cornerRadius: 10))
-                }.buttonStyle(.plain).foregroundStyle(Palette.gold).accessibilityLabel("Choose watch goal metric and target")
+                }.buttonStyle(.plain).foregroundStyle(Palette.gold).accessibilityLabel("Choose watch goal metric and target").handGestureShortcut(.primaryAction)
             }
         }.sheet(isPresented: $choosing) { GoalEditor(goalIndex: $goalIndex, resourceGoal: $resourceGoal) }
             .onAppear {
@@ -253,7 +259,7 @@ struct GoalEditor: View {
                     .digitalCrownRotation($goalIndex, from: 0, through: Double(watchGoalTargets.count - 1), by: 1, sensitivity: .low)
                 HStack {
                     Button { goalIndex = max(0, goalIndex - 1) } label: { Image(systemName: "minus").frame(width: 60, height: 44) }
-                    Button { goalIndex = min(Double(watchGoalTargets.count - 1), goalIndex + 1) } label: { Image(systemName: "plus").frame(width: 60, height: 44) }
+                    Button { goalIndex = min(Double(watchGoalTargets.count - 1), goalIndex + 1) } label: { Image(systemName: "plus").frame(width: 60, height: 44) }.handGestureShortcut(.primaryAction)
                 }
                 Text("This Watch session only").font(.caption2)
                 Button("Done") { dismiss() }.frame(minHeight: 44)
@@ -271,8 +277,9 @@ struct SkillBook: View {
         Screen(title: "Skillbook") {
             Group {
                 if let skills = lab.snapshot?.skills, !skills.isEmpty {
+                    let ordered = skills.filter { $0.id == selected } + skills.filter { $0.id != selected }
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 3) {
-                        ForEach(skills) { skill in
+                        ForEach(ordered) { skill in
                             Button { selected = selected == skill.id ? nil : skill.id } label: {
                                 VStack(spacing: 1) {
                                     HStack(spacing: 4) {
@@ -379,8 +386,11 @@ struct RunComparison: View {
                     let delta = first.durationSeconds > 0 && second.durationSeconds > 0 ? (rawRate(first) / unit).rounded() * unit - (rawRate(second) / unit).rounded() * unit : nil
                     HStack(spacing: 3) {
                         Pixel(name: "EOVChest", size: 17)
-                        Text(delta.map { (first.estimated || second.estimated ? "~ " : "") + ($0 >= 0 ? "+" : "−") + number(abs($0)) + "/min" } ?? "—")
-                            .labFont(20, weight: .bold, design: .rounded).monospacedDigit()
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text(delta.map { (first.estimated || second.estimated ? "~ " : "") + ($0 >= 0 ? "+" : "−") + number(abs($0)) } ?? "—")
+                                .labFont(20, weight: .bold, design: .rounded).monospacedDigit().lineLimit(1)
+                            Text("resources / min").labFont(9).foregroundStyle(Palette.muted)
+                        }
                         Spacer(minLength: 0)
                         Button { selected = (selected + 1) % runs.count } label: { Image(systemName: "arrow.left.arrow.right").frame(width: 44, height: 44) }
                             .buttonStyle(.plain).accessibilityLabel("Choose the next pair of recent runs")

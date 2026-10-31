@@ -15,8 +15,8 @@ struct Pixel: View {
     var size: CGFloat = 20
     var body: some View {
         Group {
-            if name == "MapFallback" { Image(systemName: "map.fill").foregroundStyle(Palette.gold) }
-            else if name == "Heart" { Image(systemName: "heart.fill").foregroundStyle(Palette.red) }
+            if name == "MapFallback" { Image(systemName: "map.fill").resizable().scaledToFit().foregroundStyle(Palette.gold) }
+            else if name == "Heart" { Image(systemName: "heart.fill").resizable().scaledToFit().foregroundStyle(Palette.red) }
             else { Image(name).resizable().interpolation(.none).scaledToFit() }
         }.frame(width: size, height: size).accessibilityHidden(true)
     }
@@ -57,17 +57,19 @@ struct CarlArrival: View {
     @Environment(\.scenePhase) var phase
     @Environment(\.isLuminanceReduced) var dimmed
     @Environment(\.accessibilityReduceMotion) var reduceMotion
-    @State private var start = Date()
+    @State private var frame = 3
     var body: some View {
         let enabled = lab.canAnimate && phase == .active && !dimmed && !reduceMotion
-        TimelineView(.explicit(enabled ? (0...3).map { start.addingTimeInterval(Double($0) / 12) } : [start])) { context in
-            let elapsed = max(0, context.date.timeIntervalSince(start))
-            let frame = enabled ? min(3, Int(elapsed * 12 + 0.001)) : 3
-            Image("CarlFly_" + String(frame)).resizable().interpolation(.none).frame(width: 80, height: 80)
-        }.accessibilityLabel("Carl, authored arrival animation")
-            .onAppear { start = .now }
-            .onChange(of: lab.refreshCount) { _, _ in start = .now }
-            .onChange(of: enabled) { _, value in if value { start = .now } }
+        Image("CarlFly_" + String(frame)).resizable().interpolation(.none).frame(width: 80, height: 80)
+            .accessibilityLabel("Carl, authored arrival animation")
+            .task(id: "\(enabled)-\(lab.refreshCount)") {
+                guard enabled else { frame = 3; return }
+                for next in 0...3 {
+                    guard !Task.isCancelled else { return }
+                    frame = next
+                    if next < 3 { try? await Task.sleep(for: .milliseconds(83)) }
+                }
+            }
     }
 }
 struct ScaledLabFont: ViewModifier {
@@ -93,10 +95,10 @@ struct LabHeader: View {
         if lab.refreshing { return "Asking iPhone…" }
         if let status = lab.runStatus { return status + " · phone " + lab.age + " ago" }
         if lab.offline { return lab.variant == "stale" ? "Estimate ended" : "Offline · cached" }
-        if lab.design == 6 { return "Session · phone " + lab.age + " ago" }
+        if lab.design == 6 { return textSize.isAccessibilitySize ? "Local · phone " + lab.age : "Session · phone " + lab.age + " ago" }
         if [3, 4, 7, 8, 9, 10].contains(lab.design) { return "Phone · " + lab.age + " ago" }
         if lab.display.expired { return "Estimate ended" }
-        if lab.design == 5 && lab.display.estimated { return lab.display.phase == 1 ? "Restarting · estimated" : "Estimated away gains" }
+        if lab.design == 5 && lab.display.estimated { return lab.display.phase == 1 ? "Restarting · estimated" : textSize.isAccessibilitySize ? "Estimated gains" : "Estimated away gains" }
         if lab.display.phase == 1 { return "Restarting · est." }
         if lab.display.phase == 2 { return "Return to iPhone" }
         return lab.display.estimated ? "Estimated · " + lab.elapsed : "Snapshot · " + lab.age + " ago"
@@ -129,7 +131,7 @@ struct Screen<Content: View>: View {
                 ScrollView {
                     content.frame(maxWidth: .infinity, minHeight: max(0, geo.size.height - (textSize.isAccessibilitySize ? 108 : 88)), alignment: .top)
                         .padding(.bottom, 3)
-                }.scrollIndicators(.hidden)
+                }.scrollIndicators(.hidden).scrollInputBehavior(.enabled, for: .handGestureShortcut)
             }.padding(.horizontal, 7).padding(.top, 32).padding(.bottom, 6)
                 .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
                 .foregroundStyle(Palette.cream)

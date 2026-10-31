@@ -30,7 +30,7 @@ final class LabStore: ObservableObject {
         let origin = decoded?.timeline?.generatedAt ?? decoded?.generatedAt ?? 0
         clock = Double(argument("clock") ?? "") ?? origin + (variant == "stale" ? 7200 : variant == "restart" ? 110 : ["away", "large-away"].contains(variant) ? 85 : 15)
     }
-    var runStatus: String? { snapshot?.run?.dead == true ? "Died" : snapshot?.run?.reaped == true ? "Reaped" : nil }
+    var runStatus: String? { snapshot?.run?.reaped == true ? "Reaped" : snapshot?.run?.dead == true ? "Died" : nil }
     var display: RunDisplay { RunDisplay(snapshot, at: clock) }
     var offline: Bool { variant == "offline" || variant == "stale" || variant == "empty" }
     var canAnimate: Bool { !offline && snapshot?.phoneInBackground != true && display.active }

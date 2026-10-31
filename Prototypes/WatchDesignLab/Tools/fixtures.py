@@ -6,7 +6,8 @@ def save(name,s,note):
 live=copy.deepcopy(base);live['phoneInBackground']=False;save('live',live,'Actual Unity-produced saved run, portrait, skills and history. Only phoneInBackground false for foreground presentation.')
 for ending in ['dead','reaped']:
     ended=copy.deepcopy(live);ended['run'][ending]=True
-    if ending=='dead': ended['run']['healthFraction']=0
+    ended['run']['healthFraction']=0
+    if ending=='reaped': ended['run'].update(distance=ended['run']['cap'],dead=True)
     save(ending,ended,'Controlled ended run: explicit status, static portrait, no invented cumulative reaps.')
 away=copy.deepcopy(base);away['forecast']=None
 away['timeline']['horizonSeconds']=300
