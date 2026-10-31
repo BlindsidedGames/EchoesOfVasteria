@@ -222,6 +222,7 @@ namespace Tests.PlayMode
             public long generatedAt;
             public string state;
             public bool phoneInBackground;
+            public bool backgroundProgressEnabled;
             public CompanionRun run;
             public CompanionSkill[] skills;
             public CompanionHistory[] recentRuns;
@@ -278,6 +279,21 @@ namespace Tests.PlayMode
                 Assert.That(resumedWatch.state, Is.EqualTo("run"));
                 Assert.That(HeroController.Instance.transform.position.x, Is.GreaterThan(119));
                 Assert.That(stats.TotalKills, Is.GreaterThan(totalKills));
+                // Opting out preserves run continuation without estimating away-time work.
+                BackgroundRunPrototype.OptedIn = false;
+                var foregroundMap = game.CurrentMap;
+                var foregroundKills = stats.TotalKills;
+                var foregroundResources = stats.TotalResourcesGathered;
+                Events.ApplicationBackground();
+                Assert.That(Time.timeScale, Is.GreaterThan(0));
+                var optedOutWatch = JsonUtility.FromJson<CompanionContract>(game.CaptureWatchCompanionSnapshot());
+                Assert.IsTrue(optedOutWatch.phoneInBackground);
+                Assert.IsFalse(optedOutWatch.backgroundProgressEnabled);
+                Events.ApplicationForeground();
+                yield return null;
+                Assert.AreSame(foregroundMap, game.CurrentMap);
+                Assert.That(stats.TotalKills, Is.EqualTo(foregroundKills));
+                Assert.That(stats.TotalResourcesGathered, Is.EqualTo(foregroundResources));
             }
             finally
             {

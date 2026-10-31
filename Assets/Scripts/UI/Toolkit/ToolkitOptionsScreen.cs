@@ -5,6 +5,7 @@ using System.Linq;
 using Blindsided;
 using Blindsided.Utilities;
 using TimelessEchoes.Audio;
+using TimelessEchoes.Stats;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Blindsided.SaveData.StaticReferences;
@@ -255,6 +256,18 @@ namespace TimelessEchoes.UI.Toolkit
             toggle.AddToClassList("settings-labelled-toggle");
             var label = ToolkitGameplay.L(toggle, "", "eov-options-label");
             ToolkitLocalization.Bind(label, "options.skip-restart-countdown", "Skip restart countdown");
+            if (BackgroundRunPrototype.Available)
+            {
+                var background = ActionButton(frame, "background-progress", () =>
+                { BackgroundRunPrototype.OptedIn = !BackgroundRunPrototype.OptedIn; RefreshValues(); }, 24, false);
+                background.AddToClassList("settings-labelled-toggle");
+                background.style.marginTop = 6;
+                background.style.height = StyleKeyword.Auto;
+                background.style.minHeight = 24;
+                var backgroundLabel = ToolkitGameplay.L(background, "", "eov-options-label");
+                backgroundLabel.style.whiteSpace = WhiteSpace.Normal;
+                ToolkitLocalization.Bind(backgroundLabel, "options.background-progress", "Enable background progress (Experimental)");
+            }
         }
         private static void ApplyFps()
         {
@@ -351,6 +364,7 @@ namespace TimelessEchoes.UI.Toolkit
             buttons["portrait-fullscreen"].EnableInClassList("active", ToolkitDisplayPreferences.DefaultPortraitFullscreen);
             buttons["portrait-compact"].EnableInClassList("active", !ToolkitDisplayPreferences.DefaultPortraitFullscreen);
             SetToggle("skip-restart-countdown", GameManager.SkipRestartCountdown);
+            if (buttons.ContainsKey("background-progress")) SetToggle("background-progress", BackgroundRunPrototype.OptedIn);
             for (var i = 0; i < 3; i++) buttons["orientation-" + i].EnableInClassList("active", ToolkitDisplayPreferences.Orientation == i);
             buttons["world-safe-area"].EnableInClassList("active", ToolkitDisplayPreferences.KeepWorldInSafeArea);
             SetSlider("master", MasterVolume); SetSlider("music", MusicVolume); SetSlider("sfx", SfxVolume); SetSlider("width", SafeAreaRatio);
