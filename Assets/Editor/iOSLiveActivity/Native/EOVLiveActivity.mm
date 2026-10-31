@@ -6,6 +6,12 @@ static Class EOVActivityClass(void) {
     return Nil;
 }
 
+// Unity's iOS IL2CPP runtime may expose only argv[0] to managed Environment.
+// Preserve the prototype's explicit demo launch opt-in using the native arguments.
+extern "C" int EOVLiveActivity_IsDemoLaunch(void) {
+    return [[NSProcessInfo processInfo].arguments containsObject:@"-eov-background-demo"] ? 1 : 0;
+}
+
 extern "C" int EOVLiveActivity_IsSupported(void) {
     __block int supported = 0;
     void (^read)(void) = ^{
