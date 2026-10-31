@@ -1,0 +1,17 @@
+/* Native graph popups live above the screen, with the same palette as their owner. */
+.graph-dropdown {--graph-menu:#3f3335;--graph-menu-hover:#514042;--graph-menu-text:#f5e4d6;--graph-menu-line:#7e684e;--graph-menu-accent:#efb984;}
+.graph-dropdown.light {--graph-menu:#e4a672;--graph-menu-hover:#edbe8a;--graph-menu-text:#3f2832;--graph-menu-line:#8d563f;--graph-menu-accent:#743f39;}
+.graph-dropdown .unity-base-dropdown__container-outer {background-color:var(--graph-menu);background-image:none;border-width:1px;border-color:var(--graph-menu-line);border-radius:0;}
+.graph-dropdown .unity-base-dropdown__container-inner {padding:2px;background-color:var(--graph-menu);background-image:none;border-width:0;}
+.graph-dropdown .unity-scroll-view__content-viewport {background-color:var(--graph-menu);background-image:none;border-width:0;}
+.graph-dropdown .unity-scroller--vertical {width:4px;min-width:4px;margin:0;}
+.graph-dropdown .unity-scroller__low-button,.graph-dropdown .unity-scroller__high-button {display:none;}
+.graph-dropdown .unity-base-slider {min-width:0;width:4px;margin:0;}
+.graph-dropdown #unity-tracker {background-image:none;background-color:var(--graph-menu);border-width:0;}
+.graph-dropdown #unity-dragger {background-image:none;background-color:var(--graph-menu-line);border-width:0;border-radius:0;margin:0;}
+.graph-dropdown .unity-base-dropdown__item {height:26px;min-height:26px;padding:4px 8px;background-color:var(--graph-menu);}
+.graph-dropdown .unity-base-dropdown__item:hover,.graph-dropdown .unity-base-dropdown__item:checked {background-color:var(--graph-menu-hover);}
+.graph-dropdown .unity-base-dropdown__label {color:var(--graph-menu-text);font-size:10px;}
+.graph-dropdown .unity-base-dropdown__checkmark {-unity-background-image-tint-color:var(--graph-menu-accent);}
+.graph-dropdown.portrait .unity-base-dropdown__item {height:32px;min-height:32px;padding:6px 8px;}
+.graph-dropdown.portrait .unity-base-dropdown__label {font-size:12px;}

@@ -451,6 +451,11 @@ namespace TimelessEchoes.UI.Toolkit
             SetVisible(tooltip, recipe); if (recipe) tooltipText.text = recipe.GetDisplayName() + "\n" + string.Join("\n", recipe.GetDescriptionLines());
         }
         public void BeginOuting() { runResources.Clear(); HideDetails(); }
+        public void RestoreOuting(IEnumerable<KeyValuePair<Resource, double>> resources)
+        {
+            BeginOuting();
+            foreach (var pair in resources) runResources[pair.Key] = pair.Value;
+        }
         private void RunStarted() { ToolkitResponsiveLayout.SetFocusView(ToolkitDisplayPreferences.DefaultPortraitFullscreen); SetHeroStatsOpen(false); HideDetails(); }
         private void RunEnded(bool died) { if (died) HideDetails(); }
         private void ResourceAdded(Resource resource, double amount, bool bonus)

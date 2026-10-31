@@ -47,6 +47,13 @@ namespace TimelessEchoes.MapGeneration
         public event Action<float> InitialGenerationProgressed;
         public event Action InitialGenerationFinished;
 
+        public void SetStartingDistance(float distance)
+        {
+            // Start with one section behind the player, preserving room for navigation.
+            // Existing generation and streaming then use normal world coordinates.
+            nextSegmentX = Mathf.Max(0, (Mathf.FloorToInt(distance / segmentSize.x) - 1) * segmentSize.x);
+        }
+
         private class Segment
         {
             public int startX;

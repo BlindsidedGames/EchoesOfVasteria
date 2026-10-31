@@ -144,7 +144,8 @@ namespace TimelessEchoes.UI.Toolkit
         private ToolkitRunGraphView runGraph;
         private void BuildGraph()
         {
-            runGraph = new ToolkitRunGraphView(body, footer, definition, () => tracker.RecentRuns);
+            runGraph = new ToolkitRunGraphView(body, footer, definition, () => tracker.RecentRuns,
+                () => tracker.PreviousRuns, () => tracker.EarlierRunDetailsUnavailable);
             GraphStatisticsGuidance.MarkViewed();
         }
         public void SetGraphMode(RunStatsPanelUI.GraphMode mode)

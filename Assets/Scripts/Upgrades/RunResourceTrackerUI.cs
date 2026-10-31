@@ -77,6 +77,28 @@ namespace TimelessEchoes.Upgrades
             if (!nativeView) UIUtils.ClearChildren(slotParent);
         }
 
+        public Blindsided.SaveData.RunSaveData.LootTotals CaptureRunState()
+        {
+            var saved = new Blindsided.SaveData.RunSaveData.LootTotals { StartingReapDistance = startingReapDistance };
+            foreach (var pair in amounts) if (pair.Key) saved.Amounts[pair.Key.name] = pair.Value;
+            foreach (var pair in bonusAmounts) if (pair.Key) saved.BonusAmounts[pair.Key.name] = pair.Value;
+            return saved;
+        }
+
+        public void RestoreRunState(Blindsided.SaveData.RunSaveData.LootTotals saved)
+        {
+            BeginRun();
+            startingReapDistance = saved.StartingReapDistance;
+            // This ledger supports the eventual town bonus; do not credit inventory again.
+            foreach (var resource in Blindsided.Utilities.AssetCache.GetAll<Resource>())
+            {
+                if (!resource) continue;
+                if (saved.Amounts != null && saved.Amounts.TryGetValue(resource.name, out var amount)) amounts[resource] = amount;
+                if (saved.BonusAmounts != null && saved.BonusAmounts.TryGetValue(resource.name, out var bonus)) bonusAmounts[resource] = bonus;
+            }
+            nativeView?.RestoreOuting(GetBaseResourceTotals());
+        }
+
         private void OnResourceAdded(Resource resource, double amount, bool bonus)
         {
             if (resource == null || amount <= 0)

@@ -189,11 +189,10 @@ namespace TimelessEchoes.UI.Toolkit
             journalRecent.Clear();
             var key = journalMap < 0 ? null : definition.maps[journalMap].config.name;
             var runs = tracker.RecentRuns.Where(r => key == null || r.MapType == key).ToList();
-            Text(journalRecent, ToolkitLocalization.Text("journal.recent-count", "{0} of the last {1} saved runs", runs.Count, tracker.RecentRuns.Count), 6).AddToClassList("journal-note");
+            Text(journalRecent, ToolkitLocalization.Text("history.recent-count", "{0} recent runs · up to 10 per map", runs.Count), 6).AddToClassList("journal-note");
             if (runs.Count == 0)
             {
                 Text(journalRecent, ToolkitLocalization.Text("journal.no-runs", "No saved runs here."), 7).AddToClassList("journal-empty");
-                return;
             }
             foreach (var run in runs.AsEnumerable().Reverse())
             {
@@ -212,6 +211,20 @@ namespace TimelessEchoes.UI.Toolkit
                 Text(totals, ToolkitLocalization.Text("journal.run-resources", "Resources: {0}", ItemStatisticsPresentation.Number(run.ResourcesCollected)), 7).AddToClassList("journal-run-rewards");
                 Text(totals, run.Abandoned ? ToolkitLocalization.Text("run.outcome-abandoned", "Abandoned") : run.Reaped ? ToolkitLocalization.Text("run.outcome-reaped", "Reaped") : run.Died ? ToolkitLocalization.Text("run.outcome-died", "Died") : ToolkitLocalization.Text("run.outcome-retreated", "Retreated"), 6).AddToClassList("journal-run-outcome");
             }
+            var previous = MapRunHistory.Previous(tracker.PreviousRuns, key);
+            if (previous.Runs > 0)
+            {
+                var button = ToolkitGameplay.B(journalRecent, StatisticsPresentation.PreviousHistoryTitle(previous), () =>
+                {
+                    var existing = journalRecent.Q<Label>("journal-previous-detail");
+                    if (existing != null) { existing.RemoveFromHierarchy(); return; }
+                    var detail = Text(journalRecent, StatisticsPresentation.PreviousHistoryDetails(previous), 7);
+                    detail.name = "journal-previous-detail"; detail.AddToClassList("journal-run-detail");
+                });
+                button.name = "journal-previous-history"; button.AddToClassList("journal-run");
+            }
+            if (tracker.EarlierRunDetailsUnavailable)
+                Text(journalRecent, ToolkitLocalization.Text("history.incomplete", "Earlier run details unavailable. Lifetime totals are preserved."), 6).AddToClassList("journal-note");
         }
         private static string JournalDuration(double duration)
         {

@@ -1383,43 +1383,13 @@ namespace Blindsided
                 return true;
             }
 
-            var hasActiveRun = HasActiveRun();
-            if (hasActiveRun && !SaveNowBlocking(CurrentSlot))
+            // Closing the app preserves the same run continuation on every platform.
+            // Only the gameplay return/end flow finalizes an outing and its bonus.
+            if (!SaveNowBlocking(CurrentSlot))
             {
                 _isQuitting = false;
                 RestartAutosaveLoop(FirstAutosaveDelaySeconds);
                 return false;
-            }
-
-            if (hasActiveRun)
-            {
-                try
-                {
-                    AbandonActiveRun();
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError(
-                        $"Could not finalize the active run during quit. The preceding full checkpoint is safe: {ex}");
-                    _finalSaveCompleted = true;
-                    TryFlushPlayerPrefs();
-                    return true;
-                }
-            }
-
-            var finalCommitSucceeded = SaveNowBlocking(CurrentSlot);
-            if (!finalCommitSucceeded && !hasActiveRun)
-            {
-                _isQuitting = false;
-                RestartAutosaveLoop(FirstAutosaveDelaySeconds);
-                return false;
-            }
-
-            if (!finalCommitSucceeded)
-            {
-                Debug.LogError(
-                    "The abandoned-run update could not be committed, but the immediately preceding full " +
-                    "checkpoint is durable. Quitting with that verified checkpoint.");
             }
 
             _finalSaveCompleted = true;
@@ -1433,20 +1403,6 @@ namespace Blindsided
             return PrepareForQuit();
         }
 #endif
-
-        private static bool HasActiveRun()
-        {
-            var tracker = GameplayStatTracker.Instance ?? FindAnyObjectByType<GameplayStatTracker>();
-            return tracker != null && tracker.RunInProgress;
-        }
-
-        private static void AbandonActiveRun()
-        {
-            var tracker = GameplayStatTracker.Instance ??
-                          FindAnyObjectByType<GameplayStatTracker>();
-            if (tracker != null && tracker.RunInProgress)
-                tracker.AbandonRun();
-        }
 
         public bool TryCommitImportedData(GameData importedData, out string error)
         {

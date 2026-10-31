@@ -39,7 +39,7 @@ namespace TimelessEchoes
     /// <summary>
     ///     Controls map generation, camera switching and UI visibility.
     /// </summary>
-    public class GameManager : Singleton<GameManager>
+    public partial class GameManager : Singleton<GameManager>
     {
         public static MapGenerationConfig CurrentGenerationConfig { get; private set; }
 
@@ -271,7 +271,7 @@ namespace TimelessEchoes
 
         public void WaitForIvanReturn(Transform speaker)
         {
-            if (speaker && hero && CurrentMap && IvanReturnPending)
+            if (hero && CurrentMap && IvanReturnPending)
                 StartCoroutine(AwaitIvanReturn(speaker, hero, CurrentMap));
         }
 
@@ -280,7 +280,7 @@ namespace TimelessEchoes
             // Continue the conversation's standing pose until the player uses
             // Return To Town. The dialogue camera is already free to restore.
             using (player.BeginNpcConversation(speaker))
-                while (player && speaker && CurrentMap == map && !IsInTown && !heroDead && IvanReturnPending)
+                while (player && CurrentMap == map && !IsInTown && !heroDead && IvanReturnPending)
                     yield return null;
         }
 
@@ -359,6 +359,8 @@ namespace TimelessEchoes
         {
             base.Awake();
             if (Instance != this) return;
+            EventHandler.OnSaveData += SaveActiveRun;
+            EventHandler.OnLoadData += LoadActiveRun;
             cloudSpawner = CloudSpawner.Instance;
             foreach (var entry in generationButtons)
             {
@@ -395,6 +397,8 @@ namespace TimelessEchoes
 
         protected override void OnDestroy()
         {
+            EventHandler.OnSaveData -= SaveActiveRun;
+            EventHandler.OnLoadData -= LoadActiveRun;
             base.OnDestroy();
             if (returnToTavernButton != null)
                 returnToTavernButton.onClick.RemoveListener(OnReturnToTavernButton);
@@ -548,11 +552,13 @@ namespace TimelessEchoes
         }
 
         /// <summary>Starts an authored map with the same music and scaling used by its original button.</summary>
-        public bool BeginAdventure(MapGenerationConfig config)
+        public bool BeginAdventure(MapGenerationConfig config) => BeginAdventure(config, null);
+
+        private bool BeginAdventure(MapGenerationConfig config, RunSaveData resume)
         {
             if (runLoadingActive) return false;
             if (TimelessEchoes.Characters.CharacterCreation.Required) return false;
-            if (UI.Toolkit.BuffIntroductionGuidance.Active || UI.Toolkit.BuffIntroductionGuidance.Eligible) return false;
+            if (resume == null && (UI.Toolkit.BuffIntroductionGuidance.Active || UI.Toolkit.BuffIntroductionGuidance.Eligible)) return false;
             if (config == null) return false;
             foreach (var entry in generationButtons)
             {
@@ -560,23 +566,27 @@ namespace TimelessEchoes
                 currentScalingMode = entry.ScalingMode;
                 currentKillsPerLevel = Mathf.Max(1, entry.KillsPerLevel);
                 AudioManager.Instance.PlayMusic(entry.MusicTrack, fadeDuration);
-                StartRun(config);
+                StartRun(config, resume);
                 return true;
             }
             return false;
         }
 
-        private void StartRun(MapGenerationConfig config)
+        private void StartRun(MapGenerationConfig config, RunSaveData resume = null)
         {
             CurrentGenerationConfig = config;
             cloudSpawner?.SetAllowClouds(config == null || config.allowClouds);
             TownWindowManager.Instance?.CloseAllWindows();
-            StartRun();
+            StartRun(resume);
         }
 
-        private void StartRun()
+        private void StartRun(RunSaveData resume = null)
         {
             if (runLoadingActive) return;
+            // Stop old actors before resetting counters. Keep the old navigation graph
+            // alive until CleanupMapRoutine has returned its pooled objects.
+            if (hero) hero.gameObject.SetActive(false);
+            DestroyAllEchoes();
             HideTooltip();
             cloudSpawner?.SetAllowClouds(CurrentGenerationConfig == null || CurrentGenerationConfig.allowClouds);
             // Stop any ongoing taskbar flashing when a new run begins
@@ -590,7 +600,7 @@ namespace TimelessEchoes
 #if !DISABLESTEAMWORKS
             RichPresenceManager.Instance?.SetInRun();
 #endif
-            if (runEndedByDeath && statTracker != null)
+            if (resume == null && runEndedByDeath && statTracker != null)
                 statTracker.EndRun(true, runEndedByReaper);
             Log("Run starting", TELogCategory.Run, this);
             runEndedByDeath = false;
@@ -610,12 +620,29 @@ namespace TimelessEchoes
             // Delay buff ticking until the map fully initializes
             BuffManager.Instance?.Pause();
             // If this is the first run of a session (tavern was active), reset session aggregates
-            if (statTracker != null && IsInTown)
+            if (resume == null && statTracker != null && IsInTown)
                 statTracker.BeginSession();
-            StartCoroutine(StartRunRoutine());
+            if (resume != null)
+            {
+                statTracker?.RestoreRunState(resume.Stats, CurrentGenerationConfig, currentScalingMode);
+                runResourceTracker?.RestoreRunState(resume.Loot);
+                resetRunResourceTracker = false;
+            }
+            else
+            {
+                statTracker?.BeginRun(CurrentGenerationConfig, currentScalingMode);
+                if (resetRunResourceTracker)
+                {
+                    runResourceTracker?.BeginRun();
+                    resetRunResourceTracker = false;
+                }
+            }
+            var startX = resume?.Distance ?? GetRunStartingDistance();
+            loadingRun = resume ?? CaptureRun(startX, 1f);
+            StartCoroutine(StartRunRoutine(startX, resume));
         }
 
-        private IEnumerator StartRunRoutine()
+        private IEnumerator StartRunRoutine(float startX, RunSaveData resume)
         {
             SetRunLoadingVisible(true);
             UpdateRunLoadingProgress(0f);
@@ -629,13 +656,6 @@ namespace TimelessEchoes
                     Log("GameplayStatTracker missing", TELogCategory.General, this);
             }
 
-            statTracker?.BeginRun(CurrentGenerationConfig, currentScalingMode);
-            if (resetRunResourceTracker)
-            {
-                runResourceTracker?.BeginRun();
-                resetRunResourceTracker = false;
-            }
-
             CurrentMap = Instantiate(mapPrefab);
             loadedMapConfig = CurrentGenerationConfig;
             taskController = CurrentMap.GetComponentInChildren<TaskController>();
@@ -646,6 +666,7 @@ namespace TimelessEchoes
             }
 
             var segmentedGenerator = CurrentMap.GetComponentInChildren<SegmentedMapGenerator>();
+            segmentedGenerator?.SetStartingDistance(startX);
 
             hero = taskController.hero;
             if (hero != null)
@@ -685,6 +706,7 @@ namespace TimelessEchoes
                 {
                     var heroPos = hero.transform.position;
                     heroPos.y = CurrentGenerationConfig.heroStartY;
+                    if (resume != null) heroPos.x = startX;
                     hero.transform.position = heroPos;
                 }
 
@@ -733,7 +755,24 @@ namespace TimelessEchoes
 
             yield return AwaitInitialGeneration(segmentedGenerator);
 
-            yield return StartCoroutine(FastForwardStart());
+            if (resume != null)
+            {
+                // Fresh surroundings need a fresh walkable spawn, not the old map's Y position.
+                var nearest = AstarPath.active?.GetNearest(hero.transform.position, NearestNodeConstraint.Walkable);
+                if (nearest.HasValue && nearest.Value.node != null)
+                    hero.transform.position = nearest.Value.position;
+                BuffManager.Instance?.Pause();
+                BuffManager.Instance?.RestoreRunState(resume.Buffs);
+                HeroStatSystem.ForceRunStartRefresh();
+                var health = hero.GetComponent<HeroHealth>();
+                if (health)
+                {
+                    health.ApplyMaxHealthChange(Mathf.RoundToInt(HeroStatSystem.GetSnapshot().maxHealth));
+                    health.SetCurrentHealthSilently(health.MaxHealth * resume.HealthFraction);
+                }
+            }
+            yield return StartCoroutine(FastForwardStart(resume != null ? hero.transform.position.x : startX, resume?.Dead != true));
+            loadingRun = null;
             SetRunLoadingVisible(false);
             UpdateRunLoadingProgress(0f);
 
@@ -747,7 +786,19 @@ namespace TimelessEchoes
 #endif
             }
 
+            if (resume?.Dead == true)
+            {
+                hero.gameObject.SetActive(false);
+                if (gravestonePrefab && CurrentMap)
+                    Instantiate(gravestonePrefab, hero.transform.position, Quaternion.identity, CurrentMap.transform);
+                retreatQueued = resume.ReturnQueued;
+                PresentDeath(resume.Reaped);
+                yield break;
+            }
+
+            retreatQueued = resume?.ReturnQueued == true;
             BuffManager.Instance?.Resume();
+            if (resume != null && IvanReturnPending) WaitForIvanReturn(null);
 
             var firstEchoLesson = FindAnyObjectByType<UI.Toolkit.ToolkitOrinIntroduction>();
             if (firstEchoLesson && UI.Toolkit.BuffIntroductionGuidance.Stage == 3)
@@ -772,7 +823,14 @@ namespace TimelessEchoes
 
         }
 
-        private IEnumerator FastForwardStart()
+        private float GetRunStartingDistance()
+        {
+            var entry = CurrentGenerationConfig ? CurrentGenerationConfig.entryIntroduction : null;
+            var distance = entry ? Mathf.Max(startingDistance, entry.StartingInset) : startingDistance;
+            return UI.Toolkit.BuffIntroductionGuidance.Stage == 3 ? Mathf.Max(distance, 4) : distance;
+        }
+
+        private IEnumerator FastForwardStart(float startX, bool activateHero = true)
         {
             if (hero == null)
                 yield break;
@@ -782,15 +840,6 @@ namespace TimelessEchoes
                 playerInput.enabled = false;
             hero.SetActiveState(false);
 
-            // The first authored entrance stands a few steps inside the map.
-            // Tasks still start at their normal thresholds; later runs keep the
-            // existing start once the introduction has been completed.
-            var entry = CurrentGenerationConfig ? CurrentGenerationConfig.entryIntroduction : null;
-            var startX = entry ? Mathf.Max(startingDistance, entry.StartingInset) : startingDistance;
-            // Orin's first Echo lesson also needs room inside the generated map,
-            // before the player is released to move or use the marked ability.
-            if (UI.Toolkit.BuffIntroductionGuidance.Stage == 3)
-                startX = Mathf.Max(startX, 4);
             var startPos = hero.transform.position;
             if (warpDuration > 0f)
             {
@@ -823,9 +872,9 @@ namespace TimelessEchoes
                         Blindsided.Utilities.Pooling.PoolManager.Release(enemy.gameObject);
                 }
 
-            hero.SetActiveState(true);
+            hero.SetActiveState(activateHero);
             if (playerInput != null)
-                playerInput.enabled = true;
+                playerInput.enabled = activateHero;
         }
 
         private IEnumerator AwaitInitialGeneration(SegmentedMapGenerator generator)
@@ -921,6 +970,12 @@ namespace TimelessEchoes
             // Prevent auto-buffing (and echo respawns) during the death window
             BuffManager.Instance?.Pause();
 
+            PresentDeath(distanceReaper);
+        }
+
+        private void PresentDeath(bool distanceReaper)
+        {
+            heroDead = true;
             runEndedByDeath = true;
             runEndedByReaper = distanceReaper;
             if (deathText != null)

@@ -11,9 +11,13 @@ namespace TimelessEchoes.UI.Toolkit
     {
         public enum Metric { Resources, Tasks, Kills, Duration, Distance }
         private readonly Func<IReadOnlyList<GameData.RunRecord>> history;
+        private readonly Func<IReadOnlyDictionary<string, RunHistoryTotals>> previousHistory;
+        private readonly Func<bool> incompleteHistory;
+        private readonly Button previousHistoryButton;
+        private readonly Label historyNote;
         private readonly ToolkitStatisticsDefinition definition;
-        private readonly List<Button> metrics = new(), maps = new();
         private readonly Button totals, rates, zoomIn, zoomOut, resetZoom;
+        private readonly VisualElement units, previousDetails;
         private readonly VisualElement plot, axis, axisLabels, barHost, averageLine, details;
         private readonly Label summary, sample, empty, first, last, detailTitle, averageLabel, overflowValue;
         private readonly Label[] ticks = new Label[5];
@@ -23,10 +27,13 @@ namespace TimelessEchoes.UI.Toolkit
         private const int MaximumZoomSteps = 18;
         private double ceiling;
         private bool perMinute;
-        private readonly DropdownField portraitMetric, portraitMap;
-        public ToolkitRunGraphView(VisualElement body, VisualElement footer, ToolkitStatisticsDefinition definition, Func<IReadOnlyList<GameData.RunRecord>> history)
+        private readonly DropdownField metricPicker, mapPicker;
+        private bool previousExpanded;
+        public ToolkitRunGraphView(VisualElement body, VisualElement footer, ToolkitStatisticsDefinition definition, Func<IReadOnlyList<GameData.RunRecord>> history,
+            Func<IReadOnlyDictionary<string, RunHistoryTotals>> previousHistory = null, Func<bool> incompleteHistory = null)
         {
             this.definition = definition; this.history = history;
+            this.previousHistory = previousHistory; this.incompleteHistory = incompleteHistory;
             body.style.paddingTop = body.style.paddingBottom = body.style.paddingLeft = body.style.paddingRight = 0;
             footer.style.display = DisplayStyle.None;
             var scroll = ToolkitGameplay.Scroll(body, "run-graph-scroll");
@@ -35,24 +42,18 @@ namespace TimelessEchoes.UI.Toolkit
             scroll.contentViewport.RegisterCallback<GeometryChangedEvent>(e => scroll.contentContainer.style.minHeight = e.newRect.height);
             body = scroll.contentContainer;
             body.AddToClassList("run-graph-content");
-            var phoneFilters = ToolkitGameplay.E(body, "portrait-graph-pickers");
-            portraitMetric = new DropdownField(Enum.GetValues(typeof(Metric)).Cast<Metric>().Select(MetricLabel).ToList(), 0);
-            portraitMetric.AddToClassList("portrait-picker"); phoneFilters.Add(portraitMetric);
-            portraitMetric.RegisterValueChangedCallback(_ => { if (portraitMetric.index >= 0) SetMetric((Metric)portraitMetric.index); });
+            var controls = ToolkitGameplay.E(body, "graph-controls");
+            var pickers = ToolkitGameplay.E(controls, "graph-pickers");
             var mapNames = new List<string> { ToolkitLocalization.Text("graph.all-maps", "All maps") };
             mapNames.AddRange(definition.maps.Select(m => ToolkitLocalization.Text("map." + m.config.name, m.label.Trim())));
-            portraitMap = new DropdownField(mapNames, 0); portraitMap.AddToClassList("portrait-picker"); portraitMap.AddToClassList("graph-last-picker"); phoneFilters.Add(portraitMap);
-            portraitMap.RegisterValueChangedCallback(_ => { map = portraitMap.index - 1; selectedRun = -1; zoomSteps = 0; Refresh(); });
-            var controls = ToolkitGameplay.E(body, "graph-controls");
-            foreach (Metric m in Enum.GetValues(typeof(Metric)))
-            { var choice=m; metrics.Add(Choice(controls, "graph-"+m, MetricLabel(m),()=>SetMetric(choice))); }
-            var units=ToolkitGameplay.E(controls,"graph-units");
+            mapPicker = Picker(pickers, "graph-map-picker", mapNames);
+            mapPicker.RegisterValueChangedCallback(_ => { map = mapPicker.index - 1; selectedRun = -1; zoomSteps = 0; previousExpanded = false; Refresh(); });
+            metricPicker = Picker(pickers, "graph-metric-picker", Enum.GetValues(typeof(Metric)).Cast<Metric>().Select(MetricLabel).ToList());
+            metricPicker.RegisterValueChangedCallback(_ => { if (metricPicker.index >= 0) SetMetric((Metric)metricPicker.index); });
+            units=ToolkitGameplay.E(controls,"graph-units");
             totals=Choice(units,"graph-totals",ToolkitLocalization.Text("graph.totals", "Totals"),()=>SetRate(false));
             rates=Choice(units,"graph-rates",ToolkitLocalization.Text("graph.per-minute", "Per minute"),()=>SetRate(true));
             rates.AddToClassList("graph-last-choice");
-            var filters=ToolkitGameplay.E(body,"graph-map-filters");
-            for(int i=-1;i<definition.maps.Length;i++) {var index=i;maps.Add(Choice(filters,"graph-map-"+(i+1),i<0?ToolkitLocalization.Text("graph.all-maps", "All maps"):ToolkitLocalization.Text("map." + definition.maps[i].config.name, definition.maps[i].label.Trim()),()=>{map=index;selectedRun=-1;zoomSteps=0;Refresh();}));}
-            maps[maps.Count - 1].AddToClassList("graph-last-choice");
             var heading=ToolkitGameplay.E(body,"graph-summary-row");
             var copy=ToolkitGameplay.E(heading,"graph-summary-copy");
             summary=Text(copy,"","graph-summary");sample=Text(copy,"","graph-sample");
@@ -81,7 +82,54 @@ namespace TimelessEchoes.UI.Toolkit
             var detailHeader=ToolkitGameplay.E(body,"graph-detail-heading");detailTitle=Text(detailHeader,"","graph-detail-title");
             Text(detailHeader,ToolkitLocalization.Text("graph.select-bar", "Select a bar for details"),"graph-detail-hint");
             details=ToolkitGameplay.E(body,"graph-details");
+            previousHistoryButton = Choice(body, "graph-previous-history", "", () =>
+            {
+                previousExpanded = !previousExpanded;
+                RefreshPreviousHistory();
+            });
+            previousHistoryButton.style.flexShrink = 0;
+            previousDetails = ToolkitGameplay.E(body, "graph-details graph-previous-details");
+            historyNote = Text(body, ToolkitLocalization.Text("history.incomplete", "Earlier run details unavailable. Lifetime totals are preserved."), "graph-detail-hint");
+            historyNote.style.whiteSpace = WhiteSpace.Normal;
             Refresh();
+        }
+        private static DropdownField Picker(VisualElement parent, string name, List<string> choices)
+        {
+            var field = new DropdownField(choices, 0) { name = name };
+            field.AddToClassList("graph-picker"); parent.Add(field);
+            // Native menus attach outside the screen root. Scope their palette and
+            // typography to this graph's popup rather than altering other panels.
+            void StyleMenu()
+            {
+                field.panel?.visualTree.Query<VisualElement>().ForEach(element =>
+                {
+                    if (element.userData is not GenericDropdownMenu menu || menu.targetElement != field) return;
+                    var overlay = menu.contentContainer;
+                    while (overlay.parent != null && overlay.parent != field.panel.visualTree) overlay = overlay.parent;
+                    overlay.EnableInClassList("portrait", ToolkitResponsiveLayout.IsPortrait);
+                    overlay.style.unityFontDefinition = field.resolvedStyle.unityFontDefinition;
+                    if (overlay.ClassListContains("graph-dropdown")) return;
+                    overlay.AddToClassList("graph-dropdown");
+                    overlay.styleSheets.Add(Resources.Load<StyleSheet>("UI/GraphDropdowns"));
+                    ToolkitColorTheme.Bind(overlay);
+                });
+            }
+            field.RegisterCallback<PointerDownEvent>(_ => field.schedule.Execute(StyleMenu), TrickleDown.TrickleDown);
+            field.RegisterCallback<NavigationSubmitEvent>(_ => field.schedule.Execute(StyleMenu), TrickleDown.TrickleDown);
+            field.RegisterCallback<KeyDownEvent>(_ => field.schedule.Execute(StyleMenu), TrickleDown.TrickleDown);
+            return field;
+        }
+
+        private void RefreshPreviousHistory()
+        {
+            var key = map < 0 ? null : definition.maps[map].config.name;
+            var previous = MapRunHistory.Previous(previousHistory?.Invoke(), key);
+            previousHistoryButton.text = StatisticsPresentation.PreviousHistoryTitle(previous) + (previousExpanded ? "  −" : "  +");
+            previousHistoryButton.style.display = previous.Runs > 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            previousDetails.style.display = previous.Runs > 0 && previousExpanded ? DisplayStyle.Flex : DisplayStyle.None;
+            previousDetails.Clear();
+            if (previousExpanded)
+                foreach (var field in StatisticsPresentation.PreviousHistoryFields(previous)) Detail(previousDetails, field.name, field.value);
         }
         private static string MetricLabel(Metric metric) => metric switch
         {
@@ -112,9 +160,11 @@ namespace TimelessEchoes.UI.Toolkit
         private string Format(double value)=>metric==Metric.Duration?CalcUtils.FormatTime(value):ItemStatisticsPresentation.Number(value);
         public void Refresh()
         {
-            portraitMetric.SetValueWithoutNotify(MetricLabel(metric));
-            portraitMap.SetValueWithoutNotify(portraitMap.choices[Mathf.Clamp(map + 1, 0, portraitMap.choices.Count - 1)]);
+            metricPicker.SetValueWithoutNotify(MetricLabel(metric));
+            mapPicker.SetValueWithoutNotify(mapPicker.choices[Mathf.Clamp(map + 1, 0, mapPicker.choices.Count - 1)]);
             var all=history();var key=map<0?null:definition.maps[map].config.name;
+            RefreshPreviousHistory();
+            historyNote.style.display = incompleteHistory?.Invoke() == true ? DisplayStyle.Flex : DisplayStyle.None;
             var filtered=all.Where(r=>key==null||r.MapType==key).ToList();
             visible=filtered.Where(r=>!perMinute||r.Duration>0).ToList();
             var omitted = filtered.Count - visible.Count;
@@ -122,20 +172,20 @@ namespace TimelessEchoes.UI.Toolkit
                 visible = visible.Skip(visible.Count - 10).ToList();
             var values=visible.Select(r=>Value(r,metric,perMinute)).ToArray();
             double max=values.Length>0?values.Max():0,avg=values.Length>0?values.Average():0;
-            for(int i=0;i<metrics.Count;i++)metrics[i].EnableInClassList("active",i==(int)metric);
-            for(int i=0;i<maps.Count;i++)maps[i].EnableInClassList("active",i==map+1);
+            units.style.display = SupportsRate ? DisplayStyle.Flex : DisplayStyle.None;
             rates.SetEnabled(SupportsRate); rates.EnableInClassList("active",perMinute);totals.EnableInClassList("active",!perMinute);
             var suffix=perMinute?ToolkitLocalization.Text("graph.rate-suffix", " / min"):"";
             summary.text=values.Length==0?ToolkitLocalization.Text("graph.no-data", "No recent data"):ToolkitLocalization.Text("graph.average-best", "Average {0}{1}   ·   {2} {3}{1}", Format(avg), suffix, metric==Metric.Duration?ToolkitLocalization.Text("graph.longest", "Longest"):ToolkitLocalization.Text("graph.best", "Best"), Format(max));
             var omittedText = omitted > 0 ? ToolkitLocalization.Text("graph.omitted", " · {0} without duration omitted", omitted) : "";
             sample.text = ToolkitResponsiveLayout.IsPortrait
                 ? ToolkitLocalization.Text("graph.recent-sample", "Latest {0} runs{1}", visible.Count, omittedText)
-                : ToolkitLocalization.Text("graph.sample", "{0} of last {1} saved runs{2}", visible.Count, all.Count, omittedText);
+                : ToolkitLocalization.Text("history.recent-count", "{0} recent runs · up to 10 per map", visible.Count) + omittedText;
             ceiling=max>0?NiceCeiling(max):1;
             for(var step=0;step<zoomSteps;step++)ceiling=LowerCeiling(ceiling);
             if(!perMinute)ceiling=Math.Max(1,ceiling);
             zoomIn.SetEnabled(max>0&&zoomSteps<MaximumZoomSteps&&(perMinute||LowerCeiling(ceiling)>=1));
             zoomOut.SetEnabled(zoomSteps>0);resetZoom.SetEnabled(zoomSteps>0);
+            resetZoom.style.display = zoomSteps > 0 ? DisplayStyle.Flex : DisplayStyle.None;
             for(int i=0;i<5;i++)ticks[i].text=Format(ceiling*i/4);
             SizeAxis();
             barHost.Clear();var slots=Math.Max(10,visible.Count);
@@ -197,6 +247,7 @@ namespace TimelessEchoes.UI.Toolkit
             axis.style.width=width;
             if(axisLabels!=null)axisLabels.style.marginLeft=width;
         }
-        private void Detail(string title,string value){var pair=ToolkitGameplay.E(details,"graph-detail-pair");Text(pair,title,"graph-detail-key");Text(pair,value,"graph-detail-value");}
+        private void Detail(string title,string value) => Detail(details, title, value);
+        private static void Detail(VisualElement parent,string title,string value){var pair=ToolkitGameplay.E(parent,"graph-detail-pair");Text(pair,title,"graph-detail-key");Text(pair,value,"graph-detail-value");}
     }
 }

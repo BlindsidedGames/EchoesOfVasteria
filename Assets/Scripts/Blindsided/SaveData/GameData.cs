@@ -7,6 +7,7 @@ namespace Blindsided.SaveData
 {
     public class GameData
     {
+        public RunSaveData ActiveRun;
         public TimelessEchoes.Shop.ShopProgress Shop = new();
         // Short-lived candidate for a synchronous in-memory economic mutation. Unrelated
         // state is read-only; every collection/record these commands may write is
@@ -22,7 +23,7 @@ namespace Blindsided.SaveData
             copy.AppliedMigrationIds = new HashSet<string>(AppliedMigrationIds);
             return copy;
         }
-        public const int CurrentSchemaVersion = 10;
+        public const int CurrentSchemaVersion = 11;
 
         public int SchemaVersion = CurrentSchemaVersion;
         public TimelessEchoes.Characters.CharacterProfile Character = TimelessEchoes.Characters.CharacterProfile.Legacy();
@@ -394,8 +395,10 @@ namespace Blindsided.SaveData
             public double LastUploadedDistanceReached;
             public int LastUploadedTasks;
 
-            // Records for the most recent runs. Limited to the last 50.
+            // Ten detailed runs per map, with bounded totals for evicted records.
             public List<RunRecord> RecentRuns = new();
+            public Dictionary<string, RunHistoryTotals> PreviousRuns = new();
+            public bool EarlierRunDetailsUnavailable;
             public float LongestRun;
             public float ShortestRun;
             public float AverageRun;

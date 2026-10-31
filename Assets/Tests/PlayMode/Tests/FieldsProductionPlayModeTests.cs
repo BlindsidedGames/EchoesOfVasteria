@@ -15,8 +15,8 @@ namespace Tests.PlayMode
 {
     // Real component/save integration in the runner's isolated empty scene. This does
     // not load Main's Steam/cloud bootstrap and is not a normal-scene visual proof.
-    [PrebuildSetup(typeof(IsolatedPlayModeScene))]
-    [PostBuildCleanup(typeof(IsolatedPlayModeScene))]
+    [PrebuildSetup(typeof(RunCameraFrameOfflineSession))]
+    [PostBuildCleanup(typeof(RunCameraFrameOfflineSession))]
     public sealed partial class FieldsProductionPlayModeTests
     {
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;

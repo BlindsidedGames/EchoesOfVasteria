@@ -27,6 +27,9 @@ namespace TimelessEchoes.Stats
         private readonly Dictionary<TaskData, GameData.TaskRecord> taskRecords = new();
 
         private readonly List<GameData.RunRecord> recentRuns = new();
+        private readonly Dictionary<string, RunHistoryTotals> previousRuns = new();
+        public IReadOnlyDictionary<string, RunHistoryTotals> PreviousRuns => previousRuns;
+        public bool EarlierRunDetailsUnavailable { get; private set; }
         private int nextRunNumber = 1;
         public int CompletedAdventures => Mathf.Max(0, nextRunNumber - 1);
         private float runStartTime;
@@ -227,6 +230,8 @@ namespace TimelessEchoes.Stats
             g.CriticalHits = CriticalHits;
             g.TotalResourcesGathered = TotalResourcesGathered;
             g.RecentRuns = new List<GameData.RunRecord>(recentRuns);
+            g.PreviousRuns = new Dictionary<string, RunHistoryTotals>(previousRuns);
+            g.EarlierRunDetailsUnavailable = EarlierRunDetailsUnavailable;
             g.LongestRun = LongestRun;
             g.ShortestRun = ShortestRun;
             g.AverageRun = AverageRun;
@@ -267,9 +272,18 @@ namespace TimelessEchoes.Stats
             BuffsCast = g.BuffsCast;
             CriticalHits = g.CriticalHits;
             TotalResourcesGathered = g.TotalResourcesGathered;
+            // Compact the source collections too, so a repeated load cannot archive
+            // the same overflow again before the next SaveState contribution.
+            g.RecentRuns ??= new List<GameData.RunRecord>();
+            g.PreviousRuns ??= new Dictionary<string, RunHistoryTotals>();
+            MapRunHistory.Compact(g.RecentRuns, g.PreviousRuns);
             recentRuns.Clear();
             if (g.RecentRuns != null)
                 recentRuns.AddRange(g.RecentRuns);
+            previousRuns.Clear();
+            if (g.PreviousRuns != null)
+                foreach (var pair in g.PreviousRuns) previousRuns[pair.Key] = pair.Value;
+            EarlierRunDetailsUnavailable = g.EarlierRunDetailsUnavailable;
             LongestRun = g.LongestRun;
             ShortestRun = g.ShortestRun;
             AverageRun = g.AverageRun;
@@ -372,7 +386,7 @@ namespace TimelessEchoes.Stats
                 // First sample of a run: set baseline and ensure current run distance starts here
                 lastHeroPos = position;
                 if (RunInProgress)
-                    CurrentRunDistance = position.x;
+                    CurrentRunDistance = Mathf.Max(CurrentRunDistance, position.x);
             }
             else
             {
@@ -495,6 +509,7 @@ namespace TimelessEchoes.Stats
 
         public void BeginRun(MapGenerationConfig config, TimelessEchoes.GameManager.MapScalingMode scalingMode)
         {
+            ResetCurrentRun();
             currentRunScalingMode = scalingMode;
             currentMapKey = config != null ? config.name : null;
             runStartTime = Time.unscaledTime;
@@ -507,12 +522,52 @@ namespace TimelessEchoes.Stats
             RunStarted();
         }
 
+        public RunSaveData.Statistics CaptureRunState() => new()
+        {
+            Distance = CurrentRunDistance, Steps = CurrentRunSteps,
+            Duration = CurrentRunElapsedSeconds, ScaledDuration = runScaledDuration,
+            Tasks = currentRunTasks, Kills = CurrentRunKills,
+            Resources = currentRunResources, BonusResources = CurrentRunBonusResources,
+            DamageDealt = currentRunDamageDealt, DamageTaken = currentRunDamageTaken,
+            ResourceAmounts = new Dictionary<string, double>(currentRunResourceAmounts),
+            SessionDeaths = SessionDeaths, SessionKills = SessionKills, SessionReaps = SessionReaps,
+            SessionDamageDealt = SessionDamageDealt, SessionSteps = SessionSteps, SessionDuration = SessionDuration
+        };
+
+        public void RestoreRunState(RunSaveData.Statistics saved, MapGenerationConfig config,
+            TimelessEchoes.GameManager.MapScalingMode scalingMode)
+        {
+            // Assign directly: inventory, XP and lifetime statistics were already loaded.
+            ResetCurrentRun();
+            currentMapKey = config.name;
+            currentRunScalingMode = scalingMode;
+            RunInProgress = true;
+            CurrentRunDistance = saved.Distance;
+            CurrentRunSteps = saved.Steps;
+            runStartTime = Time.unscaledTime - saved.Duration;
+            runScaledDuration = saved.ScaledDuration;
+            currentRunTasks = saved.Tasks;
+            CurrentRunKills = saved.Kills;
+            currentRunResources = saved.Resources;
+            CurrentRunBonusResources = saved.BonusResources;
+            currentRunDamageDealt = saved.DamageDealt;
+            currentRunDamageTaken = saved.DamageTaken;
+            if (saved.ResourceAmounts != null)
+                foreach (var pair in saved.ResourceAmounts) currentRunResourceAmounts[pair.Key] = pair.Value;
+            SessionDeaths = saved.SessionDeaths;
+            SessionKills = saved.SessionKills;
+            SessionReaps = saved.SessionReaps;
+            SessionDamageDealt = saved.SessionDamageDealt;
+            SessionSteps = saved.SessionSteps;
+            SessionDuration = saved.SessionDuration;
+            RunStarted();
+        }
+
         private void AddRunRecord(GameData.RunRecord record)
         {
             if (record == null || record.Distance <= 0f) return;
             recentRuns.Add(record);
-            if (recentRuns.Count > 50)
-                recentRuns.RemoveAt(0);
+            MapRunHistory.Compact(recentRuns, previousRuns);
 
             if (record.Distance > LongestRun) LongestRun = record.Distance;
             if (ShortestRun <= 0f || record.Distance < ShortestRun) ShortestRun = record.Distance;

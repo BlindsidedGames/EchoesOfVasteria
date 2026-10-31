@@ -166,6 +166,7 @@ namespace TimelessEchoes.Enemies
 
         private void Update()
         {
+            if (GameManager.Instance && GameManager.Instance.RunLoadingActive) return;
             UpdateAnimation();
             if (logicActive)
                 UpdateBehavior();

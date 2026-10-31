@@ -846,13 +846,18 @@
 
 /* Rank: shared controls, a readable three-column list, and a persistent personal result. */
 
-.gameplay .graph-controls,.gameplay .graph-map-filters {flex-direction:row;flex-shrink:0;margin-bottom:var(--space-section);}
+.gameplay .graph-controls {flex-direction:row;align-items:center;flex-shrink:0;margin-bottom:10px;}
+.gameplay .graph-pickers {flex-direction:row;flex-grow:1;flex-shrink:1;flex-basis:0;min-width:0;max-width:360px;}
+.gameplay .graph-picker {flex-grow:1;flex-shrink:1;flex-basis:0;min-width:0;margin:0 6px 0 0;padding:0;}
+.gameplay #graph-metric-picker {margin-right:0;}
+.gameplay .graph-picker .unity-base-popup-field__input {height:26px;min-height:26px;margin:0;padding:4px 8px;background-color:var(--control);background-image:none;border-width:1px;border-color:var(--line);border-radius:0;}
+.gameplay .graph-picker .unity-base-popup-field__input:hover {background-color:var(--hover);}
+.gameplay .graph-picker .unity-base-popup-field__text {font-size:var(--body);color:var(--text);margin:0;padding:0;}
+.gameplay .graph-picker .unity-base-popup-field__arrow {-unity-background-image-tint-color:var(--text);width:8px;height:8px;margin-left:8px;}
 .gameplay .graph-choice {height:22px;min-height:22px;font-size:var(--small);padding:var(--space-control) var(--space-section);margin-right:var(--space-control);}
 .gameplay .graph-choice.graph-last-choice {margin-right:0;}
-.gameplay .graph-controls {align-items:center;}
-.gameplay .graph-controls > .graph-choice {flex-grow:1;flex-basis:0;min-width:0;}
-.gameplay .graph-units {flex-direction:row;flex-shrink:0;margin-left:var(--space-control);}
-.gameplay .graph-map-filters .graph-choice {flex-grow:1;flex-basis:0;min-width:0;}
+.gameplay .graph-units {flex-direction:row;flex-shrink:0;margin-left:8px;}
+.gameplay .graph-units .graph-choice {height:26px;min-height:26px;min-width:64px;font-size:var(--body);margin:0;white-space:nowrap;}
 .gameplay .graph-summary-row {flex-direction:row;align-items:center;flex-wrap:wrap;margin-bottom:var(--space-section);flex-shrink:0;}
 .gameplay .graph-summary-copy {flex-grow:1;flex-shrink:1;flex-basis:180px;min-width:0;margin-right:var(--space-section);}
 .gameplay .graph-summary {font-size:var(--body);-unity-font-style:bold;white-space:normal;}
@@ -860,6 +865,8 @@
 .gameplay .graph-zoom-controls {flex-direction:row;align-items:center;flex-shrink:0;}
 .gameplay .graph-zoom-controls .graph-choice {min-width:24px;height:24px;min-height:24px;margin-top:var(--space-control);margin-bottom:var(--space-control);}
 .gameplay #graph-reset-zoom {margin-right:0;}
+.gameplay #graph-previous-history {justify-content:space-between;align-self:stretch;-unity-text-align:middle-left;margin:8px 0 0;padding:4px 0;background-color:transparent;border-width:0;border-top-width:.5px;border-top-color:var(--line);height:28px;min-height:28px;}
+.gameplay .graph-previous-details {margin-top:6px;}
 .gameplay .graph-chart {flex-direction:row;flex-grow:1;min-height:72px;}
 .gameplay .graph-axis {width:42px;flex-shrink:0;position:relative;}
 .gameplay .graph-tick {position:absolute;right:var(--space-control);font-size:var(--small);color:var(--muted);-unity-text-align:middle-right;}

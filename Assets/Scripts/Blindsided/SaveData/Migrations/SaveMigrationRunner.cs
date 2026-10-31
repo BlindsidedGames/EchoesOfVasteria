@@ -253,6 +253,7 @@ namespace Blindsided.SaveData.Migrations
             Register(new Migration_SchemaV8TownStatistics());
             Register(new Migration_SchemaV9FarmProjects());
             Register(new Migration_SchemaV10TownPaths());
+            Register(new Migration_SchemaV11MapRunHistory());
             Register(new Migration_ReturningPlayerGuidance());
         }
     }
@@ -423,6 +424,7 @@ namespace Blindsided.SaveData.Migrations
         private static void NormalizeGeneralStats(GameData.GeneralStats general)
         {
             general.RecentRuns ??= new List<GameData.RunRecord>();
+            general.PreviousRuns ??= new Dictionary<string, RunHistoryTotals>();
             general.RecentRuns.RemoveAll(run => run == null);
             if (!(general.MaxRunDistance > 0f) || float.IsInfinity(general.MaxRunDistance))
                 general.MaxRunDistance = 50f;

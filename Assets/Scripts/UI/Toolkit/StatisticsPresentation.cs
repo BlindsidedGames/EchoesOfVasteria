@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Blindsided.SaveData;
 using Blindsided.Utilities;
 using TimelessEchoes.Stats;
@@ -8,6 +9,29 @@ namespace TimelessEchoes.UI.Toolkit
     // Presentation-only values. No mutation of progression or run accounting.
     public static class StatisticsPresentation
     {
+        public static string PreviousHistoryTitle(RunHistoryTotals totals) =>
+            ToolkitLocalization.Text("history.previous", "Previous History ({0} runs)", LocaleNumbers.Integer(totals.Runs));
+
+        public static string PreviousHistoryDetails(RunHistoryTotals totals)
+            => string.Join("\n", PreviousHistoryFields(totals).Select(field => field.name + ": " + field.value));
+
+        public static IEnumerable<(string name, string value)> PreviousHistoryFields(RunHistoryTotals totals)
+        {
+            (string, string) Row(string key, string label, double value) => (ToolkitLocalization.Text(key, label), ItemStatisticsPresentation.Number(value));
+            yield return (ToolkitLocalization.Text("graph.duration", "Duration"), CalcUtils.FormatTime(totals.Duration));
+            yield return Row("graph.distance", "Distance", totals.Distance);
+            yield return Row("graph.tasks", "Tasks", totals.Tasks);
+            yield return Row("graph.resources", "Resources", totals.Resources);
+            yield return Row("graph.bonus-resources", "Bonus resources", totals.BonusResources);
+            yield return Row("graph.kills", "Kills", totals.Kills);
+            yield return Row("graph.damage-dealt", "Damage dealt", totals.DamageDealt);
+            yield return Row("graph.damage-taken", "Damage taken", totals.DamageTaken);
+            yield return Row("run.outcome-died", "Died", totals.Deaths);
+            yield return Row("run.outcome-reaped", "Reaped", totals.Reaps);
+            yield return Row("run.outcome-abandoned", "Abandoned", totals.Abandoned);
+            yield return Row("run.outcome-retreated", "Retreated", totals.Runs - totals.Deaths - totals.Reaps - totals.Abandoned);
+        }
+
         public static (string left, string right) General(GameplayStatTracker stats, bool killScaling)
         {
             string Number(double value) => CalcUtils.FormatNumber(value, true);

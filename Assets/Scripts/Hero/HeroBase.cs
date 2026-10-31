@@ -223,6 +223,7 @@ namespace TimelessEchoes.Hero
 
         protected virtual void Update()
         {
+            if (GameManager.Instance && GameManager.Instance.RunLoadingActive) return;
             if (movementController != null && !movementController.LogicActive)
                 return;
             if (stats != null)

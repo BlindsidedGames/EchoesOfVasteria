@@ -118,11 +118,11 @@
 .gameplay.portrait .eov-stat-entry-field {min-width:0;flex-grow:0;margin-right:0;margin-bottom:6px;}
 .gameplay.portrait .enemy-stat-column {flex-grow:0;flex-shrink:0;margin-bottom:4px;}
 .gameplay.portrait .eov-stat-entry-progress {flex-shrink:0;}
-.gameplay.portrait .graph-controls {flex-wrap:wrap;}
-.gameplay.portrait .graph-controls > .graph-choice {flex-grow:1;flex-basis:18%;min-width:0;padding:3px 2px;font-size:var(--body);}
+.gameplay.portrait .graph-controls {flex-direction:column;align-items:stretch;}
+.gameplay.portrait .graph-pickers {width:100%;max-width:none;flex-basis:auto;}
+.gameplay.portrait .graph-picker .unity-base-popup-field__input {height:32px;min-height:32px;}
+.gameplay.portrait .graph-picker .unity-base-popup-field__text {font-size:12px;}
 .gameplay.portrait .graph-units > .graph-choice {flex-grow:1;flex-basis:0;font-size:var(--body);}
-.gameplay.portrait .graph-map-filters {flex-wrap:wrap;}
-.gameplay.portrait .graph-map-filters > .graph-choice {flex-basis:30%;min-width:0;margin-bottom:4px;font-size:var(--body);}
 .gameplay.portrait .graph-chart {min-height:150px;flex-shrink:0;}
 .gameplay.portrait .graph-detail-heading {flex-wrap:wrap;}
 .gameplay.portrait #run-graph-scroll {min-height:0;flex-grow:1;}
@@ -201,18 +201,12 @@
 .gameplay.portrait .portrait-run-resources .heading {font-size:14px;margin-bottom:8px;}
 .gameplay.portrait .portrait-resource-row {min-height:34px;align-items:center;border-bottom-width:.5px;border-bottom-color:var(--line);}
 .gameplay.portrait .portrait-resource-row Label {font-size:11px;}
-.gameplay .portrait-picker, .gameplay .portrait-graph-pickers {display:none;}
+.gameplay .portrait-picker {display:none;}
 .gameplay.portrait .portrait-picker {display:flex;margin:0 0 8px 0;flex-shrink:0;}
 .gameplay.portrait .portrait-picker > Label {min-width:32px;max-width:80px;flex-shrink:0;white-space:nowrap;align-self:center;font-size:11px;margin-right:6px;}
 .gameplay.portrait .portrait-picker .unity-base-popup-field__input {flex-grow:1;background-color:var(--control);border-width:1px;border-color:var(--line);border-radius:0;}
 .gameplay.portrait .portrait-picker .unity-base-popup-field__text {font-size:12px;color:var(--text);}
 .gameplay.portrait.eov-statistics > .eov-stat-tabs {display:none;}
-.gameplay.portrait .portrait-graph-pickers {display:flex;flex-direction:row;flex-shrink:0;margin-bottom:8px;}
-.gameplay.portrait .portrait-graph-pickers > .portrait-picker {flex-grow:1;flex-basis:0;min-width:0;margin:0 4px 0 0;padding:0;}
-.gameplay.portrait .portrait-graph-pickers > .graph-last-picker {margin-right:0;}
-.gameplay.portrait .portrait-graph-pickers .unity-base-popup-field__input {margin:0;}
-.gameplay.portrait .graph-controls > .graph-choice, .gameplay.portrait .graph-map-filters {display:none;}
-.gameplay.portrait .graph-units {margin-top:0;}
 .gameplay.portrait.eov-navigation .portrait-more.active {color:var(--text);border-top-width:2px;border-top-color:var(--accent);}
 .gameplay.portrait .portrait-navigation-title {flex-shrink:0;}
 .gameplay.portrait #portrait-navigation-list, .gameplay.portrait #portrait-more-list {flex-grow:1;min-height:0;width:100%;}
@@ -298,8 +292,10 @@
 .gameplay.portrait .eov-task-entry .eov-stat-entry-toggle {position:absolute;right:0;top:8px;width:84px;min-width:84px;min-height:28px;height:28px;padding:4px;}
 .gameplay.portrait .eov-stat-entry-toggle Image {display:none;}
 .gameplay.portrait .task-boost-label {font-size:var(--body);white-space:nowrap;}
-.gameplay.portrait .graph-units {width:100%;margin:0;}
-.gameplay.portrait .graph-units .graph-choice {height:32px;min-height:32px;margin:0 4px 0 0;padding:4px;font-size:11px;}
+.gameplay.portrait .graph-units {align-self:flex-start;width:auto;margin:6px 0 0;}
+.gameplay.portrait .graph-units .graph-choice {height:32px;min-height:32px;min-width:88px;margin:0;padding:4px 8px;font-size:11px;}
+.gameplay.portrait .graph-zoom-controls .graph-choice {height:32px;min-height:32px;min-width:28px;}
+.gameplay.portrait #graph-previous-history {height:36px;min-height:36px;font-size:var(--body);}
 .gameplay.portrait .portrait-picker {margin-bottom:8px;min-height:32px;}
 .gameplay.portrait .portrait-picker .unity-base-popup-field__input {height:32px;min-height:32px;padding:4px 8px;}
 .gameplay.portrait .graph-units .graph-last-choice {margin-right:0;}
