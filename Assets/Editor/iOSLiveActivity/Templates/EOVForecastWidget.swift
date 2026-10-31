@@ -31,7 +31,7 @@ struct EOVForecastWidget: Widget {
                             Reaps(count: context.state.projectedReaps)
                         }
                         ForecastTime(state: context.state, stale: context.isStale)
-                    }.padding(.top, 2)
+                    }.padding(.top, 2).padding(.horizontal, 8).padding(.bottom, 4)
                 }
             } compactLeading: {
                 PixelArt(name: "EOVHero", size: 24)
