@@ -178,9 +178,7 @@ private struct HeroPortrait: View {
                 }.frame(width: size, height: size).clipped()
             } else { PixelArt(name: "EOVHero", size: size) }
         }
-        .id(state.refreshRevision ?? 0)
-        .transition(dimmed || reduceMotion ? .identity :
-            .asymmetric(insertion: .offset(y: 3).combined(with: .opacity), removal: .opacity))
+        .offset(y: dimmed || reduceMotion || (state.refreshRevision ?? 0).isMultiple(of: 2) ? 0 : -2)
         .animation(updateAnimation(disabled: dimmed || reduceMotion), value: state.refreshRevision)
         .accessibilityElement(children: .ignore).accessibilityLabel("Your character")
     }
@@ -192,9 +190,8 @@ private struct ReapIcon: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var body: some View {
         PixelArt(name: name, size: 16)
-            .id(revision)
-            .transition(dimmed || reduceMotion ? .identity :
-                .asymmetric(insertion: .offset(x: 3).combined(with: .opacity), removal: .opacity))
+            .offset(x: dimmed || reduceMotion || revision.isMultiple(of: 2) ? 0 : -2)
+            .rotationEffect(.degrees(dimmed || reduceMotion || revision.isMultiple(of: 2) ? 0 : -8))
             .animation(updateAnimation(disabled: dimmed || reduceMotion), value: revision)
     }
 }

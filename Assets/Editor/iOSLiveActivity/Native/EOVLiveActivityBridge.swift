@@ -134,7 +134,7 @@ public final class EOVLiveActivityBridge: NSObject {
         let payloadBytes = bytes(next)
         guard payloadBytes <= 3900 else { return nil }
         if manualRefresh || previous == nil {
-            NSLog("[EOVLiveActivity] payload bytes=%d portraitLayers=%d", payloadBytes, next.portraitLayers?.count ?? 0)
+            NSLog("[EOVLiveActivity] payload bytes=%d portraitLayers=%d reduceMotion=%d", payloadBytes, next.portraitLayers?.count ?? 0, UIAccessibility.isReduceMotionEnabled ? 1 : 0)
         }
         return next
     }
