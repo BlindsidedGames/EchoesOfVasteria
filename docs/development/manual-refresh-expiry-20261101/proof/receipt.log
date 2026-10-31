@@ -1,0 +1,10 @@
+PASS Encoded receipt binds to the same valid departure
+PASS An old source receipt cannot acknowledge a replacement source
+PASS A departure with a different origin rejects the receipt
+PASS A changed allowance endpoint rejects the receipt
+PASS A different map cannot acknowledge the cached departure
+PASS Receipt evaluation beyond the accepted clock skew is rejected
+PASS Receipt cannot revive backgroundProgressEnabled disabled data
+PASS Receipt cannot revive phoneInBackground disabled data
+PASS Legacy timeline-only snapshots can acknowledge native estimation without inventing a source
+9 receipt contracts passed; 0 failed. No WatchConnectivity delivery claim.

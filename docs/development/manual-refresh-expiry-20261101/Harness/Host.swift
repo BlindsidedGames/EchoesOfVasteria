@@ -29,7 +29,7 @@ struct EchoesManualExpiryHost: App {
                 .onChange(of: phase) { next in
                     if next == .active { start() }
                     receipt("phase-\(next)")
-                    if next == .background && scenario == "probe" {
+                    if next == .background && scenario.hasPrefix("probe") {
                         Task { @MainActor in await nativeProbe() }
                     }
                 }
@@ -38,6 +38,12 @@ struct EchoesManualExpiryHost: App {
 
     @MainActor private func start() {
         guard !started else { return }; started = true
+        if scenario == "probe-existing", let saved = EOVWatchSnapshotCache.load() {
+            EOVWatchPhoneSession.publish(String(decoding: saved, as: UTF8.self) as NSString)
+            message = "Existing activity retained. Background to probe the stale owner."
+            receipt("existing-before")
+            return
+        }
         do {
             let original = try Data(contentsOf: Bundle.main.url(forResource: "snapshot", withExtension: "json")!)
             var value = try JSONSerialization.jsonObject(with: original) as! [String: Any]
@@ -70,8 +76,19 @@ struct EchoesManualExpiryHost: App {
                     try? await Task.sleep(for: .seconds(1))
                     receipt("second-\(second)")
                     if second == 2, scenario == "probe", let activity = Activity<EOVForecastAttributes>.activities.first {
-                        let accepted = await EOVLiveActivityBridge.refresh(activityID: activity.id, sourceID: activity.content.state.sourceID)
-                        try? JSONSerialization.data(withJSONObject: ["foregroundRefreshRejected": !accepted])
+                        let previous = activity.content.state
+                        await EOVLiveActivityBridge.refresh(activityID: activity.id, sourceID: previous.sourceID)
+                        var result: [String: Any] = ["foregroundRefreshRejected": activity.content.state == previous]
+                        if let delegate = WCSession.default.delegate as? EOVWatchPhoneSession {
+                            let before = EOVWatchSnapshotCache.load()
+                            let reply: [String: Any] = await withCheckedContinuation { continuation in
+                                delegate.session(WCSession.default, didReceiveMessage: ["command": "requestSnapshot"]) { continuation.resume(returning: $0) }
+                            }
+                            result["foregroundReplyQueued"] = reply["refreshStatus"] as? String == "queued"
+                            result["foregroundCacheUnchanged"] = before == EOVWatchSnapshotCache.load() && reply["snapshot"] as? Data == before
+                            result["unityQueueConsumedOnce"] = consumeThroughProductionObjC() == 1 && consumeThroughProductionObjC() == 0
+                        }
+                        try? JSONSerialization.data(withJSONObject: result, options: [.prettyPrinted, .sortedKeys])
                             .write(to: documents.appendingPathComponent("foreground-guard.json"))
                     }
                 }
@@ -89,7 +106,9 @@ struct EchoesManualExpiryHost: App {
         let oldSource = activity.content.state.sourceID
         let oldOrigin = activity.content.state.backgroundOrigin
         let wasStale = activity.activityState == .stale
-        let invalidSourceRejected = !(await EOVLiveActivityBridge.refresh(activityID: activity.id, sourceID: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"))
+        let beforeInvalid = activity.content.state
+        await EOVLiveActivityBridge.refresh(activityID: activity.id, sourceID: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        let invalidSourceRejected = activity.content.state == beforeInvalid
         let reply: [String: Any] = await withCheckedContinuation { continuation in
             delegate.session(WCSession.default, didReceiveMessage: ["command": "requestSnapshot"]) { continuation.resume(returning: $0) }
         }
@@ -106,7 +125,7 @@ struct EchoesManualExpiryHost: App {
             "sourceAndOriginUnchanged": after?.content.state.sourceID == oldSource && after?.content.state.backgroundOrigin == oldOrigin,
             "noUnityRefreshQueued": consumeThroughProductionObjC() == 0,
             "status": after?.content.state.status ?? "missing", "resources": after?.content.state.resources ?? -1,
-            "refreshRevision": after?.content.state.refreshRevision ?? 0
+            "refreshRevisionAtImmediateReadback": after?.content.state.refreshRevision ?? 0
         ]
         if let data = try? JSONSerialization.data(withJSONObject: native, options: [.prettyPrinted, .sortedKeys]) {
             try? data.write(to: documents.appendingPathComponent("native-contracts.json"))

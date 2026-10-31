@@ -1,0 +1,10 @@
+PASS Current display retains refreshed values before the system stale flag
+PASS System stale display selects every preloaded terminal scalar and retires Refresh
+PASS Terminal display preserves source timestamp and allowance clock distinct from coverage
+PASS Stale presentation cannot substitute forecast gains into live totals
+PASS Malformed optional terminal keeps valid scalars and retires stale Refresh safely
+PASS Legacy Activity state without endpoint or allowance decodes and uses known coverage
+PASS Terminal limitReached retains its reason and unknown legacy counters
+PASS Terminal estimateEnded retains its reason and unknown legacy counters
+PASS Terminal waiting retains its reason and unknown legacy counters
+9 Activity content contracts passed; 0 failed. No system rendering claim.

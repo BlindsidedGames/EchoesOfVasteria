@@ -39,7 +39,7 @@ struct CheckWatchPresentation {
         let first = model(short, 120), later = model(short, 180)
         check(first.away!.expired && later.away!.expired && first.display.resources == later.display.resources && first.display.distance == later.display.distance && later.resolved(.automatic) == .away, "Earlier forecast expiry freezes the UI without silently reverting to totals")
         let hour = try snapshot("allowance-high-rate")
-        let beforeLimit = model(hour, 3599), atLimit = model(hour, 3600), afterLimit = model(hour, 7200)
+        let beforeLimit = model(hour, 3599), atLimit = model(hour, 3600), afterLimit = model(hour, 28800)
         check(beforeLimit.away?.elapsed == 3599 && beforeLimit.away?.expired == false &&
               atLimit.away?.elapsed == 3600 && afterLimit.away?.elapsed == 3600 &&
               atLimit.display.resources == 540000 && afterLimit.display.resources == 540000 &&

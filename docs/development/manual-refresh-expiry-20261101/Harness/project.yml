@@ -33,6 +33,29 @@ targets:
         embed: true
       - target: EOVTransportQA
         embed: true
+      - target: EchoesManualExpiryWatchQA
+        embed: true
+  EchoesManualExpiryWatchQA:
+    type: application
+    platform: watchOS
+    deploymentTarget: "11.0"
+    sources:
+      - path: ../../../../Assets/Editor/iOSLiveActivity/Companion
+        excludes: [EOVWatchPhoneSession.swift, Art, "*.meta"]
+      - ../../../../Assets/Editor/iOSLiveActivity/Native/EOVBackgroundAllowance.swift
+      - path: ../../../../Artifacts/WatchIntegration/Assets.xcassets
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.blindsidedgames.echoes.manualexpiryqa.watchkitapp
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_WKApplication: YES
+        INFOPLIST_KEY_WKWatchOnly: NO
+        INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp: NO
+        INFOPLIST_KEY_WKCompanionAppBundleIdentifier: com.blindsidedgames.echoes.manualexpiryqa
+        INFOPLIST_KEY_CFBundleDisplayName: Echoes Paired QA
+        TARGETED_DEVICE_FAMILY: "4"
+        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        SKIP_INSTALL: YES
   EOVTransportQA:
     type: framework
     platform: iOS

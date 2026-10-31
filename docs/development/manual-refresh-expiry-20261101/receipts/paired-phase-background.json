@@ -1,0 +1,51 @@
+{
+  "activities" : [
+    {
+      "activityState" : "active",
+      "attributes" : {
+        "mapId" : "River"
+      },
+      "id" : "671F5296-FD15-4078-B74A-69B1238CE051",
+      "staleDate" : 1793489274.3257132,
+      "state" : {
+        "backgroundLimitSeconds" : 3600,
+        "backgroundOrigin" : 1793485674.3257132,
+        "cap" : 212,
+        "distance" : 210.89242836157479,
+        "forecastEnd" : 1793489274.3257132,
+        "kills" : 536353.11777591705,
+        "mapTitle" : "River",
+        "portraitLayers" : [
+          "EOVPortrait_fb371b21c67a2edb0d83b3260e2f784b",
+          "EOVPortrait_b202cad9312eae6f9e1d5ba265068595",
+          "EOVPortrait_0b53dbd7dbb93c685855ad2baf165954",
+          "EOVPortrait_7a59628089141039bdb3e500a8f8b37b",
+          "EOVPortrait_441f8073b294e0667d8d140f88135f1f",
+          "EOVPortrait_3be63e8bd6a3db850abf1e5406f3dd54"
+        ],
+        "reapRevision" : 0,
+        "reaps" : 0,
+        "refreshRevision" : 0,
+        "resources" : 536353.11777591705,
+        "sampledAt" : 1793489250.013165,
+        "sourceID" : "9232cf5d055d49d4a334854dd7850f43",
+        "status" : "estimate",
+        "tasks" : 536353.11777591705,
+        "terminal" : {
+          "cap" : 212,
+          "distance" : 212,
+          "kills" : 540000,
+          "reaps" : 0,
+          "resources" : 540000,
+          "status" : "limitReached",
+          "tasks" : 540000
+        }
+      }
+    }
+  ],
+  "appState" : 2,
+  "at" : 1793489309.227843,
+  "event" : "phase-background",
+  "phoneSessionClass" : true,
+  "unityFrameworkLoaded" : false
+}
