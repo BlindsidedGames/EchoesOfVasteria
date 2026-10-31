@@ -33,7 +33,7 @@ struct Hero: View {
             let frame = enabled ? Int(context.date.timeIntervalSince1970 * 8) % 6 : 0
             Image((running ? "HeroRun_" : "HeroIdle_") + String(frame))
                 .resizable().interpolation(.none).scaledToFit()
-                .frame(width: size * 2, height: size * 2)
+                .frame(width: size * 3, height: size * 3)
                 .frame(width: size, height: size).clipped()
         }.accessibilityLabel("Your saved character wearing a gold helmet and blue shirt")
     }
@@ -53,13 +53,32 @@ struct CarlArrival: View {
         }
     }
 }
+struct ScaledLabFont: ViewModifier {
+    @ScaledMetric(relativeTo: .body) var points: CGFloat = 12
+    let weight: Font.Weight
+    let design: Font.Design
+    init(_ size: CGFloat, weight: Font.Weight, design: Font.Design) {
+        _points = ScaledMetric(wrappedValue: size, relativeTo: .body)
+        self.weight = weight; self.design = design
+    }
+    func body(content: Content) -> some View { content.font(.system(size: points, weight: weight, design: design)) }
+}
+extension View {
+    func labFont(_ size: CGFloat, weight: Font.Weight = .regular, design: Font.Design = .default) -> some View {
+        modifier(ScaledLabFont(size, weight: weight, design: design))
+    }
+}
 struct LabHeader: View {
+    @Environment(\.dynamicTypeSize) var textSize
     let title: String
     @EnvironmentObject var lab: LabStore
     private var shortSource: String {
         if lab.refreshing { return "Asking iPhone…" }
         if lab.offline { return lab.variant == "stale" ? "Estimate ended" : "Offline · cached" }
+        if lab.design == 6 { return "Session goal · " + lab.age + " ago" }
+        if [3, 4, 7, 8, 9, 10].contains(lab.design) { return "Phone · " + lab.age + " ago" }
         if lab.display.expired { return "Estimate ended" }
+        if lab.design == 5 && lab.display.estimated { return lab.display.phase == 1 ? "Restarting · estimated" : "Estimated away gains" }
         if lab.display.phase == 1 { return "Restarting · est." }
         if lab.display.phase == 2 { return "Return to iPhone" }
         return lab.display.estimated ? "Estimated · " + lab.elapsed : "Snapshot · " + lab.age + " ago"
@@ -67,28 +86,39 @@ struct LabHeader: View {
     var body: some View {
         HStack(spacing: 2) {
             VStack(alignment: .leading, spacing: 1) {
-                Text(title).font(.system(size: 19, weight: .bold, design: .rounded)).foregroundStyle(Palette.cream)
+                Text(title).labFont(19, weight: .bold, design: .rounded).foregroundStyle(Palette.cream)
                     .lineLimit(1).minimumScaleFactor(0.7)
-                Text(shortSource).font(.system(size: 10)).foregroundStyle(Palette.muted)
-                    .lineLimit(1).minimumScaleFactor(0.8).accessibilityLabel(lab.source)
+                if ![7, 8, 9, 10].contains(lab.design) || lab.offline {
+                    Text(shortSource).labFont(10).foregroundStyle(Palette.muted)
+                        .lineLimit(1).accessibilityLabel(lab.source)
+                }
             }.frame(maxWidth: .infinity, alignment: .leading)
             Button { lab.refresh() } label: {
-                Image(systemName: "arrow.clockwise").font(.system(size: 16, weight: .semibold))
+                Image(systemName: "arrow.clockwise").labFont(16, weight: .semibold)
                     .foregroundStyle(Palette.gold).frame(width: 44, height: 44).contentShape(Rectangle())
             }.buttonStyle(.plain).accessibilityLabel("Refresh iPhone snapshot")
-        }.frame(height: 44)
+        }.frame(height: textSize.isAccessibilitySize ? 64 : 44)
     }
 }
 struct Screen<Content: View>: View {
+    @Environment(\.dynamicTypeSize) var textSize
     let title: String
     @ViewBuilder var content: Content
     var body: some View {
-        VStack(spacing: 5) {
-            LabHeader(title: title)
-            content.frame(maxWidth: .infinity, maxHeight: .infinity)
-        }.padding(.horizontal, 5).padding(.bottom, 5).foregroundStyle(Palette.cream)
+        GeometryReader { geo in
+            VStack(spacing: 3) {
+                LabHeader(title: title)
+                ScrollView {
+                    content.frame(maxWidth: .infinity, minHeight: max(0, geo.size.height - (textSize.isAccessibilitySize ? 108 : 88)), alignment: .top)
+                        .padding(.bottom, 3)
+                }.scrollIndicators(.hidden)
+            }.padding(.horizontal, 7).padding(.top, 32).padding(.bottom, 6)
+                .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
+                .foregroundStyle(Palette.cream)
+        }.ignoresSafeArea()
     }
 }
+
 struct Metric: View {
     let art: String
     let value: String
@@ -118,9 +148,9 @@ struct DistanceLine: View {
     let run: RunDisplay
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 3) {
-            Text(number(run.distance)).font(.system(size: 25, weight: .bold, design: .rounded))
+            Text(number(run.distance)).labFont(25, weight: .bold, design: .rounded)
             Text(run.reaping && run.cap > 0 ? "/ " + number(run.cap) + " m" : "m")
-                .font(.system(size: 12)).foregroundStyle(Palette.muted)
+                .labFont(12).foregroundStyle(Palette.muted)
         }.monospacedDigit().lineLimit(1).minimumScaleFactor(0.7)
             .accessibilityLabel(run.reaping ? "Distance " + metres(run.distance) + " of " + metres(run.cap) : "Distance " + metres(run.distance) + ", no distance reap")
     }
@@ -147,9 +177,9 @@ struct ValueTile: View {
     var body: some View {
         VStack(spacing: 2) {
             Pixel(name: art, size: 24)
-            Text(value).font(.system(size: 24, weight: .bold, design: .rounded)).monospacedDigit()
+            Text(value).labFont(24, weight: .bold, design: .rounded).monospacedDigit()
                 .lineLimit(1).minimumScaleFactor(0.65)
-        }.frame(maxWidth: .infinity, minHeight: 62)
+        }.frame(maxWidth: .infinity, minHeight: 49)
             .background(Palette.panel, in: RoundedRectangle(cornerRadius: 12))
             .accessibilityElement(children: .ignore).accessibilityLabel(label).accessibilityValue(value)
     }

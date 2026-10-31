@@ -11,21 +11,20 @@ struct ExpeditionDial: View {
                     ZStack {
                         Ring(fraction: run.fraction)
                         VStack(spacing: 0) {
-                            Hero(size: 37, animate: lab.canAnimate)
+                            Hero(size: 44, animate: lab.canAnimate)
                             if focus == 0 { DistanceLine(run: run) }
                             else {
                                 Text(focus == 1 ? number(run.resources) : duration(run.seconds))
-                                    .font(.system(size: 26, weight: .bold, design: .rounded)).monospacedDigit()
-                                Text(focus == 1 ? (run.estimated ? "gained" : "resources") : "run time").font(.system(size: 10)).foregroundStyle(Palette.muted)
+                                    .labFont(26, weight: .bold, design: .rounded).monospacedDigit()
+                                Text(focus == 1 ? (run.estimated ? "gained" : "resources") : "run time").labFont(10).foregroundStyle(Palette.muted)
+                            }
+                            HStack(spacing: 2) {
+                                Pixel(name: "Heart", size: 9)
+                                Text((run.estimated ? "Last " : "") + number((run.health * 100).rounded()) + "%").labFont(9).foregroundStyle(Palette.muted)
                             }
                         }
-                    }.frame(width: 116, height: 116)
+                    }.frame(width: 100, height: 100)
                 }.buttonStyle(.plain).accessibilityLabel("Expedition dial. Tap to change the highlighted metric")
-                HStack(spacing: 3) {
-                    Pixel(name: "Heart", size: 11)
-                    Text(number(run.health * 100) + "%").font(.system(size: 10)).foregroundStyle(Palette.muted)
-                    if !run.reaping { Text("No distance reap").font(.system(size: 9)).foregroundStyle(Palette.muted) }
-                }
                 Quartet(run: run)
             }
         }
@@ -37,26 +36,28 @@ struct LivingTrail: View {
     var body: some View {
         let run = lab.display
         Screen(title: run.map) {
-            VStack(alignment: .leading, spacing: 7) {
+            VStack(alignment: .leading, spacing: 3) {
                 DistanceLine(run: run)
                 GeometryReader { geo in
-                    ZStack(alignment: .bottomLeading) {
+                    ZStack(alignment: .topLeading) {
                         HStack(spacing: 0) { ForEach(0..<8) { _ in Image("TrailGrass").resizable().interpolation(.none).frame(width: 24, height: 24) } }
-                            .frame(height: 42, alignment: .bottom).clipped()
+                            .frame(width: geo.size.width, height: 24, alignment: .leading).clipped().offset(y: 17)
                         HStack(spacing: 0) { ForEach(0..<8) { _ in Image("TrailWater").resizable().interpolation(.none).frame(width: 24, height: 24) } }
-                            .frame(height: 16).offset(y: 16).clipped()
-                        Hero(size: 44, running: true, animate: lab.canAnimate)
-                            .offset(x: max(0, (geo.size.width - 64) * (run.fraction ?? 0.4)), y: -9)
-                        if run.reaping { CarlArrival(size: 32).offset(x: geo.size.width - 34, y: -12) }
-                    }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-                }.frame(height: 60).clipped()
+                            .frame(width: geo.size.width, height: 24, alignment: .leading).clipped().offset(y: 28)
+                        Pixel(name: "TrailReeds", size: 21).offset(x: 12, y: 5)
+                        Pixel(name: "TrailReeds", size: 17).offset(x: geo.size.width * 0.65, y: 15)
+                        Hero(size: 34, running: true, animate: lab.canAnimate)
+                            .offset(x: max(0, (geo.size.width - 60) * (run.fraction ?? 0.4)), y: 0)
+                        if run.reaping { CarlArrival(size: 26).offset(x: geo.size.width - 32, y: 5) }
+                    }
+                }.frame(height: 46).clipped()
                 if let f = run.fraction {
                     GeometryReader { geo in
                         Capsule().fill(Palette.panel)
                         Capsule().fill(Palette.gold).frame(width: max(2, geo.size.width * f))
                     }.frame(height: 4)
                     Text(metres(max(0, run.cap - run.distance)) + " to Carl")
-                        .font(.system(size: 11)).foregroundStyle(Palette.muted)
+                        .labFont(11).foregroundStyle(Palette.muted)
                 } else { Text("Open route").font(.caption2).foregroundStyle(Palette.muted) }
                 Spacer(minLength: 0)
                 Quartet(run: run)
@@ -69,16 +70,16 @@ struct CombatWatch: View {
     @EnvironmentObject var lab: LabStore
     var body: some View {
         let run = lab.display
-        Screen(title: "Vanguard") {
+        Screen(title: "Health") {
             VStack(spacing: 5) {
                 HStack(spacing: 4) {
                     Hero(size: 55, animate: lab.canAnimate)
                     VStack(alignment: .leading, spacing: 1) {
                         HStack(alignment: .firstTextBaseline, spacing: 2) {
-                            Text(number(run.health * 100)).font(.system(size: 38, weight: .bold, design: .rounded))
+                            Text(number((run.health * 100).rounded())).labFont(38, weight: .bold, design: .rounded)
                             Text("%").font(.caption2).foregroundStyle(Palette.muted)
                         }
-                        Text("Last phone health").font(.system(size: 10)).foregroundStyle(Palette.muted)
+                        Text("Phone health · " + lab.age + " ago").labFont(10).foregroundStyle(Palette.muted)
                     }
                 }
                 GeometryReader { geo in
@@ -102,19 +103,19 @@ struct HarvestCounter: View {
     @State private var averages = false
     var body: some View {
         let run = lab.snapshot?.run
-        Screen(title: "Harvest") {
+        Screen(title: "Resources") {
             VStack(spacing: 5) {
                 HStack(spacing: 5) {
                     Pixel(name: "EOVChest", size: 42)
                     VStack(alignment: .leading, spacing: 0) {
                         Text(averages ? rate(run?.resources ?? 0, run?.durationSeconds ?? 0) : number(run?.resources))
-                            .font(.system(size: 36, weight: .bold, design: .rounded)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.6)
-                        Text(averages ? "/min · Run average" : "run resources").font(.system(size: 10)).foregroundStyle(Palette.muted)
+                            .labFont(36, weight: .bold, design: .rounded).monospacedDigit().lineLimit(1).minimumScaleFactor(0.6)
+                        Text(averages ? "/min · Run average" : "run resources").labFont(10).foregroundStyle(Palette.muted)
                     }
                 }
                 HStack(spacing: 5) {
-                    ValueTile(art: "EOVTask", value: averages ? rate(Double(run?.tasks ?? 0), run?.durationSeconds ?? 0) : number(run.map { Double($0.tasks) }), label: averages ? "Tasks per minute, run average" : "Tasks")
-                    ValueTile(art: "EOVKill", value: averages ? rate(Double(run?.kills ?? 0), run?.durationSeconds ?? 0) : number(run.map { Double($0.kills) }), label: averages ? "Kills per minute, run average" : "Kills")
+                    GainCell(art: "EOVTask", value: averages ? rate(Double(run?.tasks ?? 0), run?.durationSeconds ?? 0) : number(run.map { Double($0.tasks) }), label: averages ? "Tasks per minute, run average" : "Tasks")
+                    GainCell(art: "EOVKill", value: averages ? rate(Double(run?.kills ?? 0), run?.durationSeconds ?? 0) : number(run.map { Double($0.kills) }), label: averages ? "Kills per minute, run average" : "Kills")
                 }
                 Button { averages.toggle() } label: {
                     HStack { Image(systemName: averages ? "number" : "speedometer"); Text(averages ? "Totals" : "Run averages") }.font(.caption2)
@@ -125,86 +126,147 @@ struct HarvestCounter: View {
     }
 }
 
+struct GainCell: View {
+    let art: String
+    let value: String
+    let label: String
+    var body: some View {
+        HStack(spacing: 5) {
+            Pixel(name: art, size: 18)
+            Text(value).labFont(21, weight: .bold, design: .rounded).monospacedDigit().lineLimit(1)
+        }.frame(maxWidth: .infinity, minHeight: 34)
+            .background(Palette.panel, in: RoundedRectangle(cornerRadius: 10))
+            .accessibilityElement(children: .ignore).accessibilityLabel(label).accessibilityValue(value)
+    }
+}
 struct SinceAway: View {
     @EnvironmentObject var lab: LabStore
     var body: some View {
         let run = lab.display
         Screen(title: "Since you left") {
-            VStack(spacing: 5) {
-                HStack(alignment: .lastTextBaseline) {
-                    Text(lab.elapsed).font(.system(size: 29, weight: .bold, design: .rounded)).monospacedDigit()
-                    Spacer(minLength: 0)
-                    if (run.reaps ?? 0) > 0 { HStack(spacing: 2) { Pixel(name: "EOVCarl", size: 18); Text("New run").font(.system(size: 10)) }.foregroundStyle(Palette.gold) }
+            if run.estimated {
+                VStack(spacing: 3) {
+                    HStack(alignment: .lastTextBaseline) {
+                        Text(lab.elapsed).labFont(27, weight: .bold, design: .rounded).monospacedDigit()
+                        Spacer(minLength: 0)
+                        if (run.reaps ?? 0) > 0 { Text(run.phase == 1 ? "Restarting" : "New run").labFont(10).foregroundStyle(Palette.gold) }
+                    }
+                    HStack(spacing: 5) {
+                        GainCell(art: "EOVTask", value: number(run.tasks), label: "Task gains since departure")
+                        GainCell(art: "EOVKill", value: number(run.kills), label: "Kill gains since departure")
+                    }
+                    HStack(spacing: 5) {
+                        GainCell(art: "EOVChest", value: "+" + number(run.resources), label: "Resource gains since departure")
+                        GainCell(art: "EOVCarl", value: run.reaps.map(String.init) ?? "—", label: "Reaps since departure")
+                    }
+                    HStack(alignment: .firstTextBaseline, spacing: 3) {
+                        Text(number(run.distance)).labFont(20, weight: .bold, design: .rounded)
+                        Text(run.reaping ? "/ " + number(run.cap) + " m" : "m").labFont(11).foregroundStyle(Palette.muted)
+                    }.monospacedDigit()
                 }
-                HStack(spacing: 5) {
-                    ValueTile(art: "EOVTask", value: number(run.tasks), label: "Task gains since departure")
-                    ValueTile(art: "EOVKill", value: number(run.kills), label: "Kill gains since departure")
+            } else {
+                VStack(spacing: 10) {
+                    Hero(size: 42, animate: false)
+                    Text("No away estimate yet").font(.headline)
+                    Text("Your current run remains on iPhone.").font(.caption2).foregroundStyle(Palette.muted)
                 }
-                HStack(spacing: 5) {
-                    ValueTile(art: "EOVChest", value: "+" + number(run.resources), label: "Resource gains since departure")
-                    ValueTile(art: "EOVCarl", value: run.reaps.map(String.init) ?? "—", label: "Reaps since departure")
-                }
-                DistanceLine(run: run)
             }
         }
     }
 }
 
-struct RunGoal: View {
-    @EnvironmentObject var lab: LabStore
-    @State private var resourceGoal = false
-    @State private var target = 150.0
-    @State private var editing = false
+struct GoalArc: View {
+    let fraction: Double
     var body: some View {
-        let current = resourceGoal ? (lab.snapshot?.run?.resources ?? 0) : (lab.snapshot?.run?.distance ?? 0)
-        Screen(title: "Watch goal") {
-            VStack(spacing: 3) {
-                Button { editing.toggle() } label: {
-                    ZStack {
-                        Ring(fraction: min(1, current / max(1, target)), color: Palette.teal, width: 8)
-                        VStack(spacing: 2) {
-                            Pixel(name: resourceGoal ? "EOVChest" : "EOVHero", size: 23)
-                            Text(number(max(0, target - current))).font(.system(size: 31, weight: .bold, design: .rounded))
-                            Text(editing ? "Crown to edit" : resourceGoal ? "resources left" : "metres left").font(.system(size: 10)).foregroundStyle(Palette.muted)
-                        }
-                    }.frame(width: 112, height: 112)
-                }.buttonStyle(.plain).focusable(editing)
-                    .digitalCrownRotation($target, from: 25, through: 1000, by: 25, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: true)
-                    .accessibilityLabel("Watch-only goal. Tap and turn Crown to edit")
-                HStack(spacing: 0) {
-                    Button { resourceGoal.toggle(); target = resourceGoal ? 100 : 150 } label: { Pixel(name: resourceGoal ? "EOVChest" : "EOVHero", size: 20).frame(width: 44, height: 44) }
-                        .accessibilityLabel("Change goal metric")
-                    Button { target += 25; if target > 1000 { target = 25 } } label: { Text("Goal " + number(target)).font(.caption2).frame(maxWidth: .infinity, minHeight: 44) }
-                        .accessibilityLabel("Increase watch goal by25")
-                }.buttonStyle(.plain).foregroundStyle(Palette.gold)
-                Text("This Watch session only").font(.system(size: 9)).foregroundStyle(Palette.muted)
+        ZStack {
+            ForEach(0..<12) { index in
+                Circle().trim(from: Double(index) / 16, to: Double(index + 1) / 16 - 0.012)
+                    .stroke(Double(index) / 12 < fraction ? Palette.teal : Palette.teal.opacity(0.15), style: StrokeStyle(lineWidth: 6, lineCap: .round))
+                    .rotationEffect(.degrees(135))
             }
         }
     }
 }
+struct RunGoal: View {
+    @EnvironmentObject var lab: LabStore
+    @State private var resourceGoal = true
+    @State private var target = 100.0
+    @State private var editing = false
+    @State private var choosing = false
+    var body: some View {
+        let current = resourceGoal ? lab.display.resources : lab.display.distance
+        Screen(title: "Watch goal") {
+            VStack(spacing: 3) {
+                Button { editing.toggle() } label: {
+                    ZStack {
+                        GoalArc(fraction: min(1, current / max(1, target)))
+                        VStack(spacing: 2) {
+                            Group { if resourceGoal { Pixel(name: "EOVChest", size: 23) } else { Image(systemName: "flag.checkered").foregroundStyle(Palette.gold).frame(height: 23) } }
+                            Text(number(ceil(max(0, target - current)))).labFont(31, weight: .bold, design: .rounded)
+                            Text(editing ? "Crown to edit" : resourceGoal ? (lab.display.estimated ? "gain to goal" : "resources left") : "metres left").labFont(10).foregroundStyle(Palette.muted)
+                        }
+                    }.frame(width: 88, height: 88)
+                }.buttonStyle(.plain).focusable(editing)
+                    .digitalCrownRotation($target, from: 25, through: 1000, by: 25, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: true)
+                    .accessibilityLabel("Watch-only goal. Tap and turn Crown to edit")
+                HStack(spacing: 0) {
+                    Button { resourceGoal.toggle(); target = resourceGoal ? 100 : 150 } label: { Group { if resourceGoal { Pixel(name: "EOVChest", size: 20) } else { Image(systemName: "ruler").foregroundStyle(Palette.gold) } }.frame(width: 44, height: 44) }
+                        .accessibilityLabel("Change goal metric")
+                    Button { choosing = true } label: { Text("Edit " + number(target)).font(.caption2).frame(maxWidth: .infinity, minHeight: 44) }
+                        .accessibilityLabel("Choose watch goal target")
+                }.buttonStyle(.plain).foregroundStyle(Palette.gold)
+            }
+        }.sheet(isPresented: $choosing) { GoalEditor(target: $target, resourceGoal: $resourceGoal) }
+    }
+}
+struct GoalEditor: View {
+    @Binding var target: Double
+    @Binding var resourceGoal: Bool
+    @Environment(\.dismiss) var dismiss
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 4) {
+                Text("Choose goal").font(.headline)
+                Button(resourceGoal ? "Resources" : "Distance") { resourceGoal.toggle() }.frame(minHeight: 44)
+                Text(number(target) + (resourceGoal ? " resources" : " metres")).font(.title3).focusable()
+                    .digitalCrownRotation($target, from: 25, through: 1000, by: 25, sensitivity: .low)
+                HStack {
+                    Button { target = max(25, target - 25) } label: { Image(systemName: "minus").frame(width: 60, height: 44) }
+                    Button { target = min(1000, target + 25) } label: { Image(systemName: "plus").frame(width: 60, height: 44) }
+                }
+                Text("This Watch session only").font(.caption2)
+                Button("Done") { dismiss() }.frame(minHeight: 44)
+            }
+        }
+    }
+}
+
+
 
 struct SkillBook: View {
     @EnvironmentObject var lab: LabStore
     @State private var selected: String?
     var body: some View {
         Screen(title: "Skillbook") {
-            ScrollView {
+            Group {
                 if let skills = lab.snapshot?.skills, !skills.isEmpty {
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 5) {
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 3) {
                         ForEach(skills) { skill in
                             Button { selected = selected == skill.id ? nil : skill.id } label: {
-                                VStack(spacing: 2) {
-                                    Pixel(name: skillArt(skill.id), size: 27)
-                                    Text(String(skill.level)).font(.system(size: 25, weight: .bold, design: .rounded)).monospacedDigit()
-                                    Text(skill.name).font(.system(size: 10)).lineLimit(1).minimumScaleFactor(0.8)
-                                }.frame(maxWidth: .infinity, minHeight: 83)
+                                VStack(spacing: 1) {
+                                    HStack(spacing: 4) {
+                                        Pixel(name: skillArt(skill.id), size: 18)
+                                        Text(String(skill.level)).labFont(21, weight: .bold, design: .rounded).monospacedDigit()
+                                    }
+                                    Text(skill.name).labFont(10).lineLimit(1).minimumScaleFactor(0.8)
+                                }.frame(maxWidth: .infinity, minHeight: 44)
                                     .background(selected == skill.id ? Palette.gold.opacity(0.2) : Palette.panel, in: RoundedRectangle(cornerRadius: 12))
-                                    .overlay(alignment: .topTrailing) { if selected == skill.id { Image(systemName: "pin.fill").font(.system(size: 9)).padding(5).foregroundStyle(Palette.gold) } }
+                                    .overlay(alignment: .topTrailing) { if selected == skill.id { Image(systemName: "pin.fill").labFont(9).padding(5).foregroundStyle(Palette.gold) } }
                             }.buttonStyle(.plain).accessibilityLabel(skill.name + ", level " + String(skill.level) + (selected == skill.id ? ", pinned" : ", tap to pin"))
                         }
                     }
                 } else { Text("No skills yet").font(.caption) }
-            }.scrollIndicators(.hidden)
+            }
         }
     }
 }
@@ -215,29 +277,31 @@ struct RunRibbon: View {
     @State private var selection = 9.0
     var body: some View {
         let runs = lab.history.sorted { $0.runNumber < $1.runNumber }
-        Screen(title: "Run ribbon") {
+        Screen(title: "Recent runs") {
             if runs.isEmpty { Text("No recent runs").font(.caption) }
             else {
                 let index = min(runs.count - 1, max(0, Int(selection.rounded())))
                 let selected = runs[index]
                 VStack(spacing: 4) {
                     HStack {
-                        Pixel(name: mapArt(selected.mapId), size: 27)
+                        Pixel(name: outcome(selected), size: 22)
                         VStack(alignment: .leading) {
                             Text(selected.mapTitle).font(.headline)
-                            Text((selected.estimated ? "Est. · " : "") + selected.result.capitalized).font(.system(size: 10)).foregroundStyle(Palette.muted)
+                            Text("\(selected.estimated ? "~ " : "")\(selected.result.capitalized) · \(runs.count) runs").labFont(10).foregroundStyle(Palette.muted)
                         }
                         Spacer(minLength: 0)
-                        Text(number(resources ? selected.resources : selected.distance)).font(.system(size: 26, weight: .bold, design: .rounded)).monospacedDigit()
+                        VStack(alignment: .trailing, spacing: 0) {
+                            Text(number(resources ? selected.resources : selected.distance)).labFont(26, weight: .bold, design: .rounded).monospacedDigit()
+                            Text(resources ? "resources" : "metres").labFont(9).foregroundStyle(Palette.muted)
+                        }
                     }
-                    BarRibbon(runs: runs, resources: resources, selection: $selection).frame(height: 70)
+                    BarRibbon(runs: runs, resources: resources, selection: $selection).frame(height: 45)
                         .focusable().digitalCrownRotation($selection, from: 0, through: Double(max(1, runs.count - 1)), by: 1, sensitivity: .medium, isContinuous: false, isHapticFeedbackEnabled: true)
                     HStack(spacing: 1) {
-                        Button { resources.toggle() } label: { HStack(spacing: 3) { Pixel(name: resources ? "EOVChest" : "EOVHero", size: 16); Text(resources ? "Resources" : "Distance").font(.system(size: 10)) }.frame(maxWidth: .infinity, minHeight: 44) }
+                        Button { resources.toggle() } label: { HStack(spacing: 3) { Pixel(name: resources ? "EOVChest" : "EOVHero", size: 16); Text(resources ? "Resources" : "Distance").labFont(10) }.frame(maxWidth: .infinity, minHeight: 44) }
                             .accessibilityLabel("Change chart metric")
                         NavigationLink { RunDetail(run: selected) } label: { Image(systemName: "chevron.right").frame(width: 44, height: 44) }.accessibilityLabel("Open selected run receipt")
                     }.buttonStyle(.plain).foregroundStyle(Palette.gold)
-                    Text("Last " + String(runs.count) + " · ~ estimated").font(.system(size: 9)).foregroundStyle(Palette.muted)
                 }
             }
         }
@@ -254,7 +318,7 @@ struct BarRibbon: View {
         let tone: Color = selected ? Palette.gold : (runs[index].estimated ? Palette.teal.opacity(0.38) : Palette.teal)
         let barHeight = max(CGFloat(2), (height - 13) * CGFloat(values[index] / maximum))
         return VStack(spacing: 2) {
-            if runs[index].estimated { Text("~").font(.system(size: 9)).foregroundStyle(Palette.muted) }
+            if runs[index].estimated { Text("~").labFont(9).foregroundStyle(Palette.muted) }
             RoundedRectangle(cornerRadius: 3).fill(tone).frame(height: barHeight)
         }.frame(maxWidth: .infinity)
     }
@@ -288,33 +352,34 @@ struct RunComparison: View {
             else {
                 let first = runs[selected % runs.count]
                 let second = runs[(selected + 1) % runs.count]
-                VStack(spacing: 5) {
-                    comparisonRow(first, tone: Palette.gold)
-                    comparisonRow(second, tone: Palette.teal)
-                    let delta = first.durationSeconds > 0 && second.durationSeconds > 0 ? first.resources / first.durationSeconds * 60 - second.resources / second.durationSeconds * 60 : nil
+                VStack(spacing: 1) {
+                    let delta = first.durationSeconds > 0 && second.durationSeconds > 0 ? (first.resources / first.durationSeconds * 60).rounded() - (second.resources / second.durationSeconds * 60).rounded() : nil
                     HStack(spacing: 3) {
                         Pixel(name: "EOVChest", size: 17)
-                        Text(delta.map { ($0 >= 0 ? "+" : "−") + number(abs($0)) + "/min" } ?? "—")
-                            .font(.system(size: 22, weight: .bold, design: .rounded)).monospacedDigit()
+                        Text(delta.map { (first.estimated || second.estimated ? "~ " : "") + ($0 >= 0 ? "+" : "−") + number(abs($0)) + "/min" } ?? "—")
+                            .labFont(20, weight: .bold, design: .rounded).monospacedDigit()
                         Spacer(minLength: 0)
                         Button { selected = (selected + 1) % runs.count } label: { Image(systemName: "arrow.left.arrow.right").frame(width: 44, height: 44) }
                             .buttonStyle(.plain).accessibilityLabel("Choose the next pair of recent runs")
                     }.foregroundStyle(Palette.gold)
-                    Text(first.mapId == second.mapId ? "Same map · run averages" : "Different maps · run averages").font(.system(size: 9)).foregroundStyle(Palette.muted)
+                    comparisonRow(first, tone: Palette.gold)
+                    comparisonRow(second, tone: Palette.teal)
                 }
             }
         }
     }
     private func comparisonRow(_ run: EOVWatchSnapshot.RecentRun, tone: Color) -> some View {
-        NavigationLink { RunDetail(run: run) } label: {
-            HStack(spacing: 6) {
-                Pixel(name: mapArt(run.mapId), size: 27)
+        let displayedRate = run.durationSeconds > 0 ? number((run.resources / run.durationSeconds * 60).rounded()) : "—"
+        return NavigationLink { RunDetail(run: run) } label: {
+            HStack(spacing: 5) {
+                Pixel(name: mapArt(run.mapId), size: 22)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(run.mapTitle + " #" + String(run.runNumber)).font(.system(size: 12, weight: .semibold))
-                    Text((run.estimated ? "~ " : "") + run.result.capitalized + " · " + duration(run.durationSeconds)).font(.system(size: 10)).foregroundStyle(Palette.muted)
-                    HStack { Text(metres(run.distance)); Spacer(); Text(rate(run.resources, run.durationSeconds) + "/min") }.font(.system(size: 11)).monospacedDigit()
+                    Text("\(run.mapTitle) #\(run.runNumber) · \(run.estimated ? "~ " : "")\(run.result.capitalized)").labFont(10, weight: .semibold).lineLimit(1)
+                    HStack(spacing: 3) {
+                        Text(duration(run.durationSeconds)); Text("·"); Text(metres(run.distance)); Spacer(minLength: 0); Text(displayedRate + "/min")
+                    }.labFont(10).monospacedDigit()
                 }
-            }.padding(7).frame(minHeight: 61).background(tone.opacity(0.08), in: RoundedRectangle(cornerRadius: 11))
+            }.padding(.horizontal, 5).frame(minHeight: 44).background(tone.opacity(0.08), in: RoundedRectangle(cornerRadius: 10))
         }.buttonStyle(.plain)
     }
 }
@@ -322,37 +387,47 @@ struct RunComparison: View {
 struct MapDossier: View {
     @EnvironmentObject var lab: LabStore
     @State private var selection = 0.0
+    private let maps = ["River", "Woods", "Mines", "Farmlands", "Haloween"]
+    private func title(_ id: String) -> String { id == "Haloween" ? "Hollow" : id }
     var body: some View {
-        let maps = Array(Set(lab.history.map(\.mapId))).sorted()
-        Screen(title: "Map dossier") {
-            if maps.isEmpty { Text("No recent map history").font(.caption) }
-            else {
-                let id = maps[min(maps.count - 1, max(0, Int(selection.rounded())))]
-                let runs = lab.history.filter { $0.mapId == id }
-                let latest = runs.first!
-                let best = runs.filter { !$0.estimated }.map(\.distance).max()
-                let totalTime = runs.reduce(0) { $0 + $1.durationSeconds }
-                VStack(spacing: 6) {
-                    Button { selection = Double((Int(selection) + 1) % maps.count) } label: {
-                        HStack(spacing: 7) {
-                            Pixel(name: mapArt(id), size: 44)
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(latest.mapTitle).font(.system(size: 22, weight: .bold, design: .rounded))
-                                Text(String(runs.count) + " of last " + String(lab.history.count)).font(.system(size: 10)).foregroundStyle(Palette.muted)
+        let id = maps[min(maps.count - 1, max(0, Int(selection.rounded())))]
+        let runs = lab.history.filter { $0.mapId == id }
+        let latest = runs.first
+        let best = runs.filter { !$0.estimated }.map(\.distance).max()
+        let totalTime = runs.reduce(0) { $0 + $1.durationSeconds }
+        Screen(title: "Maps") {
+            VStack(spacing: 5) {
+                Button { selection = Double((Int(selection) + 1) % maps.count) } label: {
+                    HStack(spacing: 7) {
+                        Pixel(name: mapArt(id), size: 27)
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(title(id)).labFont(17, weight: .bold, design: .rounded)
+                            Text(String(runs.count) + " of last " + String(lab.history.count)).labFont(10).foregroundStyle(Palette.muted)
+                        }
+                        Spacer(minLength: 0)
+                        if let latest {
+                            VStack(alignment: .trailing, spacing: 0) {
+                                Text(number(latest.distance)).labFont(25, weight: .bold, design: .rounded).monospacedDigit()
+                                Text("m latest" + (latest.estimated ? " ~" : "")).labFont(9).foregroundStyle(Palette.muted)
                             }
-                            Spacer(minLength: 0)
-                        }.frame(minHeight: 49)
-                    }.buttonStyle(.plain).focusable().digitalCrownRotation($selection, from: 0, through: Double(max(1, maps.count - 1)), by: 1, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: true)
-                        .accessibilityLabel("Selected map " + latest.mapTitle + ". Turn Crown or tap to change map")
-                    HStack(alignment: .firstTextBaseline) {
-                        Text(number(latest.distance)).font(.system(size: 36, weight: .bold, design: .rounded)).monospacedDigit()
-                        Text("m latest" + (latest.estimated ? " ~" : "")).font(.system(size: 10)).foregroundStyle(Palette.muted)
-                    }
-                    HStack { Text("Recent best"); Spacer(); Text(best.map { metres($0) } ?? "—") }.font(.system(size: 11)).foregroundStyle(Palette.muted)
+                        }
+                        Image(systemName: "chevron.up.chevron.down").labFont(10).foregroundStyle(Palette.gold)
+                    }.frame(minHeight: 44)
+                }.buttonStyle(.plain).focusable()
+                    .digitalCrownRotation($selection, from: 0, through: Double(maps.count - 1), by: 1, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: true)
+                    .accessibilityLabel("Selected map " + title(id) + ". Turn Crown or tap to change map")
+                if let latest {
+                    HStack { Text("Recorded best"); Spacer(); Text(best.map { number($0) + " m" } ?? "—") }.labFont(10).foregroundStyle(Palette.muted)
                     HStack {
-                        Metric(art: "EOVChest", value: rate(runs.reduce(0) { $0 + $1.resources }, totalTime) + "/min", label: "Recent run average resources per minute")
-                        NavigationLink { RunDetail(run: latest) } label: { Image(systemName: "chevron.right").frame(width: 44, height: 44) }.accessibilityLabel("Open latest run receipt")
+                        VStack(alignment: .leading, spacing: 1) {
+                            Metric(art: "EOVChest", value: (runs.contains(where: { $0.estimated }) ? "~ " : "") + rate(runs.reduce(0) { $0 + $1.resources }, totalTime) + "/min", label: "Recent resource rate, including estimated records")
+                            Text(runs.contains(where: { $0.estimated }) ? "Includes estimates" : "Recent run average").labFont(9).foregroundStyle(Palette.muted)
+                        }
+                        NavigationLink { RunDetail(run: latest) } label: { Image(systemName: "chevron.right").frame(width: 44, height: 44) }.buttonStyle(.plain).accessibilityLabel("Open latest run receipt")
                     }.foregroundStyle(Palette.gold)
+                } else {
+                    Text("No recent records").labFont(17, weight: .semibold).padding(.top, 12)
+                    Text("This map has no runs in the retained ten.").labFont(12).foregroundStyle(Palette.muted).multilineTextAlignment(.center)
                 }
             }
         }

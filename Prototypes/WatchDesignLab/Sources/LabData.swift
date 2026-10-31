@@ -28,7 +28,7 @@ final class LabStore: ObservableObject {
         let decoded = url.flatMap { try? Data(contentsOf: $0) }.flatMap { try? EOVWatchSnapshot.decode($0) }
         snapshot = variant == "empty" ? nil : decoded
         let origin = decoded?.timeline?.generatedAt ?? decoded?.generatedAt ?? 0
-        clock = Double(argument("clock") ?? "") ?? origin + (variant == "stale" ? 7200 : variant == "restart" ? 110 : variant == "away" ? 85 : 15)
+        clock = Double(argument("clock") ?? "") ?? origin + (variant == "stale" ? 7200 : variant == "restart" ? 110 : ["away", "large-away"].contains(variant) ? 85 : 15)
     }
     var display: RunDisplay { RunDisplay(snapshot, at: clock) }
     var offline: Bool { variant == "offline" || variant == "stale" || variant == "empty" }

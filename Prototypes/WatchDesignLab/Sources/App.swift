@@ -33,7 +33,7 @@ struct DesignRoot: View {
             }
         }
         .background(Palette.ink)
-        .navigationTitle("").toolbarTitleDisplayMode(.inline)
+        .navigationTitle("").toolbar(.hidden, for: .navigationBar)
         .preferredColorScheme(.dark)
     }
 }
