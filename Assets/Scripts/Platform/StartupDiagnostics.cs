@@ -17,8 +17,8 @@ namespace TimelessEchoes.Platform
         public static TestMode Mode { get; private set; }
         public static bool ChoiceReady { get; private set; }
         public static bool AwaitingActivation { get; set; }
-        public static bool SkipGameCenter => TimelessEchoes.Stats.BackgroundRunPrototype.Enabled || EditorScreenshotSession || Enabled && ChoiceReady && (Mode == TestMode.NoGameCenterSignIn || Mode == TestMode.Minimal);
-        public static bool SkipOnlineServices => TimelessEchoes.Stats.BackgroundRunPrototype.Enabled || EditorScreenshotSession || Enabled && ChoiceReady && (Mode == TestMode.NoOnlineServices || Mode == TestMode.Minimal);
+        public static bool SkipGameCenter => EditorScreenshotSession || Enabled && ChoiceReady && (Mode == TestMode.NoGameCenterSignIn || Mode == TestMode.Minimal);
+        public static bool SkipOnlineServices => EditorScreenshotSession || Enabled && ChoiceReady && (Mode == TestMode.NoOnlineServices || Mode == TestMode.Minimal);
         public static bool EditorScreenshotSession
         {
             get

@@ -10,4 +10,6 @@ The final Windows PlayMode release pass completed 15 of 15 tests, covering conti
 
 The experimental background-progress setting is compiled for desktop, Android and iOS and still defaults off. The unsupported continued-processing experiment is not enabled. Build normal content with lossless LZ4HC; keep Steam beta disabled and preserve existing saves, store identities and unrelated primary-checkout edits.
 
+Final source review caught a prototype isolation leak: opting into background progress also suppressed achievement authentication and account services. Removed that coupling from the shared service policy while retaining explicit capture/diagnostic isolation. The new policy regression failed before the fix. All 37 estimator/service-policy EditMode tests and the same 15 release PlayMode tests passed on the correction. The initial candidate builds were stopped in their isolated checkouts before upload; mobile build numbers remain unused.
+
 Raw test results, store preflight responses, source manifests, build support manifests, package verification and submission receipts are retained under the ignored Artifacts/Release15920261101 directory.

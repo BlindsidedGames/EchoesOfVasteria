@@ -16,6 +16,35 @@ namespace Tests.EditMode
 {
     public sealed class BackgroundRunEstimatorTests
     {
+        [Test]
+        public void BackgroundOptInPreservesServicesAndExplicitCaptureIsolation()
+        {
+            const string preference = "Gameplay.BackgroundRunPrototype";
+            const string capture = "EOV.ScreenshotStudio.Active";
+            var existed = PlayerPrefs.HasKey(preference);
+            var previous = PlayerPrefs.GetInt(preference);
+            var previousCapture = UnityEditor.SessionState.GetBool(capture, false);
+            try
+            {
+                foreach (var optedIn in new[] { false, true })
+                foreach (var isolatedCapture in new[] { false, true })
+                {
+                    PlayerPrefs.SetInt(preference, optedIn ? 1 : 0);
+                    UnityEditor.SessionState.SetBool(capture, isolatedCapture);
+                    Assert.AreEqual(isolatedCapture, TimelessEchoes.Platform.StartupDiagnostics.SkipGameCenter,
+                        "Background progress must not disable achievement authentication.");
+                    Assert.AreEqual(isolatedCapture, TimelessEchoes.Platform.StartupDiagnostics.SkipOnlineServices,
+                        "Background progress must not disable account services.");
+                }
+            }
+            finally
+            {
+                if (existed) PlayerPrefs.SetInt(preference, previous); else PlayerPrefs.DeleteKey(preference);
+                UnityEditor.SessionState.SetBool(capture, previousCapture);
+                PlayerPrefs.Save();
+            }
+        }
+
         private static BackgroundRunEstimator.Input Input(double seconds) => new()
         {
             Run = new RunSaveData { Map = "River" }, Seconds = seconds, BaseCap = 50,
