@@ -1,0 +1,163 @@
+{
+  "source": "4f1ead91ef50e1e8174c1a31144eba2409795b2e",
+  "version": "1.5.9",
+  "iosBuild": "189",
+  "androidBuildUnchanged": 186,
+  "appId": "6749265146",
+  "lane": "Existing app, existing Internal group, internal TestFlight only",
+  "buildUploadID": "c69dcf40-aace-4bde-992a-82954c0aa08a",
+  "uploadedAtUTC": "2026-11-01T00:06:12Z",
+  "appleUploadState": {
+    "errors": [],
+    "warnings": [],
+    "infos": [],
+    "state": "PROCESSING"
+  },
+  "testerAvailabilityVerified": false,
+  "availabilityOwner": "Main Echoes Thread",
+  "approval": {
+    "exactNotesApprovedByUser": true,
+    "uploadAuthorizedByUser": true,
+    "notesFile": "docs/development/manual-refresh-expiry-20261101/testflight-189-notes.txt",
+    "notesSHA256": "eeac29807b1eaed440b908239d80c0e4a8046f080a5c1480d2a6d0c07656628d"
+  },
+  "fullGame": {
+    "freshFullDeviceSDKExport": true,
+    "reusedPriorUnityData": false,
+    "unity": "6000.6.0f1",
+    "xcode": "26.4.1 (17E202)",
+    "il2cpp": true,
+    "development": false,
+    "demo": false,
+    "beta": false,
+    "onlyExperimentalDefine": "EOV_BACKGROUND_PROTOTYPE",
+    "compiledPlayerOptInDefaultOff": true,
+    "editorReleaseHelperAndQATestsAbsentFromPlayerMetadata": true,
+    "nonExemptEncryption": false
+  },
+  "unityExport": {
+    "result": "Succeeded",
+    "errors": 0,
+    "warnings": 94,
+    "bytes": 1929090329,
+    "duration": "00:03:00.9195740"
+  },
+  "tests": {
+    "passed": 3,
+    "failed": 0,
+    "releasePrototypeDefineEnabled": true,
+    "forceEnableLaunchArgumentUsed": false,
+    "cases": [
+      {
+        "name": "BackgroundSettlementCommitsOnceAndWarmResumeRebuildsTheWorld",
+        "result": "Passed"
+      },
+      {
+        "name": "CompanionSnapshotReadsRealOwnersWithoutAwardingProgress",
+        "result": "Passed"
+      },
+      {
+        "name": "FastBackgroundRunCreditsItsFullHourAndCommitsOnce",
+        "result": "Passed"
+      }
+    ]
+  },
+  "bundles": [
+    {
+      "bundle": "com.blindsidedgames.echoesofvasteria",
+      "version": "1.5.9",
+      "build": "189",
+      "architectures": [
+        "arm64"
+      ]
+    },
+    {
+      "bundle": "com.blindsidedgames.echoesofvasteria.watchkitapp",
+      "version": "1.5.9",
+      "build": "189",
+      "architectures": [
+        "arm64_32",
+        "arm64"
+      ]
+    },
+    {
+      "bundle": "com.blindsidedgames.echoesofvasteria.liveactivity",
+      "version": "1.5.9",
+      "build": "189",
+      "architectures": [
+        "arm64"
+      ]
+    }
+  ],
+  "signing": {
+    "team": "AVX7SUF8Y6",
+    "distributionExportPassed": true,
+    "allThreeBundlesGetTaskAllow": false,
+    "appleValidationPassed": true,
+    "unityFrameworkDsymMatchesBinary": true
+  },
+  "nativePackaging": {
+    "actualGeneratedHostOwnsPhoneSession": true,
+    "hostLinksWatchConnectivity": true,
+    "allCopiedNativeSourcesMatchFrozenSource": true,
+    "actualHostRuntimeClassesVerified": [
+      "EOVLiveActivityBridge",
+      "EOVWatchPhoneSession"
+    ],
+    "frameworkCBridgesRetained": true,
+    "hostAndWidgetRefreshIntentMetadataVerified": true,
+    "expectedPortraitAssets": 179,
+    "compiledPortraitAssets": 179,
+    "watchIconVerified": true,
+    "generatedProjectManifestSHA256": "0407c2d4111006a79d60d7c4a278af53a569a0dc0fd2419e18ea615547d68c67"
+  },
+  "localBuildEnvironment": {
+    "basis": "Same local Mac importer/assembly/linker configuration and licensed vendor package/settings as successful188, with no unrelated188 gameplay source copied",
+    "vendorAndConfigFileCount": 2705,
+    "vendorAndConfigAllByteIdenticalTo188": true,
+    "vendorManifestSHA256": "3cd497a946a6eab4382cd1d6c7a49db94c7ea74ad4e681d63e213b7b80b0802f",
+    "runtimeSettingsSHA256": "6b4273f9326fa5ca10063a875efbce0a6b68b659675f41c6ced5f375076e5406",
+    "runtimeSettingsMetaSHA256": "7713f5aed4603f853478f4a4a690fb9b3735c9b11cc4b60c75033e3f2ba26f96",
+    "localAdaptationsPatchSHA256": "3ad19a59b677ef523f58f3c1d053b67668bba20a1461524b7ab9409ebfe4a2fd",
+    "fullPrivateEnvironmentRetainedLocally": true,
+    "temporarySourceChangesCleaned": true
+  },
+  "preparedIPA": {
+    "bytes": 251616180,
+    "sha256": "845a237e86e8fa8962a81bafe799f8a745b797c2d40a95d6b4a44ad62494d2cf",
+    "CRCAllEntriesPassed": true,
+    "internalOnly": true
+  },
+  "actualUploadedIPA": {
+    "bytes": 251616182,
+    "sha256": "9e27e9d0db0be5d43252d62ee060c39e47762e62b20609c0b0458643f316bc10",
+    "retainedLocally": true,
+    "nativeUUIDAndTextSectionsIncludingBothWatchSlicesMatchPrepared": true,
+    "allSerializedUnityDataHashesMatchPrepared": true
+  },
+  "nonblockingWarnings": [
+    "UnityRuntime.framework vendor dSYM missing (UUID D551654C-FD0B-35F5-B8AE-E0C93C43E314), same warning category as187/188; Apple validation/upload accepted. UnityFramework matching dSYM is present."
+  ],
+  "preservation": {
+    "primaryHeadUnchanged": true,
+    "primaryTrackedUserDiffUnchanged": true,
+    "diffSHA256": "7d45e5d114159fefba437f0b4df201af1939c4ffc59e6c29725a468ee1c68ec2",
+    "originalPlayerDirectoryFiles": 228,
+    "changedOriginalFiles": [
+      "TestResults.xml"
+    ],
+    "newPlayerDirectoryFiles": [],
+    "changedProgressionFiles": [],
+    "source": "4f1ead91ef50e1e8174c1a31144eba2409795b2e"
+  },
+  "scope": {
+    "publicAppStoreSubmission": false,
+    "externalTesterChanges": false,
+    "mainMerged": false,
+    "androidDistribution": false,
+    "steamDistribution": false,
+    "physicalDeviceInstallationOrGameplayAcceptance": false,
+    "publicLibraryAndStoreNotesChanged": false
+  },
+  "privateArtifacts": "Archives, device export, actual IPA, local dependency/config snapshot, complete hashes and signing/distribution logs retained locally outside Git."
+}
