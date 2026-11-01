@@ -1,0 +1,29 @@
+{
+  "conversations": [
+    {"id":"Farm.Saplings.Apple.v1.opening","openingQuest":"Farm.Saplings.Apple.v1","npc":"Farmers1","lines":[{"speaker":"Flora","key":"saplings.apple.offer","text":"We need fruit for the stores as well as vegetables. Bring me some apples."}]},
+    {"id":"Farm.Saplings.Apple.v1","npc":"Farmers1","lines":[{"speaker":"Flora","key":"saplings.apple.done.1","text":"Good. Keep an eye out for apple saplings when you’re gathering. Those are worth bringing home."},{"speaker":"Tillman","key":"saplings.apple.done.2","text":"Put them aside for now. We’ll need them when the orchard’s ready.","orchardKey":"saplings.apple.done.2.orchard","orchardText":"Save them for the orchard. You can choose what to plant there."}]},
+    {"id":"Farm.Saplings.Pear.v1.opening","openingQuest":"Farm.Saplings.Pear.v1","npc":"Farmers1","lines":[{"speaker":"Tillman","key":"saplings.pear.offer","text":"Bring me some pears this time. I’ll put them with the apples."}]},
+    {"id":"Farm.Saplings.Pear.v1","npc":"Farmers1","lines":[{"speaker":"Tillman","key":"saplings.pear.done.1","text":"That’ll keep us going. Pear saplings are worth bringing back too."},{"speaker":"Flora","key":"saplings.pear.done.2","text":"Leave the fruit in the stores before you start planning more trees."}]},
+    {"id":"Farm.Saplings.Peach.v1.opening","openingQuest":"Farm.Saplings.Peach.v1","npc":"Farmers1","lines":[{"speaker":"Flora","key":"saplings.peach.offer","text":"Tillman’s had his pears. Bring me some peaches—this one’s my choice."}]},
+    {"id":"Farm.Saplings.Peach.v1","npc":"Farmers1","lines":[{"speaker":"Flora","key":"saplings.peach.done.1","text":"These are for eating fresh."},{"speaker":"Tillman","key":"saplings.peach.done.2","text":"I wasn’t going to argue."},{"speaker":"Flora","key":"saplings.peach.done.3","text":"And save any peach saplings you find for planting."}]},
+    {"id":"Farm.Saplings.Cherry.v1.opening","openingQuest":"Farm.Saplings.Cherry.v1","npc":"Farmers1","lines":[{"speaker":"Tillman","key":"saplings.cherry.offer","text":"Flora got her peaches. I’m asking for cherries."}]},
+    {"id":"Farm.Saplings.Cherry.v1","npc":"Farmers1","lines":[{"speaker":"Flora","key":"saplings.cherry.done.1","text":"Some of those are going into the stores."},{"speaker":"Tillman","key":"saplings.cherry.done.2","text":"I know. I’ve put those aside already."},{"speaker":"Tillman","key":"saplings.cherry.done.3","text":"Keep an eye out for cherry saplings too. I’d like to grow these here."}]},
+    {"id":"Farm.Saplings.Oak.v1.opening","openingQuest":"Farm.Saplings.Oak.v1","npc":"Barkley1","lines":[{"speaker":"Barkley","key":"saplings.oak.offer","text":"Oak’s useful for posts and repairs. Bring me a supply, and I’ll show you which young trees to bring back."}]},
+    {"id":"Farm.Saplings.Oak.v1","npc":"Barkley1","lines":[{"speaker":"Barkley","key":"saplings.oak.done.1","text":"Good timber. Keep any oak saplings you find while you’re cutting."},{"speaker":"Barkley","key":"saplings.oak.done.2","text":"When you lay out that orchard, remember it can grow timber as well as fruit.","orchardKey":"saplings.oak.done.2.orchard","orchardText":"The orchard can grow timber as well as fruit. Worth remembering when you’re choosing what to plant."}]},
+    {"id":"Farm.Saplings.Birch.v1.opening","openingQuest":"Farm.Saplings.Birch.v1","npc":"Barkley1","lines":[{"speaker":"Barkley","key":"saplings.birch.offer","text":"Bring me birch this time. I don’t need oak for every little job."}]},
+    {"id":"Farm.Saplings.Birch.v1","npc":"Barkley1","lines":[{"speaker":"Barkley","key":"saplings.birch.done.1","text":"That’s the birch supplied. Bring back saplings when you find them—you can grow these close to town as well."}]},
+    {"id":"Farm.Saplings.Spruce.v1.opening","openingQuest":"Farm.Saplings.Spruce.v1","npc":"Barkley1","lines":[{"speaker":"Barkley","key":"saplings.spruce.offer","text":"I want some spruce put aside. Better to have it here than go looking every time someone needs a beam."}]},
+    {"id":"Farm.Saplings.Spruce.v1","npc":"Barkley1","lines":[{"speaker":"Barkley","key":"saplings.spruce.done.1","text":"Oak, birch and spruce. That gives us a useful timber reserve."},{"speaker":"Barkley","key":"saplings.spruce.done.2","text":"When you’re ready to plant, you’ve got all three to choose from."}]},
+    {"id":"Rock and Stone.opening","openingQuest":"Rock and Stone","npc":"OldTimer1","lines":[{"speaker":"Old Timer","key":"mines.timber.offer","text":"The supports need replacing. Bring me some timber before you head down there."}]},
+    {"id":"Rock and Stone","npc":"OldTimer1","lines":[{"speaker":"Old Timer","key":"mines.timber.done","text":"That’ll do for the supports. Mind your head down there."}]}
+  ],
+  "minesQuest": {"id":"Rock and Stone","name":"Shoring Things Up","description":"Bring 100 Logs to the Old Timer.","reward":"Unlocks the Mines.","amount":100},
+  "shortNotes": [
+    "Crop quests now unlock matching seed packs.",
+    "Added a final Turnip quest and seven sapling quests.",
+    "Locked seed packs now show which quest unlocks them.",
+    "The Old Timer now needs 100 Logs to open the Mines.",
+    "Fixed Barkley’s path appearing before his house is built.",
+    "Reduced the zoom when meeting Barkley in portrait."
+  ]
+}
