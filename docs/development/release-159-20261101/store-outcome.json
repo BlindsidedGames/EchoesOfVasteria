@@ -1,7 +1,7 @@
 {
   "version": "1.5.9",
   "gameplaySource": "b19047f8b52011c1ff6e6eea2fdbdb09c5d6aab8",
-  "verifiedAtUTC": "2026-11-01T06:43:53.746115+00:00",
+  "verifiedAtUTC": "2026-11-01T07:09:21.013802+00:00",
   "steam": {
     "status": "live",
     "branch": "default",
@@ -33,16 +33,26 @@
     "proof": "google-production-187-dashboard.png"
   },
   "ios": {
-    "build": 192,
-    "status": "Validated/Ready to Submit; selected and saved; review validation failed; not submitted",
-    "uploadId": "835b9179-0bfa-43be-8a79-e7b5981f4057",
+    "build": 193,
+    "status": "Waiting for Review",
+    "uploadId": "2348cd40-89ce-4134-adb3-683af0775c18",
     "signedHostGameCenter": true,
     "appleProcessedHostGameCenter": true,
     "versionGameCenterEnabled": true,
-    "backendError": "STATE_ERROR.BUILD_INDICATES_GAME_CENTER_DISABLED",
-    "nextAction": "Apple support report prepared; awaiting authorization to send",
-    "errorProof": "apple-192-review-validation-error.json",
-    "metadataProof": "apple-192-game-center-metadata.txt",
+    "backendError": null,
+    "nextAction": "Await Apple review; automatic release after approval",
+    "metadataProof": "apple-193-game-center-metadata.txt",
+    "source": "382914e64797a0a7ebbbf4b0f75998578f6a3cbd",
+    "submissionID": "d93ba0e6-8590-4571-9df0-914d38f40d62",
+    "submissionURL": "https://appstoreconnect.apple.com/apps/6749265146/distribution/reviewsubmissions/details/d93ba0e6-8590-4571-9df0-914d38f40d62",
+    "submittedUTC": "2026-11-01T07:08:00Z",
+    "autoReleaseAfterApproval": true,
+    "internalOnly": false,
+    "signedWatchGameCenter": true,
+    "appleProcessedWatchGameCenter": true,
+    "previous191And192Error": "STATE_ERROR.BUILD_INDICATES_GAME_CENTER_DISABLED",
+    "proof": "apple-193-waiting-for-review.png",
+    "actualIPASHA256": "c4bdf8261d46d5cd00d170bbe1fc5b530333ef5248db72df27c3049abe07c259",
     "allEightApprovedNotesReadbackMatch": true
   }
 }

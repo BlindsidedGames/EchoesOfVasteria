@@ -1,6 +1,6 @@
 # App Store Connect submission blocked by conflicting Game Center metadata
 
-Draft only. Not sent to Apple.
+Historical draft only. The user declined sending it. Adding Game Center signing to the embedded Watch app resolved the blocker in build 193; the public release is now Waiting for Review. This report was never sent to Apple.
 
 App: Echoes of Vatheria, Apple ID 6749265146
 Bundle ID: `com.blindsidedgames.echoesofvasteria`
