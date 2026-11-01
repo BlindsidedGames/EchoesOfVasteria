@@ -1,0 +1,1828 @@
+{
+  "context": "Measurements collected inside actual rendering; all bounds are panel units, image dimensions are physical pixels. Source bcd40fc88291a1a5d6a97fe60843b8758cb6dcf1. Actual ToolkitBookScreen.Show/ApplyLayout with normal Library/theme/template; private empty scene with disposable save root. The existing Select route was invoked reflectively to avoid unrelated pointer-delivery instability. No production seams or changes.",
+  "captures": {
+    "portrait": {
+      "label": "real-render-stage-6",
+      "Screen": {
+        "width": 1080,
+        "height": 1920,
+        "safeArea": [
+          0.0,
+          0.0,
+          1080.0,
+          1920.0
+        ]
+      },
+      "DeviceScreen": {
+        "width": 1080,
+        "height": 1920,
+        "safeArea": [
+          0.0,
+          0.0,
+          1080.0,
+          1920.0
+        ]
+      },
+      "gameView": {
+        "w": 1080,
+        "h": 1920
+      },
+      "townView": true,
+      "portrait": true,
+      "safeScreen": [
+        0.0,
+        0.0,
+        360.0,
+        640.0
+      ],
+      "realArea": [
+        0.0,
+        0.0,
+        360.0,
+        640.0
+      ],
+      "panel": {
+        "scale": 3.0,
+        "scaleMode": "ConstantPixelSize",
+        "referenceResolution": [
+          360,
+          432
+        ],
+        "match": 0.0
+      },
+      "panelTree": {
+        "name": "Echoes runtime UI",
+        "type": "PanelRootElement",
+        "classes": [],
+        "layout": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "world": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "height": 640.0,
+        "width": 360.0,
+        "flexGrow": 0.0,
+        "flexShrink": 1.0,
+        "flexBasis": "NaN",
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "documentRoot": {
+        "name": "Actual ToolkitBookScreen diagnostic-container",
+        "type": "UIDocumentRootElement",
+        "classes": [
+          "unity-ui-document__root"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "world": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "height": 640.0,
+        "width": 360.0,
+        "flexGrow": 0.0,
+        "flexShrink": 1.0,
+        "flexBasis": "NaN",
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "root": {
+        "name": "",
+        "type": "TemplateContainer",
+        "classes": [
+          "dark",
+          "gameplay",
+          "portrait",
+          "eov-book",
+          "eov-theme",
+          "menu-surface",
+          "book-reviewed",
+          "library-reader",
+          "library-narrow",
+          "focus-collapsible"
+        ],
+        "layout": [
+          0.0,
+          12.0,
+          360.0,
+          584.0
+        ],
+        "world": [
+          0.0,
+          12.0,
+          360.0,
+          584.0
+        ],
+        "content": [
+          12.0,
+          12.0,
+          336.0,
+          524.0
+        ],
+        "height": 584.0,
+        "width": 360.0,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": "NaN",
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 48.0
+      },
+      "frameBounds": {
+        "name": "book-frame",
+        "type": "VisualElement",
+        "classes": [
+          "eov-book-frame"
+        ],
+        "layout": [
+          12.0,
+          12.0,
+          336.0,
+          524.0
+        ],
+        "world": [
+          12.0,
+          24.0,
+          336.0,
+          524.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          524.0
+        ],
+        "height": 524.0,
+        "width": 336.0,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": 0.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "layoutBounds": {
+        "name": "",
+        "type": "VisualElement",
+        "classes": [
+          "library-layout"
+        ],
+        "layout": [
+          0.0,
+          65.6666641,
+          336.0,
+          458.333344
+        ],
+        "world": [
+          12.0,
+          89.6666641,
+          336.0,
+          458.333344
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          458.333344
+        ],
+        "height": 458.333344,
+        "width": 336.0,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": 0.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "articleBounds": {
+        "name": "",
+        "type": "VisualElement",
+        "classes": [
+          "library-article"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          336.0,
+          458.333344
+        ],
+        "world": [
+          12.0,
+          89.6666641,
+          336.0,
+          458.333344
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          458.333344
+        ],
+        "height": 458.333344,
+        "width": 336.0,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": 0.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "currentLabel": {
+        "name": "library-article-body",
+        "type": "Label",
+        "classes": [
+          "unity-label",
+          "unity-text-element",
+          "library-prose"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          336.0,
+          299.0
+        ],
+        "world": [
+          12.0,
+          120.666664,
+          336.0,
+          299.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          299.0
+        ],
+        "height": 299.0,
+        "width": 336.0,
+        "flexGrow": 0.0,
+        "flexShrink": 0.0,
+        "flexBasis": 299.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "historyLabel": {
+        "name": "library-patch-history",
+        "type": "Label",
+        "classes": [
+          "unity-label",
+          "unity-text-element",
+          "library-prose",
+          "library-patch-history"
+        ],
+        "layout": [
+          0.0,
+          307.0,
+          336.0,
+          2860.0
+        ],
+        "world": [
+          12.0,
+          427.666656,
+          336.0,
+          2860.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          2860.0
+        ],
+        "height": 2860.0,
+        "width": 336.0,
+        "flexGrow": 0.0,
+        "flexShrink": 0.0,
+        "flexBasis": 2860.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "contentViewport": {
+        "name": "unity-content-viewport",
+        "type": "VisualElement",
+        "classes": [
+          "unity-scroll-view__content-viewport",
+          "unity-scroll-view__content-viewport--vertical"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          336.0,
+          428.333344
+        ],
+        "world": [
+          12.0,
+          119.666664,
+          336.0,
+          428.333344
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          428.333344
+        ],
+        "height": 428.333344,
+        "width": 336.0,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": 0.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "contentContainer": {
+        "name": "unity-content-container",
+        "type": "VisualElement",
+        "classes": [
+          "unity-scroll-view__content-container",
+          "unity-scroll-view__content-container--vertical"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          336.0,
+          3169.0
+        ],
+        "world": [
+          12.0,
+          119.666664,
+          336.0,
+          3169.0
+        ],
+        "content": [
+          0.0,
+          1.0,
+          336.0,
+          3167.0
+        ],
+        "height": 3169.0,
+        "width": 336.0,
+        "flexGrow": 1.0,
+        "flexShrink": 0.0,
+        "flexBasis": 3169.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 1.0
+      },
+      "articleContent": {
+        "name": "library-article-content",
+        "type": "VisualElement",
+        "classes": [],
+        "layout": [
+          0.0,
+          1.0,
+          336.0,
+          3167.0
+        ],
+        "world": [
+          12.0,
+          120.666664,
+          336.0,
+          3167.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          3167.0
+        ],
+        "height": 3167.0,
+        "width": 336.0,
+        "flexGrow": 0.0,
+        "flexShrink": 1.0,
+        "flexBasis": 3167.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "currentLength": 1115,
+      "currentLines": 13,
+      "historyLength": 10528,
+      "historyLines": 134,
+      "measuredCurrentText": [
+        336.0,
+        299.0
+      ],
+      "historyColor": "RGBA(0.667, 0.651, 0.635, 1.000)",
+      "currentColor": "RGBA(0.961, 0.894, 0.839, 1.000)",
+      "imageDimensions": [
+        1080,
+        1920
+      ],
+      "imageSHA256": "eb48d4740a9c42e165568c608c2ffe051a4b63c7833845fcb5d6f3bc2ec55028",
+      "currentBulletCount": 11
+    },
+    "portrait-scrolled": {
+      "label": "real-render-stage-8",
+      "Screen": {
+        "width": 1080,
+        "height": 1920,
+        "safeArea": [
+          0.0,
+          0.0,
+          1080.0,
+          1920.0
+        ]
+      },
+      "DeviceScreen": {
+        "width": 1080,
+        "height": 1920,
+        "safeArea": [
+          0.0,
+          0.0,
+          1080.0,
+          1920.0
+        ]
+      },
+      "gameView": {
+        "w": 1080,
+        "h": 1920
+      },
+      "townView": true,
+      "portrait": true,
+      "safeScreen": [
+        0.0,
+        0.0,
+        360.0,
+        640.0
+      ],
+      "realArea": [
+        0.0,
+        0.0,
+        360.0,
+        640.0
+      ],
+      "panel": {
+        "scale": 3.0,
+        "scaleMode": "ConstantPixelSize",
+        "referenceResolution": [
+          360,
+          432
+        ],
+        "match": 0.0
+      },
+      "panelTree": {
+        "name": "Echoes runtime UI",
+        "type": "PanelRootElement",
+        "classes": [],
+        "layout": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "world": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "height": 640.0,
+        "width": 360.0,
+        "flexGrow": 0.0,
+        "flexShrink": 1.0,
+        "flexBasis": "NaN",
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "documentRoot": {
+        "name": "Actual ToolkitBookScreen diagnostic-container",
+        "type": "UIDocumentRootElement",
+        "classes": [
+          "unity-ui-document__root"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "world": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "height": 640.0,
+        "width": 360.0,
+        "flexGrow": 0.0,
+        "flexShrink": 1.0,
+        "flexBasis": "NaN",
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "root": {
+        "name": "",
+        "type": "TemplateContainer",
+        "classes": [
+          "dark",
+          "gameplay",
+          "portrait",
+          "eov-book",
+          "eov-theme",
+          "menu-surface",
+          "book-reviewed",
+          "library-reader",
+          "library-narrow",
+          "focus-collapsible"
+        ],
+        "layout": [
+          0.0,
+          12.0,
+          360.0,
+          584.0
+        ],
+        "world": [
+          0.0,
+          12.0,
+          360.0,
+          584.0
+        ],
+        "content": [
+          12.0,
+          12.0,
+          336.0,
+          524.0
+        ],
+        "height": 584.0,
+        "width": 360.0,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": "NaN",
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 48.0
+      },
+      "frameBounds": {
+        "name": "book-frame",
+        "type": "VisualElement",
+        "classes": [
+          "eov-book-frame"
+        ],
+        "layout": [
+          12.0,
+          12.0,
+          336.0,
+          524.0
+        ],
+        "world": [
+          12.0,
+          24.0,
+          336.0,
+          524.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          524.0
+        ],
+        "height": 524.0,
+        "width": 336.0,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": 0.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "layoutBounds": {
+        "name": "",
+        "type": "VisualElement",
+        "classes": [
+          "library-layout"
+        ],
+        "layout": [
+          0.0,
+          65.6666641,
+          336.0,
+          458.333344
+        ],
+        "world": [
+          12.0,
+          89.6666641,
+          336.0,
+          458.333344
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          458.333344
+        ],
+        "height": 458.333344,
+        "width": 336.0,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": 0.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "articleBounds": {
+        "name": "",
+        "type": "VisualElement",
+        "classes": [
+          "library-article"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          336.0,
+          458.333344
+        ],
+        "world": [
+          12.0,
+          89.6666641,
+          336.0,
+          458.333344
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          458.333344
+        ],
+        "height": 458.333344,
+        "width": 336.0,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": 0.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "currentLabel": {
+        "name": "library-article-body",
+        "type": "Label",
+        "classes": [
+          "unity-label",
+          "unity-text-element",
+          "library-prose"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          336.0,
+          299.0
+        ],
+        "world": [
+          12.0,
+          -229.333344,
+          336.0,
+          299.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          299.0
+        ],
+        "height": 299.0,
+        "width": 336.0,
+        "flexGrow": 0.0,
+        "flexShrink": 0.0,
+        "flexBasis": 299.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "historyLabel": {
+        "name": "library-patch-history",
+        "type": "Label",
+        "classes": [
+          "unity-label",
+          "unity-text-element",
+          "library-prose",
+          "library-patch-history"
+        ],
+        "layout": [
+          0.0,
+          307.0,
+          336.0,
+          2860.0
+        ],
+        "world": [
+          12.0,
+          77.66666,
+          336.0,
+          2860.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          2860.0
+        ],
+        "height": 2860.0,
+        "width": 336.0,
+        "flexGrow": 0.0,
+        "flexShrink": 0.0,
+        "flexBasis": 2860.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "contentViewport": {
+        "name": "unity-content-viewport",
+        "type": "VisualElement",
+        "classes": [
+          "unity-scroll-view__content-viewport",
+          "unity-scroll-view__content-viewport--vertical"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          336.0,
+          428.333344
+        ],
+        "world": [
+          12.0,
+          119.666664,
+          336.0,
+          428.333344
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          428.333344
+        ],
+        "height": 428.333344,
+        "width": 336.0,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": 0.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "contentContainer": {
+        "name": "unity-content-container",
+        "type": "VisualElement",
+        "classes": [
+          "unity-scroll-view__content-container",
+          "unity-scroll-view__content-container--vertical"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          336.0,
+          3169.0
+        ],
+        "world": [
+          12.0,
+          -230.333344,
+          336.0,
+          3169.0
+        ],
+        "content": [
+          0.0,
+          1.0,
+          336.0,
+          3167.0
+        ],
+        "height": 3169.0,
+        "width": 336.0,
+        "flexGrow": 1.0,
+        "flexShrink": 0.0,
+        "flexBasis": 3169.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 1.0
+      },
+      "articleContent": {
+        "name": "library-article-content",
+        "type": "VisualElement",
+        "classes": [],
+        "layout": [
+          0.0,
+          1.0,
+          336.0,
+          3167.0
+        ],
+        "world": [
+          12.0,
+          -229.333344,
+          336.0,
+          3167.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          3167.0
+        ],
+        "height": 3167.0,
+        "width": 336.0,
+        "flexGrow": 0.0,
+        "flexShrink": 1.0,
+        "flexBasis": 3167.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "offset": [
+        0.0,
+        350.0
+      ],
+      "currentLength": 1115,
+      "currentLines": 13,
+      "historyLength": 10528,
+      "historyLines": 134,
+      "measuredCurrentText": [
+        336.0,
+        299.0
+      ],
+      "historyColor": "RGBA(0.667, 0.651, 0.635, 1.000)",
+      "currentColor": "RGBA(0.961, 0.894, 0.839, 1.000)",
+      "imageDimensions": [
+        1080,
+        1920
+      ],
+      "imageSHA256": "323842803a6b97437d0495500da40156aff2901a96984ac369557e0d23909cad",
+      "currentBulletCount": 11
+    },
+    "landscape": {
+      "label": "real-render-stage-10",
+      "Screen": {
+        "width": 1920,
+        "height": 1080,
+        "safeArea": [
+          0.0,
+          0.0,
+          1920.0,
+          1080.0
+        ]
+      },
+      "DeviceScreen": {
+        "width": 1920,
+        "height": 1080,
+        "safeArea": [
+          0.0,
+          0.0,
+          1920.0,
+          1080.0
+        ]
+      },
+      "gameView": {
+        "w": 1920,
+        "h": 1080
+      },
+      "townView": true,
+      "portrait": false,
+      "safeScreen": [
+        0.0,
+        0.0,
+        768.0,
+        432.0
+      ],
+      "realArea": [
+        6.0,
+        6.0,
+        756.0,
+        420.0
+      ],
+      "panel": {
+        "scale": 2.5,
+        "scaleMode": "ConstantPixelSize",
+        "referenceResolution": [
+          768,
+          432
+        ],
+        "match": 1.0
+      },
+      "panelTree": {
+        "name": "Echoes runtime UI",
+        "type": "PanelRootElement",
+        "classes": [],
+        "layout": [
+          0.0,
+          0.0,
+          768.0,
+          432.0
+        ],
+        "world": [
+          0.0,
+          0.0,
+          768.0,
+          432.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          768.0,
+          432.0
+        ],
+        "height": 432.0,
+        "width": 768.0,
+        "flexGrow": 0.0,
+        "flexShrink": 1.0,
+        "flexBasis": "NaN",
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "documentRoot": {
+        "name": "Actual ToolkitBookScreen diagnostic-container",
+        "type": "UIDocumentRootElement",
+        "classes": [
+          "unity-ui-document__root"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          768.0,
+          432.0
+        ],
+        "world": [
+          0.0,
+          0.0,
+          768.0,
+          432.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          768.0,
+          432.0
+        ],
+        "height": 432.0,
+        "width": 768.0,
+        "flexGrow": 0.0,
+        "flexShrink": 1.0,
+        "flexBasis": "NaN",
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "root": {
+        "name": "",
+        "type": "TemplateContainer",
+        "classes": [
+          "dark",
+          "gameplay",
+          "eov-book",
+          "eov-theme",
+          "menu-surface",
+          "book-reviewed",
+          "library-reader",
+          "focus-collapsible"
+        ],
+        "layout": [
+          18.0,
+          50.0,
+          732.0,
+          364.0
+        ],
+        "world": [
+          18.0,
+          50.0,
+          732.0,
+          364.0
+        ],
+        "content": [
+          12.4,
+          12.4,
+          707.2,
+          339.2
+        ],
+        "height": 364.0,
+        "width": 732.0,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": "NaN",
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 12.0
+      },
+      "frameBounds": {
+        "name": "book-frame",
+        "type": "VisualElement",
+        "classes": [
+          "eov-book-frame"
+        ],
+        "layout": [
+          12.4,
+          12.4000015,
+          707.199951,
+          339.2
+        ],
+        "world": [
+          30.4,
+          62.4,
+          707.199951,
+          339.2
+        ],
+        "content": [
+          0.0,
+          0.0,
+          707.199951,
+          339.2
+        ],
+        "height": 339.2,
+        "width": 707.199951,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": 0.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "layoutBounds": {
+        "name": "",
+        "type": "VisualElement",
+        "classes": [
+          "library-layout"
+        ],
+        "layout": [
+          0.0,
+          21.5999985,
+          707.199951,
+          317.6
+        ],
+        "world": [
+          30.4,
+          84.0,
+          707.199951,
+          317.6
+        ],
+        "content": [
+          0.0,
+          0.0,
+          707.199951,
+          317.6
+        ],
+        "height": 317.6,
+        "width": 707.199951,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": 0.0,
+        "flexDirection": "Row",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "articleBounds": {
+        "name": "",
+        "type": "VisualElement",
+        "classes": [
+          "library-article"
+        ],
+        "layout": [
+          172.0,
+          0.0,
+          535.199951,
+          317.6
+        ],
+        "world": [
+          202.4,
+          84.0,
+          535.199951,
+          317.6
+        ],
+        "content": [
+          0.0,
+          0.0,
+          535.199951,
+          317.6
+        ],
+        "height": 317.6,
+        "width": 535.199951,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": 0.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "currentLabel": {
+        "name": "library-article-body",
+        "type": "Label",
+        "classes": [
+          "unity-label",
+          "unity-text-element",
+          "library-prose"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          528.4,
+          159.999985
+        ],
+        "world": [
+          202.4,
+          140.8,
+          528.4,
+          159.999985
+        ],
+        "content": [
+          0.0,
+          0.0,
+          528.4,
+          159.999985
+        ],
+        "height": 159.999985,
+        "width": 528.4,
+        "flexGrow": 0.0,
+        "flexShrink": 0.0,
+        "flexBasis": 160.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "historyLabel": {
+        "name": "library-patch-history",
+        "type": "Label",
+        "classes": [
+          "unity-label",
+          "unity-text-element",
+          "library-prose",
+          "library-patch-history"
+        ],
+        "layout": [
+          0.0,
+          167.999985,
+          528.4,
+          1651.6001
+        ],
+        "world": [
+          202.4,
+          308.8,
+          528.4,
+          1651.6001
+        ],
+        "content": [
+          0.0,
+          0.0,
+          528.4,
+          1651.6001
+        ],
+        "height": 1651.6001,
+        "width": 528.4,
+        "flexGrow": 0.0,
+        "flexShrink": 0.0,
+        "flexBasis": 1651.6,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "contentViewport": {
+        "name": "unity-content-viewport",
+        "type": "VisualElement",
+        "classes": [
+          "unity-scroll-view__content-viewport",
+          "unity-scroll-view__content-viewport--vertical"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          528.4,
+          262.0
+        ],
+        "world": [
+          202.4,
+          139.6,
+          528.4,
+          262.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          528.4,
+          262.0
+        ],
+        "height": 262.0,
+        "width": 528.4,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": 0.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "contentContainer": {
+        "name": "unity-content-container",
+        "type": "VisualElement",
+        "classes": [
+          "unity-scroll-view__content-container",
+          "unity-scroll-view__content-container--vertical"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          528.4,
+          1822.0
+        ],
+        "world": [
+          202.4,
+          139.6,
+          528.4,
+          1822.0
+        ],
+        "content": [
+          0.0,
+          1.2,
+          528.4,
+          1819.6
+        ],
+        "height": 1822.0,
+        "width": 528.4,
+        "flexGrow": 1.0,
+        "flexShrink": 0.0,
+        "flexBasis": 1822.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 1.2
+      },
+      "articleContent": {
+        "name": "library-article-content",
+        "type": "VisualElement",
+        "classes": [],
+        "layout": [
+          0.0,
+          1.199997,
+          528.4,
+          1819.6
+        ],
+        "world": [
+          202.4,
+          140.8,
+          528.4,
+          1819.6
+        ],
+        "content": [
+          0.0,
+          0.0,
+          528.4,
+          1819.6
+        ],
+        "height": 1819.6,
+        "width": 528.4,
+        "flexGrow": 0.0,
+        "flexShrink": 1.0,
+        "flexBasis": 1819.6,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "currentLength": 1115,
+      "currentLines": 13,
+      "historyLength": 10528,
+      "historyLines": 134,
+      "measuredCurrentText": [
+        528.4,
+        160.0
+      ],
+      "historyColor": "RGBA(0.667, 0.651, 0.635, 1.000)",
+      "currentColor": "RGBA(0.961, 0.894, 0.839, 1.000)",
+      "imageDimensions": [
+        1920,
+        1080
+      ],
+      "imageSHA256": "53d9cf0bb8f78f6412a39bcc7da75bd9c710c270877b428e4b3828f4aebb7b2f",
+      "currentBulletCount": 11
+    },
+    "portrait-after-rotation": {
+      "label": "real-render-stage-12",
+      "Screen": {
+        "width": 1080,
+        "height": 1920,
+        "safeArea": [
+          0.0,
+          0.0,
+          1080.0,
+          1920.0
+        ]
+      },
+      "DeviceScreen": {
+        "width": 1080,
+        "height": 1920,
+        "safeArea": [
+          0.0,
+          0.0,
+          1080.0,
+          1920.0
+        ]
+      },
+      "gameView": {
+        "w": 1080,
+        "h": 1920
+      },
+      "townView": true,
+      "portrait": true,
+      "safeScreen": [
+        0.0,
+        0.0,
+        360.0,
+        640.0
+      ],
+      "realArea": [
+        0.0,
+        0.0,
+        360.0,
+        640.0
+      ],
+      "panel": {
+        "scale": 3.0,
+        "scaleMode": "ConstantPixelSize",
+        "referenceResolution": [
+          360,
+          432
+        ],
+        "match": 0.0
+      },
+      "panelTree": {
+        "name": "Echoes runtime UI",
+        "type": "PanelRootElement",
+        "classes": [],
+        "layout": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "world": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "height": 640.0,
+        "width": 360.0,
+        "flexGrow": 0.0,
+        "flexShrink": 1.0,
+        "flexBasis": "NaN",
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "documentRoot": {
+        "name": "Actual ToolkitBookScreen diagnostic-container",
+        "type": "UIDocumentRootElement",
+        "classes": [
+          "unity-ui-document__root"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "world": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          360.0,
+          640.0
+        ],
+        "height": 640.0,
+        "width": 360.0,
+        "flexGrow": 0.0,
+        "flexShrink": 1.0,
+        "flexBasis": "NaN",
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "root": {
+        "name": "",
+        "type": "TemplateContainer",
+        "classes": [
+          "dark",
+          "gameplay",
+          "portrait",
+          "eov-book",
+          "eov-theme",
+          "menu-surface",
+          "book-reviewed",
+          "library-reader",
+          "library-narrow",
+          "focus-collapsible"
+        ],
+        "layout": [
+          0.0,
+          12.0,
+          360.0,
+          584.0
+        ],
+        "world": [
+          0.0,
+          12.0,
+          360.0,
+          584.0
+        ],
+        "content": [
+          12.0,
+          12.0,
+          336.0,
+          524.0
+        ],
+        "height": 584.0,
+        "width": 360.0,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": "NaN",
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 48.0
+      },
+      "frameBounds": {
+        "name": "book-frame",
+        "type": "VisualElement",
+        "classes": [
+          "eov-book-frame"
+        ],
+        "layout": [
+          12.0,
+          12.0,
+          336.0,
+          524.0
+        ],
+        "world": [
+          12.0,
+          24.0,
+          336.0,
+          524.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          524.0
+        ],
+        "height": 524.0,
+        "width": 336.0,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": 0.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "layoutBounds": {
+        "name": "",
+        "type": "VisualElement",
+        "classes": [
+          "library-layout"
+        ],
+        "layout": [
+          0.0,
+          65.6666641,
+          336.0,
+          458.333344
+        ],
+        "world": [
+          12.0,
+          89.6666641,
+          336.0,
+          458.333344
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          458.333344
+        ],
+        "height": 458.333344,
+        "width": 336.0,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": 0.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "articleBounds": {
+        "name": "",
+        "type": "VisualElement",
+        "classes": [
+          "library-article"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          336.0,
+          458.333344
+        ],
+        "world": [
+          12.0,
+          89.6666641,
+          336.0,
+          458.333344
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          458.333344
+        ],
+        "height": 458.333344,
+        "width": 336.0,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": 0.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "currentLabel": {
+        "name": "library-article-body",
+        "type": "Label",
+        "classes": [
+          "unity-label",
+          "unity-text-element",
+          "library-prose"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          336.0,
+          299.0
+        ],
+        "world": [
+          12.0,
+          120.666664,
+          336.0,
+          299.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          299.0
+        ],
+        "height": 299.0,
+        "width": 336.0,
+        "flexGrow": 0.0,
+        "flexShrink": 0.0,
+        "flexBasis": 299.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "historyLabel": {
+        "name": "library-patch-history",
+        "type": "Label",
+        "classes": [
+          "unity-label",
+          "unity-text-element",
+          "library-prose",
+          "library-patch-history"
+        ],
+        "layout": [
+          0.0,
+          307.0,
+          336.0,
+          2860.0
+        ],
+        "world": [
+          12.0,
+          427.666656,
+          336.0,
+          2860.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          2860.0
+        ],
+        "height": 2860.0,
+        "width": 336.0,
+        "flexGrow": 0.0,
+        "flexShrink": 0.0,
+        "flexBasis": 2860.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "contentViewport": {
+        "name": "unity-content-viewport",
+        "type": "VisualElement",
+        "classes": [
+          "unity-scroll-view__content-viewport",
+          "unity-scroll-view__content-viewport--vertical"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          336.0,
+          428.333344
+        ],
+        "world": [
+          12.0,
+          119.666664,
+          336.0,
+          428.333344
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          428.333344
+        ],
+        "height": 428.333344,
+        "width": 336.0,
+        "flexGrow": 1.0,
+        "flexShrink": 1.0,
+        "flexBasis": 0.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "contentContainer": {
+        "name": "unity-content-container",
+        "type": "VisualElement",
+        "classes": [
+          "unity-scroll-view__content-container",
+          "unity-scroll-view__content-container--vertical"
+        ],
+        "layout": [
+          0.0,
+          0.0,
+          336.0,
+          3169.0
+        ],
+        "world": [
+          12.0,
+          119.666664,
+          336.0,
+          3169.0
+        ],
+        "content": [
+          0.0,
+          1.0,
+          336.0,
+          3167.0
+        ],
+        "height": 3169.0,
+        "width": 336.0,
+        "flexGrow": 1.0,
+        "flexShrink": 0.0,
+        "flexBasis": 3169.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 1.0
+      },
+      "articleContent": {
+        "name": "library-article-content",
+        "type": "VisualElement",
+        "classes": [],
+        "layout": [
+          0.0,
+          1.0,
+          336.0,
+          3167.0
+        ],
+        "world": [
+          12.0,
+          120.666664,
+          336.0,
+          3167.0
+        ],
+        "content": [
+          0.0,
+          0.0,
+          336.0,
+          3167.0
+        ],
+        "height": 3167.0,
+        "width": 336.0,
+        "flexGrow": 0.0,
+        "flexShrink": 1.0,
+        "flexBasis": 3167.0,
+        "flexDirection": "Column",
+        "overflow": "Visible",
+        "display": "Flex",
+        "paddingBottom": 0.0
+      },
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "currentLength": 1115,
+      "currentLines": 13,
+      "historyLength": 10528,
+      "historyLines": 134,
+      "measuredCurrentText": [
+        336.0,
+        299.0
+      ],
+      "historyColor": "RGBA(0.667, 0.651, 0.635, 1.000)",
+      "currentColor": "RGBA(0.961, 0.894, 0.839, 1.000)",
+      "imageDimensions": [
+        1080,
+        1920
+      ],
+      "imageSHA256": "eb48d4740a9c42e165568c608c2ffe051a4b63c7833845fcb5d6f3bc2ec55028",
+      "currentBulletCount": 11
+    }
+  },
+  "directTestLimitation": "Manual direct-view layout can use stale or Editor callback screen geometry while the GameView has rotated. Runtime observation saw a 768x376 root while Screen and Device.Screen were 1080x1920 and the safe panel area was 360x640. The real ToolkitBookScreen Update/ApplyLayout resolves the correct 360x584 root. Early direct-test capture is not accepted as portrait product proof."
+}
