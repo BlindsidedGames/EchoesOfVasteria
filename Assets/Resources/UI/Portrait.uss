@@ -56,6 +56,9 @@
 .gameplay.portrait .eov-skills-left {width:100%;margin-right:0;max-height:45%;flex-shrink:1;min-height:80px;}
 .gameplay.portrait .eov-skills-right {min-height:80px;}
 .gameplay.portrait .eov-skills-selectors {flex-wrap:wrap;height:auto;}
+.gameplay.portrait .eov-skills-selector-bar {flex-direction:row;flex-wrap:wrap;align-items:center;}
+.gameplay.portrait .eov-skills-selector-bar .eov-skills-selectors {flex-shrink:0;margin-right:var(--space-control);}
+.gameplay.portrait .eov-skills-selector-bar #active-slots {margin-left:auto;align-self:center;-unity-text-align:middle-right;}
 .gameplay.portrait.library-reader .library-layout {flex-direction:column;}
 .gameplay.portrait.library-reader .library-topics {width:100%;min-width:0;margin:0 0 8px 0;border-right-width:0;border-bottom-width:1px;flex-shrink:0;}
 .gameplay.portrait.library-reader .library-topic-title {font-size:var(--body);}

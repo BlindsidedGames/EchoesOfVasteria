@@ -764,6 +764,7 @@ namespace TimelessEchoes.Buffs
 
         private void ApplyTimeScaleModifier()
         {
+            if (GameManager.HardcoreFallen) { Time.timeScale = 0; return; }
             var additive = 0f;
             foreach (var buff in activeBuffs)
             {

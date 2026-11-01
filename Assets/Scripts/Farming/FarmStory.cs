@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace TimelessEchoes.Farming
 {
-    /// <summary>Cosmetic conversations for committed Fields progress. Never grants project rewards.</summary>
+    /// <summary>Completion conversations for town projects. Never grants project rewards.</summary>
     public sealed class FarmStory : MonoBehaviour
     {
         public static FarmStory Instance { get; private set; }
@@ -23,7 +23,8 @@ namespace TimelessEchoes.Farming
         private void OnDisable() => Blindsided.EventHandler.OnLoadData -= Loaded;
         private void OnDestroy() { if (Instance == this) Instance = null; }
         private void Loaded() => pending.Clear();
-        public bool HasCompletion(string id) => definition && definition.Find(id) != null;
+        public bool HasCompletion(string id) => definition && definition.Find(id) != null &&
+            !(id == "Unlock Corn" && Oracle.oracle?.saveData != null && FarmContent.Completed(Oracle.oracle.saveData, "Unlock Cauldron"));
         public void QueueCompletion(string id) { if (HasCompletion(id) && !pending.Contains(id)) pending.Enqueue(id); }
         private bool CanSpeak => Ready && GameManager.Instance && GameManager.Instance.IsInTown && !GameManager.Instance.RunLoadingActive &&
             !Characters.CharacterCreation.Required && !WorldPresentation.IsBusy && !TownQuestReveal.IsPlaying &&
@@ -60,7 +61,8 @@ namespace TimelessEchoes.Farming
             var conversation = definition ? definition.Find(id) : null;
             if (conversation == null || !definition.meetingPrefab || !Ready) yield break;
             var capturedOwner = Oracle.oracle.saveData;
-            var subject = WorldSpeakerAnchor.Find("Farmers1");
+            var npcId = string.IsNullOrEmpty(conversation.npcId) ? "Farmers1" : conversation.npcId;
+            var subject = WorldSpeakerAnchor.Find(npcId);
             ToolkitMeetingScreen screen = null;
             IsSpeaking = true;
             try
@@ -68,7 +70,7 @@ namespace TimelessEchoes.Farming
                 screen = Instantiate(definition.meetingPrefab).GetComponent<ToolkitMeetingScreen>();
                 if (reveal != null) screen.AdoptReveal(reveal);
                 screen.Init(conversation.lines[0].speaker?.portrait, conversation.lines.Select(l => l.text).ToArray(),
-                    () => DialogueCompleted = true, conversation.lines.Select(l => l.key).ToArray(), npcId: "Farmers1", worldSubject: subject);
+                    () => DialogueCompleted = true, conversation.lines.Select(l => l.key).ToArray(), npcId: npcId, worldSubject: subject);
                 screen.SetLineSpeakers(conversation.lines.Select(l => l.speaker).ToArray());
                 if (id == "Farm.Garden.Build01.v1") screen.SetFinalActionLabel("farm.display-name", "Fields");
                 screen.BeginDialogue();

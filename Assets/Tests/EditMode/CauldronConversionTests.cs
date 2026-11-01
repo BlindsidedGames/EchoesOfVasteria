@@ -54,6 +54,26 @@ namespace Tests.EditMode
             Assert.AreEqual(0, source.ResourceStats["Food"].TotalSpent);
             Assert.AreEqual(25, next.ResourceStats["Food"].TotalSpent); Assert.AreEqual(3, next.Resources["Food"].Tier);
         }
+        [Test] public void FutureQuestFoodIsReservedUntilHandInAndReceiptReplayDoesNotSpendAgain()
+        {
+            var food = Resources.Load<Resource>("Resource Items/Radish");
+            var owner = State();
+            Assert.AreEqual(0, CauldronFoodProtection.ReservedAmount(owner, food), "Protection starts with Cold Ron.");
+            owner.Quests["Unlock Cauldron"] = new GameData.QuestRecord { Completed = true };
+            owner.Quests["ForTheJam"] = new GameData.QuestRecord { Completed = true };
+            Assert.AreEqual(500, CauldronFoodProtection.ReservedAmount(owner, food), "An unavailable, unstarted hand-in is still protected.");
+            Assert.AreEqual(100, CauldronFoodProtection.AvailableAmount(owner, food, 600));
+            Assert.AreEqual(0, CauldronFoodProtection.AvailableAmount(owner, food, 499));
+            var captured = State(600);
+            Assert.False(CauldronConversion.TryPrepare(captured, "Food", 101, .1, 1, null, out var rejected, out _, out _, 500));
+            Assert.IsNull(rejected); Assert.AreEqual(600, captured.Resources["Food"].Amount);
+            Assert.True(CauldronConversion.TryPrepare(captured, "Food", 100, .1, 1, null, out var next, out _, out var error, 500), error);
+            Assert.AreEqual(500, next.Resources["Food"].Amount); Assert.AreEqual(10, next.CauldronStew);
+            Assert.True(CauldronConversion.TryPrepare(next, "Food", 100, .1, 1, null, out var replayCandidate, out var replay, out _, 1000));
+            Assert.True(replay); Assert.IsNull(replayCandidate);
+            owner.Quests["Unlock Corn"] = new GameData.QuestRecord { Completed = true };
+            Assert.AreEqual(0, CauldronFoodProtection.ReservedAmount(owner, food), "Completed hand-ins release their reservation.");
+        }
         [Test] public void MaxBillionsAndFractionalRemainderDoNotUseIntOrFloat()
         {
             var source = State(5_000_000_000.25); Assert.IsTrue(Convert(source, 5_000_000_000.25, 1, out var next, out _));

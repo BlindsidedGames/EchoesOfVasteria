@@ -16,6 +16,7 @@ namespace TimelessEchoes.Farming
         [Serializable] public sealed class Conversation
         {
             public string id;
+            public string npcId = "Farmers1";
             public Line[] lines = Array.Empty<Line>();
         }
         public GameObject meetingPrefab;

@@ -112,12 +112,13 @@ namespace TimelessEchoes.Gear
             if (Oracle.oracle?.saveData?.SavedPreferences != null) Oracle.oracle.saveData.SavedPreferences.LastSelectedForgeSlot = value;
             Notify();
         }
-        public bool CanCraft()
+        public bool CanCraft(bool reserveCore = false)
         {
+            if (Oracle.oracle?.saveData?.HardcoreFallen == true) return false;
             if (ForgeFirstLesson.Active && ForgeFirstLesson.Stage != 3) return false;
             if (!initialized || !selectedCore) return false;
             var binding = catalog.Find(selectedCore); var ingot = binding?.ingotResource ? binding.ingotResource : selectedCore.requiredIngot;
-            return binding?.coreResource && ingot && resources.GetAmount(ingot) >= Math.Max(0, selectedCore.ingotCost) && resources.GetAmount(binding.coreResource) >= 1;
+            return binding?.coreResource && ingot && resources.GetAmount(ingot) >= Math.Max(0, selectedCore.ingotCost) && resources.GetAmount(binding.coreResource) >= (reserveCore ? 2 : 1);
         }
         public double MaxCrafts
         {
@@ -182,7 +183,7 @@ namespace TimelessEchoes.Gear
         {
             if (ForgeFirstLesson.Active || !AutomationUnlocked) return;
             if (isAutoCrafting) { StopAutoCrafting(); return; }
-            if (!CanCraft()) return;
+            if (!CanCraft(reserveCore: true)) return;
             isAutoCrafting = true;
             autoCraftCoroutine = StartCoroutine(CraftUntilUpgradeCoroutine()); Notify();
         }
@@ -314,7 +315,7 @@ namespace TimelessEchoes.Gear
                         pendingAutoSalvage = false;
                     }
 
-                    if (!CanCraft())
+                    if (!CanCraft(reserveCore: true))
                     {
 
                         shouldBreak = true;

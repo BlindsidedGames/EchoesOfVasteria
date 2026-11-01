@@ -28,6 +28,7 @@ namespace TimelessEchoes
             frame.TryGetComponent(out frame.clamp);
             camera.StandbyUpdate = CinemachineVirtualCameraBase.StandbyUpdateMode.Always;
             if (frame.isActiveAndEnabled) current = frame;
+            WorldPresentation.EnableRunPanning();
             return frame;
         }
 

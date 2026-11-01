@@ -31,7 +31,7 @@ namespace Tests.PlayMode
     // Uses the existing offline fixture before Play starts, plus a disposable save root.
     [PrebuildSetup(typeof(RunCameraFrameOfflineSession))]
     [PostBuildCleanup(typeof(RunCameraFrameOfflineSession))]
-    public sealed class RunContinuationPlayModeTests
+    public sealed partial class RunContinuationPlayModeTests
     {
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
         private string root, previousRoot;

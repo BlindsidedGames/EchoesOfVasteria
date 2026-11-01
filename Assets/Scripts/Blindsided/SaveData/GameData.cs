@@ -7,6 +7,18 @@ namespace Blindsided.SaveData
 {
     public class GameData
     {
+        public bool Hardcore;
+        public HardcoreDeathRecord HardcoreDeath;
+        public bool HardcoreFallen => Hardcore && HardcoreDeath != null;
+
+        [Serializable]
+        public sealed class HardcoreDeathRecord
+        {
+            public string Map;
+            public float Distance;
+            public string DiedUtc;
+        }
+
         public RunSaveData ActiveRun;
         public Dictionary<string, List<TimelessEchoes.Stats.BackgroundRunSample>> BackgroundSamples = new();
         public TimelessEchoes.Shop.ShopProgress Shop = new();

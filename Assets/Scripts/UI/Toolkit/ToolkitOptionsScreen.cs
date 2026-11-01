@@ -143,6 +143,8 @@ namespace TimelessEchoes.UI.Toolkit
             slider.AddToClassList("eov-options-slider");
             ToolkitGameplay.StyleSlider(slider); slider.Q("unity-dragger").style.height=12; sliders[id] = slider; parent.Add(slider); return slider;
         }
+        public void ShowSaveFiles() { if (Show()) SelectPage("saves"); }
+
         private void SelectPage(string page)
         {
             selectedPage=page; preferences.style.display=page=="preferences"?DisplayStyle.Flex:DisplayStyle.None;
@@ -321,8 +323,8 @@ namespace TimelessEchoes.UI.Toolkit
             var credits=ActionButton(row,"credits",()=>windows?.OpenWindow(TownWindowManager.Window.Credits),24);
             credits.style.width=76;credits.style.flexShrink=0;
         }
-        private bool CanSave(int index) => Oracle.oracle != null && Oracle.oracle.CanBeginSaveMutation && (index == Oracle.oracle.CurrentSlot || safety[index]);
-        private bool CanLoad(int index) => Oracle.oracle != null && Oracle.oracle.CanBeginSaveMutation && (safety[index] || ((GameManager.Instance == null || GameManager.Instance.CurrentMap == null) && index != Oracle.oracle.CurrentSlot));
+        private bool CanSave(int index) => Oracle.oracle != null && Oracle.oracle.CanManageSave && (index == Oracle.oracle.CurrentSlot || safety[index]);
+        private bool CanLoad(int index) => Oracle.oracle != null && Oracle.oracle.CanManageSave && (safety[index] || ((GameManager.HardcoreFallen || GameManager.Instance == null || GameManager.Instance.CurrentMap == null) && index != Oracle.oracle.CurrentSlot));
         private void LoadOrDelete(int index)
         {
             if (!CanLoad(index)) return;
@@ -366,7 +368,13 @@ namespace TimelessEchoes.UI.Toolkit
             buttons["portrait-fullscreen"].EnableInClassList("active", ToolkitDisplayPreferences.DefaultPortraitFullscreen);
             buttons["portrait-compact"].EnableInClassList("active", !ToolkitDisplayPreferences.DefaultPortraitFullscreen);
             SetToggle("skip-restart-countdown", GameManager.SkipRestartCountdown);
-            if (buttons.ContainsKey("background-progress")) SetToggle("background-progress", BackgroundRunPrototype.OptedIn);
+            if (buttons.ContainsKey("background-progress"))
+            {
+                var hardcore = Oracle.oracle?.saveData?.Hardcore == true;
+                SetToggle("background-progress", !hardcore && BackgroundRunPrototype.OptedIn);
+                buttons["background-progress"].SetEnabled(!hardcore);
+                if (hardcore) buttons["background-progress"].tooltip = ToolkitLocalization.Text("hardcore.no-background", "Background progress is unavailable in hardcore.");
+            }
             for (var i = 0; i < 3; i++) buttons["orientation-" + i].EnableInClassList("active", ToolkitDisplayPreferences.Orientation == i);
             buttons["world-safe-area"].EnableInClassList("active", ToolkitDisplayPreferences.KeepWorldInSafeArea);
             SetSlider("master", MasterVolume); SetSlider("music", MusicVolume); SetSlider("sfx", SfxVolume); SetSlider("width", SafeAreaRatio);

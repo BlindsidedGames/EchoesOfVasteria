@@ -29,8 +29,9 @@ namespace TimelessEchoes.UI
         public bool ForgeNeedsAttention { get; private set; }
         public bool CauldronNeedsAttention { get; private set; }
         private readonly System.Collections.Generic.HashSet<Window> tutorialLockedRoutes = new();
-        public bool CanOpenWindow(Window window) => Enum.IsDefined(typeof(Window), window) && !tutorialLockedRoutes.Contains(window) &&
-            (window != Window.Shop || TimelessEchoes.Shop.ShopRules.IntroComplete(Oracle.oracle?.saveData));
+        public bool CanOpenWindow(Window window) => Enum.IsDefined(typeof(Window), window) &&
+            (GameManager.HardcoreFallen ? window is Window.Options or Window.Stats or Window.Library :
+            !tutorialLockedRoutes.Contains(window) && (window != Window.Shop || TimelessEchoes.Shop.ShopRules.IntroComplete(Oracle.oracle?.saveData)));
 
         /// <summary>UI-independent routes shared by native and legacy navigation during migration.</summary>
         public void OpenWindow(Window window)

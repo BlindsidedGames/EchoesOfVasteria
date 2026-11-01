@@ -66,6 +66,7 @@ namespace TimelessEchoes.Gear
 
         public GearItem Craft(CoreSO core, string selectedSlot = null, List<string> slotWhitelist = null, TimelessEchoes.Upgrades.Resource coreResource = null, int coreCost = 1)
         {
+            if (oracle?.saveData?.HardcoreFallen == true) return null;
             if (core == null || core.requiredIngot == null) return null;
 
             var rm = ResourceManager.Instance;

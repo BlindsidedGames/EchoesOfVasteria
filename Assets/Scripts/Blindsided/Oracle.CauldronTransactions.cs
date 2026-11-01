@@ -13,6 +13,7 @@ namespace Blindsided
             long sequence, out double stewGained, out string error)
         {
             stewGained = 0; error = null;
+            if (saveData?.HardcoreFallen == true) { error = "This hardcore character has fallen."; return false; }
             if (!CanBeginSaveMutation || !CanSave()) { error = "Save is busy or requires recovery."; return false; }
             if (food == null || !CauldronMixingPresentation.IsFood(food) ||
                 CauldronConversion.UnitValue(food) != expectedUnitValue)
@@ -25,7 +26,8 @@ namespace Blindsided
                 var owner = saveData;
                 var questIds = QuestManager.Instance?.GetActiveCauldronQuestIds() ?? new List<string>();
                 if (!CauldronConversion.TryPrepare(owner, food.name, quantity, expectedUnitValue, sequence,
-                    questIds, out var candidate, out var replay, out error)) return false;
+                    questIds, out var candidate, out var replay, out error,
+                    CauldronFoodProtection.ReservedAmount(owner, food))) return false;
                 if (replay) return true;
                 try
                 {

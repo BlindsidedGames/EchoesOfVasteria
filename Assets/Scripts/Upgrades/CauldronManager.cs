@@ -423,13 +423,20 @@ namespace TimelessEchoes.Upgrades
         }
 
         // -------- Mixing --------
+        public double GetMixableAmount(Resource food)
+        {
+            resourceManager ??= ResourceManager.Instance;
+            return food && resourceManager ? CauldronFoodProtection.AvailableAmount(oracle?.saveData, food, resourceManager.GetAmount(food)) : 0;
+        }
+
         public bool CanAddToCauldron(Resource food, double quantity)
         {
+            if (oracle?.saveData?.HardcoreFallen == true) return false;
             resourceManager ??= ResourceManager.Instance;
             var unit = CauldronConversion.UnitValue(food);
             return food != null && resourceManager != null && resourceManager.IsUnlocked(food) &&
                 TimelessEchoes.UI.Cauldron.CauldronMixingPresentation.IsFood(food) &&
-                CauldronConversion.IsFinite(quantity) && quantity > 0 && quantity <= resourceManager.GetAmount(food) &&
+                CauldronConversion.IsFinite(quantity) && quantity > 0 && quantity <= GetMixableAmount(food) &&
                 CauldronConversion.IsFinite(unit) && unit > 0 && CauldronConversion.IsFinite(quantity * unit);
         }
 
@@ -521,6 +528,7 @@ namespace TimelessEchoes.Upgrades
         // -------- Tasting --------
         public void StartTasting()
         {
+            if (oracle?.saveData?.HardcoreFallen == true) return;
             if (tastingActive) return;
             tastingActive = true;
             _lastTasteTime = Time.unscaledTime;
@@ -547,6 +555,7 @@ namespace TimelessEchoes.Upgrades
 
         private void TasteTick()
         {
+            if (oracle?.saveData?.HardcoreFallen == true) { StopTasting(false); return; }
             if (!tastingActive || config == null) return;
             SyncConfigValuesIfNeeded();
 

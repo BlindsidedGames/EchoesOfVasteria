@@ -41,7 +41,7 @@ namespace TimelessEchoes.UI
             try
             {
                 var oracle = Oracle.oracle;
-                if (oracle == null || !oracle.CanBeginSaveMutation)
+                if (oracle == null || !oracle.CanManageSave)
                 {
                     Debug.LogWarning("A save-slot operation is already in progress.");
                     return false;

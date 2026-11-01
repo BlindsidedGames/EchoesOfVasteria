@@ -21,6 +21,7 @@ namespace TimelessEchoes.Quests
         public class Entry
         {
             public QuestData quest;
+            public List<QuestData> completedAlternatives = new();
             public List<GameObject> disableUntilComplete = new();
             public List<GameObject> enableUntilComplete = new();
             public List<GameObject> enableWhileInProgress = new();
@@ -40,6 +41,7 @@ namespace TimelessEchoes.Quests
             {
                 if (entry == null) continue;
                 var completed = entry.quest && QuestCompleted(entry.quest.questId);
+                completed |= entry.completedAlternatives.Exists(quest => quest && QuestCompleted(quest.questId));
                 var active = entry.quest && QuestInProgress(entry.quest.questId);
                 foreach (var obj in entry.disableUntilComplete) if (obj) desired[obj] = completed;
                 foreach (var obj in entry.enableUntilComplete) if (obj) desired[obj] = !completed;
@@ -103,21 +105,7 @@ namespace TimelessEchoes.Quests
         public void UpdateObjectStates()
         {
             if (presentationHeld) return;
-            foreach (var entry in entries)
-            {
-                if (entry == null) continue;
-                bool completed = entry.quest != null && QuestCompleted(entry.quest.questId);
-                bool inProgress = entry.quest != null && QuestInProgress(entry.quest.questId);
-                foreach (var obj in entry.disableUntilComplete)
-                    if (obj != null)
-                        obj.SetActive(completed);
-                foreach (var obj in entry.enableUntilComplete)
-                    if (obj != null)
-                        obj.SetActive(!completed);
-                foreach (var obj in entry.enableWhileInProgress)
-                    if (obj != null)
-                        obj.SetActive(inProgress);
-            }
+            foreach (var pair in DesiredStates()) pair.Key.SetActive(pair.Value);
         }
 
         private static bool QuestInProgress(string questId)

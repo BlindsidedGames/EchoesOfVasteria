@@ -42,6 +42,7 @@ namespace TimelessEchoes.Quests
         private bool _isRefreshingNoticeboard;
         private bool _pendingRefresh;
         private int cachedTotalQuestCount;
+        private int cachedCompletedQuestCount;
         private bool cachedAllQuestsComplete;
         private double cachedCompletionSeconds;
         private long cachedCompletionTicks;
@@ -345,6 +346,10 @@ namespace TimelessEchoes.Quests
         {
             if (quest == null)
                 return false;
+            // Cold Ron moved behind the pantry. Keep an already-started legacy
+            // quest available with its original gathering baseline.
+            if (quest.questId == "Unlock Cauldron" && oracle.saveData.Quests.TryGetValue(quest.questId, out var existing) &&
+                existing.ResourcesBaselineSet) return true;
             if (quest.minimumMaxRunDistanceExclusive > 0 &&
                 oracle.saveData.General.MaxRunDistance <= quest.minimumMaxRunDistanceExclusive)
                 return false;
@@ -737,6 +742,7 @@ namespace TimelessEchoes.Quests
 
         private void TryStartQuest(QuestData quest)
         {
+            if (oracle?.saveData?.HardcoreFallen == true) return;
             if (quest == null) return;
             if (quest.questId == TimelessEchoes.Gear.ForgeFirstLesson.QuestId &&
                 TimelessEchoes.Gear.ForgeFirstLesson.ReconcileExistingWeapon())
@@ -910,6 +916,7 @@ namespace TimelessEchoes.Quests
 
         public bool TryTurnInQuest(string questId)
         {
+            if (oracle?.saveData?.HardcoreFallen == true) return false;
             if (string.IsNullOrEmpty(questId) || !active.TryGetValue(questId, out var inst)) return false;
             if (NeedsAcceptance(inst.data))
             {
@@ -1005,6 +1012,7 @@ namespace TimelessEchoes.Quests
                 }
             }
 
+            cachedCompletedQuestCount = completed;
             var g = oracle.saveData.General ??= new GameData.GeneralStats();
             g.LastQuestTotal = total;
 
@@ -1071,6 +1079,7 @@ namespace TimelessEchoes.Quests
         public double FinalQuestCompletionSeconds => cachedCompletionSeconds;
 
         public int TotalQuestCount => cachedTotalQuestCount;
+        public int CompletedQuestCount => cachedCompletedQuestCount;
 
         private void EnsureStatTrackerSubscriptions()
         {

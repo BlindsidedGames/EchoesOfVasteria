@@ -16,6 +16,7 @@ namespace TimelessEchoes
         {
             var data = Oracle.oracle?.saveData;
             if (data == null || resumeScheduled) return;
+            if (data.HardcoreFallen) { data.ActiveRun = null; return; }
             // Suspension and generation retain their continuation checkpoint until
             // the world is rebuilt. A save must not replace its departure timestamp.
             if (loadingRun != null) { data.ActiveRun = loadingRun; return; }
@@ -46,6 +47,8 @@ namespace TimelessEchoes
 
         private void LoadActiveRun()
         {
+            ApplyHardcoreState();
+            if (HardcoreFallen) return;
             var saved = Oracle.oracle?.saveData?.ActiveRun;
             if (saved == null || resumeScheduled || !IsInTown || runLoadingActive) return;
             resumeScheduled = true;
@@ -59,6 +62,12 @@ namespace TimelessEchoes
             yield return null;
             resumeScheduled = false;
             if (Oracle.oracle?.saveData?.ActiveRun != saved || !Oracle.oracle.HasLoadedCurrentSlotData) yield break;
+            if (Oracle.oracle.saveData.Hardcore && saved.Dead && !saved.Reaped)
+            {
+                Oracle.oracle.FinishHardcoreRun(saved.Map, saved.Distance);
+                ApplyHardcoreState();
+                yield break;
+            }
             if (saved.IsValid)
                 foreach (var entry in generationButtons)
                     if (entry?.Config && entry.Config.name == saved.Map)

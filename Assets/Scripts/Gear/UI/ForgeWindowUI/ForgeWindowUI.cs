@@ -828,7 +828,7 @@ namespace TimelessEchoes.Gear.UI
             resultTierText.enabled = false;
         }
 
-        private bool CanCraft()
+        private bool CanCraft(bool reserveCore = false)
         {
             // Validate core and required resources
             if (crafting == null || selectedCore == null) return false;
@@ -842,7 +842,7 @@ namespace TimelessEchoes.Gear.UI
                 : selectedCore.requiredIngot;
             if (ingot == null) return false;
             var haveIngots = rm.GetAmount(ingot) >= Math.Max(0, selectedCore.ingotCost);
-            var haveCores = rm.GetAmount(coreRes) >= 1;
+            var haveCores = rm.GetAmount(coreRes) >= (reserveCore ? 2 : 1);
             return haveIngots && haveCores;
         }
 
@@ -1075,7 +1075,7 @@ namespace TimelessEchoes.Gear.UI
                 return;
             }
 
-            if (!CanCraft())
+            if (!CanCraft(reserveCore: true))
             {
                 RefreshActionButtons();
                 return;
@@ -1219,7 +1219,7 @@ namespace TimelessEchoes.Gear.UI
                         pendingAutoSalvage = false;
                     }
 
-                    if (!CanCraft())
+                    if (!CanCraft(reserveCore: true))
                     {
 
                         shouldBreak = true;

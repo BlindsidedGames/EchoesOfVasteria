@@ -128,7 +128,7 @@ namespace TimelessEchoes.UI.Toolkit
             });
             plusAmount = ToolkitGameplay.B(amountRow, "+", () => StepAmount(1), "amount-step");
             ToolkitLocalization.BindTooltip(plusAmount, "cauldron.increase-amount", "Increase amount");
-            maxAmount = LocalizedButton(amountRow, "cauldron.max", "Max", () => SetAmount(selectedFood ? resources.GetAmount(selectedFood) : 0), "amount-max");
+            maxAmount = LocalizedButton(amountRow, "cauldron.max", "Max", () => SetAmount(selectedFood ? manager.GetMixableAmount(selectedFood) : 0), "amount-max");
             conversionError = L(footer, "", "small muted conversion-error");
             var actions = E(footer, "mix-actions");
             actions.Add(addFood);
@@ -217,12 +217,12 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (!selectedFood) return;
             if (!TryAmount(out var value)) value = 0;
-            SetAmount(Math.Max(0, Math.Min(resources.GetAmount(selectedFood), value + step)));
+            SetAmount(Math.Max(0, Math.Min(manager.GetMixableAmount(selectedFood), value + step)));
         }
         private void RefreshConversion()
         {
             var selected = selectedFood != null && resources.IsUnlocked(selectedFood);
-            var stock = selected ? Math.Floor(resources.GetAmount(selectedFood)) : 0;
+            var stock = selected ? Math.Floor(manager.GetMixableAmount(selectedFood)) : 0;
             selection.text = selected ? ToolkitLocalization.Name(selectedFood) : ToolkitLocalization.Text("cauldron.choose-food", "Choose a food");
             selectedFoodIcon.sprite = selected ? selectedFood.icon : null;
             selectedFoodIcon.style.display = selected ? DisplayStyle.Flex : DisplayStyle.None;
@@ -237,7 +237,7 @@ namespace TimelessEchoes.UI.Toolkit
             foreach (var food in CauldronMixingPresentation.BuildEligibleFoods(resources))
             {
                 if (IsCauldronFoodLocked(food.name)) continue;
-                var quantity = Math.Floor(resources.GetAmount(food));
+                var quantity = Math.Floor(manager.GetMixableAmount(food));
                 if (manager.CanAddToCauldron(food, quantity)) allStew += quantity * CauldronConversion.UnitValue(food);
             }
             var canMixAll = CauldronConversion.IsFinite(allStew) && allStew > 0;
@@ -273,10 +273,13 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 if (manager.TryAddToCauldron(selectedFood, amount, conversionSequence, out _, out var error))
                 { NextConversion(); conversionError.text = ""; }
-                else conversionError.text = error;
+                else conversionError.text = MixingError(error);
             }
             finally { addingFood = false; Refresh(); }
         }
+        private static string MixingError(string error) => error == CauldronConversion.ProtectedFoodError
+            ? ToolkitLocalization.Text("cauldron.quest-food-protected", CauldronConversion.ProtectedFoodError) : error;
+
         private void MixAllFoods()
         {
             if (addingFood || oracle?.saveData == null) return;
@@ -287,12 +290,12 @@ namespace TimelessEchoes.UI.Toolkit
                 foreach (var food in CauldronMixingPresentation.BuildEligibleFoods(resources))
                 {
                     if (IsCauldronFoodLocked(food.name)) continue;
-                    var amount = Math.Floor(resources.GetAmount(food));
+                    var amount = Math.Floor(manager.GetMixableAmount(food));
                     if (!manager.CanAddToCauldron(food, amount)) continue;
                     var sequence = oracle.saveData.CauldronConversionSequence;
                     if (sequence == long.MaxValue) { conversionError.text = "Conversion limit reached."; break; }
                     if (!manager.TryAddToCauldron(food, amount, sequence + 1, out _, out var error))
-                    { conversionError.text = error; break; }
+                    { conversionError.text = MixingError(error); break; }
                 }
             }
             finally { NextConversion(); addingFood = false; Refresh(); }

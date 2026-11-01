@@ -100,6 +100,7 @@ namespace Blindsided.SaveData
                         buildId = buildId, sizeBytes = payload.Length, integrity = "sha256",
                         createdVersion = read.Data.GameVersionCreated, lastVersion = read.Data.LastGameVersion,
                         completion = read.Data.CompletionPercentage, playTime = read.Data.PlayTime,
+                        hardcore = read.Data.Hardcore, hardcoreFallen = read.Data.HardcoreFallen,
                         dateQuit = read.Data.DateQuitString
                     });
                     // Keep the original bytes: projecting an older schema before migration can erase legacy fields.

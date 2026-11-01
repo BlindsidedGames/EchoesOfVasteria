@@ -38,7 +38,7 @@ namespace TimelessEchoes.UI.Toolkit
 
         private SkillController controller;
 
-        private VisualElement root, xpFill, setFrame;
+        private VisualElement root, xpFill, setFrame, selectorBar, summaryContent;
 
         private Label summaryTitle;
         private VisualElement active, totals, allTotals;
@@ -93,7 +93,8 @@ namespace TimelessEchoes.UI.Toolkit
 
             var header = Frame(left, definition.frame); header.AddToClassList("eov-skills-header");
 
-            var selectorRow = new VisualElement(); selectorRow.AddToClassList("eov-skills-selectors"); header.Add(selectorRow);
+            selectorBar = new VisualElement(); selectorBar.AddToClassList("eov-skills-selector-bar"); header.Add(selectorBar);
+            var selectorRow = new VisualElement(); selectorRow.AddToClassList("eov-skills-selectors"); selectorBar.Add(selectorRow);
 
             for (var i = 0; i < definition.skills.Length; i++)
 
@@ -143,6 +144,7 @@ namespace TimelessEchoes.UI.Toolkit
             var summaryInset = Frame(summaryFrame, definition.inset); summaryInset.style.paddingTop = summaryInset.style.paddingBottom = summaryInset.style.paddingLeft = summaryInset.style.paddingRight = 0; summaryInset.style.flexGrow = 1; summaryInset.style.minHeight = 0;
 
             var summaryScroll = Scroll(summaryInset, "skill-summary"); summaryScroll.contentContainer.AddToClassList("eov-skill-summary-content");
+            summaryContent = summaryScroll.contentContainer;
 
             slots = Text(summaryScroll, "", 7); slots.name = "active-slots"; active = ToolkitGameplay.E(summaryScroll, "skill-summary-lines"); active.name = "active-milestones";
 
@@ -514,6 +516,13 @@ namespace TimelessEchoes.UI.Toolkit
             ToolkitResponsiveLayout.ApplyFocusPresentation(root);
 
             portraitPages?.Update();
+            var slotsParent = ToolkitResponsiveLayout.IsPortrait ? selectorBar : summaryContent;
+            if (slots.parent != slotsParent)
+            {
+                if (ToolkitResponsiveLayout.IsPortrait) slotsParent.Add(slots);
+                else slotsParent.Insert(0, slots);
+                slots.style.marginBottom = ToolkitResponsiveLayout.IsPortrait ? 0 : 4;
+            }
             var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height), Screen.safeArea, UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);
 
             root.style.width = ToolkitResponsiveLayout.IsPortrait ? area.width : Mathf.Min(640, area.width-24); root.style.left = area.center.x; root.style.top = area.y + ToolkitResponsiveLayout.WindowTop; root.style.height = Mathf.Max(0, area.height - ToolkitResponsiveLayout.WindowTop - ToolkitResponsiveLayout.WindowBottom);

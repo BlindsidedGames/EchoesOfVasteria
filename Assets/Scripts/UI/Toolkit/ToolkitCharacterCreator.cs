@@ -10,11 +10,15 @@ using static TimelessEchoes.UI.Toolkit.ToolkitGameplay;
 
 namespace TimelessEchoes.UI.Toolkit
 {
-    public sealed class ToolkitCharacterCreator : MonoBehaviour
+    public sealed partial class ToolkitCharacterCreator : MonoBehaviour
     {
         [SerializeField] private ToolkitTheme theme;
         [SerializeField] private ThemeStyleSheet runtimeTheme;
         [SerializeField] private PanelTextSettings textSettings;
+        [SerializeField] private ToolkitForgeDefinition equipmentArt;
+        [SerializeField] private ToolkitRunDefinition runArt;
+        [SerializeField] private ToolkitNavigationDefinition navigationArt;
+        [SerializeField] private Sprite taskIcon;
         private PanelSettings panel;
         private GameObject panelObject;
         private VisualElement root, sheet;
@@ -38,9 +42,10 @@ namespace TimelessEchoes.UI.Toolkit
         private int previewFacing;
         private float nextFrame;
         private bool optional;
+        private bool draftHardcore, memorial, canChooseHardcore;
         private Action refreshLocale;
         private static string T(string key, string english, params object[] args) => ToolkitLocalization.Text(key, english, args);
-        private void LocaleChanged() { CloseColourPicker(); refreshLocale?.Invoke(); foreach (var refresh in refreshChoices) refresh(); RefreshPresets(); }
+        private void LocaleChanged() { if (memorial) { Hide(); ShowMemorial(); return; } CloseColourPicker(); refreshLocale?.Invoke(); foreach (var refresh in refreshChoices) refresh(); RefreshPresets(); }
         public bool IsOpen => root != null;
         public static bool BlocksWorldInput { get; private set; }
 
@@ -48,6 +53,8 @@ namespace TimelessEchoes.UI.Toolkit
         {
             if (!Oracle.oracle || !Oracle.oracle.HasLoadedCurrentSlotData) { if (IsOpen) Hide(); return; }
             if (IsOpen && owner != CharacterCreation.Current) Hide();
+            if (IsOpen && GameManager.HardcoreFallen && !memorial) Hide();
+            if (!IsOpen && GameManager.HardcoreFallen) ShowMemorial();
             if (!IsOpen && CharacterCreation.Required) Show(false);
             if (!IsOpen) return;
             var safe = Screen.safeArea;
@@ -55,11 +62,20 @@ namespace TimelessEchoes.UI.Toolkit
                 safe = new Rect(0, 0, Screen.width, Screen.height);
             var scale = ToolkitResponsiveLayout.Scale(new Vector2Int(Screen.width, Screen.height));
             var area = new Rect(safe.x * scale, (Screen.height - safe.yMax) * scale, safe.width * scale, safe.height * scale);
-            sheet.style.width = Mathf.Min(600, area.width - 20);
-            sheet.style.height = Mathf.Min(ToolkitResponsiveLayout.IsPortrait ? 720 : 400, area.height - 16);
-            sheet.style.left = area.x + (area.width - Mathf.Min(600, area.width - 20)) / 2;
-            sheet.style.top = area.y + (area.height - Mathf.Min(ToolkitResponsiveLayout.IsPortrait ? 720 : 400, area.height - 16)) / 2;
+            var preferredWidth = memorial ? 680 : 600;
+            sheet.style.width = Mathf.Min(preferredWidth, area.width - 20);
+            var preferredHeight = memorial ? (ToolkitResponsiveLayout.IsPortrait ? 610 : 400) : (ToolkitResponsiveLayout.IsPortrait ? 720 : 400);
+            sheet.style.height = Mathf.Min(preferredHeight, area.height - 16);
+            sheet.style.left = area.x + (area.width - Mathf.Min(preferredWidth, area.width - 20)) / 2;
+            sheet.style.top = area.y + (area.height - Mathf.Min(preferredHeight, area.height - 16)) / 2;
             sheet.EnableInClassList("character-narrow", area.width < 540);
+            if (memorial)
+            {
+                sheet.EnableInClassList("memorial-portrait", ToolkitResponsiveLayout.IsPortrait);
+                root.style.display = TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow ? DisplayStyle.None : DisplayStyle.Flex;
+                preview.Set(CharacterEquipmentAppearance.Resolve(owner), CharacterCatalog.Load().Frame("Idle_Down", 0), false);
+                return;
+            }
             if (Time.unscaledTime < nextFrame) return;
             nextFrame = Time.unscaledTime + 1f / 12;
             preview.Set(draft, CharacterCatalog.Load().Frame(pose, Mathf.FloorToInt(Time.unscaledTime * 12)));
@@ -69,24 +85,19 @@ namespace TimelessEchoes.UI.Toolkit
         public bool Show(bool allowCancel = false)
         {
             if (TimelessEchoes.Platform.StartupDiagnostics.SkipMainUi) return false;
+            if (GameManager.HardcoreFallen) return false;
             if (IsOpen) return true;
             var catalog = CharacterCatalog.Load();
             if (!theme || !runtimeTheme || !textSettings || !catalog || !Oracle.oracle || !Oracle.oracle.HasLoadedCurrentSlotData) return false;
             owner = CharacterCreation.Current; optional = allowCancel && !CharacterCreation.Required;
+            canChooseHardcore = CharacterCreation.Required;
             draft = owner is { Modular: true } ? owner.Copy() : catalog.NewProfile();
             // Fresh profiles start with the catalog's authored default outfit.
             if (string.IsNullOrEmpty(draft.Chest)) {
                 var savedName = draft.Name; draft = catalog.NewProfile(); draft.Name = savedName;
             }
             NormalizeAppearance();
-            panel = ToolkitPanel.CreateSettings(runtimeTheme, textSettings); panel.sortingOrder = 1000;
-            // A child UIDocument inherits its parent's panel; this modal owns a separate top-level panel.
-            panelObject = new GameObject("Character creation panel", typeof(UIDocument));
-            var document = panelObject.GetComponent<UIDocument>(); document.panelSettings = panel;
-            root = new VisualElement { name = "character-creator" }; root.AddToClassList("character-overlay");
-            theme.Apply(root); ToolkitGameplay.Apply(root, theme); document.rootVisualElement.Add(root);
-            BlocksWorldInput = true;
-            sheet = E(root, "surface character-sheet");
+            CreatePanel("character-creator");
             ToolkitLocalization.Bind(L(sheet, "", "heading"), optional ? "character.your-character" : "character.create", optional ? "Your character" : "Create your character");
             var content = E(sheet, "character-content");
             var left = E(content, "character-preview-column");
@@ -111,6 +122,17 @@ namespace TimelessEchoes.UI.Toolkit
             var right = E(content, "character-options");
             nameInput = new TextField(T("character.name", "Name")) { name = "character-name", value = draft.Name, maxLength = 24 };
             right.Add(nameInput); nameInput.RegisterValueChangedCallback(e => { draft.Name = e.newValue; status.text = ""; });
+            draftHardcore = Oracle.oracle.saveData.Hardcore;
+            if (canChooseHardcore)
+            {
+                Button hardcore = null;
+                hardcore = B(right, "", () => { draftHardcore = !draftHardcore; SetToggle(hardcore, draftHardcore, false); }, "settings-labelled-toggle");
+                hardcore.name = "character-hardcore";
+                ToolkitLocalization.Bind(L(hardcore, "", "strong"), "hardcore.mode", "Hardcore");
+                SetToggle(hardcore, draftHardcore, false);
+                var warning = L(right, "", "small muted"); warning.style.whiteSpace = WhiteSpace.Normal;
+                ToolkitLocalization.Bind(warning, "hardcore.warning", "Death permanently ends this character. Carl’s reaps are safe.");
+            }
             var scroll = ToolkitControls.RecessedScroll(right, "character-options-scroll", theme);
             refreshChoices.Clear();
             foreach (var slot in new[] { CharacterSlot.Head, CharacterSlot.Chest, CharacterSlot.Legs, CharacterSlot.Feet })
@@ -213,12 +235,16 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void Confirm()
         {
+            if (GameManager.HardcoreFallen) return;
             if (!CharacterProfile.TryName(nameInput.value, out var name, out var error)) { status.text = error; return; }
             NormalizeAppearance(); draft.Name = name; draft.Created = draft.Modular = true;
+            var wasHardcore = Oracle.oracle.saveData.Hardcore;
+            if (canChooseHardcore && CharacterCreation.Required) Oracle.oracle.saveData.Hardcore = draftHardcore;
             Oracle.oracle.saveData.Character = draft.Copy();
             Blindsided.EventHandler.SaveData();
             if (!Oracle.oracle.SaveToSlot(Oracle.oracle.CurrentSlot)) {
                 Oracle.oracle.saveData.Character = owner;
+                Oracle.oracle.saveData.Hardcore = wasHardcore;
                 status.text = T("character.save-failed", "Your character could not be saved. Please try again."); return;
             }
             Hide();
@@ -233,6 +259,7 @@ namespace TimelessEchoes.UI.Toolkit
             root?.RemoveFromHierarchy(); root = null; preview = null; owner = null;
             refreshChoices.Clear();
             sheet = null; nameInput = null; status = null; draft = null;
+            memorial = false;
             Array.Clear(presetLoad, 0, presetLoad.Length);
             if (panelObject) Destroy(panelObject); panelObject = null;
             if (panel) Destroy(panel); panel = null;

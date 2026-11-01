@@ -51,3 +51,15 @@ MonoBehaviour:
     - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
       key: farm.story.well.02
       text: We'll keep the plots watered from here.
+  - id: Unlock Corn
+    npcId: Eva
+    lines:
+    - speaker: {fileID: 11400000, guid: 89f7219990dd7e84fbc642b21eff6585, type: 2}
+      key: cauldron.story.pantry
+      text: "That\u2019s the pantry stocked. I\u2019ll get the cauldron ready."
+  - id: Unlock Cauldron
+    npcId: Eva
+    lines:
+    - speaker: {fileID: 11400000, guid: 89f7219990dd7e84fbc642b21eff6585, type: 2}
+      key: cauldron.story.ready
+      text: "MoonMaster33 suggested keeping the quest supplies out of the pot. Good idea. I\u2019ve put a charm on it."

@@ -768,7 +768,7 @@ namespace TimelessEchoes.UI
 
             var isCurrent = index == Oracle.oracle.CurrentSlot;
             var safety = slot.safetyEnabled;
-            var canMutate = Oracle.oracle.CanBeginSaveMutation;
+            var canMutate = Oracle.oracle.CanManageSave;
 
             if (slot.saveButton != null)
                 slot.saveButton.interactable = canMutate && (isCurrent || safety);

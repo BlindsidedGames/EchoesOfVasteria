@@ -13,7 +13,7 @@ namespace TimelessEchoes
     /// callers; normal cameras and gameplay tracking never inherit this camera's pose.
     /// </summary>
     [DefaultExecutionOrder(-200)]
-    public sealed class WorldPresentation : MonoBehaviour
+    public sealed partial class WorldPresentation : MonoBehaviour
     {
         private static WorldPresentation instance;
         private Session active;
@@ -169,6 +169,7 @@ namespace TimelessEchoes
 
         private void Acquire(Session session)
         {
+            ResetRunPan();
             active = session; returning = false; approach = 0;
             output = Camera.main;
             town = !session.Map ? FindAnyObjectByType<TownCameraPan>() : null;
@@ -178,6 +179,7 @@ namespace TimelessEchoes
 
         private void Awake()
         {
+            CinemachineCore.CameraUpdatedEvent.AddListener(ApplyRunPan);
             Blindsided.EventHandler.OnLoadData += Cancel;
             previousBlend = CinemachineCore.GetBlendOverride;
             blendOverride = (from, to, definition, owner) =>
@@ -242,6 +244,7 @@ namespace TimelessEchoes
 
         private void Update()
         {
+            UpdateRunPan();
             if (active == null) return;
             if (!active.ContextValid || !returning && !active.Owner) { Cancel(); return; }
             if (returning)
@@ -373,6 +376,7 @@ namespace TimelessEchoes
 
         private void Cancel()
         {
+            ResetRunPan();
             if (active != null) active.Disposed = true;
             CompleteRelease();
         }
@@ -380,6 +384,7 @@ namespace TimelessEchoes
         private void OnDisable() => Cancel();
         private void OnDestroy()
         {
+            CinemachineCore.CameraUpdatedEvent.RemoveListener(ApplyRunPan);
             Cancel();
             Blindsided.EventHandler.OnLoadData -= Cancel;
             if (CinemachineCore.GetBlendOverride == blendOverride) CinemachineCore.GetBlendOverride = previousBlend;

@@ -34,6 +34,7 @@ namespace TimelessEchoes.Stats
         {
             get
             {
+                if (Blindsided.Oracle.oracle?.saveData?.Hardcore == true) return false;
 #if UNITY_IOS && !UNITY_EDITOR && EOV_BACKGROUND_PROTOTYPE
                 if (EOVLiveActivity_IsDemoLaunch() != 0) return true;
 #endif

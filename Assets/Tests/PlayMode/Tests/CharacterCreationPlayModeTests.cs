@@ -232,9 +232,14 @@ namespace Tests.PlayMode
                 }
                 FieldsClick(ui.Q<Button>("character-confirm")); yield return new WaitForSecondsRealtime(.2f);
                 Assert.False(creator.IsOpen); Assert.True(oracle.saveData.Character.Created);
-                townPan.Focus(new Vector2(4, 6)); Assert.AreEqual(new Vector3(4, 6, 0), target.transform.position, "Town camera input resumes after creation.");
                 Assert.AreEqual("Aster", oracle.saveData.Character.Name); Assert.AreEqual(first.Head, oracle.saveData.Character.Head);
-                Assert.NotNull(Object.FindAnyObjectByType<ToolkitMeetingScreen>(), "Orin begins only after the character is saved.");
+                var greeting = Object.FindAnyObjectByType<ToolkitMeetingScreen>();
+                Assert.NotNull(greeting, "Orin begins only after the character is saved.");
+                var greetingView = (ToolkitMeetingView)typeof(ToolkitMeetingScreen).GetField("view", Private).GetValue(greeting);
+                for (var i = 0; i < 20 && greeting; i++) { greetingView.Advance(); yield return null; }
+                var cameraDeadline = Time.realtimeSinceStartup + 3;
+                while (TimelessEchoes.WorldPresentation.IsBusy && Time.realtimeSinceStartup < cameraDeadline) yield return null;
+                townPan.Focus(new Vector2(4, 6)); Assert.AreEqual(new Vector3(4, 6, 0), target.transform.position, "Town camera input resumes after creation and Orin's camera presentation finish.");
                 var load = SaveManager.Instance.LoadDetailedAsync("Save" + (oracle.CurrentSlot + 1));
                 while (!load.IsCompleted) yield return null;
                 Assert.True(load.Result.Succeeded); Assert.AreEqual("Aster", load.Result.Data.Character.Name);

@@ -401,6 +401,7 @@ namespace TimelessEchoes
 
         protected override void OnDestroy()
         {
+            if (hardcorePaused) Time.timeScale = hardcorePreviousTimeScale;
             EventHandler.OnSaveData -= SaveActiveRun;
             EventHandler.OnLoadData -= LoadActiveRun;
             EventHandler.ApplicationBackgrounded -= EnterRunBackground;
@@ -445,6 +446,7 @@ namespace TimelessEchoes
 
             UpdateGenerationButtonStats();
             nextStatsUpdateTime = Time.time + statsUpdateInterval;
+            ApplyHardcoreState();
             // Initialize cached UI state immediately
             RefreshRunButtonsUI();
         }
@@ -566,6 +568,7 @@ namespace TimelessEchoes
 
         private bool BeginAdventure(MapGenerationConfig config, RunSaveData resume)
         {
+            if (HardcoreFallen) return false;
             if (runLoadingActive) return false;
             if (TimelessEchoes.Characters.CharacterCreation.Required) return false;
             if (resume == null && (UI.Toolkit.BuffIntroductionGuidance.Active || UI.Toolkit.BuffIntroductionGuidance.Eligible)) return false;
@@ -592,6 +595,7 @@ namespace TimelessEchoes
 
         private void StartRun(RunSaveData resume = null)
         {
+            if (HardcoreFallen) return;
             if (runLoadingActive) return;
             // Stop old actors before resetting counters. Keep the old navigation graph
             // alive until CleanupMapRoutine has returned its pooled objects.
@@ -928,6 +932,7 @@ namespace TimelessEchoes
 
         private void OnHeroDeath()
         {
+            if (HardcoreFallen) return;
             DestroyAllEchoes();
             heroDead = true;
             HeroDied?.Invoke();
@@ -938,11 +943,8 @@ namespace TimelessEchoes
             var distanceReaper = false;
             if (hero != null)
             {
-                var controller = hero.GetComponent<HeroController>();
-                if (controller != null)
-                    distanceReaper = controller.ReaperSpawnedByDistance;
-
                 var hp = hero.GetComponent<HeroHealth>();
+                distanceReaper = hp && hp.ReapedAtDistanceLimit;
                 if (hp != null)
                     hp.OnDeath -= OnHeroDeath;
 
@@ -980,11 +982,13 @@ namespace TimelessEchoes
             // Prevent auto-buffing (and echo respawns) during the death window
             BuffManager.Instance?.Pause();
 
+            if (!distanceReaper && FinishHardcoreDeath()) return;
             PresentDeath(distanceReaper);
         }
 
         private void PresentDeath(bool distanceReaper)
         {
+            if (HardcoreFallen) { ApplyHardcoreState(); return; }
             heroDead = true;
             runEndedByDeath = true;
             runEndedByReaper = distanceReaper;
@@ -1007,6 +1011,7 @@ namespace TimelessEchoes
 
         private void OnDeathRunButton()
         {
+            if (HardcoreFallen) return;
             if (FirstReapReturnPending || IvanReturnPending) return;
             if (deathWindowCoroutine != null)
                 StopCoroutine(deathWindowCoroutine);
@@ -1021,6 +1026,7 @@ namespace TimelessEchoes
 
         private void OnDeathReturnButton()
         {
+            if (HardcoreFallen) return;
             if (FirstReapDialoguePending) return;
             if (deathWindowCoroutine != null)
                 StopCoroutine(deathWindowCoroutine);
@@ -1132,6 +1138,7 @@ namespace TimelessEchoes
 
         private IEnumerator ReturnToTavernRoutine(bool abandon = false)
         {
+            if (HardcoreFallen) yield break;
             if (returningToTown || IsInTown) yield break;
             returningToTown = true;
             try

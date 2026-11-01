@@ -30,7 +30,7 @@ namespace TimelessEchoes.Farming
         private double nextAutomaticHarvestRetry;
         public FarmTuning Tuning => tuning;
         public FarmState State => Oracle.oracle?.saveData?.Farm;
-        public bool Ready => Oracle.oracle != null && Oracle.oracle.HasLoadedCurrentSlotData;
+        public bool Ready => Oracle.oracle != null && Oracle.oracle.HasLoadedCurrentSlotData && !Oracle.oracle.saveData.HardcoreFallen;
         public bool NeedsAttention => Ready && State?.Beds?.Values.Any(bed => bed != null && bed.IsReady &&
             (!bed.Repeat || !FarmProjects.AutoReplant(State))) == true;
         private string lastError;

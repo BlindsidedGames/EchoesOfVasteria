@@ -7,6 +7,7 @@ namespace TimelessEchoes.Upgrades
     /// <summary>Pure candidate preparation: food debit, stew and active quest progress share one immutable commit.</summary>
     public static class CauldronConversion
     {
+        public const string ProtectedFoodError = "This food is needed for unfinished quests.";
         public static bool IsFinite(double value) => !double.IsNaN(value) && !double.IsInfinity(value);
 
         public static double UnitValue(Resource resource)
@@ -19,7 +20,7 @@ namespace TimelessEchoes.Upgrades
 
         public static bool TryPrepare(GameData captured, string resourceName, double quantity,
             double unitValue, long sequence, IEnumerable<string> questIds,
-            out GameData candidate, out bool replay, out string error)
+            out GameData candidate, out bool replay, out string error, double reservedAmount = 0)
         {
             candidate = null; replay = false; error = null;
             if (captured == null || string.IsNullOrEmpty(resourceName) || sequence <= 0 ||
@@ -37,6 +38,8 @@ namespace TimelessEchoes.Upgrades
                 !entry.Earned || !IsFinite(entry.Amount) || quantity > entry.Amount)
             { error = "Not enough food."; return false; }
             var remaining = entry.Amount - quantity;
+            if (!IsFinite(reservedAmount) || reservedAmount < 0 || remaining < reservedAmount)
+            { error = ProtectedFoodError; return false; }
             var gained = quantity * unitValue;
             var stew = captured.CauldronStew + gained;
             if (remaining < 0 || remaining == entry.Amount || !IsFinite(gained) || gained <= 0 ||

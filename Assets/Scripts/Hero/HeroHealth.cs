@@ -16,6 +16,20 @@ namespace TimelessEchoes.Hero
 
         private HeroController controller;
         public bool Immortal { get; set; }
+        public bool ReapedAtDistanceLimit { get; private set; }
+
+        public override void Init(int hp)
+        {
+            ReapedAtDistanceLimit = false;
+            base.Init(hp);
+        }
+
+        public void ReapAtDistanceLimit()
+        {
+            if (CurrentHealth <= 0) return;
+            ReapedAtDistanceLimit = true;
+            KillImmediately();
+        }
 
         // Defense tuning removed; hero now uses the global default defined in Combat
 

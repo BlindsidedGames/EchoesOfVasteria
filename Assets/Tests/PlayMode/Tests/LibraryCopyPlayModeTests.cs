@@ -18,6 +18,57 @@ namespace Tests.PlayMode
     public sealed partial class FieldsProductionPlayModeTests
     {
         [UnityTest]
+        public IEnumerator PatchNotesShowPlatformFeaturesAndKeepOlderVersionsMuted()
+        {
+            yield return LocalizationSettings.InitializationOperation;
+            var oldLocale = LocalizationSettings.SelectedLocale;
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.GetLocale("en");
+            var host = new GameObject("Platform Library notes", typeof(UIDocument));
+            var panel = ToolkitPanel.CreateSettings(AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>("Assets/UI/Toolkit/Runtime.tss"), AssetDatabase.LoadAssetAtPath<PanelTextSettings>("Assets/UI/Toolkit/TextSettings.asset"));
+            ToolkitBookView view = null;
+            try
+            {
+                host.GetComponent<UIDocument>().panelSettings = panel;
+                view = new ToolkitBookView(AssetDatabase.LoadAssetAtPath<ToolkitBookDefinition>("Assets/UI/Toolkit/Library.asset"), AssetDatabase.LoadAssetAtPath<ToolkitTheme>("Assets/UI/Toolkit/Theme.asset"), AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Toolkit/Book.uxml"), "help-patchnotes");
+                host.GetComponent<UIDocument>().rootVisualElement.Add(view.Root);
+                foreach (var portrait in new[] { false, true })
+                {
+                    PlayModeWindow.SetCustomRenderingResolution(portrait ? 1080u : 1920u, portrait ? 1920u : 1080u, "Platform Library notes");
+                    yield return new WaitForSecondsRealtime(.2f);
+                    var area = ToolkitResponsiveLayout.SafeScreenArea;
+                    view.Root.style.position = Position.Absolute;
+                    view.Root.style.left = area.x; view.Root.style.top = area.y + ToolkitResponsiveLayout.WindowTop;
+                    view.Root.style.width = area.width; view.Root.style.height = area.height - ToolkitResponsiveLayout.WindowTop - ToolkitResponsiveLayout.WindowBottom;
+                    view.Root.EnableInClassList("library-narrow", area.width < 500); view.RefreshPortrait();
+                    yield return null; yield return null;
+                    var current = view.Root.Q<Label>("library-article-body");
+                    var history = view.Root.Q<Label>("library-patch-history");
+                    StringAssert.Contains("1.5.9", current.text);
+                    StringAssert.Contains("Hardcore", current.text);
+                    StringAssert.Contains("1.5.8", history.text);
+                    StringAssert.DoesNotContain("[iOS]", current.text);
+#if UNITY_IOS
+                    StringAssert.Contains("Live Activity", current.text);
+                    StringAssert.Contains("Apple Watch", current.text);
+#else
+                    StringAssert.DoesNotContain("Live Activity", current.text);
+                    StringAssert.DoesNotContain("Apple Watch", current.text);
+#endif
+                    Assert.AreNotEqual(current.resolvedStyle.color, history.resolvedStyle.color, "Older versions retain their muted styling.");
+                    Assert.LessOrEqual(current.worldBound.xMax, view.Scroll.contentViewport.worldBound.xMax + 1, "Notes fit the article width.");
+                    var evidence = Path.GetFullPath("Artifacts/TestFlightHardcore20261101"); Directory.CreateDirectory(evidence);
+                    ScreenCapture.CaptureScreenshot(Path.Combine(evidence, portrait ? "notes-portrait.png" : "notes-landscape.png"));
+                    yield return null; yield return null;
+                }
+            }
+            finally
+            {
+                view?.Dispose(); Object.DestroyImmediate(host); Object.DestroyImmediate(panel);
+                LocalizationSettings.SelectedLocale = oldLocale;
+            }
+        }
+
+        [UnityTest]
         public IEnumerator LibraryBuffEffectsAndDefenseReferenceSurviveSimulatorRotation()
         {
             yield return LocalizationSettings.InitializationOperation;

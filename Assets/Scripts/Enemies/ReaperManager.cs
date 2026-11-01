@@ -89,6 +89,9 @@ namespace TimelessEchoes.Enemies
             var dmg = target.GetComponent<IDamageable>();
             var heroHp = target.GetComponent<Hero.HeroHealth>();
             var heroCtrl = target.GetComponent<HeroController>();
+            // An enemy can kill the hero while Carl is approaching. That is a
+            // combat death, and Carl must not later award a reap for the corpse.
+            if (heroCtrl != null && hp != null && hp.CurrentHealth <= 0) { target = null; return; }
             if (heroHp != null)
                 heroHp.Immortal = false; // ensure OnDeath fires
             var tracker = GameplayStatTracker.Instance ??
@@ -99,7 +102,9 @@ namespace TimelessEchoes.Enemies
                 // Bypass defense and any mitigation; force death immediately
                 var amount = hp.CurrentHealth; // capture pre-kill health for stats
                 var hb = target.GetComponent<TimelessEchoes.HealthBase>();
-                if (hb != null)
+                if (heroHp != null && heroCtrl != null && heroCtrl.ReaperSpawnedByDistance && !fromHero)
+                    heroHp.ReapAtDistanceLimit();
+                else if (hb != null)
                     hb.KillImmediately();
                 else if (dmg != null)
                     dmg.TakeDamage(amount + 1000000f); // extreme overkill fallback

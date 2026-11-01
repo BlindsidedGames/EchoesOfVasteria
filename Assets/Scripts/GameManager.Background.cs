@@ -21,6 +21,15 @@ namespace TimelessEchoes
 
         private void EnterRunBackground()
         {
+            if (Oracle.oracle?.saveData?.Hardcore == true)
+            {
+                if (HardcoreFallen || IsInTown || backgroundSuspended || runLoadingActive) return;
+                SaveActiveRun();
+                backgroundTimeScale = Time.timeScale;
+                backgroundSuspended = true;
+                Time.timeScale = 0;
+                return;
+            }
             if (!BackgroundRunPrototype.Enabled || IsInTown || backgroundSuspended || runLoadingActive) return;
             SaveActiveRun();
             RefreshBackgroundForecast();
@@ -36,6 +45,11 @@ namespace TimelessEchoes
         {
             if (!backgroundSuspended) return;
             backgroundSuspended = false;
+            if (Oracle.oracle?.saveData?.Hardcore == true)
+            {
+                Time.timeScale = HardcoreFallen ? 0 : backgroundTimeScale;
+                return;
+            }
             var saved = Oracle.oracle?.saveData?.ActiveRun;
             if (saved == null) { Time.timeScale = backgroundTimeScale; return; }
             // Lock/authentication can briefly reactivate before pausing again. The

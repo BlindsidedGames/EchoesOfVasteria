@@ -11,6 +11,45 @@ namespace Tests.PlayMode
     public sealed partial class FieldsProductionPlayModeTests
     {
         [Test]
+        public void PantryStartsColdRonAtItsOwnBaselineAndLegacyProgressSurvivesTheNewPrerequisite()
+        {
+            var owner = new GameObject("Cauldron progression services");
+            try
+            {
+                oracle.saveData.Quests["ForTheJam"] = new Blindsided.SaveData.GameData.QuestRecord { Completed = true };
+                oracle.saveData.Quests["Tracking Twins"] = new Blindsided.SaveData.GameData.QuestRecord { Completed = true };
+                oracle.saveData.General.TotalResourcesGathered = 1000;
+                var game = owner.AddComponent<TimelessEchoes.GameManager>(); game.enabled = false;
+                typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(game, true);
+                var inventory = owner.AddComponent<ResourceManager>();
+                var stats = owner.AddComponent<TimelessEchoes.Stats.GameplayStatTracker>(); stats.enabled = false;
+                var quests = owner.AddComponent<QuestManager>();
+                Assert.True(quests.IsQuestInProgress("Unlock Corn"));
+                Assert.False(quests.IsQuestInProgress("Unlock Cauldron"));
+                var radish = Resources.Load<Resource>("Resource Items/Radish");
+                inventory.Add(radish, 500, trackStats: false, eligibleForTierRoll: false);
+                Assert.True(quests.TryTurnInQuest("Unlock Corn"));
+                Assert.AreEqual(0, inventory.GetAmount(radish));
+                Assert.True(quests.IsQuestInProgress("Unlock Cauldron"));
+                Assert.AreEqual(1000, oracle.saveData.Quests["Unlock Cauldron"].ResourcesBaseline);
+                stats.AddResources(20999);
+                Assert.False(quests.TryTurnInQuest("Unlock Cauldron"));
+                stats.AddResources(1);
+                Assert.True(quests.TryTurnInQuest("Unlock Cauldron"), "21,000 gathered since the pantry hand-in is sufficient.");
+
+                // An older save can have Cold Ron in progress without the new pantry prerequisite.
+                oracle.saveData.Quests.Remove("Unlock Corn");
+                oracle.saveData.Quests["Unlock Cauldron"] = new Blindsided.SaveData.GameData.QuestRecord { ResourcesBaselineSet = true, ResourcesBaseline = 250 };
+                Object.DestroyImmediate(quests);
+                quests = owner.AddComponent<QuestManager>();
+                Assert.True(quests.IsQuestInProgress("Unlock Cauldron"));
+                Assert.AreEqual(250, oracle.saveData.Quests["Unlock Cauldron"].ResourcesBaseline);
+                Assert.True(quests.TryTurnInQuest("Unlock Cauldron"));
+            }
+            finally { Object.DestroyImmediate(owner); }
+        }
+
+        [Test]
         public void QuestTurnInsRequireTownIncludingFundedFieldsAndMissingLocationOwner()
         {
             var resourceObject = new GameObject("Town turn-in inventory");

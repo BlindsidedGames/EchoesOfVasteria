@@ -20,7 +20,7 @@ namespace TimelessEchoes.UI.Toolkit
             while (Oracle.oracle == null || !Oracle.oracle.HasLoadedCurrentSlotData ||
                    QuestManager.Instance == null || TownWindowManager.Instance == null)
                 yield return null;
-            if (!firstQuest) yield break;
+            if (!firstQuest || GameManager.HardcoreFallen) yield break;
             var intro = FindAnyObjectByType<ToolkitIntroScreen>();
             // Let the existing first-launch notice finish before introducing Orin.
             yield return null;
@@ -54,6 +54,7 @@ namespace TimelessEchoes.UI.Toolkit
             ToolkitRunScreen runScreen = null;
             while (true)
             {
+                if (GameManager.HardcoreFallen) yield break;
                 var gm = GameManager.Instance;
                 var data = Oracle.oracle?.saveData;
                 var windows = TownWindowManager.Instance;

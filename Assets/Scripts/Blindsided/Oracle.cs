@@ -98,7 +98,8 @@ namespace Blindsided
         [TabGroup("SaveData")] [ShowInInspector] public int CurrentSlot { get; private set; }
 
         public bool HasCurrentSlotData => saveData != null && _saveDataSlot == CurrentSlot;
-        public bool CanBeginSaveMutation =>
+        public bool CanBeginSaveMutation => CanManageSave && saveData?.HardcoreFallen != true;
+        public bool CanManageSave =>
             !_slotTransitionInProgress && !_loadingSceneTransitionInProgress &&
             !_recoveryActionInProgress && !wipeInProgress && !_economicTransactionActive;
 
@@ -360,7 +361,7 @@ namespace Blindsided
 
         internal void AccumulatePlayTime(float unscaledDeltaSeconds)
         {
-            if (unscaledDeltaSeconds <= 0f || saveData == null) return;
+            if (unscaledDeltaSeconds <= 0f || saveData == null || saveData.HardcoreFallen) return;
             saveData.PlayTime += unscaledDeltaSeconds;
         }
 
@@ -1390,7 +1391,7 @@ namespace Blindsided
 
         public bool SaveToSlot(int slotIndex)
         {
-            if (!CanBeginSaveMutation || !HasCurrentSlotData)
+            if (!CanManageSave || !HasCurrentSlotData)
                 return false;
 
             var index = Mathf.Clamp(slotIndex, 0, 2);
@@ -1448,7 +1449,7 @@ namespace Blindsided
 
             error = null;
             committedToDisk = false;
-            if (!CanBeginSaveMutation)
+            if (!CanManageSave)
             {
                 error = "Another save-slot transition is already in progress.";
                 return false;
@@ -1592,7 +1593,7 @@ namespace Blindsided
         public void SelectSlot(int slot)
         {
             var clamped = Mathf.Clamp(slot, 0, 2);
-            if (clamped == CurrentSlot || !CanBeginSaveMutation)
+            if (clamped == CurrentSlot || !CanManageSave)
                 return;
 
             StartCoroutine(SelectSlotRoutine(clamped));
@@ -1772,7 +1773,7 @@ namespace Blindsided
         [Button]
         public bool WipeAllData(bool replacingDeletedSlot = false)
         {
-            if (!CanBeginSaveMutation)
+            if (!CanManageSave)
                 return false;
 
             StopAutosaveLoop();

@@ -203,6 +203,11 @@ namespace TimelessEchoes.UI.Toolkit
 
         private static string PatchNotesPart(string text, bool history)
         {
+#if UNITY_IOS
+            text = text.Replace("• [iOS] ", "• ");
+#else
+            text = Regex.Replace(text, @"(?m)^• \[iOS\] [^\r\n]*(?:\r?\n|$)", "");
+#endif
             var versions = Regex.Matches(text, @"<b>[^<]*\d+\.\d+\.\d+[^<]*</b>");
             if (versions.Count < 2) return history ? string.Empty : text;
             var split = versions[1].Index;

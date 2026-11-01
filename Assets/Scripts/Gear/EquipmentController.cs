@@ -54,6 +54,7 @@ namespace TimelessEchoes.Gear
 
         public bool Equip(GearItem item)
         {
+            if (oracle?.saveData?.HardcoreFallen == true) return false;
             if (item == null || string.IsNullOrWhiteSpace(item.slot))
                 return false;
 

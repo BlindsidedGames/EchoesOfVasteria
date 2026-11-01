@@ -1240,6 +1240,23 @@
 .gameplay.character-overlay { position:absolute;left:0;right:0;top:0;bottom:0;background-color:rgba(0,0,0,0.82); }
 .gameplay .character-sheet { position:absolute;padding:14px 16px;background-color:var(--surface);border-width:1px;border-color:var(--line); }
 .gameplay .character-content { flex-direction:row;flex-grow:1;min-height:0;margin-top:10px; }
+.gameplay .memorial-sheet .character-preview { width:64px;height:64px;flex-shrink:0;margin-right:12px; }
+.gameplay .memorial-header { align-items:center;margin:8px 0 10px; }
+.gameplay .memorial-details { flex-grow:1;min-width:0; }
+.gameplay .memorial-totals { flex-direction:row;flex-wrap:wrap;margin-bottom:6px;flex-shrink:0; }
+.gameplay .memorial-stat { width:33.3333%;padding:8px 8px 8px 0; }
+.gameplay .memorial-portrait .memorial-stat { width:50%; }
+.gameplay .memorial-stat-value { align-items:center; }
+.gameplay .memorial-stat-value .icon { margin-right:6px;flex-shrink:0; }
+.gameplay .memorial-stat-label { white-space:normal;margin-bottom:5px; }
+.gameplay .memorial-equipment { flex-direction:row;flex-wrap:wrap;flex-shrink:0; }
+.gameplay .memorial-gear { width:25%;min-width:0;padding:10px 8px 0 0; }
+.gameplay .memorial-portrait .memorial-gear { width:50%; }
+.gameplay .memorial-gear-heading { align-items:center;margin-bottom:3px; }
+.gameplay .memorial-gear-heading .icon { flex-shrink:0;margin-right:4px; }
+.gameplay .memorial-gear-affix { width:64px;max-width:100%;align-items:center;margin-top:3px; }
+.gameplay .memorial-gear-affix .icon { flex-shrink:0;margin-right:6px; }
+.gameplay .memorial-gear-affix .small { flex-grow:1;-unity-text-align:middle-right; }
 .gameplay .character-preview-column { width:188px;margin-right:16px;align-items:center;justify-content:center;border-right-width:1px;border-right-color:var(--line);padding-right:12px; }
 .gameplay .character-portrait-row { flex-direction:row;align-items:center;justify-content:center; }
 .gameplay .character-preview { position:relative;width:124px;height:124px;background-color:var(--control);overflow:hidden; }

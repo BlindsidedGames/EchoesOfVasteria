@@ -280,6 +280,8 @@ namespace Blindsided.SaveData
                     lastVersion = data.LastGameVersion ?? string.Empty,
                     completion = data.CompletionPercentage,
                     playTime = data.PlayTime,
+                    hardcore = data.Hardcore,
+                    hardcoreFallen = data.HardcoreFallen,
                     dateQuit = data.DateQuitString ?? string.Empty
                 });
             }
@@ -2318,6 +2320,7 @@ namespace Blindsided.SaveData
         [Serializable]
         private struct SlotMeta
         {
+            public bool hardcore, hardcoreFallen;
             public int schemaVersion;
             public string timestampUtc;
             public string buildId;
