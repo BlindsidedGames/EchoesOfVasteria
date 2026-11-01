@@ -1,8 +1,9 @@
 # Internal candidate, 2 November 2026
 
 Gameplay candidate: `c57eac7d406ef4aa023c42c998911bf75dd6e26f` on `Matt/watch-design-lab`.
-Marketing version: 1.5.10. iOS build number awaits a fresh App Store Connect inventory;
-193 must not be reused. Android remains 187 and is not being deployed.
+Marketing version: 1.5.10. iOS build: 194, reserved after the fresh App Store Connect
+build and upload lists showed 193 as the highest upload on 2 November 2026.
+Android remains 187 and is not being deployed.
 
 Windows Unity 6000.6.0f1 checks passed:
 
