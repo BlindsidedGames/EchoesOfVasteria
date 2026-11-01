@@ -27,6 +27,9 @@ notes in `localized-notes.json`. English notes SHA-256:
   eight locales and both orientations. A final 12-case / 18-line check in English,
   German and Japanese verified speaker names, both orchard states and the new
   Old Timer camera anchor. Screenshots were visually inspected in both layouts.
+- Three real scene-gate states passed: the Old Timer is hidden before meeting,
+  visible after meeting while the Mines remain locked, and visible for an existing
+  Mines unlock. Only his NPC entry gained the existing quest-alternative setting.
 - Some CLI test calls returned zero discovered tests; those are not passes.
 
 ## Earlier seed/drop validation retained

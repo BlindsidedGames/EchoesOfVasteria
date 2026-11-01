@@ -76792,6 +76792,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entries:
   - quest: {fileID: 11400000, guid: 8a18857e90fcac348ba107a6d4b45789, type: 2}
+    completedAlternatives:
+    - {fileID: 11400000, guid: 04f7d17c91a766641b9b4b77ff071d37, type: 2}
     disableUntilComplete:
     - {fileID: 1568596323}
     enableUntilComplete: []
