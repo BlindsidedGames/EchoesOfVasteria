@@ -27,7 +27,6 @@ namespace TimelessEchoes.Farming
         public int lastCropCapLevel = 5000;
         public double baseYield = 10;
         public int harvestXp = 10;
-        [Range(0, 1)] public float cropSeedChance = .07f;
         // Retain the existing sapling curves independently of crop seed packs.
         [Range(0, 1)] public float seedChance = .05f;
         [Range(0, 1)] public float seedChancePerCropTier = .9f;
@@ -41,8 +40,6 @@ namespace TimelessEchoes.Farming
         public static FarmContent Load() => cached ? cached : cached = Resources.Load<FarmContent>("Farming/FarmContent");
         public FarmRecipe Recipe(string id) => recipes?.FirstOrDefault(r => r != null && r.id == id);
         public FarmBuild Build(string id) => builds?.FirstOrDefault(b => b != null && b.questId == id);
-        public float SeedDropChance(FarmRecipe recipe) => recipe?.orchard == false && recipe.source &&
-            recipes != null && recipes.Contains(recipe) ? Mathf.Clamp01(cropSeedChance) : 0;
 
         public float BonusDropChance(Resource resource, float fallback)
         {
@@ -144,6 +141,7 @@ namespace TimelessEchoes.Farming
         public int GrowthLevel => Math.Max(1, growthLevel > 0 ? growthLevel : source ? source.requiredSkillLevel : 1);
         public string seedId;
         public Resource paidInput;
+        public TimelessEchoes.Quests.QuestData SeedQuest => source?.bonusDrops?.FirstOrDefault(drop => drop.resource == paidInput)?.requiredQuest;
         public bool orchard;
         public Sprite packIcon, unknownIcon;
         public Sprite[] stages = Array.Empty<Sprite>();

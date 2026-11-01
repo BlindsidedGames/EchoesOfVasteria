@@ -275,7 +275,14 @@ namespace TimelessEchoes.UI.Toolkit
                 var settings = definition.maps[journalMap].config.taskGeneratorSettings;
                 foreach (var category in new[] { settings.woodcutting, settings.mining, settings.farming, settings.fishing, settings.looting })
                     if (category != null && category.weight > 0 && category.tasks != null)
-                        foreach (var task in category.tasks) if (task) Drops(task.resourceDrops);
+                        foreach (var task in category.tasks) if (task)
+                        {
+                            Drops(task.resourceDrops);
+                            foreach (var bonus in task.bonusDrops)
+                                if (bonus?.resource && bonus.range.y > 0 && bonus.chanceMultiplier > 0 &&
+                                    (TimelessEchoes.Farming.FarmContent.Load()?.BonusDropChance(bonus.resource, bonus.chance) ?? bonus.chance) > 0)
+                                    resources.Add(bonus.resource);
+                        }
                 if (settings.enemies != null) enemies.AddRange(settings.enemies.Where(e => e && e.weight > 0).Distinct());
                 foreach (var enemy in enemies) Drops(enemy.resourceDrops);
             }

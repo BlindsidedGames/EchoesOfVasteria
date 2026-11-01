@@ -274,7 +274,7 @@ namespace TimelessEchoes
             else if (dialogue.Orin) bounds = town.LandBounds;
             else
             {
-                bounds = dialogue.Subject.TryGetComponent<WorldSpeakerAnchor>(out var anchor) ? anchor.FramingBounds :
+                bounds = dialogue.Subject.TryGetComponent<WorldSpeakerAnchor>(out var anchor) ? anchor.FramingBoundsFor(ToolkitResponsiveLayout.IsPortrait) :
                     TownQuestReveal.SpriteBounds(dialogue.Subject.gameObject) ?? new Bounds(dialogue.Subject.position, Vector3.one);
                 if (dialogue.Map && hero && Vector2.Distance(hero.transform.position, bounds.center) < 8)
                     // Include the standing character's head, rather than just

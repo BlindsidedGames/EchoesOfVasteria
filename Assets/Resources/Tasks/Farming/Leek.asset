@@ -37,6 +37,12 @@ MonoBehaviour:
     minX: 275
     maxX: Infinity
     requiredSkillLevel: 0
+  bonusDrops:
+  - resource: {fileID: 11400000, guid: b602e4a52da251d6982218dc29a05e0f, type: 2}
+    requiredQuest: {fileID: 11400000, guid: 00568cbce0574f7680580a71be54f90a, type: 2}
+    chance: 0.07
+    chanceMultiplier: 1
+    range: {x: 1, y: 1}
   additionalLootChances: []
   resetProgressOnInterrupt: 0
   persistent:

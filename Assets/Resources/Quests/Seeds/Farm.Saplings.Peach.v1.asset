@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6c671cb40351d45bf3a24266e13ced, type: 3}
+  m_Name: Peach Season
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.Quests.QuestData
+  questId: Farm.Saplings.Peach.v1
+  questName:
+    m_TableReference:
+      m_TableCollectionName: Quests
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Farm.Saplings.Peach.v1.name
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: Quests
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Farm.Saplings.Peach.v1.description
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  rewardDescription:
+    m_TableReference:
+      m_TableCollectionName: Quests
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Farm.Saplings.Peach.v1.reward
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  rewardDisplayResource: {fileID: 11400000, guid: 441bdf1c9db5e4019a08802bfe74333c, type: 2}
+  rewardIconKnown: 1
+  speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
+  npcId:
+  requiresTown: 1
+  acceptanceQuest: 0
+  acceptanceResources: []
+  autoPin: 0
+  useN0ForPinnedNumbers: 1
+  requiredQuests:
+  - {fileID: 11400000, guid: 9e275d3bb463e114a90f8885e399cc90, type: 2}
+  minimumMaxRunDistanceExclusive: 0
+  requirements:
+  - type: 0
+    resource: {fileID: 11400000, guid: c73e225f2293348658398193e3b57a5f, type: 2}
+    amount: 2000
+    enemies: []
+    killName:
+    killIcon: {fileID: 0}
+    meetNpcId:
+    buffs: []
+    includeAutoCasts: 1
+    buffCastName:
+    buffCastIcon: {fileID: 0}
+  rewards:
+  - type: 1
+    resource: {fileID: 0}
+    amount: 0
+    skill: {fileID: 11400000, guid: f3b9fce6557e44d4ac8a2a064e3b0b9b, type: 2}
+    experience: 11000
+    equipment: {fileID: 0}
+  unlockBuffSlots: 0
+  unlockAutoBuffSlots: 0
+  maxDistanceIncrease: 0
+  disciplePercentReward: 0
+  unlocksBuff: 0
+  upgradesBuff: 0
+  references:
+    version: 2
+    RefIds: []

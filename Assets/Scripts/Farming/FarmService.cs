@@ -45,9 +45,10 @@ namespace TimelessEchoes.Farming
             Instance = this; lastMonotonic = Time.realtimeSinceStartupAsDouble;
             if (!GetComponent<FarmStory>()) gameObject.AddComponent<FarmStory>();
         }
-        private void OnEnable() { Blindsided.EventHandler.OnLoadData += Loaded; Blindsided.EventHandler.OnSaveData += CaptureGrowth; }
-        private void OnDisable() { Blindsided.EventHandler.OnLoadData -= Loaded; Blindsided.EventHandler.OnSaveData -= CaptureGrowth; }
+        private void OnEnable() { Blindsided.EventHandler.OnLoadData += Loaded; Blindsided.EventHandler.OnSaveData += CaptureGrowth; Blindsided.EventHandler.OnQuestHandin += QuestHandedIn; }
+        private void OnDisable() { Blindsided.EventHandler.OnLoadData -= Loaded; Blindsided.EventHandler.OnSaveData -= CaptureGrowth; Blindsided.EventHandler.OnQuestHandin -= QuestHandedIn; }
         private void OnDestroy() { if (Instance == this) Instance = null; }
+        private void QuestHandedIn(string _) => Changed?.Invoke();
         private void Loaded() { owner = null; SettleResume(); }
         private void SettleResume()
         {
@@ -163,45 +164,7 @@ namespace TimelessEchoes.Farming
         public bool Harvest(string bedId) => Execute(state => FarmCommands.HarvestFields(Oracle.oracle.saveData,
             FarmJournal.NextOperation(state, "harvest-bed:" + bedId), DateTime.UtcNow, Content, false, bedId));
 
-        /// <summary>Eligibility and ownership are captured before ordinary completion callbacks.</summary>
-        public sealed class StagedTaskCredit
-        {
-            internal readonly FarmService Source;
-            internal readonly GameData Owner;
-            internal readonly int Slot;
-            internal readonly string OperationId;
-            internal StagedTaskCredit(FarmService source, GameData owner, int slot, string operationId)
-            { Source = source; Owner = owner; Slot = slot; OperationId = operationId; }
-        }
-        public StagedTaskCredit StageCompletedTask(StagedTaskCredit existing, TaskData task)
-        {
-            // Retain the completed task's token even after its individual receipt is compacted.
-            // An old-owner handle is deliberately not reminted for a newly selected bank.
-            if (existing != null) return existing;
-            if (!Ready || InTown || task == null || !Content ||
-                !FarmContent.Completed(Oracle.oracle.saveData, FarmContent.IntroductionId)) return null;
-            var recipe = Content.recipes.FirstOrDefault(r => !r.orchard && r.source == task);
-            if (recipe == null || !Content.CanPlant(Oracle.oracle.saveData, recipe)) return null;
-            var id = FarmJournal.StageSeed(State, recipe.seedId, UnityEngine.Random.value < Content.SeedDropChance(recipe), DateTime.UtcNow);
-            return id == null ? null : new StagedTaskCredit(this, Oracle.oracle.saveData, Oracle.oracle.CurrentSlot, id);
-        }
-        public StagedTaskCredit StageRadishCompletion(bool rolled)
-        {
-            if (!Ready) return null;
-            var current = Oracle.oracle.saveData;
-            var id = FarmJournal.StageCredit(current.Farm, rolled, DateTime.UtcNow);
-            return id == null ? null : new StagedTaskCredit(this, current, Oracle.oracle.CurrentSlot, id);
-        }
-        public bool CommitStagedTask(StagedTaskCredit credit)
-        {
-            // A callback may end the run or switch slots. Never transfer old-bank credit to a new owner.
-            if (credit == null || credit.Source != this || !Ready ||
-                !ReferenceEquals(credit.Owner, Oracle.oracle.saveData) || credit.Slot != Oracle.oracle.CurrentSlot) return false;
-            var state = credit.Owner.Farm;
-            if (state.PendingCredits?.TryGetValue(credit.OperationId, out var pending) == true)
-                return CommitPendingCredit(credit.OperationId, pending);
-            return FarmJournal.IsCommittedCredit(state, credit.OperationId);
-        }
+        // Settle already-rolled credits from older saves without rerolling or re-gating.
         private bool CommitPendingCredit(string operationId, FarmPendingCredit pending)
         {
             if (!Ready || pending == null) return false;
@@ -267,6 +230,7 @@ namespace TimelessEchoes.Farming
                     data?.Resources?.TryGetValue(r.paidInput.name, out var input) == true && input.Earned : false;
                 return new FarmRecipePresentation { Id=r.id, Title=r.paidInput ? ToolkitLocalization.Name(r.paidInput) : ToolkitLocalization.Text("fields.recipe-seeds", "{0} seeds", ToolkitLocalization.Name(r.output)),
                     CropTitle=r.DisplayName,SeedQuantity=quantity, Discovered=discovered, Eligible=config.CanPlant(data,r), Orchard=r.orchard,
+                    DropUnlocked=DropResolver.QuestUnlocked(r.SeedQuest,data), UnlockQuestTitle=r.SeedQuest ? r.SeedQuest.questName.GetLocalizedString() : "",
                     Icon=r.packIcon, UnknownIcon=r.unknownIcon, RequiredSkill=r.source?.associatedSkill ? ToolkitLocalization.Name(r.source.associatedSkill, "skill") : ToolkitLocalization.Text("skill.Farming", "Farming"), RequiredHeroLevel=r.source ? r.source.requiredSkillLevel : 1 };
             }).ToArray();
             var builds = new List<FarmBuildPresentation>();

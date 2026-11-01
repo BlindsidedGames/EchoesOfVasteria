@@ -280,6 +280,7 @@ namespace TimelessEchoes.Stats
             for (var i = 0; i < 128; i++)
             {
                 Skill skill; IEnumerable<ResourceDrop> drops; IList<float> extra;
+                IEnumerable<TaskData.BonusDrop> bonuses = null;
                 if (combat)
                 {
                     var enemy = Choose(map.taskGeneratorSettings.enemies, e => EnemyWeight(e, (float)x));
@@ -291,7 +292,7 @@ namespace TimelessEchoes.Stats
                     var category = Choose(categories, c => CategoryWeight(c, (float)x));
                     var task = category == null ? null : Choose(category.tasks, t => TaskWeight(t, (float)x));
                     if (!task) continue;
-                    skill = task.associatedSkill; drops = task.resourceDrops; extra = task.additionalLootChances;
+                    skill = task.associatedSkill; drops = task.resourceDrops; extra = task.additionalLootChances; bonuses = task.bonusDrops;
                 }
                 var stack = skills ? 1 + Mathf.Max(0, skills.Aggregator.GetProcChance(skill, MilestoneProcType.DoubleResources)) : 1;
                 var gain = skills ? skills.GetResourceGainMultiplier() * skills.GetResourceBonusMultiplier(skill) : 1;
@@ -303,6 +304,8 @@ namespace TimelessEchoes.Stats
                     var raw = drop.count * stack;
                     total += (raw * gain * buff + CauldronResourceYield.Supplement(Oracle.oracle?.saveData, drop.resource, raw)) * shop * tier;
                 }
+                if (bonuses != null)
+                    foreach (var bonus in bonuses) total += DropResolver.ExpectedBonusAmount(bonus);
             }
             return total / 128;
         }

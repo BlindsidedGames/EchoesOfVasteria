@@ -44,6 +44,7 @@ MonoBehaviour:
     requiredSkillLevel: 0
   bonusDrops:
   - resource: {fileID: 11400000, guid: 6d462a44e783b02468f52ca0559a9c73, type: 2}
+    requiredQuest: {fileID: 11400000, guid: 9d2f57a68f024fd42b159983d2385cbb, type: 2}
     chance: 0.1
     chanceMultiplier: 0.5
     range: {x: 1, y: 1}

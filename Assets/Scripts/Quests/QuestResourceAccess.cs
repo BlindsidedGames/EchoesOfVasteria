@@ -17,8 +17,9 @@ namespace TimelessEchoes.Quests
             public readonly Skill Skill;
             public readonly int Level;
             public readonly bool Combat, ResourceUnlock;
-            public Source(Skill skill, int level, bool combat = false, bool resourceUnlock = true)
-            { Skill = skill; Level = level; Combat = combat; ResourceUnlock = resourceUnlock; }
+            public readonly QuestData Quest;
+            public Source(Skill skill, int level, bool combat = false, bool resourceUnlock = true, QuestData quest = null)
+            { Skill = skill; Level = level; Combat = combat; ResourceUnlock = resourceUnlock; Quest = quest; }
         }
         private static Dictionary<Resource, List<Source>> sources;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -38,12 +39,12 @@ namespace TimelessEchoes.Quests
                 if (!task || !task.taskPrefab || task.weight <= 0) continue;
                 foreach (var drop in task.resourceDrops)
                     if (drop?.resource && drop.weight > 0 && drop.dropRange.y > 0)
-                        Add(drop.resource, new Source(task.associatedSkill, Mathf.Max(task.requiredSkillLevel, drop.requiredSkillLevel)));
+                        Add(drop.resource, new Source(task.associatedSkill, Mathf.Max(task.requiredSkillLevel, drop.requiredSkillLevel), quest: drop.requiredQuest));
                 foreach (var drop in task.bonusDrops)
                 {
                     if (drop?.resource && drop.range.y > 0 && drop.chanceMultiplier > 0 &&
                         (Farming.FarmContent.Load()?.BonusDropChance(drop.resource, drop.chance) ?? drop.chance) > 0)
-                        Add(drop.resource, new Source(task.associatedSkill, task.requiredSkillLevel, resourceUnlock: false));
+                        Add(drop.resource, new Source(task.associatedSkill, task.requiredSkillLevel, resourceUnlock: false, quest: drop.requiredQuest));
                 }
             }
             foreach (var enemy in AssetCache.GetAll<EnemyData>(""))
@@ -51,15 +52,15 @@ namespace TimelessEchoes.Quests
                 if (!enemy || !enemy.prefab || enemy.weight <= 0) continue;
                 foreach (var drop in enemy.resourceDrops)
                     if (drop?.resource && drop.weight > 0 && drop.dropRange.y > 0)
-                        Add(drop.resource, new Source(null, drop.requiredSkillLevel, combat: true));
+                        Add(drop.resource, new Source(null, drop.requiredSkillLevel, combat: true, quest: drop.requiredQuest));
             }
         }
 
-        // Different sources are alternatives. Only block when every known gathering
-        // route needs a higher skill level, and the player still needs this item.
-        public static IReadOnlyList<(Skill skill, int level)> Blockers(QuestData.Requirement requirement, GameData owner)
+        // Sources are alternatives; each route needs both its skill level and quest.
+        // Cache authored requirements, never a particular save's eligibility.
+        public static IReadOnlyList<(Skill skill, int level, QuestData quest)> Blockers(QuestData.Requirement requirement, GameData owner)
         {
-            var result = new List<(Skill skill, int level)>();
+            var result = new List<(Skill skill, int level, QuestData quest)>();
             if (owner == null || requirement?.type != QuestData.RequirementType.Resource || !requirement.resource) return result;
             var resource = requirement.resource;
             var bank = ResourceManager.Instance;
@@ -67,20 +68,20 @@ namespace TimelessEchoes.Quests
             if (owned >= requirement.amount) return result;
             if (sources == null) BuildSources();
             if (!sources.TryGetValue(resource, out var routes)) return result;
-            var levels = new Dictionary<Skill, int>();
             var controller = SkillController.Instance;
             foreach (var route in routes)
             {
                 var skill = route.Combat ? controller?.CombatSkill : route.Skill;
-                // An unclassified route must not invent a skill lock.
-                if (!skill) return result;
-                var level = Mathf.Max(route.Level, route.ResourceUnlock ? skill.GetResourceUnlockLevel(resource) : 0);
-                var current = controller ? controller.GetLevel(skill, owner) : owner.SkillData.TryGetValue(skill.name, out var progress) ? Mathf.Max(1, progress.Level) : 1;
-                if (current >= level) return result;
-                if (!levels.TryGetValue(skill, out var previous) || level < previous) levels[skill] = level;
+                var level = Mathf.Max(route.Level, route.ResourceUnlock && skill ? skill.GetResourceUnlockLevel(resource) : 0);
+                var current = skill ? controller ? controller.GetLevel(skill, owner) : owner.SkillData.TryGetValue(skill.name, out var progress) ? Mathf.Max(1, progress.Level) : 1 : level;
+                var quest = QuestUtils.QuestCompleted(route.Quest, owner) ? null : route.Quest;
+                if (current >= level && !quest) { result.Clear(); return result; }
+                var gate = (skill: current < level ? skill : null, level: current < level ? level : 0, quest);
+                if (result.Any(other => other.skill == gate.skill && other.quest == gate.quest && other.level <= gate.level)) continue;
+                result.RemoveAll(other => other.skill == gate.skill && other.quest == gate.quest && other.level > gate.level);
+                result.Add(gate);
             }
-            result.AddRange(levels.Select(pair => (pair.Key, pair.Value)).OrderBy(gate => gate.Value));
-            return result;
+            return result.OrderBy(gate => gate.level).ToList();
         }
 
         public static bool IsLocked(QuestData quest, GameData owner)

@@ -44,6 +44,22 @@ namespace Tests.EditMode
         }
 
         [Test]
+        public void SeedRequirementTracksQuestCompletionAndAcceptsAlreadyOwnedStock()
+        {
+            var task = Resources.Load<TaskData>("Tasks/Farming/Corn");
+            var pack = task.bonusDrops.Single();
+            var owner = new GameData();
+            owner.SkillData[task.associatedSkill.name] = new GameData.SkillProgress { Level = task.requiredSkillLevel };
+            var requirement = new QuestData.Requirement { type=QuestData.RequirementType.Resource,resource=pack.resource,amount=1 };
+            Assert.AreSame(pack.requiredQuest, QuestResourceAccess.Blockers(requirement, owner).Single().quest);
+            owner.Quests[pack.requiredQuest.questId] = new GameData.QuestRecord { Completed=true };
+            Assert.IsEmpty(QuestResourceAccess.Blockers(requirement, owner), "Source caches must not retain a save's old quest state.");
+            owner.Quests.Clear();
+            owner.Resources[pack.resource.name] = new GameData.ResourceEntry { Amount=1, Earned=true };
+            Assert.IsEmpty(QuestResourceAccess.Blockers(requirement, owner), "Existing stock stays usable before the new drop gate.");
+        }
+
+        [Test]
         public void UnlockedAlternativeSourceDoesNotLockTheResource()
         {
             var tasks = Resources.LoadAll<TaskData>("Tasks");

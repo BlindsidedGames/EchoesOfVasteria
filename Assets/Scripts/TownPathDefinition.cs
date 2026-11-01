@@ -14,6 +14,7 @@ namespace TimelessEchoes
         public Tile[] pavingEdge = new Tile[256];
         public Tile[] pavingStairs = new Tile[3];
         public Vector3Int[] baseCells;
+        public Vector3Int[] barkleyApproach;
         public Vector3Int[] firstField;
         public Vector3Int[] secondField;
         public Vector3Int[] thirdField;
@@ -21,11 +22,12 @@ namespace TimelessEchoes
         public Vector3Int[] pierApproach;
         public Vector3Int stairTop = new(-86, -5, 0);
 
-        public HashSet<Vector3Int> Cells(int gardenCapacity, bool millBuilt)
+        public HashSet<Vector3Int> Cells(int gardenCapacity, bool millBuilt, bool barkleyHouseBuilt = false)
         {
             var result = new HashSet<Vector3Int>();
             void Add(Vector3Int[] cells) { if (cells != null) result.UnionWith(cells); }
             Add(baseCells);
+            if (barkleyHouseBuilt) Add(barkleyApproach);
             if (gardenCapacity >= 1) Add(firstField);
             if (gardenCapacity >= 3) Add(secondField);
             if (gardenCapacity >= 5) Add(thirdField);

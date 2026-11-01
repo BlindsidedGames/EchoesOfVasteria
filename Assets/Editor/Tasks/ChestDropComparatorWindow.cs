@@ -329,8 +329,12 @@ namespace TimelessEchoes.EditorTools
 			float Rand01() => (float)rng.NextDouble();
 
 			var results = new Dictionary<TaskData, Dictionary<Resource, (float p, float e)>>();
+            var previewOwner = assumeQuests ? new Blindsided.SaveData.GameData() : null;
 			foreach (var t in sel)
 			{
+                if (previewOwner != null)
+                    foreach (var drop in t.resourceDrops.Where(drop => drop?.requiredQuest))
+                        previewOwner.Quests[drop.requiredQuest.questId] = new Blindsided.SaveData.GameData.QuestRecord { Completed = true };
 				var map = new Dictionary<Resource, (float p, float e)>();
 				results[t] = map;
 				foreach (var r in resources) map[r] = (0f, 0f);
@@ -338,7 +342,7 @@ namespace TimelessEchoes.EditorTools
                                 for (int i = 0; i < count; i++)
                                 {
                                         var produced = new Dictionary<Resource, int>();
-                                        var rolled = DropResolver.RollDrops(t.resourceDrops, includeAdditionalLootChances ? t.additionalLootChances : null, t.associatedSkill, assumeQuests, Rand01);
+                                        var rolled = DropResolver.RollDrops(t.resourceDrops, includeAdditionalLootChances ? t.additionalLootChances : null, t.associatedSkill, assumeQuests, Rand01, previewOwner);
                                         foreach (var res in rolled)
                                         {
                                                 produced.TryGetValue(res.resource, out var prev);

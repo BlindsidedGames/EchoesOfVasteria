@@ -369,8 +369,11 @@ namespace TimelessEchoes.UI.Toolkit
                         var gates = QuestResourceAccess.Blockers(item.req, Blindsided.Oracle.oracle?.saveData);
                         if (gates.Count > 0)
                             label += " · " + string.Join(ToolkitLocalization.Text("quests.requirement-or", " or "), gates.Select(gate =>
-                                ToolkitLocalization.Text("quests.requires-skill", "Requires {0} {1}", gate.level,
-                                    ToolkitLocalization.Text("skill." + gate.skill.name, gate.skill.skillName))));
+                                string.Join(ToolkitLocalization.Text("quests.requirement-and", " and "), new[] {
+                                    gate.skill ? ToolkitLocalization.Text("quests.requires-skill", "Requires {0} {1}", gate.level,
+                                        ToolkitLocalization.Text("skill." + gate.skill.name, gate.skill.skillName)) : null,
+                                    gate.quest ? ToolkitLocalization.Text("quests.requires-quest", "Complete {0}", gate.quest.questName.GetLocalizedString()) : null
+                                }.Where(text => !string.IsNullOrEmpty(text)))));
                     }
                     if (item.resourceRow != null) item.resourceRow.SetText(label);
                     else item.text.text = ToolkitControls.WithoutInlineTextSize(presentation.text);

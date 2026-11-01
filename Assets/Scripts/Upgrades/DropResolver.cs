@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using TimelessEchoes.Skills;
+using Blindsided.SaveData;
+using TimelessEchoes.Quests;
 using UnityEngine;
 
 namespace TimelessEchoes.Upgrades
@@ -37,7 +39,8 @@ namespace TimelessEchoes.Upgrades
             IList<float> additionalLootChances,
             Skill associatedSkill = null,
             bool ignoreSkillLevel = false,
-            Func<float> rand = null)
+            Func<float> rand = null,
+            GameData owner = null)
         {
             // Initialize scratch lists on first use
             _scratchResults ??= new List<DropResult>(8);
@@ -51,7 +54,7 @@ namespace TimelessEchoes.Upgrades
             {
                 if (drop == null || drop.resource == null) continue;
                 if (drop.weight <= 0f) continue;
-                if (!ignoreSkillLevel && !IsDropUnlocked(drop, associatedSkill)) continue;
+                if (!IsDropUnlocked(drop, associatedSkill, ignoreSkillLevel, owner)) continue;
                 _scratchAvailable.Add(drop);
             }
 
@@ -110,17 +113,15 @@ namespace TimelessEchoes.Upgrades
             return _scratchResults;
         }
 
-        public static List<DropResult> RollBonusDrops(IEnumerable<TimelessEchoes.Tasks.TaskData.BonusDrop> drops, Func<float> rand = null)
+        public static List<DropResult> RollBonusDrops(IEnumerable<TimelessEchoes.Tasks.TaskData.BonusDrop> drops, Func<float> rand = null, GameData owner = null)
         {
             var result = new List<DropResult>();
             if (drops == null) return result;
             float Rand() => rand != null ? rand() : UnityEngine.Random.value;
             foreach (var drop in drops)
             {
-                if (drop?.resource == null) continue;
-                var content = TimelessEchoes.Farming.FarmContent.Load();
-                var chance = (content ? content.BonusDropChance(drop.resource, drop.chance) : drop.chance) * Mathf.Max(0, drop.chanceMultiplier);
-                if (chance <= 0 || Rand() >= Mathf.Clamp01(chance)) continue;
+                var chance = BonusChance(drop, owner);
+                if (chance <= 0 || Rand() >= chance) continue;
                 var min = Mathf.Max(0, drop.range.x); var max = Mathf.Max(min, drop.range.y);
                 var t = Rand(); t *= t;
                 var count = Mathf.Clamp(Mathf.FloorToInt(Mathf.Lerp(min, max + 1, t)), min, max);
@@ -129,8 +130,31 @@ namespace TimelessEchoes.Upgrades
             return result;
         }
 
-        private static bool IsDropUnlocked(ResourceDrop drop, Skill skill)
+        public static float BonusChance(TimelessEchoes.Tasks.TaskData.BonusDrop drop, GameData owner = null)
         {
+            if (drop?.resource == null || !QuestUnlocked(drop.requiredQuest, owner)) return 0;
+            var content = TimelessEchoes.Farming.FarmContent.Load();
+            return Mathf.Clamp01((content ? content.BonusDropChance(drop.resource, drop.chance) : drop.chance) * Mathf.Max(0, drop.chanceMultiplier));
+        }
+
+        public static double ExpectedBonusAmount(TimelessEchoes.Tasks.TaskData.BonusDrop drop, GameData owner = null)
+        {
+            var chance = BonusChance(drop, owner);
+            if (chance <= 0) return 0;
+            var min = Mathf.Max(0, drop.range.x); var max = Mathf.Max(min, drop.range.y);
+            double amount = min;
+            for (long value = (long)min + 1; value <= max; value++)
+                amount += 1 - Math.Sqrt((double)(value - min) / (max + 1d - min));
+            return amount * chance;
+        }
+
+        public static bool QuestUnlocked(QuestData quest, GameData owner = null) =>
+            QuestUtils.QuestCompleted(quest, owner ?? Blindsided.Oracle.oracle?.saveData);
+
+        public static bool IsDropUnlocked(ResourceDrop drop, Skill skill, bool ignoreSkillLevel = false, GameData owner = null)
+        {
+            if (drop == null || !QuestUnlocked(drop.requiredQuest, owner)) return false;
+            if (ignoreSkillLevel) return true;
             var requiredLevel = Mathf.Max(drop.requiredSkillLevel, skill ? skill.GetResourceUnlockLevel(drop.resource) : 0);
             if (requiredLevel <= 0)
                 return true;  // No requirement
@@ -139,10 +163,12 @@ namespace TimelessEchoes.Upgrades
                 return false;
 
             var controller = SkillController.Instance;
-            if (controller == null)
-                return false;
-
-            int level = controller.GetProgress(skill)?.Level ?? 1;
+            if (!controller && owner == null) return false;
+            int level;
+            if (owner != null)
+                level = controller ? controller.GetLevel(skill, owner) :
+                    owner.SkillData?.TryGetValue(skill.name, out var saved) == true ? saved.Level : 1;
+            else level = controller.GetLevel(skill);
             return level >= requiredLevel;
         }
     }

@@ -1,5 +1,6 @@
 ﻿#if UNITY_INCLUDE_TESTS
 using System.Linq;
+using Blindsided.SaveData;
 using NUnit.Framework;
 using TimelessEchoes.Farming;
 using TimelessEchoes.Tasks;
@@ -24,9 +25,12 @@ namespace Tests.EditMode
             Assert.IsNotEmpty(tasks, "Every sapling must have an adventure source.");
             foreach (var task in tasks)
             {
+                var owner = new GameData();
+                foreach (var drop in task.bonusDrops.Where(drop => drop.requiredQuest))
+                    owner.Quests[drop.requiredQuest.questId] = new GameData.QuestRecord { Completed = true };
                 var expected = task.name.StartsWith("Small ", System.StringComparison.Ordinal) ? smallChance : chance;
-                Assert.IsEmpty(TimelessEchoes.Upgrades.DropResolver.RollBonusDrops(task.bonusDrops, () => expected + .000001f), task.name);
-                var hit = TimelessEchoes.Upgrades.DropResolver.RollBonusDrops(task.bonusDrops, () => expected - .000001f);
+                Assert.IsEmpty(TimelessEchoes.Upgrades.DropResolver.RollBonusDrops(task.bonusDrops, () => expected + .000001f, owner), task.name);
+                var hit = TimelessEchoes.Upgrades.DropResolver.RollBonusDrops(task.bonusDrops, () => expected - .000001f, owner);
                 Assert.AreEqual(1, hit.Count, task.name);
                 Assert.AreSame(sapling, hit[0].resource, task.name);
                 Assert.AreEqual(1, hit[0].count, "Propagation stays a single unmultiplied item.");
@@ -34,17 +38,27 @@ namespace Tests.EditMode
         }
 
         [Test]
-        public void EveryCropHasSevenPercentSeedChanceAndOrchardsDoNotDropSeedPacks()
+        public void EveryCropPackIsAnAdditiveQuestGatedBonus()
         {
             var content = Resources.Load<FarmContent>("Farming/FarmContent");
-            Assert.NotNull(content);
             var crops = content.recipes.Where(recipe => !recipe.orchard).ToArray();
-            Assert.IsNotEmpty(crops);
+            Assert.AreEqual(17, crops.Length);
             foreach (var recipe in crops)
-                Assert.AreEqual(.07f, content.SeedDropChance(recipe), .000001f, recipe.id);
-            foreach (var recipe in content.recipes.Where(recipe => recipe.orchard))
-                Assert.Zero(content.SeedDropChance(recipe), recipe.id);
-            Assert.Zero(content.SeedDropChance(null));
+            {
+                var pack = recipe.source.bonusDrops.Single(drop => drop.resource == recipe.paidInput);
+                Assert.NotNull(pack.requiredQuest, recipe.id);
+                var owner = new GameData();
+                var randomCalls = 0;
+                Assert.IsEmpty(TimelessEchoes.Upgrades.DropResolver.RollBonusDrops(new[] {pack}, () => { randomCalls++; return 0; }, owner));
+                Assert.Zero(randomCalls, "Locked packs must not consume a roll.");
+                owner.Quests[pack.requiredQuest.questId] = new GameData.QuestRecord { Completed = true };
+                var hit = TimelessEchoes.Upgrades.DropResolver.RollBonusDrops(new[] {pack}, () => .069999f, owner);
+                Assert.AreEqual(1, hit.Count, recipe.id);
+                Assert.AreSame(recipe.paidInput, hit[0].resource);
+                Assert.AreEqual(1, hit[0].count);
+                Assert.IsEmpty(TimelessEchoes.Upgrades.DropResolver.RollBonusDrops(new[] {pack}, () => .070001f, owner));
+                Assert.IsTrue(recipe.source.resourceDrops.Any(drop => drop.resource == recipe.output), "Seeds cannot replace the crop reward.");
+            }
         }
     }
 }

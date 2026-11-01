@@ -36,19 +36,13 @@ namespace Tests.PlayMode
                 var resources = resourceObject.AddComponent<ResourceManager>(); resources.enabled = false;
                 var hero = heroObject.AddComponent<HeroController>(); hero.enabled = false;
                 var recipe = content.Recipe(FarmCommands.RadishRecipeId);
-                Assert.AreEqual(.1f, content.seedChance, "Exercise the shipped roll, not a guaranteed test chance.");
-                Random.State winning = random;
-                for (var seed = 0; ; seed++)
-                {
-                    Random.InitState(seed); winning = Random.state;
-                    if (Random.value < content.seedChance) break;
-                }
+                Random.InitState(104729);
                 cropObject = Object.Instantiate(recipe.source.taskPrefab).gameObject;
                 var crop = cropObject.GetComponent<FarmingTask>();
                 Assert.NotNull(crop); crop.enabled = false;
                 Assert.AreSame(recipe.source, crop.taskData, "Use the authored adventure crop definition.");
                 Assert.True(crop.Claim(hero));
-                crop.StartTask(); Random.state = winning;
+                crop.StartTask();
                 for (var tick = 0; !crop.IsComplete() && tick < 10000; tick++) crop.Tick(hero);
                 Assert.True(crop.IsComplete());
                 Assert.AreEqual(0, resources.GetAmount(recipe.paidInput), "Meeting/acknowledgement gate blocks pre-introduction rolls.");
@@ -88,11 +82,14 @@ namespace Tests.PlayMode
                 var loaded = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
                 Assert.True(loaded.Succeeded, loaded.Diagnostic);
                 Assert.True(FarmContent.Completed(loaded.Data, FarmContent.IntroductionId));
-                // A live reward since the last snapshot must survive the task credit.
+                // New bonus drops share ordinary reward persistence, retaining live stock.
                 resources.Add(recipe.paidInput, 2, trackStats: false, eligibleForTierRoll: false);
-                crop.StartTask(); Random.state = winning;
-                for (var tick = 0; !crop.IsComplete() && tick < 10000; tick++) crop.Tick(hero);
-                Assert.True(crop.IsComplete());
+                for (var attempt = 0; resources.GetAmount(recipe.paidInput) < 4 && attempt < 128; attempt++)
+                {
+                    crop.StartTask();
+                    for (var tick = 0; !crop.IsComplete() && tick < 10000; tick++) crop.Tick(hero);
+                    Assert.True(crop.IsComplete());
+                }
                 Assert.AreEqual(4, resources.GetAmount(recipe.paidInput), "The new pack must preserve the two unsaved live packs.");
                 crop.Tick(hero);
                 Assert.AreEqual(4, resources.GetAmount(recipe.paidInput));

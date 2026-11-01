@@ -13,5 +13,7 @@ namespace TimelessEchoes.Upgrades
         [Min(0f)] public float weight = 1f;
         [Tooltip("Skill level required for this drop (0 = no requirement)")]
         public int requiredSkillLevel;
+        [Tooltip("Optional quest that must be handed in before this reward can drop.")]
+        public TimelessEchoes.Quests.QuestData requiredQuest;
     }
 }

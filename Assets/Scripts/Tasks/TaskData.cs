@@ -85,6 +85,8 @@ namespace TimelessEchoes.Tasks
         public class BonusDrop
         {
             public Resource resource;
+            [Tooltip("Optional quest that must be handed in before this bonus can drop.")]
+            public TimelessEchoes.Quests.QuestData requiredQuest;
             [Tooltip("Fixed chance for ordinary bonuses. Sapling chances use the Fields seed curve, with separate fruit and timber tiers.")]
             [MinValue(0f), MaxValue(1f)] public float chance;
             [Tooltip("Scales the effective chance, including the shared sapling curve, for this task.")]

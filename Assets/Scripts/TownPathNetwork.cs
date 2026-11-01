@@ -71,7 +71,7 @@ namespace TimelessEchoes
             var data = Oracle.oracle?.saveData;
             if (data == null || !definition || !surface) return;
             var next = HashCode.Combine(data, data.Farm?.GardenCapacity ?? 0,
-                data.Farm?.Projects ?? FarmProject.None, TownPathProgression.Tier(data));
+                data.Farm?.Projects ?? FarmProject.None, TownPathProgression.Tier(data), BarkleyHouseBuilt(data));
             if (next != signature && !held) Refresh();
         }
 
@@ -80,7 +80,7 @@ namespace TimelessEchoes
             var data = Oracle.oracle?.saveData;
             tier = TownPathProgression.Tier(data);
             cells = definition.Cells(data?.Farm?.GardenCapacity ?? 0,
-                FarmProjects.Complete(data?.Farm, FarmProject.MillBody));
+                FarmProjects.Complete(data?.Farm, FarmProject.MillBody), BarkleyHouseBuilt(data));
             var result = new Dictionary<Vector3Int, TileBase>();
             foreach (var cell in cells)
             {
@@ -124,8 +124,11 @@ namespace TimelessEchoes
                 : originalBarkleyPosition;
             var data = Oracle.oracle.saveData;
             signature = HashCode.Combine(data, data.Farm?.GardenCapacity ?? 0,
-                data.Farm?.Projects ?? FarmProject.None, TownPathProgression.Tier(data));
+                data.Farm?.Projects ?? FarmProject.None, TownPathProgression.Tier(data), BarkleyHouseBuilt(data));
         }
+
+        private static bool BarkleyHouseBuilt(GameData data) =>
+            data?.Quests != null && data.Quests.TryGetValue("Adding A Roof", out var quest) && quest != null && quest.Completed;
 
         private void OnDestroy()
         {

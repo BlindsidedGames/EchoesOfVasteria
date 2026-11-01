@@ -29,5 +29,8 @@ namespace TimelessEchoes.Quests
         {
             return QuestCompleted(quest != null ? quest.questId : null);
         }
+
+        public static bool QuestCompleted(QuestData quest, GameData owner) => !quest ||
+            owner?.Quests?.TryGetValue(quest.questId, out var record) == true && record?.Completed == true;
     }
 }

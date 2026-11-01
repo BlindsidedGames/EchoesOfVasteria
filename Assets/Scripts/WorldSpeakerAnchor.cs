@@ -9,9 +9,16 @@ namespace TimelessEchoes
         public string speakerId;
         [SerializeField] private Vector2 framingCenter = new(0, .5f);
         [SerializeField] private Vector2 framingSize = new(2.5f, 2.5f);
+        [SerializeField, Min(.1f)] private float portraitFramingScale = 1f;
         // Authored character bounds exclude animation-sheet padding and scenery.
-        public Bounds FramingBounds => new(transform.TransformPoint(framingCenter),
-            new Vector3(framingSize.x * Mathf.Abs(transform.lossyScale.x), framingSize.y * Mathf.Abs(transform.lossyScale.y), 0));
+        public Bounds FramingBounds => FramingBoundsFor(false);
+        public Bounds FramingBoundsFor(bool portrait)
+        {
+            var scale = portrait ? portraitFramingScale : 1f;
+            return new Bounds(transform.TransformPoint(framingCenter),
+                new Vector3(framingSize.x * Mathf.Abs(transform.lossyScale.x) * scale,
+                    framingSize.y * Mathf.Abs(transform.lossyScale.y) * scale, 0));
+        }
         private static readonly List<WorldSpeakerAnchor> Anchors = new();
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]

@@ -41,7 +41,7 @@ namespace Tests.PlayMode
                 yield return null; yield return null;
                 var unknownCorn = ui.Q<Button>("fields-seed-recipe.corn.v1");
                 Assert.AreEqual(DisplayStyle.Flex, unknownCorn.resolvedStyle.display, "Undiscovered seeds occupy their own visible cards.");
-                Assert.False(unknownCorn.enabledInHierarchy);
+                Assert.True(unknownCorn.enabledInHierarchy, "Unknown packs can explain their quest requirement without allowing planting.");
                 Assert.AreSame(content.Recipe("recipe.corn.v1").unknownIcon, unknownCorn.Q<Image>().sprite);
                 var buildPlot = ui.Q<Button>("fields-build-selected");
                 Assert.False(buildPlot.enabledInHierarchy, "Without a quest owner, Fields must not offer direct construction.");
@@ -54,6 +54,11 @@ namespace Tests.PlayMode
                 typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(game, false);
                 screen.Hide(); Assert.True(screen.Show());
                 yield return null; yield return null;
+                unknownCorn = ui.Q<Button>("fields-seed-recipe.corn.v1");
+                FieldsClick(unknownCorn);
+                Assert.That(ui.Q<Label>("fields-selected-status").text, Does.Contain(content.Recipe("recipe.corn.v1").SeedQuest.questName.GetLocalizedString()));
+                Assert.False(ui.Q<Button>("fields-plant-selected").enabledInHierarchy);
+                Assert.True(unknownCorn.ClassListContains("primary"));
                 FieldsClick(ui.Q<Button>("fields-seed-" + FarmCommands.RadishRecipeId));
                 Assert.True(ui.Q<Button>("fields-seed-" + FarmCommands.RadishRecipeId).ClassListContains("primary"),
                     "Seed selection must repaint on its own click, before touching any bed.");
@@ -182,6 +187,7 @@ namespace Tests.PlayMode
                 foreach (var bedId in FarmCommands.GardenBeds.Concat(FarmCommands.OrchardBeds))
                     if (!service.State.Beds.ContainsKey(bedId)) service.State.Beds[bedId] = new FarmBedState { Unlocked = true };
                 service.State.TwinsLevel = 5000;
+                service.State.Projects |= FarmProject.MillBody | FarmProject.MillSails | FarmProject.Well;
                 foreach (var recipe in content.recipes)
                 {
                     oracle.saveData.SkillData[recipe.source.associatedSkill.name] = new GameData.SkillProgress { Level = 500 };
@@ -268,7 +274,7 @@ namespace Tests.PlayMode
                 Assert.False(ui.Q<Button>("fields-seed-recipe.birch.v1").enabledInHierarchy, "Growing trees lock selection just like crops.");
                 UnityEditor.PlayModeWindow.SetCustomRenderingResolution(960, 2078, "Portrait water action");
                 yield return new WaitForSecondsRealtime(.3f);
-                Assert.True(service.State.Beds[orchardId].Watered, "Level 50 automatically waters newly planted trees.");
+                Assert.True(service.State.Beds[orchardId].Watered, "The completed well automatically waters newly planted trees.");
                 Assert.AreEqual(DisplayStyle.None, ui.Q<Button>("fields-water-selected").resolvedStyle.display);
                 Assert.AreEqual(DisplayStyle.Flex, ui.Q<Button>("fields-harvest-selected").resolvedStyle.display);
                 FarmCommands.TickFields(service.State, 100000);

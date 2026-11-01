@@ -66,6 +66,7 @@ namespace TimelessEchoes.Gear
             foreach (var drop in drops)
             {
                 if (drop == null || drop.resource == null || drop.weight <= 0f) continue;
+                if (!DropResolver.IsDropUnlocked(drop, null, ignoreSkillLevel: true)) continue;
                 totalWeight += drop.weight;
             }
             if (totalWeight <= 0f) return;
@@ -89,6 +90,7 @@ namespace TimelessEchoes.Gear
             foreach (var drop in drops)
             {
                 if (drop == null || drop.resource == null || drop.weight <= 0f) continue;
+                if (!DropResolver.IsDropUnlocked(drop, null, ignoreSkillLevel: true)) continue;
                 float prob = drop.weight / totalWeight;
                 // Average amount with bias towards lower values (same as RollAmount: t*t bias)
                 // Expected value of biased roll = integral of floor(lerp(min, max+1, t*t)) dt from 0 to 1

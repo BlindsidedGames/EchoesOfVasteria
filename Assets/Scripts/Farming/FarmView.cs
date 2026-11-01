@@ -65,6 +65,8 @@ namespace TimelessEchoes.Farming
         public string Id, Title, CropTitle;
         public double SeedQuantity;
         public bool Discovered, Eligible, Orchard;
+        public bool DropUnlocked;
+        public string UnlockQuestTitle;
         public int RequiredHeroLevel;
         public Sprite Icon, UnknownIcon;
     }

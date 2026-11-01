@@ -1,6 +1,9 @@
 #if UNITY_INCLUDE_TESTS
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
+using Blindsided.SaveData;
+using TimelessEchoes.Quests;
 using TimelessEchoes.Tasks;
 using TimelessEchoes.Upgrades;
 using UnityEngine;
@@ -63,6 +66,25 @@ namespace TimelessEchoes.Tests
             var result = DropResolver.RollDrops(drops, new List<float> { 1f, 1f }, rand: () => 0f);
             Assert.That(result.Count, Is.EqualTo(2));
             Assert.That(result[0].count + result[1].count, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void QuestGateFiltersWeightedPoolAndCannotBeBypassedByIgnoringSkillLevels()
+        {
+            var quest = ScriptableObject.CreateInstance<QuestData>();
+            quest.questId = "Drop gate";
+            try
+            {
+                var owner = new GameData();
+                var drop = new ResourceDrop { resource = resource, requiredQuest = quest, requiredSkillLevel = 10, dropRange = new Vector2Int(2, 2) };
+                var calls = 0;
+                Assert.IsEmpty(DropResolver.RollDrops(new[] {drop}, null, ignoreSkillLevel: true, rand: () => { calls++; return 0; }, owner: owner));
+                Assert.Zero(calls);
+                owner.Quests[quest.questId] = new GameData.QuestRecord { Completed = true };
+                Assert.IsEmpty(DropResolver.RollDrops(new[] {drop}, null, owner: owner), "Quest completion cannot bypass the skill gate.");
+                Assert.AreEqual(2, DropResolver.RollDrops(new[] {drop}, null, ignoreSkillLevel: true, rand: () => 0, owner: owner).Single().count);
+            }
+            finally { Object.DestroyImmediate(quest); }
         }
 
         [Test]
