@@ -23,6 +23,8 @@ using TimelessEchoes.Upgrades;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
+using UnityEngine.UIElements;
+using TimelessEchoes.UI.Toolkit;
 using Object = UnityEngine.Object;
 using Events = Blindsided.EventHandler;
 
@@ -36,6 +38,7 @@ namespace Tests.PlayMode
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
         private string root, previousRoot;
         private GameObject owner;
+        private GameObject loadingScreen;
         private Oracle oracle;
         private GameManager game;
         private GameplayStatTracker stats;
@@ -123,6 +126,7 @@ namespace Tests.PlayMode
 
         private void DestroyRuntime()
         {
+            if (loadingScreen) Object.DestroyImmediate(loadingScreen);
             if (oracle)
             {
                 typeof(Oracle).GetMethod("CompleteActiveSaveBlocking", Private).Invoke(oracle, null);
@@ -165,6 +169,18 @@ namespace Tests.PlayMode
                 Assert.Less(Time.realtimeSinceStartup, until, "The real run loader did not finish.");
                 yield return null;
             }
+        }
+
+        private VisualElement CreateLoadingScreen()
+        {
+            var view = loadingScreen = new GameObject("Continuation loading screen", typeof(UIDocument));
+            view.SetActive(false);
+            var screen = view.AddComponent<ToolkitLoadingScreen>();
+            Set(screen, "theme", AssetDatabase.LoadAssetAtPath<ToolkitTheme>("Assets/UI/Toolkit/Theme.asset"));
+            Set(screen, "runtimeTheme", AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>("Assets/UI/Toolkit/Runtime.tss"));
+            Set(screen, "textSettings", AssetDatabase.LoadAssetAtPath<PanelTextSettings>("Assets/UI/Toolkit/TextSettings.asset"));
+            view.SetActive(true);
+            return view.GetComponent<UIDocument>().rootVisualElement.Q("loading-backdrop");
         }
 
         [UnityTest]
@@ -431,6 +447,15 @@ namespace Tests.PlayMode
                 Assert.NotNull(saved.ActiveRun, "A pause checkpoint must include its active adventure.");
                 DestroyRuntime();
                 CreateRuntime(saved, "Farmlands");
+                var backdrop = CreateLoadingScreen();
+                yield return null;
+                yield return null; // Main can render before Oracle publishes OnLoadData.
+                Assert.AreEqual(DisplayStyle.Flex, backdrop.resolvedStyle.display,
+                    "The loading screen must cover town before progress subscribers restore the run.");
+                Assert.AreEqual(1, backdrop.resolvedStyle.backgroundColor.a);
+                var viewport = backdrop.panel.visualTree.worldBound;
+                Assert.That(backdrop.worldBound.width, Is.EqualTo(viewport.width).Within(.1f));
+                Assert.That(backdrop.worldBound.height, Is.EqualTo(viewport.height).Within(.1f));
                 Events.LoadData();
                 Events.SaveData(force: true); // Pausing again before generation must retain the checkpoint.
                 Assert.NotNull(saved.ActiveRun);
@@ -438,6 +463,10 @@ namespace Tests.PlayMode
                 yield return null;
                 Assert.IsFalse(game.IsInTown && !game.RunLoadingActive, "Loading a saved adventure must not leave the game idle in town.");
                 yield return WaitForRun();
+                yield return null;
+                yield return null;
+                Assert.AreEqual(DisplayStyle.None, backdrop.resolvedStyle.display,
+                    "The same loading screen must release once the restored world is ready.");
                 hero = HeroController.Instance;
                 hero.SetActiveState(false);
                 Assert.AreEqual(777, hero.transform.position.x, 2, "Generate and resume near the saved distance.");
@@ -454,12 +483,43 @@ namespace Tests.PlayMode
                 Assert.AreEqual(80, game.ResourceBonusPercent);
                 Assert.AreEqual(100, inventory.GetAmount(stone));
                 Assert.AreEqual(.6f, hero.GetComponent<HeroHealth>().CurrentHealth / hero.GetComponent<HeroHealth>().MaxHealth, .05f);
+                // This fixture disables GameManager.Update, so it cannot service a
+                // queued combat retreat. Test the immediate return bonus here.
+                hero.CombatController.ExitCombat();
                 game.RequestRetreat();
                 for (var i = 0; i < 120 && !game.IsInTown; i++) yield return null;
                 Assert.IsTrue(game.IsInTown);
                 Assert.AreEqual(180, inventory.GetAmount(stone), 1e-6, "The existing return bonus is paid exactly once.");
                 Assert.IsTrue(oracle.SaveToSlot(oracle.CurrentSlot));
                 Assert.IsNull(oracle.saveData.ActiveRun, "An intentional town return must retire the adventure.");
+                DestroyRuntime();
+                yield return null;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator TownAndRejectedContinuationReleaseTheLoadingScreen()
+        {
+            foreach (var portrait in new[] { false, true })
+            foreach (var invalidMap in new[] { false, true })
+            {
+                PlayModeWindow.SetCustomRenderingResolution(portrait ? 540u : 960u, portrait ? 960u : 540u, "Town continuation fallback");
+                var data = Progress();
+                if (invalidMap) data.ActiveRun = new RunSaveData { Map = "Missing map", Distance = 100, HealthFraction = 1 };
+                CreateRuntime(data, "Farmlands");
+                var backdrop = CreateLoadingScreen();
+                yield return null;
+                yield return null;
+                Assert.AreEqual(invalidMap ? DisplayStyle.Flex : DisplayStyle.None, backdrop.resolvedStyle.display);
+                if (invalidMap) LogAssert.Expect(LogType.Warning, "The saved adventure could not be resumed. Player progression has been retained.");
+                Events.LoadData();
+                yield return null;
+                yield return null;
+                yield return null;
+                Assert.True(game.IsInTown);
+                Assert.IsNull(data.ActiveRun);
+                Assert.AreEqual(DisplayStyle.None, backdrop.resolvedStyle.display,
+                    "Town and rejected checkpoints must never leave the loading screen stuck.");
                 DestroyRuntime();
                 yield return null;
             }

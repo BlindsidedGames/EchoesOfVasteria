@@ -45,7 +45,8 @@ namespace TimelessEchoes.UI.Toolkit
             root.style.height = ToolkitResponsiveLayout.Size.y;
             var manager = GameManager.Instance;
             bool startup = StartupDiagnostics.Enabled && StartupDiagnostics.Active;
-            bool loading = startup || SceneManager.GetActiveScene().name == "Loading" || manager && manager.RunLoadingActive;
+            bool loading = startup || SceneManager.GetActiveScene().name == "Loading" ||
+                manager && (manager.RunRestorePending || manager.RunLoadingActive);
             root.style.display = loading ? DisplayStyle.Flex : DisplayStyle.None;
             fill.style.width = Length.Percent(startup ? StartupDiagnostics.Progress * 100 : manager ? manager.RunLoadingFraction * 100 : 0);
             if (diagnosticLabel == null) return;

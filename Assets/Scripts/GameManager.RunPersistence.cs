@@ -11,6 +11,12 @@ namespace TimelessEchoes
     {
         private RunSaveData loadingRun;
         private bool resumeScheduled;
+        private bool runRestoreChecked;
+
+        // Main can render before OnLoadData. Cover that gap without setting
+        // runLoadingActive, which would prevent BeginAdventure from restoring it.
+        public bool RunRestorePending => Oracle.oracle?.HasLoadedCurrentSlotData == true && !HardcoreFallen &&
+            (resumeScheduled || !runRestoreChecked && IsInTown && Oracle.oracle.saveData.ActiveRun != null);
 
         private void SaveActiveRun()
         {
@@ -47,6 +53,7 @@ namespace TimelessEchoes
 
         private void LoadActiveRun()
         {
+            runRestoreChecked = true;
             ApplyHardcoreState();
             if (HardcoreFallen) return;
             var saved = Oracle.oracle?.saveData?.ActiveRun;
