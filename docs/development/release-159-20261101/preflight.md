@@ -12,4 +12,6 @@ The experimental background-progress setting is compiled for desktop, Android an
 
 Final source review caught a prototype isolation leak: opting into background progress also suppressed achievement authentication and account services. Removed that coupling from the shared service policy while retaining explicit capture/diagnostic isolation. The new policy regression failed before the fix. All 37 estimator/service-policy EditMode tests and the same 15 release PlayMode tests passed on the correction. The initial candidate builds were stopped in their isolated checkouts before upload; mobile build numbers remain unused.
 
+Inspection of the first successful Windows package caught the Library definition's English fallback still carrying the shorter TestFlight notes. It now matches the approved 17-bullet English translation exactly, with historical content preserved. The existing platform-notes and muted-history PlayMode check passed again in both layouts. No gameplay code changed in this final notes-only correction; fresh player builds are required before upload.
+
 Raw test results, store preflight responses, source manifests, build support manifests, package verification and submission receipts are retained under the ignored Artifacts/Release15920261101 directory.
