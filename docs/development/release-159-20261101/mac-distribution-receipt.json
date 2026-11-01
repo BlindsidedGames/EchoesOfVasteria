@@ -67,7 +67,121 @@
     "infoPlistChanged": false,
     "infoPlistSHA256": "161ef1da887c2c3ec7e6398076db639930d756d243c1b9926bd1b1ae8d74e8d0",
     "nativeUUIDAndAllTextSectionsUnchanged": true,
-    "privateExactDeltaReceiptSHA256": "e0f4a0d9bf180bbc67031bfff0b41a5374832310e3163162531b45bd460ae589"
+    "privateExactDeltaReceiptSHA256": "e0f4a0d9bf180bbc67031bfff0b41a5374832310e3163162531b45bd460ae589",
+    "exactChangedFiles": [
+      {
+        "path": "Contents/_CodeSignature/CodeResources",
+        "beforeSHA256": "75e4b25c62319e21bf320915efa5abe7e74585121e991601f853a78d8ffc1ef7",
+        "afterSHA256": "2a6d5a329cf5631538970aab81942e66598cb18029a4632cc86168399d7bc02e",
+        "beforeBytes": 88621,
+        "afterBytes": 88729,
+        "classification": "Code signature resource seal"
+      },
+      {
+        "path": "Contents/MacOS/Echoes of Vasteria",
+        "beforeSHA256": "ba383079fd58f74e5b16c4d029fc07d5d4a2322483edd30193090e4f0b818813",
+        "afterSHA256": "94d1e124de84c84d5ca676a0b42430dcdc5b1832aa2485b585b23194cecbbcbe",
+        "beforeBytes": 66938,
+        "afterBytes": 101136,
+        "classification": "MachO signature/linkedit only; UUID and everyTEXT section identical"
+      },
+      {
+        "path": "Contents/PlugIns/webpdecoder.bundle",
+        "beforeSHA256": "250c7d819b301e23ee0e9a4cb00890886a5f3d54cbd8b1e35559c4652e6cad71",
+        "afterSHA256": "0476353e1ccd542c74ecfd28b0a8f498d51a5ac07733158263480298de870113",
+        "beforeBytes": 756096,
+        "afterBytes": 805088,
+        "classification": "MachO signature/linkedit only; UUID and everyTEXT section identical"
+      },
+      {
+        "path": "Contents/PlugIns/lib_burst_generated.bundle",
+        "beforeSHA256": "4ab3cabdc6d6ec44f72ea3433666da5f5eb286a572c0cf4e31df55af6a3d10c8",
+        "afterSHA256": "59ab46fe3a4271e300e6e244a06c1d434c9599e0c8aefe03a94de40f6f7c959b",
+        "beforeBytes": 5026874,
+        "afterBytes": 5086896,
+        "classification": "MachO signature/linkedit only; UUID and everyTEXT section identical"
+      },
+      {
+        "path": "Contents/PlugIns/webpdemux.bundle",
+        "beforeSHA256": "a10e16868be9e5d2c406365f0d4b6a1fdf1df696e9f27a17491bc1ae9024f4c9",
+        "afterSHA256": "27e0df79705b92beaefed56a6392be84b67fc5ef7987cedd73e43ab21d2925ad",
+        "beforeBytes": 102704,
+        "afterBytes": 153232,
+        "classification": "MachO signature/linkedit only; UUID and everyTEXT section identical"
+      },
+      {
+        "path": "Contents/PlugIns/sharpyuv.bundle",
+        "beforeSHA256": "afb58683cebc8dd1bed4a04d3441a5df1ea8f5cee6501afcb2ce5d39b772ba3a",
+        "afterSHA256": "aaf4cd5be30e80c2c8ceab41e6b77ed1b7b935002ed21f43382dd123e9f4d9db",
+        "beforeBytes": 118992,
+        "afterBytes": 169520,
+        "classification": "MachO signature/linkedit only; UUID and everyTEXT section identical"
+      },
+      {
+        "path": "Contents/PlugIns/webpmux.bundle",
+        "beforeSHA256": "5aeab50a35f92761981092b7f601a5041d90b7fe32b1bb1b62eadc56e6d0a4f8",
+        "afterSHA256": "5bd49718835ca7f9fac6bc38a059ff835ce8c19ed0144fcdf70979a6f3818339",
+        "beforeBytes": 157184,
+        "afterBytes": 207552,
+        "classification": "MachO signature/linkedit only; UUID and everyTEXT section identical"
+      },
+      {
+        "path": "Contents/PlugIns/webp.bundle",
+        "beforeSHA256": "e638bf957b6b8c2fa02b8b58637523bbb14b8e1672edd8e9cd65386476c0f75b",
+        "afterSHA256": "782e56f633331b3e9285b6c1a2c990f4b98d10d8f434976348aa708e7717a0a0",
+        "beforeBytes": 1379784,
+        "afterBytes": 1410752,
+        "classification": "MachO signature/linkedit only; UUID and everyTEXT section identical"
+      },
+      {
+        "path": "Contents/Frameworks/libMonoPosixHelper.dylib",
+        "beforeSHA256": "f2f2e1ad3cd0fe1a9c82dbb82559c02e55cae10e0c6a27b5440316f82f365b3f",
+        "afterSHA256": "6b806dd16394bd6fe5e6a1afbca2ef66075d217a085adf6f757213edba59a18b",
+        "beforeBytes": 567696,
+        "afterBytes": 565488,
+        "classification": "MachO signature/linkedit only; UUID and everyTEXT section identical"
+      },
+      {
+        "path": "Contents/Frameworks/libmono-native.dylib",
+        "beforeSHA256": "2dcea6bce592b2bf708810a76b9557977a6a8b9b941fa8149e9af81a0e61d808",
+        "afterSHA256": "17f77b15228acac8c345d4ed5ab9dd140d9ef2ce4f09698aab5b002380a0295e",
+        "beforeBytes": 1649792,
+        "afterBytes": 1644624,
+        "classification": "MachO signature/linkedit only; UUID and everyTEXT section identical"
+      },
+      {
+        "path": "Contents/Frameworks/UnityPlayer.dylib",
+        "beforeSHA256": "f43716f2bbd05ca6a3d185034c42cf4d7fd2384e3d0d21edc153151bf824795d",
+        "afterSHA256": "0c026017174835b8e381990c0aa49f6ff0f0100d8319e09867ea0c97f51144fd",
+        "beforeBytes": 65784592,
+        "afterBytes": 65607344,
+        "classification": "MachO signature/linkedit only; UUID and everyTEXT section identical"
+      },
+      {
+        "path": "Contents/Frameworks/libmonobdwgc-2.0.dylib",
+        "beforeSHA256": "abfc7baba2e1adbddefccc918bdae11e693f0b43f5d35b6f5a425682e94e6d77",
+        "afterSHA256": "f6f008eb67b5753729a95f737e4a30a91f8c317efed29fd951371fc3ad2d7153",
+        "beforeBytes": 7054944,
+        "afterBytes": 7034224,
+        "classification": "MachO signature/linkedit only; UUID and everyTEXT section identical"
+      },
+      {
+        "path": "Contents/PlugIns/steam_api.bundle/Contents/MacOS/libsteam_api.dylib",
+        "beforeSHA256": "2cef820956001d03982228c7b431a10be44014b4366bef2edcb83ff494b03a3c",
+        "afterSHA256": "961d9d926dcce79f7240d0adfae4dbf92027348de37ab049328810d4b716aac0",
+        "beforeBytes": 393437,
+        "afterBytes": 426768,
+        "classification": "MachO signature/linkedit only; UUID and everyTEXT section identical"
+      },
+      {
+        "path": "Contents/PlugIns/unitypurchasing.bundle/Contents/MacOS/unitypurchasing",
+        "beforeSHA256": "0a9f14fd227c83c1c7adad2f104f2e1e8a8d69ff9de7517b16af032f61229e93",
+        "afterSHA256": "b3b16010e531009e2c762ef5b23fc0f5a60b7846271e8bb68e136b17b07a7509",
+        "beforeBytes": 2450544,
+        "afterBytes": 2443536,
+        "classification": "MachO signature/linkedit only; UUID and everyTEXT section identical"
+      }
+    ]
   },
   "validation": {
     "finalSourceEditModePolicyPassed": 1,
@@ -84,10 +198,12 @@
     "all8Approved17BulletNotesReloadVerified": true,
     "watch2ScreenshotsSharedAcrossAll8LocalesReloadVerified": true,
     "watchDescriptionAppendsSavedWithOriginalParagraphsPreserved": true,
-    "descriptionFinalReloadVerificationPendingCoordinator": true,
+    "descriptionFinalReloadVerificationPendingCoordinator": false,
     "reviewNotesSaved": true,
     "automaticReleaseSelected": true,
-    "phasedRelease": false
+    "phasedRelease": false,
+    "all8DescriptionsApprovedWatchBulletReloadVerifiedByCoordinator": true,
+    "finalNotesDescriptionsAutomaticReleaseAndReviewInfoVerifiedByCoordinator": true
   },
   "preservation": {
     "primaryUserEditsUnchanged": true,
