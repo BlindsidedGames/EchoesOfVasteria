@@ -1,0 +1,206 @@
+{
+  "source": "3931ab1e68d8e371e7c98f0b3e854708558e59aa",
+  "gameplayAndUnityDataSource": "b19047f8b52011c1ff6e6eea2fdbdb09c5d6aab8",
+  "version": "1.5.9",
+  "iosBuild": "192",
+  "androidBuildUnchanged": 187,
+  "purpose": "One fresh ingestion attempt after the 191 backend Game Center classification contradicted signed and processed metadata; not a claimed entitlement fix.",
+  "sourceChange": {
+    "file": "ProjectSettings/ProjectSettings.asset",
+    "onlyChange": "buildNumber.iPhone: 191 to 192",
+    "postprocessorsChanged": false,
+    "gameplayOrNativeSourcesChanged": false
+  },
+  "availabilityCheck": {
+    "coordinatorFreshLiveTestFlightInventoryHighest191": true,
+    "no192IncludingProcessingVerifiedBeforeUpload": true,
+    "independentMacAltoolProbeAuthBlocked": true
+  },
+  "upload": {
+    "source": "3931ab1e68d8e371e7c98f0b3e854708558e59aa",
+    "version": "1.5.9",
+    "build": "192",
+    "buildUploadID": "835b9179-0bfa-43be-8a79-e7b5981f4057",
+    "state": {
+      "errors": [],
+      "warnings": [],
+      "infos": [],
+      "state": "PROCESSING"
+    },
+    "uploadedDate": "2026-10-31T23:34:05-07:00",
+    "internalOnly": false,
+    "xcodeUploadSucceeded": true,
+    "actualUploadPackageSHA256": "cf515c9399447efd9300a2722df78f9398df90b243e8a9d8167ffc4996c6a549",
+    "compiledAndSerializedContentMatchesPrepared": true,
+    "testerAvailabilityVerified": false,
+    "uploadedAtUTC": "2026-11-01T06:34:05+00:00",
+    "actualIPABytes": 251682298,
+    "preparedIPABytes": 251682319,
+    "preparedIPASHA256": "11c5ff7b66172a08bde8147206764b78cd20b5297342baae27e3a2646d76d465"
+  },
+  "parity": {
+    "all30UnityDataFilesIdenticalTo191": true,
+    "allNativeMachineCodeUnchanged": true,
+    "allHostWidgetWatchUUIDAndTextSectionsUnchanged": true,
+    "UnityFrameworkUUID191": "C533433C-3915-3144-A9B1-796741051DA2",
+    "UnityFrameworkUUID192": "2E9BFDC0-6938-3C64-A876-B95A562B8AED",
+    "UnityFrameworkOnlyTEXTDelta": "Six diagnostic strings name the owned export folder 191 to 192; no instructions changed.",
+    "UnityRuntimeStubUUID192": "A20561A0-8CC6-3E87-9389-FCF8995D4C91",
+    "UnityRuntimeStubHasMachineCodeTextSection": false,
+    "allSignedXMLDERAndProfileEntitlementsIdenticalTo191": true,
+    "all4PrimaryNativeDsymsMatch": true,
+    "baselineFinalSourcePolicyAndLifecycleChecksReused": "One EditMode policy check and nine PlayMode checks passed; gameplay code, native source and Unity data are unchanged."
+  },
+  "actualSignedEntitlements": {
+    "com.blindsidedgames.echoesofvasteria.liveactivity": {
+      "version": "1.5.9",
+      "build": "192",
+      "signedSlices": [
+        {
+          "cpu": 16777228,
+          "subtype": 0,
+          "XML": {
+            "application-identifier": "AVX7SUF8Y6.com.blindsidedgames.echoesofvasteria.liveactivity",
+            "beta-reports-active": true,
+            "com.apple.developer.team-identifier": "AVX7SUF8Y6",
+            "get-task-allow": false
+          },
+          "DER": {
+            "application-identifier": "AVX7SUF8Y6.com.blindsidedgames.echoesofvasteria.liveactivity",
+            "beta-reports-active": true,
+            "com.apple.developer.team-identifier": "AVX7SUF8Y6",
+            "get-task-allow": false
+          },
+          "XMLAndDERMatch": true,
+          "DERPayloadSHA256": "73ab63cc11325645557c607e33fb9548a2386f81f36fbaa4fd3928efc94c1cbe"
+        }
+      ],
+      "profileEntitlements": {
+        "beta-reports-active": true,
+        "application-identifier": "AVX7SUF8Y6.com.blindsidedgames.echoesofvasteria.liveactivity",
+        "keychain-access-groups": [
+          "AVX7SUF8Y6.*",
+          "com.apple.token"
+        ],
+        "get-task-allow": false,
+        "com.apple.developer.team-identifier": "AVX7SUF8Y6"
+      }
+    },
+    "com.blindsidedgames.echoesofvasteria.watchkitapp": {
+      "version": "1.5.9",
+      "build": "192",
+      "signedSlices": [
+        {
+          "cpu": 33554444,
+          "subtype": 1,
+          "XML": {
+            "application-identifier": "AVX7SUF8Y6.com.blindsidedgames.echoesofvasteria.watchkitapp",
+            "beta-reports-active": true,
+            "com.apple.developer.team-identifier": "AVX7SUF8Y6",
+            "get-task-allow": false
+          },
+          "DER": {
+            "application-identifier": "AVX7SUF8Y6.com.blindsidedgames.echoesofvasteria.watchkitapp",
+            "beta-reports-active": true,
+            "com.apple.developer.team-identifier": "AVX7SUF8Y6",
+            "get-task-allow": false
+          },
+          "XMLAndDERMatch": true,
+          "DERPayloadSHA256": "b776934bf25284753bc4e204f2913ddbaced8b86a4432e4f2d81d28a9dc59053"
+        },
+        {
+          "cpu": 16777228,
+          "subtype": 0,
+          "XML": {
+            "application-identifier": "AVX7SUF8Y6.com.blindsidedgames.echoesofvasteria.watchkitapp",
+            "beta-reports-active": true,
+            "com.apple.developer.team-identifier": "AVX7SUF8Y6",
+            "get-task-allow": false
+          },
+          "DER": {
+            "application-identifier": "AVX7SUF8Y6.com.blindsidedgames.echoesofvasteria.watchkitapp",
+            "beta-reports-active": true,
+            "com.apple.developer.team-identifier": "AVX7SUF8Y6",
+            "get-task-allow": false
+          },
+          "XMLAndDERMatch": true,
+          "DERPayloadSHA256": "b776934bf25284753bc4e204f2913ddbaced8b86a4432e4f2d81d28a9dc59053"
+        }
+      ],
+      "profileEntitlements": {
+        "beta-reports-active": true,
+        "application-identifier": "AVX7SUF8Y6.com.blindsidedgames.echoesofvasteria.watchkitapp",
+        "keychain-access-groups": [
+          "AVX7SUF8Y6.*",
+          "com.apple.token"
+        ],
+        "get-task-allow": false,
+        "com.apple.developer.team-identifier": "AVX7SUF8Y6"
+      }
+    },
+    "com.blindsidedgames.echoesofvasteria": {
+      "version": "1.5.9",
+      "build": "192",
+      "signedSlices": [
+        {
+          "cpu": 16777228,
+          "subtype": 0,
+          "XML": {
+            "application-identifier": "AVX7SUF8Y6.com.blindsidedgames.echoesofvasteria",
+            "beta-reports-active": true,
+            "com.apple.developer.game-center": true,
+            "com.apple.developer.team-identifier": "AVX7SUF8Y6",
+            "get-task-allow": false
+          },
+          "DER": {
+            "application-identifier": "AVX7SUF8Y6.com.blindsidedgames.echoesofvasteria",
+            "beta-reports-active": true,
+            "com.apple.developer.game-center": true,
+            "com.apple.developer.team-identifier": "AVX7SUF8Y6",
+            "get-task-allow": false
+          },
+          "XMLAndDERMatch": true,
+          "DERPayloadSHA256": "f975c89a5223739f13a159216cd8371ff487f6385842cd1ff96a82463a7b6c7c"
+        }
+      ],
+      "profileEntitlements": {
+        "beta-reports-active": true,
+        "com.apple.developer.game-center": true,
+        "application-identifier": "AVX7SUF8Y6.com.blindsidedgames.echoesofvasteria",
+        "keychain-access-groups": [
+          "AVX7SUF8Y6.*",
+          "com.apple.token"
+        ],
+        "get-task-allow": false,
+        "com.apple.developer.team-identifier": "AVX7SUF8Y6"
+      }
+    }
+  },
+  "allActualXMLAndDERMatch": true,
+  "hostActualGameCenterTrueInXMLDERAndProfile": true,
+  "otherTargetsOmitGameCenter": true,
+  "publicAppStoreEligible": true,
+  "knownCLIWarning": {
+    "framework": "UnityRuntime.framework",
+    "missingDsymUUID": "A20561A0-8CC6-3E87-9389-FCF8995D4C91",
+    "validationAndUploadPassed": true
+  },
+  "browserHandoff": {
+    "owner": "Main Echoes Thread",
+    "versionID": "7ac791ae-f7bc-4b4a-8707-1d821b24deb9",
+    "url": "https://appstoreconnect.apple.com/apps/6749265146/distribution/ios/version/inflight",
+    "select192AfterProcessingThenRetrySubmissionOnce": true,
+    "submissionVerified": false,
+    "gameCenterEnabledMustRemain": true,
+    "marketingVersionAndAllApprovedNotesUnchanged": true,
+    "prior191BackendError": "STATE_ERROR.BUILD_INDICATES_GAME_CENTER_DISABLED"
+  },
+  "preservation": {
+    "atUTC": "2026-11-01T06:35:06.829325+00:00",
+    "allPlayerFilesUnchangedDuring192": true,
+    "playerFileCount": 228,
+    "primaryTwoExistingEditsUnchanged": true,
+    "primaryDiffSHA256": "7d45e5d114159fefba437f0b4df201af1939c4ffc59e6c29725a468ee1c68ec2",
+    "isolatedCheckoutCleanBeforeReceipt": true
+  }
+}

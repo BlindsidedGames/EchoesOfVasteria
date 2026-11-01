@@ -1,0 +1,21 @@
+# iOS 1.5.9 (192): fresh ingestion receipt
+
+Apple accepted the App Store eligible upload at **2026-11-01T06:34:05+00:00**, upload/build ID `835b9179-0bfa-43be-8a79-e7b5981f4057`. The last recorded state is **Processing**, with structured errors, warnings and infos empty. Final App Store build selection, Game Center classification and review submission belong to the Windows coordinator and are not established by this upload receipt.
+
+The source is `3931ab1e68d8e371e7c98f0b3e854708558e59aa`, verified against `origin/main` immediately before upload. Its only production change is `ProjectSettings/ProjectSettings.asset`: iOS build 191 to 192. Marketing version remains 1.5.9; Android remains 187; approved notes are unchanged. No postprocessor or gameplay fix was added.
+
+Build 191's transmitted phone binary, embedded profile and Apple's processed build metadata all contained Game Center. The submission backend nevertheless returned `409 STATE_ERROR.ENTITY_STATE_INVALID`, associated error `STATE_ERROR.BUILD_INDICATES_GAME_CENTER_DISABLED`. Reattaching 191 and refreshing version-level Game Center with the final state enabled did not resolve it. Build 192 is one fresh-ingestion attempt, not a claim that 191 lacked the entitlement. Fresh authenticated TestFlight inventory confirmed 192 absent, including processing uploads. The independent Mac altool status probe required separate credentials; no credential or permission change was made.
+
+The verified 191 native export was cloned. Exactly three input plist values changed: host, Live Activity and Watch `CFBundleVersion` became 192. Generated C++, native sources, project settings and entitlements remained byte-identical. A fresh archive/export was produced and signed with the existing automatic signing configuration.
+
+The actual transmitted IPA is **251,682,298 bytes**, SHA-256 `cf515c9399447efd9300a2722df78f9398df90b243e8a9d8167ffc4996c6a549`. The prepared IPA is 251,682,319 bytes, SHA-256 `11c5ff7b66172a08bde8147206764b78cd20b5297342baae27e3a2646d76d465`. Both packages and the signed archive are retained.
+
+All 30 serialized Unity data files match 191 exactly. All embedded native machine-code sections match 191, including VBCoreLibrary. Host, Live Activity and both Watch slices retain their UUIDs and text sections. UnityFramework's UUID changed because six diagnostic strings name the new export folder; replacing only that folder segment makes the entire changed string section identical. No instructions changed. The UnityRuntime framework stub has no machine-code text section and a new UUID. All four primary native binaries have matching dSYMs. Apple retained the known missing UnityRuntime stub dSYM warning for UUID `A20561A0-8CC6-3E87-9389-FCF8995D4C91`; validation and upload passed.
+
+The actual upload package's XML and DER entitlement blobs were independently decoded and agree for every slice. Every signed entitlement and profile entitlement matches 191. The phone has `com.apple.developer.game-center:true`; Watch and Live Activity omit it; all distribution bundles have `get-task-allow:false`. Other signing settings and entitlement groups were preserved. Exact identifiers and verification details are in the [machine-readable receipt](ios192-distribution-receipt.json).
+
+No Unity gameplay rebuild or new gameplay test run was performed: this native-only retry preserves the previously checked runtime/data. The baseline one policy EditMode check and nine lifecycle/UI PlayMode checks still describe the unchanged gameplay source. This does not establish hardware or native gameplay QA.
+
+All 228 player files were unchanged during 192 preparation/delivery. The primary checkout's two existing edits are unchanged. Only completed owned compiler/packaging intermediates were reclaimed; archives, prepared/actual IPAs, source and signing evidence remain protected.
+
+The coordinator will select 192 after processing and retry the public submission once with Game Center enabled. If the same contradiction returns, the retained 191/192 XML/DER/profile and backend error evidence supports an Apple App Store Connect investigation. No Game Center capability was added to unrelated targets and no backend metadata was fabricated.
