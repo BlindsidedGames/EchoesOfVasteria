@@ -12,11 +12,17 @@ namespace TimelessEchoes.Farming
             public QuestSpeaker speaker;
             public string key;
             [TextArea] public string text;
+            public string orchardKey;
+            [TextArea] public string orchardText;
+            public string Text(bool orchardBuilt) => orchardBuilt && !string.IsNullOrEmpty(orchardText) ? orchardText : text;
+            public string Key(bool orchardBuilt) => orchardBuilt && !string.IsNullOrEmpty(orchardText) ? orchardKey : key;
         }
         [Serializable] public sealed class Conversation
         {
             public string id;
             public string npcId = "Farmers1";
+            [Tooltip("Optional quest whose existing acceptance record makes this opening play once.")]
+            public QuestData openingQuest;
             public Line[] lines = Array.Empty<Line>();
         }
         public GameObject meetingPrefab;

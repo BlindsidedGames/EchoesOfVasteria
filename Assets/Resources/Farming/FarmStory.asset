@@ -15,57 +15,278 @@ MonoBehaviour:
   meetingPrefab: {fileID: 4473393103591709735, guid: 8ed7138ae18d6d148b1f94dd314d3c1b, type: 3}
   conversations:
   - id: town-introduction
+    npcId: Farmers1
+    openingQuest: {fileID: 0}
     lines:
     - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
       key: farm.story.town.01
       text: "Here\u2014a Radish seed pack for our first bed. Barkley's marking out the boundary."
+      orchardKey:
+      orchardText:
   - id: Farm.Garden.Build01.v1
+    npcId: Farmers1
+    openingQuest: {fileID: 0}
     lines:
     - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
       key: farm.story.patch.01
       text: Ready for those radishes.
+      orchardKey:
+      orchardText:
     - speaker: {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
       key: farm.story.patch.02
       text: Give them some water from the river. They'll grow twice as fast.
+      orchardKey:
+      orchardText:
   - id: Farm.Project.MillBody.v1
+    npcId: Farmers1
+    openingQuest: {fileID: 0}
     lines:
     - speaker: {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
       key: farm.story.mill.01
       text: Barkley's finished the tower. For the sails, I'm thinking feathers.
+      orchardKey:
+      orchardText:
     - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
       key: farm.story.mill.02
       text: This had better work.
+      orchardKey:
+      orchardText:
   - id: Farm.Project.MillSails.v1
+    npcId: Farmers1
+    openingQuest: {fileID: 0}
     lines:
     - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
       key: farm.story.sails.01
       text: It works. I owe Tillman an apology.
+      orchardKey:
+      orchardText:
     - speaker: {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
       key: farm.story.sails.02
       text: Keep the seed packs and saplings coming. We can handle the planting and harvest now.
+      orchardKey:
+      orchardText:
   - id: Farm.Project.Well.v1
+    npcId: Farmers1
+    openingQuest: {fileID: 0}
     lines:
     - speaker: {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
       key: farm.story.well.01
       text: No more hauling water from the river. My back thanks you.
+      orchardKey:
+      orchardText:
     - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
       key: farm.story.well.02
       text: We'll keep the plots watered from here.
+      orchardKey:
+      orchardText:
   - id: Unlock Corn
     npcId: Eva
+    openingQuest: {fileID: 0}
     lines:
     - speaker: {fileID: 11400000, guid: 89f7219990dd7e84fbc642b21eff6585, type: 2}
       key: cauldron.story.pantry
       text: "That\u2019s the pantry stocked. I\u2019ll get the cauldron ready."
+      orchardKey:
+      orchardText:
   - id: Unlock Cauldron
     npcId: Eva
+    openingQuest: {fileID: 0}
     lines:
     - speaker: {fileID: 11400000, guid: 89f7219990dd7e84fbc642b21eff6585, type: 2}
       key: cauldron.story.ready
       text: "MoonMaster33 suggested keeping the quest supplies out of the pot. Good idea. I\u2019ve put a charm on it."
+      orchardKey:
+      orchardText:
   - id: Farm.Seeds.Turnip.v1
     npcId: Farmers1
+    openingQuest: {fileID: 0}
     lines:
     - speaker: {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
       key: farm.story.turnip.01
       text: "That\u2019s the cellar sorted. Here\u2014save these for your fields."
+      orchardKey:
+      orchardText:
+  - id: Farm.Saplings.Apple.v1.opening
+    npcId: Farmers1
+    openingQuest: {fileID: 11400000, guid: 5c7cc88dd5825a4458b60944b9e2e7a3, type: 2}
+    lines:
+    - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
+      key: saplings.apple.offer
+      text: We need fruit for the stores as well as vegetables. Bring me some apples.
+      orchardKey:
+      orchardText:
+  - id: Farm.Saplings.Apple.v1
+    npcId: Farmers1
+    openingQuest: {fileID: 0}
+    lines:
+    - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
+      key: saplings.apple.done.1
+      text: "Good. Keep an eye out for apple saplings when you\u2019re gathering. Those are worth bringing home."
+      orchardKey:
+      orchardText:
+    - speaker: {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
+      key: saplings.apple.done.2
+      text: "Put them aside for now. We\u2019ll need them when the orchard\u2019s ready."
+      orchardKey: saplings.apple.done.2.orchard
+      orchardText: Save them for the orchard. You can choose what to plant there.
+  - id: Farm.Saplings.Pear.v1.opening
+    npcId: Farmers1
+    openingQuest: {fileID: 11400000, guid: 9e275d3bb463e114a90f8885e399cc90, type: 2}
+    lines:
+    - speaker: {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
+      key: saplings.pear.offer
+      text: "Bring me some pears this time. I\u2019ll put them with the apples."
+      orchardKey:
+      orchardText:
+  - id: Farm.Saplings.Pear.v1
+    npcId: Farmers1
+    openingQuest: {fileID: 0}
+    lines:
+    - speaker: {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
+      key: saplings.pear.done.1
+      text: "That\u2019ll keep us going. Pear saplings are worth bringing back too."
+      orchardKey:
+      orchardText:
+    - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
+      key: saplings.pear.done.2
+      text: Leave the fruit in the stores before you start planning more trees.
+      orchardKey:
+      orchardText:
+  - id: Farm.Saplings.Peach.v1.opening
+    npcId: Farmers1
+    openingQuest: {fileID: 11400000, guid: a82da11dce671b746bebd570bd25d52a, type: 2}
+    lines:
+    - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
+      key: saplings.peach.offer
+      text: "Tillman\u2019s had his pears. Bring me some peaches\u2014this one\u2019s my choice."
+      orchardKey:
+      orchardText:
+  - id: Farm.Saplings.Peach.v1
+    npcId: Farmers1
+    openingQuest: {fileID: 0}
+    lines:
+    - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
+      key: saplings.peach.done.1
+      text: These are for eating fresh.
+      orchardKey:
+      orchardText:
+    - speaker: {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
+      key: saplings.peach.done.2
+      text: "I wasn\u2019t going to argue."
+      orchardKey:
+      orchardText:
+    - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
+      key: saplings.peach.done.3
+      text: And save any peach saplings you find for planting.
+      orchardKey:
+      orchardText:
+  - id: Farm.Saplings.Cherry.v1.opening
+    npcId: Farmers1
+    openingQuest: {fileID: 11400000, guid: 4d867b0a6572c6e4a89a189a0c9fd78f, type: 2}
+    lines:
+    - speaker: {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
+      key: saplings.cherry.offer
+      text: "Flora got her peaches. I\u2019m asking for cherries."
+      orchardKey:
+      orchardText:
+  - id: Farm.Saplings.Cherry.v1
+    npcId: Farmers1
+    openingQuest: {fileID: 0}
+    lines:
+    - speaker: {fileID: 11400000, guid: 1c80a52c0f7a0054594ac41ec423cfdb, type: 2}
+      key: saplings.cherry.done.1
+      text: Some of those are going into the stores.
+      orchardKey:
+      orchardText:
+    - speaker: {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
+      key: saplings.cherry.done.2
+      text: "I know. I\u2019ve put those aside already."
+      orchardKey:
+      orchardText:
+    - speaker: {fileID: 11400000, guid: 1b080b8b9a20be14ca1d446e5f4a58c7, type: 2}
+      key: saplings.cherry.done.3
+      text: "Keep an eye out for cherry saplings too. I\u2019d like to grow these here."
+      orchardKey:
+      orchardText:
+  - id: Farm.Saplings.Oak.v1.opening
+    npcId: Barkley1
+    openingQuest: {fileID: 11400000, guid: 51f4f7885a66fc64a8234683a10f9781, type: 2}
+    lines:
+    - speaker: {fileID: 11400000, guid: 8ede8a076e8894444bcb5d55b4606285, type: 2}
+      key: saplings.oak.offer
+      text: "Oak\u2019s useful for posts and repairs. Bring me a supply, and I\u2019ll show you which young trees to bring back."
+      orchardKey:
+      orchardText:
+  - id: Farm.Saplings.Oak.v1
+    npcId: Barkley1
+    openingQuest: {fileID: 0}
+    lines:
+    - speaker: {fileID: 11400000, guid: 8ede8a076e8894444bcb5d55b4606285, type: 2}
+      key: saplings.oak.done.1
+      text: "Good timber. Keep any oak saplings you find while you\u2019re cutting."
+      orchardKey:
+      orchardText:
+    - speaker: {fileID: 11400000, guid: 8ede8a076e8894444bcb5d55b4606285, type: 2}
+      key: saplings.oak.done.2
+      text: When you lay out that orchard, remember it can grow timber as well as fruit.
+      orchardKey: saplings.oak.done.2.orchard
+      orchardText: "The orchard can grow timber as well as fruit. Worth remembering when you\u2019re choosing what to plant."
+  - id: Farm.Saplings.Birch.v1.opening
+    npcId: Barkley1
+    openingQuest: {fileID: 11400000, guid: 488535cd6225c034f9c19f514b5e3cc3, type: 2}
+    lines:
+    - speaker: {fileID: 11400000, guid: 8ede8a076e8894444bcb5d55b4606285, type: 2}
+      key: saplings.birch.offer
+      text: "Bring me birch this time. I don\u2019t need oak for every little job."
+      orchardKey:
+      orchardText:
+  - id: Farm.Saplings.Birch.v1
+    npcId: Barkley1
+    openingQuest: {fileID: 0}
+    lines:
+    - speaker: {fileID: 11400000, guid: 8ede8a076e8894444bcb5d55b4606285, type: 2}
+      key: saplings.birch.done.1
+      text: "That\u2019s the birch supplied. Bring back saplings when you find them\u2014you can grow these close to town as well."
+      orchardKey:
+      orchardText:
+  - id: Farm.Saplings.Spruce.v1.opening
+    npcId: Barkley1
+    openingQuest: {fileID: 11400000, guid: 9d2f57a68f024fd42b159983d2385cbb, type: 2}
+    lines:
+    - speaker: {fileID: 11400000, guid: 8ede8a076e8894444bcb5d55b4606285, type: 2}
+      key: saplings.spruce.offer
+      text: I want some spruce put aside. Better to have it here than go looking every time someone needs a beam.
+      orchardKey:
+      orchardText:
+  - id: Farm.Saplings.Spruce.v1
+    npcId: Barkley1
+    openingQuest: {fileID: 0}
+    lines:
+    - speaker: {fileID: 11400000, guid: 8ede8a076e8894444bcb5d55b4606285, type: 2}
+      key: saplings.spruce.done.1
+      text: Oak, birch and spruce. That gives us a useful timber reserve.
+      orchardKey:
+      orchardText:
+    - speaker: {fileID: 11400000, guid: 8ede8a076e8894444bcb5d55b4606285, type: 2}
+      key: saplings.spruce.done.2
+      text: "When you\u2019re ready to plant, you\u2019ve got all three to choose from."
+      orchardKey:
+      orchardText:
+  - id: Rock and Stone.opening
+    npcId: OldTimer1
+    openingQuest: {fileID: 11400000, guid: 8a18857e90fcac348ba107a6d4b45789, type: 2}
+    lines:
+    - speaker: {fileID: 11400000, guid: f8d638bbab1ae4a4292cbf1eb8f7f614, type: 2}
+      key: mines.timber.offer
+      text: The supports need replacing. Bring me some timber before you head down there.
+      orchardKey:
+      orchardText:
+  - id: Rock and Stone
+    npcId: OldTimer1
+    openingQuest: {fileID: 0}
+    lines:
+    - speaker: {fileID: 11400000, guid: f8d638bbab1ae4a4292cbf1eb8f7f614, type: 2}
+      key: mines.timber.done
+      text: "That\u2019ll do for the supports. Mind your head down there."
+      orchardKey:
+      orchardText:

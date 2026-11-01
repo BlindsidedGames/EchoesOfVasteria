@@ -144,8 +144,8 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var identity = npcId switch
             {
-                "Barkley1" => "Barkley", "Ivan1" => "Ivan", "Gill1" => "Gill",
-                "Farmers1" => "Farmers", "OldTimer1" => "OldTimer",
+                "Barkley1" or "Barkley" => "Barkley", "Ivan1" => "Ivan", "Gill1" => "Gill",
+                "Farmers1" => "Farmers", "OldTimer1" or "OldTimer" => "OldTimer",
                 "Witch1" or "EvaWateringCanIntroduction" => "Eva",
                 "Orin" or "OrinHubIntroduction" => "Orin", "Reaper1" => "Carl", "Flora" or "Tillman" => npcId, _ => null
             };

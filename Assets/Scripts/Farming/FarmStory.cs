@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace TimelessEchoes.Farming
 {
-    /// <summary>Completion conversations for town projects. Never grants project rewards.</summary>
+    /// <summary>Town quest conversations. QuestManager owns acceptance, payments and rewards.</summary>
     public sealed class FarmStory : MonoBehaviour
     {
         public static FarmStory Instance { get; private set; }
@@ -27,6 +27,7 @@ namespace TimelessEchoes.Farming
             !(id == "Unlock Corn" && Oracle.oracle?.saveData != null && FarmContent.Completed(Oracle.oracle.saveData, "Unlock Cauldron"));
         public void QueueCompletion(string id) { if (HasCompletion(id) && !pending.Contains(id)) pending.Enqueue(id); }
         private bool CanSpeak => Ready && GameManager.Instance && GameManager.Instance.IsInTown && !GameManager.Instance.RunLoadingActive &&
+            !GameManager.HardcoreFallen &&
             !Characters.CharacterCreation.Required && !WorldPresentation.IsBusy && !TownQuestReveal.IsPlaying &&
             !ToolkitMeetingScreen.HasVisibleMeeting && Blindsided.SaveData.StaticReferences.ActiveNpcMeetings.Count == 0 &&
             FindAnyObjectByType<ToolkitRunScreen>()?.HasOpenDetails != true &&
@@ -51,6 +52,19 @@ namespace TimelessEchoes.Farming
                     if (DialogueCompleted && id == "Farm.Garden.Build01.v1")
                         TownWindowManager.Instance?.OpenWindow(TownWindowManager.Window.Farm);
                 }
+                else
+                {
+                    var manager = QuestManager.Instance;
+                    var opening = definition.conversations.FirstOrDefault(c => c.openingQuest && manager &&
+                        manager.NeedsAcceptance(c.openingQuest) &&
+                        !c.openingQuest.requirements.Any(r => QuestResourceAccess.Blockers(r, data).Count > 0));
+                    // Acceptance has no grant for these conversations. The existing
+                    // quest owner persists it before presentation, so reload/skip
+                    // cannot repeat an opening or pay a hand-in accidentally.
+                    if (opening != null && definition.meetingPrefab && opening.lines.Length > 0 &&
+                        manager.TryTurnInQuest(opening.openingQuest.questId))
+                        yield return ShowCompletion(opening.id);
+                }
                 yield return null;
             }
         }
@@ -61,6 +75,7 @@ namespace TimelessEchoes.Farming
             var conversation = definition ? definition.Find(id) : null;
             if (conversation == null || !definition.meetingPrefab || !Ready) yield break;
             var capturedOwner = Oracle.oracle.saveData;
+            var orchardBuilt = capturedOwner.Farm?.OrchardCapacity > 0;
             var npcId = string.IsNullOrEmpty(conversation.npcId) ? "Farmers1" : conversation.npcId;
             var subject = WorldSpeakerAnchor.Find(npcId);
             ToolkitMeetingScreen screen = null;
@@ -69,8 +84,8 @@ namespace TimelessEchoes.Farming
             {
                 screen = Instantiate(definition.meetingPrefab).GetComponent<ToolkitMeetingScreen>();
                 if (reveal != null) screen.AdoptReveal(reveal);
-                screen.Init(conversation.lines[0].speaker?.portrait, conversation.lines.Select(l => l.text).ToArray(),
-                    () => DialogueCompleted = true, conversation.lines.Select(l => l.key).ToArray(), npcId: npcId, worldSubject: subject);
+                screen.Init(conversation.lines[0].speaker?.portrait, conversation.lines.Select(l => l.Text(orchardBuilt)).ToArray(),
+                    () => DialogueCompleted = true, conversation.lines.Select(l => l.Key(orchardBuilt)).ToArray(), npcId: npcId, worldSubject: subject);
                 screen.SetLineSpeakers(conversation.lines.Select(l => l.speaker).ToArray());
                 if (id == "Farm.Garden.Build01.v1") screen.SetFinalActionLabel("farm.display-name", "Fields");
                 screen.BeginDialogue();

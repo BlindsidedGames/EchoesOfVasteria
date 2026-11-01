@@ -1,48 +1,48 @@
-# Internal candidate, 2 November 2026
+# TestFlight 1.5.10 (194), 2 November 2026
 
-Gameplay candidate: `c57eac7d406ef4aa023c42c998911bf75dd6e26f` on `Matt/watch-design-lab`.
-Marketing version: 1.5.10. iOS build: 194, reserved after the fresh App Store Connect
-build and upload lists showed 193 as the highest upload on 2 November 2026.
-Android remains 187 and is not being deployed.
+Destination: the existing Internal group. Normal game content, LZ4HC, normal
+App Store Connect export (`internalOnly: false`). Android remains 187; no other
+platform or production release is requested. App Store Connect's current builds
+and pending uploads were checked again: 193 is the highest uploaded build.
+The earlier prepared 194 package was never uploaded and is superseded.
 
-Windows Unity 6000.6.0f1 checks passed:
+The user approved the dialogue/Mines proposal, shorter notes and TestFlight upload
+in the current instruction. All eight Library translations match the six short
+notes in `localized-notes.json`. English notes SHA-256:
+`9cd22857344073e48c2fd73d5dfd47c987533bee489e1fd0237e63364051f8f8`.
 
-- ResourceDropTests: 7/7.
-- Farm EditMode tests: 72/72.
-- QuestResourceAccessTests: 5/5.
-- TownPathProgressionTests: 12/12.
-- BackgroundRunEstimatorTests: 37/37.
-- HeroAndEchoCropCompletionsShareTheSameSeedRollAndSingleCredit: 1/1.
-- FieldsPointerSelectionPlantAndReloadStayCoherent: 1/1. Its existing late-game
-  setup now includes completed mill/well projects instead of assuming level alone
-  unlocks automation.
+## Dialogue and Mines checks
 
-The broader Fields PlayMode fixture previously returned 74 passed and 22 failed.
-It has not been rerun in full, and its remaining failures have not all been
-established as baseline failures. The focused Hero/Echo and pointer tests above
-were rerun successfully after their setup corrections. Some subsequent CLI test
-filters returned zero tests, which is not counted as a pass. Clean Mac continuation
-and lifecycle checks remain pending.
+- 36 localized strings checked against all eight native language tables.
+- Sixteen opening/completion conversations have their approved text, speakers,
+  anchors and keys. Apple and Oak use the correct orchard-state variants.
+- The existing quest acceptance record persists openings; no save field or
+  migration was added. Completion conversations do not award quest rewards.
+- Two real QuestManager/disk persistence cases passed: new saves accept without
+  spending, pay exactly 100 Logs at completion, and cannot pay again; previously
+  completed Mines unlocks remain available and uncharged.
+- The automatic Mines opening was observed in the private Main scene, accepted
+  without completing the quest, and showed the meeting.
+- Actual dialogue text and pointer actions passed 46 cases / 76 lines across
+  eight locales and both orientations. A final 12-case / 18-line check in English,
+  German and Japanese verified speaker names, both orchard states and the new
+  Old Timer camera anchor. Screenshots were visually inspected in both layouts.
+- Some CLI test calls returned zero discovered tests; those are not passes.
 
-Private native runtime verification exercised the actual production owners:
+## Earlier seed/drop validation retained
 
-- 1,000 background crop completions with the introduction locked paid no packs;
-  after unlocking, 1,000 completions paid 65. Forecast pack yield was approximately
-  0.07 per task.
-- Hero and Echo each completed 128 real crop tasks, awarding 11 and 12 packs.
-  Ticking completed tasks again did not award another pack.
-- QuestManager spent 6,000 Turnips, awarded one pack and approximately 20,000
-  Farming XP, enabled future Turnip pack drops, and rejected repeat hand-in.
-- All 24 crop/sapling mappings, eight new quests and eight localizations were
-  checked. Existing crop hand-in costs/XP, ordinary task drops and sapling chance
-  curves were preserved.
-- Actual Fields and Library UI were captured and visually inspected at
-  1920×1080 and 1080×1920. The locked-pack quest hint, selection and disabled
-  planting action worked. New Library notes match the six-bullet draft and retain
-  the previous release history.
+ResourceDropTests 7/7; Farm EditMode 72/72; QuestResourceAccessTests 5/5;
+TownPathProgressionTests 12/12; BackgroundRunEstimatorTests 37/37;
+Hero/Echo crop completion 1/1; Fields pointer selection/plant/reload 1/1.
+Actual foreground and background task awards, Turnip hand-in and locked-pack UI
+were also checked using private saves. Ordinary looting behaviour was unchanged.
 
-Evidence is retained locally in ignored `Artifacts/QuestGatedSeeds20261102` and
-`Artifacts/TestFlight1510Seeds20261102`. All runtime checks used disposable save
-state; private capture was ended afterwards. Native Mac export, signing,
-App Store Connect validation, upload and Internal tester availability are pending.
-Player note approval is also pending under AGENTS.md.
+The broader Fields PlayMode fixture previously returned 74 passed and 22 failed;
+its remaining failures have not all been established as baseline failures. It is
+not represented as a passing full suite.
+
+Local evidence: `Artifacts/QuestGatedSeeds20261102`,
+`Artifacts/TestFlight1510Seeds20261102`, and
+`Artifacts/TestFlight1510Dialogue20261102`. Player saves were preserved and private
+capture was ended. The final build receipt records the exact source SHA, package
+hashes, signing checks, upload receipt and store availability separately.

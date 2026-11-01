@@ -10,6 +10,53 @@ namespace Tests.PlayMode
 {
     public sealed partial class FieldsProductionPlayModeTests
     {
+        [TestCase(false)]
+        [TestCase(true)]
+        public void MinesTimberHandInPersistsAcceptanceAndPreservesExistingAccess(bool alreadyUnlocked)
+        {
+            var owner = new GameObject("Mines timber services");
+            try
+            {
+                var mine = Resources.LoadAll<QuestData>("Quests").Single(q => q.questId == "Rock and Stone");
+                oracle.saveData.CompletedNpcTasks.Add(mine.npcId);
+                foreach (var prerequisite in mine.requiredQuests)
+                    oracle.saveData.Quests[prerequisite.questId] = new Blindsided.SaveData.GameData.QuestRecord { Completed = true };
+                if (alreadyUnlocked)
+                    oracle.saveData.Quests[mine.questId] = new Blindsided.SaveData.GameData.QuestRecord { Completed = true };
+                var game = owner.AddComponent<TimelessEchoes.GameManager>(); game.enabled = false;
+                typeof(TimelessEchoes.GameManager).GetProperty("IsInTown").SetValue(game, true);
+                var inventory = owner.AddComponent<ResourceManager>();
+                var quests = owner.AddComponent<QuestManager>();
+                var logs = Resources.Load<Resource>("Resource Items/Log");
+                inventory.Add(logs, 100, trackStats: false, eligibleForTierRoll: false);
+                if (!alreadyUnlocked)
+                {
+                    Assert.True(quests.NeedsAcceptance(mine));
+                    Assert.True(quests.TryTurnInQuest(mine.questId));
+                    Assert.False(quests.NeedsAcceptance(mine));
+                    Assert.False(FarmContent.Completed(oracle.saveData, mine.questId), "The opening must not unlock the Mines.");
+                    Assert.AreEqual(100, inventory.GetAmount(logs), "The opening must not spend the hand-in.");
+                    Assert.True((bool)typeof(Blindsided.Oracle).GetMethod("SaveNowBlocking", Private)
+                        .Invoke(oracle, new object[] { oracle.CurrentSlot, false }));
+                    var accepted = Blindsided.SaveData.SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
+                    Assert.True(accepted.Succeeded, accepted.Diagnostic);
+                    Assert.True(accepted.Data.Quests[mine.questId].Accepted, "Reloading must not repeat the opening.");
+                    Assert.False(accepted.Data.Quests[mine.questId].Completed);
+                    Assert.True(quests.TryTurnInQuest(mine.questId));
+                }
+                Assert.True(FarmContent.Completed(oracle.saveData, mine.questId));
+                Assert.False(quests.NeedsAcceptance(mine));
+                Assert.False(quests.TryTurnInQuest(mine.questId), "Existing or newly earned access must not charge again.");
+                Assert.AreEqual(alreadyUnlocked ? 100 : 0, inventory.GetAmount(logs));
+                Assert.True((bool)typeof(Blindsided.Oracle).GetMethod("SaveNowBlocking", Private)
+                    .Invoke(oracle, new object[] { oracle.CurrentSlot, false }));
+                var completed = Blindsided.SaveData.SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
+                Assert.True(completed.Succeeded, completed.Diagnostic);
+                Assert.True(FarmContent.Completed(completed.Data, mine.questId));
+            }
+            finally { Object.DestroyImmediate(owner); }
+        }
+
         [Test]
         public void PantryStartsColdRonAtItsOwnBaselineAndLegacyProgressSurvivesTheNewPrerequisite()
         {
