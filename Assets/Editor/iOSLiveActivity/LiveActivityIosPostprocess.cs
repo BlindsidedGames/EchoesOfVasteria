@@ -155,6 +155,18 @@ namespace TimelessEchoes.Editor
             project.SetBuildProperty(watch, "INFOPLIST_FILE", infoPath);
             project.SetBuildProperty(watch, "PRODUCT_NAME", nameOfTarget);
             project.SetBuildProperty(watch, "PRODUCT_BUNDLE_IDENTIFIER", hostId + ".watchkitapp");
+            // App Store Game Center validation also checks the embedded Watch app.
+            // This single-target watchOS app owns its entitlement (there is no WatchKit extension).
+            var entitlementsPath = companionFolder + "/Watch.entitlements";
+            var entitlementsFile = Path.Combine(destination, "Companion/Watch.entitlements");
+            var entitlements = new PlistDocument();
+            if (File.Exists(entitlementsFile)) entitlements.ReadFromFile(entitlementsFile);
+            entitlements.root.SetBoolean("com.apple.developer.game-center", true);
+            entitlements.WriteToFile(entitlementsFile);
+            project.AddCapability(watch, PBXCapabilityType.GameCenter, entitlementsPath);
+            project.SetBuildProperty(watch, "CODE_SIGN_ENTITLEMENTS", entitlementsPath);
+            // Unity's capability helper links frameworks to UnityFramework; Watch needs its own link.
+            project.AddFrameworkToProject(watch, "GameKit.framework", false);
             project.SetBuildProperty(watch, "SWIFT_VERSION", "5.0");
             project.SetBuildProperty(watch, "CLANG_ENABLE_MODULES", "YES");
             project.SetBuildProperty(watch, "WATCHOS_DEPLOYMENT_TARGET", "11.0");
