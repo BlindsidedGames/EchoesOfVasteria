@@ -133,7 +133,13 @@
     "sha256": "9e27e9d0db0be5d43252d62ee060c39e47762e62b20609c0b0458643f316bc10",
     "retainedLocally": true,
     "nativeUUIDAndTextSectionsIncludingBothWatchSlicesMatchPrepared": true,
-    "allSerializedUnityDataHashesMatchPrepared": true
+    "allSerializedUnityDataHashesMatchPrepared": true,
+    "nativeBinariesCompared": [
+      "phone executable",
+      "Live Activity widget executable",
+      "Watch executable (arm64_32 and arm64)",
+      "UnityFramework"
+    ]
   },
   "nonblockingWarnings": [
     "UnityRuntime.framework vendor dSYM missing (UUID D551654C-FD0B-35F5-B8AE-E0C93C43E314), same warning category as187/188; Apple validation/upload accepted. UnityFramework matching dSYM is present."
@@ -148,7 +154,8 @@
     ],
     "newPlayerDirectoryFiles": [],
     "changedProgressionFiles": [],
-    "source": "4f1ead91ef50e1e8174c1a31144eba2409795b2e"
+    "source": "4f1ead91ef50e1e8174c1a31144eba2409795b2e",
+    "primaryHead": "aa17b243787c3e1988ae06c12e4cc9a568786776"
   },
   "scope": {
     "publicAppStoreSubmission": false,
