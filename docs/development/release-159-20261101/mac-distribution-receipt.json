@@ -1,0 +1,98 @@
+{
+  "source": "b19047f8b52011c1ff6e6eea2fdbdb09c5d6aab8",
+  "version": "1.5.9",
+  "recordedAtUTC": "2026-11-01T05:40:17.148634+00:00",
+  "steam": {
+    "source": "b19047f8b52011c1ff6e6eea2fdbdb09c5d6aab8",
+    "version": "1.5.9",
+    "appID": 2940000,
+    "buildID": "26356626",
+    "depots": {
+      "2940001": "3314075571749984887",
+      "2940002": "5742832878672576254",
+      "2940003": "8265499075316969021"
+    },
+    "all3PlatformPackagesVerified": true,
+    "all8LocalizedTablesAndCorrectedFallbackVerified": true,
+    "windowsOriginalManifestReusedExactly": true,
+    "macAdHocSignatureDeepStrictVerified": true,
+    "nativeUUIDAndTextIdentityUnchangedBySigning": true,
+    "replacesHeldBuildID": "26356608",
+    "setLivePerformed": false,
+    "steamDefaultAndAnnouncementOwner": "root Windows Codex browser",
+    "atUTC": "2026-11-01T05:33:23.466305+00:00"
+  },
+  "ios": {
+    "source": "b19047f8b52011c1ff6e6eea2fdbdb09c5d6aab8",
+    "version": "1.5.9",
+    "build": "191",
+    "buildUploadID": "00b2edae-9670-4aae-9abd-057aad68f5c1",
+    "state": {
+      "errors": [],
+      "warnings": [],
+      "infos": [],
+      "state": "PROCESSING"
+    },
+    "uploadedDate": "2026-10-31T22:39:41-07:00",
+    "internalOnly": false,
+    "xcodeUploadSucceeded": true,
+    "actualUploadPackageSHA256": "3dffcc197b4542fb234ab90b5c5500cd645f8fa38308ac97cc18b84160ba92d5",
+    "compiledAndSerializedContentMatchesPrepared": true,
+    "testerAvailabilityVerified": false,
+    "uploadedAtUTC": "2026-11-01T05:39:41+00:00",
+    "actualIPABytes": 251682357,
+    "preparedIPABytes": 251682359,
+    "preparedIPASHA256": "1c91e6380f44c75197407c44088534c46d451c90f0a44ed7652634e1eb3880cf",
+    "appStoreEligible": true,
+    "publicSubmissionVerified": false,
+    "buildSelectabilityVerified": false,
+    "inflightURL": "https://appstoreconnect.apple.com/apps/6749265146/distribution/ios/version/inflight",
+    "finalBrowserOwner": "Main Echoes Thread",
+    "knownNonblockingCLIWarning": {
+      "framework": "UnityRuntime.framework",
+      "uuid": "603B8E5D-94BB-3C1A-98DC-175E340472CD",
+      "missingVendorDsym": true,
+      "appleValidationPassed": true,
+      "gameUnityFrameworkAndHostAndLiveActivityAndWatchDsymsMatchAllNativeSlices": true,
+      "scope": "Known vendorframework symbol warning; separate from the verified game UnityFramework dSYM."
+    }
+  },
+  "macSignatureRepair": {
+    "replacesHeldBuildID": "26356608",
+    "finalBuildID": "26356626",
+    "finalMacManifest": "5742832878672576254",
+    "codesignDeepStrictReturncode": 0,
+    "changedSignatureFiles": 14,
+    "unchangedProductFiles": 294,
+    "infoPlistChanged": false,
+    "infoPlistSHA256": "161ef1da887c2c3ec7e6398076db639930d756d243c1b9926bd1b1ae8d74e8d0",
+    "nativeUUIDAndAllTextSectionsUnchanged": true,
+    "privateExactDeltaReceiptSHA256": "e0f4a0d9bf180bbc67031bfff0b41a5374832310e3163162531b45bd460ae589"
+  },
+  "validation": {
+    "finalSourceEditModePolicyPassed": 1,
+    "finalSourcePlayModePassed": 9,
+    "failed": 0,
+    "all8BuiltLocalizedTablesMatchApprovedSource": true,
+    "corrected17FallbackPresentAndOld11Absent": true,
+    "desktopCompiled15CommonNotesAndPublicServicePoliciesVerified": true,
+    "all4IOSNativeDsymsMatch": true,
+    "freshUnityDataMatchesSignedArchive": true,
+    "nativeDesktopGameplayAndHardwareQA": false
+  },
+  "storeMetadata": {
+    "all8Approved17BulletNotesReloadVerified": true,
+    "watch2ScreenshotsSharedAcrossAll8LocalesReloadVerified": true,
+    "watchDescriptionAppendsSavedWithOriginalParagraphsPreserved": true,
+    "descriptionFinalReloadVerificationPendingCoordinator": true,
+    "reviewNotesSaved": true,
+    "automaticReleaseSelected": true,
+    "phasedRelease": false
+  },
+  "preservation": {
+    "primaryUserEditsUnchanged": true,
+    "playerProgressionHashesUnchanged": true,
+    "onlyGeneratedTestResultsAndEditorAnalyticsChanged": true,
+    "archivesAndPreparedActualIPAsRetained": true
+  }
+}
