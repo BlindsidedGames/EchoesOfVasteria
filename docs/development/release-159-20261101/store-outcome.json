@@ -1,0 +1,48 @@
+{
+  "version": "1.5.9",
+  "gameplaySource": "b19047f8b52011c1ff6e6eea2fdbdb09c5d6aab8",
+  "verifiedAtUTC": "2026-11-01T06:43:53.746115+00:00",
+  "steam": {
+    "status": "live",
+    "branch": "default",
+    "build": "26356626",
+    "betaBuild": "0",
+    "depots": {
+      "2940001": "3314075571749984887",
+      "2940002": "5742832878672576254",
+      "2940003": "8265499075316969021"
+    },
+    "announcement": "https://store.steampowered.com/news/app/2940000/view/712290761518876828",
+    "announcementStatus": "Publicly visible; Library moderation pending",
+    "notesLocales": 8,
+    "notesCommonBullets": 15,
+    "proof": [
+      "steam-default-26356626-live.png",
+      "steam-public-notes.png",
+      "steam-announcement-published.png"
+    ]
+  },
+  "android": {
+    "status": "published production",
+    "build": 187,
+    "rolloutPercent": 100,
+    "unpublishedChanges": false,
+    "nativeSymbolsAttached": true,
+    "notesLocales": 8,
+    "sha256": "4f5f641a34aa55f7738166701b8b3feebb16b092331197cf28547b3ed224b193",
+    "proof": "google-production-187-dashboard.png"
+  },
+  "ios": {
+    "build": 192,
+    "status": "Validated/Ready to Submit; selected and saved; review validation failed; not submitted",
+    "uploadId": "835b9179-0bfa-43be-8a79-e7b5981f4057",
+    "signedHostGameCenter": true,
+    "appleProcessedHostGameCenter": true,
+    "versionGameCenterEnabled": true,
+    "backendError": "STATE_ERROR.BUILD_INDICATES_GAME_CENTER_DISABLED",
+    "nextAction": "Apple support report prepared; awaiting authorization to send",
+    "errorProof": "apple-192-review-validation-error.json",
+    "metadataProof": "apple-192-game-center-metadata.txt",
+    "allEightApprovedNotesReadbackMatch": true
+  }
+}
