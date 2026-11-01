@@ -1,6 +1,6 @@
 # Internal iPhone and Watch TestFlight build 189
 
-Apple accepted **1.5.9 (189)** from source `4f1ead91ef50e1e8174c1a31144eba2409795b2e` at **2026-11-01 00:06:12 UTC**. Upload ID: `c69dcf40-aace-4bde-992a-82954c0aa08a`. The structured response reports **Processing**, with no errors/warnings in that response. Internal tester availability and approved English (Australia) notes remain the coordinator's separate App Store Connect check; this receipt does not establish installation or physical gameplay acceptance.
+Apple accepted **1.5.9 (189)** from source `4f1ead91ef50e1e8174c1a31144eba2409795b2e` at **2026-11-01 00:06:12 UTC**. Upload ID: `c69dcf40-aace-4bde-992a-82954c0aa08a`. The initial structured response reported **Processing**, with no errors/warnings in that response. At **00:13 UTC**, App Store Connect showed **Testing** for the existing **Internal** group with **three testers**. The exact approved English (Australia) notes were saved, and the UI confirmed **Saved**. This verifies availability, not installation or physical gameplay acceptance.
 
 The user approved [these exact testing notes](testflight-189-notes.txt) and the internal-only upload before delivery. Marketing version stays 1.5.9 and Android stays 186. Public Library/store release notes remain unchanged.
 
@@ -20,4 +20,6 @@ Temporary source/configuration changes were cleaned after successful delivery. T
 
 Xcode reported the existing nonblocking vendor UnityRuntime.framework dSYM warning (new UUID `D551654C-FD0B-35F5-B8AE-E0C93C43E314`); the game's matching UnityFramework dSYM is present. Apple accepted validation and upload.
 
-This delivery is internal TestFlight only for existing app 6749265146. No public App Store submission, external tester changes, main merge, Android or Steam distribution occurred. Tester-group/Testing evidence belongs to the coordinator and must be reported separately from this accepted upload.
+This delivery is internal TestFlight only for existing app 6749265146. No public App Store submission, external tester changes, main merge, Android or Steam distribution occurred. The coordinator separately verified tester availability and saved notes after processing completed.
+
+[Testing status](testflight-189-testing.jpg) and [saved notes](testflight-189-notes-saved.jpg) record the final App Store Connect state.

@@ -13,7 +13,7 @@
     "infos": [],
     "state": "PROCESSING"
   },
-  "testerAvailabilityVerified": false,
+  "testerAvailabilityVerified": true,
   "availabilityOwner": "Main Echoes Thread",
   "approval": {
     "exactNotesApprovedByUser": true,
@@ -166,5 +166,24 @@
     "physicalDeviceInstallationOrGameplayAcceptance": false,
     "publicLibraryAndStoreNotesChanged": false
   },
-  "privateArtifacts": "Archives, device export, actual IPA, local dependency/config snapshot, complete hashes and signing/distribution logs retained locally outside Git."
+  "privateArtifacts": "Archives, device export, actual IPA, local dependency/config snapshot, complete hashes and signing/distribution logs retained locally outside Git.",
+  "availability": {
+    "state": "Testing",
+    "confirmed": true,
+    "internalGroup": "Internal",
+    "testers": 3,
+    "buildId": "c69dcf40-aace-4bde-992a-82954c0aa08a",
+    "observedAtUTC": "2026-11-01T00:13:08Z",
+    "evidence": [
+      "testflight-189-testing.jpg",
+      "testflight-189-notes-saved.jpg"
+    ]
+  },
+  "testingNotes": {
+    "approvedByUser": true,
+    "whatToTest": "• Elapsed time now stops at the one-hour background limit.\n• Live Activity carries the final estimates for when the limit is reached.\n• Watch Refresh updates the phone activity while the game is backgrounded.\n• Fixed expired estimates and clipped text in the smaller Watch dial.\n",
+    "savedInAppStoreConnect": true,
+    "locale": "English (Australia)",
+    "saveConfirmation": "Saved"
+  }
 }
