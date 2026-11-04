@@ -2979,7 +2979,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003118
-    m_Localized: "Datei {0} ist vor\xFCbergehend nicht verf\xFCgbar oder konnte nicht in das laufende Spiel \xFCbernommen werden. Automatisches Speichern ist deaktiviert; vorhandene Sicherungen bleiben erhalten. Schlie\xDFe gegebenenfalls Synchronisierungs- oder Sicherungsprogramme, die auf die Dateien zugreifen, und versuche es erneut.\n\n{1}"
+    m_Localized: "Datei {0} konnte nicht geladen werden. Deine vorhandenen Speicherdateien bleiben erhalten."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003117
@@ -6140,6 +6140,34 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 169970417860743168
     m_Localized: "Das reicht f\xFCr die St\xFCtzen. Pass da unten auf deinen Kopf auf."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000000
+    m_Localized: "In der Stadt laden"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000001
+    m_Localized: "Beim Laden in der Stadt endet das aktuelle Abenteuer. Der gespeicherte Fortschritt bleibt erhalten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000002
+    m_Localized: "Diagnosedaten senden"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000003
+    m_Localized: "Diagnosedaten werden gesendet…"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000004
+    m_Localized: "Diagnosedaten gesendet."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000005
+    m_Localized: "Diagnosedaten ausstehend."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000006
+    m_Localized: "ID kopieren · {0}"
     m_Metadata:
       m_Items: []
   references:

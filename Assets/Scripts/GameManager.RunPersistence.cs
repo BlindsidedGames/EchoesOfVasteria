@@ -1,4 +1,7 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Blindsided;
 using Blindsided.SaveData;
 using TimelessEchoes.Buffs;
@@ -12,6 +15,7 @@ namespace TimelessEchoes
         private RunSaveData loadingRun;
         private bool resumeScheduled;
         private bool runRestoreChecked;
+        private bool backgroundSettlementCommitted;
 
         // Main can render before OnLoadData. Cover that gap without setting
         // runLoadingActive, which would prevent BeginAdventure from restoring it.
@@ -75,18 +79,101 @@ namespace TimelessEchoes
                 ApplyHardcoreState();
                 yield break;
             }
-            if (saved.IsValid)
-                foreach (var entry in generationButtons)
-                    if (entry?.Config && entry.Config.name == saved.Map)
+            RestoreSavedRun(saved, resumedInSameProcess: false);
+        }
+
+        private void RestoreSavedRun(RunSaveData saved, bool resumedInSameProcess)
+        {
+            var oracle = Oracle.oracle;
+            if (oracle?.HasLoadedCurrentSlotData != true) return;
+            backgroundSettlementCommitted = false;
+            try
+            {
+                if (!oracle.TryBeginRunRestore(saved, resumedInSameProcess)) return;
+                var entry = generationButtons.FirstOrDefault(e => e?.Config && e.Config.name == saved.Map);
+                if (!saved.IsValid || entry == null)
+                {
+                    oracle.ReportRunRestoreFailure("run-checkpoint", null);
+                    return;
+                }
+
+                StaticReferences.ActiveNpcMeetings.Clear();
+                if (!TrySettleBackground(saved, entry))
+                {
+                    oracle.ReportRunRestoreFailure("offline-settlement", null);
+                    return;
+                }
+                var checkpoint = oracle.saveData.ActiveRun;
+                if (backgroundSettlementCommitted) oracle.TrackRunRestoreCheckpoint(checkpoint);
+                if (!BeginAdventure(entry.Config, checkpoint))
+                    oracle.ReportRunRestoreFailure("run-start", null, backgroundSettlementCommitted);
+            }
+            catch (Exception ex)
+            {
+                oracle.ReportRunRestoreFailure("run-start", ex, backgroundSettlementCommitted);
+            }
+        }
+
+        // Unity executes nested enumerators outside their parent's MoveNext. Drive the
+        // restore stack here so that failures in cleanup, map waits and hero setup agree.
+        private IEnumerator RunRestoreRoutine(IEnumerator root)
+        {
+            var stack = new Stack<IEnumerator>();
+            stack.Push(root);
+            var activeSeconds = 0f;
+            try
+            {
+                while (stack.Count > 0)
+                {
+                    var current = stack.Peek();
+                    bool moved;
+                    object next = null;
+                    Exception failure = null;
+                    try
                     {
-                        StaticReferences.ActiveNpcMeetings.Clear();
-                        if (!TrySettleBackground(saved, entry)) yield break;
-                        saved = Oracle.oracle.saveData.ActiveRun;
-                        if (BeginAdventure(entry.Config, saved)) yield break;
-                        break;
+                        moved = current.MoveNext();
+                        if (moved) next = current.Current;
                     }
-            Debug.LogWarning("The saved adventure could not be resumed. Player progression has been retained.");
-            Oracle.oracle.saveData.ActiveRun = null;
+                    catch (Exception ex)
+                    {
+                        moved = false;
+                        failure = ex;
+                    }
+                    if (failure != null)
+                    {
+                        if (loadingRun != null)
+                            Oracle.oracle?.ReportRunRestoreFailure("map-rebuild", failure, backgroundSettlementCommitted);
+                        else Debug.LogException(failure);
+                        yield break;
+                    }
+                    if (!moved)
+                    {
+                        (stack.Pop() as IDisposable)?.Dispose();
+                        continue;
+                    }
+                    if (next is IEnumerator nested)
+                    {
+                        stack.Push(nested);
+                        continue;
+                    }
+
+                    yield return next;
+                    // Count active frames, so suspension itself cannot time out a restore.
+                    if (loadingRun != null && Application.isFocused)
+                        activeSeconds += Mathf.Min(Time.unscaledDeltaTime, 0.25f);
+                    if (loadingRun != null && activeSeconds >= 60f)
+                    {
+                        Oracle.oracle?.ReportRunRestoreFailure("map-timeout", null, backgroundSettlementCommitted);
+                        yield break;
+                    }
+                }
+                if (loadingRun != null)
+                    Oracle.oracle?.ReportRunRestoreFailure("map-incomplete", null, backgroundSettlementCommitted);
+            }
+            finally
+            {
+                while (stack.Count > 0) (stack.Pop() as IDisposable)?.Dispose();
+            }
         }
     }
 }

@@ -2935,7 +2935,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003118
-    m_Localized: "Le fichier {0} est temporairement indisponible ou n\u2019a pas pu \xEAtre appliqu\xE9 au jeu en cours. La sauvegarde automatique est d\xE9sactiv\xE9e et les instantan\xE9s existants restent pr\xE9serv\xE9s. Ferme tout outil de synchronisation ou de sauvegarde susceptible d\u2019utiliser ces fichiers, puis r\xE9essaie.\n\n{1}"
+    m_Localized: "Impossible de charger le fichier {0}. Vos fichiers de sauvegarde ont été conservés."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003117
@@ -6090,6 +6090,34 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 169970417860743168
     m_Localized: "\xC7a ira pour les \xE9tais. Fais attention \xE0 ta t\xEAte en bas."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000000
+    m_Localized: "Charger en ville"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000001
+    m_Localized: "Le chargement en ville met fin à l’aventure en cours et conserve la progression sauvegardée."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000002
+    m_Localized: "Envoyer le diagnostic"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000003
+    m_Localized: "Envoi du diagnostic…"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000004
+    m_Localized: "Diagnostic envoyé."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000005
+    m_Localized: "Diagnostic en attente."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000006
+    m_Localized: "Copier l’identifiant · {0}"
     m_Metadata:
       m_Items: []
   references:

@@ -45,7 +45,8 @@ namespace Blindsided
                 }
                 catch (Exception ex)
                 {
-                    RequireRuntimeReloadRecovery("A food conversion failed during publication", ex, checkpointCommitted: false);
+                    RequireRuntimeReloadRecovery("A food conversion failed during publication", ex,
+                        checkpointCommitted: false, phase: "cauldron-apply");
                     error = "Conversion publication failed; reload is required: " + ex.Message; return false;
                 }
             }

@@ -66,7 +66,8 @@ namespace Blindsided
             }
             catch (Exception ex)
             {
-                if (publishing) RequireRuntimeReloadRecovery("A farm action failed during publication", ex, checkpointCommitted: false);
+                if (publishing) RequireRuntimeReloadRecovery("A farm action failed during publication", ex,
+                    checkpointCommitted: false, phase: "farm-apply");
                 error = ex.Message;
                 return false;
             }

@@ -2931,7 +2931,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003118
-    m_Localized: "\u30D5\u30A1\u30A4\u30EB{0}\u306F\u4E00\u6642\u7684\u306B\u5229\u7528\u3067\u304D\u306A\u3044\u304B\u3001\u5B9F\u884C\u4E2D\u306E\u30B2\u30FC\u30E0\u306B\u9069\u7528\u3067\u304D\u307E\u305B\u3093\u3067\u3057\u305F\u3002\u81EA\u52D5\u4FDD\u5B58\u306F\u7121\u52B9\u306B\u306A\u3063\u3066\u304A\u308A\u3001\u65E2\u5B58\u306E\u30B9\u30CA\u30C3\u30D7\u30B7\u30E7\u30C3\u30C8\u306F\u3059\u3079\u3066\u4FDD\u6301\u3055\u308C\u3066\u3044\u307E\u3059\u3002\u30D5\u30A1\u30A4\u30EB\u3092\u4F7F\u7528\u3057\u3066\u3044\u308B\u53EF\u80FD\u6027\u306E\u3042\u308B\u540C\u671F\u30FB\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\u30C4\u30FC\u30EB\u3092\u9589\u3058\u3066\u304B\u3089\u3001\u518D\u8A66\u884C\u3057\u3066\u304F\u3060\u3055\u3044\u3002\n\n{1}"
+    m_Localized: "ファイル {0} を読み込めませんでした。既存のセーブファイルは保持されています。"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003117
@@ -6084,6 +6084,34 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 169970417860743168
     m_Localized: "\u3053\u308C\u3067\u652F\u67F1\u306F\u306A\u3093\u3068\u304B\u306A\u308B\u3002\u4E0B\u3067\u306F\u982D\u3092\u3076\u3064\u3051\u308B\u306A\u3088\u3002"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000000
+    m_Localized: "町から再開"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000001
+    m_Localized: "町から再開すると現在の冒険は終了します。保存済みの進行状況は保持されます。"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000002
+    m_Localized: "診断データを送信"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000003
+    m_Localized: "診断データを送信中…"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000004
+    m_Localized: "診断データを送信しました。"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000005
+    m_Localized: "診断データは未送信です。"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000006
+    m_Localized: "IDをコピー · {0}"
     m_Metadata:
       m_Items: []
   references:

@@ -32,7 +32,8 @@ namespace TimelessEchoes
             }
             if (!BackgroundRunPrototype.Enabled || IsInTown || backgroundSuspended || runLoadingActive) return;
             SaveActiveRun();
-            RefreshBackgroundForecast();
+            try { RefreshBackgroundForecast(); }
+            catch (Exception ex) { Debug.LogWarning($"Could not prepare the background display ({ex.GetType().Name})."); }
             // Saves must retain the departure time until this checkpoint is settled
             // and the world is rebuilt, just as they do during run generation.
             loadingRun = Oracle.oracle?.saveData?.ActiveRun;
@@ -68,15 +69,9 @@ namespace TimelessEchoes
         {
             runLoadingActive = true;
             yield return null;
-            var entry = generationButtons.FirstOrDefault(e => e?.Config && e.Config.name == saved.Map);
-            if (entry != null && TrySettleBackground(saved, entry))
-            {
-                Time.timeScale = backgroundTimeScale;
-                runLoadingActive = false;
-                BeginAdventure(entry.Config, Oracle.oracle.saveData.ActiveRun);
-            }
-            else if (Oracle.oracle?.HasLoadedCurrentSlotData == true)
-            { runLoadingActive = false; Time.timeScale = backgroundTimeScale; }
+            Time.timeScale = backgroundTimeScale;
+            runLoadingActive = false;
+            RestoreSavedRun(saved, resumedInSameProcess: true);
         }
 
         private BackgroundRunEstimator.Input BackgroundInput(RunSaveData run, MapGenerationButton entry, double seconds)
@@ -130,10 +125,21 @@ namespace TimelessEchoes
             if (!BackgroundRunPrototype.Enabled || run.CheckpointUtcTicks <= 0 || backgroundSettling) return true;
             var seconds = (DateTime.UtcNow.Ticks - run.CheckpointUtcTicks) / (double)TimeSpan.TicksPerSecond;
             if (seconds < 2) return true;
-            var input = BackgroundInput(run, entry, seconds);
-            var forecast = BackgroundRunEstimator.Forecast(input);
-            var content = new BackgroundRunContent(entry.Config, entry.ScalingMode == MapScalingMode.KillBased,
-                entry.KillsPerLevel, KillLevelIncreasePerTier, run, forecast.EchoTaskShare, forecast.EchoKillShare);
+            BackgroundRunEstimator.Input input;
+            BackgroundRunEstimator.Result forecast;
+            BackgroundRunContent content;
+            try
+            {
+                input = BackgroundInput(run, entry, seconds);
+                forecast = BackgroundRunEstimator.Forecast(input);
+                content = new BackgroundRunContent(entry.Config, entry.ScalingMode == MapScalingMode.KillBased,
+                    entry.KillsPerLevel, KillLevelIncreasePerTier, run, forecast.EchoTaskShare, forecast.EchoKillShare);
+            }
+            catch (Exception ex)
+            {
+                Oracle.oracle?.ReportOfflineEstimateFailure(ex);
+                return true; // The departure checkpoint and its rewards were untouched.
+            }
             backgroundSettling = true;
             loadingRun = run;
             var initialResources = statTracker.TotalResourcesGathered;
@@ -196,14 +202,25 @@ namespace TimelessEchoes
                     Oracle.oracle.saveData.ActiveRun = run;
                 });
                 if (!committed) return false;
+                backgroundSettlementCommitted = true;
                 var report = new { map = run.Map, awaySeconds = seconds, forecast.SampleCount, forecast.Seconds,
                     forecast.Distance, forecast.Reaps, forecast.Deaths, forecast.Tasks, forecast.Kills,
                     forecast.StopReason, resources = statTracker.TotalResourcesGathered - initialResources,
                     checkpointUtcTicks = run.CheckpointUtcTicks, prototype = true };
-                try { File.WriteAllText(Path.Combine(Platform.StartupDiagnostics.EditorScreenshotRoot ?? Application.persistentDataPath, "background-last-settlement.json"), JsonConvert.SerializeObject(report, Formatting.Indented)); }
-                catch (IOException ex) { Debug.LogWarning("Could not write background prototype diagnostics: " + ex.Message); }
-                Debug.Log("[Background prototype] " + JsonConvert.SerializeObject(report));
-                BackgroundRunPrototype.End(); activityVisible = false;
+                try
+                {
+                    var json = JsonConvert.SerializeObject(report, Formatting.Indented);
+                    File.WriteAllText(Path.Combine(Platform.StartupDiagnostics.EditorScreenshotRoot ?? Application.persistentDataPath,
+                        "background-last-settlement.json"), json);
+                    Debug.Log("[Background prototype] " + json);
+                }
+                catch (Exception ex) { Debug.LogWarning($"Could not write background settlement diagnostics ({ex.GetType().Name})."); }
+                try
+                {
+                    BackgroundRunPrototype.End();
+                    activityVisible = false;
+                }
+                catch (Exception ex) { Debug.LogWarning($"Background settlement succeeded but its presentation could not be updated ({ex.GetType().Name})."); }
                 return true;
             }
             finally { backgroundSettling = false; }

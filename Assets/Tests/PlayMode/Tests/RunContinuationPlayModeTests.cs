@@ -22,6 +22,7 @@ using TimelessEchoes.Skills;
 using TimelessEchoes.Upgrades;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using UnityEngine.UIElements;
 using TimelessEchoes.UI.Toolkit;
@@ -457,11 +458,22 @@ namespace Tests.PlayMode
                 Assert.That(backdrop.worldBound.width, Is.EqualTo(viewport.width).Within(.1f));
                 Assert.That(backdrop.worldBound.height, Is.EqualTo(viewport.height).Within(.1f));
                 Events.LoadData();
-                Events.SaveData(force: true); // Pausing again before generation must retain the checkpoint.
-                Assert.NotNull(saved.ActiveRun);
-                yield return null;
-                yield return null;
-                Assert.IsFalse(game.IsInTown && !game.RunLoadingActive, "Loading a saved adventure must not leave the game idle in town.");
+                var checkpoint = saved.ActiveRun;
+                var captureAttempts = 0;
+                void CountCapture() => captureAttempts++;
+                Events.OnSaveData += CountCapture;
+                try
+                {
+                    oracle.RequestCheckpointSave();
+                    yield return null;
+                    yield return null;
+                    Assert.IsFalse(game.IsInTown && !game.RunLoadingActive, "Loading a saved adventure must not leave the game idle in town.");
+                    Assert.True(game.RunLoadingActive);
+                    oracle.RequestCheckpointSave();
+                    Assert.Zero(captureAttempts, "A save request must not capture owners while the saved run is being rebuilt.");
+                    Assert.AreSame(checkpoint, saved.ActiveRun);
+                }
+                finally { Events.OnSaveData -= CountCapture; }
                 yield return WaitForRun();
                 yield return null;
                 yield return null;
@@ -498,30 +510,61 @@ namespace Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator TownAndRejectedContinuationReleaseTheLoadingScreen()
+        public IEnumerator TownReleasesLoadingAndInvalidContinuationOffersRecovery()
         {
             foreach (var portrait in new[] { false, true })
-            foreach (var invalidMap in new[] { false, true })
             {
                 PlayModeWindow.SetCustomRenderingResolution(portrait ? 540u : 960u, portrait ? 960u : 540u, "Town continuation fallback");
                 var data = Progress();
-                if (invalidMap) data.ActiveRun = new RunSaveData { Map = "Missing map", Distance = 100, HealthFraction = 1 };
                 CreateRuntime(data, "Farmlands");
                 var backdrop = CreateLoadingScreen();
                 yield return null;
                 yield return null;
-                Assert.AreEqual(invalidMap ? DisplayStyle.Flex : DisplayStyle.None, backdrop.resolvedStyle.display);
-                if (invalidMap) LogAssert.Expect(LogType.Warning, "The saved adventure could not be resumed. Player progression has been retained.");
                 Events.LoadData();
-                yield return null;
-                yield return null;
                 yield return null;
                 Assert.True(game.IsInTown);
                 Assert.IsNull(data.ActiveRun);
                 Assert.AreEqual(DisplayStyle.None, backdrop.resolvedStyle.display,
-                    "Town and rejected checkpoints must never leave the loading screen stuck.");
+                    "A save without an active run should reveal town.");
                 DestroyRuntime();
                 yield return null;
+            }
+
+            var previousScene = SceneManager.GetActiveScene();
+            var loadingScene = SceneManager.CreateScene("Loading");
+            SceneManager.SetActiveScene(loadingScene);
+            const string reportsKey = "SaveRecovery.Diagnostics.v1";
+            var previousReports = PlayerPrefs.GetString(reportsKey, null);
+            PlayerPrefs.DeleteKey(reportsKey);
+            var broken = Progress();
+            var checkpoint = broken.ActiveRun = new RunSaveData
+            {
+                Map = "Missing map", Distance = 100, HealthFraction = 1, CheckpointUtcTicks = DateTime.UtcNow.Ticks
+            };
+            CreateRuntime(broken, "Farmlands");
+            var markerKey = oracle.GetSlotPlayerPrefsKey(oracle.CurrentSlot, "RestoringRun");
+            var previousMarker = PlayerPrefs.GetString(markerKey, null);
+            Set(oracle, "recoveryViewPrefab",
+                AssetDatabase.LoadAssetAtPath<ToolkitDialogScreen>("Assets/UI/Toolkit/Recovery.prefab"));
+            try
+            {
+                LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex("The active adventure could not be restored"));
+                Events.LoadData();
+                for (var frame = 0; frame < 5; frame++) yield return null;
+                Assert.False(oracle.HasLoadedCurrentSlotData, "Saving must be blocked while recovery is required.");
+                Assert.AreSame(checkpoint, broken.ActiveRun);
+                var dialog = owner.GetComponentInChildren<UIDocument>().rootVisualElement;
+                Assert.AreEqual("Load in Town", dialog.Q<Button>("dialog-secondary").text);
+            }
+            finally
+            {
+                DestroyRuntime();
+                SceneManager.SetActiveScene(previousScene);
+                SceneManager.UnloadSceneAsync(loadingScene);
+                if (previousReports == null) PlayerPrefs.DeleteKey(reportsKey);
+                else PlayerPrefs.SetString(reportsKey, previousReports);
+                if (previousMarker == null) PlayerPrefs.DeleteKey(markerKey);
+                else PlayerPrefs.SetString(markerKey, previousMarker);
             }
         }
 

@@ -2931,7 +2931,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003118
-    m_Localized: "\u5B58\u6863{0}\u6682\u65F6\u4E0D\u53EF\u7528\uFF0C\u6216\u65E0\u6CD5\u5E94\u7528\u4E8E\u5F53\u524D\u6E38\u620F\u3002\u81EA\u52A8\u4FDD\u5B58\u5DF2\u505C\u7528\uFF0C\u73B0\u6709\u5B58\u6863\u526F\u672C\u5747\u5DF2\u4FDD\u7559\u3002\u8BF7\u5173\u95ED\u53EF\u80FD\u5360\u7528\u6587\u4EF6\u7684\u540C\u6B65\u6216\u5907\u4EFD\u5DE5\u5177\u540E\u91CD\u8BD5\u3002\n\n{1}"
+    m_Localized: "无法加载存档 {0}。现有存档文件已保留。"
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003117
@@ -6084,6 +6084,34 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 169970417860743168
     m_Localized: "\u8FD9\u4E9B\u591F\u6362\u652F\u6491\u6728\u4E86\u3002\u4E0B\u53BB\u65F6\u5C0F\u5FC3\u78B0\u5934\u3002"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000000
+    m_Localized: "在城镇加载"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000001
+    m_Localized: "在城镇加载会结束当前冒险，并保留已保存的进度。"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000002
+    m_Localized: "发送诊断数据"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000003
+    m_Localized: "正在发送诊断数据…"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000004
+    m_Localized: "诊断数据已发送。"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000005
+    m_Localized: "诊断数据待发送。"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000006
+    m_Localized: "复制 ID · {0}"
     m_Metadata:
       m_Items: []
   references:

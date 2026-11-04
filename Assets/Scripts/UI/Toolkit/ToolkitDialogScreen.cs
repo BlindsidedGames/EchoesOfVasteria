@@ -17,6 +17,7 @@ namespace TimelessEchoes.UI.Toolkit
         [SerializeField] private PanelTextSettings textSettings;
         [SerializeField] private Sprite frame, primarySprite;
         [SerializeField] private float maximumWidth = 480;
+        [SerializeField] private bool centerInPortrait;
         private PanelSettings panel;
         private VisualElement root;
         private Label titleLabel, bodyLabel;
@@ -43,6 +44,7 @@ namespace TimelessEchoes.UI.Toolkit
             bodyLabel.text = body;
             primary.text = primaryText;
             secondary.text = secondaryText;
+            secondary.style.display = onSecondary == null ? DisplayStyle.None : DisplayStyle.Flex;
             primaryAction = onPrimary;
             secondaryAction = onSecondary;
             foreach (var old in choiceButtons) old.RemoveFromHierarchy();
@@ -134,8 +136,11 @@ namespace TimelessEchoes.UI.Toolkit
 
         private void ApplyLayout()
         {
-            var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height),
-                Screen.safeArea, UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);
+            var size = new Vector2Int(Screen.width, Screen.height);
+            var area = centerInPortrait && ToolkitResponsiveLayout.Portrait(size)
+                ? ToolkitResponsiveLayout.FullSafeArea(size, Screen.safeArea)
+                : ToolkitBookScreen.CalculateSafeArea(size, Screen.safeArea,
+                    UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);
             root.style.left = area.center.x;
             root.style.top = area.center.y;
             root.style.width = Mathf.Max(1, Mathf.Min(maximumWidth, area.width - 12));

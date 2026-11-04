@@ -2947,7 +2947,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003118
-    m_Localized: "El archivo {0} no est\xE1 disponible o no se pudo cargar en el juego. El guardado autom\xE1tico est\xE1 desactivado y se conservan las copias existentes. Cierra las herramientas de sincronizaci\xF3n o respaldo que puedan estar usando los archivos y reintenta.\n\n{1}"
+    m_Localized: "No se pudo cargar el archivo {0}. Se conservaron tus archivos de guardado."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003117
@@ -6106,6 +6106,34 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 169970417860743168
     m_Localized: "Con esto alcanzar\xE1 para los soportes. Cuidado con la cabeza ah\xED abajo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000000
+    m_Localized: "Cargar en el pueblo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000001
+    m_Localized: "Al cargar en el pueblo, termina la aventura actual y se conserva el progreso guardado."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000002
+    m_Localized: "Enviar diagnóstico"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000003
+    m_Localized: "Enviando diagnóstico…"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000004
+    m_Localized: "Diagnóstico enviado."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000005
+    m_Localized: "Diagnóstico pendiente."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000006
+    m_Localized: "Copiar ID · {0}"
     m_Metadata:
       m_Items: []
   references:

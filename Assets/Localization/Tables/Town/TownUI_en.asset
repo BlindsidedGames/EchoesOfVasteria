@@ -3032,10 +3032,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003118
-    m_Localized: 'File {0} is temporarily unavailable or could not be applied to the running game. Autosave is disabled and existing snapshot evidence remains preserved. Retry after closing any sync or backup tool that may be using the files.
-
-
-      {1}'
+    m_Localized: "File {0} couldn't be loaded. Your existing save files were kept."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003117
@@ -6225,6 +6222,34 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 169970417860743168
     m_Localized: "That\u2019ll do for the supports. Mind your head down there."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000000
+    m_Localized: "Load in Town"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000001
+    m_Localized: "Loading in town ends the current adventure and keeps saved progress."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000002
+    m_Localized: "Send Diagnostics"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000003
+    m_Localized: "Sending diagnostics…"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000004
+    m_Localized: "Diagnostics sent."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000005
+    m_Localized: "Diagnostics pending."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000006
+    m_Localized: "Copy ID · {0}"
     m_Metadata:
       m_Items: []
   references:

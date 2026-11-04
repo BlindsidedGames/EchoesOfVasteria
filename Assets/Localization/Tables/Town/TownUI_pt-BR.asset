@@ -2967,7 +2967,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003118
-    m_Localized: "O arquivo {0} est\xE1 indispon\xEDvel ou n\xE3o p\xF4de ser carregado no jogo. O salvamento autom\xE1tico est\xE1 desativado, e as c\xF3pias existentes foram preservadas. Feche as ferramentas de sincroniza\xE7\xE3o ou backup que possam estar usando os arquivos e tente novamente.\n\n{1}"
+    m_Localized: "Não foi possível carregar o arquivo {0}. Seus arquivos de jogo salvo foram mantidos."
     m_Metadata:
       m_Items: []
   - m_Id: 87000000000003117
@@ -6128,6 +6128,34 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 169970417860743168
     m_Localized: "Isso basta para os apoios. Cuidado com a cabe\xE7a l\xE1 embaixo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000000
+    m_Localized: "Carregar na cidade"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000001
+    m_Localized: "Carregar na cidade encerra a aventura atual e mantém o progresso salvo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000002
+    m_Localized: "Enviar diagnóstico"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000003
+    m_Localized: "Enviando diagnóstico…"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000004
+    m_Localized: "Diagnóstico enviado."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000005
+    m_Localized: "Diagnóstico pendente."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 170111000000000006
+    m_Localized: "Copiar ID · {0}"
     m_Metadata:
       m_Items: []
   references:
