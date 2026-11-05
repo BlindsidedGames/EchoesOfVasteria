@@ -125,6 +125,8 @@ namespace TimelessEchoes.UI.Toolkit
         public static float WindowTop => IsPortrait ? (TownView ? 12 : 52) : 44;
         public static float MenuTop => WindowTop + (IsPortrait && !TownView ? 28 : 0);
         public static float WindowBottom => IsPortrait ? 44 : 12;
+        internal const float PortraitRunRowGap = 8;
+        internal const float PortraitProgressRowHeight = 32;
 
         public static Rect WorldArea
         {

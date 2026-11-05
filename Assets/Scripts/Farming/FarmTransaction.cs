@@ -55,6 +55,10 @@ namespace TimelessEchoes.Farming
                 candidate.Quests["Farm.PrepareBeds"] = new GameData.QuestRecord { Completed = true, CompletedTimestamp = DateTime.UtcNow.Ticks };
             foreach (var id in proposal.CompletedQuests)
                 candidate.Quests[id] = new GameData.QuestRecord { Completed = true, CompletedTimestamp = DateTime.UtcNow.Ticks };
+            // The first completion is the actual hand-in. A construction may also
+            // satisfy an earlier prerequisite without presenting its dialogue.
+            if (proposal.CompletedQuests.Count > 0)
+                FarmStory.QueueCompletion(candidate, proposal.CompletedQuests[0]);
             // Existing Oracle publication patches every touched resource in one inventory batch.
             // Zero deltas publish migration transfers without applying them or their stats again.
             foreach (var name in migrated)

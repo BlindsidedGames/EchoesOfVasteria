@@ -189,6 +189,7 @@ namespace TimelessEchoes.UI.Toolkit
             journalRecent.Clear();
             var key = journalMap < 0 ? null : definition.maps[journalMap].config.name;
             var runs = tracker.RecentRuns.Where(r => key == null || r.MapType == key).ToList();
+            var hasEstimated = runs.Any(run => run.Estimated);
             Text(journalRecent, ToolkitLocalization.Text("history.recent-count", "{0} recent runs Â· up to 10 per map", runs.Count), 6).AddToClassList("journal-note");
             if (runs.Count == 0)
             {
@@ -198,18 +199,38 @@ namespace TimelessEchoes.UI.Toolkit
             {
                 var button = ToolkitGameplay.B(journalRecent, "", () => ShowJournalRun(run));
                 button.AddToClassList("journal-run"); button.userData = run;
-                var heading = journalMap < 0 ? ToolkitGameplay.E(button, "journal-run-line") : button;
-                if (journalMap < 0)
+                var overall = journalMap < 0;
+                button.EnableInClassList("journal-run-overall", overall);
+                var heading = overall ? ToolkitGameplay.E(button, "journal-run-line") : button;
+                if (overall)
                 {
-                    button.AddToClassList("journal-run-overall");
                     Text(heading, JournalMapName(run.MapType), 7).AddToClassList("journal-run-map");
                 }
-                var duration = Text(heading, JournalDuration(run.Duration) + (run.Estimated ? " · " + ToolkitLocalization.Text("graph.estimated", "Estimated") : ""), 7);
+                var duration = Text(heading, JournalDuration(run.Duration), 7);
                 duration.AddToClassList("journal-run-duration");
                 duration.tooltip = CalcUtils.FormatTime(run.Duration);
-                var totals = journalMap < 0 ? ToolkitGameplay.E(button, "journal-run-line") : button;
-                Text(totals, ToolkitLocalization.Text("journal.run-resources", "Resources: {0}", ItemStatisticsPresentation.Number(run.ResourcesCollected)), 7).AddToClassList("journal-run-rewards");
+                var totals = overall ? ToolkitGameplay.E(button, "journal-run-line") : heading;
+                var resources = Text(totals, ToolkitLocalization.Text("journal.run-resources", "Resources: {0}", ItemStatisticsPresentation.Number(run.ResourcesCollected)), 7);
+                resources.AddToClassList("journal-run-rewards");
+                if (run.Estimated)
+                {
+                    var marker = Text(resources, "*", 6);
+                    marker.AddToClassList("journal-run-estimate-marker");
+                    resources.RegisterCallback<GeometryChangedEvent>(_ =>
+                    {
+                        var width = resources.MeasureTextSize(resources.text, 0, VisualElement.MeasureMode.Undefined,
+                            0, VisualElement.MeasureMode.Undefined).x;
+                        var content = resources.contentRect;
+                        marker.style.left = Mathf.Min(content.xMax - 4, content.xMin + width + 1);
+                    });
+                }
                 Text(totals, run.Abandoned ? ToolkitLocalization.Text("run.outcome-abandoned", "Abandoned") : run.Reaped ? ToolkitLocalization.Text("run.outcome-reaped", "Reaped") : run.Died ? ToolkitLocalization.Text("run.outcome-died", "Died") : ToolkitLocalization.Text("run.outcome-retreated", "Retreated"), 6).AddToClassList("journal-run-outcome");
+            }
+            if (hasEstimated)
+            {
+                var legend = Text(journalRecent, "* " + ToolkitLocalization.Text("history.estimated-legend", "Includes estimated progress while away."), 6);
+                legend.AddToClassList("journal-note");
+                legend.AddToClassList("journal-estimate-legend");
             }
             var previous = MapRunHistory.Previous(tracker.PreviousRuns, key);
             if (previous.Runs > 0)

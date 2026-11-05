@@ -94,7 +94,10 @@ namespace TimelessEchoes.UI.Toolkit
             overlay = new VisualElement(); overlay.AddToClassList("eov-run-overlay"); root.Add(overlay);
             detail=Panel(overlay,"breakdown-sheet");var head=E(detail,"row breakdown-header");LocalizedLabel(head, "run.base-return-rate", "Base rate (return bonus)","small muted breakdown-rate");detailTitle=L(head,ToolkitLocalization.Text("run.breakdown-heading", "Run breakdown"),"heading breakdown-title");runTime=L(head,"","strong breakdown-time");BuildSummaryOverview();
             detailRows=ToolkitGameplay.Scroll(detail,"run-ledger");detailRows.contentContainer.AddToClassList("run-ledger-grid");var footer=E(detail,"row breakdown-footer");runRatesLeft=L(footer,"","small");runRatesRight=L(footer,"","small");runRatesRight.style.unityTextAlign=TextAnchor.MiddleRight; liveBreakdown = new ToolkitRunResourcesView(definition); detail.Add(liveBreakdown); BuildDetailsClose(); HideDetails();
-            tooltip = Panel(root, "eov-run-tooltip", definition.tooltipFrame); tooltipText = Text(tooltip, ""); SetVisible(tooltip, false);
+            tooltip = Panel(root, "eov-run-tooltip", definition.tooltipFrame);
+            tooltip.pickingMode = PickingMode.Ignore;
+            tooltipText = Text(tooltip, "");
+            SetVisible(tooltip, false);
             ToolkitLocalization.Changed += LocalizationChanged;
             Blindsided.EventHandler.OnRunStarted += RunStarted;
             AttachServices(); Refresh();
@@ -176,14 +179,26 @@ namespace TimelessEchoes.UI.Toolkit
             label.AddToClassList("ability-status");
             label.style.whiteSpace = WhiteSpace.NoWrap;
             var held = button.schedule.Execute(() => { suppress = true; BuffManager.Instance?.ToggleSlotAutoCast(index); }); held.Pause();
-            button.RegisterCallback<PointerDownEvent>(e => { if (e.button == 0) { suppress = false; held.ExecuteLater(1000); } else if (e.button == 1) BuffManager.Instance?.ToggleSlotAutoCast(index); }, TrickleDown.TrickleDown);
-            button.RegisterCallback<PointerUpEvent>(_ => held.Pause(), TrickleDown.TrickleDown);
-            button.RegisterCallback<PointerCancelEvent>(_ => held.Pause(), TrickleDown.TrickleDown);
+            button.RegisterCallback<PointerDownEvent>(e =>
+            {
+                if (e.button == 0)
+                {
+                    suppress = false; held.ExecuteLater(1000);
+                    if (e.pointerType == UnityEngine.UIElements.PointerType.touch) { tooltipSlot = index; RefreshTooltip(); }
+                }
+                else if (e.button == 1) BuffManager.Instance?.ToggleSlotAutoCast(index);
+            }, TrickleDown.TrickleDown);
+            button.RegisterCallback<PointerUpEvent>(e =>
+            {
+                held.Pause();
+                if (e.pointerType == UnityEngine.UIElements.PointerType.touch) HideBuffTooltip(index);
+            }, TrickleDown.TrickleDown);
+            button.RegisterCallback<PointerCancelEvent>(_ => { held.Pause(); HideBuffTooltip(index); }, TrickleDown.TrickleDown);
             button.RegisterCallback<DetachFromPanelEvent>(_ => held.Pause());
             button.RegisterCallback<PointerEnterEvent>(_ => { tooltipSlot = index; RefreshTooltip(); });
-            button.RegisterCallback<PointerLeaveEvent>(_ => { held.Pause(); tooltipSlot = -1; SetVisible(tooltip, false); });
+            button.RegisterCallback<PointerLeaveEvent>(_ => { held.Pause(); HideBuffTooltip(index); });
             button.RegisterCallback<FocusInEvent>(_ => { tooltipSlot = index; RefreshTooltip(); });
-            button.RegisterCallback<FocusOutEvent>(_ => { tooltipSlot = -1; SetVisible(tooltip, false); });
+            button.RegisterCallback<FocusOutEvent>(_ => HideBuffTooltip(index));
             slots.Add((button, icon, auto, locked, label, fill));
         }
         private void Update()
@@ -232,6 +247,7 @@ namespace TimelessEchoes.UI.Toolkit
                 portraitResources.SetEnabled(!focus);
                 if (ToolkitResponsiveLayout.FocusTransition >= 1) SetVisible(portraitResources, false);
             }
+            LayoutBuffTooltip();
         }
         private void LateUpdate()
         {
@@ -256,7 +272,8 @@ namespace TimelessEchoes.UI.Toolkit
             death.style.top = portrait ? safe.yMin - area.yMin + 8 : StyleKeyword.Null;
             death.style.right = portrait ? area.xMax - safe.xMax + 8 : StyleKeyword.Null;
             hud.style.left = portrait ? 8 : 12;
-            hud.style.top = portrait ? ToolkitResponsiveLayout.WorldArea.yMax - area.yMin + 8 : StyleKeyword.Auto;
+            var runRowTop = world.yMax - area.yMin + ToolkitResponsiveLayout.PortraitRunRowGap;
+            hud.style.top = portrait ? runRowTop : StyleKeyword.Auto;
             hud.style.bottom = portrait ? StyleKeyword.Auto : 12;
             // Reserve the five-slot footprint even before abilities unlock. A hidden
             // row must not make the health strip shrink to its text's intrinsic width.
@@ -286,13 +303,16 @@ namespace TimelessEchoes.UI.Toolkit
             if (portrait)
             {
                 abilityBar.style.left = area.width - 204;
-                abilityBar.style.top = ToolkitResponsiveLayout.WorldArea.yMax - area.yMin + 8;
+                abilityBar.style.top = runRowTop;
             }
             // Colour changes must not repeat the orientation-only reparenting below.
             health.style.backgroundColor = portrait ? Color.clear : ToolkitColorTheme.HudSurface;
             heroStatsPanel.style.backgroundColor = portrait ? Color.clear : ToolkitColorTheme.HudSurface;
             if (portraitRun == portrait) return;
             portraitRun = portrait;
+            tooltip.style.top = tooltip.style.left = tooltip.style.bottom = StyleKeyword.Null;
+            tooltip.style.maxWidth = StyleKeyword.Null;
+            tooltipText.style.whiteSpace = portrait ? WhiteSpace.Normal : StyleKeyword.Null;
             if (portrait && showingBreakdown && GameManager.Instance && !GameManager.Instance.HeroIsDead) HideDetails();
             health.style.width = Length.Percent(100);
             health.style.height = portrait ? 36 : 24;
@@ -448,7 +468,44 @@ namespace TimelessEchoes.UI.Toolkit
         private void RefreshTooltip()
         {
             var recipe = tooltipSlot >= 0 ? BuffManager.Instance?.GetAssigned(tooltipSlot) : null;
-            SetVisible(tooltip, recipe); if (recipe) tooltipText.text = recipe.GetDisplayName() + "\n" + string.Join("\n", recipe.GetDescriptionLines());
+            SetVisible(tooltip, recipe && !HasOpenDetails && abilityBar.style.display.value != DisplayStyle.None);
+            if (recipe)
+                tooltipText.text = recipe.GetDisplayName() + "\n" + string.Join("\n", recipe.GetDescriptionLines());
+        }
+
+        private void HideBuffTooltip(int index)
+        {
+            if (tooltipSlot != index) return;
+            tooltipSlot = -1;
+            SetVisible(tooltip, false);
+        }
+
+        private void LayoutBuffTooltip()
+        {
+            if (tooltipSlot < 0 || tooltip.style.display.value == DisplayStyle.None) return;
+            if (HasOpenDetails || abilityBar.style.display.value == DisplayStyle.None)
+            {
+                HideBuffTooltip(tooltipSlot);
+                return;
+            }
+            if (root.IndexOf(tooltip) != root.childCount - 1) tooltip.BringToFront();
+            if (!ToolkitResponsiveLayout.IsPortrait) return;
+
+            var safe = ToolkitResponsiveLayout.SafeScreenArea;
+            var min = root.WorldToLocal(safe.min) + new Vector2(8, 8);
+            var max = root.WorldToLocal(safe.max) - new Vector2(8, 8);
+            var bounds = slots[tooltipSlot].button.worldBound;
+            var anchor = root.WorldToLocal(new Vector2(bounds.center.x, bounds.yMin));
+            var width = tooltip.layout.width;
+            var height = tooltip.layout.height;
+            tooltip.style.bottom = StyleKeyword.Auto;
+            tooltip.style.maxWidth = Mathf.Min(250, max.x - min.x);
+            if (!float.IsFinite(width) || !float.IsFinite(height)) return;
+            // The navigation panel owns the progress strip and draws above this panel.
+            var progressTop = root.WorldToLocal(new Vector2(0, ToolkitResponsiveLayout.WorldArea.yMax)).y -
+                ToolkitResponsiveLayout.PortraitProgressRowHeight - ToolkitResponsiveLayout.PortraitRunRowGap;
+            tooltip.style.left = Mathf.Clamp(anchor.x - width / 2, min.x, Mathf.Max(min.x, max.x - width));
+            tooltip.style.top = Mathf.Clamp(Mathf.Min(anchor.y, progressTop) - height - 6, min.y, Mathf.Max(min.y, max.y - height));
         }
         public void BeginOuting() { runResources.Clear(); HideDetails(); }
         public void RestoreOuting(IEnumerable<KeyValuePair<Resource, double>> resources)

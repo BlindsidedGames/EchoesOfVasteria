@@ -27,7 +27,6 @@ namespace TimelessEchoes.UI
         [SerializeField] private List<Sprite> tierBackgroundSprites;
 
         private readonly Dictionary<Skill, List<Func<string>>> pendingMilestoneMessages = new();
-        private readonly Dictionary<Skill, Dictionary<MilestoneDefinition, int>> milestoneTierCache = new();
         private readonly Dictionary<Skill, PendingLevelRange> pendingLevelRanges = new();
 
         private ResourceManager resourceManager;
@@ -86,7 +85,6 @@ namespace TimelessEchoes.UI
         private void OnDestroy()
         {
             pendingMilestoneMessages.Clear();
-            milestoneTierCache.Clear();
             pendingLevelRanges.Clear();
         }
 
@@ -167,21 +165,15 @@ namespace TimelessEchoes.UI
 
             var messages = GetOrCreateMessages(skill);
             messages.Add(() => ToolkitLocalization.Text("notification.milestone-unlocked", "<size=8>{0} Unlocked!</size>" , GetMilestoneName(milestone)));
-
-            UpdateMilestoneTierCache(skill, milestone);
         }
 
-        private void OnMilestoneTierChanged(Skill skill, MilestoneDefinition milestone, int newTierIndex)
+        private void OnMilestoneTierChanged(Skill skill, MilestoneDefinition milestone, int previousTierIndex, int newTierIndex)
         {
             if (skill == null || milestone == null)
                 return;
 
-            var tierMap = GetOrCreateTierMap(skill);
-            tierMap.TryGetValue(milestone, out var previousTierIndex);
-            tierMap[milestone] = newTierIndex;
-
-            var oldTierDisplay = previousTierIndex >= 0 ? previousTierIndex + 1 : Mathf.Max(1, newTierIndex);
-            var newTierDisplay = Mathf.Max(oldTierDisplay, newTierIndex + 1);
+            var oldTierDisplay = previousTierIndex + 1;
+            var newTierDisplay = newTierIndex + 1;
 
             var messages = GetOrCreateMessages(skill);
             messages.Add(() => ToolkitLocalization.Text("notification.milestone-tier", "<size=8>{0} {1}<sprite=194>{2}</size>" , GetMilestoneName(milestone), oldTierDisplay, newTierDisplay));
@@ -196,30 +188,6 @@ namespace TimelessEchoes.UI
             }
 
             return list;
-        }
-
-        private Dictionary<MilestoneDefinition, int> GetOrCreateTierMap(Skill skill)
-        {
-            if (!milestoneTierCache.TryGetValue(skill, out var map))
-            {
-                map = new Dictionary<MilestoneDefinition, int>();
-                milestoneTierCache[skill] = map;
-            }
-
-            return map;
-        }
-
-        private void UpdateMilestoneTierCache(Skill skill, MilestoneDefinition milestone)
-        {
-            if (skillController == null)
-                return;
-
-            var state = skillController.GetMilestoneState(skill, milestone);
-            if (state == null)
-                return;
-
-            var map = GetOrCreateTierMap(skill);
-            map[milestone] = state.TierIndex;
         }
 
         private string GetMilestoneName(MilestoneDefinition milestone)

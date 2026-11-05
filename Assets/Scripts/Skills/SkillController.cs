@@ -48,7 +48,7 @@ namespace TimelessEchoes.Skills
         public event Action<Skill, float, float> OnExperienceGained;
         public event Action<Skill, int> OnLevelUp;
         public event Action<Skill, MilestoneDefinition> OnMilestoneUnlocked;
-        public event Action<Skill, MilestoneDefinition, int> OnMilestoneTierChanged;
+        public event Action<Skill, MilestoneDefinition, int, int> OnMilestoneTierChanged;
         public event Action<Skill, MilestoneDefinition, bool> OnMilestoneActivationChanged;
         public event Action OnMilestoneDataChanged;
         public event Action<int, int> OnActiveSlotsChanged;
@@ -425,7 +425,7 @@ namespace TimelessEchoes.Skills
                     }
                     else if (newTier >= 0 && raiseEvents)
                     {
-                        OnMilestoneTierChanged?.Invoke(skill, definition, newTier);
+                        OnMilestoneTierChanged?.Invoke(skill, definition, previousTier, newTier);
                     }
                 }
 

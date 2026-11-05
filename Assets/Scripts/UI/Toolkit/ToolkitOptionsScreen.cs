@@ -224,6 +224,13 @@ namespace TimelessEchoes.UI.Toolkit
                 { ToolkitDisplayPreferences.Orientation = mode; RefreshValues(); }, 22, false);
                 ToolkitLocalization.Bind(button, "options.orientation-" + i, names[i]); Grow(button);
             }
+            var statusBar = ActionButton(mobileDisplay, "show-status-bar", () =>
+            { ToolkitDisplayPreferences.ShowStatusBar = !ToolkitDisplayPreferences.ShowStatusBar; RefreshValues(); }, 24, false);
+            statusBar.AddToClassList("settings-labelled-toggle");
+            statusBar.style.marginTop = 6;
+            var statusBarLabel = ToolkitGameplay.L(statusBar, "", "eov-options-label");
+            ToolkitLocalization.Bind(statusBarLabel, "options.show-status-bar", "Show status bar");
+
             var inset = ActionButton(mobileDisplay, "world-safe-area", () =>
             { ToolkitDisplayPreferences.KeepWorldInSafeArea = !ToolkitDisplayPreferences.KeepWorldInSafeArea; RefreshValues(); }, 22, false);
             inset.style.marginTop = 6;
@@ -376,6 +383,7 @@ namespace TimelessEchoes.UI.Toolkit
                 if (hardcore) buttons["background-progress"].tooltip = ToolkitLocalization.Text("hardcore.no-background", "Background progress is unavailable in hardcore.");
             }
             for (var i = 0; i < 3; i++) buttons["orientation-" + i].EnableInClassList("active", ToolkitDisplayPreferences.Orientation == i);
+            SetToggle("show-status-bar", ToolkitDisplayPreferences.ShowStatusBar);
             buttons["world-safe-area"].EnableInClassList("active", ToolkitDisplayPreferences.KeepWorldInSafeArea);
             SetSlider("master", MasterVolume); SetSlider("music", MusicVolume); SetSlider("sfx", SfxVolume); SetSlider("width", SafeAreaRatio);
             SetSlider("drops", DropFloatingTextDuration / 10); SetSlider("player-damage", PlayerDamageTextDuration / 2); SetSlider("enemy-damage", EnemyDamageTextDuration / 2);

@@ -995,7 +995,8 @@ namespace TimelessEchoes.UI.Toolkit
             var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height), Screen.safeArea,
                 UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);
             root.style.left = area.x + (ToolkitResponsiveLayout.IsPortrait ? 0 : 8);
-            root.style.top = ToolkitResponsiveLayout.IsPortrait ? area.yMax - 44 : area.y + 8;
+            var top = ToolkitResponsiveLayout.IsPortrait ? area.yMax - 44 : area.y + 8;
+            root.style.top = top;
             root.style.width = area.width - (ToolkitResponsiveLayout.IsPortrait ? 0 : 16);
             // Continue the same navigation surface through the home-indicator inset.
             root.style.height = ToolkitResponsiveLayout.IsPortrait ? ToolkitResponsiveLayout.Size.y - (area.yMax - 44) : 36;
@@ -1009,7 +1010,8 @@ namespace TimelessEchoes.UI.Toolkit
             var context = root.Q("navigation-context");
             context.style.display = ToolkitResponsiveLayout.IsPortrait && !(GameManager.Instance && GameManager.Instance.CurrentMap) ? DisplayStyle.None : DisplayStyle.Flex;
             context.style.top = ToolkitResponsiveLayout.IsPortrait ?
-                ToolkitResponsiveLayout.WorldArea.yMax - root.resolvedStyle.top - 39 : StyleKeyword.Null;
+                ToolkitResponsiveLayout.WorldArea.yMax - top -
+                ToolkitResponsiveLayout.PortraitProgressRowHeight - ToolkitResponsiveLayout.PortraitRunRowGap : StyleKeyword.Null;
             progressRoot.style.width = ToolkitResponsiveLayout.IsPortrait ? area.width - 16 : StyleKeyword.Null;
             progressRoot.Q(className: "eov-navigation-progress-track").style.width = ToolkitResponsiveLayout.IsPortrait ? area.width - 20 : StyleKeyword.Null;
             progressReaper.style.left = ToolkitResponsiveLayout.IsPortrait ? area.width - 40 : StyleKeyword.Null;

@@ -124,6 +124,8 @@ namespace Tests.PlayMode
             Assert.True(FarmContent.Completed(loaded.Data, "Farm.Garden.Build01.v1"));
             Assert.AreEqual(1, loaded.Data.Farm.GardenCapacity);
             Assert.AreEqual(0, loaded.Data.Resources["Log"].Amount);
+            CollectionAssert.AreEqual(new[] { FarmContent.IntroductionId, "Farm.Garden.Build01.v1" },
+                loaded.Data.Farm.PendingQuestDialogues, "The paid hand-ins and dialogue order must survive the same save.");
         }
 
         [Test]

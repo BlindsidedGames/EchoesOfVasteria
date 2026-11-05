@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using Blindsided.Utilities.Pooling;
 using TimelessEchoes.Enemies;
 using TimelessEchoes.Skills;
@@ -26,7 +25,6 @@ namespace TimelessEchoes.Hero
         private EnemyHealth currentEnemyHealth;
         private Enemy currentEnemyComp;
         private float lastAttack = float.NegativeInfinity;
-        private bool isRolling;
         private float combatDamageMultiplier = 1f;
         private bool diceUnlocked;
 
@@ -56,11 +54,6 @@ namespace TimelessEchoes.Hero
         /// The current enemy being targeted.
         /// </summary>
         public Transform CurrentTarget => currentEnemy;
-
-        /// <summary>
-        /// True if dice roll animation is in progress.
-        /// </summary>
-        public bool IsRolling => isRolling;
 
         /// <summary>
         /// Initialize the combat controller with dependencies.
@@ -100,7 +93,6 @@ namespace TimelessEchoes.Hero
 
             var rate = HeroStatSystem.GetSnapshot().attacksPerSecond;
             lastAttack = Time.time - 1f / rate;
-            isRolling = false;
             combatDamageMultiplier = 1f;
             IsInCombat = false;
         }
@@ -165,8 +157,6 @@ namespace TimelessEchoes.Hero
         {
             Log("Hero exiting combat", TELogCategory.Combat, this);
             combatDamageMultiplier = 1f;
-            isRolling = false;
-            diceRoller?.ResetRoll();
             ClearCurrentEnemy();
             IsInCombat = false;
         }
@@ -309,11 +299,11 @@ namespace TimelessEchoes.Hero
             if (!IsInCombat)
             {
                 Log($"Hero entering combat with {enemy.name}", TELogCategory.Combat, this);
-                if (diceUnlocked && diceRoller != null && !isRolling)
+                if (diceUnlocked && diceRoller != null)
                 {
                     var rate = HeroStatSystem.GetSnapshot().attacksPerSecond;
                     var cooldown = rate > 0f ? 1f / rate : 0.5f;
-                    StartCoroutine(RollForCombat(cooldown));
+                    RollForCombat(cooldown);
                 }
             }
 
@@ -333,7 +323,7 @@ namespace TimelessEchoes.Hero
             {
                 var rate = HeroStatSystem.GetSnapshot().attacksPerSecond;
                 var cooldown = rate > 0f ? 1f / rate : float.PositiveInfinity;
-                if (hero.AllowAttacks && Time.time - lastAttack >= cooldown && !isRolling)
+                if (hero.AllowAttacks && Time.time - lastAttack >= cooldown)
                 {
                     Attack(enemy);
                     lastAttack = Time.time;
@@ -653,18 +643,9 @@ namespace TimelessEchoes.Hero
             }
         }
 
-        private IEnumerator RollForCombat(float duration)
+        private void RollForCombat(float duration)
         {
-            if (!diceUnlocked || diceRoller == null)
-                yield break;
-
-            isRolling = true;
-            lastAttack = Time.time;
-
-            yield return StartCoroutine(diceRoller.Roll(duration));
-
-            combatDamageMultiplier = 1f + 0.1f * diceRoller.Result;
-            isRolling = false;
+            combatDamageMultiplier = 1f + 0.1f * diceRoller.Roll(duration);
 
             if (!hero.IsEcho)
             {

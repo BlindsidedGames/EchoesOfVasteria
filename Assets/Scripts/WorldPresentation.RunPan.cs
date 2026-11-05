@@ -15,6 +15,7 @@ namespace TimelessEchoes
         private Vector2 panStart, panPrevious;
         private bool panHeld, panDragging, panRejected;
         private int panPointer;
+        private int panReturnFrame = -1;
         private float panOffset, panVelocity;
 
         internal static void EnableRunPanning() => Get();
@@ -32,6 +33,7 @@ namespace TimelessEchoes
         {
             panHeld = panDragging = panRejected = false;
             panOffset = panVelocity = 0;
+            panReturnFrame = -1;
             panMap = null;
         }
 
@@ -68,8 +70,6 @@ namespace TimelessEchoes
             if (!down)
             {
                 panHeld = panDragging = panRejected = false;
-                panOffset = Mathf.SmoothDamp(panOffset, 0, ref panVelocity, 1.5f, Mathf.Infinity, Time.unscaledDeltaTime);
-                if (Mathf.Abs(panOffset) < .001f) panOffset = panVelocity = 0;
                 return;
             }
             if (!panHeld)
@@ -90,16 +90,25 @@ namespace TimelessEchoes
             if (!CanPanRun || !brain || brain.OutputCamera != Camera.main ||
                 !RunCameraFrame.TryGetCurrent(out var frame)) return;
             var camera = brain.OutputCamera;
-            var origin = frame.State.GetFinalPosition();
-            var halfWidth = frame.State.Lens.OrthographicSize * camera.aspect;
+            if (!panHeld && panReturnFrame != Time.frameCount)
+            {
+                panReturnFrame = Time.frameCount;
+                panOffset = Mathf.SmoothDamp(panOffset, 0, ref panVelocity, 1.5f, Mathf.Infinity, Time.unscaledDeltaTime);
+                if (Mathf.Abs(panOffset) < .001f) panOffset = panVelocity = 0;
+            }
+
+            var origin = camera.transform.position;
+            var halfWidth = camera.orthographicSize * camera.aspect;
             var bounds = frame.ActivityBounds;
             var minimum = bounds.min.x + halfWidth;
             if (frame.TryGetComponent<CameraClampExtension>(out var boundary))
                 minimum = Mathf.Max(minimum, boundary.MinimumX + halfWidth);
-            panOffset = Mathf.Clamp(panOffset, Mathf.Min(0, minimum - origin.x), Mathf.Max(0, bounds.max.x - halfWidth - origin.x));
-            // Cinemachine has just written the ordinary pose. Offset only its output;
-            // RunCameraFrame and all gameplay consumers retain their original bounds.
-            camera.transform.position += Vector3.right * panOffset;
+            var visibleOffset = Mathf.Clamp(panOffset, Mathf.Min(0, minimum - origin.x),
+                Mathf.Max(0, bounds.max.x - halfWidth - origin.x));
+            if (panDragging) panOffset = visibleOffset;
+            // During the return a changing boundary can clip the displayed pose
+            // without changing the easing state. PixelGridSnap rounds the final pose.
+            camera.transform.position = origin + Vector3.right * visibleOffset;
         }
     }
 }

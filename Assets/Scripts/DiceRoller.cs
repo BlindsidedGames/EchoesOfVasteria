@@ -17,14 +17,9 @@ namespace TimelessEchoes
         [SerializeField] private float resultDuration = 0.5f;
 
         /// <summary>
-        /// Result of the most recent roll. 1 indicates the first face.
-        /// </summary>
-        public int Result { get; private set; } = 1;
-
-        /// <summary>
         /// Stop any ongoing roll animation and hide the dice.
         /// </summary>
-        public void ResetRoll()
+        private void ResetRoll()
         {
             StopAllCoroutines();
             if (diceRenderer != null)
@@ -39,23 +34,24 @@ namespace TimelessEchoes
                 diceRenderer.enabled = false;
         }
 
+        private void OnDisable() => ResetRoll();
+
         /// <summary>
-        /// Perform a dice roll animation using the configured durations.
+        /// Choose the result immediately and animate the dice independently of combat.
         /// </summary>
-        public IEnumerator Roll()
+        public int Roll(float totalDuration)
         {
-            yield return Roll(rollDuration + resultDuration);
+            ResetRoll();
+            if (diceRenderer == null || faces == null || faces.Length == 0 || !isActiveAndEnabled)
+                return 1;
+
+            var result = Random.Range(1, faces.Length + 1);
+            StartCoroutine(AnimateRoll(result, totalDuration));
+            return result;
         }
 
-        /// <summary>
-        /// Perform a dice roll that lasts the specified <paramref name="totalDuration"/> seconds.
-        /// Durations are scaled based on the default roll and result times.
-        /// </summary>
-        public IEnumerator Roll(float totalDuration)
+        private IEnumerator AnimateRoll(int result, float totalDuration)
         {
-            if (diceRenderer == null || faces == null || faces.Length == 0)
-                yield break;
-
             float baseDuration = rollDuration + resultDuration;
             float scale = baseDuration > 0f ? totalDuration / baseDuration : 1f;
             float scaledRollDuration = rollDuration * scale;
@@ -71,8 +67,7 @@ namespace TimelessEchoes
                 yield return new WaitForSeconds(scaledFaceInterval);
             }
 
-            Result = Random.Range(1, faces.Length + 1);
-            diceRenderer.sprite = faces[Result - 1];
+            diceRenderer.sprite = faces[result - 1];
             yield return new WaitForSeconds(scaledResultDuration);
             diceRenderer.enabled = false;
         }
