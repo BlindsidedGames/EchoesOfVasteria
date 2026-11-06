@@ -1,4 +1,3 @@
-using System.Reflection;
 using TimelessEchoes.Hero;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Buffs;
@@ -53,7 +52,7 @@ namespace TimelessEchoes.Tasks
             {
                 var startSprite = growthStages[0];
                 if (startSprite != null)
-                    spriteRenderer.sprite = startSprite;
+                    SetGrowthSprite(startSprite);
             }
             currentStage = 0;
             IsExhausted = false;
@@ -101,17 +100,13 @@ namespace TimelessEchoes.Tasks
                     {
                         var s = growthStages[newStage];
                         if (s != null)
-                            spriteRenderer.sprite = s;
+                            SetGrowthSprite(s);
                     }
                 }
             }
 
-            if (IsComplete() && spriteRenderer != null && spriteRenderer.enabled)
-            {
-                spriteRenderer.enabled = false;
-                if (wetSpriteRenderer != null)
-                    wetSpriteRenderer.enabled = false;
-            }
+            if (IsComplete())
+                ShowCompletedVisuals();
         }
 
         public override void OnInterrupt(HeroBase hero)
@@ -123,12 +118,22 @@ namespace TimelessEchoes.Tasks
 
         protected override void OnTaskCompleted(HeroBase hero)
         {
-            // Mirror the visual cleanup that happens in Tick() when complete
+            ShowCompletedVisuals();
+            IsExhausted = true;
+        }
+
+        protected virtual void SetGrowthSprite(Sprite sprite)
+        {
+            if (spriteRenderer != null)
+                spriteRenderer.sprite = sprite;
+        }
+
+        protected virtual void ShowCompletedVisuals()
+        {
             if (spriteRenderer != null && spriteRenderer.enabled)
                 spriteRenderer.enabled = false;
             if (wetSpriteRenderer != null)
                 wetSpriteRenderer.enabled = false;
-            IsExhausted = true;
         }
 
         // TaskDuration property from ContinuousTask provides the duration

@@ -7,7 +7,7 @@ namespace Blindsided
         // Normal save contributors observe the complete published owners and projected
         // loadingRun together. A failed publication/commit blocks further saves; it must
         // never retry rewards against an already-mutated live inventory.
-        public bool CommitBackgroundRun(Action publish)
+        public bool CommitBackgroundProgress(Action publish)
         {
             if (!CanSave(allowDuringRestore: true) || saveData.Hardcore || _economicTransactionActive) return false;
             _economicTransactionActive = true;

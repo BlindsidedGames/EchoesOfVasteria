@@ -8,3 +8,11 @@
 .gameplay .button.mildred-choice { flex-direction:column; align-items:center; justify-content:center; width:58px; min-width:0; height:80px; padding:3px 0; }
 .gameplay .mildred-choice .icon { margin:0; width:48px; height:48px; }
 .gameplay .mildred-colour-name { font-size:var(--small); -unity-font-style:bold; -unity-text-align:middle-center; white-space:normal; }
+.gameplay .companion-lock { left:auto; right:3px; top:3px; translate:0 0; width:10px; height:10px; }
+.gameplay .companion-locked-background { display:none; position:absolute; left:0; right:0; top:0; bottom:0; background-color:var(--control); border-width:0.5px; border-bottom-width:1.5px; border-color:var(--button-edge); border-top-color:var(--button-light); opacity:.45; }
+.gameplay .button.mildred-choice.companion-locked,.gameplay .button.mildred-choice.companion-locked:hover,.gameplay .button.mildred-choice.companion-locked:active { background-color:transparent; border-color:transparent; }
+.gameplay .companion-locked .companion-locked-background { display:flex; }
+.gameplay .companion-locked .mildred-colour-name,.gameplay .companion-locked .companion-lock { opacity:.45; }
+.gameplay .companion-header { align-items:center; }
+.gameplay .companion-header .heading { flex-grow:1; margin-bottom:0; }
+.gameplay .button.companion-unlock { flex-shrink:0; min-height:26px; padding:4px 8px; font-size:9px; margin-left:8px; }

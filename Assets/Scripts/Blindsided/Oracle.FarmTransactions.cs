@@ -38,31 +38,7 @@ namespace Blindsided
             try
             {
                 ResourceManager.Instance?.SaveState();
-                var owner = saveData;
-                var proposal = command(owner.Farm);
-                if (proposal.Status == FarmCommandStatus.AlreadyApplied) return true;
-                if (!FarmTransaction.TryPrepareProgress(owner, proposal, out var candidate, out error)) return false;
-                publishing = true;
-                var preparedNow = candidate.Farm.OriginalBedsBuildOperationId != owner.Farm.OriginalBedsBuildOperationId;
-                owner.Farm = candidate.Farm;
-                owner.SchemaVersion = candidate.SchemaVersion;
-                owner.AppliedMigrationIds = candidate.AppliedMigrationIds;
-                if (preparedNow && candidate.Quests.TryGetValue("Farm.PrepareBeds", out var quest))
-                    owner.Quests["Farm.PrepareBeds"] = quest;
-                foreach (var id in proposal.CompletedQuests) owner.Quests[id] = candidate.Quests[id];
-                var manager = ResourceManager.Instance;
-                manager?.BeginBatch();
-                try
-                {
-                    foreach (var delta in proposal.ResourceDeltas)
-                    {
-                        owner.Resources[delta.Key] = candidate.Resources[delta.Key];
-                        owner.ResourceStats[delta.Key] = candidate.ResourceStats[delta.Key];
-                        manager?.PublishCommittedResource(delta.Key, owner.Resources[delta.Key], owner.ResourceStats[delta.Key]);
-                    }
-                }
-                finally { manager?.EndBatch(); }
-                return true;
+                return TryPublishFarmProposal(command(saveData.Farm), out error, ref publishing);
             }
             catch (Exception ex)
             {
@@ -77,6 +53,45 @@ namespace Blindsided
                 // A callback can return to town. Capture only after publication completes.
                 if (_savePending && CanSave()) { _savePending = false; RequestSave(); }
             }
+        }
+
+        // The shared background transaction owns the checkpoint for all of these harvests.
+        internal void ApplyBackgroundFarmProposal(FarmCommandResult proposal)
+        {
+            if (!_economicTransactionActive)
+                throw new InvalidOperationException("Background harvest requires an active transaction.");
+            var publishing = false;
+            if (!TryPublishFarmProposal(proposal, out var error, ref publishing))
+                throw new InvalidOperationException(error ?? "Background harvest was rejected.");
+        }
+
+        private bool TryPublishFarmProposal(FarmCommandResult proposal, out string error, ref bool publishing)
+        {
+            error = null;
+            if (proposal.Status == FarmCommandStatus.AlreadyApplied) return true;
+            var owner = saveData;
+            if (!FarmTransaction.TryPrepareProgress(owner, proposal, out var candidate, out error)) return false;
+            publishing = true;
+            var preparedNow = candidate.Farm.OriginalBedsBuildOperationId != owner.Farm.OriginalBedsBuildOperationId;
+            owner.Farm = candidate.Farm;
+            owner.SchemaVersion = candidate.SchemaVersion;
+            owner.AppliedMigrationIds = candidate.AppliedMigrationIds;
+            if (preparedNow && candidate.Quests.TryGetValue("Farm.PrepareBeds", out var quest))
+                owner.Quests["Farm.PrepareBeds"] = quest;
+            foreach (var id in proposal.CompletedQuests) owner.Quests[id] = candidate.Quests[id];
+            var manager = ResourceManager.Instance;
+            manager?.BeginBatch();
+            try
+            {
+                foreach (var delta in proposal.ResourceDeltas)
+                {
+                    owner.Resources[delta.Key] = candidate.Resources[delta.Key];
+                    owner.ResourceStats[delta.Key] = candidate.ResourceStats[delta.Key];
+                    manager?.PublishCommittedResource(delta.Key, owner.Resources[delta.Key], owner.ResourceStats[delta.Key]);
+                }
+            }
+            finally { manager?.EndBatch(); }
+            return true;
         }
     }
 }

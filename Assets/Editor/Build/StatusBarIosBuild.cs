@@ -37,8 +37,7 @@ internal static class StatusBarIosBuild
         plist.WriteToFile(plistPath);
     }
 
-    private const string NativeBridge = @"#import <UIKit/UIKit.h>
-#include ""UnityInterface.h""
+    private const string NativeBridge = "#import <UIKit/UIKit.h>\n#include \"UnityInterface.h\"\n" + @"
 
 static int EOVStatusBarVisible = -1;
 

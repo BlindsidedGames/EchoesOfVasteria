@@ -153,7 +153,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             BindValue(element, () => element.tooltip = Text(key, english, arguments));
         }
-        private static void BindValue(VisualElement element, Action refresh)
+        internal static void BindValue(VisualElement element, Action refresh)
         {
             var attached = false;
             void Attach()

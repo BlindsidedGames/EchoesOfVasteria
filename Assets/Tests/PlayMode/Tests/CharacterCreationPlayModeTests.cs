@@ -54,6 +54,8 @@ namespace Tests.PlayMode
                 var tiers = new[] { -1, -1, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7 };
                 var skillsScreenObject = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Skills.prefab"), owner.transform);
                 var skillsScreen = skillsScreenObject.GetComponent<ToolkitSkillsScreen>();
+                var windows = owner.AddComponent<TownWindowManager>(); windows.enabled = false;
+                typeof(TownWindowManager).GetField("toolkitSkills", Private).SetValue(windows, skillsScreen);
                 Assert.True(skillsScreen.Show());
                 var skillsUi = skillsScreenObject.GetComponent<UIDocument>().rootVisualElement;
                 for (var i = 0; i < levels.Length; i++) {
@@ -73,6 +75,7 @@ namespace Tests.PlayMode
                 // Support skill icons use the same authored metal palette without changing animations.
                 foreach (var viewport in new[] { new Vector2Int(1170, 2532), new Vector2Int(1920, 1080) })
                 {
+                    var lootingIcons = new System.Collections.Generic.HashSet<Sprite>();
                     PlayModeWindow.SetCustomRenderingResolution((uint)viewport.x, (uint)viewport.y, "Support skill tiers");
                     foreach (var level in new[] { 1, 7, 14, 20, 27, 36, 46, 56, 68 })
                     {
@@ -83,15 +86,23 @@ namespace Tests.PlayMode
                         for (var skillIndex = 4; skillIndex < 6; skillIndex++)
                         {
                             var icon = skillsUi.Q<Button>("skill-" + names[skillIndex]).Q<Image>(className: "skill-selector-icon").sprite;
-                            if (level == 1) Assert.AreSame(AssetDatabase.LoadAssetAtPath<ToolkitSkillsDefinition>("Assets/UI/Toolkit/Skills.asset").icons[skillIndex == 4 ? 5 : 0], icon);
+                            if (skillIndex == 4)
+                            {
+                                Assert.That(icon.name, Does.EndWith("_Gauntlet_LongCuff_OpenFingers"));
+                                Assert.True(lootingIcons.Add(icon), "Each Looting tier uses a distinct glove colour.");
+                            }
+                            else if (level == 1) Assert.AreSame(AssetDatabase.LoadAssetAtPath<ToolkitSkillsDefinition>("Assets/UI/Toolkit/Skills.asset").icons[0], icon);
                             else
                             {
                                 var tierIndex = System.Array.IndexOf(new[] { 7, 14, 20, 27, 36, 46, 56, 68 }, level);
                                 Assert.AreEqual(192 - tierIndex * 16, icon.rect.y);
-                                Assert.AreEqual(skillIndex == 4 ? 144 : 96, icon.rect.x);
+                                Assert.AreEqual(96, icon.rect.x);
                             }
                         }
                     }
+                    Assert.True(skillsScreen.RevealSkill("Looting"));
+                    yield return new WaitForSecondsRealtime(.3f);
+                    Assert.Greater(skillsUi.Q<Button>("skill-Looting").worldBound.width, 0);
                     CaptureFeedback(viewport.x < viewport.y ? "support-skill-tiers-portrait.png" : "support-skill-tiers-landscape.png");
                     yield return null;
                 }

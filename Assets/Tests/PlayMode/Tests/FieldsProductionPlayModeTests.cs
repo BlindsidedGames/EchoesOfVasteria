@@ -183,25 +183,29 @@ namespace Tests.PlayMode
         {
             service.State.FirstHarvestCompleted = true;
             PreparePaidCrop();
-            FarmCommands.TickFields(service.State, 120);
+            FarmCommands.TickFields(service.State, 24);
             var bed = service.State.Beds[FarmCommands.WestBedId];
             bed.LastGrowthUtcTicks = Now.AddYears(-1).Ticks;
             InvokeService("OnApplicationPause", true);
             InvokeService("OnApplicationPause", false);
-            Assert.AreEqual(120, bed.ElapsedSeconds);
+            Assert.AreEqual(24, bed.ElapsedSeconds);
             InvokeService("Loaded");
-            Assert.AreEqual(120, service.State.Beds[FarmCommands.WestBedId].ElapsedSeconds);
+            Assert.AreEqual(24, service.State.Beds[FarmCommands.WestBedId].ElapsedSeconds);
             Assert.True(Commit(s => FarmCommands.Water(s, FarmCommands.WestBedId,
                 FarmJournal.NextOperation(s, "water:" + FarmCommands.WestBedId), Now)));
-            Assert.AreEqual(120, service.State.Beds[FarmCommands.WestBedId].ElapsedSeconds);
+            Assert.AreEqual(24, service.State.Beds[FarmCommands.WestBedId].ElapsedSeconds);
             Assert.AreEqual(content.baseDurationSeconds / 2, service.State.Beds[FarmCommands.WestBedId].ReadyAfterSeconds);
         }
 
         [UnityTest]
-        public IEnumerator DurableHarvestRepeatsAndRunningServiceStopsAtOnePackExhaustion()
+        public IEnumerator DurableHarvestRepeatsAndRunningServiceWaitsForMoreSeeds()
         {
             PreparePaidCrop();
+            var inventoryObject = new GameObject("Fields live seed inventory");
+            inventoryObject.transform.SetParent(serviceObject.transform, false);
+            var inventory = inventoryObject.AddComponent<TimelessEchoes.Upgrades.ResourceManager>();
             service.State.TwinsLevel = 20; // Controlled progression fixture, not natural earning proof.
+            service.State.Projects = FarmProject.MillBody | FarmProject.MillSails;
             Assert.True(Commit(s => FarmCommands.SetRepeat(s, FarmCommands.WestBedId, true,
                 FarmJournal.NextOperation(s, "repeat:" + FarmCommands.WestBedId + ":1"), Now)));
             FarmCommands.TickFields(service.State, content.baseDurationSeconds * 100);
@@ -213,12 +217,12 @@ namespace Tests.PlayMode
             Assert.False(bed.Watered);
             Assert.AreEqual(0, bed.ElapsedSeconds);
             Assert.AreEqual(0, oracle.saveData.Resources["Radish Seed Pack"].Amount);
-            Assert.AreEqual(before + 10, oracle.saveData.Resources["Radish"].Amount, 1e-9);
+            Assert.AreEqual(before + 100, oracle.saveData.Resources["Radish"].Amount, 1e-9);
             Assert.AreEqual(1, service.State.TotalHarvests);
-            Assert.AreEqual(10, service.State.CropsGathered, 1e-9);
+            Assert.AreEqual(100, service.State.CropsGathered, 1e-9);
             Assert.False(Commit(s => FarmCommands.HarvestFields(oracle.saveData,
                 FarmJournal.NextOperation(s, "harvest-fields"), Now.AddDays(10), content, false)));
-            Assert.AreEqual(before + 10, oracle.saveData.Resources["Radish"].Amount, 1e-9);
+            Assert.AreEqual(before + 100, oracle.saveData.Resources["Radish"].Amount, 1e-9);
             Assert.AreEqual(1, service.State.TotalHarvests, "Rejected harvest must not count again.");
             FarmCommands.TickFields(service.State, content.baseDurationSeconds);
             service.enabled = true;
@@ -226,9 +230,9 @@ namespace Tests.PlayMode
             yield return null; yield return null; yield return null;
             service.enabled = false;
             bed = service.State.Beds[FarmCommands.WestBedId];
-            Assert.False(bed.IsPlanted); Assert.False(bed.Repeat);
+            Assert.False(bed.IsPlanted); Assert.True(bed.Repeat);
             Assert.AreEqual(0, oracle.saveData.Resources["Radish Seed Pack"].Amount);
-            Assert.AreEqual(before + 21.9, oracle.saveData.Resources["Radish"].Amount, 1e-9, "The repeated batch froze the existing 19% level-20 yield bonus.");
+            Assert.AreEqual(before + 219, oracle.saveData.Resources["Radish"].Amount, 1e-9, "The repeated batch froze the existing 19% level-20 yield bonus.");
             var loaded = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
             Assert.True(loaded.Succeeded, loaded.Diagnostic);
             Assert.True(loaded.Data.Farm.Beds[FarmCommands.WestBedId].IsPlanted,
@@ -238,10 +242,59 @@ namespace Tests.PlayMode
             loaded = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot)).GetAwaiter().GetResult();
             Assert.True(loaded.Succeeded, loaded.Diagnostic);
             Assert.False(loaded.Data.Farm.Beds[FarmCommands.WestBedId].IsPlanted);
-            Assert.False(loaded.Data.Farm.Beds[FarmCommands.WestBedId].Repeat);
+            Assert.True(loaded.Data.Farm.Beds[FarmCommands.WestBedId].Repeat);
             Assert.AreEqual(2, loaded.Data.Farm.TotalHarvests);
-            Assert.AreEqual(21.9, loaded.Data.Farm.CropsGathered, 1e-9);
+            Assert.AreEqual(219, loaded.Data.Farm.CropsGathered, 1e-9);
             Assert.AreEqual(0, loaded.Data.Farm.LogsGathered);
+            inventory.Add(content.Recipe(FarmCommands.RadishRecipeId).paidInput, 1,
+                trackStats: false, eligibleForTierRoll: false);
+            Assert.AreEqual(0, oracle.saveData.Resources["Radish Seed Pack"].Amount,
+                "The live drop has not yet been captured by the save dictionary.");
+            service.enabled = true;
+            yield return null; yield return null;
+            service.enabled = false;
+            Assert.True(service.State.Beds[FarmCommands.WestBedId].IsPlanted);
+            Assert.AreEqual(0, oracle.saveData.Resources["Radish Seed Pack"].Amount);
+        }
+
+        [Test]
+        public void HarvestPreviewAndCommittedAmountIncludeSkillCardAndItemTierBonuses()
+        {
+            PreparePaidCrop();
+            var recipe = content.Recipe(FarmCommands.RadishRecipeId);
+            oracle.saveData.SkillData["Combat"] = new GameData.SkillProgress { Level = 100 };
+            oracle.saveData.SkillData[recipe.source.associatedSkill.name] = new GameData.SkillProgress { Level = 100 };
+            oracle.saveData.Resources["Radish"] = new GameData.ResourceEntry { Amount = 0, Earned = true, Tier = 4 };
+            oracle.saveData.Resources["Corn"] = new GameData.ResourceEntry { Amount = 0, Earned = true, Tier = 1 };
+            oracle.saveData.CauldronCardCounts[recipe.output.CardId] = 10000;
+            var combat = ScriptableObject.CreateInstance<TimelessEchoes.Skills.Skill>();
+            combat.name = "Combat";
+            combat.taskSpeedPerLevel = .01f;
+            var skillsObject = new GameObject("Fields real skill bonuses");
+            skillsObject.SetActive(false);
+            var skills = skillsObject.AddComponent<TimelessEchoes.Skills.SkillController>();
+            var inventoryObject = new GameObject("Fields real item tiers");
+            try
+            {
+                typeof(TimelessEchoes.Skills.SkillController).GetField("combatSkill", Private).SetValue(skills, combat);
+                typeof(TimelessEchoes.Skills.SkillController).GetField("skills", Private).SetValue(skills,
+                    new System.Collections.Generic.List<TimelessEchoes.Skills.Skill> { combat, recipe.source.associatedSkill });
+                skillsObject.SetActive(true);
+                inventoryObject.AddComponent<TimelessEchoes.Upgrades.ResourceManager>();
+                FarmCommands.TickFields(service.State, 120);
+                var preview = service.CapturePresentation().Beds.Single(b => b.Id == FarmCommands.WestBedId);
+                // 100 base * (2 Combat * 1.5 Farming + .2 card) * 1.3 item tier.
+                Assert.AreEqual(416, preview.ExpectedYield, .001);
+                Assert.True(service.Harvest(FarmCommands.WestBedId));
+                Assert.AreEqual(416, oracle.saveData.Resources["Radish"].Amount, .001);
+                Assert.AreEqual(416, service.State.CropsGathered, .001);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(inventoryObject);
+                UnityEngine.Object.DestroyImmediate(skillsObject);
+                UnityEngine.Object.DestroyImmediate(combat);
+            }
         }
 
         [Test]
@@ -284,6 +337,7 @@ namespace Tests.PlayMode
                 Assert.False(geometry.Find(FarmCommands.WestBedId).gameObject.activeSelf, "Polling must keep the old view until the camera arrives.");
                 var reveal = view.PendingPresentationChange();
                 Assert.True(reveal.HasValue);
+                oracle.saveData.Farm.Projects |= FarmProject.MillBody | FarmProject.MillSails;
                 reveal.Value.Apply();
                 view.ReleasePresentation();
                 Assert.True(geometry.Find(FarmCommands.WestBedId).gameObject.activeSelf);
@@ -298,6 +352,7 @@ namespace Tests.PlayMode
                 // Rendering fixture: constructed orchard slots with one fruit tree and each timber species.
                 oracle.saveData.Farm.OrchardCapacity = 4;
                 oracle.saveData.Farm.TwinsLevel = 20;
+                oracle.saveData.Farm.Projects = FarmProject.MillBody | FarmProject.MillSails;
                 var treeRecipes = new[] { "recipe.apple.v1", "recipe.oak.v1", "recipe.birch.v1", "recipe.spruce.v1" };
                 double gatheredCrops = 0, gatheredLogs = 0;
                 for (var i = 0; i < treeRecipes.Length; i++)
@@ -312,7 +367,8 @@ namespace Tests.PlayMode
                     var tree = geometry.Find(bedId).GetComponentsInChildren<SpriteRenderer>().Single(r => r.name == "Finite orchard growth");
                     Assert.AreSame(recipe.stages[0], tree.sprite, "New trees start from their own sapling stage.");
                     FarmCommands.TickFields(service.State, 100000); view.Refresh();
-                    Assert.AreSame(recipe.stages[3], tree.sprite);
+                    Assert.AreSame(recipe.secondaryOutput ? recipe.fullGrownSprite : recipe.stages[3], tree.sprite,
+                        "Automatic timber reaches the full-grown sprite before harvest.");
                     var beforeYield = oracle.saveData.Resources.TryGetValue(recipe.output.name, out var stock) ? stock.Amount : 0;
                     Assert.True(service.Harvest(bedId)); view.Refresh();
                     var paidYield = oracle.saveData.Resources[recipe.output.name].Amount - beforeYield;

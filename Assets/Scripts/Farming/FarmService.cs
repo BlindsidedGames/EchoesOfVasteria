@@ -36,7 +36,7 @@ namespace TimelessEchoes.Farming
         private string lastError;
         private GameData yieldPreviewOwner;
         private double nextYieldPreview;
-        private readonly Dictionary<Resource, float> yieldPreviewBonuses = new();
+        private readonly Dictionary<Resource, double> yieldPreviewBonuses = new();
         public string LastError => lastError == null ? null : ErrorText(lastError);
         public event Action Changed;
         private bool InTown => Ready && GameManager.Instance != null && GameManager.Instance.IsInTown && !GameManager.Instance.RunLoadingActive;
@@ -66,12 +66,13 @@ namespace TimelessEchoes.Farming
         }
         private void Update()
         {
-            if (!Ready || suspended) return;
+            if (!Ready || suspended || GameManager.Instance?.BackgroundProgressPaused == true)
+            { skipGrowthFrame = true; return; }
             if (!ReferenceEquals(owner, Oracle.oracle.saveData)) { SettleResume(); return; }
             var seconds = Time.unscaledDeltaTime;
             if (skipGrowthFrame) skipGrowthFrame = false;
             else if (seconds >= 0 && seconds <= Time.maximumDeltaTime) FarmCommands.TickFields(owner.Farm, seconds);
-            if (Time.realtimeSinceStartupAsDouble >= nextAutomaticHarvestRetry && FarmProjects.AutoReplant(owner.Farm) && owner.Farm.Beds.Any(b => FarmCommands.KnownBed(b.Key) && b.Value?.Repeat == true && b.Value.IsReady))
+            if (Time.realtimeSinceStartupAsDouble >= nextAutomaticHarvestRetry && FarmCommands.HasAutomaticWork(owner, Content))
             {
                 if (!Execute(state => FarmCommands.HarvestFields(owner, FarmJournal.NextOperation(state, "harvest-auto"), DateTime.UtcNow, Content, true)))
                     nextAutomaticHarvestRetry = Time.realtimeSinceStartupAsDouble + 1;
@@ -119,7 +120,7 @@ namespace TimelessEchoes.Farming
         };
         private bool Execute(Func<FarmState, FarmCommandResult> command)
         {
-            if (!Ready)
+            if (!Ready || GameManager.Instance?.BackgroundProgressPaused == true)
             { lastError = "NotReady"; Changed?.Invoke(); return false; }
             CaptureGrowth();
             var ok = Oracle.oracle.TryCommitFarmCommand(command, out var error);
@@ -211,11 +212,11 @@ namespace TimelessEchoes.Farming
                 yieldPreviewOwner = data; nextYieldPreview = Time.realtimeSinceStartupAsDouble + 1;
                 yieldPreviewBonuses.Clear();
             }
-            float PreviewBonus(Resource resource)
+            double PreviewBonus(FarmRecipe recipe, Resource resource)
             {
-                if (!resource) return 0;
+                if (!resource) return 1;
                 if (!yieldPreviewBonuses.TryGetValue(resource, out var bonus))
-                    yieldPreviewBonuses[resource] = bonus = CauldronResourceYield.BonusPercent(data, resource);
+                    yieldPreviewBonuses[resource] = bonus = FarmContent.HarvestMultiplier(data, recipe, resource);
                 return bonus;
             }
             if (!config) return new FarmPresentationSnapshot();
@@ -266,8 +267,8 @@ namespace TimelessEchoes.Farming
                     var orchard=index>=6;
                     return new FarmBedPresentation { Id=id,Title=ToolkitLocalization.Text("fields.plot-number", "Plot {0}", orchard ? index-5 : index+1),
                         Unlocked=FarmCommands.AccessibleBed(state,id),Orchard=orchard,RecipeId=recipe?.id,RecipeTitle=recipe?.DisplayName,YieldTitle=ToolkitLocalization.Name(recipe?.output),
-                        ExpectedYield=bed?.IsPlanted==true ? bed.FrozenYield * bed.GrowthMultiplier * (1 + PreviewBonus(recipe?.output) / 100d) : 0,
-                        SecondaryExpectedYield=bed?.IsPlanted==true ? bed.FrozenSecondaryYield * bed.GrowthMultiplier * (1 + PreviewBonus(recipe?.secondaryOutput) / 100d) : 0,
+                        ExpectedYield=bed?.IsPlanted==true ? bed.FrozenYield * bed.GrowthMultiplier * PreviewBonus(recipe, recipe?.output) : 0,
+                        SecondaryExpectedYield=bed?.IsPlanted==true ? bed.FrozenSecondaryYield * bed.GrowthMultiplier * PreviewBonus(recipe, recipe?.secondaryOutput) : 0,
                         SecondaryIcon=recipe?.secondaryOutput?.icon,SecondaryTitle=ToolkitLocalization.Name(recipe?.secondaryOutput),Timber=recipe?.secondaryOutput,
                         HarvestXp=bed == null ? 0 : checked(bed.HarvestXp * bed.GrowthMultiplier), GrowFully=bed?.FullGrowth==true, EstablishedTree=bed?.EstablishedTree==true,
                         Icon=bed?.IsPlanted==true?recipe?.output?.icon:null,Watered=bed?.Watered==true,Repeat=bed?.Repeat==true,Planted=bed?.IsPlanted==true,Ready=bed?.IsReady==true,

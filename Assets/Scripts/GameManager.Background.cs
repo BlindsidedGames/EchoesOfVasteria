@@ -18,9 +18,12 @@ namespace TimelessEchoes
     {
         private bool backgroundSuspended, backgroundSettling, backgroundDemoStarted, activityVisible;
         private float backgroundTimeScale = 1, nextBackgroundForecast;
+        public bool BackgroundProgressPaused => backgroundSuspended || backgroundSettling || resumeScheduled ||
+            runLoadingActive || RunRestorePending;
 
         private void EnterRunBackground()
         {
+            if (resumeScheduled || runLoadingActive || RunRestorePending) return;
             if (Oracle.oracle?.saveData?.Hardcore == true)
             {
                 if (HardcoreFallen || IsInTown || backgroundSuspended || runLoadingActive) return;
@@ -30,8 +33,10 @@ namespace TimelessEchoes
                 Time.timeScale = 0;
                 return;
             }
-            if (!BackgroundRunPrototype.Enabled || IsInTown || backgroundSuspended || runLoadingActive) return;
+            if (!BackgroundRunPrototype.Enabled || backgroundSuspended || runLoadingActive) return;
             SaveActiveRun();
+            if (Oracle.oracle?.HasLoadedCurrentSlotData != true) return;
+            Oracle.oracle.saveData.BackgroundProgressUtcTicks = DateTime.UtcNow.Ticks;
             try { RefreshBackgroundForecast(); }
             catch (Exception ex) { Debug.LogWarning($"Could not prepare the background display ({ex.GetType().Name})."); }
             // Saves must retain the departure time until this checkpoint is settled
@@ -52,12 +57,18 @@ namespace TimelessEchoes
                 return;
             }
             var saved = Oracle.oracle?.saveData?.ActiveRun;
-            if (saved == null) { Time.timeScale = backgroundTimeScale; return; }
+            if (saved == null)
+            {
+                if (!TrySettleBackground(null, null)) return;
+                Time.timeScale = backgroundTimeScale;
+                return;
+            }
             // Lock/authentication can briefly reactivate before pausing again. The
             // existing settlement threshold awards nothing for this interval; keep
             // the live world ready to capture a new departure instead of rebuilding.
             if ((DateTime.UtcNow.Ticks - saved.CheckpointUtcTicks) / (double)TimeSpan.TicksPerSecond < 2)
             {
+                if (!TrySettleBackground(saved, null)) return;
                 loadingRun = null;
                 Time.timeScale = backgroundTimeScale;
                 return;
@@ -122,91 +133,137 @@ namespace TimelessEchoes
 
         private bool TrySettleBackground(RunSaveData run, MapGenerationButton entry)
         {
-            if (!BackgroundRunPrototype.Enabled || run.CheckpointUtcTicks <= 0 || backgroundSettling) return true;
-            var seconds = (DateTime.UtcNow.Ticks - run.CheckpointUtcTicks) / (double)TimeSpan.TicksPerSecond;
-            if (seconds < 2) return true;
-            BackgroundRunEstimator.Input input;
-            BackgroundRunEstimator.Result forecast;
-            BackgroundRunContent content;
-            try
+            var oracle = Oracle.oracle;
+            var owner = oracle?.saveData;
+            if (!BackgroundRunPrototype.Enabled || owner == null || backgroundSettling) return true;
+            var checkpoint = owner.BackgroundProgressUtcTicks > 0
+                ? owner.BackgroundProgressUtcTicks : run?.CheckpointUtcTicks ?? 0;
+            if (checkpoint <= 0 || checkpoint > DateTime.MaxValue.Ticks) return true;
+            var now = DateTime.UtcNow;
+            var seconds = Math.Max(0, (now.Ticks - checkpoint) / (double)TimeSpan.TicksPerSecond);
+            var allowance = Math.Min(seconds, BackgroundRunEstimator.MaxAwaySeconds);
+            var fieldsAllowance = owner.BackgroundProgressUtcTicks > 0 ? allowance : 0;
+            var hasFields = owner.Farm?.Beds?.Any(pair => TimelessEchoes.Farming.FarmCommands.KnownBed(pair.Key) &&
+                (pair.Value?.IsPlanted == true || pair.Value?.Repeat == true)) == true;
+            if (seconds < 2 && !hasFields) return true;
+            BackgroundRunEstimator.Input input = null;
+            BackgroundRunEstimator.Result forecast = null;
+            BackgroundRunContent content = null;
+            if (run != null && entry != null && seconds >= 2)
             {
-                input = BackgroundInput(run, entry, seconds);
-                forecast = BackgroundRunEstimator.Forecast(input);
-                content = new BackgroundRunContent(entry.Config, entry.ScalingMode == MapScalingMode.KillBased,
-                    entry.KillsPerLevel, KillLevelIncreasePerTier, run, forecast.EchoTaskShare, forecast.EchoKillShare);
-            }
-            catch (Exception ex)
-            {
-                Oracle.oracle?.ReportOfflineEstimateFailure(ex);
-                return true; // The departure checkpoint and its rewards were untouched.
+                try
+                {
+                    input = BackgroundInput(run, entry, seconds);
+                    forecast = BackgroundRunEstimator.Forecast(input);
+                    content = new BackgroundRunContent(entry.Config, entry.ScalingMode == MapScalingMode.KillBased,
+                        entry.KillsPerLevel, KillLevelIncreasePerTier, run, forecast.EchoTaskShare, forecast.EchoKillShare);
+                }
+                catch (Exception ex)
+                {
+                    oracle.ReportOfflineEstimateFailure(ex);
+                    forecast = null;
+                }
             }
             backgroundSettling = true;
             loadingRun = run;
-            var initialResources = statTracker.TotalResourcesGathered;
+            var initialResources = statTracker ? statTracker.TotalResourcesGathered : 0;
             try
             {
-                var committed = Oracle.oracle.CommitBackgroundRun(() =>
+                var committed = oracle.CommitBackgroundProgress(() =>
                 {
-                    statTracker.RestoreRunState(run.Stats, entry.Config, entry.ScalingMode);
-                    runResourceTracker?.RestoreRunState(run.Loot);
-                    var oldRandom = UnityEngine.Random.state;
-                    UnityEngine.Random.InitState(unchecked((int)run.CheckpointUtcTicks));
-                    double elapsed = 0, runSeconds = 0;
-                    var firstRun = true;
                     var inventory = TimelessEchoes.Upgrades.ResourceManager.Instance;
-                    if (inventory) inventory.BeginBatch();
+                    double fieldsElapsed = 0;
+                    void AdvanceFields(double duration)
+                    {
+                        // Run drops become available to the next planting at their actual step boundary.
+                        if (owner.Farm?.Beds?.Count > 0)
+                        {
+                            inventory?.SaveState();
+                            var fieldSeconds = Math.Min(duration, Math.Max(0, fieldsAllowance - fieldsElapsed));
+                            TimelessEchoes.Farming.FarmCommands.AdvanceFields(owner, fieldSeconds,
+                                new DateTime(checkpoint, DateTimeKind.Utc).AddSeconds(Math.Min(fieldsElapsed, fieldsAllowance)),
+                                TimelessEchoes.Farming.FarmContent.Load(), oracle.ApplyBackgroundFarmProposal);
+                        }
+                        fieldsElapsed += duration;
+                    }
+                    var oldRandom = UnityEngine.Random.state;
+                    UnityEngine.Random.InitState(unchecked((int)checkpoint));
+                    inventory?.BeginBatch();
                     try
                     {
-                        foreach (var step in forecast.Steps)
+                        if (forecast != null)
                         {
-                            statTracker.AdvanceEstimatedRun(step); elapsed += step.Seconds; runSeconds += step.Seconds;
-                            content.Award(step, elapsed, runSeconds, firstRun);
-                            if (!step.EndsRun) continue;
-                            content.EndRun();
-                            if (step.Reaped)
+                            statTracker.RestoreRunState(run.Stats, entry.Config, entry.ScalingMode);
+                            runResourceTracker?.RestoreRunState(run.Loot);
+                            double elapsed = 0, runSeconds = 0;
+                            var firstRun = true;
+                            foreach (var step in forecast.Steps)
                             {
-                                statTracker.AddTimesReaped();
-                                if (step.CapIncrease > 0) statTracker.IncreaseMaxRunDistance((float)step.CapIncrease);
+                                AdvanceFields(step.Seconds);
+                                statTracker.AdvanceEstimatedRun(step);
+                                elapsed += step.Seconds;
+                                runSeconds += step.Seconds;
+                                content.Award(step, elapsed, runSeconds, firstRun);
+                                AdvanceFields(0);
+                                if (!step.EndsRun) continue;
+                                content.EndRun();
+                                if (step.Reaped)
+                                {
+                                    statTracker.AddTimesReaped();
+                                    if (step.CapIncrease > 0) statTracker.IncreaseMaxRunDistance((float)step.CapIncrease);
+                                }
+                                else statTracker.AddDeath();
+                                AdvanceFields(step.RestartSeconds);
+                                var restarts = !(step.Reaped && input.StopOnFirstReap) &&
+                                    step.RestartSeconds + .00001 >= input.RestartSeconds;
+                                if (!restarts) continue;
+                                statTracker.EndRun(true, step.Reaped, true);
+                                statTracker.BeginRun(entry.Config, entry.ScalingMode);
+                                runSeconds = 0;
+                                firstRun = false;
+                                statTracker.RecordHeroPosition(new Vector3((float)input.StartingDistance, 0, 0));
+                                elapsed += step.RestartSeconds;
                             }
-                            else statTracker.AddDeath();
-                            var restarts = !(step.Reaped && input.StopOnFirstReap) && step.RestartSeconds + .00001 >= input.RestartSeconds;
-                            if (!restarts) continue;
-                            statTracker.EndRun(true, step.Reaped, true);
-                            statTracker.BeginRun(entry.Config, entry.ScalingMode);
-                            runSeconds = 0; firstRun = false;
-                            statTracker.RecordHeroPosition(new Vector3((float)input.StartingDistance, 0, 0));
-                            elapsed += step.RestartSeconds;
+                            statTracker.SetEstimatedRemainders(forecast);
+                            var last = forecast.Steps.LastOrDefault();
+                            var dead = last == null ? run.Dead : last.EndsRun &&
+                                ((last.Reaped && input.StopOnFirstReap) || last.RestartSeconds + .00001 < input.RestartSeconds);
+                            run.Distance = (float)forecast.Distance;
+                            run.HealthFraction = dead ? 0 : (float)forecast.HealthFraction;
+                            run.Dead = dead;
+                            run.Reaped = dead && (last == null ? run.Reaped : last.Reaped);
+                            run.Stats = statTracker.CaptureRunState();
+                            run.Loot = runResourceTracker ? runResourceTracker.CaptureRunState() : run.Loot;
+                            if (forecast.Reaps + forecast.Deaths > 0) run.Buffs = null;
+                            else if (run.Buffs != null)
+                            {
+                                foreach (var buff in run.Buffs.Active) buff.Remaining -= (float)forecast.MovingSeconds;
+                                run.Buffs.Active.RemoveAll(b => b.Remaining <= 0 || b.ExpireAtDistance > 0 && b.ExpireAtDistance <= run.Distance);
+                                foreach (var key in run.Buffs.Cooldowns.Keys.ToArray())
+                                    run.Buffs.Cooldowns[key] = Math.Max(0, run.Buffs.Cooldowns[key] - (float)forecast.MovingSeconds);
+                            }
+                            owner.Shop.GatheringSeconds = Math.Max(0, owner.Shop.GatheringSeconds - forecast.Seconds);
                         }
+                        // Fields continue through dialogue stops and maps without usable run history.
+                        AdvanceFields(Math.Max(0, allowance - fieldsElapsed));
+                        if (run != null) run.CheckpointUtcTicks = now.Ticks;
+                        owner.ActiveRun = run;
+                        owner.BackgroundProgressUtcTicks = now.Ticks;
                     }
                     finally
                     {
                         UnityEngine.Random.state = oldRandom;
-                        if (inventory) inventory.EndBatch();
+                        inventory?.EndBatch();
                     }
-                    statTracker.SetEstimatedRemainders(forecast);
-                    var last = forecast.Steps.LastOrDefault();
-                    var dead = last == null ? run.Dead : last.EndsRun && ((last.Reaped && input.StopOnFirstReap) || last.RestartSeconds + .00001 < input.RestartSeconds);
-                    run.Distance = (float)forecast.Distance; run.HealthFraction = dead ? 0 : (float)forecast.HealthFraction;
-                    run.Dead = dead; run.Reaped = dead && (last == null ? run.Reaped : last.Reaped);
-                    run.Stats = statTracker.CaptureRunState();
-                    run.Loot = runResourceTracker ? runResourceTracker.CaptureRunState() : run.Loot;
-                    if (forecast.Reaps + forecast.Deaths > 0) run.Buffs = null;
-                    else if (run.Buffs != null)
-                    {
-                        foreach (var buff in run.Buffs.Active) buff.Remaining -= (float)forecast.MovingSeconds;
-                        run.Buffs.Active.RemoveAll(b => b.Remaining <= 0 || b.ExpireAtDistance > 0 && b.ExpireAtDistance <= run.Distance);
-                        foreach (var key in run.Buffs.Cooldowns.Keys.ToArray()) run.Buffs.Cooldowns[key] = Math.Max(0, run.Buffs.Cooldowns[key] - (float)forecast.MovingSeconds);
-                    }
-                    Oracle.oracle.saveData.Shop.GatheringSeconds = Math.Max(0, Oracle.oracle.saveData.Shop.GatheringSeconds - forecast.Seconds);
-                    run.CheckpointUtcTicks = DateTime.UtcNow.Ticks;
-                    Oracle.oracle.saveData.ActiveRun = run;
                 });
                 if (!committed) return false;
                 backgroundSettlementCommitted = true;
-                var report = new { map = run.Map, awaySeconds = seconds, forecast.SampleCount, forecast.Seconds,
-                    forecast.Distance, forecast.Reaps, forecast.Deaths, forecast.Tasks, forecast.Kills,
-                    forecast.StopReason, resources = statTracker.TotalResourcesGathered - initialResources,
-                    checkpointUtcTicks = run.CheckpointUtcTicks, prototype = true };
+                var report = new { map = run?.Map, awaySeconds = seconds, fieldsSeconds = fieldsAllowance,
+                    sampleCount = forecast?.SampleCount ?? 0, estimatedSeconds = forecast?.Seconds ?? 0,
+                    distance = forecast?.Distance, reaps = forecast?.Reaps, deaths = forecast?.Deaths,
+                    tasks = forecast?.Tasks, kills = forecast?.Kills, stopReason = forecast?.StopReason,
+                    resources = (statTracker ? statTracker.TotalResourcesGathered : 0) - initialResources,
+                    checkpointUtcTicks = now.Ticks, prototype = true };
                 try
                 {
                     var json = JsonConvert.SerializeObject(report, Formatting.Indented);
@@ -238,10 +295,13 @@ namespace TimelessEchoes
             var forecast = BackgroundRunEstimator.Forecast(input);
             var content = new BackgroundRunContent(entry.Config, entry.ScalingMode == MapScalingMode.KillBased,
                 entry.KillsPerLevel, KillLevelIncreasePerTier, run);
-            var resourcesPerTask = content.EstimateResourcesPerWork(false, run.Distance);
+            var seedRates = new Dictionary<TimelessEchoes.Upgrades.Resource, double>();
+            var resourcesPerTask = content.EstimateResourcesPerWork(false, run.Distance, seedRates);
             var resourcesPerKill = content.EstimateResourcesPerWork(true, run.Distance);
-            var resources = forecast.Tasks * resourcesPerTask + forecast.Kills * resourcesPerKill;
-            var timeline = WatchForecastTimeline.Create(input, forecast, resourcesPerTask, resourcesPerKill);
+            var fields = TimelessEchoes.Farming.FarmBackgroundProjection.Create(Oracle.oracle.saveData,
+                TimelessEchoes.Farming.FarmContent.Load(), forecast, BackgroundRunEstimator.MaxAwaySeconds, seedRates);
+            var resources = forecast.Tasks * resourcesPerTask + forecast.Kills * resourcesPerKill + (fields?.Total ?? 0);
+            var timeline = WatchForecastTimeline.Create(input, forecast, resourcesPerTask, resourcesPerKill, fields);
             BackgroundRunPrototype.Publish(run.Map, forecast, run.Distance, resources, timeline);
             activityVisible = true;
         }

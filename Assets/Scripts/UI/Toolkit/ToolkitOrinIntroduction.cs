@@ -66,7 +66,7 @@ namespace TimelessEchoes.UI.Toolkit
                     Gear.ForgeFirstLesson.Stage >= 5 && QuestUtils.QuestCompleted(Gear.ForgeFirstLesson.QuestId))
                     data.General.MapStatisticsTutorialStage = 1;
                 if (!runScreen) runScreen = FindAnyObjectByType<ToolkitRunScreen>();
-                if (TimelessEchoes.Characters.CharacterCreation.Required || TownQuestReveal.IsPlaying || WorldPresentation.IsBusy || data == null || !windows || windows.HasOpenWindow ||
+                if (TimelessEchoes.Characters.CharacterCreation.Required || ToolkitConversationScreen.BlocksInput || TownQuestReveal.IsPlaying || WorldPresentation.IsBusy || data == null || !windows || windows.HasOpenWindow ||
                     runScreen?.HasOpenDetails == true ||
                     Blindsided.SaveData.StaticReferences.ActiveNpcMeetings.Count > 0 || (gm && gm.RunLoadingActive))
                 { yield return null; continue; }

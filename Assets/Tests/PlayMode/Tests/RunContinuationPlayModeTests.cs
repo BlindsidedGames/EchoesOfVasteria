@@ -369,6 +369,7 @@ namespace Tests.PlayMode
                 Events.ApplicationBackground();
                 Assert.That(Time.timeScale, Is.Zero);
                 oracle.saveData.ActiveRun.CheckpointUtcTicks = DateTime.UtcNow.AddSeconds(-20).Ticks;
+                oracle.saveData.BackgroundProgressUtcTicks = oracle.saveData.ActiveRun.CheckpointUtcTicks;
                 // A due autosave may run before the mobile resume callback.
                 // It must retain the departure time so all 20 seconds are settled.
                 oracle.RequestCheckpointSave();

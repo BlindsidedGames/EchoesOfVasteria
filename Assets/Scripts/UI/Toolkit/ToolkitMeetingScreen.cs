@@ -27,6 +27,18 @@ namespace TimelessEchoes.UI.Toolkit
         private Action finished;
         private bool initialized, completed;
         private bool continueAfterDialogue;
+        private Blindsided.SaveData.GameData conversationOwner;
+        private string conversationId;
+        private bool conversationOrchard;
+        private bool replay;
+        public void RecordConversation(string id, bool orchardBuilt = false)
+        {
+            conversationOwner = Blindsided.Oracle.oracle?.saveData;
+            Conversations.ConversationCatalog.EnsureHistory(conversationOwner, id);
+            conversationId = id;
+            conversationOrchard = orchardBuilt;
+        }
+        public void SetReplay() => replay = true;
         private ToolkitNavigationScreen lessonNavigation;
         private bool guidanceStarted;
         private string navigationShortcut;
@@ -274,6 +286,11 @@ namespace TimelessEchoes.UI.Toolkit
             Visible.Remove(this);
             // Release before completion can synchronously enqueue another speaker.
             ReleasePresentation();
+            if (conversationId != null && conversationOwner != null && conversationOwner == Blindsided.Oracle.oracle?.saveData)
+            {
+                conversationOwner.HeardConversations[conversationId] = conversationOrchard;
+                Blindsided.Oracle.oracle.RequestCheckpointSave();
+            }
             try { finished?.Invoke(); }
             finally { Destroy(gameObject); }
         }
@@ -298,7 +315,7 @@ namespace TimelessEchoes.UI.Toolkit
                 var guided = lessonNavigation && guidanceStarted;
                 presentation?.SetSuspended(settingsOpen);
                 presentation?.SetGuidance(guided);
-                if (!closing && performance && presentation?.SubjectFramed == true && !settingsOpen)
+                if (!replay && !closing && performance && presentation?.SubjectFramed == true && !settingsOpen)
                     performance.Begin(TimelessEchoes.Hero.HeroController.Instance?.transform);
                 ApplyLayout();
                 // Settings temporarily covers the lesson without completing or replacing it.

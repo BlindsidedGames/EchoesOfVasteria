@@ -27,8 +27,11 @@ namespace Tests.PlayMode
             var uiObject = new GameObject("Isolated shop UI", typeof(UIDocument));
             yield return LocalizationSettings.InitializationOperation;
             var originalLocale = LocalizationSettings.SelectedLocale;
+            var originalFocus = ToolkitResponsiveLayout.UserFocusView;
             try
             {
+                // Standalone menu fixture has no window manager to collapse the run viewport.
+                ToolkitResponsiveLayout.SetFocusView(false);
                 LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.GetLocale("en");
                 var shop = shopObject.AddComponent<ShopService>(); shop.enabled = false;
                 typeof(ShopService).GetField("ledger", Private).SetValue(shop, new ShopLedger(Path.Combine(root, "shop.json")));
@@ -95,6 +98,7 @@ namespace Tests.PlayMode
             {
                 Object.DestroyImmediate(uiObject); Object.DestroyImmediate(shopObject);
                 LocalizationSettings.SelectedLocale = originalLocale;
+                ToolkitResponsiveLayout.SetFocusView(originalFocus);
             }
         }
     }

@@ -23,12 +23,12 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  baseDurationSeconds: 600
+  baseDurationSeconds: 120
   durationMultiplierPerCropLevel: 1.02
   minimumDurationSeconds: 60
   minimumCropCapLevel: 100
   lastCropCapLevel: 5000
-  baseYield: 10
+  baseYield: 100
   harvestXp: 10
   seedChance: 0.05
   seedChancePerCropTier: 0.9

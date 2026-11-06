@@ -96,11 +96,10 @@ namespace TimelessEchoes.Editor.Characters
             var iconRows = new[] { 8, 0, 1, 2, 3, 4, 5, 6, 7 };
             var iconColumns = new[] { 1, 0, 3, 2 };
             catalog.skillToolIcons = iconRows.SelectMany(row => iconColumns.Select(column => iconSheet[row * 12 + column])).ToArray();
-            var forge = AssetDatabase.LoadAssetAtPath<ToolkitForgeDefinition>("Assets/UI/Toolkit/Forge.asset");
-            if (!forge || forge.coreIcons.Length != metals.Length) throw new InvalidOperationException("Missing Forge core icons");
-            var starterCore = Sprites("Assets/Art/Packs/Cute_Fantasy_UI/Cores.png")[9];
+            var gloves = AssetDatabase.LoadAllAssetsAtPath("Assets/Art/Packs/Cute_Fantasy_Icons_Premium/Cute_Fantasy_Icons_Armor/Armor_all_16x16.png").OfType<Sprite>().ToArray();
+            var gloveColours = new[] { "Charcoal", "CopperBrown", "SilverGrey", "GoldenYellow", "Orange", "Cyan", "Green", "Red", "Purple" };
             catalog.skillSupportIcons = iconRows.SelectMany((row, tier) => new[] {
-                tier == 0 ? starterCore : forge.coreIcons[tier - 1], iconSheet[row * 12 + 6]
+                gloves.Single(sprite => sprite.name.EndsWith("_" + gloveColours[tier] + "_Gauntlet_LongCuff_OpenFingers", StringComparison.Ordinal)), iconSheet[row * 12 + 6]
             }).ToArray();
             catalog.gear = new CharacterCatalog.GearVisual[metals.Length];
             for (var tier = 0; tier < metals.Length; tier++) {

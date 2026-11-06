@@ -33,6 +33,7 @@ namespace TimelessEchoes.Shop
         {
             if (string.IsNullOrEmpty(transactionId)) return false;
             if (productId == settings.permanentProductId) return Update(next => next.Permanent = true);
+            if (productId == settings.cosmeticProductId) return Update(next => next.Cosmetics = true);
             if (Array.IndexOf(settings.supporterProductIds, productId) < 0) return false;
             if (Array.IndexOf(Current.Transactions ?? Array.Empty<string>(), transactionId) >= 0) return true;
             return Update(next =>
@@ -42,11 +43,11 @@ namespace TimelessEchoes.Shop
             });
         }
         // Steam retains purchased items. Restoring a stack must not count it again.
-        public bool ApplySteamInventory(bool permanent, int supporters)
+        public bool ApplySteamInventory(bool permanent, int supporters, bool cosmetics = false)
         {
             if (supporters < 0) return false;
-            if (Current.Permanent == permanent && Current.SupporterPurchases == supporters) return true;
-            return Update(next => { next.Permanent = permanent; next.SupporterPurchases = supporters; });
+            if (Current.Permanent == permanent && Current.SupporterPurchases == supporters && Current.Cosmetics == cosmetics) return true;
+            return Update(next => { next.Permanent = permanent; next.SupporterPurchases = supporters; next.Cosmetics = cosmetics; });
         }
     }
 }

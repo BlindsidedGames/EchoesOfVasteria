@@ -48,6 +48,7 @@ namespace TimelessEchoes.Farming
         private bool CanSpeak => Ready && GameManager.Instance && GameManager.Instance.IsInTown && !GameManager.Instance.RunLoadingActive &&
             !GameManager.HardcoreFallen &&
             !Characters.CharacterCreation.Required && !WorldPresentation.IsBusy && !TownQuestReveal.IsPlaying &&
+            !ToolkitConversationScreen.BlocksInput &&
             !ToolkitMeetingScreen.HasVisibleMeeting && Blindsided.SaveData.StaticReferences.ActiveNpcMeetings.Count == 0 &&
             SummaryClosed &&
             TownWindowManager.Instance && !TownWindowManager.Instance.HasOpenWindow;
@@ -113,6 +114,7 @@ namespace TimelessEchoes.Farming
                 screen.Init(conversation.lines[0].speaker?.portrait, conversation.lines.Select(l => l.Text(orchardBuilt)).ToArray(),
                     Finished, conversation.lines.Select(l => l.Key(orchardBuilt)).ToArray(), npcId: npcId, worldSubject: subject);
                 screen.SetLineSpeakers(conversation.lines.Select(l => l.speaker).ToArray());
+                screen.RecordConversation("story:" + conversation.id, orchardBuilt);
                 if (questId == "Farm.Garden.Build01.v1") screen.SetFinalActionLabel("farm.display-name", "Fields");
                 screen.BeginDialogue();
                 while (screen && Ready && ReferenceEquals(capturedOwner, Oracle.oracle.saveData)) yield return null;

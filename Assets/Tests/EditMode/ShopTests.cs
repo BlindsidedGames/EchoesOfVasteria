@@ -19,9 +19,12 @@ namespace Tests.EditMode
             data.General.MapStatisticsTutorialStage = 9;
             Assert.True(ShopRules.IntroComplete(data));
         }
-        [TestCase(0, true)] [TestCase(5400, true)] [TestCase(5401, false)] [TestCase(7200, false)]
-        public void ClaimsBankWholeThirtyMinuteRewardsWithoutExceedingTwoHours(double seconds, bool allowed)
+        [TestCase(0, true)] [TestCase(5400, true)] [TestCase(5401, true)] [TestCase(7199, true)] [TestCase(7200, false)]
+        public void ClaimsRemainAvailableUntilTheTwoHourBankIsFull(double seconds, bool allowed)
             => Assert.AreEqual(allowed, ShopRules.CanClaim(seconds));
+        [TestCase(0, true)] [TestCase(1799, true)] [TestCase(1800, false)] [TestCase(5400, false)]
+        public void RefillReminderOnlyAppearsBelowThirtyMinutes(double seconds, bool visible)
+            => Assert.AreEqual(visible, ShopRules.NeedsRefill(seconds));
         [Test] public void BundledCatalogUsesTheIdsContractAndExcludesThisGame()
         {
             var catalog = PromotionCatalog.Parse(Resources.Load<TextAsset>("Shop/Promotions/catalog").text);
@@ -50,6 +53,9 @@ namespace Tests.EditMode
                 Assert.AreEqual(1, ledger.Current.SupporterPurchases);
                 Assert.True(ledger.Fulfill(settings, settings.permanentProductId, "permanent-1"));
                 Assert.True(new ShopLedger(path).Current.Permanent);
+                Assert.False(ledger.Current.HasCosmetics, "Support and gathering purchases do not include cosmetics.");
+                Assert.True(ledger.Fulfill(settings, settings.cosmeticProductId, "cosmetics-1"));
+                Assert.True(new ShopLedger(path).Current.HasCosmetics);
                 Assert.False(ledger.Fulfill(settings, "unknown", "unknown-1"));
                 Assert.False(ledger.Fulfill(settings, settings.permanentProductId, ""));
             }
@@ -65,6 +71,8 @@ namespace Tests.EditMode
                 var ledger = new ShopLedger(Path.Combine(obstruction, "ownership.json")); var settings = ShopSettings.Load();
                 Assert.False(ledger.Fulfill(settings, settings.permanentProductId, "paid-1"));
                 Assert.False(ledger.Current.Permanent);
+                Assert.False(ledger.Fulfill(settings, settings.cosmeticProductId, "cosmetics-1"));
+                Assert.False(ledger.Current.HasCosmetics);
                 Assert.False(ledger.ApplySteamInventory(true, 1));
                 Assert.False(ledger.Current.Permanent);
                 Assert.AreEqual(0, ledger.Current.SupporterPurchases);
@@ -88,6 +96,7 @@ namespace Tests.EditMode
                 Assert.AreEqual(eligible, ledger.GrantLegacyAndroidInstall(cutoff.ToUnixTimeMilliseconds() + offsetMilliseconds, cutoff));
                 ledger = new ShopLedger(path);
                 Assert.AreEqual(eligible, ledger.Current.OriginalOwner);
+                Assert.AreEqual(eligible, ledger.Current.HasCosmetics);
                 Assert.AreEqual(eligible, ledger.GrantLegacyAndroidInstall(cutoff.AddDays(30).ToUnixTimeMilliseconds(), cutoff));
                 Assert.AreEqual(eligible, ledger.GrantLegacyAndroidInstall(0, cutoff));
                 Assert.AreEqual(eligible, new ShopLedger(path).Current.OriginalOwner);
@@ -104,15 +113,17 @@ namespace Tests.EditMode
             try
             {
                 var ledger = new ShopLedger(path);
-                Assert.True(ledger.ApplySteamInventory(true, 3));
+                Assert.True(ledger.ApplySteamInventory(true, 3, true));
                 ledger = new ShopLedger(path);
-                Assert.True(ledger.ApplySteamInventory(true, 3));
+                Assert.True(ledger.Current.HasCosmetics);
+                Assert.True(ledger.ApplySteamInventory(true, 3, true));
                 Assert.AreEqual(3, ledger.Current.SupporterPurchases);
                 Assert.True(ledger.ApplySteamInventory(true, 4));
                 Assert.AreEqual(4, new ShopLedger(path).Current.SupporterPurchases);
                 Assert.True(ledger.ApplySteamInventory(false, 2));
                 ledger = new ShopLedger(path);
                 Assert.False(ledger.Current.Permanent);
+                Assert.False(ledger.Current.HasCosmetics, "A complete inventory without the item revokes purchased cosmetics.");
                 Assert.AreEqual(2, ledger.Current.SupporterPurchases);
                 Assert.False(ledger.ApplySteamInventory(true, -1));
                 Assert.False(ledger.Current.Permanent);

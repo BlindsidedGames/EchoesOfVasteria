@@ -9,11 +9,16 @@ namespace TimelessEchoes.Shop
     public sealed class ShopSettings
     {
         public string permanentProductId, baseCurrency, legacyPurchaseCutoff;
+        public string cosmeticProductId, cosmeticBaseCurrency;
+        public double cosmeticBasePrice;
+        public int steamCosmeticItemDefId;
         public string[] supporterProductIds;
         public double permanentBasePrice;
         public double[] supporterBasePrices;
         public int steamPermanentItemDefId;
         public int[] steamSupporterItemDefIds;
+        public string[] NonConsumableProductIds => new[] { permanentProductId, cosmeticProductId };
+        public bool IsNonConsumable(string id) => !string.IsNullOrEmpty(id) && (id == permanentProductId || id == cosmeticProductId);
         public static ShopSettings Load()
         {
             var asset = Resources.Load<TextAsset>("Shop/settings");
@@ -23,7 +28,8 @@ namespace TimelessEchoes.Shop
     }
     [Serializable] public sealed class ShopOwnership
     {
-        public bool Permanent, OriginalOwner, Enabled = true;
+        public bool Permanent, Cosmetics, OriginalOwner, Enabled = true;
+        public bool HasCosmetics => Cosmetics || OriginalOwner;
         public string[] Transactions = Array.Empty<string>();
         public int SupporterPurchases;
     }
@@ -44,6 +50,8 @@ namespace TimelessEchoes.Shop
         public bool Unlocked => Oracle.oracle?.HasLoadedCurrentSlotData == true && ShopRules.IntroComplete(Oracle.oracle.saveData);
         public bool PermanentOwned => ownership.Permanent || ownership.OriginalOwner;
         public bool OriginalOwner => ownership.OriginalOwner;
+        public bool CosmeticsOwned => ownership.HasCosmetics;
+        public bool Owns(string id) => id == Settings.permanentProductId ? PermanentOwned : id == Settings.cosmeticProductId && CosmeticsOwned;
         public bool PermanentEnabled => PermanentOwned && ownership.Enabled;
         public double Remaining => ShopRules.Remaining(Oracle.oracle?.saveData?.Shop?.GatheringSeconds ?? 0);
         public bool Active => PermanentEnabled || !PermanentOwned && Remaining > 0;
@@ -61,9 +69,9 @@ namespace TimelessEchoes.Shop
             ledger = new ShopLedger(Path.Combine(Application.persistentDataPath, "shop-steam-" + account + ".json"));
             steamAccount = account; Changed?.Invoke();
         }
-        public bool ApplySteamInventory(bool permanent, int supporters)
+        public bool ApplySteamInventory(bool permanent, int supporters, bool cosmetics = false)
         {
-            if (steamAccount == null || !ledger.ApplySteamInventory(permanent, supporters)) return false;
+            if (steamAccount == null || !ledger.ApplySteamInventory(permanent, supporters, cosmetics)) return false;
             Changed?.Invoke(); return true;
         }
         private void Awake()
@@ -91,7 +99,7 @@ namespace TimelessEchoes.Shop
         {
             if (!CanClaim) return false;
             var progress = Oracle.oracle.saveData.Shop ??= new();
-            progress.GatheringSeconds = Remaining + ShopRules.ClaimSeconds;
+            progress.GatheringSeconds = ShopRules.Remaining(Remaining + ShopRules.ClaimSeconds);
             Blindsided.EventHandler.SaveData(); Changed?.Invoke(); return true;
         }
         public void TogglePermanent()
@@ -105,9 +113,18 @@ namespace TimelessEchoes.Shop
             Changed?.Invoke(); return true;
         }
         public bool SetPermanentEntitlement(bool owned)
+            => SetPurchasedEntitlement(Settings.permanentProductId, owned);
+
+        public bool SetPurchasedEntitlement(string id, bool owned)
         {
-            if (ownership.Permanent == owned) return true;
-            var result = ledger.Update(next => next.Permanent = owned);
+            if (!Settings.IsNonConsumable(id)) return false;
+            var cosmetics = id == Settings.cosmeticProductId;
+            if ((cosmetics ? ownership.Cosmetics : ownership.Permanent) == owned) return true;
+            var result = ledger.Update(next =>
+            {
+                if (cosmetics) next.Cosmetics = owned;
+                else next.Permanent = owned;
+            });
             if (result) Changed?.Invoke(); return result;
         }
         public void GrantLegacyAndroidInstall(long firstInstallMilliseconds, DateTimeOffset cutoff)

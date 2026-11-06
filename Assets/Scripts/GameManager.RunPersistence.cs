@@ -6,6 +6,7 @@ using Blindsided;
 using Blindsided.SaveData;
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Hero;
+using TimelessEchoes.Stats;
 using UnityEngine;
 
 namespace TimelessEchoes
@@ -30,6 +31,8 @@ namespace TimelessEchoes
             // Suspension and generation retain their continuation checkpoint until
             // the world is rebuilt. A save must not replace its departure timestamp.
             if (loadingRun != null) { data.ActiveRun = loadingRun; return; }
+            if (!backgroundSuspended && !backgroundSettling && !runLoadingActive && !RunRestorePending)
+                data.BackgroundProgressUtcTicks = BackgroundRunPrototype.Enabled ? DateTime.UtcNow.Ticks : 0;
             if (IsInTown || !CurrentMap || !hero || statTracker?.RunInProgress != true)
             {
                 data.ActiveRun = null;
@@ -61,9 +64,27 @@ namespace TimelessEchoes
             ApplyHardcoreState();
             if (HardcoreFallen) return;
             var saved = Oracle.oracle?.saveData?.ActiveRun;
-            if (saved == null || resumeScheduled || !IsInTown || runLoadingActive) return;
+            if (resumeScheduled || !IsInTown || runLoadingActive) return;
+            if (saved == null)
+            {
+                if (BackgroundRunPrototype.Enabled && Oracle.oracle.saveData.BackgroundProgressUtcTicks > 0)
+                {
+                    resumeScheduled = true;
+                    StartCoroutine(ResumeTownBackground(Oracle.oracle.saveData));
+                }
+                return;
+            }
             resumeScheduled = true;
             StartCoroutine(ResumeAfterProgressLoads(saved));
+        }
+
+        private IEnumerator ResumeTownBackground(GameData owner)
+        {
+            yield return null;
+            resumeScheduled = false;
+            if (Oracle.oracle?.HasLoadedCurrentSlotData != true ||
+                !ReferenceEquals(owner, Oracle.oracle.saveData) || !IsInTown) yield break;
+            TrySettleBackground(null, null);
         }
 
         private IEnumerator ResumeAfterProgressLoads(RunSaveData saved)
