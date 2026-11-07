@@ -20,6 +20,8 @@ namespace Blindsided.SaveData
         }
 
         public RunSaveData ActiveRun;
+        // Shared departure checkpoint for adventure and Fields progress, including town saves.
+        public long BackgroundProgressUtcTicks;
         public Dictionary<string, List<TimelessEchoes.Stats.BackgroundRunSample>> BackgroundSamples = new();
         public TimelessEchoes.Shop.ShopProgress Shop = new();
         // Short-lived candidate for a synchronous in-memory economic mutation. Unrelated
@@ -89,6 +91,9 @@ namespace Blindsided.SaveData
 
         [ShowInInspector] [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Tasks")]
         public HashSet<string> CompletedNpcTasks = new();
+
+        // Null identifies older saves whose heard scenes can be inferred from progression.
+        public Dictionary<string, bool> HeardConversations;
 
         [HideReferenceObjectPicker] [TabGroup("GameDataTabs", "Disciples")]
         // Retired Alter-Echo records remain inert for save compatibility; there is no payout.

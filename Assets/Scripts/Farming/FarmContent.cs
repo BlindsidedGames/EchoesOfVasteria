@@ -20,12 +20,12 @@ namespace TimelessEchoes.Farming
         public string displayName = "Fields";
         public LocalizedString localizedDisplayName = new("TownUI", "farm.display-name");
         public string DisplayName => localizedDisplayName == null || localizedDisplayName.IsEmpty ? displayName : localizedDisplayName.GetLocalizedString();
-        public double baseDurationSeconds = 600;
+        public double baseDurationSeconds = 120;
         public double durationMultiplierPerCropLevel = 1.02;
         public double minimumDurationSeconds = 60;
         public int minimumCropCapLevel = 100;
         public int lastCropCapLevel = 5000;
-        public double baseYield = 10;
+        public double baseYield = 100;
         public int harvestXp = 10;
         // Retain the existing sapling curves independently of crop seed packs.
         [Range(0, 1)] public float seedChance = .05f;
@@ -67,6 +67,19 @@ namespace TimelessEchoes.Farming
         }
         public static bool Completed(GameData data, string id) => data?.Quests?.TryGetValue(id, out var quest) == true && quest?.Completed == true;
         public static double YieldMultiplier(int level) => 1 + .01 * (Math.Max(1, level) - 1d);
+        public static double HarvestMultiplier(GameData data, FarmRecipe recipe, Resource resource)
+        {
+            if (data == null || recipe == null || !resource) return 1;
+            var skills = SkillController.Instance;
+            var gain = skills ? skills.GetResourceGainMultiplier() * skills.GetResourceBonusMultiplier(recipe.source?.associatedSkill) : 1;
+            var cauldron = CauldronResourceYield.BonusPercent(data, resource) / 100d;
+            var inventory = ResourceManager.Instance;
+            var tier = inventory && ReferenceEquals(data, Blindsided.Oracle.oracle?.saveData)
+                ? inventory.GetTier(resource)
+                : data.Resources.TryGetValue(resource.name, out var saved) ? saved?.Tier ?? 1 : 1;
+            var tierBonus = inventory && !resource.DisableAlterEcho ? inventory.GetTierBonusPercent(tier) / 100d : 0;
+            return (gain + cauldron) * (1 + tierBonus);
+        }
         public static double SpeedFactor(int level) => level >= 60 ? .7 : level >= 30 ? .8 : level >= 10 ? .9 : 1;
         public int GrowthCapLevel(FarmRecipe recipe)
         {

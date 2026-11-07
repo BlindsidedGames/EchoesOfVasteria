@@ -63,9 +63,22 @@ namespace Tests.PlayMode
                 Assert.AreEqual(min, afterMin); Assert.AreEqual(max, afterMax);
                 yield return Pointer(point + Vector2.right * 200, false);
                 Assert.Less(camera.transform.position.x, normal.x - .5f, "Release must not snap back.");
-                yield return new WaitForSecondsRealtime(.6f); brain.ManualUpdate();
+                var settle = Time.realtimeSinceStartup + .6f;
+                var previousOffset = Mathf.Abs(camera.transform.position.x - frame.State.GetFinalPosition().x);
+                while (Time.realtimeSinceStartup < settle)
+                {
+                    yield return null;
+                    rigHost.transform.position += Vector3.right * (Time.unscaledDeltaTime * 3);
+                    brain.ManualUpdate();
+                    var offset = Mathf.Abs(camera.transform.position.x - frame.State.GetFinalPosition().x);
+                    Assert.LessOrEqual(offset, previousOffset + .001f, "The view must keep returning as its follow position moves.");
+                    previousOffset = offset;
+                }
                 Assert.Greater(camera.transform.position.x, shifted, "The view drifts toward its follow position.");
-                yield return new WaitForSecondsRealtime(7); brain.ManualUpdate();
+                settle = Time.realtimeSinceStartup + 7;
+                while (Time.realtimeSinceStartup < settle) { yield return null; brain.ManualUpdate(); }
+                normal = frame.State.GetFinalPosition();
+                RunActivityArea.TryGetBounds(camera, out min, out max);
                 Assert.That(camera.transform.position.x, Is.EqualTo(normal.x).Within(.02f));
                 blocker.SetActive(true); yield return null;
                 yield return Pointer(point, true); yield return Pointer(point + Vector2.right * 200, true); yield return Pointer(point, false);

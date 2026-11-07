@@ -328,6 +328,14 @@ MonoBehaviour:
   autoRemovalIntervalSeconds: 2
   progressBarObject: {fileID: 1455508166104743818}
   progressBar: {fileID: 4806323317670866511}
+  spriteRenderer: {fileID: 2547878457613048879}
+  wetSpriteRenderer: {fileID: 0}
+  growthStages:
+    - {fileID: -8582943164656172086, guid: fb2d20a85bb1e404abf5ec5eef672073, type: 3}
+    - {fileID: 6735665171789789739, guid: fb2d20a85bb1e404abf5ec5eef672073, type: 3}
+    - {fileID: -6927793014847252990, guid: fb2d20a85bb1e404abf5ec5eef672073, type: 3}
+    - {fileID: 214158277229850874, guid: 832a8ff528ace054787e1a6f66aa6b88, type: 3}
+  wateringPoint: {fileID: 0}
   treeRenderer: {fileID: 2547878457613048879}
   fruitingSprite: {fileID: 214158277229850874, guid: 832a8ff528ace054787e1a6f66aa6b88, type: 3}
   harvestedSprite: {fileID: -6927793014847252990, guid: fb2d20a85bb1e404abf5ec5eef672073, type: 3}

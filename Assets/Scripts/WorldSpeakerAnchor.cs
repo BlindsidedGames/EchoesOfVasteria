@@ -36,7 +36,26 @@ namespace TimelessEchoes
             return null;
         }
 
-        private static string Canonical(string id) => id switch
+        public static Transform Pick(Camera camera, Vector2 position)
+        {
+            Transform closest = null;
+            var nearest = float.PositiveInfinity;
+            foreach (var anchor in Anchors)
+            {
+                if (!anchor || !anchor.isActiveAndEnabled) continue;
+                var bounds = anchor.FramingBounds;
+                var a = camera.WorldToScreenPoint(bounds.min);
+                var b = camera.WorldToScreenPoint(bounds.max);
+                var size = new Vector2(Mathf.Max(44, b.x - a.x), Mathf.Max(44, b.y - a.y));
+                var center = (Vector2)(a + b) * .5f;
+                var distance = Vector2.SqrMagnitude(center - position);
+                if (new Rect(center - size * .5f, size).Contains(position) && distance < nearest)
+                { closest = anchor.transform; nearest = distance; }
+            }
+            return closest;
+        }
+
+        public static string Canonical(string id) => id switch
         {
             "Witch1" or "EvaWateringCanIntroduction" => "Eva",
             "Farmers1" => "Farmers",

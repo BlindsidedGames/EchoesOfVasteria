@@ -130,6 +130,53 @@ namespace TimelessEchoes.Farming
                 bed.ElapsedSeconds = Math.Min(bed.ReadyAfterSeconds, bed.ElapsedSeconds + seconds);
             }
         }
+        public static bool HasAutomaticWork(GameData owner, FarmContent content)
+        {
+            if (owner?.Farm == null || !content || !FarmProjects.AutoReplant(owner.Farm)) return false;
+            return GardenBeds.Concat(OrchardBeds).Any(id => AccessibleBed(owner.Farm, id) &&
+                owner.Farm.Beds.TryGetValue(id, out var bed) && bed?.Repeat == true &&
+                (bed.IsReady || CanReplant(owner, bed, content)));
+        }
+        private static bool CanReplant(GameData owner, FarmBedState bed, FarmContent content)
+        {
+            var recipe = content.Recipe(bed.SelectedRecipeId);
+            if (bed.IsPlanted || !recipe?.paidInput || !content.CanPlant(owner, recipe)) return false;
+            var inventory = ResourceManager.Instance;
+            var amount = inventory ? inventory.GetAmount(recipe.paidInput, owner) :
+                owner.Resources.TryGetValue(recipe.paidInput.name, out var seed) ? seed?.Amount ?? 0 : 0;
+            return amount >= FarmContent.PlantingCost(recipe.orchard);
+        }
+        public static void AdvanceFields(GameData owner, double seconds, DateTime start, FarmContent content,
+            Action<FarmCommandResult> apply)
+        {
+            if (owner?.Farm == null || !content || apply == null || !Finite(seconds) || seconds < 0)
+                throw new ArgumentException("Invalid Fields progression input.");
+            var elapsed = 0d;
+            while (true)
+            {
+                if (HasAutomaticWork(owner, content))
+                {
+                    var operation = FarmJournal.NextOperation(owner.Farm, "harvest-auto");
+                    var result = HarvestFields(owner, operation, start.AddSeconds(elapsed), content, true);
+                    if (!result.Accepted) throw new InvalidOperationException(result.Reason);
+                    apply(result);
+                }
+                var remaining = seconds - elapsed;
+                if (remaining <= 0) return;
+                var step = remaining;
+                foreach (var id in GardenBeds.Concat(OrchardBeds))
+                    if (AccessibleBed(owner.Farm, id) && owner.Farm.Beds.TryGetValue(id, out var bed) &&
+                        bed?.IsPlanted == true && !bed.IsReady)
+                    {
+                        var untilReady = bed.ReadyAfterSeconds - bed.ElapsedSeconds;
+                        if (!Finite(untilReady) || untilReady <= 0)
+                            throw new InvalidOperationException("Invalid Fields growth state.");
+                        step = Math.Min(step, untilReady);
+                    }
+                TickFields(owner.Farm, step);
+                elapsed += step;
+            }
+        }
         public static FarmCommandResult Water(FarmState state, string id, string operationId, DateTime now)
         {
             var result = Begin(state, operationId, "water:" + id, now);
@@ -163,17 +210,24 @@ namespace TimelessEchoes.Farming
             if (automatic && !FarmProjects.AutoReplant(owner.Farm)) return Reject("RepeatLocked");
             var result = Begin(owner.Farm, operationId, bedId != null ? "harvest-bed:" + bedId : automatic ? "harvest-auto" : "harvest-fields", now);
             if (!result.Accepted) return result;
+            var planted = false;
             foreach (var id in GardenBeds.Concat(OrchardBeds))
             {
                 if (bedId != null && id != bedId) continue;
-                if (!AccessibleBed(result.Candidate, id) || !result.Candidate.Beds.TryGetValue(id, out var bed) || bed == null || !bed.IsReady || automatic && !bed.Repeat) continue;
+                if (!AccessibleBed(result.Candidate, id) || !result.Candidate.Beds.TryGetValue(id, out var bed) || bed == null || automatic && !bed.Repeat) continue;
+                if (automatic && CanReplant(owner, bed, content))
+                {
+                    var plantingError = PlantInto(result, owner, id, content.Recipe(bed.SelectedRecipeId), operationId, content);
+                    if (plantingError == null) planted = true;
+                    else if (plantingError != "NoMatchingSeeds" && plantingError != "NoMatchingSapling") return Reject(plantingError);
+                }
+                if (!bed.IsReady) continue;
                 var recipe = content.Recipe(bed.RecipeId);
                 var legacy = bed.BatchId.StartsWith("radish:", StringComparison.Ordinal);
                 if (recipe == null || !recipe.output || !Finite(bed.DurationSeconds) || !Finite(bed.ElapsedSeconds) ||
                     !ValidPaidBatch(owner.Farm, id, bed, legacy)) return Reject("InvalidHarvestBatch");
                 result.ResourceDeltas.TryGetValue(recipe.output.name, out var total);
-                var bonus = CauldronResourceYield.BonusPercent(owner, recipe.output);
-                var gathered = (legacy ? bed.HarvestYield : bed.FrozenYield * bed.GrowthMultiplier) * (1 + bonus / 100d);
+                var gathered = (legacy ? bed.HarvestYield : bed.FrozenYield * bed.GrowthMultiplier) * FarmContent.HarvestMultiplier(owner, recipe, recipe.output);
                 result.ResourceDeltas[recipe.output.name] = total + gathered;
                 result.Candidate.TotalHarvests++;
                 result.Candidate.FirstHarvestCompleted = true;
@@ -182,8 +236,7 @@ namespace TimelessEchoes.Farming
                 if (recipe.secondaryOutput && bed.FrozenSecondaryYield > 0)
                 {
                     result.ResourceDeltas.TryGetValue(recipe.secondaryOutput.name, out var secondary);
-                    var secondaryBonus = CauldronResourceYield.BonusPercent(owner, recipe.secondaryOutput);
-                    result.ResourceDeltas[recipe.secondaryOutput.name] = secondary + bed.FrozenSecondaryYield * bed.GrowthMultiplier * (1 + secondaryBonus / 100d);
+                    result.ResourceDeltas[recipe.secondaryOutput.name] = secondary + bed.FrozenSecondaryYield * bed.GrowthMultiplier * FarmContent.HarvestMultiplier(owner, recipe, recipe.secondaryOutput);
                 }
                 result.OperationReceipt.BatchIds.Add(bed.BatchId); result.HarvestedBeds.Add(id);
                 if (legacy)
@@ -204,10 +257,10 @@ namespace TimelessEchoes.Farming
                 {
                     // Begin one new cycle; never carry elapsed time or watering into it.
                     var error = PlantInto(result, owner, id, content.Recipe(bed.SelectedRecipeId), operationId, content);
-                    if (error != null) bed.Repeat = false;
+                    if (error != null && error != "NoMatchingSeeds" && error != "NoMatchingSapling") return Reject(error);
                 }
             }
-            return result.HarvestedBeds.Count == 0 ? Reject("NoReadyBeds") : result;
+            return result.HarvestedBeds.Count == 0 && !planted ? Reject("NoReadyBeds") : result;
         }
         private static bool ValidPaidBatch(FarmState state, string id, FarmBedState bed, bool legacy)
         {

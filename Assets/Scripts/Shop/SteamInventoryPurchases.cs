@@ -51,6 +51,7 @@ namespace TimelessEchoes.Shop
         private int Definition(string id)
         {
             if (id == shop.Settings.permanentProductId) return shop.Settings.steamPermanentItemDefId;
+            if (id == shop.Settings.cosmeticProductId) return shop.Settings.steamCosmeticItemDefId;
             var index = Array.IndexOf(shop.Settings.supporterProductIds, id);
             return index >= 0 && index < shop.Settings.steamSupporterItemDefIds.Length ? shop.Settings.steamSupporterItemDefIds[index] : 0;
         }
@@ -130,7 +131,8 @@ namespace TimelessEchoes.Shop
                 var supporters = 0;
                 foreach (var definition in shop.Settings.steamSupporterItemDefIds)
                     supporters = checked(supporters + Quantity(totals, definition));
-                if (!shop.ApplySteamInventory(Quantity(totals, shop.Settings.steamPermanentItemDefId) > 0, supporters))
+                if (!shop.ApplySteamInventory(Quantity(totals, shop.Settings.steamPermanentItemDefId) > 0, supporters,
+                    Quantity(totals, shop.Settings.steamCosmeticItemDefId) > 0))
                     throw new System.IO.IOException("Ownership could not be saved. Restore to retry.");
                 return totals;
             }
@@ -155,6 +157,7 @@ namespace TimelessEchoes.Shop
                 prices.Clear();
                 currency = result.m_rgchCurrency;
                 var ids = new List<string>(shop.Settings.supporterProductIds) { shop.Settings.permanentProductId };
+                ids.Add(shop.Settings.cosmeticProductId);
                 foreach (var id in ids)
                     if (Definition(id) > 0 && SteamInventory.GetItemPrice(new SteamItemDef_t(Definition(id)), out var price, out _))
                         prices[id] = price;
@@ -203,7 +206,7 @@ namespace TimelessEchoes.Shop
             {
                 Identify(); var expected = account; var definition = Definition(id);
                 var before = Quantity(await Inventory(expected), definition);
-                if (id == shop.Settings.permanentProductId && shop.PermanentOwned) return;
+                if (shop.Owns(id)) return;
                 var result = await Call<SteamInventoryStartPurchaseResult_t>(SteamInventory.StartPurchase(new[] { new SteamItemDef_t(definition) }, new uint[] { 1 }, 1), expected);
                 if (result.m_result != EResult.k_EResultOK) throw new InvalidOperationException("Purchase unsuccessful.");
                 var deadline = Time.realtimeSinceStartup + 120;

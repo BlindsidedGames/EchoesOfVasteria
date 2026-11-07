@@ -135,7 +135,7 @@ namespace TimelessEchoes
             if (expansion.HasValue) changes.Add(expansion.Value);
             var routeChange = paths ? paths.PendingPresentationChange() : null;
             if (routeChange.HasValue) changes.Add(routeChange.Value);
-            if (changes.Count == 0) { FarmStory.Instance?.QueueCompletion(completedQuest); Cleanup(); return; }
+            if (changes.Count == 0) { Cleanup(); return; }
             var groups = new List<Group>();
             foreach (var change in changes)
             {
@@ -145,7 +145,7 @@ namespace TimelessEchoes
                 group.Changes.Add(change);
             }
             presentation = WorldPresentation.BeginReveal(this);
-            if (presentation == null) { FarmStory.Instance?.QueueCompletion(completedQuest); Cleanup(); return; }
+            if (presentation == null) { Cleanup(); return; }
             cancelled = false; restoreMenu = true; openFields = false; presentingDialogue = false; playing = true; active = this;
             resumeQuests = TownWindowManager.Instance?.SuspendQuestsForReveal();
             var screen = FindAnyObjectByType<ToolkitQuestsScreen>(FindObjectsInactive.Include);
@@ -232,13 +232,12 @@ namespace TimelessEchoes
                     arrivals.Clear();
                     for (var elapsed = 0f; elapsed < .6f && !Interrupted; elapsed += Time.unscaledDeltaTime) yield return null;
                 }
-                if (!Interrupted && FarmStory.Instance && FarmStory.Instance.HasCompletion(completedQuest))
+                if (!Interrupted && FarmStory.Instance && FarmStory.Instance.CanPresentCompletion(completedQuest))
                 {
                     removeSkip?.Invoke(); removeSkip = null;
                     presentingDialogue = true;
                     yield return FarmStory.Instance.ShowCompletion(completedQuest, presentation);
                     openFields = !Interrupted && FarmStory.Instance.DialogueCompleted && completedQuest == "Farm.Garden.Build01.v1";
-                    presentation = null;
                 }
                 else if (!Interrupted) yield return presentation.Restore(.55f);
             }

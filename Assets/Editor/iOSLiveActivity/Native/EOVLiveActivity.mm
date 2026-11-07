@@ -64,3 +64,15 @@ extern "C" int EOVWatchCompanion_ConsumeRefreshRequest(void) {
     if ([NSThread isMainThread]) read(); else dispatch_sync(dispatch_get_main_queue(), read);
     return requested;
 }
+
+extern "C" int EOVWatchCompanion_LiveUpdatesAvailable(void) {
+    __block int available = 0;
+    void (^read)(void) = ^{
+        Class bridge = NSClassFromString(@"EOVWatchPhoneSession");
+        SEL selector = NSSelectorFromString(@"liveUpdatesAvailable");
+        if (bridge && [bridge respondsToSelector:selector])
+            available = ((BOOL (*)(id, SEL))objc_msgSend)(bridge, selector) ? 1 : 0;
+    };
+    if ([NSThread isMainThread]) read(); else dispatch_sync(dispatch_get_main_queue(), read);
+    return available;
+}

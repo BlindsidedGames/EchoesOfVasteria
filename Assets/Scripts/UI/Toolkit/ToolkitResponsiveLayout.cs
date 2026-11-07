@@ -125,6 +125,8 @@ namespace TimelessEchoes.UI.Toolkit
         public static float WindowTop => IsPortrait ? (TownView ? 12 : 52) : 44;
         public static float MenuTop => WindowTop + (IsPortrait && !TownView ? 28 : 0);
         public static float WindowBottom => IsPortrait ? 44 : 12;
+        internal const float PortraitRunRowGap = 8;
+        internal const float PortraitProgressRowHeight = 32;
 
         public static Rect WorldArea
         {
@@ -167,13 +169,20 @@ namespace TimelessEchoes.UI.Toolkit
         }
 
         // UI coordinates start at the top; camera pixels start at the bottom.
-        public static Rect DockArea(Vector2Int size, Rect safe)
+        public static Rect FullSafeArea(Vector2Int size, Rect safe)
         {
             safe = ValidSafeArea(size, safe);
             var scale = Scale(size);
+            return new Rect(safe.xMin * scale, (size.y - safe.yMax) * scale,
+                safe.width * scale, safe.height * scale);
+        }
+
+        public static Rect DockArea(Vector2Int size, Rect safe)
+        {
             if (TownView)
-                return new Rect(safe.xMin * scale, (size.y - safe.yMax) * scale,
-                    safe.width * scale, safe.height * scale);
+                return FullSafeArea(size, safe);
+            safe = ValidSafeArea(size, safe);
+            var scale = Scale(size);
             // Preserve the dock's normal geometry while suspended. Its panels must
             // never receive zero/negative layout heights during focus mode.
             var world = new Rect(safe.x, (ToolkitDisplayPreferences.KeepWorldInSafeArea ? safe.yMax : size.y) - safe.width * 9f / 16f,

@@ -33,6 +33,7 @@ namespace TimelessEchoes.Farming
         // Selected completion results waiting for a successful durable credit. A routine
         // snapshot can preserve these without revealing/granting an uncommitted pack.
         public Dictionary<string, FarmPendingCredit> PendingCredits = new Dictionary<string, FarmPendingCredit>();
+        public List<string> PendingQuestDialogues;
         public HashSet<string> HarvestedBatchIds = new HashSet<string>();
 
         public FarmState DeepClone()
@@ -53,6 +54,7 @@ namespace TimelessEchoes.Farming
                 CommittedThroughSequence = CommittedThroughSequence,
                 OriginalBedsPrepared = OriginalBedsPrepared,
                 OriginalBedsBuildOperationId = OriginalBedsBuildOperationId,
+                PendingQuestDialogues = PendingQuestDialogues == null ? null : new List<string>(PendingQuestDialogues),
                 HarvestedBatchIds = HarvestedBatchIds == null ? new HashSet<string>() : new HashSet<string>(HarvestedBatchIds)
             };
             if (Beds != null)

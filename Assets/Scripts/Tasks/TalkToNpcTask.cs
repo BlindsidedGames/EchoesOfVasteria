@@ -28,6 +28,13 @@ namespace TimelessEchoes.Tasks
         private bool talked;
         private GameObject meetingInstance;
 
+        public string NpcId => npcId;
+        public Sprite Portrait => npcSprite;
+        public GameObject MeetingPrefab => meetingPrefab;
+        public IReadOnlyList<string> Lines => lines;
+        public IReadOnlyList<string> LineKeys => lineKeys;
+        public IReadOnlyList<QuestSpeaker> Speakers => dialogueSpeakers;
+
         public override Transform Target => chatPoint != null ? chatPoint : transform;
         public override bool BlocksMovement => true;
 
@@ -61,6 +68,7 @@ namespace TimelessEchoes.Tasks
             {
                 toolkit.Init(npcSprite, lines, OnMeetingFinished, lineKeys, npcId: npcId, worldSubject: transform);
                 toolkit.SetLineSpeakers(dialogueSpeakers);
+                toolkit.RecordConversation("meeting:" + npcId);
                 return;
             }
             var controller = meetingInstance.GetComponent<MeetingController>();

@@ -28,6 +28,20 @@ namespace TimelessEchoes.UI.Toolkit
         private Entry[] navigationEntries;
         private ToolkitShopScreen shopScreen;
         private ToolkitMildredPicker mildredPicker;
+        private ToolkitConversationScreen conversationPicker;
+        private readonly WorldTapInput npcTap = new();
+
+        public void ShowConversations(string npcId)
+        {
+            if (!theme || !runtimeTheme || !textSettings) return;
+            if (!conversationPicker)
+            {
+                var host = new GameObject("NPC conversations", typeof(UIDocument));
+                conversationPicker = host.AddComponent<ToolkitConversationScreen>();
+                conversationPicker.Configure(theme, runtimeTheme, textSettings);
+            }
+            conversationPicker.Show(npcId);
+        }
 
         public void ShowMildredColours()
         {
@@ -40,6 +54,14 @@ namespace TimelessEchoes.UI.Toolkit
             }
             mildredPicker.Show();
         }
+
+        public void ShowCompanionShop()
+        {
+            if (!OpenHelpDestination("shop")) return;
+            mildredPicker?.Hide();
+            conversationPicker?.Hide();
+            shopScreen?.RevealCompanions();
+        }
         private PanelSettings panel;
         private VisualElement root, popup, autoPinGroup;
         private VisualElement menuDismiss;
@@ -51,6 +73,7 @@ namespace TimelessEchoes.UI.Toolkit
         private bool moreOpen;
         private bool? portraitNavigation;
         private Image forgeAttention, cauldronAttention, fieldsAttention, questAttention, hubQuestAttention, shopAttention, hubShopAttention;
+        private Image forgeMenuAttention, cauldronMenuAttention, fieldsMenuAttention;
         private VisualElement progressRoot, progressFill;
         private Image progressHero, progressReaper, progressFlight;
         private ToolkitNpcIntroduction progressIntroduction;
@@ -283,6 +306,16 @@ namespace TimelessEchoes.UI.Toolkit
                         .Find(recipe => recipe?.output != null)?.output.icon);
                     fieldsAttention.name = "fields-attention";
                 }
+                if (entry.action == NavAction.Window)
+                {
+                    if (entry.window == TownWindowManager.Window.Forge)
+                        forgeMenuAttention = AddAttention(button, definition.forgeAttention);
+                    if (entry.window == TownWindowManager.Window.Cauldron)
+                        cauldronMenuAttention = AddAttention(button, definition.cauldronAttention);
+                    if (entry.window == TownWindowManager.Window.Farm)
+                        fieldsMenuAttention = AddAttention(button, TimelessEchoes.Farming.FarmContent.Load()?.recipes
+                            .Find(recipe => recipe?.output != null)?.output.icon);
+                }
                 if (entry.action == NavAction.Window && entry.window == TownWindowManager.Window.Quests)
                 {
                     questAttention = AddAttention(button, definition.questAttention);
@@ -502,6 +535,11 @@ namespace TimelessEchoes.UI.Toolkit
         private void Update()
         {
             if (root == null) return;
+            if (npcTap.Released(out var tap) && GameManager.Instance && GameManager.Instance.IsInTown && Camera.main)
+            {
+                var subject = WorldSpeakerAnchor.Pick(Camera.main, tap);
+                if (subject) ShowConversations(subject.GetComponent<WorldSpeakerAnchor>().speakerId);
+            }
             if (!windows) windows = TownWindowManager.Instance;
             if (windows && !hooked)
             {
@@ -703,12 +741,16 @@ namespace TimelessEchoes.UI.Toolkit
             SetVisible(forgeAttention, windows != null && windows.ForgeNeedsAttention);
             SetVisible(cauldronAttention, windows != null && windows.CauldronNeedsAttention);
             SetVisible(fieldsAttention, TimelessEchoes.Farming.FarmService.Instance?.NeedsAttention == true);
+            SetVisible(forgeMenuAttention, windows != null && windows.ForgeNeedsAttention);
+            SetVisible(cauldronMenuAttention, windows != null && windows.CauldronNeedsAttention);
+            SetVisible(fieldsMenuAttention, TimelessEchoes.Farming.FarmService.Instance?.NeedsAttention == true);
             SetVisible(questAttention, QuestManager.Instance != null && QuestManager.Instance.HasQuestsReadyForTurnIn());
             SetVisible(hubQuestAttention, QuestManager.Instance != null && QuestManager.Instance.HasQuestsReadyForTurnIn());
             var shopIcon = ToolkitColorTheme.IsLight && definition.shopAttentionLight ? definition.shopAttentionLight : definition.shopAttention;
             if (shopAttention != null) shopAttention.sprite = shopIcon;
             if (hubShopAttention != null) hubShopAttention.sprite = shopIcon;
-            var canClaimShopBonus = TimelessEchoes.Shop.ShopService.Instance?.CanClaim == true;
+            var shop = TimelessEchoes.Shop.ShopService.Instance;
+            var canClaimShopBonus = shop?.CanClaim == true && TimelessEchoes.Shop.ShopRules.NeedsRefill(shop.Remaining);
             SetVisible(shopAttention, canClaimShopBonus);
             SetVisible(hubShopAttention, canClaimShopBonus);
             SetVisible(autoPinGroup, !ToolkitResponsiveLayout.IsPortrait && windows != null && windows.IsWindowOpen(TownWindowManager.Window.Quests));
@@ -995,7 +1037,8 @@ namespace TimelessEchoes.UI.Toolkit
             var area = ToolkitBookScreen.CalculateSafeArea(new Vector2Int(Screen.width, Screen.height), Screen.safeArea,
                 UnityEngine.Device.Application.isMobilePlatform ? 1 : SafeAreaRatio);
             root.style.left = area.x + (ToolkitResponsiveLayout.IsPortrait ? 0 : 8);
-            root.style.top = ToolkitResponsiveLayout.IsPortrait ? area.yMax - 44 : area.y + 8;
+            var top = ToolkitResponsiveLayout.IsPortrait ? area.yMax - 44 : area.y + 8;
+            root.style.top = top;
             root.style.width = area.width - (ToolkitResponsiveLayout.IsPortrait ? 0 : 16);
             // Continue the same navigation surface through the home-indicator inset.
             root.style.height = ToolkitResponsiveLayout.IsPortrait ? ToolkitResponsiveLayout.Size.y - (area.yMax - 44) : 36;
@@ -1009,7 +1052,8 @@ namespace TimelessEchoes.UI.Toolkit
             var context = root.Q("navigation-context");
             context.style.display = ToolkitResponsiveLayout.IsPortrait && !(GameManager.Instance && GameManager.Instance.CurrentMap) ? DisplayStyle.None : DisplayStyle.Flex;
             context.style.top = ToolkitResponsiveLayout.IsPortrait ?
-                ToolkitResponsiveLayout.WorldArea.yMax - root.resolvedStyle.top - 39 : StyleKeyword.Null;
+                ToolkitResponsiveLayout.WorldArea.yMax - top -
+                ToolkitResponsiveLayout.PortraitProgressRowHeight - ToolkitResponsiveLayout.PortraitRunRowGap : StyleKeyword.Null;
             progressRoot.style.width = ToolkitResponsiveLayout.IsPortrait ? area.width - 16 : StyleKeyword.Null;
             progressRoot.Q(className: "eov-navigation-progress-track").style.width = ToolkitResponsiveLayout.IsPortrait ? area.width - 20 : StyleKeyword.Null;
             progressReaper.style.left = ToolkitResponsiveLayout.IsPortrait ? area.width - 40 : StyleKeyword.Null;
@@ -1045,6 +1089,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void OnDisable()
         {
             if (mildredPicker) mildredPicker.Hide();
+            if (conversationPicker) conversationPicker.Hide();
             if (hooked && windows) { windows.CloseRequested -= CloseMenu; windows.WindowsChanged -= Refresh; }
             hooked = false;
             foreach (var binding in bindings) binding.Dispose();
@@ -1059,6 +1104,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void OnDestroy()
         {
             if (mildredPicker) Destroy(mildredPicker.gameObject);
+            if (conversationPicker) Destroy(conversationPicker.gameObject);
             if (shopScreen) Destroy(shopScreen.gameObject);
             if (panel) Destroy(panel);
         }

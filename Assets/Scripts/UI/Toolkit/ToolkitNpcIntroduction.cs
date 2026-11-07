@@ -67,6 +67,7 @@ namespace TimelessEchoes.UI.Toolkit
                 }, lineKeys, npcId: npcId, worldSubject: actor ? actor.transform : worldSubject ? worldSubject : WorldSpeakerAnchor.Find(npcId));
                 if (portraitFrames != null && portraitFrames.Length > 0)
                     meeting.SetPortraitAnimation(portraitFrames, portraitFramesPerSecond, actor ? actor.AnimationStartedAt : (float?)null);
+                meeting.RecordConversation("introduction:" + npcId);
                 meeting.BeginDialogue();
                 if (actor)
                 {

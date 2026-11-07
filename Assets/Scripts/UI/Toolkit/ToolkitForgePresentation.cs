@@ -13,7 +13,7 @@ namespace TimelessEchoes.UI.Toolkit
 {
     public sealed partial class ToolkitForgeScreen
     {
-        private sealed class ConversionRow { public VisualElement root; public Image first, second, result, arrow; public Label firstCount, secondCount, resultCount, maximum; public Button button; public TextField amount; }
+        private sealed class ConversionRow { public VisualElement root, caption; public Image first, second, result, arrow, requirementIcon; public Label firstCount, secondCount, resultCount, maximum; public Button button; public TextField amount; }
         private void BuildConversions()
         {
             var grid = new VisualElement(); grid.AddToClassList("eov-forge-conversions"); main.Add(grid);
@@ -28,7 +28,16 @@ namespace TimelessEchoes.UI.Toolkit
                 var second = Row(costs); second.AddToClassList("forge-ingredient"); row.second = ToolkitControls.Icon(null); second.Add(row.second); row.secondCount = Label(second, "", ToolkitControls.TextRole.Caption);
                 row.arrow = ToolkitControls.Icon(null); recipe.Add(row.arrow); var result = new VisualElement(); result.AddToClassList("forge-conversion-result"); recipe.Add(result); row.result = ToolkitControls.Icon(null); result.Add(row.result); row.resultCount = Label(result, "", ToolkitControls.TextRole.Caption);
                 var control = new VisualElement(); control.AddToClassList("eov-forge-conversion-control"); body.Add(control);
-                row.maximum = Label(recipeColumn, "", ToolkitControls.TextRole.Caption); row.maximum.AddToClassList("forge-conversion-maximum");
+                row.caption = Row(recipeColumn);
+                row.caption.AddToClassList("forge-conversion-caption");
+                if (type == ConversionType.Crystal)
+                {
+                    row.requirementIcon = ToolkitControls.Icon(null);
+                    row.requirementIcon.AddToClassList("forge-conversion-requirement-icon");
+                    row.requirementIcon.style.display = DisplayStyle.None;
+                    row.caption.Add(row.requirementIcon);
+                }
+                row.maximum = Label(row.caption, "", ToolkitControls.TextRole.Caption); row.maximum.AddToClassList("forge-conversion-maximum");
                 row.button = LocalizedButton(control, "smelt-" + type, "forge.smelt", "Smelt", () => session.Convert(type));
                 // Keep press-and-hold conversion behavior while using native pointer capture.
                 ToolkitControls.RepeatWhileHeld(row.button, () => session.Convert(type));
@@ -134,10 +143,22 @@ namespace TimelessEchoes.UI.Toolkit
             row.firstCount.EnableInClassList("forge-loss", first && resources.GetAmount(first) < costA * shownAmount);
             row.secondCount.EnableInClassList("forge-loss", second && resources.GetAmount(second) < costB * shownAmount);
             var max = session.ConversionMaximum(type); var desired = session.Desired(type); var batches = max <= 0 ? 0 : desired > max ? 1 : Math.Floor(max / desired); row.maximum.text = ToolkitLocalization.Text("forge.batches", "Batches: {0}", CalcUtils.FormatNumber(batches, true));
-            var skills = TimelessEchoes.Skills.SkillController.Instance;
-            if (type == ConversionType.Crystal && core && skills && skills.CombatSkill &&
-                skills.GetLevel(skills.CombatSkill) < skills.CombatSkill.GetResourceUnlockLevel(core.crystalResource))
-                row.maximum.text = ToolkitLocalization.Text("forge.combat-level-required", "Requires Combat level {0}", skills.CombatSkill.GetResourceUnlockLevel(core.crystalResource));
+            if (row.requirementIcon != null)
+            {
+                var skills = TimelessEchoes.Skills.SkillController.Instance;
+                var combat = skills ? skills.CombatSkill : null;
+                var requiredLevel = core && combat ? combat.GetResourceUnlockLevel(core.crystalResource) : 0;
+                var locked = combat && skills.GetLevel(combat) < requiredLevel;
+                row.requirementIcon.style.display = locked ? DisplayStyle.Flex : DisplayStyle.None;
+                row.maximum.EnableInClassList("forge-loss", locked);
+                row.caption.tooltip = locked ? ToolkitLocalization.Text("forge.combat-level-required", "Requires Combat level {0}", requiredLevel) : null;
+                row.caption.pickingMode = locked ? PickingMode.Position : PickingMode.Ignore;
+                if (locked)
+                {
+                    row.requirementIcon.sprite = combat.skillIcon;
+                    row.maximum.text = ToolkitLocalization.Text("statistics.enemy-level", "Lvl {0}", requiredLevel);
+                }
+            }
             row.button.SetEnabled(session.CanConvert(type)); row.arrow.sprite = session.CanConvert(type) ? definition.arrowValid : definition.arrowInvalid;
         }
     }

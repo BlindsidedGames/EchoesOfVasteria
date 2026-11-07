@@ -35,6 +35,9 @@ namespace TimelessEchoes.Shop
             if (steam) return steam.Price(id);
             if (!products.TryGetValue(id, out var product)) return null;
             if (!IsTestStore) return product.metadata.localizedPriceString;
+            if (id == shop.Settings.cosmeticProductId)
+                return (shop.Settings.cosmeticBaseCurrency == "USD" ? "US$" : shop.Settings.cosmeticBaseCurrency + " ")
+                    + shop.Settings.cosmeticBasePrice.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
             var index = Array.IndexOf(shop.Settings.supporterProductIds, id);
             var price = id == shop.Settings.permanentProductId ? shop.Settings.permanentBasePrice
                 : index >= 0 ? shop.Settings.supporterBasePrices[index] : 0;
@@ -63,7 +66,7 @@ namespace TimelessEchoes.Shop
                 var controller = store;
                 await controller.Connect();
                 if (!this || store != controller) return;
-                var definitions = new List<ProductDefinition> { new(shop.Settings.permanentProductId, ProductType.NonConsumable) };
+                var definitions = shop.Settings.NonConsumableProductIds.Select(id => new ProductDefinition(id, ProductType.NonConsumable)).ToList();
                 definitions.AddRange(shop.Settings.supporterProductIds.Select(id => new ProductDefinition(id, ProductType.Consumable)));
                 store.FetchProductsWithNoRetries(definitions);
             }
@@ -80,7 +83,7 @@ namespace TimelessEchoes.Shop
         public void Buy(string id)
         {
             if (steam) { steam.Buy(id); return; }
-            if (!Available(id) || id == shop.Settings.permanentProductId && shop.PermanentOwned) return;
+            if (!Available(id) || shop.Owns(id)) return;
             Busy = true; SetStatus("waiting", "Waiting for purchase…"); Changed?.Invoke();
             try { store.PurchaseProduct(products[id]); } catch { Busy = false; SetStatus("could-not-start", "Purchase could not start."); Changed?.Invoke(); }
         }
@@ -106,16 +109,19 @@ namespace TimelessEchoes.Shop
         private void Restored(Orders orders)
         {
             foreach (var order in orders.ConfirmedOrders)
-                if (order.CartOrdered.Items().Any(i => i.Product.definition.id == shop.Settings.permanentProductId)) shop.SetPermanentEntitlement(true);
-            if (products.TryGetValue(shop.Settings.permanentProductId, out var product)) store.CheckEntitlement(product);
+                foreach (var item in order.CartOrdered.Items())
+                    if (shop.Settings.IsNonConsumable(item.Product.definition.id)) shop.SetPurchasedEntitlement(item.Product.definition.id, true);
+            foreach (var id in shop.Settings.NonConsumableProductIds)
+                if (products.TryGetValue(id, out var product)) store.CheckEntitlement(product);
             Busy = false; SetStatus(IsTestStore ? "editor" : "restored", IsTestStore ? "Editor test store — no charges" : "Purchases restored."); Changed?.Invoke();
         }
         private void EntitlementChecked(Entitlement entitlement)
         {
-            if (entitlement.Product?.definition.id != shop.Settings.permanentProductId) return;
+            var id = entitlement.Product?.definition.id;
+            if (!shop.Settings.IsNonConsumable(id)) return;
             if (entitlement.Status == EntitlementStatus.FullyEntitled || entitlement.Status == EntitlementStatus.EntitledButNotFinished)
-                shop.SetPermanentEntitlement(true);
-            else if (entitlement.Status == EntitlementStatus.NotEntitled) shop.SetPermanentEntitlement(false);
+                shop.SetPurchasedEntitlement(id, true);
+            else if (entitlement.Status == EntitlementStatus.NotEntitled) shop.SetPurchasedEntitlement(id, false);
             Changed?.Invoke();
         }
         private void RestoreFailed(PurchasesFetchFailureDescription _) { Busy = false; SetStatus("restore-failed", "Restore unavailable. Try again later."); Changed?.Invoke(); }

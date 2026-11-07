@@ -83,7 +83,8 @@ namespace TimelessEchoes.Stats
                 sampleCount = forecast.SampleCount, generatedAt = now, currentDistance,
                 projectedDistance = forecast.Distance, reapCap = forecast.BaseCap,
                 projectedReaps = forecast.Reaps, projectedTasks = forecast.Tasks, projectedKills = forecast.Kills,
-                projectedResources = resources, forecastEnd = now + Math.Max(1, forecast.Seconds), status = forecast.Status
+                projectedResources = resources, forecastEnd = now + Math.Max(1, timeline?.horizonSeconds ?? forecast.Seconds),
+                status = timeline != null ? "forecast" : forecast.Status
             };
             if (timeline != null) timeline.generatedAt = now;
             WatchCompanionPrototype.RememberForecast(map, payload, Blindsided.Oracle.oracle?.saveData, timeline);

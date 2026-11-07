@@ -40,10 +40,23 @@ namespace TimelessEchoes.Stats
 #if UNITY_IOS && !UNITY_EDITOR && EOV_BACKGROUND_PROTOTYPE
         [DllImport("__Internal")] private static extern void EOVWatchCompanion_Publish(string json);
         [DllImport("__Internal")] private static extern int EOVWatchCompanion_ConsumeRefreshRequest();
+        [DllImport("__Internal")] private static extern int EOVWatchCompanion_LiveUpdatesAvailable();
         public static bool Supported => true;
 #else
         public static bool Supported => false;
 #endif
+
+        public static bool LiveUpdatesAvailable
+        {
+            get
+            {
+#if UNITY_IOS && !UNITY_EDITOR && EOV_BACKGROUND_PROTOTYPE
+                return EOVWatchCompanion_LiveUpdatesAvailable() != 0;
+#else
+                return false;
+#endif
+            }
+        }
 
         public static bool ConsumeRefreshRequest()
         {

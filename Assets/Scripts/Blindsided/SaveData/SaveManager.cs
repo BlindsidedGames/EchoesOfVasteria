@@ -69,7 +69,8 @@ namespace Blindsided.SaveData
             GameData data = null,
             string sourcePath = null,
             bool integrityVerified = false,
-            string diagnostic = null)
+            string diagnostic = null,
+            Exception readException = null)
         {
             Status = status;
             SlotName = slotName;
@@ -77,6 +78,7 @@ namespace Blindsided.SaveData
             SourcePath = sourcePath;
             IntegrityVerified = integrityVerified;
             Diagnostic = diagnostic;
+            ReadException = readException;
         }
 
         public SaveLoadStatus Status { get; }
@@ -85,6 +87,7 @@ namespace Blindsided.SaveData
         public string SourcePath { get; }
         public bool IntegrityVerified { get; }
         public string Diagnostic { get; }
+        internal Exception ReadException { get; }
         public bool Succeeded => Status == SaveLoadStatus.Success || Status == SaveLoadStatus.Recovered;
     }
 
@@ -838,6 +841,7 @@ namespace Blindsided.SaveData
                 var generationCandidates = GetGenerationCandidates(slotDir);
                 var legacyCandidates = GetLegacyCandidates(slotDir);
                 var diagnostics = new List<string>();
+                Exception legacyReadException = null;
                 var snapshotFiles = Directory.GetFiles(slotDir, "snapshot*", SearchOption.TopDirectoryOnly);
                 var inspectedAny = snapshotFiles.Length > 0;
                 var recognizedPaths = new HashSet<string>(
@@ -888,7 +892,8 @@ namespace Blindsided.SaveData
                         SaveLoadStatus.Unavailable,
                         slotName,
                         sourcePath: unavailable.Candidate.Path,
-                        diagnostic: unavailable.Read.Error);
+                        diagnostic: unavailable.Read.Error,
+                        readException: unavailable.Read.ReadException);
                 }
 
                 var unsupported = generationReads.FirstOrDefault(item => item.Read.State == SnapshotReadState.Unsupported);
@@ -997,7 +1002,8 @@ namespace Blindsided.SaveData
                             SaveLoadStatus.Unavailable,
                             slotName,
                             sourcePath: chosen.Candidate.Path,
-                            diagnostic: detailed.Error);
+                            diagnostic: detailed.Error,
+                            readException: detailed.ReadException);
                     }
                     if (detailed.State != SnapshotReadState.Valid || detailed.Data == null)
                     {
@@ -1005,7 +1011,8 @@ namespace Blindsided.SaveData
                             SaveLoadStatus.Corrupt,
                             slotName,
                             sourcePath: chosen.Candidate.Path,
-                            diagnostic: detailed.Error ?? "The selected save head could not be deserialized.");
+                            diagnostic: detailed.Error ?? "The selected save head could not be deserialized.",
+                            readException: detailed.ReadException);
                     }
                     if (!SnapshotIdentityMatches(chosen.Read, detailed))
                     {
@@ -1073,7 +1080,8 @@ namespace Blindsided.SaveData
                             SaveLoadStatus.Unavailable,
                             slotName,
                             sourcePath: candidate.Path,
-                            diagnostic: read.Error);
+                            diagnostic: read.Error,
+                            readException: read.ReadException);
                     }
                     if (read.State == SnapshotReadState.Valid || read.State == SnapshotReadState.Unsupported)
                     {
@@ -1085,6 +1093,7 @@ namespace Blindsided.SaveData
                     else
                     {
                         diagnostics.Add($"{Path.GetFileName(candidate.Path)}: {read.Error}");
+                        legacyReadException ??= read.ReadException;
                     }
                 }
 
@@ -1149,7 +1158,9 @@ namespace Blindsided.SaveData
                 return new SaveLoadResult(
                     SaveLoadStatus.Corrupt,
                     slotName,
-                    diagnostic: BuildDiagnostic(diagnostics) ?? "Save files exist, but none passed validation.");
+                    diagnostic: BuildDiagnostic(diagnostics) ?? "Save files exist, but none passed validation.",
+                    readException: generationReads.Select(item => item.Read.ReadException).FirstOrDefault(ex => ex != null)
+                                   ?? legacyReadException);
             }
             catch (OperationCanceledException)
             {
@@ -1157,7 +1168,7 @@ namespace Blindsided.SaveData
             }
             catch (Exception ex)
             {
-                return new SaveLoadResult(SaveLoadStatus.Failed, slotName, diagnostic: ex.ToString());
+                return new SaveLoadResult(SaveLoadStatus.Failed, slotName, diagnostic: ex.ToString(), readException: ex);
             }
         }
 
@@ -1334,23 +1345,23 @@ namespace Blindsided.SaveData
             }
             catch (SnapshotUnavailableException ex)
             {
-                return SnapshotReadResult.Unavailable(ex.Message);
+                return SnapshotReadResult.Unavailable(ex.Message, ex);
             }
             catch (EndOfStreamException ex)
             {
-                return SnapshotReadResult.Invalid(ex.Message);
+                return SnapshotReadResult.Invalid(ex.Message, ex);
             }
             catch (UnauthorizedAccessException ex)
             {
-                return SnapshotReadResult.Unavailable(ex.Message);
+                return SnapshotReadResult.Unavailable(ex.Message, ex);
             }
             catch (IOException ex)
             {
-                return SnapshotReadResult.Unavailable(ex.Message);
+                return SnapshotReadResult.Unavailable(ex.Message, ex);
             }
             catch (Exception ex)
             {
-                return SnapshotReadResult.Invalid(ex.Message);
+                return SnapshotReadResult.Invalid(ex.Message, ex);
             }
         }
 
@@ -1378,7 +1389,7 @@ namespace Blindsided.SaveData
             }
 
             throw new SnapshotUnavailableException(
-                $"Save file is temporarily unavailable after retries: {lastError?.Message}");
+                $"Save file is temporarily unavailable after retries: {lastError?.Message}", lastError);
         }
 
         private static List<GenerationCandidate> GetGenerationCandidates(string slotDir)
@@ -2226,6 +2237,9 @@ namespace Blindsided.SaveData
             return string.IsNullOrEmpty(rootPathOverride) ? Application.persistentDataPath : rootPathOverride;
         }
 
+        internal Guid GetKnownLineage(string slotName) =>
+            GetCachedSlotContext(GetRootPath(), slotName)?.LineageId ?? Guid.Empty;
+
         private CachedSlotContext GetCachedSlotContext(string root, string slotName)
         {
             lock (slotContextLock)
@@ -2845,7 +2859,8 @@ namespace Blindsided.SaveData
                 Guid parentWriteId,
                 byte[] payloadSha256,
                 bool hasAncestry,
-                string error)
+                string error,
+                Exception readException = null)
             {
                 State = state;
                 Data = data;
@@ -2858,6 +2873,7 @@ namespace Blindsided.SaveData
                 PayloadSha256 = payloadSha256;
                 HasAncestry = hasAncestry;
                 Error = error;
+                ReadException = readException;
             }
 
             public SnapshotReadState State { get; }
@@ -2871,6 +2887,7 @@ namespace Blindsided.SaveData
             public byte[] PayloadSha256 { get; }
             public bool HasAncestry { get; }
             public string Error { get; }
+            public Exception ReadException { get; }
 
             public static SnapshotReadResult ValidResult(
                 GameData data,
@@ -2897,7 +2914,7 @@ namespace Blindsided.SaveData
                     null);
             }
 
-            public static SnapshotReadResult Invalid(string error)
+            public static SnapshotReadResult Invalid(string error, Exception readException = null)
             {
                 return new SnapshotReadResult(
                     SnapshotReadState.Invalid,
@@ -2910,10 +2927,11 @@ namespace Blindsided.SaveData
                     Guid.Empty,
                     null,
                     false,
-                    error);
+                    error,
+                    readException);
             }
 
-            public static SnapshotReadResult Unavailable(string error)
+            public static SnapshotReadResult Unavailable(string error, Exception readException = null)
             {
                 return new SnapshotReadResult(
                     SnapshotReadState.Unavailable,
@@ -2926,7 +2944,8 @@ namespace Blindsided.SaveData
                     Guid.Empty,
                     null,
                     false,
-                    error);
+                    error,
+                    readException);
             }
 
             public static SnapshotReadResult UnsupportedResult(
@@ -2951,7 +2970,7 @@ namespace Blindsided.SaveData
 
         private sealed class SnapshotUnavailableException : IOException
         {
-            public SnapshotUnavailableException(string message) : base(message)
+            public SnapshotUnavailableException(string message, Exception inner) : base(message, inner)
             {
             }
         }

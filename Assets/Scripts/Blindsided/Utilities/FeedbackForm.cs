@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -11,29 +12,33 @@ namespace Blindsided.Utilities
         public string error;
 
 
-        private readonly string formUrl =
-            "https://docs.google.com/forms/u/0/d/e/1FAIpQLScDFgaPvj7D8qCj_Z9l-u9nZ0aj0rgOOE90XKzMMLv_evF9xA/formResponse";
+        private const string FormUrl =
+            "https://docs.google.com/forms/d/e/1FAIpQLSfNND3n6lfEj2LiwolJWyN0yDXUM1Y8bvDHFT8GELgJhHtwcA/formResponse?hl=en";
 
         [Button]
         public void SubmitFeedback()
         {
-            StartCoroutine(Post(errorType, error));
+            Submit(errorType, error);
         }
 
-        private IEnumerator Post(string entry1, string errorToReport)
+        private IEnumerator Post(string entry1, string errorToReport, Action<bool> finished = null)
         {
             var form = new WWWForm();
-            form.AddField("entry.220430120", entry1);
-            form.AddField("entry.1630659015", errorToReport);
+            form.AddField("entry.762473998", entry1);
+            form.AddField("entry.184011040", errorToReport);
 
-            using (var www = UnityWebRequest.Post(formUrl, form))
+            using (var www = UnityWebRequest.Post(FormUrl, form))
             {
+                www.timeout = 12;
                 yield return www.SendWebRequest();
 
-                if (www.result == UnityWebRequest.Result.Success)
+                var sent = www.result == UnityWebRequest.Result.Success &&
+                           www.downloadHandler.text.Contains("Your response has been recorded");
+                if (sent)
                     Debug.Log("Feedback submitted successfully.");
                 else
-                    Debug.LogError("Error in feedback submission: " + www.error);
+                    Debug.LogWarning($"Feedback submission was not confirmed (HTTP {www.responseCode}).");
+                finished?.Invoke(sent);
             }
         }
 
@@ -42,45 +47,52 @@ namespace Blindsided.Utilities
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => Instance = null;
 
-        private void Awake()
-        {
-            Instance = this;
-        }
-
         // Static helper API for submitting feedback from anywhere (e.g., exceptions)
-        public static void Submit(string type, string message)
+        public static void Submit(string type, string message, Action<bool> finished = null)
         {
+            if (TimelessEchoes.Platform.StartupDiagnostics.SkipOnlineServices)
+            {
+                finished?.Invoke(false);
+                return;
+            }
+
             try
             {
                 EnsureInstance();
                 if (Instance == null)
                 {
                     Debug.LogWarning("FeedbackForm.Submit called but no instance could be created.");
+                    finished?.Invoke(false);
                     return;
                 }
 
-                Instance.StartCoroutine(Instance.Post(type, message));
+                Instance.StartCoroutine(Instance.Post(type, message, finished));
             }
             catch (System.Exception e)
             {
                 Debug.LogWarning("Feedback submission failed: " + e);
+                finished?.Invoke(false);
             }
         }
 
         public static void SubmitException(string type, System.Exception ex, string extra = null)
         {
-            var sb = new System.Text.StringBuilder();
-            if (!string.IsNullOrEmpty(extra)) sb.AppendLine(extra);
-            // Include application and platform context for triage
-            sb.AppendLine($"AppVersion: {Application.version}");
-            sb.AppendLine($"Platform: {Application.platform}");
-            sb.AppendLine($"Unity: {Application.unityVersion}");
-            sb.AppendLine("== Exception ==");
-            sb.AppendLine(BuildExceptionReport(ex));
-            Submit(type, sb.ToString());
+            Submit(type, FormatReport(extra, ex));
         }
 
-        private static string BuildExceptionReport(System.Exception ex)
+        internal static string FormatReport(string context, Exception exception = null)
+        {
+            var sb = new System.Text.StringBuilder();
+            if (!string.IsNullOrEmpty(context)) sb.AppendLine(context);
+            sb.AppendLine($"Build: {Application.version} ({Application.buildGUID})");
+            sb.AppendLine($"Platform: {Application.platform}");
+            sb.AppendLine($"Device: {SystemInfo.deviceModel}");
+            sb.AppendLine($"OS: {SystemInfo.operatingSystem}");
+            if (exception != null) sb.Append(FormatExceptionForReport(exception));
+            return sb.ToString(0, Math.Min(sb.Length, 4000));
+        }
+
+        private static string FormatExceptionForReport(Exception ex)
         {
             if (ex == null) return "<null exception>";
             var sb = new System.Text.StringBuilder();
@@ -112,18 +124,9 @@ namespace Blindsided.Utilities
         {
             try
             {
-                sb.AppendLine($"[#{index}] {e.GetType().FullName}: {e.Message}");
-                if (e.Data != null && e.Data.Count > 0)
-                {
-                    sb.AppendLine("Data:");
-                    foreach (var key in e.Data.Keys)
-                    {
-                        var val = e.Data[key];
-                        sb.AppendLine($" - {key}: {val}");
-                    }
-                }
-                sb.AppendLine("StackTrace:");
-                sb.AppendLine(string.IsNullOrEmpty(e.StackTrace) ? "<no stack trace>" : e.StackTrace);
+                // Raw messages and Exception.Data can carry save values or device paths.
+                sb.AppendLine($"[#{index}] {e.GetType().FullName} (0x{e.HResult:X8})");
+                sb.AppendLine(new System.Diagnostics.StackTrace(e, false).ToString());
             }
             catch { /* best-effort */ }
         }
@@ -131,14 +134,11 @@ namespace Blindsided.Utilities
         private static void EnsureInstance()
         {
             if (Instance != null) return;
-            // Try to find an existing instance first
-            Instance = Object.FindAnyObjectByType<FeedbackForm>();
-            if (Instance != null) return;
-
-            // Create a lightweight host if none exists
+            // A scene-authored FeedbackForm is a manual entry point only. Requests
+            // belong to one host so reloading a scene cannot drop their callbacks.
             var go = new GameObject("FeedbackForm");
             Instance = go.AddComponent<FeedbackForm>();
-            Object.DontDestroyOnLoad(go);
+            UnityEngine.Object.DontDestroyOnLoad(go);
         }
     }
 }

@@ -17,6 +17,7 @@ namespace TimelessEchoes
     {
         private float nextWatchSnapshot;
         private string lastWatchMode;
+        private bool lastWatchLiveUpdates;
         private bool watchPhoneInBackground;
 
         private void WatchPhoneBackgrounded()
@@ -38,7 +39,9 @@ namespace TimelessEchoes
         {
             if (!WatchCompanionPrototype.Supported || backgroundSuspended || backgroundSettling) return;
             var refresh = WatchCompanionPrototype.ConsumeRefreshRequest();
-            if (!refresh && WatchMode == lastWatchMode && Time.unscaledTime < nextWatchSnapshot) return;
+            var liveUpdates = WatchCompanionPrototype.LiveUpdatesAvailable;
+            if (!refresh && WatchMode == lastWatchMode && liveUpdates == lastWatchLiveUpdates &&
+                Time.unscaledTime < nextWatchSnapshot) return;
             PublishWatchCompanionSnapshot();
         }
 
@@ -49,7 +52,8 @@ namespace TimelessEchoes
             if (json == null) return;
             WatchCompanionPrototype.Publish(json);
             lastWatchMode = WatchMode;
-            nextWatchSnapshot = Time.unscaledTime + 15;
+            lastWatchLiveUpdates = WatchCompanionPrototype.LiveUpdatesAvailable;
+            nextWatchSnapshot = Time.unscaledTime + (lastWatchLiveUpdates ? 1 : 15);
         }
 
         // Read the actual owners without checkpointing, awarding rewards or changing history.
@@ -99,7 +103,7 @@ namespace TimelessEchoes
             var timeline = run == null ? null : WatchCompanionPrototype.GetTimeline(map, data);
             string Serialize() => JsonConvert.SerializeObject(new
             {
-                schemaVersion = 1, generatedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), demo = BackgroundRunPrototype.Demo,
+                schemaVersion = 1, generatedAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000d, demo = BackgroundRunPrototype.Demo,
                 state = mode, phoneInBackground = watchPhoneInBackground,
                 backgroundLimitSeconds = BackgroundRunEstimator.MaxAwaySeconds,
                 backgroundProgressEnabled = BackgroundRunPrototype.Enabled, run,

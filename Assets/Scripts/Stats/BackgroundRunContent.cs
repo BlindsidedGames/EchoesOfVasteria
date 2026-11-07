@@ -272,9 +272,10 @@ namespace TimelessEchoes.Stats
             }
         }
 
-        public double EstimateResourcesPerWork(bool combat, double x)
+        public double EstimateResourcesPerWork(bool combat, double x, IDictionary<Resource, double> expectedBonusAmounts = null)
         {
             // Read-only sampling uses its own RNG; never consumes Unity's global sequence.
+            expectedBonusAmounts?.Clear();
             var sampleRandom = new System.Random(175);
             double total = 0;
             for (var i = 0; i < 128; i++)
@@ -305,7 +306,14 @@ namespace TimelessEchoes.Stats
                     total += (raw * gain * buff + CauldronResourceYield.Supplement(Oracle.oracle?.saveData, drop.resource, raw)) * shop * tier;
                 }
                 if (bonuses != null)
-                    foreach (var bonus in bonuses) total += DropResolver.ExpectedBonusAmount(bonus);
+                    foreach (var bonus in bonuses)
+                    {
+                        var amount = DropResolver.ExpectedBonusAmount(bonus);
+                        total += amount;
+                        if (expectedBonusAmounts == null || amount <= 0 || !bonus.resource) continue;
+                        expectedBonusAmounts.TryGetValue(bonus.resource, out var previous);
+                        expectedBonusAmounts[bonus.resource] = previous + amount / 128;
+                    }
             }
             return total / 128;
         }

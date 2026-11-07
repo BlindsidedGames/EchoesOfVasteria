@@ -20,7 +20,7 @@ namespace TimelessEchoes.UI.Toolkit
         private Label modalTitle, promotionDescription;
         private PromotionGame promotionGame;
         private readonly List<(Button button, PromotionGame game)> gameButtons = new();
-        private Button claim, permanent;
+        private Button claim, permanent, cosmetics;
         private readonly List<(Button button, string id)> buyButtons = new();
         private readonly ToolkitWindowLayout layout = new();
         private Texture2D bannerTexture;
@@ -72,6 +72,12 @@ namespace TimelessEchoes.UI.Toolkit
             Text(purchases, "+50% adventure resources on every save. No top-ups needed.", "shop-description", "shop.permanent-description");
             permanent = ToolkitGameplay.B(purchases, "", () => { if (shop.PermanentOwned) shop.TogglePermanent(); else shop.Purchases.Buy(shop.Settings.permanentProductId); });
             permanent.name = "shop-permanent";
+            var companion = ToolkitGameplay.E(scroll, "shop-card");
+            companion.name = "companion-purchase";
+            Text(companion, "Companion colours", "heading", "companion.pack-title");
+            Text(companion, "Three extra cat colours and three extra dog colours.", "shop-description", "companion.pack-description");
+            cosmetics = ToolkitGameplay.B(companion, "", () => shop.Purchases.Buy(shop.Settings.cosmeticProductId));
+            cosmetics.name = "companion-buy";
             Text(scroll, "Support the developer", "heading shop-section-heading", "shop.support-title");
             Text(scroll, "Optional support. No extra gameplay bonuses.", "muted shop-description", "shop.support-description");
             var supporters = ToolkitGameplay.E(scroll, "row shop-supporters");
@@ -90,6 +96,14 @@ namespace TimelessEchoes.UI.Toolkit
             shop.Changed += Refresh; shop.Purchases.Changed += Refresh; ToolkitLocalization.Changed += RefreshLanguage;
             Refresh(); layout.Fill(root, theme); return true;
         }
+        public void RevealCompanions()
+        {
+            root?.schedule.Execute(() =>
+            {
+                if (root != null) root.Q<ScrollView>("shop-body")?.ScrollTo(root.Q("companion-purchase"));
+            });
+        }
+
         private void Refresh()
         {
             if (root == null) return;
@@ -105,6 +119,10 @@ namespace TimelessEchoes.UI.Toolkit
                 : T("shop.buy", "Buy · {0}", shop.Purchases.Price(shop.Settings.permanentProductId) ?? T("shop.unavailable", "Unavailable"));
             permanent.SetEnabled(shop.PermanentOwned || shop.Purchases.Available(shop.Settings.permanentProductId));
             permanent.EnableInClassList("primary", shop.PermanentEnabled);
+            cosmetics.text = shop.CosmeticsOwned
+                ? shop.OriginalOwner ? T("companion.original-owner", "Included with your original purchase") : T("companion.owned", "Owned")
+                : T("shop.buy", "Buy · {0}", shop.Purchases.Price(shop.Settings.cosmeticProductId) ?? T("shop.unavailable", "Unavailable"));
+            cosmetics.SetEnabled(!shop.CosmeticsOwned && shop.Purchases.Available(shop.Settings.cosmeticProductId));
             foreach (var item in buyButtons)
             {
                 item.button.text = shop.Purchases.Price(item.id) ?? T("shop.unavailable", "Unavailable");

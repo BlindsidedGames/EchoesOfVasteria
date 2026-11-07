@@ -4,6 +4,7 @@ import UIKit
 
 @objc(EOVWatchPhoneSession)
 final class EOVWatchPhoneSession: NSObject, WCSessionDelegate {
+    private static let contextInterval: TimeInterval = 15
     private static var instance: EOVWatchPhoneSession?
     private static var shared: EOVWatchPhoneSession {
         if let instance { return instance }
@@ -14,6 +15,9 @@ final class EOVWatchPhoneSession: NSObject, WCSessionDelegate {
     private var latest = EOVWatchSnapshotCache.load()
     private var refreshRequested = false
     private var cached = true
+    private var nextContextUpdate: TimeInterval = 0
+    private var liveMessageStartedAt: TimeInterval?
+    private var liveUpdatesStalled = false
 
     private override init() {
         super.init()
@@ -28,12 +32,15 @@ final class EOVWatchPhoneSession: NSObject, WCSessionDelegate {
         let data = Data((json as String).utf8)
         do {
             let incoming = try EOVWatchSnapshot.decode(data)
-            if let old = shared.latest.flatMap({ try? EOVWatchSnapshot.decode($0) }),
-               incoming.generatedAt < old.generatedAt { return }
+            let old = shared.latest.flatMap { try? EOVWatchSnapshot.decode($0) }
+            if let old, incoming.generatedAt < old.generatedAt { return }
             shared.latest = data
             shared.cached = false
-            EOVWatchSnapshotCache.save(data)
-            shared.sendContext()
+            let changedMode = old?.state != incoming.state || old?.phoneInBackground != incoming.phoneInBackground
+            if changedMode || !liveUpdatesAvailable() || ProcessInfo.processInfo.systemUptime >= shared.nextContextUpdate {
+                shared.sendContext()
+            }
+            shared.sendLiveSnapshot()
             NSLog("[EOVWatch] published generatedAt=%.0f state=%@ skills=%d runs=%d",
                   incoming.generatedAt, incoming.state, incoming.skills.count, incoming.recentRuns.count)
         } catch { NSLog("[EOVWatch] rejected snapshot: %@", String(describing: error)) }
@@ -47,24 +54,70 @@ final class EOVWatchPhoneSession: NSObject, WCSessionDelegate {
         return value ? 1 : 0
     }
 
+    @objc(liveUpdatesAvailable)
+    static func liveUpdatesAvailable() -> Bool {
+        guard canSendLiveMessage else { return false }
+        guard let service = instance else { return true }
+        guard !service.liveUpdatesStalled else { return false }
+        guard let started = service.liveMessageStartedAt else { return true }
+        return ProcessInfo.processInfo.systemUptime - started < contextInterval
+    }
+
+    private static var canSendLiveMessage: Bool {
+        WCSession.isSupported() && WCSession.default.activationState == .activated &&
+            WCSession.default.isReachable && UIApplication.shared.applicationState == .active
+    }
+
     private func sendContext() {
+        guard let latest else { return }
+        EOVWatchSnapshotCache.save(latest)
+        nextContextUpdate = ProcessInfo.processInfo.systemUptime + Self.contextInterval
         guard WCSession.isSupported(), WCSession.default.activationState == .activated,
-              WCSession.default.isPaired, WCSession.default.isWatchAppInstalled, let latest else { return }
+              WCSession.default.isPaired, WCSession.default.isWatchAppInstalled else { return }
         do { try WCSession.default.updateApplicationContext(["snapshot": latest, "cached": cached]) }
         catch { NSLog("[EOVWatch] context send failed: %@", String(describing: error)) }
+    }
+
+    private func sendLiveSnapshot() {
+        guard Self.canSendLiveMessage, !cached, let data = latest else { return }
+        let started = ProcessInfo.processInfo.systemUptime
+        if let previous = liveMessageStartedAt {
+            guard started - previous >= Self.contextInterval else { return }
+            // Reachability can remain true after disconnect. Retry only with the slow feed
+            // until a reply confirms delivery, and ignore callbacks from expired attempts.
+            liveUpdatesStalled = true
+        }
+        liveMessageStartedAt = started
+        WCSession.default.sendMessage(["snapshot": data, "cached": false], replyHandler: { _ in
+            DispatchQueue.main.async {
+                guard self.liveMessageStartedAt == started else { return }
+                self.liveMessageStartedAt = nil
+                self.liveUpdatesStalled = false
+                if self.latest != data { self.sendLiveSnapshot() }
+            }
+        }, errorHandler: { error in
+            DispatchQueue.main.async {
+                guard self.liveMessageStartedAt == started else { return }
+                self.liveMessageStartedAt = nil
+                self.liveUpdatesStalled = true
+                self.sendContext()
+                NSLog("[EOVWatch] live send failed: %@", String(describing: error))
+            }
+        })
     }
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         DispatchQueue.main.async {
             NSLog("[EOVWatch] phone session activated=%d paired=%d installed=%d reachable=%d",
                   activationState.rawValue, session.isPaired, session.isWatchAppInstalled, session.isReachable)
             self.sendContext()
+            self.sendLiveSnapshot()
         }
     }
     func sessionWatchStateDidChange(_ session: WCSession) {
-        DispatchQueue.main.async { self.sendContext() }
+        DispatchQueue.main.async { self.sendContext(); self.sendLiveSnapshot() }
     }
     func sessionReachabilityDidChange(_ session: WCSession) {
-        DispatchQueue.main.async { self.sendContext() }
+        DispatchQueue.main.async { self.sendContext(); self.sendLiveSnapshot() }
     }
     func sessionDidBecomeInactive(_ session: WCSession) {}
     func sessionDidDeactivate(_ session: WCSession) { session.activate() }

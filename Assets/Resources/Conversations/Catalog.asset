@@ -1,0 +1,312 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29331fdde8a293949b41c82d9b9b1e9a, type: 3}
+  m_Name: Catalog
+  m_EditorClassIdentifier: TimelessEchoes.Runtime::TimelessEchoes.Conversations.ConversationCatalog
+  entries:
+  - id: meeting:Barkley1
+    npcId: Barkley1
+    titleKey: conversations.first-meeting
+    title: First meeting
+    task: {fileID: -8091379227490058525, guid: 34f3291671019ea4b99d82cc970ce458, type: 3}
+    introduction: {fileID: 0}
+    story: {fileID: 0}
+    storyId: 
+    quest: {fileID: 0}
+  - id: meeting:Farmers1
+    npcId: Farmers1
+    titleKey: conversations.first-meeting
+    title: First meeting
+    task: {fileID: -8091379227490058525, guid: 3c15d1934c54c974cbf50e0b22f7d91d, type: 3}
+    introduction: {fileID: 0}
+    story: {fileID: 0}
+    storyId: 
+    quest: {fileID: 0}
+  - id: meeting:Gill1
+    npcId: Gill1
+    titleKey: conversations.first-meeting
+    title: First meeting
+    task: {fileID: 1742882378197287474, guid: 3e371285512051e448f324c7aee61518, type: 3}
+    introduction: {fileID: 0}
+    story: {fileID: 0}
+    storyId: 
+    quest: {fileID: 0}
+  - id: meeting:Ivan1
+    npcId: Ivan1
+    titleKey: conversations.first-meeting
+    title: First meeting
+    task: {fileID: 795168505222910750, guid: b5a1ff40b24cbf04f99945ac596898cc, type: 3}
+    introduction: {fileID: 0}
+    story: {fileID: 0}
+    storyId: 
+    quest: {fileID: 0}
+  - id: meeting:OldTimer1
+    npcId: OldTimer1
+    titleKey: conversations.first-meeting
+    title: First meeting
+    task: {fileID: -8091379227490058525, guid: 56881595ccac0b244a734c3c5331dcac, type: 3}
+    introduction: {fileID: 0}
+    story: {fileID: 0}
+    storyId: 
+    quest: {fileID: 0}
+  - id: meeting:Witch1
+    npcId: Witch1
+    titleKey: conversations.first-meeting
+    title: First meeting
+    task: {fileID: -8091379227490058525, guid: fd43160ecb35be24bbbfe997241efce5, type: 3}
+    introduction: {fileID: 0}
+    story: {fileID: 0}
+    storyId: 
+    quest: {fileID: 0}
+  - id: introduction:Reaper1
+    npcId: Reaper1
+    titleKey: conversations.intro.Reaper1
+    title: Carl the Reaper
+    task: {fileID: 0}
+    introduction: {fileID: 11400000, guid: 098f03185e3a0594296d7fec33148c0d, type: 2}
+    story: {fileID: 0}
+    storyId: 
+    quest: {fileID: 0}
+  - id: introduction:EvaWateringCanIntroduction
+    npcId: EvaWateringCanIntroduction
+    titleKey: conversations.intro.EvaWateringCanIntroduction
+    title: Eva the Witch
+    task: {fileID: 0}
+    introduction: {fileID: 11400000, guid: c985ab78ebd6132458d470465901ee43, type: 2}
+    story: {fileID: 0}
+    storyId: 
+    quest: {fileID: 0}
+  - id: introduction:OrinHubIntroduction
+    npcId: OrinHubIntroduction
+    titleKey: conversations.intro.OrinHubIntroduction
+    title: Orin Hub
+    task: {fileID: 0}
+    introduction: {fileID: 11400000, guid: 71175c1334cf18144b304d9fbe1c9568, type: 2}
+    story: {fileID: 0}
+    storyId: 
+    quest: {fileID: 0}
+  - id: story:town-introduction
+    npcId: Farmers1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: town-introduction
+    quest: {fileID: 0}
+  - id: story:Farm.Garden.Build01.v1
+    npcId: Farmers1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Garden.Build01.v1
+    quest: {fileID: 11400000, guid: 990df55b6dd8494db93628351eee0c4e, type: 2}
+  - id: story:Farm.Project.MillBody.v1
+    npcId: Farmers1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Project.MillBody.v1
+    quest: {fileID: 11400000, guid: da470947f5dbf7942bf020d22cbd985b, type: 2}
+  - id: story:Farm.Project.MillSails.v1
+    npcId: Farmers1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Project.MillSails.v1
+    quest: {fileID: 11400000, guid: 88313955f492f3f43933720db4e7496d, type: 2}
+  - id: story:Farm.Project.Well.v1
+    npcId: Farmers1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Project.Well.v1
+    quest: {fileID: 11400000, guid: 2d550d517b5ac47418189d769150a195, type: 2}
+  - id: story:Unlock Corn
+    npcId: Eva
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Unlock Corn
+    quest: {fileID: 11400000, guid: c83b4b0590bf39a498aef150278941ac, type: 2}
+  - id: story:Unlock Cauldron
+    npcId: Eva
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Unlock Cauldron
+    quest: {fileID: 11400000, guid: 9ff6011875dbd3e4d91801288f50ebc0, type: 2}
+  - id: story:Farm.Seeds.Turnip.v1
+    npcId: Farmers1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Seeds.Turnip.v1
+    quest: {fileID: 11400000, guid: a4433ad432635324fab82b1108fb5e9d, type: 2}
+  - id: story:Farm.Saplings.Apple.v1.opening
+    npcId: Farmers1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Saplings.Apple.v1.opening
+    quest: {fileID: 11400000, guid: 5c7cc88dd5825a4458b60944b9e2e7a3, type: 2}
+  - id: story:Farm.Saplings.Apple.v1
+    npcId: Farmers1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Saplings.Apple.v1
+    quest: {fileID: 11400000, guid: 5c7cc88dd5825a4458b60944b9e2e7a3, type: 2}
+  - id: story:Farm.Saplings.Pear.v1.opening
+    npcId: Farmers1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Saplings.Pear.v1.opening
+    quest: {fileID: 11400000, guid: 9e275d3bb463e114a90f8885e399cc90, type: 2}
+  - id: story:Farm.Saplings.Pear.v1
+    npcId: Farmers1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Saplings.Pear.v1
+    quest: {fileID: 11400000, guid: 9e275d3bb463e114a90f8885e399cc90, type: 2}
+  - id: story:Farm.Saplings.Peach.v1.opening
+    npcId: Farmers1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Saplings.Peach.v1.opening
+    quest: {fileID: 11400000, guid: a82da11dce671b746bebd570bd25d52a, type: 2}
+  - id: story:Farm.Saplings.Peach.v1
+    npcId: Farmers1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Saplings.Peach.v1
+    quest: {fileID: 11400000, guid: a82da11dce671b746bebd570bd25d52a, type: 2}
+  - id: story:Farm.Saplings.Cherry.v1.opening
+    npcId: Farmers1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Saplings.Cherry.v1.opening
+    quest: {fileID: 11400000, guid: 4d867b0a6572c6e4a89a189a0c9fd78f, type: 2}
+  - id: story:Farm.Saplings.Cherry.v1
+    npcId: Farmers1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Saplings.Cherry.v1
+    quest: {fileID: 11400000, guid: 4d867b0a6572c6e4a89a189a0c9fd78f, type: 2}
+  - id: story:Farm.Saplings.Oak.v1.opening
+    npcId: Barkley1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Saplings.Oak.v1.opening
+    quest: {fileID: 11400000, guid: 51f4f7885a66fc64a8234683a10f9781, type: 2}
+  - id: story:Farm.Saplings.Oak.v1
+    npcId: Barkley1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Saplings.Oak.v1
+    quest: {fileID: 11400000, guid: 51f4f7885a66fc64a8234683a10f9781, type: 2}
+  - id: story:Farm.Saplings.Birch.v1.opening
+    npcId: Barkley1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Saplings.Birch.v1.opening
+    quest: {fileID: 11400000, guid: 488535cd6225c034f9c19f514b5e3cc3, type: 2}
+  - id: story:Farm.Saplings.Birch.v1
+    npcId: Barkley1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Saplings.Birch.v1
+    quest: {fileID: 11400000, guid: 488535cd6225c034f9c19f514b5e3cc3, type: 2}
+  - id: story:Farm.Saplings.Spruce.v1.opening
+    npcId: Barkley1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Saplings.Spruce.v1.opening
+    quest: {fileID: 11400000, guid: 9d2f57a68f024fd42b159983d2385cbb, type: 2}
+  - id: story:Farm.Saplings.Spruce.v1
+    npcId: Barkley1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Farm.Saplings.Spruce.v1
+    quest: {fileID: 11400000, guid: 9d2f57a68f024fd42b159983d2385cbb, type: 2}
+  - id: story:Rock and Stone.opening
+    npcId: OldTimer1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Rock and Stone.opening
+    quest: {fileID: 11400000, guid: 8a18857e90fcac348ba107a6d4b45789, type: 2}
+  - id: story:Rock and Stone
+    npcId: OldTimer1
+    titleKey: conversations.town-fields
+    title: Our first field
+    task: {fileID: 0}
+    introduction: {fileID: 0}
+    story: {fileID: 11400000, guid: c0233ce131820e2469b7879e4a485eb3, type: 2}
+    storyId: Rock and Stone
+    quest: {fileID: 11400000, guid: 8a18857e90fcac348ba107a6d4b45789, type: 2}

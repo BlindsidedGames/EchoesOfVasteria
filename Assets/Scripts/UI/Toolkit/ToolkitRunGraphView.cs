@@ -58,7 +58,7 @@ namespace TimelessEchoes.UI.Toolkit
             var copy=ToolkitGameplay.E(heading,"graph-summary-copy");
             summary=Text(copy,"","graph-summary");sample=Text(copy,"","graph-sample");
             var zoom=ToolkitGameplay.E(heading,"graph-zoom-controls");
-            zoomOut=Choice(zoom,"graph-zoom-out","âˆ’",()=>{zoomSteps=Math.Max(0,zoomSteps-1);Refresh();});
+            zoomOut=Choice(zoom,"graph-zoom-out","−",()=>{zoomSteps=Math.Max(0,zoomSteps-1);Refresh();});
             zoomIn=Choice(zoom,"graph-zoom-in","+",()=>{zoomSteps=Math.Min(MaximumZoomSteps,zoomSteps+1);Refresh();});
             resetZoom=Choice(zoom,"graph-reset-zoom",ToolkitLocalization.Text("graph.reset-zoom", "Reset"),()=>{zoomSteps=0;Refresh();});
             ToolkitLocalization.BindTooltip(zoomOut,"graph.zoom-out","Zoom out");
@@ -124,7 +124,7 @@ namespace TimelessEchoes.UI.Toolkit
         {
             var key = map < 0 ? null : definition.maps[map].config.name;
             var previous = MapRunHistory.Previous(previousHistory?.Invoke(), key);
-            previousHistoryButton.text = StatisticsPresentation.PreviousHistoryTitle(previous) + (previousExpanded ? "  âˆ’" : "  +");
+            previousHistoryButton.text = StatisticsPresentation.PreviousHistoryTitle(previous) + (previousExpanded ? "  −" : "  +");
             previousHistoryButton.style.display = previous.Runs > 0 ? DisplayStyle.Flex : DisplayStyle.None;
             previousDetails.style.display = previous.Runs > 0 && previousExpanded ? DisplayStyle.Flex : DisplayStyle.None;
             previousDetails.Clear();
@@ -154,7 +154,7 @@ namespace TimelessEchoes.UI.Toolkit
         private bool SupportsRate=>metric==Metric.Resources||metric==Metric.Tasks||metric==Metric.Kills;
         public static double Value(GameData.RunRecord run,Metric metric,bool rate)
         {
-            double value=metric switch {Metric.Resources=>run.ResourcesCollected,Metric.Tasks=>run.TasksCompleted,Metric.Kills=>run.EnemiesKilled,Metric.Duration=>run.Duration,_=>run.Distance};
+            double value=metric switch {Metric.Resources=>Math.Max(0,run.ResourcesCollected-run.BonusResourcesCollected),Metric.Tasks=>run.TasksCompleted,Metric.Kills=>run.EnemiesKilled,Metric.Duration=>run.Duration,_=>run.Distance};
             return rate ? run.Duration>0?value*60/run.Duration:double.NaN : value;
         }
         private string Format(double value)=>metric==Metric.Duration?CalcUtils.FormatTime(value):ItemStatisticsPresentation.Number(value);
@@ -196,7 +196,7 @@ namespace TimelessEchoes.UI.Toolkit
                 var fill=ToolkitGameplay.E(hit,"graph-run-fill");fill.pickingMode=PickingMode.Ignore;fill.style.height=Length.Percent((float)(Math.Min(value/ceiling,1)*100));
                 fill.AddToClassList("graph-outcome-"+(run.Abandoned?"abandoned":run.Reaped?"reaped":run.Died?"died":"retreated"));
                 hit.tooltip=Format(value)+suffix;
-                if(value>ceiling){var overflow=Text(hit,"â†‘","graph-overflow-marker");overflow.pickingMode=PickingMode.Ignore;}
+                if(value>ceiling){var overflow=Text(hit,"↑","graph-overflow-marker");overflow.pickingMode=PickingMode.Ignore;}
                 hit.RegisterCallback<PointerEnterEvent>(_=>ShowDetails(run));hit.RegisterCallback<PointerLeaveEvent>(_=>ShowSelected());
                 hit.RegisterCallback<FocusInEvent>(_=>ShowDetails(run));hit.RegisterCallback<FocusOutEvent>(_=>ShowSelected());
                 hit.userData=run.RunNumber;

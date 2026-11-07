@@ -68,7 +68,8 @@ final class EOVWatchCompanionStore: NSObject, ObservableObject, WCSessionDelegat
         do {
             let next = try EOVWatchSnapshot.decode(data)
             if let current = snapshot,
-               next.generatedAt < current.generatedAt || (cached && next.generatedAt <= current.generatedAt) { return false }
+               next.generatedAt < current.generatedAt ||
+                (next.generatedAt == current.generatedAt && (!self.cached || cached)) { return false }
             snapshot = next
             self.cached = cached
             EOVWatchSnapshotCache.save(data)
@@ -103,5 +104,12 @@ final class EOVWatchCompanionStore: NSObject, ObservableObject, WCSessionDelegat
     }
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {
         DispatchQueue.main.async { self.receiveContext(applicationContext) }
+    }
+
+    func session(_ session: WCSession, didReceiveMessage message: [String: Any], replyHandler: @escaping ([String: Any]) -> Void) {
+        DispatchQueue.main.async {
+            self.receiveContext(message)
+            replyHandler([:])
+        }
     }
 }

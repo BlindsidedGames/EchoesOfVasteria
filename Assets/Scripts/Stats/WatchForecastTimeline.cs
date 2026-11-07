@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TimelessEchoes.Farming;
 
 namespace TimelessEchoes.Stats
 {
@@ -17,11 +18,14 @@ namespace TimelessEchoes.Stats
         public const int MaxFrames = 128;
 
         public static WatchForecastTimeline Create(BackgroundRunEstimator.Input input,
-            BackgroundRunEstimator.Result result, double resourcesPerTask, double resourcesPerKill)
+            BackgroundRunEstimator.Result result, double resourcesPerTask, double resourcesPerKill,
+            FarmBackgroundProjection fields = null)
         {
             if (result.Status != "forecast" || result.Steps.Count == 0 || result.Seconds <= 0 ||
-                !Finite(resourcesPerTask) || !Finite(resourcesPerKill)) return null;
+                !Finite(resourcesPerTask) || !Finite(resourcesPerKill))
+                return CreateFieldsOnly(input, result, fields);
             var timeline = new WatchForecastTimeline { mapId = input.Run.Map, distanceReaping = input.DistanceReaping };
+            var frameLimit = fields != null && fields.HorizonSeconds > result.Seconds ? MaxFrames - 1 : MaxFrames;
             timeline.frames.Add(new[] { 0d, (double)input.Run.Distance, result.Steps[0].Cap, 0, 0, 0, 0, 0 });
             double seconds = 0, resources = 0, reaps = 0, tasks = 0, kills = 0;
             foreach (var step in result.Steps)
@@ -49,14 +53,69 @@ namespace TimelessEchoes.Stats
                     if (step.Restarted)
                         timeline.Add(new[] { seconds, input.StartingDistance, step.RestartCap, resources, reaps, 0, tasks, kills }, false);
                 }
-                if (timeline.frames.Count <= MaxFrames) continue;
+                if (timeline.frames.Count <= frameLimit) continue;
                 timeline.frames.RemoveRange(oldCount, timeline.frames.Count - oldCount);
                 timeline.frames[oldCount - 1] = oldLast;
                 timeline.truncated = true;
                 break;
             }
             timeline.horizonSeconds = timeline.frames.Last()[0];
+            timeline.IncludeFields(fields);
             return timeline.horizonSeconds > 0 && timeline.frames.All(f => Array.TrueForAll(f, Finite)) ? timeline : null;
+        }
+
+        private static WatchForecastTimeline CreateFieldsOnly(BackgroundRunEstimator.Input input,
+            BackgroundRunEstimator.Result result, FarmBackgroundProjection fields)
+        {
+            if (fields == null || fields.Total <= 0) return null;
+            var timeline = new WatchForecastTimeline { mapId = input.Run.Map, distanceReaping = input.DistanceReaping };
+            var cap = input.DistanceReaping ? result.BaseCap : 0;
+            timeline.frames.Add(new[] { 0d, (double)input.Run.Distance, cap, 0, 0, 2, 0, 0 });
+            timeline.IncludeFields(fields);
+            return timeline;
+        }
+
+        private void IncludeFields(FarmBackgroundProjection fields)
+        {
+            if (fields == null) return;
+            // Preserve a truncated adventure's last truthful position. A complete
+            // stopped adventure can still have crops growing for the rest of its hour.
+            if (!truncated && horizonSeconds < fields.HorizonSeconds)
+            {
+                var last = (double[])frames[^1].Clone();
+                last[0] = fields.HorizonSeconds;
+                last[5] = 2;
+                frames.Add(last);
+                horizonSeconds = fields.HorizonSeconds;
+            }
+            // A small fixed sampling budget represents crop batches without adding
+            // a native frame for every harvest or losing adventure boundary groups.
+            var source = frames.ToArray();
+            var samples = Math.Min(60, MaxFrames - frames.Count);
+            for (var i = 1; i <= samples; i++)
+            {
+                var seconds = horizonSeconds * i / (samples + 1);
+                if (source.Any(frame => Math.Abs(frame[0] - seconds) < .000001)) continue;
+                frames.Add(Sample(source, seconds));
+            }
+            frames = frames.OrderBy(frame => frame[0]).ToList();
+            foreach (var frame in frames) frame[3] += fields.At(frame[0]);
+        }
+
+        private static double[] Sample(double[][] source, double seconds)
+        {
+            var upper = Array.FindIndex(source, frame => frame[0] > seconds);
+            var lower = Math.Max(0, upper < 0 ? source.Length - 1 : upper - 1);
+            var value = (double[])source[lower].Clone();
+            value[0] = seconds;
+            if (upper < 0) return value;
+            var next = source[upper];
+            var fraction = (seconds - source[lower][0]) / (next[0] - source[lower][0]);
+            foreach (var index in new[] { 3, 6, 7 })
+                value[index] += (next[index] - value[index]) * fraction;
+            if (value[5] == 0 && next[5] == 0 && value[2] == next[2] && value[4] == next[4])
+                value[1] += (next[1] - value[1]) * fraction;
+            return value;
         }
 
         private void Add(double[] point, bool compactMovement)

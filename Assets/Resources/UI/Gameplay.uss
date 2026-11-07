@@ -804,6 +804,9 @@
 .gameplay .journal-run .journal-run-outcome {font-size:var(--small);color:var(--muted);}
 .gameplay .journal-run.journal-run-overall {height:auto;min-height:32px;flex-direction:column;flex-wrap:nowrap;align-items:stretch;}
 .gameplay .journal-run-line {flex-direction:row;align-items:baseline;flex-shrink:0;min-width:0;width:100%;}
+.gameplay .journal-run .journal-run-rewards .journal-run-estimate-marker {position:absolute;top:-9px;margin:0;padding:0;font-size:var(--small);color:var(--muted);}
+.gameplay.portrait .journal-run .journal-run-rewards .journal-run-estimate-marker {top:-13px;}
+.gameplay .journal-estimate-legend {margin-top:var(--space-control);}
 .gameplay .journal-run-map {flex-grow:1;-unity-font-style:bold;-unity-text-align:middle-left;}
 .gameplay .journal-run-overall .journal-run-duration {-unity-text-align:middle-right;}
 .gameplay .journal-run-rewards {-unity-text-align:middle-left;}
@@ -1320,7 +1323,10 @@
 .gameplay.eov-forge .eov-forge-conversion > .forge-conversion-body {height:auto;min-height:48px;align-items:center;min-width:0;flex-shrink:0;}
 .gameplay.eov-forge .forge-conversion-recipe-column {flex-grow:0;flex-shrink:1;min-width:0;}
 .gameplay.eov-forge .forge-conversion-recipe {height:36px;align-items:center;}
+.gameplay.eov-forge .forge-conversion-caption {align-items:center;min-width:0;}
+.gameplay.eov-forge .forge-conversion-requirement-icon {width:12px;height:12px;margin-right:3px;flex-shrink:0;}
 .gameplay.eov-forge .forge-conversion-maximum {color:var(--muted);white-space:nowrap;}
+.gameplay.eov-forge .forge-conversion-maximum.forge-loss {color:rgb(216,140,133);}
 .gameplay.eov-forge .forge-conversion-body .eov-number-field {width:auto;min-width:0;flex-basis:auto;flex-grow:0;flex-shrink:0;margin:0 0 4px 0;}
 .gameplay.eov-forge .eov-forge-conversion-control {flex-direction:column;flex-wrap:nowrap;margin:0 0 0 6px;min-width:44px;flex-basis:0;flex-grow:1;align-items:stretch;}
 .gameplay.eov-forge .eov-forge-conversion-control .eov-forge-button {width:auto;min-width:0;margin:0;}

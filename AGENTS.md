@@ -27,3 +27,17 @@ Write patch notes for players: describe changes they can see or use, without
 implementation details or internal development status. Use the `unslop` skill on
 the draft before presenting it to the user for approval. Obtain approval for the
 patch notes before publishing them or deploying the release.
+
+## Windows build cleanup
+
+1. Resolve each approved folder to an absolute path under the build root.
+   Check that it is inactive and that its path and contents have no reparse
+   points. Keep current and rollback builds, crash symbols, release receipts,
+   source, and saves. Measure free space before deleting.
+2. In PowerShell, preview with `Remove-Item -LiteralPath $path -Recurse -WhatIf`.
+   Delete with `Remove-Item -LiteralPath $path -Recurse -ErrorAction Stop`.
+   Omit `-Force`, which triggered `blocked by policy`. Stop if you find hidden,
+   read-only, or system items, or if the runner rejects the command. Report
+   the affected paths and any exact error.
+3. Verify the targets are gone and retained files are intact. Measure and
+   report the space reclaimed.

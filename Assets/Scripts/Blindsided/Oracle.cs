@@ -106,6 +106,7 @@ namespace Blindsided
         [TabGroup("SaveData")] [NonSerialized, OdinSerialize] public GameData saveData = new();
 
         private bool loaded;
+        private bool mainRuntimeReady = true;
         public bool HasLoadedCurrentSlotData => loaded && !_recoveryRequired && HasCurrentSlotData;
         private bool wipeInProgress;
         private const string SlotPrefKey = "SaveSlot";
@@ -191,6 +192,7 @@ namespace Blindsided
         private IEnumerator Start()
         {
             while (StartupDiagnostics.Enabled && !StartupDiagnostics.ChoiceReady) yield return null;
+            RetryPendingRecoveryReports();
             StartupDiagnostics.SetPhase("Opening loading screen", 0.05f);
             // Normal builds and Editor Play both start in Loading. This fallback protects a
             // misordered build or direct scene launch without allowing Main to reach a null tree.
@@ -204,7 +206,7 @@ namespace Blindsided
                     RestoreSceneRoots(suspendedRoots);
                     RequireRecovery(
                         SaveLoadStatus.Failed,
-                        "The Loading scene could not be opened before save verification began.");
+                        "The Loading scene could not be opened before save verification began.", "loading-scene");
                     yield break;
                 }
             }
@@ -224,14 +226,25 @@ namespace Blindsided
             yield return LoadMainScene();
         }
 
-        private IEnumerator LoadMainScene(string durableOperation = null)
+        private IEnumerator LoadMainScene(string durableOperation = null, bool loadInTown = false)
         {
+            mainRuntimeReady = false;
             StartupDiagnostics.SetPhase("Loading town assets", 0.6f);
             if (StartupDiagnostics.Enabled) yield return null;
             // This set refers to scene objects, so it must be empty before Main's Awake/Start
             // methods begin spawning NPC tasks after any Loading -> Main transition.
             StaticReferences.ActiveNpcMeetings.Clear();
-            var async = SceneManager.LoadSceneAsync(MainSceneName, LoadSceneMode.Single);
+            AsyncOperation async = null;
+            Exception sceneLoadFailure = null;
+            try { async = SceneManager.LoadSceneAsync(MainSceneName, LoadSceneMode.Single); }
+            catch (Exception ex) { sceneLoadFailure = ex; }
+            if (async == null)
+            {
+                RequireRuntimeReloadRecovery(durableOperation ?? "The loaded save remains intact on disk",
+                    sceneLoadFailure ?? new InvalidOperationException("Unity returned no town scene operation"),
+                    phase: "town-scene");
+                yield break;
+            }
             if (StartupDiagnostics.Enabled)
             {
                 async.allowSceneActivation = false;
@@ -260,6 +273,21 @@ namespace Blindsided
                     clearTransientState: false,
                     durableOperation ?? "The loaded save remains intact on disk"))
                 yield break;
+            mainRuntimeReady = true;
+
+            if (loadInTown && townRecoveryDiscardedRun && !SaveCheckpointBlocking(CurrentSlot, false, "town-save"))
+            {
+                if (!_recoveryRequired)
+                    RequireRuntimeReloadRecovery("The town recovery could not be saved",
+                        new InvalidOperationException("Checkpoint rejected"), false, "town-save");
+                yield break;
+            }
+            if (saveData.ActiveRun == null) CompleteRunRestore();
+            if (loadInTown && saveData.ActiveRun == null)
+            {
+                try { BackgroundRunPrototype.End(); }
+                catch (Exception ex) { Debug.LogWarning($"Could not clear the background activity: {ex.Message}"); }
+            }
 
             // Start autosave only after data is loaded and applied in the main scene.
             // First autosave occurs shortly after load, then at a modest interval. Lifecycle saves
@@ -450,8 +478,15 @@ namespace Blindsided
             // This coroutine cannot run while the engine is suspended; it also
             // handles a legitimate resume notification arriving before UIKit active.
             yield return null;
+            var focusedSeconds = 0f;
             while (_applicationInBackground && !BackgroundRunPrototype.NativeForeground)
+            {
+                focusedSeconds = Application.isFocused ? focusedSeconds + Mathf.Min(Time.unscaledDeltaTime, 0.25f) : 0f;
+                // Keep the normal lock guard, but allow a persistently focused Unity
+                // window to recover if the native foreground signal never arrives.
+                if (focusedSeconds >= 5f) break;
                 yield return null;
+            }
             mobileForegroundResume = null;
             ExitMobileBackground();
         }
@@ -506,7 +541,12 @@ namespace Blindsided
                 return;
 
             _applicationInBackground = false;
-            AwayForSeconds();
+            try { AwayForSeconds(); }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Could not notify systems of elapsed background time: {ex}");
+                RecordRecoveryReport("foreground-notification", "Elapsed-time listener failed", ex);
+            }
             try
             {
                 EventHandler.ApplicationForeground();
@@ -627,9 +667,10 @@ namespace Blindsided
         private bool TryStartTrackedSave(
             int slotIndex,
             bool replaceLineage = false,
-            bool forceAuthorityReplacement = false)
+            bool forceAuthorityReplacement = false,
+            string recoveryPhase = null)
         {
-            if (!TryPrepareSnapshot(out var error))
+            if (!TryPrepareSnapshot(out var error, recoveryPhase))
             {
                 if (!string.IsNullOrEmpty(error))
                     Debug.LogWarning(error);
@@ -649,10 +690,12 @@ namespace Blindsided
             return true;
         }
 
-        private bool TryPrepareSnapshot(out string error)
+        private bool snapshotFailureReported;
+
+        private bool TryPrepareSnapshot(out string error, string recoveryPhase = null)
         {
             error = null;
-            if (!CanSave())
+            if (!CanSave(allowDuringRestore: recoveryPhase != null))
             {
                 error = _recoveryRequired
                     ? "Skipping save because this slot requires recovery. Existing files remain untouched."
@@ -671,8 +714,16 @@ namespace Blindsided
                     error =
                         "Save cancelled because one or more runtime systems could not contribute a complete snapshot: " +
                         ex;
+                    if (recoveryPhase != null)
+                        RecordRecoveryReport(recoveryPhase, "Snapshot capture failed before writing", ex);
+                    else if (!snapshotFailureReported)
+                    {
+                        snapshotFailureReported = true;
+                        FeedbackForm.SubmitException("Save.SnapshotCapture", ex);
+                    }
                     return false;
                 }
+                snapshotFailureReported = false;
             }
 
             if (saveData == null)
@@ -688,22 +739,29 @@ namespace Blindsided
             return true;
         }
 
-        private bool CanSave()
+        private bool RuntimeIsRestoring => restoringRun ||
+            TimelessEchoes.GameManager.Instance && TimelessEchoes.GameManager.Instance.RunRestorePending;
+
+        private bool CanSave(bool allowDuringRestore = false)
         {
-            return !_recoveryRequired && HasCurrentSlotData && (loaded || wipeInProgress);
+            return !_recoveryRequired && HasCurrentSlotData && (loaded || wipeInProgress) &&
+                   (wipeInProgress || mainRuntimeReady && (allowDuringRestore || !RuntimeIsRestoring));
         }
 
-        private bool SaveNowBlocking(int slotIndex, bool replaceLineage = false)
+        private bool SaveNowBlocking(int slotIndex, bool replaceLineage = false) =>
+            SaveCheckpointBlocking(slotIndex, replaceLineage, null);
+
+        private bool SaveCheckpointBlocking(int slotIndex, bool replaceLineage, string recoveryPhase)
         {
             if (_economicTransactionActive) { _savePending = true; return false; }
-            if (!CanSave())
+            if (!CanSave(allowDuringRestore: recoveryPhase != null))
                 return false;
 
             StopSaveCoordinatorMonitoring();
             CompleteActiveSaveBlocking();
             _savePending = false;
 
-            if (!TryStartTrackedSave(slotIndex, replaceLineage))
+            if (!TryStartTrackedSave(slotIndex, replaceLineage, recoveryPhase: recoveryPhase))
                 return false;
 
             var task = _activeSaveTask;
@@ -713,7 +771,7 @@ namespace Blindsided
             _activeSaveTask = null;
             _activeSaveSlot = -1;
             _activeSaveIsReplacement = false;
-            HandleSaveResult(result, index, wasReplacement);
+            HandleSaveResult(result, index, wasReplacement, recoveryPhase);
             return result.Succeeded;
         }
 
@@ -750,7 +808,8 @@ namespace Blindsided
             }
         }
 
-        private void HandleSaveResult(SaveWriteResult result, int slotIndex, bool replacedLineage = false)
+        private void HandleSaveResult(SaveWriteResult result, int slotIndex, bool replacedLineage = false,
+            string recoveryPhase = null)
         {
             if (result != null && result.Succeeded)
             {
@@ -771,12 +830,14 @@ namespace Blindsided
             var detail = result?.Error ?? "Unknown save failure.";
             Debug.LogError($"Save failed for File {slotIndex + 1}: {detail}");
             if (result?.Status == SaveWriteStatus.ReloadRequired && slotIndex == CurrentSlot)
-                RequireSaveReloadRecovery(result, slotIndex);
+            {
+                RequireSaveReloadRecovery(result, slotIndex, recoveryPhase ?? "save-write");
+                return;
+            }
+            if (recoveryPhase != null) return; // Recovery owns the incident and the report.
             try
             {
-                FeedbackForm.Submit(
-                    "Save.CommitFailed",
-                    $"slot: {slotIndex + 1}\nstatus: {result?.Status}\ndetail: {detail}");
+                FeedbackForm.Submit("Save.CommitFailed", FeedbackForm.FormatReport($"Status: {result?.Status}"));
             }
             catch
             {
@@ -784,7 +845,7 @@ namespace Blindsided
             }
         }
 
-        private void RequireSaveReloadRecovery(SaveWriteResult result, int slotIndex)
+        private void RequireSaveReloadRecovery(SaveWriteResult result, int slotIndex, string phase)
         {
             loaded = false;
             _recoveryRequired = true;
@@ -795,8 +856,7 @@ namespace Blindsided
                 $"File {slotIndex + 1} changed outside the running save session. Autosave stopped before " +
                 "the external authority was overwritten. The current in-memory state is retained, and an " +
                 "importable rescue was attempted before offering a reload. " + result.Error;
-            try { FeedbackForm.Submit("Save.ReloadRequired", _recoveryDiagnostic); }
-            catch { }
+            RecordRecoveryReport(phase, _recoveryStatus.ToString());
             ShowRecoveryUiAtLoadingBoundary();
         }
 
@@ -826,11 +886,12 @@ namespace Blindsided
             _saveCoordinatorRoutine = null;
         }
 
-        private IEnumerator LoadCurrentSlot()
+        private IEnumerator LoadCurrentSlot(bool loadInTown = false, bool requireExistingSave = false)
         {
             StartupDiagnostics.SetPhase("Preparing save storage", 0.1f);
             if (StartupDiagnostics.Enabled) yield return null;
             PrepareForSlotLoad();
+            townRecoveryDiscardedRun = false;
 
             var index = Mathf.Clamp(CurrentSlot, 0, 2);
             var slotName = GetSlotDirectoryName(index);
@@ -853,7 +914,8 @@ namespace Blindsided
                     loadResult = new SaveLoadResult(
                         SaveLoadStatus.Failed,
                         slotName,
-                        diagnostic: ex.ToString());
+                        diagnostic: ex.ToString(),
+                        readException: ex);
                 }
 
                 if (!IsTransientLoadFailure(loadResult.Status) || attempt >= MaxLoadAttempts)
@@ -868,6 +930,13 @@ namespace Blindsided
             if (loadResult == null)
             {
                 RequireRecovery(SaveLoadStatus.Failed, "The save load ended without a result.");
+                yield break;
+            }
+
+            if ((requireExistingSave || loadInTown) &&
+                (loadResult.Status == SaveLoadStatus.NotFound || loadResult.Status == SaveLoadStatus.Deleted))
+            {
+                RequireRecovery(loadResult.Status, "No existing save could be verified for recovery.");
                 yield break;
             }
 
@@ -912,7 +981,7 @@ namespace Blindsided
 
             if (!loadResult.Succeeded || loadResult.Data == null)
             {
-                RequireRecovery(loadResult.Status, loadResult.Diagnostic);
+                RequireRecovery(loadResult.Status, loadResult.Diagnostic, exception: loadResult.ReadException);
                 yield break;
             }
 
@@ -924,12 +993,13 @@ namespace Blindsided
             {
                 RequireRecovery(
                     SaveLoadStatus.Failed,
-                    migration.Error ?? "A required save migration failed.");
+                    migration.Error ?? "A required save migration failed.", "save-migration");
                 yield break;
             }
 
             var candidate = migration.Data;
-            var mustCommit = migration.Changed ||
+            var pendingHardcoreDeath = RestorePendingHardcoreDeath(candidate);
+            var mustCommit = pendingHardcoreDeath || migration.Changed ||
                              loadResult.Status == SaveLoadStatus.Recovered ||
                              !loadResult.IntegrityVerified;
             if (mustCommit)
@@ -945,13 +1015,20 @@ namespace Blindsided
                 {
                     RequireRecovery(
                         SaveLoadStatus.Failed,
-                        $"Loaded data was preserved, but its verified migration could not be committed: {migrationWrite.Error}");
+                        $"The loaded checkpoint was preserved, but the updated checkpoint could not be committed: {migrationWrite.Error}",
+                        pendingHardcoreDeath ? "hardcore-death-save" : "migration-save");
                     yield break;
                 }
+                if (pendingHardcoreDeath) ClearPendingHardcoreDeath();
             }
 
             StartupDiagnostics.SetPhase("Preparing player data", 0.5f);
             if (StartupDiagnostics.Enabled) yield return null;
+            if (loadInTown && !candidate.Hardcore && candidate.ActiveRun != null)
+            {
+                candidate.ActiveRun = null;
+                townRecoveryDiscardedRun = true;
+            }
             PublishLoadedData(candidate);
             PersistSlotMetadataToPlayerPrefs();
 
@@ -965,6 +1042,8 @@ namespace Blindsided
 
         private void PrepareForSlotLoad()
         {
+            mainRuntimeReady = false;
+            restoringRun = false;
             _recoveryChoices = null;
             loaded = false;
             _recoveryRequired = false;
@@ -979,7 +1058,8 @@ namespace Blindsided
             return status == SaveLoadStatus.Unavailable || status == SaveLoadStatus.Failed;
         }
 
-        private void RequireRecovery(SaveLoadStatus status, string diagnostic)
+        private void RequireRecovery(SaveLoadStatus status, string diagnostic, string phase = "save-read",
+            Exception exception = null)
         {
             StartupDiagnostics.SetPhase("Save recovery required", StartupDiagnostics.Progress);
             loaded = false;
@@ -993,8 +1073,7 @@ namespace Blindsided
                 "No existing snapshot generation was overwritten or deleted by this failure. " +
                 $"{diagnostic}";
             Debug.LogError(_recoveryDiagnostic);
-            try { FeedbackForm.Submit("Save.RecoveryRequired", _recoveryDiagnostic); }
-            catch { }
+            RecordRecoveryReport(phase, status.ToString(), exception);
             ShowRecoveryUiAtLoadingBoundary();
             if (status == SaveLoadStatus.Conflict) StartCoroutine(LoadRecoveryChoices());
         }
@@ -1089,6 +1168,19 @@ namespace Blindsided
             var titleText = unsupportedNewer ? ToolkitLocalization.Text("save.recovery.newer-title", "Save From Newer Version") :
                 canStartFresh ? ToolkitLocalization.Text("save.recovery.required-title", "Save Recovery Required") : ToolkitLocalization.Text("save.recovery.unavailable-title", "Save Temporarily Unavailable");
             var bodyText = GetRecoveryBody(canStartFresh, unsupportedNewer);
+            if (CurrentRecoveryReport is { } report)
+                bodyText += "\n\n" + (report.sent
+                    ? ToolkitLocalization.Text("save.recovery.sent", "Diagnostics sent.")
+                    : ToolkitLocalization.Text("save.recovery.pending", "Diagnostics pending."));
+            var loadInTown = !canStartFresh && !unsupportedNewer && !(HasCurrentSlotData && saveData.Hardcore);
+            if (loadInTown)
+                bodyText += "\n\n" + ToolkitLocalization.Text("save.recovery.town-note",
+                    "Loading in town ends the current adventure and keeps saved progress.");
+            var secondaryText = loadInTown ? ToolkitLocalization.Text("save.recovery.town", "Load in Town") :
+                canStartFresh ? ToolkitLocalization.Text("save.recovery.fresh", "Keep Old Files & Start Fresh") :
+                Application.isMobilePlatform ? null : ToolkitLocalization.Text("save.recovery.folder", "Open Save Folder");
+            Action secondaryAction = loadInTown ? () => BeginRecoveryRetry(loadInTown: true) :
+                canStartFresh ? BeginFreshRecovery : secondaryText == null ? null : OpenSaveFolder;
             if (recoveryViewPrefab != null)
             {
                 if (_nativeRecoveryView == null)
@@ -1096,10 +1188,9 @@ namespace Blindsided
                 _recoveryCanvas ??= transform.Find("Canvas")?.gameObject;
                 if (_recoveryCanvas != null) _recoveryCanvas.SetActive(false);
                 _nativeRecoveryView.Show(titleText, bodyText, ToolkitLocalization.Text("save.recovery.retry", "Retry"),
-                    canStartFresh ? ToolkitLocalization.Text("save.recovery.fresh", "Keep Old Files & Start Fresh") : ToolkitLocalization.Text("save.recovery.folder", "Open Save Folder"),
-                    BeginRecoveryRetry, canStartFresh ? BeginFreshRecovery : OpenSaveFolder,
+                    secondaryText, () => BeginRecoveryRetry(), secondaryAction,
                     !_recoveryActionInProgress && !_loadingSceneTransitionInProgress &&
-                    _recoverySceneTransitionRoutine == null, RecoveryChoices());
+                    _recoverySceneTransitionRoutine == null, RecoveryActions(loadInTown && !Application.isMobilePlatform));
                 return;
             }
 
@@ -1146,19 +1237,16 @@ namespace Blindsided
                 var label = primaryButton.GetComponentInChildren<TMP_Text>(includeInactive: true);
                 if (label != null) label.text = ToolkitLocalization.Text("save.recovery.retry", "Retry");
                 primaryButton.onClick.RemoveAllListeners();
-                primaryButton.onClick.AddListener(BeginRecoveryRetry);
+                primaryButton.onClick.AddListener(() => BeginRecoveryRetry());
             }
 
             if (secondaryButton != null)
             {
                 var label = secondaryButton.GetComponentInChildren<TMP_Text>(includeInactive: true);
-                if (label != null)
-                    label.text = canStartFresh ? ToolkitLocalization.Text("save.recovery.fresh", "Keep Old Files & Start Fresh") : ToolkitLocalization.Text("save.recovery.folder", "Open Save Folder");
+                if (label != null) label.text = secondaryText;
                 secondaryButton.onClick.RemoveAllListeners();
-                if (canStartFresh)
-                    secondaryButton.onClick.AddListener(BeginFreshRecovery);
-                else
-                    secondaryButton.onClick.AddListener(OpenSaveFolder);
+                secondaryButton.gameObject.SetActive(secondaryAction != null);
+                if (secondaryAction != null) secondaryButton.onClick.AddListener(() => secondaryAction());
             }
 
             _recoveryCanvas.transform.localScale = Vector3.one;
@@ -1184,7 +1272,8 @@ namespace Blindsided
                 return ToolkitLocalization.Text("save.recovery.newer-body", "File {0} was written by a newer game version. It has not been changed. Install the newer version, then Retry, or inspect the save folder. Starting fresh is disabled to protect that progress.\n\n{1}", CurrentSlot + 1, details);
             if (canStartFresh)
                 return ToolkitLocalization.Text("save.recovery.conflict-body", "File {0} has a confirmed integrity or cloud-authority conflict. Retry is the safest first action and every existing snapshot remains preserved. If you explicitly start fresh, a new cloud lineage is created without deleting the old files.\n\n{1}", CurrentSlot + 1, details);
-            return ToolkitLocalization.Text("save.recovery.unavailable-body", "File {0} is temporarily unavailable or could not be applied to the running game. Autosave is disabled and existing snapshot evidence remains preserved. Retry after closing any sync or backup tool that may be using the files.\n\n{1}", CurrentSlot + 1, details);
+            return ToolkitLocalization.Text("save.recovery.unavailable-body",
+                "File {0} couldn't be loaded. Your existing save files were kept.", CurrentSlot + 1);
         }
 
         private static bool CanOfferFreshRecovery(SaveLoadStatus status)
@@ -1192,13 +1281,13 @@ namespace Blindsided
             return status == SaveLoadStatus.Corrupt || status == SaveLoadStatus.Conflict;
         }
 
-        private void BeginRecoveryRetry()
+        private void BeginRecoveryRetry(bool loadInTown = false)
         {
-            if (!_recoveryActionInProgress && !_loadingSceneTransitionInProgress)
-                StartCoroutine(RetryRecoveryRoutine());
+            if (!_recoveryActionInProgress && !_loadingSceneTransitionInProgress && _recoverySceneTransitionRoutine == null)
+                StartCoroutine(RetryRecoveryRoutine(loadInTown));
         }
 
-        private IEnumerator RetryRecoveryRoutine()
+        private IEnumerator RetryRecoveryRoutine(bool loadInTown = false)
         {
             _recoveryActionInProgress = true;
             var buttons = GetRecoveryButtons();
@@ -1219,13 +1308,15 @@ namespace Blindsided
                     }
                 }
 
-                yield return LoadCurrentSlot();
+                yield return LoadCurrentSlot(loadInTown, requireExistingSave: true);
                 if (!loaded)
                     yield break;
 
                 PersistCurrentSlotSelection();
                 HideRecoveryUi();
-                yield return LoadMainScene("The retried save was loaded from a verified disk snapshot");
+                retryInterruptedRun = true;
+                yield return LoadMainScene("The retried save was loaded from a verified disk snapshot",
+                    loadInTown: loadInTown);
             }
             finally
             {
@@ -1366,7 +1457,8 @@ namespace Blindsided
             }
         }
 
-        private void RequireRuntimeReloadRecovery(string durableOperation, Exception exception, bool checkpointCommitted = true)
+        private void RequireRuntimeReloadRecovery(string durableOperation, Exception exception, bool checkpointCommitted = true,
+            string phase = "apply-save")
         {
             loaded = false;
             _recoveryRequired = true;
@@ -1379,8 +1471,7 @@ namespace Blindsided
                 $"{durableOperation}. Further saves have been blocked to preserve the last checkpoint. " +
                 "Restart the game or Retry; changes since that checkpoint may be lost. " + exception;
             Debug.LogError(_recoveryDiagnostic);
-            try { FeedbackForm.Submit("Save.RuntimeReloadFailed", _recoveryDiagnostic); }
-            catch { }
+            RecordRecoveryReport(phase, checkpointCommitted ? "Checkpoint committed" : "Commit unconfirmed", exception);
             ShowRecoveryUiAtLoadingBoundary();
         }
 
@@ -1406,7 +1497,7 @@ namespace Blindsided
             _isQuitting = true;
             StopAutosaveLoop();
 
-            if (_recoveryRequired || !loaded)
+            if (_recoveryRequired || !loaded || !mainRuntimeReady || RuntimeIsRestoring)
             {
                 _finalSaveCompleted = true;
                 TryFlushPlayerPrefs();

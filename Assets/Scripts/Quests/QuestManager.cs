@@ -9,6 +9,7 @@ using System.Linq;
 using Blindsided.SaveData;
 using TimelessEchoes.Buffs;
 using TimelessEchoes.Enemies;
+using TimelessEchoes.Farming;
 using TimelessEchoes.Stats;
 using TimelessEchoes.Skills;
 using TimelessEchoes.Upgrades;
@@ -585,6 +586,8 @@ namespace TimelessEchoes.Quests
 
             record.Completed = true;
             record.CompletedTimestamp = DateTime.UtcNow.Ticks;
+            if (!fieldQuest) FarmStory.QueueCompletion(oracle.saveData, id);
+            var pendingDialogue = oracle.saveData.Farm?.PendingQuestDialogues?.Contains(id) == true;
             if (TownPathProgression.IsPathQuest(id))
                 Hero.HeroStatSystem.MarkDirty(Hero.DirtyMask.Move, Hero.DirtyReason.PerksChanged);
             // Trim transient quest progress to reduce save size
@@ -647,17 +650,17 @@ namespace TimelessEchoes.Quests
             else
                 PinnedQuestUIManager.Instance?.UpdateProgress();
 
-            // Immediately persist rewards and quest state so saved data matches live inventory.
             try
             {
-                if (!fieldQuest) SaveData();
+                // The pending scene shares a checkpoint with the completed hand-in.
+                if (pendingDialogue) oracle.RequestCheckpointSave();
+                else if (!fieldQuest) SaveData();
             }
             catch (System.Exception ex)
             {
                 Debug.LogError($"Immediate save after quest completion failed: {ex}");
             }
             reveal?.Play(id);
-            if (reveal == null) TimelessEchoes.Farming.FarmStory.Instance?.QueueCompletion(id);
             return true;
         }
 

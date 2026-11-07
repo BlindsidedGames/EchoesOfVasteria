@@ -653,7 +653,8 @@ namespace TimelessEchoes
             }
             var startX = resume?.Distance ?? GetRunStartingDistance();
             loadingRun = resume ?? CaptureRun(startX, 1f);
-            StartCoroutine(StartRunRoutine(startX, resume));
+            var routine = StartRunRoutine(startX, resume);
+            StartCoroutine(resume == null ? routine : RunRestoreRoutine(routine));
         }
 
         private IEnumerator StartRunRoutine(float startX, RunSaveData resume)
@@ -661,7 +662,7 @@ namespace TimelessEchoes
             SetRunLoadingVisible(true);
             UpdateRunLoadingProgress(0f);
             yield return null; // Present the loading overlay before teardown/instantiation.
-            yield return StartCoroutine(CleanupMapRoutine(true));
+            yield return CleanupMapRoutine(true);
 
             if (statTracker == null)
             {
@@ -785,10 +786,7 @@ namespace TimelessEchoes
                     health.SetCurrentHealthSilently(health.MaxHealth * resume.HealthFraction);
                 }
             }
-            yield return StartCoroutine(FastForwardStart(resume != null ? hero.transform.position.x : startX, resume?.Dead != true));
-            loadingRun = null;
-            SetRunLoadingVisible(false);
-            UpdateRunLoadingProgress(0f);
+            yield return FastForwardStart(resume != null ? hero.transform.position.x : startX, resume?.Dead != true);
 
             // Initialize distance and buff state immediately after restart to avoid 0% stalls
             if (statTracker != null && hero != null)
@@ -807,12 +805,14 @@ namespace TimelessEchoes
                     Instantiate(gravestonePrefab, hero.transform.position, Quaternion.identity, CurrentMap.transform);
                 retreatQueued = resume.ReturnQueued;
                 PresentDeath(resume.Reaped);
+                FinishRunLoading(restored: true);
                 yield break;
             }
 
             retreatQueued = resume?.ReturnQueued == true;
             BuffManager.Instance?.Resume();
             if (resume != null && IvanReturnPending) WaitForIvanReturn(null);
+            FinishRunLoading(restored: resume != null);
 
             var firstEchoLesson = FindAnyObjectByType<UI.Toolkit.ToolkitOrinIntroduction>();
             if (firstEchoLesson && UI.Toolkit.BuffIntroductionGuidance.Stage == 3)
@@ -835,6 +835,14 @@ namespace TimelessEchoes
                 if (CurrentMap == null) yield break;
             }
 
+        }
+
+        private void FinishRunLoading(bool restored)
+        {
+            if (restored) Blindsided.Oracle.oracle?.CompleteRunRestore();
+            loadingRun = null;
+            SetRunLoadingVisible(false);
+            UpdateRunLoadingProgress(0f);
         }
 
         private float GetRunStartingDistance()

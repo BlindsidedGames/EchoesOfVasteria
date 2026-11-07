@@ -7,6 +7,16 @@ namespace TimelessEchoes.NPC
     public sealed class MildredColours : ScriptableObject
     {
         public Sprite[] original, white, ginger, brown, silver;
+        [System.Serializable]
+        public sealed class Dog
+        {
+            public Sprite[] idle;
+            public RuntimeAnimatorController controller;
+        }
+        public Dog[] dogs = System.Array.Empty<Dog>();
+        public int ChoiceCount => Count + dogs.Length;
+        public Sprite[] PreviewFrames(int choice) => choice < Count ? Frames(choice) : dogs[choice - Count].idle;
+        public RuntimeAnimatorController Controller(int choice) => choice < Count ? null : dogs[choice - Count].controller;
         private Dictionary<Sprite, int> frameIndices;
 
         public const int Count = 5;
@@ -17,7 +27,7 @@ namespace TimelessEchoes.NPC
 
         public Sprite Remap(Sprite sprite, int colour)
         {
-            if (!sprite) return sprite;
+            if (!sprite || colour >= Count) return sprite;
             if (frameIndices == null)
             {
                 frameIndices = new Dictionary<Sprite, int>();

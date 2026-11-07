@@ -3,6 +3,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
+[DefaultExecutionOrder(1)]
 public class PixelGridSnap : MonoBehaviour
 {
     public int internalHeightPx = 576; // e.g., tilesHigh * PPU
