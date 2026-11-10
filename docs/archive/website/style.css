@@ -514,11 +514,13 @@ footer a:hover {
 .hero-content {
   max-width: 800px;
   margin: 0 auto;
+  padding: 0 var(--spacing-lg);
 }
 
-.hero h2 {
+.hero h1 {
   font-size: var(--font-size-3xl);
   font-weight: 700;
+  margin-top: 0;
   margin-bottom: var(--spacing-lg);
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   -webkit-background-clip: text;
@@ -531,6 +533,10 @@ footer a:hover {
   color: var(--text-muted);
   margin-bottom: var(--spacing-xl);
   line-height: 1.7;
+}
+
+.availability {
+  margin-bottom: 0;
 }
 
 /* Buttons */
@@ -763,9 +769,15 @@ footer a:hover {
 
 /* Store badges */
 .store-badge {
-  display: inline-block;
-  line-height: 0;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  line-height: 1.4;
+  max-width: 100%;
 }
+.store-platform { font-size: var(--font-size-sm); color: var(--text-muted); }
+.store-badge:focus-visible { outline: 3px solid var(--secondary-color); outline-offset: 6px; border-radius: var(--radius-sm); }
 .store-badge img { height: 78px; width: auto; }
 .store-badge--google img { height: 78px; }
 .store-badge--apple img { height: 78px; }
@@ -917,7 +929,7 @@ body.wiki-page .changes .changes-content { background: transparent; border: none
     max-width: 100%;
   }
   
-  .hero h2 {
+  .hero h1 {
     font-size: var(--font-size-2xl);
   }
   
@@ -989,7 +1001,7 @@ body.wiki-page .changes .changes-content { background: transparent; border: none
     padding: var(--spacing-xl) 0;
   }
   
-  .hero h2 {
+  .hero h1 {
     font-size: var(--font-size-xl);
   }
   
