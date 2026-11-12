@@ -30,6 +30,8 @@ namespace TimelessEchoes
         private bool pinching, pinchRejected;
         private InputAction moveAction;
         private bool presentationControl;
+        // Leave one native pixel for the final PixelGridSnap adjustment.
+        private const float LandInset = 1f / 16f;
 
         public bool CanPresent => isActiveAndEnabled && panTarget && landBounds && outputCamera;
         public Bounds LandBounds => landBounds ? landBounds.bounds : default;
@@ -50,10 +52,51 @@ namespace TimelessEchoes
             if (presentationControl) return;
             if (Characters.CharacterCreation.Required || UI.Toolkit.ToolkitCharacterCreator.BlocksWorldInput) return;
             if (panTarget == null || landBounds == null || outputCamera == null) return;
+            SetFocus(worldPosition);
+        }
+
+        internal void SetPresentationReturnFocus(Vector2 worldPosition)
+        {
+            if (!presentationControl || !CanPresent) return;
+            SetFocus(worldPosition);
+            var bounds = LandBounds;
+            var aspect = ViewportAspect;
+            requestedSize = Mathf.Min(requestedSize, MaximumSize(bounds, aspect));
+            ApplyLens(requestedSize, aspect);
+            panTarget.position = ClampToLand(panTarget.position, bounds, requestedSize, aspect);
+            // The town camera is in standby. Calculate its new pose before the
+            // dialogue camera starts blending towards it.
+            var up = outputCamera.TryGetComponent<CinemachineBrain>(out var brain) ? brain.DefaultWorldUp : Vector3.up;
+            townCamera.UpdateCameraState(up, -1f);
+        }
+
+        private void SetFocus(Vector2 worldPosition)
+        {
             ResetGesture();
             requestedSize = preferredSize * .5f;
             panTarget.position = new Vector3(worldPosition.x, worldPosition.y, panTarget.position.z);
-            // Normal Update applies the same authored confiner/aspect bounds as touch/keyboard.
+        }
+
+        // Use the rendered viewport, including AspectRatioBox's letterboxing.
+        private float ViewportAspect => (float)outputCamera.pixelWidth / Mathf.Max(1, outputCamera.pixelHeight);
+        private float MaximumSize(Bounds bounds, float aspect) => Mathf.Min(preferredSize * 1.5f,
+            bounds.extents.y - LandInset, (bounds.extents.x - LandInset) / aspect);
+
+        private void ApplyLens(float size, float aspect)
+        {
+            if (Mathf.Approximately(size, townCamera.Lens.OrthographicSize) && Mathf.Approximately(aspect, lastAspect)) return;
+            townCamera.Lens.OrthographicSize = size;
+            confiner.InvalidateLensCache();
+            lastAspect = aspect;
+        }
+
+        private static Vector3 ClampToLand(Vector3 position, Bounds bounds, float size, float aspect)
+        {
+            var halfWidth = size * aspect + LandInset;
+            var halfHeight = size + LandInset;
+            position.x = Mathf.Clamp(position.x, bounds.min.x + halfWidth, bounds.max.x - halfWidth);
+            position.y = Mathf.Clamp(position.y, bounds.min.y + halfHeight, bounds.max.y - halfHeight);
+            return position;
         }
 
         private void OnDisable() => ResetGesture();
@@ -100,28 +143,16 @@ namespace TimelessEchoes
                 return;
             }
 
-            // Use the rendered viewport, including AspectRatioBox's letterboxing.
-            float aspect = (float)outputCamera.pixelWidth / Mathf.Max(1, outputCamera.pixelHeight);
-            var bounds = landBounds.bounds;
-            // Leave one native pixel of slack for the final PixelGridSnap adjustment.
-            const float slack = 1f / 16f;
-            float maxSize = Mathf.Min(preferredSize * 1.5f, bounds.extents.y - slack,
-                (bounds.extents.x - slack) / aspect);
+            var aspect = ViewportAspect;
+            var bounds = LandBounds;
+            var maxSize = MaximumSize(bounds, aspect);
             float minSize = Mathf.Min(preferredSize * .5f, maxSize);
             requestedSize = Mathf.Clamp(requestedSize, minSize, maxSize);
 
             if (presentationControl)
             {
-                if (!Mathf.Approximately(townCamera.Lens.OrthographicSize, requestedSize) || !Mathf.Approximately(aspect, lastAspect))
-                {
-                    townCamera.Lens.OrthographicSize = requestedSize;
-                    confiner.InvalidateLensCache();
-                    lastAspect = aspect;
-                }
-                var target = panTarget.position;
-                target.x = Mathf.Clamp(target.x, bounds.min.x + requestedSize * aspect + slack, bounds.max.x - requestedSize * aspect - slack);
-                target.y = Mathf.Clamp(target.y, bounds.min.y + requestedSize + slack, bounds.max.y - requestedSize - slack);
-                panTarget.position = target;
+                ApplyLens(requestedSize, aspect);
+                panTarget.position = ClampToLand(panTarget.position, bounds, requestedSize, aspect);
                 return;
             }
 
@@ -173,21 +204,8 @@ namespace TimelessEchoes
                 requestedSize *= Mathf.Exp(-Mathf.Clamp(scroll, -20f, 20f) * .15f);
             }
             float size = requestedSize = Mathf.Clamp(requestedSize, minSize, maxSize);
-            if (!Mathf.Approximately(size, townCamera.Lens.OrthographicSize) || !Mathf.Approximately(aspect, lastAspect))
-            {
-                townCamera.Lens.OrthographicSize = size;
-                confiner.InvalidateLensCache();
-                lastAspect = aspect;
-            }
-
-            Vector3 Clamp(Vector3 p)
-            {
-                float halfWidth = size * aspect + slack, halfHeight = size + slack;
-                p.x = Mathf.Clamp(p.x, bounds.min.x + halfWidth, bounds.max.x - halfWidth);
-                p.y = Mathf.Clamp(p.y, bounds.min.y + halfHeight, bounds.max.y - halfHeight);
-                return p;
-            }
-            panTarget.position = Clamp(panTarget.position);
+            ApplyLens(size, aspect);
+            panTarget.position = ClampToLand(panTarget.position, bounds, size, aspect);
 
             // Read the project's shared horizontal/vertical movement action.
             // Scale speed with zoom so crossing the screen takes a consistent time.
@@ -195,8 +213,8 @@ namespace TimelessEchoes
                 (UI.TownWindowManager.Instance == null || !UI.TownWindowManager.Instance.HasOpenWindow))
             {
                 Vector2 movement = Vector2.ClampMagnitude(moveAction.ReadValue<Vector2>(), 1f);
-                panTarget.position = Clamp(panTarget.position +
-                    new Vector3(movement.x, movement.y, 0) * (size * 1.2f * Time.unscaledDeltaTime));
+                panTarget.position = ClampToLand(panTarget.position +
+                    new Vector3(movement.x, movement.y, 0) * (size * 1.2f * Time.unscaledDeltaTime), bounds, size, aspect);
             }
 
             if (touches > 1) return;
@@ -227,7 +245,7 @@ namespace TimelessEchoes
             Vector2 delta = position - previous;
             previous = position;
             float unitsPerPixel = 2f * size / Mathf.Max(1, outputCamera.pixelHeight);
-            panTarget.position = Clamp(panTarget.position - new Vector3(delta.x, delta.y, 0) * unitsPerPixel);
+            panTarget.position = ClampToLand(panTarget.position - new Vector3(delta.x, delta.y, 0) * unitsPerPixel, bounds, size, aspect);
         }
     }
 }

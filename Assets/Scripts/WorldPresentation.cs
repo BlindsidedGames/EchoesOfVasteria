@@ -80,6 +80,12 @@ namespace TimelessEchoes
             return session;
         }
 
+        internal static void SetTownDialogueReturnFocus(Vector2 worldPosition)
+        {
+            if (instance && instance.returning && instance.active is DialogueSession && instance.town)
+                instance.town.SetPresentationReturnFocus(worldPosition);
+        }
+
         public abstract class Session : IDisposable
         {
             internal readonly WorldPresentation Director;

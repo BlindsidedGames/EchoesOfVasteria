@@ -35,7 +35,7 @@ namespace TimelessEchoes.UI.Toolkit
         public bool HasBeenCompleted => StaticReferences.CompletedNpcTasks.Contains(npcId) ||
             (previouslyCompletedIntroduction && QuestUtils.QuestCompleted(previouslyCompletedIntroduction));
 
-        public IEnumerator ShowAndWait(Transform owner, Transform worldSubject = null)
+        public IEnumerator ShowAndWait(Transform owner, Transform worldSubject = null, System.Action onCompleted = null)
         {
             if (!owner || Oracle.oracle == null || !Oracle.oracle.HasLoadedCurrentSlotData ||
                 string.IsNullOrEmpty(npcId) || !meetingPrefab ||
@@ -64,6 +64,7 @@ namespace TimelessEchoes.UI.Toolkit
                     QuestManager.Instance?.OnNpcMet(npcId);
                     NPC.NpcObjectStateController.Instance?.UpdateObjectStates();
                     finished = true;
+                    onCompleted?.Invoke();
                 }, lineKeys, npcId: npcId, worldSubject: actor ? actor.transform : worldSubject ? worldSubject : WorldSpeakerAnchor.Find(npcId));
                 if (portraitFrames != null && portraitFrames.Length > 0)
                     meeting.SetPortraitAnimation(portraitFrames, portraitFramesPerSecond, actor ? actor.AnimationStartedAt : (float?)null);

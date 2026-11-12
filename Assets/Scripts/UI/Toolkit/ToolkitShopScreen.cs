@@ -15,6 +15,7 @@ namespace TimelessEchoes.UI.Toolkit
         private PanelTextSettings textSettings;
         private PanelSettings settings;
         private ShopService shop;
+        private ToolkitMildredPicker companionPicker;
         private VisualElement root, modal;
         private Label boostStatus, storeStatus;
         private Label modalTitle, promotionDescription;
@@ -76,8 +77,10 @@ namespace TimelessEchoes.UI.Toolkit
             companion.name = "companion-purchase";
             Text(companion, "Companion colours", "heading", "companion.pack-title");
             Text(companion, "Three extra cat colours and three extra dog colours.", "shop-description", "companion.pack-description");
-            cosmetics = ToolkitGameplay.B(companion, "", () => shop.Purchases.Buy(shop.Settings.cosmeticProductId));
+            var companionActions = ToolkitGameplay.E(companion, "row shop-actions");
+            cosmetics = ToolkitGameplay.B(companionActions, "", () => shop.Purchases.Buy(shop.Settings.cosmeticProductId));
             cosmetics.name = "companion-buy";
+            Button(companionActions, "companion.view", "View companions", ShowCompanions).name = "companion-view";
             Text(scroll, "Support the developer", "heading shop-section-heading", "shop.support-title");
             Text(scroll, "Optional support. No extra gameplay bonuses.", "muted shop-description", "shop.support-description");
             var supporters = ToolkitGameplay.E(scroll, "row shop-supporters");
@@ -103,6 +106,19 @@ namespace TimelessEchoes.UI.Toolkit
                 if (root != null) root.Q<ScrollView>("shop-body")?.ScrollTo(root.Q("companion-purchase"));
             });
         }
+
+        private void ShowCompanions()
+        {
+            if (!companionPicker)
+            {
+                var host = new GameObject("Shop companions", typeof(UIDocument));
+                companionPicker = host.AddComponent<ToolkitMildredPicker>();
+                companionPicker.Configure(theme, runtimeTheme, textSettings);
+            }
+            companionPicker.Show(this);
+        }
+
+        internal void FocusCompanionPreview() => root?.Q<Button>("companion-view")?.Focus();
 
         private void Refresh()
         {
@@ -199,6 +215,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         public void Hide()
         {
+            if (companionPicker) companionPicker.Hide();
             CloseModal();
             if (shop) { shop.Changed -= Refresh; shop.Purchases.Changed -= Refresh; }
             ToolkitLocalization.Changed -= RefreshLanguage;
@@ -206,6 +223,10 @@ namespace TimelessEchoes.UI.Toolkit
             ToolkitPanel.Release(GetComponent<UIDocument>(), ref settings);
         }
         private void OnDisable() => Hide();
-        private void OnDestroy() => Hide();
+        private void OnDestroy()
+        {
+            Hide();
+            if (companionPicker) Destroy(companionPicker.gameObject);
+        }
     }
 }

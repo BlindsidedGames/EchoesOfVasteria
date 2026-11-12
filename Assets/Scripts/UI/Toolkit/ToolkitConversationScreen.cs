@@ -18,10 +18,10 @@ namespace TimelessEchoes.UI.Toolkit
         private ThemeStyleSheet runtimeTheme;
         private PanelTextSettings textSettings;
         private PanelSettings panel;
-        private VisualElement root, frame;
+        private VisualElement root, stack;
         private GameData owner;
         private string npcId;
-        private float preferredHeight;
+        private bool evaLesson;
         private ToolkitMeetingScreen replay;
         public static bool BlocksInput => active && (active.root != null || active.replay) || Time.frameCount <= blockThroughFrame;
         public bool IsOpen => root != null || replay;
@@ -39,6 +39,7 @@ namespace TimelessEchoes.UI.Toolkit
             if (active && active != this) active.Hide();
             npcId = WorldSpeakerAnchor.Canonical(speaker);
             owner = Oracle.oracle.saveData;
+            evaLesson = npcId == "Eva" && owner.General.EvaConversationPending;
             ConversationCatalog.EnsureHistory(owner);
             active = this;
             if (root != null) root.RemoveFromHierarchy();
@@ -52,31 +53,46 @@ namespace TimelessEchoes.UI.Toolkit
             root.styleSheets.Add(Resources.Load<StyleSheet>("UI/Conversations"));
             root.AddToClassList("conversations");
             document.rootVisualElement.Add(root);
-            ToolkitGameplay.B(root, "", Hide, "mildred-dismiss");
-            frame = ToolkitGameplay.E(root, "surface conversation-dialog");
+            ToolkitGameplay.B(root, "", () => { if (!evaLesson) Hide(); }, "mildred-dismiss");
+            stack = ToolkitGameplay.E(root, "conversation-stack");
+            var isEva = npcId == "Eva";
+            var preview = isEva && !ToolkitCompanionChoices.QuestComplete;
+            var entries = catalog.entries.Where(e => WorldSpeakerAnchor.Canonical(e.npcId) == npcId).ToArray();
+            if (evaLesson) AddLesson(entries.FirstOrDefault(entry => entry.introduction)?.introduction);
+            var frame = ToolkitGameplay.E(stack, "surface conversation-dialog");
             var header = ToolkitGameplay.E(frame, "row between mildred-header");
             var name = ToolkitGameplay.L(header, "", "heading");
             ToolkitLocalization.Bind(name, "npc.name." + npcId,
                 npcId == "Farmers" ? "Flora and Tillman" : npcId == "OldTimer" ? "The Old Timer" : npcId);
-            var close = ToolkitGameplay.B(header, "×", Hide, "mildred-close"); close.name = "conversations-close";
+            var close = ToolkitGameplay.B(header, "×", Close, evaLesson ? "primary conversation-tutorial-close" : "mildred-close");
+            close.name = "conversations-close";
+            if (evaLesson) ToolkitLocalization.Bind(close, "common.close", "Close");
             var scroll = ToolkitGameplay.Scroll(frame, "conversation-scroll");
             ToolkitGameplay.StyleScroll(scroll);
-            var companionQuest = GameManager.Instance ? GameManager.Instance.mildredQuestId : "Mildred";
-            if (npcId == "Eva" && owner.Quests.TryGetValue(companionQuest, out var petQuest) && petQuest.Completed)
+            scroll.verticalScrollerVisibility = ScrollerVisibility.Auto;
+            var columns = ToolkitGameplay.E(scroll, "conversation-columns");
+            var history = ToolkitGameplay.E(columns, "conversation-history");
+            var heading = ToolkitGameplay.L(history, "", "heading conversation-section");
+            ToolkitLocalization.Bind(heading, "conversations.title", "Conversations");
+            var historyEntries = preview ? entries.OrderByDescending(entry => owner.HeardConversations.ContainsKey(entry.id))
+                : entries.AsEnumerable();
+            foreach (var entry in historyEntries) AddEntry(entry);
+            if (isEva)
             {
-                var companionHeader = ToolkitGameplay.E(scroll, "row companion-header conversation-section");
+                columns.AddToClassList("with-companions");
+                var companions = ToolkitGameplay.E(columns, "conversation-companions");
+                var companionHeader = ToolkitGameplay.E(companions, "row companion-header conversation-section");
                 var label = ToolkitGameplay.L(companionHeader, "", "heading");
                 ToolkitLocalization.Bind(label, "companion.title", "Companion");
-                scroll.Add(new ToolkitCompanionChoices(companionHeader));
+                companions.Add(new ToolkitCompanionChoices(companionHeader, preview));
             }
-            var heading = ToolkitGameplay.L(scroll, "", "heading conversation-section");
-            ToolkitLocalization.Bind(heading, "conversations.title", "Conversations");
-            var entries = catalog.entries.Where(e => WorldSpeakerAnchor.Canonical(e.npcId) == npcId).ToArray();
-            preferredHeight = 90 + entries.Length * 40 + (scroll.Q<ToolkitCompanionChoices>() != null ? 220 : 0);
-            foreach (var entry in entries)
+            root.RegisterCallback<KeyDownEvent>(evt => { if (evt.keyCode == KeyCode.Escape) { Close(); evt.StopPropagation(); } });
+            Layout();
+
+            void AddEntry(ConversationCatalog.Entry entry)
             {
                 var known = owner.HeardConversations.ContainsKey(entry.id);
-                var button = ToolkitGameplay.B(scroll, "", () => Play(entry), "conversation-choice");
+                var button = ToolkitGameplay.B(history, "", () => Play(entry), "conversation-choice");
                 button.name = "conversation-" + entry.id;
                 button.SetEnabled(known);
                 var label = ToolkitGameplay.L(button, "");
@@ -87,8 +103,19 @@ namespace TimelessEchoes.UI.Toolkit
                     button.Insert(0, new ToolkitLockIcon());
                 }
             }
-            root.RegisterCallback<KeyDownEvent>(evt => { if (evt.keyCode == KeyCode.Escape) { Hide(); evt.StopPropagation(); } });
-            Layout();
+        }
+
+        private void AddLesson(ToolkitNpcIntroduction introduction)
+        {
+            var card = ToolkitGameplay.E(stack, "surface conversation-lesson-card");
+            if (introduction && introduction.portrait)
+                ToolkitGameplay.Icon(card, introduction.portrait, 32).AddToClassList("conversation-lesson-portrait");
+            var dialogue = ToolkitGameplay.E(card, "conversation-lesson-dialogue");
+            var speaker = ToolkitGameplay.L(dialogue, "", "strong");
+            ToolkitLocalization.Bind(speaker, "npc.name.Eva", "Eva");
+            var lesson = ToolkitGameplay.L(dialogue, "", "conversation-lesson");
+            ToolkitLocalization.Bind(lesson, "intro.Eva.conversations",
+                "Tap people in town to revisit past conversations. Close this panel to continue.");
         }
 
         private void Play(ConversationCatalog.Entry entry)
@@ -108,17 +135,31 @@ namespace TimelessEchoes.UI.Toolkit
                 Characters.CharacterCreation.Required || TownWindowManager.Instance && TownWindowManager.Instance.HasOpenWindow)
             { Hide(); return; }
             if (root == null) return;
-            if (Keyboard.current?.escapeKey.wasPressedThisFrame == true) { Hide(); return; }
+            if (Keyboard.current?.escapeKey.wasPressedThisFrame == true) { Close(); return; }
             Layout();
         }
         private void Layout()
         {
-            if (frame == null) return;
+            if (stack == null) return;
             var area = ToolkitResponsiveLayout.SafeScreenArea;
-            frame.style.width = Mathf.Min(360, area.width - 20);
-            frame.style.height = Mathf.Min(preferredHeight, area.height - 28);
-            frame.style.left = area.center.x;
-            frame.style.top = area.center.y;
+            var desktop = !ToolkitResponsiveLayout.IsPortrait && area.width >= 410;
+            root.EnableInClassList("conversation-desktop", desktop);
+            root.EnableInClassList("conversation-compact-stack", !desktop && area.height < 540);
+            var width = desktop ? (npcId == "Eva" ? 440 : 260) : 360;
+            stack.style.width = Mathf.Min(width, area.width - 20);
+            stack.style.maxHeight = area.height - 28;
+            stack.style.left = area.center.x;
+            stack.style.top = area.center.y;
+        }
+
+        private void Close()
+        {
+            if (evaLesson && owner == Oracle.oracle?.saveData)
+            {
+                owner.General.EvaConversationPending = false;
+                Oracle.oracle.RequestCheckpointSave();
+            }
+            Hide();
         }
 
         public void Hide()
@@ -127,7 +168,8 @@ namespace TimelessEchoes.UI.Toolkit
             blockThroughFrame = Time.frameCount + 1;
             if (replay) Destroy(replay.gameObject);
             replay = null;
-            root?.RemoveFromHierarchy(); root = null; frame = null;
+            evaLesson = false;
+            root?.RemoveFromHierarchy(); root = null; stack = null;
             ToolkitPanel.Release(GetComponent<UIDocument>(), ref panel);
             if (active == this) active = null;
         }

@@ -571,6 +571,7 @@ namespace TimelessEchoes
             if (HardcoreFallen) return false;
             if (runLoadingActive) return false;
             if (TimelessEchoes.Characters.CharacterCreation.Required) return false;
+            if (resume == null && IsInTown && UI.Toolkit.ToolkitOrinIntroduction.EvaTapTarget) return false;
             if (resume == null && (UI.Toolkit.BuffIntroductionGuidance.Active || UI.Toolkit.BuffIntroductionGuidance.Eligible)) return false;
             if (config == null) return false;
             foreach (var entry in generationButtons)

@@ -30,6 +30,8 @@ namespace TimelessEchoes.UI.Toolkit
         private ToolkitMildredPicker mildredPicker;
         private ToolkitConversationScreen conversationPicker;
         private readonly WorldTapInput npcTap = new();
+        private VisualElement evaPrompt;
+        private Vector2Int evaPromptViewport;
 
         public void ShowConversations(string npcId)
         {
@@ -154,6 +156,8 @@ namespace TimelessEchoes.UI.Toolkit
             if (refresherEntry != null) return true;
             if (ToolkitMeetingScreen.HasOpenDialogue)
                 return ToolkitMeetingScreen.AllowsNavigation(route => DialogueRouteMatches(entry, route));
+            if ((entry.action is NavAction.AdventureMenu or NavAction.BeginMap) && ToolkitOrinIntroduction.EvaTapTarget)
+                return false;
             if (MapStatisticsGuidance.Stage is >= 2 and < 7 && windows &&
                 windows.IsWindowOpen(TownWindowManager.Window.Stats))
             {
@@ -549,6 +553,7 @@ namespace TimelessEchoes.UI.Toolkit
             ApplyLayout();
             AnimateProgressActors();
             RefreshTutorialPrompt();
+            RefreshEvaPrompt();
             if (Time.unscaledTime < nextRefresh) return;
             nextRefresh = Time.unscaledTime + .1f;
             Refresh();
@@ -780,6 +785,58 @@ namespace TimelessEchoes.UI.Toolkit
 
         private int lastProgressLocaleRevision = -1;
 
+        private void RefreshEvaPrompt()
+        {
+            var target = ToolkitOrinIntroduction.EvaTapTarget;
+            var camera = Camera.main;
+            if (!target) evaPromptViewport = default;
+            if (!target || !camera || !GameManager.Instance || !GameManager.Instance.IsInTown || HasOpenMenu ||
+                ToolkitMeetingScreen.HasOpenDialogue || ToolkitConversationScreen.BlocksInput ||
+                TownQuestReveal.IsPlaying || WorldPresentation.IsBusy || (windows && windows.HasOpenWindow))
+            {
+                if (evaPrompt != null) SetVisible(evaPrompt, false);
+                return;
+            }
+            var bounds = target.GetComponent<WorldSpeakerAnchor>().FramingBounds;
+            var anchor = bounds.center + Vector3.up * (bounds.extents.y * .65f);
+            var viewport = camera.WorldToViewportPoint(anchor);
+            var size = new Vector2Int(Screen.width, Screen.height);
+            if (size != evaPromptViewport)
+            {
+                evaPromptViewport = size;
+                // A reload or orientation change can put Eva outside the viewport.
+                if (viewport.x < .1f || viewport.x > .9f || viewport.y < .1f || viewport.y > .9f)
+                    FindAnyObjectByType<TownCameraPan>()?.Focus(bounds.center);
+            }
+            if (viewport.z < 0 || viewport.x < 0 || viewport.x > 1 || viewport.y < 0 || viewport.y > 1)
+            {
+                if (evaPrompt != null) SetVisible(evaPrompt, false);
+                return;
+            }
+            if (evaPrompt == null)
+            {
+                evaPrompt = ToolkitGameplay.E(root, "eva-tap-prompt");
+                evaPrompt.name = "eva-tap-prompt";
+                evaPrompt.pickingMode = PickingMode.Ignore;
+                evaPrompt.style.position = Position.Absolute;
+                evaPrompt.style.alignItems = Align.Center;
+                evaPrompt.style.translate = new Translate(Length.Percent(-50), Length.Percent(-100));
+                var label = ToolkitGameplay.L(evaPrompt, "", "surface");
+                label.pickingMode = PickingMode.Ignore;
+                label.style.paddingLeft = label.style.paddingRight = 8;
+                label.style.paddingTop = label.style.paddingBottom = 3;
+                ToolkitLocalization.Bind(label, "intro.Eva.tap", "Tap Eva");
+                var hand = new Image { sprite = definition.questTutorialHand, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
+                hand.style.width = hand.style.height = 24;
+                hand.style.rotate = new Rotate(Angle.Degrees(180));
+                evaPrompt.Add(hand);
+            }
+            var point = root.WorldToLocal(RuntimePanelUtils.CameraTransformWorldToPanel(root.panel, anchor, camera));
+            evaPrompt.style.left = point.x;
+            evaPrompt.style.top = point.y;
+            SetVisible(evaPrompt, true);
+        }
+
         private void RefreshTutorialPrompt()
         {
             var data = Blindsided.Oracle.oracle?.saveData;
@@ -817,7 +874,10 @@ namespace TimelessEchoes.UI.Toolkit
             if (refresherEntry != null)
                 desired = !refresherGuidanceActive || RefresherDestinationOpen ? null : refresherTab >= 0 && openGroup == Group.Statistics ?
                     "statistics-section-" + refresherTab : refresherEntry.id;
-            else if (ActiveNpcMeetings.Count > 0 || (runScreen && runScreen.HasOpenDetails)) desired = null;
+            else if (ActiveNpcMeetings.Count > 0 || ToolkitConversationScreen.BlocksInput ||
+                     (runScreen && runScreen.HasOpenDetails)) desired = null;
+            else if (inTown && ToolkitOrinIntroduction.EvaTapTarget)
+                desired = windows && windows.HasOpenWindow ? "close" : null;
             else if (highlightQuestsUntilOpened) desired = "quests";
             else if (inTown && BuffIntroductionGuidance.Active)
                 desired = windows != null && windows.IsWindowOpen(TownWindowManager.Window.Buffs) ? null : windows != null && windows.HasOpenWindow ? "close" : openGroup == Group.Hub ? "buffs" : "hub";
@@ -1097,7 +1157,7 @@ namespace TimelessEchoes.UI.Toolkit
             root?.RemoveFromHierarchy(); root = null; popup = null; menuAnchor = null; morePopup = null; moreButton = null; portraitGroupScroll = null; portraitMoreScroll = null; portraitNavigation = null;
             menuDismiss = null;
             characterPortrait = null;
-            tutorialPrompts.Clear(); highlightedEntryId = null;
+            tutorialPrompts.Clear(); highlightedEntryId = null; evaPrompt = null; evaPromptViewport = default;
             refresherEntry = null; refresherTab = -1;
             openGroup = Group.Toolbar;
         }

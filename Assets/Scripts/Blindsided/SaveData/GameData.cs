@@ -437,6 +437,7 @@ namespace Blindsided.SaveData
             public int GraphsTutorialStage;
             public bool ReturnedFromRiver;
             public bool ReturnedFromFarmlands;
+            public bool EvaConversationPending;
             public int InventoryTutorialStage;
             public bool ReturningPlayerIntroductionComplete;
             public bool ReturningPlayerWelcomeSeen;

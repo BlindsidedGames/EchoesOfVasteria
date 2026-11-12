@@ -15,6 +15,22 @@ namespace TimelessEchoes.UI.Toolkit
         [SerializeField] private ToolkitNpcIntroduction evaIntroduction;
         [SerializeField] private ToolkitNpcIntroduction hubIntroduction;
 
+        internal static Transform EvaTapTarget => Oracle.oracle?.saveData?.General.EvaConversationPending == true
+            ? WorldSpeakerAnchor.Find("Eva") : null;
+
+        private static void BeginEvaTapLesson()
+        {
+            var data = Oracle.oracle.saveData;
+            if (data.General.NextRunNumber > 1 || data.ActiveRun != null || data.General.ReturnedFromFarmlands ||
+                data.General.ReturningPlayerIntroductionComplete || data.General.RecentRuns is { Count: > 0 } ||
+                ToolkitCompanionChoices.QuestComplete) return;
+            data.General.EvaConversationPending = true;
+            var target = EvaTapTarget;
+            if (target && target.TryGetComponent<WorldSpeakerAnchor>(out var anchor))
+                WorldPresentation.SetTownDialogueReturnFocus(anchor.FramingBounds.center);
+            Oracle.oracle.RequestCheckpointSave();
+        }
+
         private IEnumerator Start()
         {
             while (Oracle.oracle == null || !Oracle.oracle.HasLoadedCurrentSlotData ||
@@ -48,7 +64,7 @@ namespace TimelessEchoes.UI.Toolkit
                 while (!QuestUtils.QuestCompleted(firstQuest) || TownWindowManager.Instance.HasOpenWindow ||
                        (GameManager.Instance && !GameManager.Instance.IsInTown))
                     yield return null;
-                yield return evaIntroduction.ShowAndWait(TownWindowManager.Instance.transform);
+                yield return evaIntroduction.ShowAndWait(TownWindowManager.Instance.transform, onCompleted: BeginEvaTapLesson);
             }
             var nextBoostCheck = 0f;
             ToolkitRunScreen runScreen = null;

@@ -61,6 +61,25 @@ namespace Tests.PlayMode
                     Assert.GreaterOrEqual(shop.Remaining, ShopRules.ClaimSeconds);
                     ScreenCapture.CaptureScreenshot(Path.Combine(evidence, "shop-" + size.x + ".png"));
                     yield return null;
+                    var view = ui.Q<Button>("companion-view");
+                    FieldsClick(view);
+                    yield return null; yield return null;
+                    var picker = Object.FindAnyObjectByType<ToolkitMildredPicker>();
+                    Assert.True(picker && picker.IsOpen);
+                    var preview = picker.GetComponent<UIDocument>().rootVisualElement;
+                    Assert.False(preview.Q<Button>("companion-choice-0").enabledInHierarchy);
+                    Assert.False(preview.Q<Button>("companion-choice-5").enabledInHierarchy);
+                    FieldsClick(preview.Q<Button>("mildred-close"));
+                    Assert.False(picker.IsOpen);
+                    Assert.True(screen.IsOpen);
+                    Assert.AreSame(view, ui.Q<Button>("companion-view"), "Closing the preview returns to the existing Shop.");
+
+                    oracle.saveData.Quests["Mildred"] = new GameData.QuestRecord { Completed = true };
+                    FieldsClick(view);
+                    yield return null;
+                    Assert.True(picker.GetComponent<UIDocument>().rootVisualElement.Q<Button>("companion-choice-0").enabledInHierarchy);
+                    picker.Hide();
+                    oracle.saveData.Quests.Remove("Mildred");
                 }
                 Assert.AreEqual(2 * ShopRules.ClaimSeconds, shop.Remaining);
                 // Exercise the real screen and table delivery, rather than only testing

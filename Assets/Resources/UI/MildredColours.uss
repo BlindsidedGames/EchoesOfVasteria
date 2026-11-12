@@ -11,8 +11,10 @@
 .gameplay .companion-lock { left:auto; right:3px; top:3px; translate:0 0; width:10px; height:10px; }
 .gameplay .companion-locked-background { display:none; position:absolute; left:0; right:0; top:0; bottom:0; background-color:var(--control); border-width:0.5px; border-bottom-width:1.5px; border-color:var(--button-edge); border-top-color:var(--button-light); opacity:.45; }
 .gameplay .button.mildred-choice.companion-locked,.gameplay .button.mildred-choice.companion-locked:hover,.gameplay .button.mildred-choice.companion-locked:active { background-color:transparent; border-color:transparent; }
+.gameplay .button.mildred-choice.companion-locked:disabled { opacity:1; }
 .gameplay .companion-locked .companion-locked-background { display:flex; }
 .gameplay .companion-locked .mildred-colour-name,.gameplay .companion-locked .companion-lock { opacity:.45; }
+.gameplay .companion-preview-hint { margin-bottom:6px; white-space:normal; }
 .gameplay .companion-header { align-items:center; }
 .gameplay .companion-header .heading { flex-grow:1; margin-bottom:0; }
 .gameplay .button.companion-unlock { flex-shrink:0; min-height:26px; padding:4px 8px; font-size:9px; margin-left:8px; }

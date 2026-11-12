@@ -577,7 +577,8 @@ namespace TimelessEchoes.UI
             // Let EventSystem deliver pointer-up before destroying the receiving panel.
             // Closing on down loses that release and leaves UI Toolkit's right-button
             // bit set, so later left-clicks retain soft capture on the navigation panel.
-            if (!Toolkit.ToolkitDimScreen.BlocksInput && Mouse.current?.rightButton.wasReleasedThisFrame == true)
+            if (!Toolkit.ToolkitDimScreen.BlocksInput && !Toolkit.ToolkitMildredPicker.BlocksInput &&
+                Mouse.current?.rightButton.wasReleasedThisFrame == true)
                 CloseAllWindows();
             if (toolkitResources == null || !toolkitResources.IsOpen || toolkitResources.ManualLayout) return;
             var area = Toolkit.ToolkitWindowLayout.SafeArea;
