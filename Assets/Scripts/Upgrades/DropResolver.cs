@@ -110,6 +110,10 @@ namespace TimelessEchoes.Upgrades
                 }
             }
 
+            // Keep guaranteed drops in the weighted pool so the other drops retain their odds.
+            foreach (var drop in _scratchAvailable)
+                if (drop.guaranteed) AddResult(drop);
+
             return _scratchResults;
         }
 

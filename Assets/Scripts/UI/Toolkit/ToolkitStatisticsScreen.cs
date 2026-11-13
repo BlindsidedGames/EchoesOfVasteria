@@ -34,7 +34,7 @@ namespace TimelessEchoes.UI.Toolkit
         private readonly List<(string title, System.Action action)> portraitSortActions = new();
         public static readonly IReadOnlyList<int> Sections = Array.AsReadOnly(new[] { 0, 2, 3, 4, 5, 6 });
         private ToolkitTownStatisticsView townView;
-        private float nextTownRefresh;
+        private float nextTownRefresh, nextLiveGraphRefresh;
         public bool IsOpen => root != null;
         public int SelectedTab => selectedTab;
         public bool IsConfigured => definition && theme && runtimeTheme && textSettings;
@@ -145,7 +145,7 @@ namespace TimelessEchoes.UI.Toolkit
         private void BuildGraph()
         {
             runGraph = new ToolkitRunGraphView(body, footer, definition, () => tracker.RecentRuns,
-                () => tracker.PreviousRuns, () => tracker.EarlierRunDetailsUnavailable);
+                () => tracker.PreviousRuns, () => tracker.EarlierRunDetailsUnavailable, tracker.GetCurrentRunRecord);
             GraphStatisticsGuidance.MarkViewed();
         }
         public void SetGraphMode(RunStatsPanelUI.GraphMode mode)
@@ -162,7 +162,11 @@ namespace TimelessEchoes.UI.Toolkit
             if (selectedTab == 4) { RefreshTasks(); return; }
             RefreshMapJournal();
         }
-        private void RefreshGraph() => runGraph?.Refresh();
+        private void RefreshGraph(bool liveTick = false)
+        {
+            nextLiveGraphRefresh = Time.unscaledTime + .5f;
+            runGraph?.Refresh(liveTick);
+        }
         private Label Text(VisualElement parent, string value, float size)
         {
             var role = size >= 8 ? ToolkitControls.TextRole.Heading : size >= 7 ? ToolkitControls.TextRole.Subheading : size >= 6 ? ToolkitControls.TextRole.Body : ToolkitControls.TextRole.Caption;
@@ -197,7 +201,20 @@ namespace TimelessEchoes.UI.Toolkit
         private void Changed() { dirty = true; journalKnown = -1; }
         private void RunEnded(bool _) => Changed();
         private void DistanceChanged(float _) { if (selectedTab == 0 || selectedTab == 4) dirty = true; }
-        private void Update() { if (!IsOpen) return; Layout(); RefreshJournalAccess(); RefreshMapTutorial(); RefreshGraphGuidance(); RefreshBoostGuidance(); if (localizationDirty) { localizationDirty = false; RefreshLocalization(); } if (dirty || selectedTab == 6 && Time.unscaledTime >= nextTownRefresh) Refresh(); RevealJournalDiscovery(); }
+        private void Update()
+        {
+            if (!IsOpen) return;
+            Layout();
+            RefreshJournalAccess();
+            RefreshMapTutorial();
+            RefreshGraphGuidance();
+            RefreshBoostGuidance();
+            if (localizationDirty) { localizationDirty = false; RefreshLocalization(); }
+            if (dirty || selectedTab == 6 && Time.unscaledTime >= nextTownRefresh) Refresh();
+            else if (selectedTab == 2 && (tracker.RunInProgress || runGraph?.HasCurrentRun == true) &&
+                     Time.unscaledTime >= nextLiveGraphRefresh) RefreshGraph(liveTick: true);
+            RevealJournalDiscovery();
+        }
         // Portrait section guidance belongs to the global Statistics popup.
         private VisualElement StatisticsSectionTarget(int tab) => ToolkitResponsiveLayout.IsPortrait ? null : tabButtons[tab];
         private void PositionStatisticsHand(Image hand, VisualElement target, string option = null)

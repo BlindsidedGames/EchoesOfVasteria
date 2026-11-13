@@ -17,6 +17,77 @@ namespace Tests.PlayMode
     public sealed partial class FieldsProductionPlayModeTests
     {
         [UnityTest]
+        public IEnumerator CurrentRunAppearsAtRightEdgeAndGrowsWithoutCountingBonusOrChangingHistory()
+        {
+            var owner = new GameObject("Live run graph tracker");
+            GameObject view = null;
+            try
+            {
+                oracle.saveData.General.NextRunNumber = 12;
+                oracle.saveData.General.RecentRuns.Add(new GameData.RunRecord
+                {
+                    RunNumber = 11, MapType = "Woods", Duration = 40, ResourcesCollected = 500
+                });
+                var tracker = owner.AddComponent<GameplayStatTracker>();
+                tracker.enabled = false;
+                var map = AssetDatabase.LoadAssetAtPath<TimelessEchoes.MapGeneration.MapGenerationConfig>(
+                    "Assets/Scriptables/MapSettings/Farmlands.asset");
+                tracker.BeginRun(map, TimelessEchoes.GameManager.MapScalingMode.DistanceBased);
+                tracker.RecordHeroPosition(new Vector3(24, 0, 0));
+                tracker.AddResources(100);
+                tracker.AddResources(10000, bonus: true);
+                view = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Statistics.prefab"));
+                var screen = view.GetComponent<ToolkitStatisticsScreen>();
+                Assert.True(screen.Show());
+                screen.SelectTab(2);
+                yield return null;
+                var ui = view.GetComponent<UIDocument>().rootVisualElement;
+                var title = ui.Q<Label>(className: "graph-detail-title");
+                var current = ui.Q<Button>("graph-run-12");
+                Assert.That(current.worldBound.xMin, Is.GreaterThan(ui.Q<Button>("graph-run-11").worldBound.xMin));
+                Assert.That(title.text, Does.Contain("In progress"));
+                Assert.That(current.tooltip, Does.EndWith("100"));
+                Assert.That(tracker.RecentRuns.Count, Is.EqualTo(1));
+                var average = ui.Q<Label>(className: "graph-summary").text;
+                var fill = current.Q(className: "graph-run-fill");
+                var initialHeight = fill.resolvedStyle.height;
+
+                tracker.AddResources(200);
+                yield return new WaitForSecondsRealtime(.65f);
+                Assert.That(current.tooltip, Does.EndWith("300"));
+                Assert.That(fill.resolvedStyle.height, Is.GreaterThan(initialHeight));
+                Assert.That(ui.Q<Label>(className: "graph-summary").text, Is.EqualTo(average));
+
+                var picker = ui.Q<DropdownField>("graph-map-picker");
+                yield return OpenGraphPicker(picker);
+                ClickGraphElement(GraphOption(picker, ToolkitLocalization.Text("map.Woods", "Woods")));
+                yield return null;
+                Assert.IsNull(ui.Q("graph-run-12"));
+                yield return OpenGraphPicker(picker);
+                ClickGraphElement(GraphOption(picker, ToolkitLocalization.Text("map.Farmlands", "Farmlands")));
+                yield return null;
+                current = ui.Q<Button>("graph-run-12");
+                Assert.That(current.worldBound.xMax, Is.EqualTo(current.parent.worldBound.xMax).Within(1));
+                yield return OpenGraphPicker(picker);
+                ClickGraphElement(GraphOption(picker, ToolkitLocalization.Text("graph.all-maps", "All maps")));
+                yield return null;
+
+                tracker.EndRun(false);
+                yield return null;
+                CollectionAssert.AreEqual(new[] { "graph-run-11", "graph-run-12" },
+                    ui.Query<Button>(className: "graph-run-bar").ToList().Select(bar => bar.name));
+                Assert.That(title.text, Does.Contain("Retreated"));
+                Assert.That(ui.Q<Button>("graph-run-12").tooltip, Is.EqualTo("300"));
+                Assert.That(tracker.RecentRuns.Count, Is.EqualTo(2));
+            }
+            finally
+            {
+                if (view) Object.DestroyImmediate(view);
+                Object.DestroyImmediate(owner);
+            }
+        }
+
+        [UnityTest]
         public IEnumerator GraphDropdownsSelectRealOptionsAndFitBothOrientationsAndThemes()
         {
             Assert.True(TimelessEchoes.Platform.StartupDiagnostics.SkipOnlineServices);

@@ -93,12 +93,11 @@ namespace TimelessEchoes.UI.Toolkit
             canChooseHardcore = CharacterCreation.Required;
             draft = owner is { Modular: true } ? owner.Copy() : catalog.NewProfile();
             // Fresh profiles start with the catalog's authored default outfit.
-            if (string.IsNullOrEmpty(draft.Chest)) {
-                var savedName = draft.Name; draft = catalog.NewProfile(); draft.Name = savedName;
-            }
+            if (string.IsNullOrEmpty(draft.Chest)) draft = catalog.NewProfile();
+            if (owner != null) draft.Name = owner.Name;
             NormalizeAppearance();
             CreatePanel("character-creator");
-            ToolkitLocalization.Bind(L(sheet, "", "heading"), optional ? "character.your-character" : "character.create", optional ? "Your character" : "Create your character");
+            ToolkitLocalization.Bind(L(sheet, "", "heading"), optional ? "character.edit-appearance" : "character.create", optional ? "Edit appearance" : "Create your character");
             var content = E(sheet, "character-content");
             var left = E(content, "character-preview-column");
             var portraitRow = E(left, "character-portrait-row");
@@ -200,11 +199,20 @@ namespace TimelessEchoes.UI.Toolkit
             }
             status = L(sheet, "", "character-status"); status.name = "character-status";
             var footer = E(sheet, "row character-footer");
-            if (optional) ToolkitLocalization.Bind(B(footer, "", Hide), "common.cancel", "Cancel");
+            Button cancel = null;
+            if (optional)
+            {
+                cancel = B(footer, "", Hide);
+                cancel.name = "character-cancel";
+                ToolkitLocalization.Bind(cancel, "common.cancel", "Cancel");
+            }
             var confirm = B(footer, "", Confirm); ToolkitLocalization.Bind(confirm, optional ? "character.save" : "character.start", optional ? "Save character" : "Start game"); confirm.name = "character-confirm";
             refreshLocale = () => { nameInput.label = T("character.name", "Name"); actionLabel.text = T("character.action." + actions[actionIndex], actions[actionIndex]); };
             ToolkitLocalization.Changed += LocaleChanged;
-            RefreshPresets(); nextFrame = 0; nameInput.Focus(); return true;
+            RefreshPresets(); nextFrame = 0;
+            if (optional) cancel.Focus();
+            else nameInput.Focus();
+            return true;
         }
         private void SavePreset(int index)
         {
@@ -235,16 +243,17 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void Confirm()
         {
-            if (GameManager.HardcoreFallen) return;
+            var oracle = Oracle.oracle;
+            if (!oracle || !oracle.HasLoadedCurrentSlotData || !oracle.CanBeginSaveMutation ||
+                CharacterCreation.Current != owner) return;
             if (!CharacterProfile.TryName(nameInput.value, out var name, out var error)) { status.text = error; return; }
             NormalizeAppearance(); draft.Name = name; draft.Created = draft.Modular = true;
-            var wasHardcore = Oracle.oracle.saveData.Hardcore;
-            if (canChooseHardcore && CharacterCreation.Required) Oracle.oracle.saveData.Hardcore = draftHardcore;
-            Oracle.oracle.saveData.Character = draft.Copy();
-            Blindsided.EventHandler.SaveData();
-            if (!Oracle.oracle.SaveToSlot(Oracle.oracle.CurrentSlot)) {
-                Oracle.oracle.saveData.Character = owner;
-                Oracle.oracle.saveData.Hardcore = wasHardcore;
+            var wasHardcore = oracle.saveData.Hardcore;
+            if (canChooseHardcore && CharacterCreation.Required) oracle.saveData.Hardcore = draftHardcore;
+            oracle.saveData.Character = draft.Copy();
+            if (!oracle.SaveToSlot(oracle.CurrentSlot)) {
+                oracle.saveData.Character = owner;
+                oracle.saveData.Hardcore = wasHardcore;
                 status.text = T("character.save-failed", "Your character could not be saved. Please try again."); return;
             }
             Hide();

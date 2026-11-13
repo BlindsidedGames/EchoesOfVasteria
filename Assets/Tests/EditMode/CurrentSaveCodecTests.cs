@@ -13,6 +13,34 @@ namespace Tests.EditMode
     public class CurrentSaveCodecTests
     {
         [Test]
+        public void CauldronLegacyIntegerWireAndLargeCurrentTotalsSurviveSerialization()
+        {
+            GameData.CauldronTotalsRecord legacy;
+            using (var stream = new MemoryStream())
+            {
+                var context = new SerializationContext();
+                context.TryRegisterInternalReference(new GameData.CauldronTotalsRecord(), out var rootId);
+                using (var writer = SerializationUtility.CreateWriter(stream, context, DataFormat.Binary))
+                {
+                    writer.BeginReferenceNode(null, typeof(GameData.CauldronTotalsRecord), rootId);
+                    Serializer.Get<int>().WriteValue("TotalTastings", 428000000, writer);
+                    Serializer.Get<int>().WriteValue("TotalCards", -1180317866, writer);
+                    writer.EndNode(null);
+                    writer.FlushToStream();
+                }
+                legacy = SerializationUtility.DeserializeValue<GameData.CauldronTotalsRecord>(stream.ToArray(), DataFormat.Binary);
+            }
+            Assert.AreEqual(428000000L, legacy.TotalTastings);
+            Assert.AreEqual(-1180317866L, legacy.TotalCards, "Preserve the old signed value for migration.");
+            var source = new GameData { CauldronTotals = legacy };
+            legacy.TotalCards = 11704584022L;
+            legacy.TotalTastings = 3000000000L;
+            var loaded = SerializationUtility.DeserializeValue<GameData>(CurrentSaveCodec.Serialize(source), DataFormat.Binary);
+            Assert.AreEqual(11704584022L, loaded.CauldronTotals.TotalCards);
+            Assert.AreEqual(3000000000L, loaded.CauldronTotals.TotalTastings);
+        }
+
+        [Test]
         public void NewSnapshot_OmitsObsoleteFieldsAndKeepsExactProgressAndFiveActiveChoices()
         {
             var source = new GameData { StatUpgradesMigratedToGear = true, DuckHelmetSanitized = true };

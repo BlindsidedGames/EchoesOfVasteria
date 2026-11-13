@@ -11,6 +11,8 @@ namespace TimelessEchoes.Upgrades
         [FormerlySerializedAs("dropChance")]
         [Tooltip("Relative weight used when selecting this drop." )]
         [Min(0f)] public float weight = 1f;
+        [Tooltip("Also award this drop if it wasn't selected by the weighted rolls.")]
+        public bool guaranteed;
         [Tooltip("Skill level required for this drop (0 = no requirement)")]
         public int requiredSkillLevel;
         [Tooltip("Optional quest that must be handed in before this reward can drop.")]

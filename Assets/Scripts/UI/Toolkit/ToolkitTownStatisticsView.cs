@@ -109,6 +109,7 @@ namespace TimelessEchoes.UI.Toolkit
         }
         private void Row(VisualElement parent, string id, string fallback, string value) =>
             AddRow(parent, ToolkitLocalization.Text("town-stats." + id, fallback), value).name = "town-statistics-" + id;
+        private static string Number(long value) => value.ToString("N0", LocaleNumbers.Culture);
         private static string Number(double value) => value.ToString("N2", LocaleNumbers.Culture).TrimEnd('0').TrimEnd(Blindsided.Utilities.LocaleNumbers.Culture.NumberFormat.NumberDecimalSeparator.ToCharArray());
         private static VisualElement AddRow(VisualElement parent, string label, string value, Sprite sprite = null)
         {

@@ -31,8 +31,9 @@ MonoBehaviour:
     weight: 1
     requiredSkillLevel: 0
   - resource: {fileID: 11400000, guid: 9b8342747b02439438dbacd529ed8931, type: 2}
-    dropRange: {x: 1, y: 2}
+    dropRange: {x: 1, y: 7}
     weight: 5
+    guaranteed: 1
     requiredSkillLevel: 0
   additionalLootChances:
   - 0.2

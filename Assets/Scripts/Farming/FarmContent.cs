@@ -27,9 +27,11 @@ namespace TimelessEchoes.Farming
         public int lastCropCapLevel = 5000;
         public double baseYield = 100;
         public int harvestXp = 10;
-        // Retain the existing sapling curves independently of crop seed packs.
-        [Range(0, 1)] public float seedChance = .05f;
-        [Range(0, 1)] public float seedChancePerCropTier = .9f;
+        // "Seeds" includes crop seed packs, fruit-tree saplings, and timber-tree saplings.
+        // Seed balance requests cover all three unless explicitly scoped otherwise.
+        // These legacy sapling curves currently remain separate from crop seed-pack chances.
+        [Range(0, 1)] public float seedChance = .25f;
+        [Range(0, 1)] public float seedChancePerCropTier = 1f;
         public List<FarmRecipe> recipes = new();
         public List<FarmBuild> builds = new();
         private static FarmContent cached;

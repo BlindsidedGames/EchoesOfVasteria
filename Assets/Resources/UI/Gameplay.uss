@@ -45,6 +45,7 @@
 .gameplay.dark .graph-outcome-reaped {background-color:#b28ac9;}
 .gameplay.dark .graph-outcome-died {background-color:#d16666;}
 .gameplay.dark .graph-outcome-abandoned {background-color:#6e6b6e;}
+.gameplay.dark .graph-outcome-current {background-color:#6ebcac;}
 .gameplay.dark .hero-surface.button.active {background-color:var(--accent);color:var(--on-accent);}
 .gameplay { position:absolute; left:0; right:0; top:0; bottom:0; overflow:hidden; --space-tight:2px; --space-control:4px; --space-section:8px; --space-panel:12px; --body:9.5px; --small:8.5px; --heading:11.5px; --title:16px; --amount:19px; font-size:var(--body); color:var(--text); }
 .gameplay.dark { --surface:#292426; --text:#f5e4d6; --muted:#c8aea1; --control:#3c3032; --hover:#514042; --line:#74514a; --accent:#efb984; --on-accent:#302126; --selected:#674635; --field:#382e31; --health:#63c64d; }
@@ -876,6 +877,7 @@
 .gameplay .graph-plot {flex-grow:1;position:relative;min-width:0;}
 .gameplay .graph-grid-line {position:absolute;left:0;right:0;height:.5px;background-color:rgba(200,174,161,.15);}
 .gameplay .graph-bars {position:absolute;left:0;right:0;top:0;bottom:0;flex-direction:row;justify-content:space-between;}
+.gameplay .graph-bars.graph-single-run {justify-content:flex-end;}
 .gameplay .graph-run-bar {height:100%;min-width:0;margin:0;padding:0;border-width:0;background-color:transparent;flex-shrink:0;}
 .gameplay .graph-run-bar:hover,.gameplay .graph-run-bar:focus,.gameplay .graph-run-bar.selected {background-color:rgba(245,228,214,.07);}
 .gameplay .graph-run-fill {position:absolute;left:1px;right:1px;bottom:0;}
@@ -1239,6 +1241,7 @@
 .gameplay .inventory-equipment-slot-name { font-size:var(--small);white-space:normal;flex-shrink:1;min-width:0; }
 .gameplay .inventory-visibility-button { width:24px;min-width:24px;min-height:24px;padding:3px;margin:0 0 0 3px;color:var(--muted); }
 .gameplay .inventory-visibility-button.shown { color:var(--text); }
+.gameplay .inventory-edit-appearance { min-height:24px;margin:4px 0 0;padding:3px 4px;font-size:var(--small);white-space:normal; }
 .gameplay .equipment-eye-icon { width:16px;height:16px;align-self:center; }
 .gameplay.character-overlay { position:absolute;left:0;right:0;top:0;bottom:0;background-color:rgba(0,0,0,0.82); }
 .gameplay .character-sheet { position:absolute;padding:14px 16px;background-color:var(--surface);border-width:1px;border-color:var(--line); }

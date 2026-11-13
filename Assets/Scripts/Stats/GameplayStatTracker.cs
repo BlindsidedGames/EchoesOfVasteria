@@ -523,6 +523,9 @@ namespace TimelessEchoes.Stats
             RunStarted();
         }
 
+        public GameData.RunRecord GetCurrentRunRecord() =>
+            RunInProgress ? BuildRunRecord(CurrentRunElapsedSeconds) : null;
+
         public RunSaveData.Statistics CaptureRunState() => new()
         {
             ActiveSeconds = activeSeconds, StartingDistance = runStartingDistance, EstimatedSeconds = estimatedSeconds,
@@ -616,9 +619,29 @@ namespace TimelessEchoes.Stats
             SessionDuration += duration;
             var durationForRates = runScaledDuration > 0f ? runScaledDuration : duration;
             UpdateBestResourcePerMinute(durationForRates);
-            var record = new GameData.RunRecord
+            var record = BuildRunRecord(duration);
+            record.Estimated |= estimated;
+            record.Died = died;
+            record.Reaped = reaped;
+            AddRunRecord(record);
+            LastRunSteps = CurrentRunSteps;
+            var map = GetOrCreateCurrentMapStats();
+            if (map != null)
+                if (CurrentRunDistance > map.LongestTrekDouble)
+                    map.LongestTrekDouble = CurrentRunDistance;
+            nextRunNumber++;
+
+            OnRunEnded?.Invoke(died);
+            UpdateMostKillsStats();
+            ResetCurrentRun();
+            // After state resets, broadcast a global run-ended event
+            RunEnded();
+        }
+
+        private GameData.RunRecord BuildRunRecord(float duration) =>
+            new()
             {
-                Estimated = estimated || estimatedSeconds > 0, ActiveSeconds = activeSeconds, StartingDistance = runStartingDistance,
+                Estimated = estimatedSeconds > 0, ActiveSeconds = activeSeconds, StartingDistance = runStartingDistance,
                 EchoTasks = echoTasks, EchoKills = echoKills,
                 RunNumber = nextRunNumber,
                 MapType = currentMapKey,
@@ -634,26 +657,9 @@ namespace TimelessEchoes.Stats
                 DamageDealt = (float)currentRunDamageDealt,
 #pragma warning restore CS0618 // Type or member is obsolete
 #pragma warning disable CS0618 // Type or member is obsolete
-                DamageTaken = (float)currentRunDamageTaken,
+                DamageTaken = (float)currentRunDamageTaken
 #pragma warning restore CS0618 // Type or member is obsolete
-                Died = died,
-                Reaped = reaped,
-                Abandoned = false
             };
-            AddRunRecord(record);
-            LastRunSteps = CurrentRunSteps;
-            var map = GetOrCreateCurrentMapStats();
-            if (map != null)
-                if (CurrentRunDistance > map.LongestTrekDouble)
-                    map.LongestTrekDouble = CurrentRunDistance;
-            nextRunNumber++;
-
-            OnRunEnded?.Invoke(died);
-            UpdateMostKillsStats();
-            ResetCurrentRun();
-            // After state resets, broadcast a global run-ended event
-            RunEnded();
-        }
 
         public void AbandonRun()
         {

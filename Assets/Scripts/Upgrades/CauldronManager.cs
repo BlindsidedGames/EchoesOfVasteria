@@ -28,8 +28,8 @@ namespace TimelessEchoes.Upgrades
         private ResourceManager resourceManager;
         private TimelessEchoes.Quests.QuestManager questManager;
         private bool tastingActive;
-        private int sessionCardsGained;
-        private int sessionTastings;
+        private long sessionCardsGained;
+        private long sessionTastings;
         private int countNothing;
         private int countAlterEcho; // legacy total (sum of subcategories)
         private int countBuffs;
@@ -91,7 +91,7 @@ namespace TimelessEchoes.Upgrades
         public event Action<string, int> OnCardGained; // (cardId, amount)
         public event Action OnTasteSessionStarted;
         public event Action OnTasteSessionStopped;
-        public event Action<int> OnSessionCardsChanged;
+        public event Action<long> OnSessionCardsChanged;
         public event Action<TastingStats> OnStatsChanged;
         /// <summary>
         ///     Fired when mixing occurs. Amount is the committed number of food units consumed. Quest progress is already durable.
@@ -100,8 +100,8 @@ namespace TimelessEchoes.Upgrades
 
         public struct TastingStats
         {
-            public int tastings;
-            public int cardsGained;
+            public long tastings;
+            public long cardsGained;
             public int gainedNothing;
             public int alterEcho;
             public int buffs;
@@ -589,8 +589,9 @@ namespace TimelessEchoes.Upgrades
 
                 Stew -= cost;
                 GainEvaXp(cost);
-                sessionTastings++;
-                if (oracle != null) oracle.saveData.CauldronTotals.TotalTastings++;
+                if (sessionTastings < long.MaxValue) sessionTastings++;
+                if (oracle != null && oracle.saveData.CauldronTotals.TotalTastings < long.MaxValue)
+                    oracle.saveData.CauldronTotals.TotalTastings++;
                 ResolveTasteOutcome(cardMultiplier);
             }
 
@@ -904,10 +905,23 @@ namespace TimelessEchoes.Upgrades
             return chosen;
         }
 
+        // Both single and batched awards must count only the cards that fit in the save.
+        private int ApplyCardGain(string id, int requested)
+        {
+            if (requested <= 0 || string.IsNullOrEmpty(id)) return 0;
+            var dict = oracle.saveData.CauldronCardCounts;
+            var current = dict.TryGetValue(id, out var count) ? count : 0;
+            var added = (int)Math.Min(requested, (long)int.MaxValue - current);
+            if (added <= 0) return 0;
+            dict[id] = current + added;
+            sessionCardsGained += Math.Min(added, long.MaxValue - sessionCardsGained);
+            var totals = oracle.saveData.CauldronTotals;
+            totals.TotalCards += Math.Min(added, long.MaxValue - totals.TotalCards);
+            return added;
+        }
+
         private void AddCardCount(string id, int delta)
         {
-            var dict = oracle.saveData.CauldronCardCounts;
-
             // Detect pre-change tiers for buff updates
             int oldBuffTier = -1;
             int oldBuffsGroupTier = -1;
@@ -922,19 +936,16 @@ namespace TimelessEchoes.Upgrades
                 oldBuffsGroupTier = GetBuffsGroupTier();
             }
 
-            // Clamp RES/BUFF at max tier; Infinity has no cap
+            // RES/BUFF stop at their final tier; every card count has an integer ceiling.
             if (!isInfinity && IsIdMaxed(id))
                 delta = 0;
 
-            if (!dict.ContainsKey(id)) dict[id] = 0;
-            dict[id] += delta;
+            delta = ApplyCardGain(id, delta);
             if (delta > 0)
             {
-                sessionCardsGained += delta;
                 OnCardGained?.Invoke(id, delta);
                 if (ShouldEmitSessionCardsNow())
                     OnSessionCardsChanged?.Invoke(sessionCardsGained);
-                if (oracle != null) oracle.saveData.CauldronTotals.TotalCards += delta;
                 if (ShouldEmitStatsNow())
                 {
                     var statsHandler = OnStatsChanged;
@@ -1006,12 +1017,11 @@ namespace TimelessEchoes.Upgrades
 
             bool anyBuffTierChanged = false;
             bool anyTierChanged = false;
-            int totalCardsGained = 0;
-            var dict = oracle.saveData.CauldronCardCounts;
+            long totalCardsGained = 0;
 
-            foreach (var (id, delta) in _pendingCardGains)
+            foreach (var (id, requested) in _pendingCardGains)
             {
-                if (delta <= 0) continue;
+                if (requested <= 0) continue;
 
                 bool isInfinity = !string.IsNullOrEmpty(id) && id.StartsWith("INF:");
 
@@ -1024,9 +1034,8 @@ namespace TimelessEchoes.Upgrades
                 if (!isInfinity && _tierCalculator != null)
                     oldTier = _tierCalculator.GetTier(id);
 
-                // Update count
-                if (!dict.ContainsKey(id)) dict[id] = 0;
-                dict[id] += delta;
+                var delta = ApplyCardGain(id, requested);
+                if (delta == 0) continue;
                 totalCardsGained += delta;
 
                 // Check for tier change
@@ -1050,11 +1059,6 @@ namespace TimelessEchoes.Upgrades
                 _pendingCardGains.Clear();
                 return;
             }
-
-            // Update session stats
-            sessionCardsGained += totalCardsGained;
-            if (oracle != null) oracle.saveData.CauldronTotals.TotalCards += totalCardsGained;
-
 
             if (anyBuffTierChanged)
             {

@@ -9,6 +9,11 @@ work without asking for permission each time. Preserve unrelated unsaved edits
 and the user's player saves; permission to stop Play does not authorize
 discarding edits, overwriting progression, or changing save data.
 
+## Farming terminology
+
+When Matt says "seeds", include crop seed packs, fruit-tree saplings, and timber-tree
+saplings unless he explicitly narrows the scope.
+
 ## UI changes
 
 UI changes must consider both supported layouts: landscape and portrait. Validate

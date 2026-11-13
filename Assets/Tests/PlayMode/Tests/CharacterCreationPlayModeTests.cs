@@ -450,7 +450,7 @@ namespace Tests.PlayMode
                 ui = view.GetComponent<UIDocument>().rootVisualElement;
                 Assert.True(ui.Q<Button>("inventory-visibility-Helmet").ClassListContains("shown"));
                 UnityEditor.PlayModeWindow.SetCustomRenderingResolution(1179, 2556, "Portrait visibility checkpoint");
-                screen.Bounds = new Rect(0, 0, 600, 1200);
+                screen.Bounds = new Rect(0, 0, 360, 600);
                 yield return null; yield return null;
                 FieldsClick(ui.Q<Button>("inventory-equipment-tab"));
                 yield return null; yield return null;
@@ -464,6 +464,88 @@ namespace Tests.PlayMode
                 Assert.True(load.Result.Succeeded); Assert.True(load.Result.Data.EquipmentVisibility.Boots);
             }
             finally { if (view) Object.DestroyImmediate(view); Object.DestroyImmediate(owner); }
+        }
+
+        [UnityTest]
+        public IEnumerator InventoryEditsAnExistingCharacterWithoutChangingHardcore()
+        {
+            var owner = new GameObject("Protected appearance edit");
+            GameObject inventory = null, intro = null;
+            try
+            {
+                oracle.saveData.Character = CharacterProfile.Legacy();
+                oracle.saveData.Character.Name = "Aster";
+                oracle.saveData.Hardcore = true;
+                oracle.saveData.EquipmentVisibility.Helmet = true;
+                owner.AddComponent<ResourceManager>();
+                owner.AddComponent<EquipmentController>();
+                var preset = CharacterCatalog.Load().NewProfile();
+                preset.Name = "Briar";
+                preset.Head = "Head/Hair_2/Hair_2_Purple";
+                Assert.True(CharacterPresetStore.TrySave(0, preset, out var error), error);
+
+                intro = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/Intro.prefab"));
+                intro.GetComponent<ToolkitIntroScreen>().Hide();
+                var creator = intro.GetComponentInChildren<ToolkitCharacterCreator>();
+                inventory = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/UI/Toolkit/ResourceInventory.prefab"));
+                var inventoryScreen = inventory.GetComponent<ToolkitResourceInventoryScreen>();
+                inventoryScreen.Bounds = new Rect(36, 28, 696, 376);
+                Assert.True(inventoryScreen.Show());
+                var inventoryUi = inventory.GetComponent<UIDocument>().rootVisualElement;
+                var edit = inventoryUi.Q<Button>("inventory-edit-appearance");
+                yield return null; yield return null;
+                Assert.True(inventoryUi.Q<ScrollView>("inventory-equipment-scroll").contentViewport.worldBound.Contains(edit.worldBound.center));
+                FieldsClick(edit);
+                yield return null; yield return null;
+                Assert.True(creator.IsOpen);
+                var ui = GameObject.Find("Character creation panel").GetComponent<UIDocument>().rootVisualElement;
+                Assert.IsNull(ui.Q("character-hardcore"));
+                Assert.AreEqual("Aster", ui.Q<TextField>("character-name").value);
+                FieldsClick(ui.Q<Button>("character-load-preset-0"));
+                Assert.AreEqual("Briar", ui.Q<TextField>("character-name").value);
+                Assert.AreEqual("Aster", oracle.saveData.Character.Name);
+                FieldsClick(ui.Q<Button>("character-cancel"));
+                yield return null;
+                Assert.False(creator.IsOpen);
+                Assert.True(inventoryScreen.IsOpen);
+                Assert.AreEqual("Aster", oracle.saveData.Character.Name);
+
+                PlayModeWindow.SetCustomRenderingResolution(1080, 1920, "Edit appearance in portrait");
+                inventoryScreen.Bounds = new Rect(0, 0, 360, 600);
+                yield return null; yield return null;
+                FieldsClick(inventoryUi.Q<Button>("inventory-equipment-tab"));
+                yield return null; yield return null;
+                Assert.True(inventoryUi.Q<ScrollView>("inventory-equipment-scroll").contentViewport.worldBound.Contains(edit.worldBound.center));
+                FieldsClick(edit);
+                yield return null; yield return null;
+                ui = GameObject.Find("Character creation panel").GetComponent<UIDocument>().rootVisualElement;
+                Assert.IsNull(ui.Q("character-hardcore"));
+                var sheet = ui.Q(className: "character-sheet").worldBound;
+                foreach (var button in new[] { "character-load-preset-0", "character-save-preset-1", "character-cancel", "character-confirm" })
+                    Assert.True(sheet.Contains(ui.Q<Button>(button).worldBound.center), button);
+                FieldsClick(ui.Q<Button>("character-load-preset-0"));
+                ui.Q<TextField>("character-name").value = "Rowan";
+                FieldsClick(ui.Q<Button>("character-save-preset-1"));
+                Assert.True(CharacterPresetStore.TryLoad(1, out var savedPreset, out error), error);
+                Assert.AreEqual("Rowan", savedPreset.Name);
+                FieldsClick(ui.Q<Button>("character-confirm"));
+                yield return null;
+                Assert.False(creator.IsOpen);
+                Assert.True(inventoryScreen.IsOpen);
+                var load = SaveManager.Instance.LoadDetailedAsync(oracle.GetSlotDirectoryName(oracle.CurrentSlot));
+                while (!load.IsCompleted) yield return null;
+                Assert.True(load.Result.Succeeded, load.Result.Diagnostic);
+                Assert.AreEqual("Rowan", load.Result.Data.Character.Name);
+                Assert.AreEqual(preset.Head, load.Result.Data.Character.Head);
+                Assert.True(load.Result.Data.Hardcore);
+                Assert.True(load.Result.Data.EquipmentVisibility.Helmet);
+            }
+            finally
+            {
+                if (inventory) Object.DestroyImmediate(inventory);
+                if (intro) Object.DestroyImmediate(intro);
+                Object.DestroyImmediate(owner);
+            }
         }
 
         [Test]

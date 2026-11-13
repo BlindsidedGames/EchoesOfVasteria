@@ -43,16 +43,20 @@ namespace Tests.PlayMode
                     yield return null; yield return null;
                     var current = view.Root.Q<Label>("library-article-body");
                     var history = view.Root.Q<Label>("library-patch-history");
-                    StringAssert.Contains("1.5.9", current.text);
-                    StringAssert.Contains("Hardcore", current.text);
-                    StringAssert.Contains("1.5.8", history.text);
+                    StringAssert.Contains("1.5.12", current.text);
+                    StringAssert.Contains("Edit your character", current.text);
+                    StringAssert.Contains("1.5.11b", history.text);
+                    StringAssert.Contains("Added dog companions", history.text);
+                    StringAssert.Contains("1.5.10", history.text);
                     StringAssert.DoesNotContain("[iOS]", current.text);
+                    StringAssert.DoesNotContain("[Mobile]", current.text);
+                    StringAssert.Contains("25% drop chance", current.text);
 #if UNITY_IOS
-                    StringAssert.Contains("Live Activity", current.text);
-                    StringAssert.Contains("Apple Watch", current.text);
+                    StringAssert.Contains("Show status bar", history.text);
+                    StringAssert.Contains("Apple Watch", history.text);
 #else
-                    StringAssert.DoesNotContain("Live Activity", current.text);
-                    StringAssert.DoesNotContain("Apple Watch", current.text);
+                    StringAssert.DoesNotContain("Show status bar", history.text);
+                    StringAssert.DoesNotContain("Apple Watch", history.text);
 #endif
                     Assert.AreNotEqual(current.resolvedStyle.color, history.resolvedStyle.color, "Older versions retain their muted styling.");
                     Assert.LessOrEqual(current.worldBound.xMax, view.Scroll.contentViewport.worldBound.xMax + 1, "Notes fit the article width.");

@@ -38,7 +38,7 @@ namespace Blindsided.SaveData
             copy.AppliedMigrationIds = new HashSet<string>(AppliedMigrationIds);
             return copy;
         }
-        public const int CurrentSchemaVersion = 11;
+        public const int CurrentSchemaVersion = 12;
 
         public int SchemaVersion = CurrentSchemaVersion;
         public TimelessEchoes.Characters.CharacterProfile Character = TimelessEchoes.Characters.CharacterProfile.Legacy();
@@ -176,8 +176,8 @@ namespace Blindsided.SaveData
         [HideReferenceObjectPicker]
         public class CauldronTotalsRecord
         {
-            public int TotalTastings;
-            public int TotalCards;
+            public long TotalTastings;
+            public long TotalCards;
             public int GainedNothing;
             public int AlterEcho;
             public int Buffs;

@@ -254,6 +254,7 @@
 .gameplay.portrait .inventory-equipment-row {margin-bottom:4px;min-height:30px;}
 .gameplay.portrait .inventory-equipment-slot {height:30px;min-height:30px;}
 .gameplay.portrait .inventory-visibility-button {height:30px;min-height:30px;width:30px;margin-left:4px;}
+.gameplay.portrait .inventory-edit-appearance {min-height:32px;font-size:var(--body);}
 .gameplay.portrait .inventory-equipment-slot-name {font-size:var(--body);}
 .gameplay.portrait .inventory-character-name {display:none;}
 .gameplay.portrait.eov-forge .eov-forge-conversion {height:124px;min-height:124px;max-height:124px;padding:8px;margin:0 0 8px 0;}
@@ -302,6 +303,15 @@
 .gameplay.portrait .portrait-picker {margin-bottom:8px;min-height:32px;}
 .gameplay.portrait .portrait-picker .unity-base-popup-field__input {height:32px;min-height:32px;padding:4px 8px;}
 .gameplay.portrait .graph-units .graph-last-choice {margin-right:0;}
+.gameplay.portrait #graph-select-hint {display:none;}
+.gameplay.portrait .graph-compact .graph-controls {flex-direction:row;align-items:center;margin-bottom:2px;}
+.gameplay.portrait .graph-compact .graph-pickers {width:auto;flex-basis:0;}
+.gameplay.portrait .graph-compact .graph-picker .unity-base-popup-field__text {overflow:hidden;text-overflow:ellipsis;min-width:0;}
+.gameplay.portrait .graph-compact .graph-units {align-self:center;margin:0 0 0 6px;}
+.gameplay.portrait .graph-compact .graph-units .graph-choice {flex-grow:0;flex-basis:auto;min-width:0;padding:4px 6px;}
+.gameplay.portrait .graph-compact .graph-summary-row {margin-bottom:8px;}
+.gameplay.portrait .graph-compact .graph-zoom-controls .graph-choice {margin-top:0;margin-bottom:0;}
+.gameplay.portrait .graph-compact .graph-chart {min-height:56px;}
 .gameplay.portrait .eov-stat-entry-toggle {flex-direction:row;align-items:center;justify-content:center;}
 .gameplay.portrait .eov-stat-entry-toggle .task-boost-label {margin-left:4px;}
 .gameplay.portrait .eov-stat-entry-toggle .check-mark {width:10px;height:10px;min-width:10px;margin:0;}

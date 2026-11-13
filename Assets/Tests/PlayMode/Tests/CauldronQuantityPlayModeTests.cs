@@ -18,6 +18,52 @@ namespace Tests.PlayMode
 {
     public sealed partial class FieldsProductionPlayModeTests
     {
+        [TestCase(false, 2147483647L)]
+        [TestCase(true, 2147483647L)]
+        [TestCase(false, long.MaxValue - 1)]
+        [TestCase(true, long.MaxValue - 1)]
+        public void CauldronAwardsCapBoonsAndCountOnlyCardsActuallyAdded(bool batched, long startingTotal)
+        {
+            var counts = oracle.saveData.CauldronCardCounts;
+            foreach (var resource in Blindsided.Utilities.AssetCache.GetAll<Resource>())
+                counts[resource.CardId] = int.MaxValue;
+            foreach (var buff in TimelessEchoes.Buffs.BuffRecipe.LoadAvailable())
+                counts[buff.CardId] = int.MaxValue;
+            var boonIds = Blindsided.Utilities.AssetCache.GetAll<InfinityCauldronStatSO>("Infinity")
+                .Select(boon => "INF:" + boon.Stat).Distinct().ToArray();
+            Assert.IsNotEmpty(boonIds);
+            foreach (var id in boonIds) counts[id] = int.MaxValue - 2;
+            oracle.saveData.CauldronTotals.TotalCards = startingTotal;
+            oracle.saveData.CauldronEvaLevel = 42;
+            oracle.saveData.CauldronStew = 1000;
+            var config = ScriptableObject.CreateInstance<CauldronConfig>();
+            config.weightInfinity.baseWeight = batched ? 0 : 1;
+            config.weightVastSurgeX10.baseWeight = batched ? 1 : 0;
+            var randomState = Random.state;
+            var owner = new GameObject("Bounded cauldron awards");
+            owner.SetActive(false);
+            try
+            {
+                var cauldron = owner.AddComponent<CauldronManager>();
+                typeof(CauldronManager).GetField("config", Private).SetValue(cauldron, config);
+                owner.SetActive(true);
+                cauldron.enabled = false;
+                var gained = 0;
+                cauldron.OnCardGained += (_, amount) => gained += amount;
+                cauldron.StartTasting();
+                typeof(CauldronManager).GetField("_lastTasteTime", Private).SetValue(cauldron, Time.unscaledTime - 1.001f);
+                typeof(CauldronManager).GetMethod("TasteTick", Private).Invoke(cauldron, null);
+                Assert.That(boonIds.All(id => counts[id] >= int.MaxValue - 2 && counts[id] <= int.MaxValue));
+                Assert.That(boonIds.Any(id => counts[id] == int.MaxValue));
+                var retainedGain = boonIds.Sum(id => (long)counts[id] - (int.MaxValue - 2));
+                Assert.AreEqual(retainedGain, gained, "Only retained cards count as gains, including after a boon caps.");
+                var expectedTotal = startingTotal == int.MaxValue ? startingTotal + retainedGain : long.MaxValue;
+                Assert.AreEqual(expectedTotal, cauldron.CurrentStats.cardsGained);
+                Assert.Greater(cauldron.GetInfinityValueFor(TimelessEchoes.Gear.HeroStatMapping.Damage, out _), 0);
+            }
+            finally { Object.DestroyImmediate(owner); Object.DestroyImmediate(config); Random.state = randomState; }
+        }
+
         [Test]
         public void CauldronWaitsForExplicitTasteAfterMixingOrLoading()
         {
@@ -64,6 +110,7 @@ namespace Tests.PlayMode
         {
             oracle.saveData.CauldronEvaLevel = evaLevel;
             oracle.saveData.CauldronStew = 1000;
+            oracle.saveData.CauldronTotals.TotalTastings = int.MaxValue;
             var inventoryObject = new GameObject("Tasting rate inventory");
             var cauldronObject = new GameObject("Tasting rate owner");
             cauldronObject.SetActive(false);
@@ -90,6 +137,7 @@ namespace Tests.PlayMode
                 typeof(CauldronManager).GetField("_accumulatedTasteTime", Private).SetValue(cauldron, 0f);
                 typeof(CauldronManager).GetMethod("TasteTick", Private).Invoke(cauldron, null);
                 Assert.AreEqual(expectedTastes, oracle.saveData.CauldronTotals.TotalTastings - before);
+                Assert.Greater(oracle.saveData.CauldronTotals.TotalTastings, (long)int.MaxValue);
                 Assert.AreEqual(stewBefore - expectedTastes, cauldron.Stew, 1e-9);
                 Assert.AreEqual(expectedTastes, cauldron.TastesPerSecond, "The UI rate matches actual consumption.");
             }

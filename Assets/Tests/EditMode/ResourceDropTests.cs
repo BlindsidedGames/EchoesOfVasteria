@@ -68,6 +68,17 @@ namespace TimelessEchoes.Tests
             Assert.That(result[0].count + result[1].count, Is.EqualTo(3));
         }
 
+        [TestCase(0f, 1, 3)]
+        [TestCase(1f, 7, 1)]
+        public void ChickenAwardsFeathersOnceWhetherOrNotItsWeightedRollPicksThem(float roll, int feathers, int dropCount)
+        {
+            var chicken = UnityEditor.AssetDatabase.LoadAssetAtPath<TimelessEchoes.Enemies.EnemyData>(
+                "Assets/Resources/Enemies/Farmlands/Chicken.asset");
+            var result = DropResolver.RollDrops(chicken.resourceDrops, chicken.additionalLootChances, rand: () => roll);
+            Assert.That(result.Count, Is.EqualTo(dropCount));
+            Assert.That(result.Single(drop => drop.resource.name == "Feather").count, Is.EqualTo(feathers));
+        }
+
         [Test]
         public void QuestGateFiltersWeightedPoolAndCannotBeBypassedByIgnoringSkillLevels()
         {

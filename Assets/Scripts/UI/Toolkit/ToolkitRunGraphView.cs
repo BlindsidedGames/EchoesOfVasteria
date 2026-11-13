@@ -11,35 +11,43 @@ namespace TimelessEchoes.UI.Toolkit
     {
         public enum Metric { Resources, Tasks, Kills, Duration, Distance }
         private readonly Func<IReadOnlyList<GameData.RunRecord>> history;
+        private readonly Func<GameData.RunRecord> currentRun;
         private readonly Func<IReadOnlyDictionary<string, RunHistoryTotals>> previousHistory;
         private readonly Func<bool> incompleteHistory;
         private readonly Button previousHistoryButton;
         private readonly Label historyNote;
         private readonly ToolkitStatisticsDefinition definition;
         private readonly Button totals, rates, zoomIn, zoomOut, resetZoom;
-        private readonly VisualElement units, previousDetails;
+        private readonly VisualElement units, previousDetails, currentRunLegend;
         private readonly VisualElement plot, axis, axisLabels, barHost, averageLine, details;
         private readonly Label summary, sample, empty, first, last, detailTitle, averageLabel, overflowValue;
         private readonly Label[] ticks = new Label[5];
         private List<GameData.RunRecord> visible = new();
         private Metric metric;
         private int map = -1, selectedRun = -1, zoomSteps;
+        private int currentRunNumber = -1, previewedRun = -1;
         private const int MaximumZoomSteps = 18;
         private double ceiling;
         private bool perMinute;
         private readonly DropdownField metricPicker, mapPicker;
         private bool previousExpanded;
         public ToolkitRunGraphView(VisualElement body, VisualElement footer, ToolkitStatisticsDefinition definition, Func<IReadOnlyList<GameData.RunRecord>> history,
-            Func<IReadOnlyDictionary<string, RunHistoryTotals>> previousHistory = null, Func<bool> incompleteHistory = null)
+            Func<IReadOnlyDictionary<string, RunHistoryTotals>> previousHistory = null, Func<bool> incompleteHistory = null,
+            Func<GameData.RunRecord> currentRun = null)
         {
             this.definition = definition; this.history = history;
             this.previousHistory = previousHistory; this.incompleteHistory = incompleteHistory;
+            this.currentRun = currentRun;
             body.style.paddingTop = body.style.paddingBottom = body.style.paddingLeft = body.style.paddingRight = 0;
             footer.style.display = DisplayStyle.None;
             var scroll = ToolkitGameplay.Scroll(body, "run-graph-scroll");
             scroll.style.flexGrow = 1; scroll.style.minHeight = 0;
             scroll.contentContainer.style.flexGrow = 1;
-            scroll.contentViewport.RegisterCallback<GeometryChangedEvent>(e => scroll.contentContainer.style.minHeight = e.newRect.height);
+            scroll.contentViewport.RegisterCallback<GeometryChangedEvent>(e =>
+            {
+                scroll.contentContainer.style.minHeight = e.newRect.height;
+                scroll.contentContainer.EnableInClassList("graph-compact", e.newRect.height < 360f);
+            });
             body = scroll.contentContainer;
             body.AddToClassList("run-graph-content");
             var controls = ToolkitGameplay.E(body, "graph-controls");
@@ -78,9 +86,10 @@ namespace TimelessEchoes.UI.Toolkit
             overflowValue.RegisterCallback<GeometryChangedEvent>(_=>PositionOverflowValue());
             axisLabels=ToolkitGameplay.E(body,"graph-x-labels");first=Text(axisLabels,"","graph-first");Text(axisLabels,ToolkitLocalization.Text("graph.run-number", "Run number"),"graph-x-title");last=Text(axisLabels,"","graph-last");
             var legend=ToolkitGameplay.E(body,"graph-legend");
+            currentRunLegend = Legend(legend, InProgressLabel(), "current");
             Legend(legend,ToolkitLocalization.Text("run.outcome-retreated", "Retreated"),"retreated");Legend(legend,ToolkitLocalization.Text("run.outcome-reaped", "Reaped"),"reaped");Legend(legend,ToolkitLocalization.Text("run.outcome-died", "Died"),"died");Legend(legend,ToolkitLocalization.Text("run.outcome-abandoned", "Abandoned"),"abandoned");
             var detailHeader=ToolkitGameplay.E(body,"graph-detail-heading");detailTitle=Text(detailHeader,"","graph-detail-title");
-            Text(detailHeader,ToolkitLocalization.Text("graph.select-bar", "Select a bar for details"),"graph-detail-hint");
+            Text(detailHeader,ToolkitLocalization.Text("graph.select-bar", "Select a bar for details"),"graph-detail-hint").name = "graph-select-hint";
             details=ToolkitGameplay.E(body,"graph-details");
             previousHistoryButton = Choice(body, "graph-previous-history", "", () =>
             {
@@ -141,7 +150,9 @@ namespace TimelessEchoes.UI.Toolkit
         };
         private static Button Choice(VisualElement parent,string name,string text,Action click){var b=ToolkitGameplay.B(parent,text,click);b.name=name;b.AddToClassList("graph-choice");return b;}
         private static Label Text(VisualElement parent,string text,string classes)=>ToolkitGameplay.L(parent,text,classes);
-        private static void Legend(VisualElement parent,string title,string outcome){var item=ToolkitGameplay.E(parent,"graph-legend-item");var swatch=ToolkitGameplay.E(item,"graph-legend-swatch");swatch.AddToClassList("graph-outcome-"+outcome);Text(item,title,"");}
+        private static VisualElement Legend(VisualElement parent,string title,string outcome){var item=ToolkitGameplay.E(parent,"graph-legend-item");var swatch=ToolkitGameplay.E(item,"graph-legend-swatch");swatch.AddToClassList("graph-outcome-"+outcome);Text(item,title,"");return item;}
+        public bool HasCurrentRun => currentRunNumber >= 0;
+        private static string InProgressLabel() => ToolkitLocalization.Text("graph.in-progress", "In progress");
         public (Metric metric, int map, int selectedRun, bool perMinute, int zoomSteps) ViewState => (metric, map, selectedRun, perMinute, zoomSteps);
         public void RestoreViewState((Metric metric, int map, int selectedRun, bool perMinute, int zoomSteps) state)
         {
@@ -158,19 +169,29 @@ namespace TimelessEchoes.UI.Toolkit
             return rate ? run.Duration>0?value*60/run.Duration:double.NaN : value;
         }
         private string Format(double value)=>metric==Metric.Duration?CalcUtils.FormatTime(value):ItemStatisticsPresentation.Number(value);
-        public void Refresh()
+        private double PlotValue(GameData.RunRecord run) => perMinute && run.Duration <= 0 ? 0 : Value(run, metric, perMinute);
+
+        public void Refresh(bool liveTick = false)
         {
-            metricPicker.SetValueWithoutNotify(MetricLabel(metric));
-            mapPicker.SetValueWithoutNotify(mapPicker.choices[Mathf.Clamp(map + 1, 0, mapPicker.choices.Count - 1)]);
             var all=history();var key=map<0?null:definition.maps[map].config.name;
-            RefreshPreviousHistory();
-            historyNote.style.display = incompleteHistory?.Invoke() == true ? DisplayStyle.Flex : DisplayStyle.None;
+            var active = currentRun?.Invoke();
+            if (active != null && key != null && active.MapType != key) active = null;
+            var priorCurrentRunNumber = currentRunNumber;
+            currentRunNumber = active?.RunNumber ?? -1;
+            if (!liveTick || priorCurrentRunNumber != currentRunNumber)
+            {
+                metricPicker.SetValueWithoutNotify(MetricLabel(metric));
+                mapPicker.SetValueWithoutNotify(mapPicker.choices[Mathf.Clamp(map + 1, 0, mapPicker.choices.Count - 1)]);
+                RefreshPreviousHistory();
+                historyNote.style.display = incompleteHistory?.Invoke() == true ? DisplayStyle.Flex : DisplayStyle.None;
+            }
             var filtered=all.Where(r=>key==null||r.MapType==key).ToList();
             visible=filtered.Where(r=>!perMinute||r.Duration>0).ToList();
             var omitted = filtered.Count - visible.Count;
             if (ToolkitResponsiveLayout.IsPortrait && visible.Count > 10)
                 visible = visible.Skip(visible.Count - 10).ToList();
-            var values=visible.Select(r=>Value(r,metric,perMinute)).ToArray();
+            // Only completed runs contribute to comparison statistics and the history count.
+            var values=visible.Select(PlotValue).ToArray();
             double max=values.Length>0?values.Max():0,avg=values.Length>0?values.Average():0;
             units.style.display = SupportsRate ? DisplayStyle.Flex : DisplayStyle.None;
             rates.SetEnabled(SupportsRate); rates.EnableInClassList("active",perMinute);totals.EnableInClassList("active",!perMinute);
@@ -180,32 +201,66 @@ namespace TimelessEchoes.UI.Toolkit
             sample.text = ToolkitResponsiveLayout.IsPortrait
                 ? ToolkitLocalization.Text("graph.recent-sample", "Latest {0} runs{1}", visible.Count, omittedText)
                 : ToolkitLocalization.Text("history.recent-count", "{0} recent runs Â· up to 10 per map", visible.Count) + omittedText;
-            ceiling=max>0?NiceCeiling(max):1;
+            if (active != null) visible.Add(active);
+            var plotMax = active != null ? Math.Max(max, PlotValue(active)) : max;
+            currentRunLegend.style.display = HasCurrentRun ? DisplayStyle.Flex : DisplayStyle.None;
+            ceiling=plotMax>0?NiceCeiling(plotMax):1;
             for(var step=0;step<zoomSteps;step++)ceiling=LowerCeiling(ceiling);
             if(!perMinute)ceiling=Math.Max(1,ceiling);
-            zoomIn.SetEnabled(max>0&&zoomSteps<MaximumZoomSteps&&(perMinute||LowerCeiling(ceiling)>=1));
+            zoomIn.SetEnabled(plotMax>0&&zoomSteps<MaximumZoomSteps&&(perMinute||LowerCeiling(ceiling)>=1));
             zoomOut.SetEnabled(zoomSteps>0);resetZoom.SetEnabled(zoomSteps>0);
             resetZoom.style.display = zoomSteps > 0 ? DisplayStyle.Flex : DisplayStyle.None;
             for(int i=0;i<5;i++)ticks[i].text=Format(ceiling*i/4);
             SizeAxis();
-            barHost.Clear();var slots=Math.Max(10,visible.Count);
+            var rebuildBars = !barHost.Children().Select(bar => (int)bar.userData).SequenceEqual(visible.Select(run => run.RunNumber));
+            if (rebuildBars) { barHost.Clear(); previewedRun = -1; }
+            barHost.EnableInClassList("graph-single-run", visible.Count == 1);
+            var slots = Math.Max(10, visible.Count);
+            averageLabel.style.right = Length.Percent(HasCurrentRun ? 100f / slots : 0f);
             for(int i=0;i<visible.Count;i++)
             {
-                var run=visible[i];var value=values[i];var hit=new Button(()=>{selectedRun=run.RunNumber;ShowDetails(run);StyleSelection();}){name="graph-run-"+run.RunNumber};
-                hit.AddToClassList("graph-run-bar");hit.style.width=Length.Percent(100f/slots);barHost.Add(hit);
-                var fill=ToolkitGameplay.E(hit,"graph-run-fill");fill.pickingMode=PickingMode.Ignore;fill.style.height=Length.Percent((float)(Math.Min(value/ceiling,1)*100));
-                fill.AddToClassList("graph-outcome-"+(run.Abandoned?"abandoned":run.Reaped?"reaped":run.Died?"died":"retreated"));
-                hit.tooltip=Format(value)+suffix;
-                if(value>ceiling){var overflow=Text(hit,"↑","graph-overflow-marker");overflow.pickingMode=PickingMode.Ignore;}
-                hit.RegisterCallback<PointerEnterEvent>(_=>ShowDetails(run));hit.RegisterCallback<PointerLeaveEvent>(_=>ShowSelected());
-                hit.RegisterCallback<FocusInEvent>(_=>ShowDetails(run));hit.RegisterCallback<FocusOutEvent>(_=>ShowSelected());
-                hit.userData=run.RunNumber;
+                var run = visible[i];
+                var value = PlotValue(run);
+                var isCurrent = run.RunNumber == currentRunNumber;
+                var hit = rebuildBars ? BuildBar(run.RunNumber, slots) : barHost.ElementAt(i);
+                var fill = hit.ElementAt(0);
+                fill.style.height = Length.Percent((float)(Math.Min(value / ceiling, 1) * 100));
+                fill.style.minHeight = isCurrent ? 2 : 0;
+                var outcome = isCurrent ? "current" : run.Abandoned ? "abandoned" : run.Reaped ? "reaped" : run.Died ? "died" : "retreated";
+                if (fill.userData is string priorOutcome && priorOutcome != outcome)
+                    fill.RemoveFromClassList("graph-outcome-" + priorOutcome);
+                fill.AddToClassList("graph-outcome-" + outcome);
+                fill.userData = outcome;
+                hit.tooltip = isCurrent ? InProgressLabel() + " · " + Format(value) + suffix : Format(value) + suffix;
+                hit.ElementAt(1).style.display = value > ceiling ? DisplayStyle.Flex : DisplayStyle.None;
             }
             averageLine.style.display=max>0&&avg<=ceiling?DisplayStyle.Flex:DisplayStyle.None;averageLine.style.bottom=Length.Percent((float)(avg/ceiling*100));averageLabel.text=ToolkitLocalization.Text("graph.average-marker", "Avg {0}", Format(avg));
             empty.style.display=visible.Count==0?DisplayStyle.Flex:DisplayStyle.None;
-            first.text=visible.Count>0?"#"+visible[0].RunNumber:"";last.text=visible.Count>1?"#"+visible[visible.Count-1].RunNumber:"";
-            if(!visible.Any(r=>r.RunNumber==selectedRun))selectedRun=visible.Count>0?visible[visible.Count-1].RunNumber:-1;
-            StyleSelection();ShowSelected();
+            first.text = visible.Count > 1 ? "#" + visible[0].RunNumber : "";
+            last.text = visible.Count > 0 ? "#" + visible[^1].RunNumber : "";
+            if (active != null && (selectedRun == priorCurrentRunNumber || !visible.Any(r => r.RunNumber == selectedRun)))
+                selectedRun = currentRunNumber;
+            else if (!visible.Any(r => r.RunNumber == selectedRun))
+                selectedRun = visible.Count > 0 ? visible[^1].RunNumber : -1;
+            StyleSelection();
+            ShowSelected();
+        }
+
+        private VisualElement BuildBar(int runNumber, int slots)
+        {
+            var hit = new Button(() => { selectedRun = runNumber; ShowSelected(); StyleSelection(); })
+                { name = "graph-run-" + runNumber, userData = runNumber };
+            hit.AddToClassList("graph-run-bar");
+            hit.style.width = Length.Percent(100f / slots);
+            barHost.Add(hit);
+            ToolkitGameplay.E(hit, "graph-run-fill").pickingMode = PickingMode.Ignore;
+            Text(hit, "↑", "graph-overflow-marker").pickingMode = PickingMode.Ignore;
+            void Preview(int id) { previewedRun = id; ShowSelected(); }
+            hit.RegisterCallback<PointerEnterEvent>(_ => Preview(runNumber));
+            hit.RegisterCallback<PointerLeaveEvent>(_ => Preview(-1));
+            hit.RegisterCallback<FocusInEvent>(_ => Preview(runNumber));
+            hit.RegisterCallback<FocusOutEvent>(_ => Preview(-1));
+            return hit;
         }
         private static double NiceCeiling(double maximum){var power=Math.Pow(10,Math.Floor(Math.Log10(maximum)));return Math.Ceiling(maximum/power)*power;}
         private static double LowerCeiling(double value)
@@ -215,18 +270,22 @@ namespace TimelessEchoes.UI.Toolkit
             return fraction>5.000001?5*power:fraction>2.000001?2*power:fraction>1.000001?power:power/2;
         }
         private void StyleSelection(){foreach(var bar in barHost.Children())bar.EnableInClassList("selected",(int)bar.userData==selectedRun);}
-        private void ShowSelected()=>ShowDetails(visible.FirstOrDefault(r=>r.RunNumber==selectedRun));
+        private void ShowSelected()=>ShowDetails(visible.FirstOrDefault(r=>r.RunNumber==(previewedRun >= 0 ? previewedRun : selectedRun)));
         private static string Outcome(GameData.RunRecord run)=>run.Abandoned?ToolkitLocalization.Text("run.outcome-abandoned", "Abandoned"):run.Reaped?ToolkitLocalization.Text("run.outcome-reaped", "Reaped"):run.Died?ToolkitLocalization.Text("run.outcome-died", "Died"):ToolkitLocalization.Text("run.outcome-retreated", "Retreated");
         private void ShowDetails(GameData.RunRecord run)
         {
-            overflowValue.text=run!=null&&Value(run,metric,perMinute)>ceiling?Format(Value(run,metric,perMinute)):"";
+            overflowValue.text=run!=null&&PlotValue(run)>ceiling?Format(PlotValue(run)):"";
             overflowValue.style.display=string.IsNullOrEmpty(overflowValue.text)?DisplayStyle.None:DisplayStyle.Flex;
             overflowValue.userData=run?.RunNumber;PositionOverflowValue();
             details.Clear();if(run==null){detailTitle.text=ToolkitLocalization.Text("graph.details", "Run details");Text(details,ToolkitLocalization.Text("graph.select-map", "Select a map with saved runs to inspect its history."),"graph-detail-hint");return;}
             var mapName=definition.maps.FirstOrDefault(m=>m.config&&m.config.name==run.MapType).label;
-            detailTitle.text=ToolkitLocalization.Text("graph.detail-title", "Run #{0} Â· {1} Â· {2}", run.RunNumber, ToolkitLocalization.Text("map." + run.MapType, string.IsNullOrWhiteSpace(mapName)?run.MapType:mapName.Trim()), Outcome(run)) + (run.Estimated ? " · " + ToolkitLocalization.Text("graph.estimated", "Estimated") : "");
+            var isCurrent = run.RunNumber == currentRunNumber;
+            detailTitle.text=ToolkitLocalization.Text("graph.detail-title", "Run #{0} Â· {1} Â· {2}", run.RunNumber, ToolkitLocalization.Text("map." + run.MapType, string.IsNullOrWhiteSpace(mapName)?run.MapType:mapName.Trim()), isCurrent ? InProgressLabel() : Outcome(run)) + (run.Estimated ? " · " + ToolkitLocalization.Text("graph.estimated", "Estimated") : "");
             Detail(ToolkitLocalization.Text("graph.duration", "Duration"),CalcUtils.FormatTime(run.Duration));Detail(ToolkitLocalization.Text("graph.distance", "Distance"),ItemStatisticsPresentation.Number(run.Distance));Detail(ToolkitLocalization.Text("graph.tasks", "Tasks"),ItemStatisticsPresentation.Number(run.TasksCompleted));
-            Detail(ToolkitLocalization.Text("graph.resources", "Resources"),ItemStatisticsPresentation.Number(run.ResourcesCollected));Detail(ToolkitLocalization.Text("graph.bonus-resources", "Bonus resources"),ItemStatisticsPresentation.Number(run.BonusResourcesCollected));Detail(ToolkitLocalization.Text("graph.kills", "Kills"),ItemStatisticsPresentation.Number(run.EnemiesKilled));
+            var resources = isCurrent ? Value(run, Metric.Resources, false) : run.ResourcesCollected;
+            Detail(ToolkitLocalization.Text("graph.resources", "Resources"),ItemStatisticsPresentation.Number(resources));
+            if (!isCurrent) Detail(ToolkitLocalization.Text("graph.bonus-resources", "Bonus resources"),ItemStatisticsPresentation.Number(run.BonusResourcesCollected));
+            Detail(ToolkitLocalization.Text("graph.kills", "Kills"),ItemStatisticsPresentation.Number(run.EnemiesKilled));
             Detail(ToolkitLocalization.Text("graph.damage-dealt", "Damage dealt"),ItemStatisticsPresentation.Number(run.DamageDealtAsDouble));Detail(ToolkitLocalization.Text("graph.damage-taken", "Damage taken"),ItemStatisticsPresentation.Number(run.DamageTakenAsDouble));
         }
         private void PositionOverflowValue()

@@ -8,6 +8,46 @@ namespace Tests.EditMode
 {
     public sealed class SaveMigrationValidationTests
     {
+        [TestCase(-1180317866, false, 3114649430L)]
+        [TestCase(-1180317866, true, 7409616726L)]
+        [TestCase(100, false, 3100000000L)]
+        [TestCase(0, false, 3100000000L)]
+        public void LegacyCauldronOverflowPreservesCardsAndRepairsTotalsOnce(int savedCards, bool wrappedBoon, long expectedCards)
+        {
+            var source = new GameData { SchemaVersion = 11, LastGameVersion = "1.5.11" };
+            source.CauldronTotals.TotalCards = savedCards;
+            source.CauldronTotals.TotalTastings = int.MinValue;
+            source.CauldronCardCounts["INF:Damage"] = wrappedBoon ? -1 : 1500000000;
+            source.CauldronCardCounts["INF:Defense"] = 1600000000;
+            var result = SaveMigrationRunner.TryMigrate(source, "9999.0.0");
+            Assert.IsTrue(result.Succeeded, result.Error);
+            Assert.AreEqual(expectedCards, result.Data.CauldronTotals.TotalCards);
+            Assert.AreEqual(2147483648L, result.Data.CauldronTotals.TotalTastings);
+            Assert.AreEqual(wrappedBoon ? int.MaxValue : 1500000000, result.Data.CauldronCardCounts["INF:Damage"]);
+            Assert.AreEqual(1600000000, result.Data.CauldronCardCounts["INF:Defense"]);
+            Assert.AreEqual(savedCards, source.CauldronTotals.TotalCards, "Leave the source save untouched.");
+            var loaded = Sirenix.Serialization.SerializationUtility.DeserializeValue<GameData>(
+                CurrentSaveCodec.Serialize(result.Data), Sirenix.Serialization.DataFormat.Binary);
+            var repeated = SaveMigrationRunner.TryMigrate(loaded, "9999.0.0");
+            Assert.IsTrue(repeated.Succeeded, repeated.Error);
+            Assert.AreEqual(expectedCards, repeated.Data.CauldronTotals.TotalCards);
+            CollectionAssert.AreEquivalent(result.Data.CauldronCardCounts, repeated.Data.CauldronCardCounts);
+        }
+
+        [Test]
+        public void LegacyCauldronHealthyTotalsRemainExact()
+        {
+            var source = new GameData { SchemaVersion = 11, LastGameVersion = "1.5.11" };
+            source.CauldronTotals.TotalCards = 100;
+            source.CauldronTotals.TotalTastings = 20;
+            source.CauldronCardCounts["INF:Damage"] = 42;
+            var result = SaveMigrationRunner.TryMigrate(source, "9999.0.0");
+            Assert.IsTrue(result.Succeeded, result.Error);
+            Assert.AreEqual(100, result.Data.CauldronTotals.TotalCards);
+            Assert.AreEqual(20, result.Data.CauldronTotals.TotalTastings);
+            Assert.AreEqual(42, result.Data.CauldronCardCounts["INF:Damage"]);
+        }
+
         [TestCase(1, true)] [TestCase(7, true)] [TestCase(7, false)]
         public void ReturningPlayersKeepTheirSetupWithoutReplayingTheOpening(int schema, bool established)
         {

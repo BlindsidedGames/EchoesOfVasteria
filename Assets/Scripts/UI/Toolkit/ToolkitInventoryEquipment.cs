@@ -104,9 +104,23 @@ namespace TimelessEchoes.UI.Toolkit
                 control.name = "inventory-visibility-" + slot;
                 var eye = new ToolkitVisibilityIcon(); control.Add(eye); visibilityControls.Add(slot, (control, eye));
             }
+            if (CharacterCreation.Current is { Created: true } && !GameManager.HardcoreFallen)
+            {
+                var edit = ToolkitGameplay.B(rows, "", EditAppearance, "inventory-edit-appearance");
+                edit.name = "inventory-edit-appearance";
+                ToolkitLocalization.Bind(edit, "character.edit-appearance", "Edit appearance");
+            }
             equipmentContent = ToolkitGameplay.E(details.contentContainer, "inventory-equipment-details");
             equipmentController.OnEquipmentChanged += Changed;
         }
+
+        private static void EditAppearance()
+        {
+            if (!Blindsided.Oracle.oracle || !Blindsided.Oracle.oracle.CanBeginSaveMutation ||
+                CharacterCreation.Current is not { Created: true }) return;
+            FindAnyObjectByType<ToolkitCharacterCreator>()?.Show(allowCancel: true);
+        }
+
         private void FitEquipmentColumns()
         {
             if (equipmentHeading != null) equipmentHeading.style.display = ToolkitResponsiveLayout.IsPortrait ? DisplayStyle.None : DisplayStyle.Flex;
